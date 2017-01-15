@@ -45,7 +45,7 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
             HangmanObject[] termTypes;
             data.TryGetValue(type, out termTypes);
 
-            if (termTypes.Length == 0)
+            if (termTypes == null || termTypes.Length == 0)
                 return null;
 
             return termTypes[rng.Next(0, termTypes.Length)];
@@ -114,7 +114,7 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
                 await GameChannel.EmbedAsync(embed.WithOkColor()).ConfigureAwait(false);
         }
 
-        private async void PotentialGuess(SocketMessage msg)
+        private async Task PotentialGuess(SocketMessage msg)
         {
             try
             {

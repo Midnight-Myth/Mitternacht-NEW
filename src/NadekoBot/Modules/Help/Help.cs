@@ -137,7 +137,7 @@ namespace NadekoBot.Modules.Help
                 }
                 helpstr.AppendLine($"{string.Join(" ", com.Aliases.Select(a => "`" + a + "`"))} | {string.Format(com.Summary, com.Module.GetPrefix())} {GetCommandRequirements(com)} | {string.Format(com.Remarks, com.Module.GetPrefix())}");
             }
-            helpstr = helpstr.Replace(NadekoBot.Client.CurrentUser().Username , "@BotName");
+            helpstr = helpstr.Replace(NadekoBot.Client.CurrentUser.Username , "@BotName");
             File.WriteAllText("../../docs/Commands List.md", helpstr.ToString());
             await Context.Channel.SendConfirmAsync("Commandlist Regenerated").ConfigureAwait(false);
         }
@@ -161,7 +161,7 @@ namespace NadekoBot.Modules.Help
 
             await channel.SendConfirmAsync(
 $@"You can support the NadekoBot project on patreon. <https://patreon.com/nadekobot> or
-You can send donations to `nadekodiscordbot@gmail.com`
+Paypal <https://paypal.me/Kwoth>
 Don't forget to leave your discord name or id in the message.
 
 **Thank you** ♥️").ConfigureAwait(false);

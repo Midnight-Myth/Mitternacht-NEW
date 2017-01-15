@@ -2,6 +2,7 @@
 using Discord.Net;
 using Discord.WebSocket;
 using NadekoBot.Extensions;
+using NadekoBot.Services;
 using NLog;
 using System;
 using System.Collections.Concurrent;
@@ -55,7 +56,9 @@ namespace NadekoBot.Modules.Games.Trivia
 
                 // load question
                 CurrentQuestion = TriviaQuestionPool.Instance.GetRandomQuestion(oldQuestions);
-                if (CurrentQuestion == null)
+                if (CurrentQuestion == null || 
+                    string.IsNullOrWhiteSpace(CurrentQuestion.Answer) || 
+                    string.IsNullOrWhiteSpace(CurrentQuestion.Question))
                 {
                     await channel.SendErrorAsync("Trivia Game", "Failed loading a question.").ConfigureAwait(false);
                     return;
@@ -73,7 +76,9 @@ namespace NadekoBot.Modules.Games.Trivia
 
                     questionMessage = await channel.EmbedAsync(questionEmbed).ConfigureAwait(false);
                 }
-                catch (HttpException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound || ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                catch (HttpException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound || 
+                                               ex.StatusCode == System.Net.HttpStatusCode.Forbidden ||
+                                               ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
                     return;
                 }
@@ -142,7 +147,7 @@ namespace NadekoBot.Modules.Games.Trivia
                 try { await channel.SendConfirmAsync("Trivia Game", "Stopping after this question.").ConfigureAwait(false); } catch (Exception ex) { _log.Warn(ex); }
         }
 
-        private async void PotentialGuess(SocketMessage imsg)
+        private async Task PotentialGuess(SocketMessage imsg)
         {
             try
             {
@@ -177,7 +182,10 @@ namespace NadekoBot.Modules.Games.Trivia
                 if (Users[guildUser] == WinRequirement)
                 {
                     ShouldStopGame = true;
-                    await channel.SendConfirmAsync("Trivia Game", $"{guildUser.Mention} guessed it and WON the game! The answer was: **{CurrentQuestion.Answer}**").ConfigureAwait(false);
+                    try { await channel.SendConfirmAsync("Trivia Game", $"{guildUser.Mention} guessed it and WON the game! The answer was: **{CurrentQuestion.Answer}**").ConfigureAwait(false); } catch { }
+                    var reward = NadekoBot.BotConfig.TriviaCurrencyReward;
+                    if (reward > 0)
+                        await CurrencyHandler.AddCurrencyAsync(guildUser, "Won trivia", reward, true).ConfigureAwait(false);
                     return;
                 }
                 await channel.SendConfirmAsync("Trivia Game", $"{guildUser.Mention} guessed it! The answer was: **{CurrentQuestion.Answer}**").ConfigureAwait(false);
