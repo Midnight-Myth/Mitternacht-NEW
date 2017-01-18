@@ -23,8 +23,8 @@ namespace NadekoBot
     {
         private Logger _log;
         
-        public static Color OkColor { get; } = new Color(0x71cd40);
-        public static Color ErrorColor { get; } = new Color(0xee281f);
+        public static Color OkColor { get; }
+        public static Color ErrorColor { get; }
 
         public static CommandService CommandService { get; private set; }
         public static CommandHandler CommandHandler { get; private set; }
@@ -49,6 +49,8 @@ namespace NadekoBot
             {
                 AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs();
                 BotConfig = uow.BotConfig.GetOrCreate();
+                OkColor = new Color(Convert.ToUInt32(BotConfig.OkColor, 16));
+                ErrorColor = new Color(Convert.ToUInt32(BotConfig.ErrorColor, 16));
             }
         }
 
@@ -67,8 +69,9 @@ namespace NadekoBot
                 TotalShards = Credentials.TotalShards,
                 ConnectionTimeout = int.MaxValue
             });
-
+#if GLOBAL_NADEKO
             Client.Log += Client_Log;
+#endif
 
             //initialize Services
             CommandService = new CommandService(new CommandServiceConfig() {
@@ -95,10 +98,8 @@ namespace NadekoBot
             //connect
             await Client.LoginAsync(TokenType.Bot, Credentials.Token).ConfigureAwait(false);
             await Client.ConnectAsync().ConfigureAwait(false);
+            //await Client.DownloadAllUsersAsync().ConfigureAwait(false);
             Stats.Initialize();
-#if !GLOBAL_NADEKO
-            await Client.DownloadAllUsersAsync().ConfigureAwait(false);
-#endif
 
             _log.Info("Connected");
 
@@ -107,6 +108,7 @@ namespace NadekoBot
             ModulePrefixes = new ConcurrentDictionary<string, string>(NadekoBot.BotConfig.ModulePrefixes.OrderByDescending(mp => mp.Prefix.Length).ToDictionary(m => m.ModuleName, m => m.Prefix));
 
             // start handling messages received in commandhandler
+            
             await CommandHandler.StartHandling().ConfigureAwait(false);
 
             await CommandService.AddModulesAsync(this.GetType().GetTypeInfo().Assembly).ConfigureAwait(false);
