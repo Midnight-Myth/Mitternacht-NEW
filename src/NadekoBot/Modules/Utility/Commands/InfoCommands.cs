@@ -53,7 +53,7 @@ namespace NadekoBot.Modules.Utility
                     .WithColor(NadekoBot.OkColor);
                 if (guild.Emojis.Count() > 0)
                 {
-                    embed.AddField(fb => fb.WithName("**Custom Emojis**").WithValue(string.Join(" ", guild.Emojis.Select(e => $"{e.Name} <:{e.Name}:{e.Id}>"))));
+                    embed.AddField(fb => fb.WithName($"**Custom Emojis ({guild.Emojis.Count})**").WithValue(string.Join(" ", guild.Emojis.Shuffle().Take(25).Select(e => $"{e.Name} <:{e.Name}:{e.Id}>"))));
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
@@ -97,8 +97,10 @@ namespace NadekoBot.Modules.Utility
                     .AddField(fb => fb.WithName("**Joined Server**").WithValue($"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm")}").WithIsInline(true))
                     .AddField(fb => fb.WithName("**Joined Discord**").WithValue($"{user.CreatedAt.ToString("dd.MM.yyyy HH:mm")}").WithIsInline(true))
                     .AddField(fb => fb.WithName("**Roles**").WithValue($"**({user.RoleIds.Count - 1})** - {string.Join("\n", user.GetRoles().Where(r => r.Id != r.Guild.EveryoneRole.Id).Select(r => r.Name)).SanitizeMentions()}").WithIsInline(true))
-                    .WithThumbnailUrl(user.RealAvatarUrl())
                     .WithColor(NadekoBot.OkColor);
+
+                if (user.AvatarId != null)
+                    embed.WithThumbnailUrl(user.RealAvatarUrl());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
         }

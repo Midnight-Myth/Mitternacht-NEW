@@ -159,8 +159,8 @@ namespace NadekoBot.Services
 
         private async Task<bool> WordFiltered(IGuild guild, SocketUserMessage usrMsg)
         {
-            var filteredChannelWords = Permissions.FilterCommands.FilteredWordsForChannel(usrMsg.Channel.Id, guild.Id);
-            var filteredServerWords = Permissions.FilterCommands.FilteredWordsForServer(guild.Id);
+            var filteredChannelWords = Permissions.FilterCommands.FilteredWordsForChannel(usrMsg.Channel.Id, guild.Id) ?? new ConcurrentHashSet<string>();
+            var filteredServerWords = Permissions.FilterCommands.FilteredWordsForServer(guild.Id) ?? new ConcurrentHashSet<string>();
             var wordsInMessage = usrMsg.Content.ToLowerInvariant().Split(' ');
             if (filteredChannelWords.Count != 0 || filteredServerWords.Count != 0)
             {
@@ -197,8 +197,10 @@ namespace NadekoBot.Services
                 if (usrMsg == null) //has to be an user message, not system/other messages.
                     return;
 
+#if !GLOBAL_NADEKO
                 // track how many messagges each user is sending
                 UserMessagesSent.AddOrUpdate(usrMsg.Author.Id, 1, (key, old) => ++old);
+#endif
 
                 var channel = msg.Channel as SocketTextChannel;
                 var guild = channel?.Guild;
@@ -215,19 +217,20 @@ namespace NadekoBot.Services
                 if (IsBlacklisted(guild, usrMsg))
                     return;
 
-                var cleverBotRan = await TryRunCleverbot(usrMsg, guild).ConfigureAwait(false);
+                var cleverBotRan = await Task.Run(() => TryRunCleverbot(usrMsg, guild)).ConfigureAwait(false);
                 if (cleverBotRan)
                     return;
 
                 // maybe this message is a custom reaction
-                var crExecuted = await CustomReactions.TryExecuteCustomReaction(usrMsg).ConfigureAwait(false);
+                // todo log custom reaction executions. return struct with info
+                var crExecuted = await Task.Run(() => CustomReactions.TryExecuteCustomReaction(usrMsg)).ConfigureAwait(false);
                 if (crExecuted) //if it was, don't execute the command
                     return;
 
                 string messageContent = usrMsg.Content;
 
                 // execute the command and measure the time it took
-                var exec = await ExecuteCommand(new CommandContext(_client, usrMsg), messageContent, DependencyMap.Empty, MultiMatchHandling.Best);
+                var exec = await Task.Run(() => ExecuteCommand(new CommandContext(_client, usrMsg), messageContent, DependencyMap.Empty, MultiMatchHandling.Best)).ConfigureAwait(false);
                 execTime = Environment.TickCount - execTime;
 
                 if (exec.Result.IsSuccess)

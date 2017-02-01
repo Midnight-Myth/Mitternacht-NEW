@@ -292,7 +292,7 @@
     <value>addplaying adpl</value>
   </data>
   <data name="addplaying_desc" xml:space="preserve">
-    <value>Adds a specified string to the list of playing strings to rotate. Supported placeholders: %servers%, %users%, %playing%, %queued%</value>
+    <value>Adds a specified string to the list of playing strings to rotate. Supported placeholders: %servers%, %users%, %playing%, %queued%, %time%,%shardid%,%shardcount%, %shardguilds%</value>
   </data>
   <data name="addplaying_usage" xml:space="preserve">
     <value>`{0}adpl`</value>
@@ -340,7 +340,7 @@
     <value>Creates a text channel for each voice channel only users in that voice channel can see.If you are server owner, keep in mind you will see them all the time regardless.</value>
   </data>
   <data name="voiceplustext_usage" xml:space="preserve">
-    <value>`{0}voice+text`</value>
+    <value>`{0}v+t`</value>
   </data>
   <data name="scsc_cmd" xml:space="preserve">
     <value>scsc</value>
@@ -1183,7 +1183,7 @@
     <value>betflip bf</value>
   </data>
   <data name="betflip_desc" xml:space="preserve">
-    <value>Bet to guess will the result be heads or tails. Guessing awards you 1.8x the currency you've bet.</value>
+    <value>Bet to guess will the result be heads or tails. Guessing awards you 1.95x the currency you've bet (rounded up). Multiplier can be changed by the bot owner.</value>
   </data>
   <data name="betflip_usage" xml:space="preserve">
     <value>`{0}bf 5 heads` or `{0}bf 3 t`</value>
@@ -1372,10 +1372,10 @@
     <value>plant</value>
   </data>
   <data name="plant_desc" xml:space="preserve">
-    <value>Spend a unit of currency to plant it in this channel. (If bot is restarted or crashes, the currency will be lost)</value>
+    <value>Spend an amount of currency to plant it in this channel. Default is 1. (If bot is restarted or crashes, the currency will be lost)</value>
   </data>
   <data name="plant_usage" xml:space="preserve">
-    <value>`{0}plant`</value>
+    <value>`{0}plant` or `{0}plant 5`</value>
   </data>
   <data name="gencurrency_cmd" xml:space="preserve">
     <value>gencurrency gc</value>
@@ -2978,5 +2978,68 @@
   </data>
   <data name="slot_usage" xml:space="preserve">
     <value>`{0}slot 5`</value>
+  </data>
+  <data name="waifuclaimeraffinity_cmd" xml:space="preserve">
+    <value>affinity</value>
+  </data>
+  <data name="waifuclaimeraffinity_desc" xml:space="preserve">
+    <value>Sets your affinity towards someone you want to be claimed by. Setting affinity will reduce their `{0}claim` on you by 20%. You can leave second argument empty to clear your affinity. 30 minutes cooldown.</value>
+  </data>
+  <data name="waifuclaimeraffinity_usage" xml:space="preserve">
+    <value>`{0}affinity @MyHusband` or `{0}affinity`</value>
+  </data>
+  <data name="waifuclaim_cmd" xml:space="preserve">
+    <value>claimwaifu claim</value>
+  </data>
+  <data name="waifuclaim_desc" xml:space="preserve">
+    <value>Claim a waifu for yourself by spending currency.  You must spend atleast 10% more than her current value unless she set `{0}affinity` towards you.</value>
+  </data>
+  <data name="waifuclaim_usage" xml:space="preserve">
+    <value>`{0}claim 50 @Himesama`</value>
+  </data>
+  <data name="waifuleaderboard_cmd" xml:space="preserve">
+    <value>waifus waifulb</value>
+  </data>
+  <data name="waifuleaderboard_desc" xml:space="preserve">
+    <value>Shows top 9 waifus.</value>
+  </data>
+  <data name="waifuleaderboard_usage" xml:space="preserve">
+    <value>`{0}waifus`</value>
+  </data>
+  <data name="divorce_cmd" xml:space="preserve">
+    <value>divorce</value>
+  </data>
+  <data name="divorce_desc" xml:space="preserve">
+    <value>Releases your claim on a specific waifu. You will get some of the money you've spent back unless that waifu has an affinity towards you. 6 hours cooldown.</value>
+  </data>
+  <data name="divorce_usage" xml:space="preserve">
+    <value>`{0}divorce @CheatingSloot`</value>
+  </data>
+  <data name="waifuinfo_cmd" xml:space="preserve">
+    <value>waifuinfo waifustats</value>
+  </data>
+  <data name="waifuinfo_desc" xml:space="preserve">
+    <value>Shows waifu stats for a target person. Defaults to you if no user is provided.</value>
+  </data>
+  <data name="waifuinfo_usage" xml:space="preserve">
+    <value>`{0}waifuinfo @MyCrush` or `{0}waifuinfo`</value>
+  </data>
+  <data name="mal_cmd" xml:space="preserve">
+    <value>mal</value>
+  </data>
+  <data name="mal_desc" xml:space="preserve">
+    <value>Shows basic info from myanimelist profile.</value>
+  </data>
+  <data name="mal_usage" xml:space="preserve">
+    <value>`{0}mal straysocks`</value>
+  </data>
+  <data name="setmusicchannel_cmd" xml:space="preserve">
+    <value>setmusicchannel smch</value>
+  </data>
+  <data name="setmusicchannel_desc" xml:space="preserve">
+    <value>Sets the current channel as the default music output channel. This will output playing, finished, paused and removed songs to that channel instead of the channel where the first song was queued in.</value>
+  </data>
+  <data name="setmusicchannel_usage" xml:space="preserve">
+    <value>`{0}smch`</value>
   </data>
 </root>
