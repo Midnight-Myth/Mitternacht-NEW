@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NadekoBot.Modules.Games.Commands.Hangman;
 
-namespace NadekoBot.Modules.Games.Commands.Hangman
+namespace NadekoBot.Modules.Games.Hangman
 {
     public class HangmanTermPool
     {
@@ -63,15 +64,14 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
         public uint MaxErrors { get; } = 6;
         public uint MessagesSinceLastPost { get; private set; } = 0;
         public string ScrambledWord => "`" + String.Concat(Term.Word.Select(c =>
-         {
-             if (!(char.IsLetter(c) || char.IsDigit(c)))
+        {
+            if (c == ' ')
+                return " \u2000";
+            if (!(char.IsLetter(c) || char.IsDigit(c)))
                  return $" {c}";
 
              c = char.ToUpperInvariant(c);
-
-             if (c == ' ')
-                 return "   ";
-             return Guesses.Contains(c) ? $" {c}" : " _";
+             return Guesses.Contains(c) ? $" {c}" : " ◯";
          })) + "`";
 
         public bool GuessedAll => Guesses.IsSupersetOf(Term.Word.ToUpperInvariant()
@@ -146,7 +146,7 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
                         MessagesSinceLastPost = 0;
                         ++Errors;
                         if (Errors < MaxErrors)
-                            await GameChannel.SendErrorAsync("Hangman Game", $"{msg.Author.Mention} Letter `{guess}` has already been used.\n" + ScrambledWord + "\n" + GetHangman(),
+                            await GameChannel.SendErrorAsync("Hangman Game", $"{msg.Author} Letter `{guess}` has already been used.\n" + ScrambledWord + "\n" + GetHangman(),
                                 footer: string.Join(" ", Guesses)).ConfigureAwait(false);
                         else
                             await End().ConfigureAwait(false);
@@ -159,7 +159,7 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
                     {
                         if (GuessedAll)
                         {
-                            try { await GameChannel.SendConfirmAsync("Hangman Game", $"{msg.Author.Mention} guessed a letter `{guess}`!").ConfigureAwait(false); } catch { }
+                            try { await GameChannel.SendConfirmAsync("Hangman Game", $"{msg.Author} guessed a letter `{guess}`!").ConfigureAwait(false); } catch { }
 
                             await End().ConfigureAwait(false);
                             return;
@@ -167,7 +167,7 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
                         MessagesSinceLastPost = 0;
                         try
                         {
-                            await GameChannel.SendConfirmAsync("Hangman Game", $"{msg.Author.Mention} guessed a letter `{guess}`!\n" + ScrambledWord + "\n" + GetHangman(),
+                            await GameChannel.SendConfirmAsync("Hangman Game", $"{msg.Author} guessed a letter `{guess}`!\n" + ScrambledWord + "\n" + GetHangman(),
                           footer: string.Join(" ", Guesses)).ConfigureAwait(false);
                         }
                         catch { }
@@ -178,7 +178,7 @@ namespace NadekoBot.Modules.Games.Commands.Hangman
                         MessagesSinceLastPost = 0;
                         ++Errors;
                         if (Errors < MaxErrors)
-                            await GameChannel.SendErrorAsync("Hangman Game", $"{msg.Author.Mention} Letter `{guess}` does not exist.\n" + ScrambledWord + "\n" + GetHangman(),
+                            await GameChannel.SendErrorAsync("Hangman Game", $"{msg.Author} Letter `{guess}` does not exist.\n" + ScrambledWord + "\n" + GetHangman(),
                                 footer: string.Join(" ", Guesses)).ConfigureAwait(false);
                         else
                             await End().ConfigureAwait(false);

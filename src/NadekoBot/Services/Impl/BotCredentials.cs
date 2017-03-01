@@ -5,6 +5,8 @@ using Discord;
 using System.Linq;
 using NLog;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace NadekoBot.Services.Impl
 {
@@ -21,11 +23,21 @@ namespace NadekoBot.Services.Impl
 
         public string Token { get; }
 
-        public ulong[] OwnerIds { get; }
+        public ImmutableHashSet<ulong> OwnerIds { get; }
 
         public string LoLApiKey { get; }
         public string OsuApiKey { get; }
-        public string SoundCloudClientId { get; }
+        private string _soundcloudClientId;
+        public string SoundCloudClientId {
+            get {
+                return string.IsNullOrWhiteSpace(_soundcloudClientId)
+                    ? "d0bd7768e3a1a2d15430f0dccb871117"
+                    : _soundcloudClientId;
+            }
+            set {
+                _soundcloudClientId = value;
+            }
+        }
 
         public DBConfig Db { get; }
         public int TotalShards { get; }
@@ -51,7 +63,7 @@ namespace NadekoBot.Services.Impl
                 Token = data[nameof(Token)];
                 if (string.IsNullOrWhiteSpace(Token))
                     throw new ArgumentNullException(nameof(Token), "Token is missing from credentials.json or Environment varibles.");
-                OwnerIds = data.GetSection("OwnerIds").GetChildren().Select(c => ulong.Parse(c.Value)).ToArray();
+                OwnerIds = data.GetSection("OwnerIds").GetChildren().Select(c => ulong.Parse(c.Value)).ToImmutableHashSet();
                 LoLApiKey = data[nameof(LoLApiKey)];
                 GoogleApiKey = data[nameof(GoogleApiKey)];
                 MashapeKey = data[nameof(MashapeKey)];

@@ -10,10 +10,8 @@ using NLog;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace NadekoBot.Modules.Games
@@ -28,21 +26,16 @@ namespace NadekoBot.Modules.Games
         /// https://discord.gg/0TYNJfCU4De7YIk8
         /// </summary>
         [Group]
-        public class PlantPickCommands : ModuleBase
+        public class PlantPickCommands : NadekoSubmodule
         {
-            private static ConcurrentHashSet<ulong> generationChannels { get; } = new ConcurrentHashSet<ulong>();
+            private static ConcurrentHashSet<ulong> generationChannels { get; }
             //channelid/message
             private static ConcurrentDictionary<ulong, List<IUserMessage>> plantedFlowers { get; } = new ConcurrentDictionary<ulong, List<IUserMessage>>();
             //channelId/last generation
             private static ConcurrentDictionary<ulong, DateTime> lastGenerations { get; } = new ConcurrentDictionary<ulong, DateTime>();
 
-            private static ConcurrentHashSet<ulong> usersRecentlyPicked { get; } = new ConcurrentHashSet<ulong>();
-
-            private static Logger _log { get; }
-
             static PlantPickCommands()
             {
-                _log = LogManager.GetCurrentClassLogger();
 
 #if !GLOBAL_NADEKO
                 NadekoBot.Client.MessageReceived += PotentialFlowerGeneration;
@@ -51,63 +44,73 @@ namespace NadekoBot.Modules.Games
                     .SelectMany(c => c.GenerateCurrencyChannelIds.Select(obj => obj.ChannelId)));
             }
 
-            private static async Task PotentialFlowerGeneration(SocketMessage imsg)
+            private static Task PotentialFlowerGeneration(SocketMessage imsg)
             {
-                try
+                var msg = imsg as SocketUserMessage;
+                if (msg == null || msg.IsAuthor() || msg.Author.IsBot)
+                    return Task.CompletedTask;
+
+                var channel = imsg.Channel as ITextChannel;
+                if (channel == null)
+                    return Task.CompletedTask;
+
+                if (!generationChannels.Contains(channel.Id))
+                    return Task.CompletedTask;
+
+                var _ = Task.Run(async () =>
                 {
-                    var msg = imsg as SocketUserMessage;
-                    if (msg == null || msg.IsAuthor() || msg.Author.IsBot)
-                        return;
-
-                    var channel = imsg.Channel as ITextChannel;
-                    if (channel == null)
-                        return;
-
-                    if (!generationChannels.Contains(channel.Id))
-                        return;
-
-                    var lastGeneration = lastGenerations.GetOrAdd(channel.Id, DateTime.MinValue);
-                    var rng = new NadekoRandom();
-
-                    if (DateTime.Now - TimeSpan.FromSeconds(NadekoBot.BotConfig.CurrencyGenerationCooldown) < lastGeneration) //recently generated in this channel, don't generate again
-                        return;
-
-                    var num = rng.Next(1, 101) + NadekoBot.BotConfig.CurrencyGenerationChance * 100;
-
-                    if (num > 100)
+                    try
                     {
-                        lastGenerations.AddOrUpdate(channel.Id, DateTime.Now, (id, old) => DateTime.Now);
+                        var lastGeneration = lastGenerations.GetOrAdd(channel.Id, DateTime.MinValue);
+                        var rng = new NadekoRandom();
 
-                        var dropAmount = NadekoBot.BotConfig.CurrencyDropAmount;
+                        //todo i'm stupid :rofl: wtg kwoth. real async programming :100: :ok_hand: :100: :100: :thumbsup:
+                        if (DateTime.Now - TimeSpan.FromSeconds(NadekoBot.BotConfig.CurrencyGenerationCooldown) < lastGeneration) //recently generated in this channel, don't generate again
+                            return;
 
-                        if (dropAmount > 0)
+                        var num = rng.Next(1, 101) + NadekoBot.BotConfig.CurrencyGenerationChance * 100;
+
+                        if (num > 100)
                         {
-                            var msgs = new IUserMessage[dropAmount];
+                            lastGenerations.AddOrUpdate(channel.Id, DateTime.Now, (id, old) => DateTime.Now);
 
-                            string firstPart;
-                            if (dropAmount == 1)
+                            var dropAmount = NadekoBot.BotConfig.CurrencyDropAmount;
+
+                            if (dropAmount > 0)
                             {
-                                firstPart = $"A random { NadekoBot.BotConfig.CurrencyName } appeared!";
-                            }
-                            else
-                            {
-                                firstPart = $"{dropAmount} random { NadekoBot.BotConfig.CurrencyPluralName } appeared!";
-                            }
-                            var file = GetRandomCurrencyImagePath();
-                            var sent = await channel.SendFileAsync(
-                                File.Open(file, FileMode.OpenOrCreate),
-                                new FileInfo(file).Name,
-                                $"❗ {firstPart} Pick it up by typing `{NadekoBot.ModulePrefixes[typeof(Games).Name]}pick`")
-                                    .ConfigureAwait(false);
+                                var msgs = new IUserMessage[dropAmount];
+                                var prefix = NadekoBot.ModulePrefixes[typeof(Games).Name];
+                                var toSend = dropAmount == 1 
+                                    ? GetLocalText(channel, "curgen_sn", NadekoBot.BotConfig.CurrencySign, prefix)
+                                    : GetLocalText(channel, "curgen_pl", dropAmount, NadekoBot.BotConfig.CurrencySign, prefix);
+                                var file = GetRandomCurrencyImage();
+                                using (var fileStream = file.Value.ToStream())
+                                {
+                                    var sent = await channel.SendFileAsync(
+                                        fileStream,
+                                        file.Key,
+                                        toSend).ConfigureAwait(false);
 
-                            msgs[0] = sent;
+                                    msgs[0] = sent;
+                                }
 
-                            plantedFlowers.AddOrUpdate(channel.Id, msgs.ToList(), (id, old) => { old.AddRange(msgs); return old; });
+                                plantedFlowers.AddOrUpdate(channel.Id, msgs.ToList(), (id, old) => { old.AddRange(msgs); return old; });
+                            }
                         }
                     }
-                }
-                catch { }
+                    catch (Exception ex)
+                    {
+                        LogManager.GetCurrentClassLogger().Warn(ex);
+                    }
+                });
+                return Task.CompletedTask;
             }
+
+            public static string GetLocalText(ITextChannel channel, string key, params object[] replacements) =>
+                NadekoTopLevelModule.GetTextStatic(key,
+                    NadekoBot.Localization.GetCultureInfo(channel.GuildId),
+                    typeof(Games).Name.ToLowerInvariant(),
+                    replacements);
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
@@ -117,32 +120,19 @@ namespace NadekoBot.Modules.Games
 
                 if (!(await channel.Guild.GetCurrentUserAsync()).GetPermissions(channel).ManageMessages)
                     return;
-#if GLOBAL_NADEKO
-                if (!usersRecentlyPicked.Add(Context.User.Id))
+
+                List<IUserMessage> msgs;
+
+                try { await Context.Message.DeleteAsync().ConfigureAwait(false); } catch { }
+                if (!plantedFlowers.TryRemove(channel.Id, out msgs))
                     return;
-#endif
-                try
-                {
 
-                    List<IUserMessage> msgs;
+                await Task.WhenAll(msgs.Where(m => m != null).Select(toDelete => toDelete.DeleteAsync())).ConfigureAwait(false);
 
-                    try { await Context.Message.DeleteAsync().ConfigureAwait(false); } catch { }
-                    if (!plantedFlowers.TryRemove(channel.Id, out msgs))
-                        return;
-
-                    await Task.WhenAll(msgs.Where(m => m != null).Select(toDelete => toDelete.DeleteAsync())).ConfigureAwait(false);
-
-                    await CurrencyHandler.AddCurrencyAsync((IGuildUser)Context.User, $"Picked {NadekoBot.BotConfig.CurrencyPluralName}", msgs.Count, false).ConfigureAwait(false);
-                    var msg = await channel.SendConfirmAsync($"**{Context.User}** picked {msgs.Count}{NadekoBot.BotConfig.CurrencySign}!").ConfigureAwait(false);
-                    msg.DeleteAfter(10);
-                }
-                finally
-                {
-#if GLOBAL_NADEKO
-                    await Task.Delay(60000);
-                    usersRecentlyPicked.TryRemove(Context.User.Id);
-#endif
-                }
+                await CurrencyHandler.AddCurrencyAsync((IGuildUser)Context.User, $"Picked {NadekoBot.BotConfig.CurrencyPluralName}", msgs.Count, false).ConfigureAwait(false);
+                var msg = await ReplyConfirmLocalized("picked", msgs.Count + NadekoBot.BotConfig.CurrencySign)
+                    .ConfigureAwait(false);
+                msg.DeleteAfter(10);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -155,22 +145,24 @@ namespace NadekoBot.Modules.Games
                 var removed = await CurrencyHandler.RemoveCurrencyAsync((IGuildUser)Context.User, $"Planted a {NadekoBot.BotConfig.CurrencyName}", amount, false).ConfigureAwait(false);
                 if (!removed)
                 {
-                    await Context.Channel.SendErrorAsync($"You don't have any {NadekoBot.BotConfig.CurrencyPluralName}.").ConfigureAwait(false);
+                    await ReplyErrorLocalized("not_enough", NadekoBot.BotConfig.CurrencySign).ConfigureAwait(false);
                     return;
                 }
 
-                var file = GetRandomCurrencyImagePath();
+                var imgData = GetRandomCurrencyImage();
+
+                //todo upload all currency images to transfer.sh and use that one as cdn
+                //and then 
+
+                var msgToSend = GetText("planted",
+                    Format.Bold(Context.User.ToString()), 
+                    amount + NadekoBot.BotConfig.CurrencySign, 
+                    Prefix);
+
                 IUserMessage msg;
-                var vowelFirst = new[] { 'a', 'e', 'i', 'o', 'u' }.Contains(NadekoBot.BotConfig.CurrencyName[0]);
-                
-                var msgToSend = $"Oh how Nice! **{Context.User.Username}** planted {(amount == 1 ? (vowelFirst ? "an" : "a") : amount.ToString())} {(amount > 1 ? NadekoBot.BotConfig.CurrencyPluralName : NadekoBot.BotConfig.CurrencyName)}. Pick it using {NadekoBot.ModulePrefixes[typeof(Games).Name]}pick";
-                if (file == null)
+                using (var toSend = imgData.Value.ToStream())
                 {
-                    msg = await Context.Channel.SendConfirmAsync(NadekoBot.BotConfig.CurrencySign).ConfigureAwait(false);
-                }
-                else
-                {
-                    msg = await Context.Channel.SendFileAsync(File.Open(file, FileMode.OpenOrCreate), new FileInfo(file).Name, msgToSend).ConfigureAwait(false);
+                    msg = await Context.Channel.SendFileAsync(toSend, imgData.Key, msgToSend).ConfigureAwait(false);
                 }
 
                 var msgs = new IUserMessage[amount];
@@ -212,29 +204,20 @@ namespace NadekoBot.Modules.Games
                 }
                 if (enabled)
                 {
-                    await channel.SendConfirmAsync("Currency generation enabled on this channel.").ConfigureAwait(false);
+                    await ReplyConfirmLocalized("curgen_enabled").ConfigureAwait(false);
                 }
                 else
                 {
-                    await channel.SendConfirmAsync("Currency generation disabled on this channel.").ConfigureAwait(false);
+                    await ReplyConfirmLocalized("curgen_disabled").ConfigureAwait(false);
                 }
             }
 
-            private static string GetRandomCurrencyImagePath()
+            private static KeyValuePair<string, ImmutableArray<byte>> GetRandomCurrencyImage()
             {
                 var rng = new NadekoRandom();
-                return Directory.GetFiles("data/currency_images").OrderBy(s => rng.Next()).FirstOrDefault();
-            }
+                var images = NadekoBot.Images.Currency;
 
-            int GetRandomNumber()
-            {
-                using (var rg = RandomNumberGenerator.Create())
-                {
-                    byte[] rno = new byte[4];
-                    rg.GetBytes(rno);
-                    int randomvalue = BitConverter.ToInt32(rno, 0);
-                    return randomvalue;
-                }
+                return images[rng.Next(0, images.Length)];
             }
         }
     }

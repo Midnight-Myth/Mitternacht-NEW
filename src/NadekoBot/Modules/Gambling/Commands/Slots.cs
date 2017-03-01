@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
+using ImageSharp;
 using NadekoBot.Attributes;
 using NadekoBot.Extensions;
 using NadekoBot.Services;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,62 +16,29 @@ namespace NadekoBot.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class Slots : ModuleBase
+        public class Slots : NadekoSubmodule
         {
-            private static int totalBet = 0;
-            private static int totalPaidOut = 0;
+            private static int _totalBet;
+            private static int _totalPaidOut;
 
-            private const string backgroundPath = "data/slots/background.png";
-
-            private static readonly byte[] backgroundBuffer;
-            private static readonly byte[][] numbersBuffer = new byte[10][];
-            private static readonly byte[][] emojiBuffer;
-
-            const int alphaCutOut = byte.MaxValue / 3;
-
-            static Slots()
-            {
-                backgroundBuffer = File.ReadAllBytes(backgroundPath);
-
-                for (int i = 0; i < 10; i++)
-                {
-                    numbersBuffer[i] = File.ReadAllBytes("data/slots/" + i + ".png");
-                }
-                int throwaway;
-                var emojiFiles = Directory.GetFiles("data/slots/emojis/", "*.png")
-                    .Where(f => int.TryParse(Path.GetFileNameWithoutExtension(f), out throwaway))
-                    .OrderBy(f => int.Parse(Path.GetFileNameWithoutExtension(f)))
-                    .ToArray();
-
-                emojiBuffer = new byte[emojiFiles.Length][];
-                for (int i = 0; i < emojiFiles.Length; i++)
-                {
-                    emojiBuffer[i] = File.ReadAllBytes(emojiFiles[i]);
-                }
-            }
-
-
-            private static MemoryStream InternalGetStream(string path)
-            {
-                var ms = new MemoryStream();
-                using (var fs = File.Open(path, FileMode.Open))
-                {
-                    fs.CopyTo(ms);
-                    fs.Flush();
-                }
-                ms.Position = 0;
-                return ms;
-            }
+            private const int _alphaCutOut = byte.MaxValue / 3;
 
             //here is a payout chart
             //https://lh6.googleusercontent.com/-i1hjAJy_kN4/UswKxmhrbPI/AAAAAAAAB1U/82wq_4ZZc-Y/DE6B0895-6FC1-48BE-AC4F-14D1B91AB75B.jpg
             //thanks to judge for helping me with this
 
+            private readonly IImagesService _images;
+
+            public Slots()
+            {
+                _images = NadekoBot.Images;
+            }
+
             public class SlotMachine
             {
                 public const int MaxValue = 5;
 
-                static readonly List<Func<int[], int>> winningCombos = new List<Func<int[], int>>()
+                static readonly List<Func<int[], int>> _winningCombos = new List<Func<int[], int>>()
                 {
                     //three flowers
                     (arr) => arr.All(a=>a==MaxValue) ? 30 : 0,
@@ -86,14 +53,14 @@ namespace NadekoBot.Modules.Gambling
                 public static SlotResult Pull()
                 {
                     var numbers = new int[3];
-                    for (int i = 0; i < numbers.Length; i++)
+                    for (var i = 0; i < numbers.Length; i++)
                     {
                         numbers[i] = new NadekoRandom().Next(0, MaxValue + 1);
                     }
-                    int multi = 0;
-                    for (int i = 0; i < winningCombos.Count; i++)
+                    var multi = 0;
+                    foreach (var t in _winningCombos)
                     {
-                        multi = winningCombos[i](numbers);
+                        multi = t(numbers);
                         if (multi != 0)
                             break;
                     }
@@ -107,8 +74,8 @@ namespace NadekoBot.Modules.Gambling
                     public int Multiplier { get; }
                     public SlotResult(int[] nums, int multi)
                     {
-                        this.Numbers = nums;
-                        this.Multiplier = multi;
+                        Numbers = nums;
+                        Multiplier = multi;
                     }
                 }
             }
@@ -118,8 +85,8 @@ namespace NadekoBot.Modules.Gambling
             public async Task SlotStats()
             {
                 //i remembered to not be a moron
-                var paid = totalPaidOut;
-                var bet = totalBet;
+                var paid = _totalPaidOut;
+                var bet = _totalBet;
 
                 if (bet <= 0)
                     bet = 1;
@@ -154,7 +121,7 @@ namespace NadekoBot.Modules.Gambling
                 var sb = new StringBuilder();
                 const int bet = 1;
                 int payout = 0;
-                foreach (var key in dict.Keys.OrderByDescending(x=>x))
+                foreach (var key in dict.Keys.OrderByDescending(x => x))
                 {
                     sb.AppendLine($"x{key} occured {dict[key]} times. {dict[key] * 1.0f / tests * 100}%");
                     payout += key * dict[key];
@@ -163,139 +130,101 @@ namespace NadekoBot.Modules.Gambling
                     footer: $"Total Bet: {tests * bet} | Payout: {payout * bet} | {payout * 1.0f / tests * 100}%");
             }
 
-            static HashSet<ulong> runningUsers = new HashSet<ulong>();
+            private static readonly HashSet<ulong> _runningUsers = new HashSet<ulong>();
+
             [NadekoCommand, Usage, Description, Aliases]
             public async Task Slot(int amount = 0)
             {
-                if (!runningUsers.Add(Context.User.Id))
+                if (!_runningUsers.Add(Context.User.Id))
                     return;
                 try
                 {
                     if (amount < 1)
                     {
-                        await Context.Channel.SendErrorAsync($"You can't bet less than 1{NadekoBot.BotConfig.CurrencySign}").ConfigureAwait(false);
+                        await ReplyErrorLocalized("min_bet_limit", 1 + CurrencySign).ConfigureAwait(false);
                         return;
                     }
 
                     if (amount > 999)
                     {
-                        await Context.Channel.SendErrorAsync($"You can't bet more than 999{NadekoBot.BotConfig.CurrencySign}").ConfigureAwait(false);
+                        GetText("slot_maxbet", 999 + CurrencySign);
+                        await ReplyErrorLocalized("max_bet_limit", 999 + CurrencySign).ConfigureAwait(false);
                         return;
                     }
 
                     if (!await CurrencyHandler.RemoveCurrencyAsync(Context.User, "Slot Machine", amount, false))
                     {
-                        await Context.Channel.SendErrorAsync($"You don't have enough {NadekoBot.BotConfig.CurrencySign}.").ConfigureAwait(false);
+                        await ReplyErrorLocalized("not_enough", CurrencySign).ConfigureAwait(false);
                         return;
                     }
-                    Interlocked.Add(ref totalBet, amount);
-                    using (var bgFileStream = new MemoryStream(backgroundBuffer))
+                    Interlocked.Add(ref _totalBet, amount);
+                    using (var bgFileStream = NadekoBot.Images.SlotBackground.ToStream())
                     {
                         var bgImage = new ImageSharp.Image(bgFileStream);
 
                         var result = SlotMachine.Pull();
                         int[] numbers = result.Numbers;
-                        using (var bgPixels = bgImage.Lock())
+
+                        for (int i = 0; i < 3; i++)
                         {
-                            for (int i = 0; i < 3; i++)
+                            using (var file = _images.SlotEmojis[numbers[i]].ToStream())
+                            using (var randomImage = new ImageSharp.Image(file))
                             {
-                                using (var file = new MemoryStream(emojiBuffer[numbers[i]]))
-                                {
-                                    var randomImage = new ImageSharp.Image(file);
-                                    using (var toAdd = randomImage.Lock())
-                                    {
-                                        for (int j = 0; j < toAdd.Width; j++)
-                                        {
-                                            for (int k = 0; k < toAdd.Height; k++)
-                                            {
-                                                var x = 95 + 142 * i + j;
-                                                int y = 330 + k;
-                                                var toSet = toAdd[j, k];
-                                                if (toSet.A < alphaCutOut)
-                                                    continue;
-                                                bgPixels[x, y] = toAdd[j, k];
-                                            }
-                                        }
-                                    }
-                                }
+                                bgImage.DrawImage(randomImage, 100, default(Size), new Point(95 + 142 * i, 330));
                             }
-
-                            var won = amount * result.Multiplier;
-                            var printWon = won;
-                            var n = 0;
-                            do
-                            {
-                                var digit = printWon % 10;
-                                using (var fs = new MemoryStream(numbersBuffer[digit]))
-                                {
-                                    var img = new ImageSharp.Image(fs);
-                                    using (var pixels = img.Lock())
-                                    {
-                                        for (int i = 0; i < pixels.Width; i++)
-                                        {
-                                            for (int j = 0; j < pixels.Height; j++)
-                                            {
-                                                if (pixels[i, j].A < alphaCutOut)
-                                                    continue;
-                                                var x = 230 - n * 16 + i;
-                                                bgPixels[x, 462 + j] = pixels[i, j];
-                                            }
-                                        }
-                                    }
-                                }
-                                n++;
-                            } while ((printWon /= 10) != 0);
-
-                            var printAmount = amount;
-                            n = 0;
-                            do
-                            {
-                                var digit = printAmount % 10;
-                                using (var fs = new MemoryStream(numbersBuffer[digit]))
-                                {
-                                    var img = new ImageSharp.Image(fs);
-                                    using (var pixels = img.Lock())
-                                    {
-                                        for (int i = 0; i < pixels.Width; i++)
-                                        {
-                                            for (int j = 0; j < pixels.Height; j++)
-                                            {
-                                                if (pixels[i, j].A < alphaCutOut)
-                                                    continue;
-                                                var x = 395 - n * 16 + i;
-                                                bgPixels[x, 462 + j] = pixels[i, j];
-                                            }
-                                        }
-                                    }
-                                }
-                                n++;
-                            } while ((printAmount /= 10) != 0);
                         }
 
-                        var msg = "Better luck next time ^_^";
+                        var won = amount * result.Multiplier;
+                        var printWon = won;
+                        var n = 0;
+                        do
+                        {
+                            var digit = printWon % 10;
+                            using (var fs = NadekoBot.Images.SlotNumbers[digit].ToStream())
+                            using (var img = new ImageSharp.Image(fs))
+                            {
+                                bgImage.DrawImage(img, 100, default(Size), new Point(230 - n * 16, 462));
+                            }
+                            n++;
+                        } while ((printWon /= 10) != 0);
+
+                        var printAmount = amount;
+                        n = 0;
+                        do
+                        {
+                            var digit = printAmount % 10;
+                            using (var fs = _images.SlotNumbers[digit].ToStream())
+                            using (var img = new ImageSharp.Image(fs))
+                            { 
+                                bgImage.DrawImage(img, 100, default(Size), new Point(395 - n * 16, 462));
+                            }
+                            n++;
+                        } while ((printAmount /= 10) != 0);
+
+                        var msg = GetText("better_luck");
                         if (result.Multiplier != 0)
                         {
                             await CurrencyHandler.AddCurrencyAsync(Context.User, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier, false);
-                            Interlocked.Add(ref totalPaidOut, amount * result.Multiplier);
+                            Interlocked.Add(ref _totalPaidOut, amount * result.Multiplier);
                             if (result.Multiplier == 1)
-                                msg = $"A single {NadekoBot.BotConfig.CurrencySign}, x1 - Try again!";
+                                msg = GetText("slot_single", CurrencySign, 1);
                             else if (result.Multiplier == 4)
-                                msg = $"Good job! Two {NadekoBot.BotConfig.CurrencySign} - bet x4";
+                                msg = GetText("slot_two", CurrencySign, 4);
                             else if (result.Multiplier == 10)
-                                msg = "Wow! Lucky! Three of a kind! x10";
+                                msg = GetText("slot_three", 10);
                             else if (result.Multiplier == 30)
-                                msg = "WOAAHHHHHH!!! Congratulations!!! x30";
+                                msg = GetText("slot_jackpot", 30);
                         }
 
-                        await Context.Channel.SendFileAsync(bgImage.ToStream(), "result.png", Context.User.Mention + " " + msg + $"\n`Bet:`{amount} `Won:` {amount * result.Multiplier}{NadekoBot.BotConfig.CurrencySign}").ConfigureAwait(false);
+                        await Context.Channel.SendFileAsync(bgImage.ToStream(), "result.png", Context.User.Mention + " " + msg + $"\n`{GetText("slot_bet")}:`{amount} `{GetText("slot_won")}:` {amount * result.Multiplier}{NadekoBot.BotConfig.CurrencySign}").ConfigureAwait(false);
                     }
                 }
                 finally
                 {
-                    var t = Task.Run(async () =>
+                    var _ = Task.Run(async () =>
                     {
-                        await Task.Delay(3000);
-                        runningUsers.Remove(Context.User.Id);
+                        await Task.Delay(2000);
+                        _runningUsers.Remove(Context.User.Id);
                     });
                 }
             }

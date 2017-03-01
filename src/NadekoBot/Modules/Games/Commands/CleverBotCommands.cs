@@ -17,31 +17,23 @@ namespace NadekoBot.Modules.Games
     public partial class Games
     {
         [Group]
-        public class CleverBotCommands : ModuleBase
+        public class CleverBotCommands : NadekoSubmodule
         {
-            private static Logger _log { get; }
+            private new static Logger _log { get; }
 
-            class CleverAnswer
-            {
-                public string Status { get; set; }
-                public string Response { get; set; }
-            }
-
-            public static ConcurrentDictionary<ulong, Lazy<ChatterBotSession>> CleverbotGuilds { get; } = new ConcurrentDictionary<ulong, Lazy<ChatterBotSession>>();
+            public static ConcurrentDictionary<ulong, Lazy<ChatterBotSession>> CleverbotGuilds { get; }
 
             static CleverBotCommands()
             {
                 _log = LogManager.GetCurrentClassLogger();
                 var sw = Stopwatch.StartNew();
 
-                using (var uow = DbHandler.UnitOfWork())
-                {
-                    var bot = ChatterBotFactory.Create(ChatterBotType.CLEVERBOT);
-                    CleverbotGuilds = new ConcurrentDictionary<ulong, Lazy<ChatterBotSession>>(
-                        NadekoBot.AllGuildConfigs
-                            .Where(gc => gc.CleverbotEnabled)
-                            .ToDictionary(gc => gc.GuildId, gc => new Lazy<ChatterBotSession>(() => bot.CreateSession(), true)));
-                }
+                
+                var bot = ChatterBotFactory.Create(ChatterBotType.CLEVERBOT);
+                CleverbotGuilds = new ConcurrentDictionary<ulong, Lazy<ChatterBotSession>>(
+                    NadekoBot.AllGuildConfigs
+                        .Where(gc => gc.CleverbotEnabled)
+                        .ToDictionary(gc => gc.GuildId, gc => new Lazy<ChatterBotSession>(() => bot.CreateSession(), true)));
 
                 sw.Stop();
                 _log.Debug($"Loaded in {sw.Elapsed.TotalSeconds:F2}s");
@@ -104,7 +96,7 @@ namespace NadekoBot.Modules.Games
                         uow.GuildConfigs.SetCleverbotEnabled(Context.Guild.Id, false);
                         await uow.CompleteAsync().ConfigureAwait(false);
                     }
-                    await Context.Channel.SendConfirmAsync($"{Context.User.Mention} Disabled cleverbot on this server.").ConfigureAwait(false);
+                    await ReplyConfirmLocalized("cleverbot_disabled").ConfigureAwait(false);
                     return;
                 }
 
@@ -118,7 +110,7 @@ namespace NadekoBot.Modules.Games
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                await Context.Channel.SendConfirmAsync($"{Context.User.Mention} Enabled cleverbot on this server.").ConfigureAwait(false);
+                await ReplyConfirmLocalized("cleverbot_enabled").ConfigureAwait(false);
             }
         }
     }
