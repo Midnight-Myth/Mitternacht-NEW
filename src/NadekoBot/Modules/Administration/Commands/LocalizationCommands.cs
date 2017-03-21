@@ -18,14 +18,21 @@ namespace NadekoBot.Modules.Administration
         {
             private ImmutableDictionary<string, string> supportedLocales { get; } = new Dictionary<string, string>()
             {
+                {"zh-TW", "Chinese (Traditional), China" },
+                {"zh-CN", "Chinese (Simplified), China"},
+                {"nl-NL", "Dutch, Netherlands"},
                 {"en-US", "English, United States"},
                 {"fr-FR", "French, France"},
-                {"ru-RU", "Russian, Russia"},
                 {"de-DE", "German, Germany"},
-                //{"nl-NL", "Dutch, Netherlands"},
                 //{"ja-JP", "Japanese, Japan"},
+                {"nb-NO", "Norwegian (bokmål), Norway"},
+                {"pl-PL", "Polish, Poland" },
                 {"pt-BR", "Portuguese, Brazil"},
-                //{"sr-Cyrl-RS", "Serbian, Serbia - Cyrillic"}
+                {"ru-RU", "Russian, Russia"},
+                {"sr-Cyrl-RS", "Serbian, Serbia - Cyrillic"},
+                {"es-ES", "Spanish, Spain"},
+                {"sv-SE", "Swedish, Sweden"},
+                {"tr-TR", "Turkish, Turkey" }
             }.ToImmutableDictionary();
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -97,11 +104,10 @@ namespace NadekoBot.Modules.Administration
             }
 
             [NadekoCommand, Usage, Description, Aliases]
-            [OwnerOnly]
             public async Task LanguagesList()
             {
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                    .WithTitle(GetText("lang_list", ""))
+                    .WithTitle(GetText("lang_list"))
                     .WithDescription(string.Join("\n",
                         supportedLocales.Select(x => $"{Format.Code(x.Key), -10} => {x.Value}"))));
             }

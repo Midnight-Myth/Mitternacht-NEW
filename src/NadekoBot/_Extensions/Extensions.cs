@@ -21,6 +21,12 @@ namespace NadekoBot.Extensions
         private const string arrow_left = "⬅";
         private const string arrow_right = "➡";
 
+        public static string ToBase64(this string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
+        }
+
         public static Stream ToStream(this IEnumerable<byte> bytes, bool canWrite = false)
         {
             var ms = new MemoryStream(bytes as byte[] ?? bytes.ToArray(), canWrite);
@@ -87,9 +93,9 @@ namespace NadekoBot.Extensions
         private static EmbedBuilder AddPaginatedFooter(this EmbedBuilder embed, int curPage, int? lastPage)
         {
             if (lastPage != null)
-                return embed.WithFooter(efb => efb.WithText($"page {curPage} / {lastPage}"));
+                return embed.WithFooter(efb => efb.WithText($"{curPage} / {lastPage}"));
             else
-                return embed.WithFooter(efb => efb.WithText($"page {curPage}"));
+                return embed.WithFooter(efb => efb.WithText(curPage.ToString()));
         }
 
         public static ReactionEventWrapper OnReaction(this IUserMessage msg, Action<SocketReaction> reactionAdded, Action<SocketReaction> reactionRemoved = null)
@@ -277,6 +283,15 @@ namespace NadekoBot.Extensions
                 }
                 return list;
             }
+        }
+    
+        /// <summary>
+        /// Easy use of fast, efficient case-insensitive Contains check with StringComparison Member Types 
+        /// CurrentCulture, CurrentCultureIgnoreCase, InvariantCulture, InvariantCultureIgnoreCase, Ordinal, OrdinalIgnoreCase
+        /// </summary>    
+        public static bool ContainsNoCase(this string str, string contains, StringComparison compare)
+        {
+            return str.IndexOf(contains, compare) >= 0;
         }
 
         public static string TrimTo(this string str, int maxLength, bool hideDots = false)

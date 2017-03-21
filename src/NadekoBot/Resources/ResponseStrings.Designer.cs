@@ -557,7 +557,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User Kicked.
+        ///    Looks up a localized string similar to User kicked.
         /// </summary>
         public static string administration_kicked_user {
             get {
@@ -566,8 +566,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List Of Languages
-        ///{0}.
+        ///    Looks up a localized string similar to List of languages.
         /// </summary>
         public static string administration_lang_list {
             get {
@@ -747,7 +746,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Message Deleted in #{0}.
+        ///    Looks up a localized string similar to Message deleted in #{0}.
         /// </summary>
         public static string administration_msg_del {
             get {
@@ -756,11 +755,20 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Message Updated in #{0}.
+        ///    Looks up a localized string similar to Message updated in #{0}.
         /// </summary>
         public static string administration_msg_update {
             get {
                 return ResourceManager.GetString("administration_msg_update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to You must be in a voice channel on this server..
+        /// </summary>
+        public static string administration_must_be_in_voice {
+            get {
+                return ResourceManager.GetString("administration_must_be_in_voice", resourceCulture);
             }
         }
         
@@ -810,7 +818,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to New Message.
+        ///    Looks up a localized string similar to New message.
         /// </summary>
         public static string administration_new_msg {
             get {
@@ -819,7 +827,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to New Nickname.
+        ///    Looks up a localized string similar to New nickname.
         /// </summary>
         public static string administration_new_nick {
             get {
@@ -828,7 +836,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to New Topic.
+        ///    Looks up a localized string similar to New topic.
         /// </summary>
         public static string administration_new_topic {
             get {
@@ -837,7 +845,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Nickname Changed.
+        ///    Looks up a localized string similar to Nickname changed.
         /// </summary>
         public static string administration_nick_change {
             get {
@@ -864,7 +872,16 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Old Message.
+        ///    Looks up a localized string similar to There are no voice channel roles..
+        /// </summary>
+        public static string administration_no_vcroles {
+            get {
+                return ResourceManager.GetString("administration_no_vcroles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Old message.
         /// </summary>
         public static string administration_old_msg {
             get {
@@ -873,7 +890,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Old Nickname.
+        ///    Looks up a localized string similar to Old nickname.
         /// </summary>
         public static string administration_old_nick {
             get {
@@ -882,7 +899,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Old Topic.
+        ///    Looks up a localized string similar to Old topic.
         /// </summary>
         public static string administration_old_topic {
             get {
@@ -909,7 +926,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Presence Updates.
+        ///    Looks up a localized string similar to Presence updates.
         /// </summary>
         public static string administration_presence_updates {
             get {
@@ -918,7 +935,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Active Protections.
+        ///    Looks up a localized string similar to Active protections.
         /// </summary>
         public static string administration_prot_active {
             get {
@@ -954,7 +971,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to No protections enabled..
+        ///    Looks up a localized string similar to No protection enabled..
         /// </summary>
         public static string administration_prot_none {
             get {
@@ -1171,7 +1188,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User Soft-Banned.
+        ///    Looks up a localized string similar to User soft-banned.
         /// </summary>
         public static string administration_sb_user {
             get {
@@ -1443,7 +1460,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Text Channel Created.
+        ///    Looks up a localized string similar to Text channel created..
         /// </summary>
         public static string administration_text_chan_created {
             get {
@@ -1452,7 +1469,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Text Channel Destroyed .
+        ///    Looks up a localized string similar to Text channel destroyed..
         /// </summary>
         public static string administration_text_chan_destroyed {
             get {
@@ -1479,7 +1496,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User Banned.
+        ///    Looks up a localized string similar to User banned.
         /// </summary>
         public static string administration_user_banned {
             get {
@@ -1506,7 +1523,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User Joined.
+        ///    Looks up a localized string similar to User joined.
         /// </summary>
         public static string administration_user_joined {
             get {
@@ -1515,7 +1532,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User Left.
+        ///    Looks up a localized string similar to User left.
         /// </summary>
         public static string administration_user_left {
             get {
@@ -1533,7 +1550,16 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User&apos;s Role Added.
+        ///    Looks up a localized string similar to {0} has been **muted** from text and voice chat for {1} minutes..
+        /// </summary>
+        public static string administration_user_muted_time {
+            get {
+                return ResourceManager.GetString("administration_user_muted_time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to User&apos;s role added.
         /// </summary>
         public static string administration_user_role_add {
             get {
@@ -1542,7 +1568,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User&apos;s  Role Removed.
+        ///    Looks up a localized string similar to User&apos;s  role removed.
         /// </summary>
         public static string administration_user_role_rem {
             get {
@@ -1560,7 +1586,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to User Unbanned.
+        ///    Looks up a localized string similar to User unbanned.
         /// </summary>
         public static string administration_user_unbanned {
             get {
@@ -1632,7 +1658,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Username Changed.
+        ///    Looks up a localized string similar to Username changed.
         /// </summary>
         public static string administration_username_changed {
             get {
@@ -1650,7 +1676,34 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Voice Channel Created.
+        ///    Looks up a localized string similar to Voice channel roles.
+        /// </summary>
+        public static string administration_vc_role_list {
+            get {
+                return ResourceManager.GetString("administration_vc_role_list", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Users who join {0} voice channel will get {1} role..
+        /// </summary>
+        public static string administration_vcrole_added {
+            get {
+                return ResourceManager.GetString("administration_vcrole_added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Users who join {0} voice channel will no longer get a role..
+        /// </summary>
+        public static string administration_vcrole_removed {
+            get {
+                return ResourceManager.GetString("administration_vcrole_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Voice channel created.
         /// </summary>
         public static string administration_voice_chan_created {
             get {
@@ -1659,7 +1712,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Voice Channel Destroyed.
+        ///    Looks up a localized string similar to Voice channel destroyed.
         /// </summary>
         public static string administration_voice_chan_destroyed {
             get {
@@ -1794,7 +1847,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Claim from @{0} for a war against {1} has expired..
+        ///    Looks up a localized string similar to Claim from @{0} in a war against {1} has expired..
         /// </summary>
         public static string clashofclans_claim_expired {
             get {
@@ -1848,7 +1901,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Not a Valid war size..
+        ///    Looks up a localized string similar to Not a valid war size..
         /// </summary>
         public static string clashofclans_invalid_size {
             get {
@@ -1857,7 +1910,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List Of Active Wars.
+        ///    Looks up a localized string similar to List of active wars.
         /// </summary>
         public static string clashofclans_list_active_wars {
             get {
@@ -1866,7 +1919,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to No active wars..
+        ///    Looks up a localized string similar to No active war..
         /// </summary>
         public static string clashofclans_no_active_wars {
             get {
@@ -1965,6 +2018,42 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Message triggering the custom reaction with id {0} won&apos;t get automatically deleted..
+        /// </summary>
+        public static string customreactions_crad_disabled {
+            get {
+                return ResourceManager.GetString("customreactions_crad_disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Message triggering the custom reaction with id {0} will get automatically deleted..
+        /// </summary>
+        public static string customreactions_crad_enabled {
+            get {
+                return ResourceManager.GetString("customreactions_crad_enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Response message for the custom reaction with id {0} won&apos;t be sent as a DM..
+        /// </summary>
+        public static string customreactions_crdm_disabled {
+            get {
+                return ResourceManager.GetString("customreactions_crdm_disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Response message for the custom reaction with id {0} will be sent as a DM..
+        /// </summary>
+        public static string customreactions_crdm_enabled {
+            get {
+                return ResourceManager.GetString("customreactions_crdm_enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Custom Reaction deleted.
         /// </summary>
         public static string customreactions_deleted {
@@ -2010,7 +2099,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to No custom reactions found..
+        ///    Looks up a localized string similar to No custom reaction found..
         /// </summary>
         public static string customreactions_no_found {
             get {
@@ -2073,11 +2162,20 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Animal Race.
+        ///    Looks up a localized string similar to Animal race.
         /// </summary>
         public static string gambling_animal_race {
             get {
                 return ResourceManager.GetString("gambling_animal_race", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to You&apos;ve already joined this race!.
+        /// </summary>
+        public static string gambling_animal_race_already_in {
+            get {
+                return ResourceManager.GetString("gambling_animal_race_already_in", resourceCulture);
             }
         }
         
@@ -2199,7 +2297,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Changes Of Heart.
+        ///    Looks up a localized string similar to Changes of heart.
         /// </summary>
         public static string gambling_changes_of_heart {
             get {
@@ -2208,7 +2306,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Claimed By.
+        ///    Looks up a localized string similar to Claimed by.
         /// </summary>
         public static string gambling_claimed_by {
             get {
@@ -2334,7 +2432,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Heads.
+        ///    Looks up a localized string similar to Head.
         /// </summary>
         public static string gambling_heads {
             get {
@@ -2397,6 +2495,15 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to No user found..
+        /// </summary>
+        public static string gambling_no_users_found {
+            get {
+                return ResourceManager.GetString("gambling_no_users_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Nobody.
         /// </summary>
         public static string gambling_nobody {
@@ -2411,6 +2518,15 @@ namespace NadekoBot.Resources {
         public static string gambling_not_enough {
             get {
                 return ResourceManager.GetString("gambling_not_enough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to page {0}.
+        /// </summary>
+        public static string gambling_page {
+            get {
+                return ResourceManager.GetString("gambling_page", resourceCulture);
             }
         }
         
@@ -2442,7 +2558,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Raffled User.
+        ///    Looks up a localized string similar to Raffled user.
         /// </summary>
         public static string gambling_raffled_user {
             get {
@@ -2551,7 +2667,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Tails.
+        ///    Looks up a localized string similar to Tail.
         /// </summary>
         public static string gambling_tails {
             get {
@@ -2906,7 +3022,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to {0} random {1} appeared! Pick them up by typing `{2}pick`.
+        ///    Looks up a localized string similar to {0} random {1} appeared!.
         /// </summary>
         public static string games_curgen_pl {
             get {
@@ -2915,11 +3031,20 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to A random {0} appeared! Pick it up by typing `{1}pick`.
+        ///    Looks up a localized string similar to A random {0} appeared!.
         /// </summary>
         public static string games_curgen_sn {
             get {
                 return ResourceManager.GetString("games_curgen_sn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Current poll results.
+        /// </summary>
+        public static string games_current_poll_results {
+            get {
+                return ResourceManager.GetString("games_current_poll_results", resourceCulture);
             }
         }
         
@@ -2933,7 +3058,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Game Started.
+        ///    Looks up a localized string similar to Game started.
         /// </summary>
         public static string games_game_started {
             get {
@@ -2996,11 +3121,38 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to No votes cast..
+        /// </summary>
+        public static string games_no_votes_cast {
+            get {
+                return ResourceManager.GetString("games_no_votes_cast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to You don&apos;t have enough {0}.
         /// </summary>
         public static string games_not_enough {
             get {
                 return ResourceManager.GetString("games_not_enough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Pick them up by typing `{0}pick`.
+        /// </summary>
+        public static string games_pick_pl {
+            get {
+                return ResourceManager.GetString("games_pick_pl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Pick it up by typing `{0}pick`.
+        /// </summary>
+        public static string games_pick_sn {
+            get {
+                return ResourceManager.GetString("games_pick_sn", resourceCulture);
             }
         }
         
@@ -3019,6 +3171,60 @@ namespace NadekoBot.Resources {
         public static string games_planted {
             get {
                 return ResourceManager.GetString("games_planted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Poll is already running on this server..
+        /// </summary>
+        public static string games_poll_already_running {
+            get {
+                return ResourceManager.GetString("games_poll_already_running", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to 📃 {0} has created a poll which requires your attention:.
+        /// </summary>
+        public static string games_poll_created {
+            get {
+                return ResourceManager.GetString("games_poll_created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to `{0}.` {1} with {2} votes..
+        /// </summary>
+        public static string games_poll_result {
+            get {
+                return ResourceManager.GetString("games_poll_result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Private Message me with the corresponding number of the answer..
+        /// </summary>
+        public static string games_poll_vote_private {
+            get {
+                return ResourceManager.GetString("games_poll_vote_private", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Send a Message here with the corresponding number of the answer..
+        /// </summary>
+        public static string games_poll_vote_public {
+            get {
+                return ResourceManager.GetString("games_poll_vote_public", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to {0} voted..
+        /// </summary>
+        public static string games_poll_voted {
+            get {
+                return ResourceManager.GetString("games_poll_voted", resourceCulture);
             }
         }
         
@@ -3050,11 +3256,20 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Submissions Closed.
+        ///    Looks up a localized string similar to Submissions closed.
         /// </summary>
         public static string games_submissions_closed {
             get {
                 return ResourceManager.GetString("games_submissions_closed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Thank you for voting, {0}.
+        /// </summary>
+        public static string games_thanks_for_voting {
+            get {
+                return ResourceManager.GetString("games_thanks_for_voting", resourceCulture);
             }
         }
         
@@ -3167,7 +3382,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to {0} has Won!.
+        ///    Looks up a localized string similar to {0} has won!.
         /// </summary>
         public static string games_ttt_has_won {
             get {
@@ -3176,7 +3391,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Matched Three.
+        ///    Looks up a localized string similar to Matched three.
         /// </summary>
         public static string games_ttt_matched_three {
             get {
@@ -3194,7 +3409,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Time Expired!.
+        ///    Looks up a localized string similar to Time expired!.
         /// </summary>
         public static string games_ttt_time_expired {
             get {
@@ -3221,6 +3436,15 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to {0} total votes cast..
+        /// </summary>
+        public static string games_x_votes_cast {
+            get {
+                return ResourceManager.GetString("games_x_votes_cast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Back to ToC.
         /// </summary>
         public static string help_back_to_toc {
@@ -3230,7 +3454,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Bot Owner Only.
+        ///    Looks up a localized string similar to Bot owner only.
         /// </summary>
         public static string help_bot_owner_only {
             get {
@@ -3248,7 +3472,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Command and aliases.
+        ///    Looks up a localized string similar to Commands and aliases.
         /// </summary>
         public static string help_cmd_and_alias {
             get {
@@ -3275,7 +3499,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Commandlist Regenerated..
+        ///    Looks up a localized string similar to Commandlist regenerated..
         /// </summary>
         public static string help_commandlist_regen {
             get {
@@ -3316,8 +3540,8 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to **List of Commands**: &lt;{0}&gt;
-        ///**Hosting Guides and docs can be found here**: &lt;{1}&gt;.
+        ///    Looks up a localized string similar to **List of commands**: &lt;{0}&gt;
+        ///**Hosting guides and docs can be found here**: &lt;{1}&gt;.
         /// </summary>
         public static string help_guide {
             get {
@@ -3326,7 +3550,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List Of Commands.
+        ///    Looks up a localized string similar to List of commands.
         /// </summary>
         public static string help_list_of_commands {
             get {
@@ -3335,7 +3559,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List Of Modules.
+        ///    Looks up a localized string similar to List of modules.
         /// </summary>
         public static string help_list_of_modules {
             get {
@@ -3371,7 +3595,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Table Of Contents.
+        ///    Looks up a localized string similar to Table of contents.
         /// </summary>
         public static string help_table_of_contents {
             get {
@@ -3443,7 +3667,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Finished Song.
+        ///    Looks up a localized string similar to Finished song.
         /// </summary>
         public static string music_finished_song {
             get {
@@ -3569,7 +3793,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Now Playing.
+        ///    Looks up a localized string similar to Now playing.
         /// </summary>
         public static string music_now_playing {
             get {
@@ -3596,7 +3820,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Player Queue - Page {0}/{1}.
+        ///    Looks up a localized string similar to Player queue - Page {0}/{1}.
         /// </summary>
         public static string music_player_queue {
             get {
@@ -3605,7 +3829,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Playing Song.
+        ///    Looks up a localized string similar to Playing song.
         /// </summary>
         public static string music_playing_song {
             get {
@@ -3650,7 +3874,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Playlist Saved.
+        ///    Looks up a localized string similar to Playlist saved.
         /// </summary>
         public static string music_playlist_saved {
             get {
@@ -3668,7 +3892,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Page {0} of Saved Playlists.
+        ///    Looks up a localized string similar to Page {0} of saved playlists.
         /// </summary>
         public static string music_playlists_page {
             get {
@@ -3704,7 +3928,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Queued Song.
+        ///    Looks up a localized string similar to Queued song.
         /// </summary>
         public static string music_queued_song {
             get {
@@ -3722,7 +3946,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Repeating Current Song.
+        ///    Looks up a localized string similar to Repeating current song.
         /// </summary>
         public static string music_repeating_cur_song {
             get {
@@ -3731,7 +3955,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Repeating Playlist.
+        ///    Looks up a localized string similar to Repeating playlist.
         /// </summary>
         public static string music_repeating_playlist {
             get {
@@ -3740,7 +3964,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Repeating Track.
+        ///    Looks up a localized string similar to Repeating track.
         /// </summary>
         public static string music_repeating_track {
             get {
@@ -3803,7 +4027,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Song Moved.
+        ///    Looks up a localized string similar to Song moved.
         /// </summary>
         public static string music_song_moved {
             get {
@@ -3812,7 +4036,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Songs shuffled..
+        ///    Looks up a localized string similar to Songs shuffled.
         /// </summary>
         public static string music_songs_shuffled {
             get {
@@ -3903,7 +4127,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Disabled usage of ALL MODULES on {0} channel..
+        ///    Looks up a localized string similar to Disabled usage of ALL MODULES on channel {0}..
         /// </summary>
         public static string permissions_acm_disable {
             get {
@@ -3912,7 +4136,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Enabled usage of ALL MODULES on {0} channel..
+        ///    Looks up a localized string similar to Enabled usage of ALL MODULES on channel {0}..
         /// </summary>
         public static string permissions_acm_enable {
             get {
@@ -3930,7 +4154,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Disabled usage of ALL MODULES for {0} role..
+        ///    Looks up a localized string similar to Disabled usage of ALL MODULES for role {0}..
         /// </summary>
         public static string permissions_arm_disable {
             get {
@@ -3939,7 +4163,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Enabled usage of ALL MODULES for {0} role..
+        ///    Looks up a localized string similar to Enabled usage of ALL MODULES for role {0}..
         /// </summary>
         public static string permissions_arm_enable {
             get {
@@ -3966,7 +4190,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Disabled usage of ALL MODULES for {0} user..
+        ///    Looks up a localized string similar to Disabled usage of ALL MODULES for user {0}..
         /// </summary>
         public static string permissions_aum_disable {
             get {
@@ -3975,7 +4199,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Enabled usage of ALL MODULES for {0} user..
+        ///    Looks up a localized string similar to Enabled usage of ALL MODULES for user {0}..
         /// </summary>
         public static string permissions_aum_enable {
             get {
@@ -4002,7 +4226,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Command {0} has no coooldown now and all existing cooldowns have been cleared..
+        ///    Looks up a localized string similar to Command {0} has no cooldown now and all existing cooldowns have been cleared..
         /// </summary>
         public static string permissions_cmdcd_cleared {
             get {
@@ -4020,7 +4244,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Command Costs.
+        ///    Looks up a localized string similar to Command costs.
         /// </summary>
         public static string permissions_command_costs {
             get {
@@ -4029,7 +4253,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Disabled usage of {0} {1} on {2} channel..
+        ///    Looks up a localized string similar to Disabled usage of {0} {1} on channel {2}..
         /// </summary>
         public static string permissions_cx_disable {
             get {
@@ -4038,7 +4262,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Enabled usage of {0} {1} on {2} channel..
+        ///    Looks up a localized string similar to Enabled usage of {0} {1} on channel {2}..
         /// </summary>
         public static string permissions_cx_enable {
             get {
@@ -4065,7 +4289,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List Of Filtered Words.
+        ///    Looks up a localized string similar to List of filtered words.
         /// </summary>
         public static string permissions_filter_word_list {
             get {
@@ -4659,7 +4883,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Competitive Loses.
+        ///    Looks up a localized string similar to Competitive losses.
         /// </summary>
         public static string searches_compet_loses {
             get {
@@ -4668,7 +4892,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Competitive Played.
+        ///    Looks up a localized string similar to Competitive played.
         /// </summary>
         public static string searches_compet_played {
             get {
@@ -4677,7 +4901,16 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Competitive Rank.
+        ///    Looks up a localized string similar to Competitive playtime.
+        /// </summary>
+        public static string searches_compet_playtime {
+            get {
+                return ResourceManager.GetString("searches_compet_playtime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Competitive rank.
         /// </summary>
         public static string searches_compet_rank {
             get {
@@ -4839,7 +5072,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Image Search For:.
+        ///    Looks up a localized string similar to Image search for:.
         /// </summary>
         public static string searches_image_search_for {
             get {
@@ -4965,7 +5198,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to On-Hold.
+        ///    Looks up a localized string similar to On-hold.
         /// </summary>
         public static string searches_on_hold {
             get {
@@ -4974,7 +5207,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Original Url.
+        ///    Looks up a localized string similar to Original url.
         /// </summary>
         public static string searches_original_url {
             get {
@@ -5055,7 +5288,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Profile Link:.
+        ///    Looks up a localized string similar to Profile link:.
         /// </summary>
         public static string searches_profile_link {
             get {
@@ -5073,7 +5306,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Quick Playtime.
+        ///    Looks up a localized string similar to Quick playtime.
         /// </summary>
         public static string searches_quick_playtime {
             get {
@@ -5082,7 +5315,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Quick Wins.
+        ///    Looks up a localized string similar to Quick wins.
         /// </summary>
         public static string searches_quick_wins {
             get {
@@ -5109,7 +5342,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Search For:.
+        ///    Looks up a localized string similar to Search for:.
         /// </summary>
         public static string searches_search_for {
             get {
@@ -5118,7 +5351,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Short Url.
+        ///    Looks up a localized string similar to Short url.
         /// </summary>
         public static string searches_short_url {
             get {
@@ -5163,7 +5396,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Store Url.
+        ///    Looks up a localized string similar to Store url.
         /// </summary>
         public static string searches_store_url {
             get {
@@ -5370,7 +5603,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Wind Speed.
+        ///    Looks up a localized string similar to Wind speed.
         /// </summary>
         public static string searches_wind_speed {
             get {
@@ -5415,7 +5648,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Activity Page #{0}.
+        ///    Looks up a localized string similar to Activity page #{0}.
         /// </summary>
         public static string utility_activity_page {
             get {
@@ -5429,6 +5662,51 @@ namespace NadekoBot.Resources {
         public static string utility_activity_users_total {
             get {
                 return ResourceManager.GetString("utility_activity_users_total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Typing {0} will now be an alias of {1}..
+        /// </summary>
+        public static string utility_alias_added {
+            get {
+                return ResourceManager.GetString("utility_alias_added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to List of aliases.
+        /// </summary>
+        public static string utility_alias_list {
+            get {
+                return ResourceManager.GetString("utility_alias_list", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Trigger {0} didn&apos;t have an alias..
+        /// </summary>
+        public static string utility_alias_remove_fail {
+            get {
+                return ResourceManager.GetString("utility_alias_remove_fail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Trigger {0} no longer has an alias..
+        /// </summary>
+        public static string utility_alias_removed {
+            get {
+                return ResourceManager.GetString("utility_alias_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to No alias found.
+        /// </summary>
+        public static string utility_aliases_none {
+            get {
+                return ResourceManager.GetString("utility_aliases_none", resourceCulture);
             }
         }
         
@@ -5460,7 +5738,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Channel Topic.
+        ///    Looks up a localized string similar to Channel topic.
         /// </summary>
         public static string utility_channel_topic {
             get {
@@ -5478,7 +5756,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Commands Ran.
+        ///    Looks up a localized string similar to Commands ran.
         /// </summary>
         public static string utility_commands_ran {
             get {
@@ -5523,7 +5801,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Created At.
+        ///    Looks up a localized string similar to Created at.
         /// </summary>
         public static string utility_created_at {
             get {
@@ -5559,7 +5837,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Custom Emojis.
+        ///    Looks up a localized string similar to Custom emojis.
         /// </summary>
         public static string utility_custom_emojis {
             get {
@@ -5604,7 +5882,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Here is a list of users in those roles:.
+        ///    Looks up a localized string similar to List of users in {0} role.
         /// </summary>
         public static string utility_inrole_list {
             get {
@@ -5613,7 +5891,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to you are not allowed to use this command on roles with a lot of users in them to prevent abuse..
+        ///    Looks up a localized string similar to You are not allowed to use this command on roles with a lot of users in them to prevent abuse..
         /// </summary>
         public static string utility_inrole_not_allowed {
             get {
@@ -5640,7 +5918,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Joined Server.
+        ///    Looks up a localized string similar to Joined server.
         /// </summary>
         public static string utility_joined_server {
             get {
@@ -5649,7 +5927,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List of Repeaters.
+        ///    Looks up a localized string similar to List of repeater.
         /// </summary>
         public static string utility_list_of_repeaters {
             get {
@@ -5660,7 +5938,7 @@ namespace NadekoBot.Resources {
         /// <summary>
         ///    Looks up a localized string similar to ID: {0}
         ///Members: {1}
-        ///OwnerID: {2}.
+        ///Owner ID: {2}.
         /// </summary>
         public static string utility_listservers {
             get {
@@ -5696,7 +5974,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Message Repeater.
+        ///    Looks up a localized string similar to Message repeater.
         /// </summary>
         public static string utility_message_repeater {
             get {
@@ -5824,7 +6102,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Deleted a random quote..
+        ///    Looks up a localized string similar to Quote #{0} deleted..
         /// </summary>
         public static string utility_quote_deleted {
             get {
@@ -5878,7 +6156,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Registered On.
+        ///    Looks up a localized string similar to Registered on.
         /// </summary>
         public static string utility_registered_on {
             get {
@@ -5941,7 +6219,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to List Of Repeaters.
+        ///    Looks up a localized string similar to List of repeaters.
         /// </summary>
         public static string utility_repeaters_list {
             get {
@@ -6022,7 +6300,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Server Info.
+        ///    Looks up a localized string similar to Server info.
         /// </summary>
         public static string utility_server_info {
             get {
@@ -6049,7 +6327,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Shard Stats.
+        ///    Looks up a localized string similar to Shard stats.
         /// </summary>
         public static string utility_shard_stats {
             get {
@@ -6094,7 +6372,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Text Channels.
+        ///    Looks up a localized string similar to Text channels.
         /// </summary>
         public static string utility_text_channels {
             get {
@@ -6139,7 +6417,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Voice Channels.
+        ///    Looks up a localized string similar to Voice channels.
         /// </summary>
         public static string utility_voice_channels {
             get {

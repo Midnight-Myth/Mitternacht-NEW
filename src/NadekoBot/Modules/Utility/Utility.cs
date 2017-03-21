@@ -22,7 +22,7 @@ namespace NadekoBot.Modules.Utility
     [NadekoModule("Utility", ".")]
     public partial class Utility : NadekoTopLevelModule
     {
-        private static ConcurrentDictionary<ulong, Timer> rotatingRoleColors = new ConcurrentDictionary<ulong, Timer>();
+        private static ConcurrentDictionary<ulong, Timer> _rotatingRoleColors = new ConcurrentDictionary<ulong, Timer>();
 
         //[NadekoCommand, Usage, Description, Aliases]
         //[RequireContext(ContextType.Guild)]
@@ -114,7 +114,7 @@ namespace NadekoBot.Modules.Utility
             Timer t;
             if (timeout == 0 || hexes.Length == 0)
             {
-                if (rotatingRoleColors.TryRemove(role.Id, out t))
+                if (_rotatingRoleColors.TryRemove(role.Id, out t))
                 {
                     t.Change(Timeout.Infinite, Timeout.Infinite);
                     await ReplyConfirmLocalized("rrc_stop", Format.Bold(role.Name)).ConfigureAwait(false);
@@ -157,7 +157,7 @@ namespace NadekoBot.Modules.Utility
                 catch { }
             }, null, 0, timeout * 1000);
 
-            rotatingRoleColors.AddOrUpdate(role.Id, t, (key, old) =>
+            _rotatingRoleColors.AddOrUpdate(role.Id, t, (key, old) =>
             {
                 old.Change(Timeout.Infinite, Timeout.Infinite);
                 return t;
@@ -217,33 +217,18 @@ namespace NadekoBot.Modules.Utility
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task InRole(params IRole[] roles)
+        public async Task InRole([Remainder] IRole role)
         {
-            if (roles.Length == 0)
-                return;
-            var send = "ℹ️ " + Format.Bold(GetText("inrole_list"));
+            var rng = new NadekoRandom();
             var usrs = (await Context.Guild.GetUsersAsync()).ToArray();
-            foreach (var role in roles.Where(r => r.Id != Context.Guild.Id))
-            {
-                send += $"```css\n[{role.Name}]\n";
-                send += string.Join(", ", usrs.Where(u => u.RoleIds.Contains(role.Id)).Select(u => u.ToString()));
-                send += "\n```";
-            }
-            var usr = (IGuildUser)Context.User;
-            while (send.Length > 2000)
-            {
-                if (!usr.GetPermissions((ITextChannel)Context.Channel).ManageMessages)
-                {
-                    await ReplyErrorLocalized("inrole_not_allowed").ConfigureAwait(false);
-                    return;
-                }
-                var curstr = send.Substring(0, 2000);
-                await Context.Channel.SendConfirmAsync(curstr.Substring(0,
-                        curstr.LastIndexOf(", ", StringComparison.Ordinal) + 1)).ConfigureAwait(false);
-                send = curstr.Substring(curstr.LastIndexOf(", ", StringComparison.Ordinal) + 1) +
-                       send.Substring(2000);
-            }
-            await Context.Channel.SendConfirmAsync(send).ConfigureAwait(false);
+            var roleUsers = usrs.Where(u => u.RoleIds.Contains(role.Id)).Select(u => u.ToString())
+                .ToArray();
+            var embed = new EmbedBuilder().WithOkColor()
+                .WithTitle("ℹ️ " + Format.Bold(GetText("inrole_list", Format.Bold(role.Name))) + $" - {roleUsers.Length}")
+                .WithDescription(string.Join(", ", roleUsers
+                    .OrderBy(x => rng.Next())
+                    .Take(50)));
+            await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -481,7 +466,31 @@ namespace NadekoBot.Modules.Utility
 
             var title = $"Chatlog-{Context.Guild.Name}/#{Context.Channel.Name}-{DateTime.Now}.txt";
             var grouping = msgs.GroupBy(x => $"{x.CreatedAt.Date:dd.MM.yyyy}")
-                .Select(g => new { date = g.Key, messages = g.OrderBy(x => x.CreatedAt).Select(s => $"【{s.Timestamp:HH:mm:ss}】{s.Author}:" + s.ToString()) });
+                .Select(g => new
+                {
+                    date = g.Key,
+                    messages = g.OrderBy(x => x.CreatedAt).Select(s =>
+                    {
+                        var msg = $"【{s.Timestamp:HH:mm:ss}】{s.Author}:";
+                        if (string.IsNullOrWhiteSpace(s.ToString()))
+                        {
+                            if (s.Attachments.Any())
+                            {
+                                msg += "FILES_UPLOADED: " + string.Join("\n", s.Attachments.Select(x => x.Url));
+                            }
+                            else if (s.Embeds.Any())
+                            {
+                                //todo probably just go through all properties and check if they are set, if they are, add them
+                                msg += "EMBEDS: " + string.Join("\n--------\n", s.Embeds.Select(x => $"Description: {x.Description}"));
+                            }
+                        }
+                        else
+                        {
+                            msg += s.ToString();
+                        }
+                        return msg;
+                    })
+                });
             await Context.User.SendFileAsync(
                 await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
         }

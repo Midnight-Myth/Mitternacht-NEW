@@ -244,19 +244,26 @@ namespace NadekoBot.Modules.Gambling
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Leaderboard()
+        public async Task Leaderboard(int page = 1)
         {
             List<Currency> richest;
             using (var uow = DbHandler.UnitOfWork())
             {
-                richest = uow.Currency.GetTopRichest(9).ToList();
+                richest = uow.Currency.GetTopRichest(9, 9 * (page - 1)).ToList();
             }
-            if (!richest.Any())
-                return;
 
             var embed = new EmbedBuilder()
                 .WithOkColor()
-                .WithTitle(NadekoBot.BotConfig.CurrencySign + " " + GetText("leaderboard"));
+                .WithTitle(NadekoBot.BotConfig.CurrencySign +
+                           " " + GetText("leaderboard"))
+                .WithFooter(efb => efb.WithText(GetText("page", page)));
+
+            if (!richest.Any())
+            {
+                embed.WithDescription(GetText("no_users_found"));
+                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+                return;
+            }
 
             for (var i = 0; i < richest.Count; i++)
             {
@@ -267,7 +274,7 @@ namespace NadekoBot.Modules.Gambling
                     : usr.Username?.TrimTo(20, true);
 
                 var j = i;
-                embed.AddField(efb => efb.WithName("#" + (j + 1) + " " + usrStr)
+                embed.AddField(efb => efb.WithName("#" + (9 * (page - 1) + j + 1) + " " + usrStr)
                                          .WithValue(x.Amount.ToString() + " " + NadekoBot.BotConfig.CurrencySign)
                                          .WithIsInline(true));
             }

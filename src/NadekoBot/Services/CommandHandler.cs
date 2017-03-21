@@ -16,6 +16,7 @@ using NadekoBot.Modules.CustomReactions;
 using NadekoBot.Modules.Games;
 using System.Collections.Concurrent;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
 using NadekoBot.DataStructures;
 
 namespace NadekoBot.Services
@@ -28,11 +29,7 @@ namespace NadekoBot.Services
     }
     public class CommandHandler
     {
-#if GLOBAL_NADEKO
-        public const int GlobalCommandsCooldown = 1500;
-#else
         public const int GlobalCommandsCooldown = 750;
-#endif
 
         private readonly DiscordShardedClient _client;
         private readonly CommandService _commandService;
@@ -273,13 +270,76 @@ namespace NadekoBot.Services
 
                     // maybe this message is a custom reaction
                     // todo log custom reaction executions. return struct with info
-                    var crExecuted = await Task.Run(() => CustomReactions.TryExecuteCustomReaction(usrMsg)).ConfigureAwait(false);
-                    if (crExecuted) //if it was, don't execute the command
+                    var cr = await Task.Run(() => CustomReactions.TryGetCustomReaction(usrMsg)).ConfigureAwait(false);
+                    if (cr != null) //if it was, don't execute the command
+                    {
+                        try
+                        {
+                            if (guild != null)
+                            {
+                                PermissionCache pc;
+                                if (!Permissions.Cache.TryGetValue(guild.Id, out pc))
+                                {
+                                    using (var uow = DbHandler.UnitOfWork())
+                                    {
+                                        var config = uow.GuildConfigs.For(guild.Id,
+                                            set => set.Include(x => x.Permissions));
+                                        Permissions.UpdateCache(config);
+                                    }
+                                    Permissions.Cache.TryGetValue(guild.Id, out pc);
+                                    if (pc == null)
+                                        throw new Exception("Cache is null.");
+                                }
+                                int index;
+                                if (
+                                    !pc.Permissions.CheckPermissions(usrMsg, cr.Trigger, "ActualCustomReactions",
+                                        out index))
+                                {
+                                    //todo print in guild actually
+                                    var returnMsg =
+                                        $"Permission number #{index + 1} **{pc.Permissions[index].GetCommand(guild)}** is preventing this action.";
+                                    _log.Info(returnMsg);
+                                    return;
+                                }
+                            }
+                            await cr.Send(usrMsg).ConfigureAwait(false);
+
+                            if (cr.AutoDeleteTrigger)
+                            {
+                                try { await msg.DeleteAsync().ConfigureAwait(false); } catch { }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.Warn("Sending CREmbed failed");
+                            _log.Warn(ex);
+                        }
                         return;
+                    }
 
                     var exec3 = Environment.TickCount - execTime;
 
                     string messageContent = usrMsg.Content;
+                    if (guild != null)
+                    {
+                        ConcurrentDictionary<string, string> maps;
+                        if (Modules.Utility.Utility.CommandMapCommands.AliasMaps.TryGetValue(guild.Id, out maps))
+                        {
+                            string newMessageContent;
+                            if (maps.TryGetValue(messageContent.Trim().ToLowerInvariant(), out newMessageContent))
+                            {
+                                _log.Info(@"--Mapping Command--
+    GuildId: {0}
+    Trigger: {1}
+    Mapping: {2}", guild.Id, messageContent, newMessageContent);
+                                var oldMessageContent = messageContent;
+                                messageContent = newMessageContent;
+
+                                try { await usrMsg.Channel.SendConfirmAsync($"{oldMessageContent} => {newMessageContent}").ConfigureAwait(false); } catch { }
+                            }
+                        }
+                    }
+                    
 
                     // execute the command and measure the time it took
                     var exec = await Task.Run(() => ExecuteCommand(new CommandContext(_client, usrMsg), messageContent, DependencyMap.Empty, MultiMatchHandling.Best)).ConfigureAwait(false);
@@ -378,28 +438,27 @@ namespace NadekoBot.Services
                 }
 
                 var cmd = commands[i].Command;
-                bool resetCommand = cmd.Name == "resetperms";
+                var resetCommand = cmd.Name == "resetperms";
                 var module = cmd.Module.GetTopLevelModule();
                 PermissionCache pc;
                 if (context.Guild != null)
                 {
-                    pc = Permissions.Cache.GetOrAdd(context.Guild.Id, (id) =>
+                    //todo move to permissions module?
+                    if (!Permissions.Cache.TryGetValue(context.Guild.Id, out pc))
                     {
                         using (var uow = DbHandler.UnitOfWork())
                         {
-                            var config = uow.GuildConfigs.PermissionsFor(context.Guild.Id);
-                            return new PermissionCache()
-                            {
-                                Verbose = config.VerbosePermissions,
-                                RootPermission = config.RootPermission,
-                                PermRole = config.PermissionRole.Trim().ToLowerInvariant(),
-                            };
+                            var config = uow.GuildConfigs.GcWithPermissionsv2For(context.Guild.Id);
+                            Permissions.UpdateCache(config);
                         }
-                    });
+                        Permissions.Cache.TryGetValue(context.Guild.Id, out pc);
+                        if(pc == null)
+                            throw new Exception("Cache is null.");
+                    }
                     int index;
-                    if (!resetCommand && !pc.RootPermission.AsEnumerable().CheckPermissions(context.Message, cmd.Aliases.First(), module.Name, out index))
+                    if (!resetCommand && !pc.Permissions.CheckPermissions(context.Message, cmd.Aliases.First(), module.Name, out index))
                     {
-                        var returnMsg = $"Permission number #{index + 1} **{pc.RootPermission.GetAt(index).GetCommand((SocketGuild)context.Guild)}** is preventing this action.";
+                        var returnMsg = $"Permission number #{index + 1} **{pc.Permissions[index].GetCommand((SocketGuild)context.Guild)}** is preventing this action.";
                         return new ExecuteCommandResult(cmd, pc, SearchResult.FromError(CommandError.Exception, returnMsg));
                     }
 

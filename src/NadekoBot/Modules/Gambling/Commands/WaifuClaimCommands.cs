@@ -395,7 +395,7 @@ namespace NadekoBot.Modules.Gambling
                     target = Context.User;
                 WaifuInfo w;
                 IList<WaifuInfo> claims;
-                int divorces = 0;
+                int divorces;
                 using (var uow = DbHandler.UnitOfWork())
                 {
                     w = uow.Waifus.ByWaifuUserId(target.Id);
@@ -434,7 +434,7 @@ namespace NadekoBot.Modules.Gambling
                     .AddField(efb => efb.WithName(GetText("likes")).WithValue(w.Affinity?.ToString() ?? nobody).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("changes_of_heart")).WithValue($"{affInfo.Count} - \"the {affInfo.Title}\"").WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("divorces")).WithValue(divorces.ToString()).WithIsInline(true))
-                    .AddField(efb => efb.WithName($"Waifus ({claims.Count})").WithValue(claims.Count == 0 ? nobody : string.Join("\n", claims.OrderBy(x => rng.Next()).Take(40).Select(x => x.Waifu))).WithIsInline(true));
+                    .AddField(efb => efb.WithName($"Waifus ({claims.Count})").WithValue(claims.Count == 0 ? nobody : string.Join("\n", claims.OrderBy(x => rng.Next()).Take(30).Select(x => x.Waifu))).WithIsInline(true));
 
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
@@ -494,7 +494,10 @@ namespace NadekoBot.Modules.Gambling
                 int count;
                 using (var uow = DbHandler.UnitOfWork())
                 {
-                    count = uow._context.WaifuUpdates.Count(w => w.User.UserId == userId && w.UpdateType == WaifuUpdateType.AffinityChanged);
+                    count = uow._context.WaifuUpdates
+                        .Where(w => w.User.UserId == userId && w.UpdateType == WaifuUpdateType.AffinityChanged && w.New != null)
+                        .GroupBy(x => x.New)
+                        .Count();
                 }
 
                 AffinityTitles title;

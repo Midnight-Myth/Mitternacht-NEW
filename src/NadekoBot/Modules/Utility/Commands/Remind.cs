@@ -64,7 +64,10 @@ namespace NadekoBot.Modules.Utility
                     IMessageChannel ch;
                     if (r.IsPrivate)
                     {
-                        ch = await NadekoBot.Client.GetDMChannelAsync(r.ChannelId).ConfigureAwait(false);
+                        var user = NadekoBot.Client.GetGuild(r.ServerId).GetUser(r.ChannelId);
+                        if(user == null)
+                            return;
+                        ch = await user.CreateDMChannelAsync().ConfigureAwait(false);
                     }
                     else
                     {
@@ -100,25 +103,20 @@ namespace NadekoBot.Modules.Utility
             [Priority(1)]
             public async Task Remind(MeOrHere meorhere, string timeStr, [Remainder] string message)
             {
-                IMessageChannel target;
-                if (meorhere == MeOrHere.Me)
-                {
-                    target = await ((IGuildUser)Context.User).CreateDMChannelAsync().ConfigureAwait(false);
-                }
-                else
-                {
-                    target = Context.Channel;
-                }
-                await Remind(target, timeStr, message).ConfigureAwait(false);
+                ulong target;
+                target = meorhere == MeOrHere.Me ? Context.User.Id : Context.Channel.Id;
+                await RemindInternal(target, meorhere == MeOrHere.Me, timeStr, message).ConfigureAwait(false);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.ManageMessages)]
             [Priority(0)]
-            public async Task Remind(IMessageChannel ch, string timeStr, [Remainder] string message)
-            {
-                var channel = (ITextChannel)Context.Channel;
+            public Task Remind(ITextChannel channel, string timeStr, [Remainder] string message) =>
+                RemindInternal(channel.Id, false, timeStr, message);
 
+            public async Task RemindInternal(ulong targetId, bool isPrivate, string timeStr, [Remainder] string message)
+            {
                 var m = _regex.Match(timeStr);
 
                 if (m.Length == 0)
@@ -148,7 +146,7 @@ namespace NadekoBot.Modules.Utility
                         (groupName == "hours" && value > 23) ||
                         (groupName == "minutes" && value > 59))
                     {
-                        await channel.SendErrorAsync($"Invalid {groupName} value.").ConfigureAwait(false);
+                        await Context.Channel.SendErrorAsync($"Invalid {groupName} value.").ConfigureAwait(false);
                         return;
                     }
                     namesAndValues[groupName] = value;
@@ -163,12 +161,12 @@ namespace NadekoBot.Modules.Utility
 
                 var rem = new Reminder
                 {
-                    ChannelId = ch.Id,
-                    IsPrivate = ch is IDMChannel,
+                    ChannelId = targetId,
+                    IsPrivate = isPrivate,
                     When = time,
                     Message = message,
                     UserId = Context.User.Id,
-                    ServerId = channel.Guild.Id
+                    ServerId = Context.Guild.Id
                 };
 
                 using (var uow = DbHandler.UnitOfWork())
@@ -179,9 +177,9 @@ namespace NadekoBot.Modules.Utility
 
                 try
                 {
-                    await channel.SendConfirmAsync(
+                    await Context.Channel.SendConfirmAsync(
                         "⏰ " + GetText("remind",
-                            Format.Bold(ch is ITextChannel ? ((ITextChannel) ch).Name : Context.User.Username),
+                            Format.Bold(!isPrivate ? $"<#{targetId}>" : Context.User.Username),
                             Format.Bold(message.SanitizeMentions()),
                             Format.Bold(output),
                             time, time)).ConfigureAwait(false);

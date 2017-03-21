@@ -347,10 +347,8 @@ namespace NadekoBot.Modules.Music
                 return;
             }
             var count = ids.Count();
-
-            var msg = await Context.Channel.SendMessageAsync(GetText("attempting_to_queue", 
-                Format.Bold(count.ToString())))
-                    .ConfigureAwait(false);
+            var msg = await Context.Channel.SendMessageAsync("🎵 " + GetText("attempting_to_queue",
+                Format.Bold(count.ToString()))).ConfigureAwait(false);
 
             var cancelSource = new CancellationTokenSource();
 
@@ -374,7 +372,7 @@ namespace NadekoBot.Modules.Music
                 ids = ids.Skip(5);
             }
 
-            await msg.ModifyAsync(m => m.Content = GetText("playlist_queue_complete")).ConfigureAwait(false);
+            await msg.ModifyAsync(m => m.Content = "✅ " + Format.Bold(GetText("playlist_queue_complete"))).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -722,7 +720,7 @@ namespace NadekoBot.Modules.Music
             var embed = new EmbedBuilder()
                 .WithAuthor(eab => eab.WithName(GetText("playlists_page", num)).WithMusicIcon())
                 .WithDescription(string.Join("\n", playlists.Select(r =>
-                    GetText("playlists", "#" + r.Id, r.Name, r.Author, r.Songs.Count))))
+                    GetText("playlists", r.Id, r.Name, r.Author, r.Songs.Count))))
                 .WithOkColor();
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 
