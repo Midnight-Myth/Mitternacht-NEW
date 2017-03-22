@@ -1,6 +1,5 @@
 using Discord;
 using Discord.Commands;
-using ImageSharp;
 using NadekoBot.Attributes;
 using NadekoBot.Extensions;
 using NadekoBot.Services;
@@ -10,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ImageSharp.Formats;
 using Image = ImageSharp.Image;
 
 namespace NadekoBot.Modules.Gambling
@@ -62,7 +60,7 @@ namespace NadekoBot.Modules.Gambling
 
             [NadekoCommand, Usage, Description, Aliases]
             [Priority(0)]
-            public async Task Rolluo(int num)
+            public async Task Rolluo(int num = 1)
             {
                 await InternalRoll(num, false).ConfigureAwait(false);
             }
