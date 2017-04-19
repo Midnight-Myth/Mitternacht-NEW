@@ -28,7 +28,7 @@ namespace NadekoBot.Modules.CustomReactions
             {
                 return await channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText ?? "");
             }
-            return await channel.SendMessageAsync(cr.ResponseWithContext(context));
+            return await channel.SendMessageAsync(cr.ResponseWithContext(context).SanitizeMentions());
         }
     }
 
@@ -59,7 +59,7 @@ namespace NadekoBot.Modules.CustomReactions
 
         public void ClearStats() => ReactionStats.Clear();
 
-        public static CustomReaction TryGetCustomReaction(SocketUserMessage umsg)
+        public static CustomReaction TryGetCustomReaction(IUserMessage umsg)
         {
             var channel = umsg.Channel as SocketTextChannel;
             if (channel == null)

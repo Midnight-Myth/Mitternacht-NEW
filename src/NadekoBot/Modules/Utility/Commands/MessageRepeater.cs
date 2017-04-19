@@ -36,6 +36,7 @@ namespace NadekoBot.Modules.Utility
                 public Repeater Repeater { get; }
                 public SocketGuild Guild { get; }
                 public ITextChannel Channel { get; private set; }
+                private IUserMessage oldMsg = null;
 
                 public RepeatRunner(Repeater repeater, ITextChannel channel = null)
                 {
@@ -48,58 +49,61 @@ namespace NadekoBot.Modules.Utility
                         Task.Run(Run);
                 }
 
-
                 private async Task Run()
                 {
                     source = new CancellationTokenSource();
                     token = source.Token;
-                    IUserMessage oldMsg = null;
                     try
                     {
                         while (!token.IsCancellationRequested)
                         {
-                            var toSend = "🔄 " + Repeater.Message;
                             await Task.Delay(Repeater.Interval, token).ConfigureAwait(false);
 
-                            //var lastMsgInChannel = (await Channel.GetMessagesAsync(2)).FirstOrDefault();
-                            // if (lastMsgInChannel.Id == oldMsg?.Id) //don't send if it's the same message in the channel
-                            //     continue;
-
-                            if (oldMsg != null)
-                                try
-                                {
-                                    await oldMsg.DeleteAsync();
-                                }
-                                catch
-                                {
-                                    // ignored
-                                }
-                            try
-                            {
-                                if (Channel == null)
-                                    Channel = Guild.GetTextChannel(Repeater.ChannelId);
-
-                                if (Channel != null)
-                                    oldMsg = await Channel.SendMessageAsync(toSend).ConfigureAwait(false);
-                            }
-                            catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.Forbidden)
-                            {
-                                _log.Warn("Missing permissions. Repeater stopped. ChannelId : {0}", Channel?.Id);
-                                return;
-                            }
-                            catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.NotFound)
-                            {
-                                _log.Warn("Channel not found. Repeater stopped. ChannelId : {0}", Channel?.Id);
-                                return;
-                            }
-                            catch (Exception ex)
-                            {
-                                _log.Warn(ex);
-                            }
+                            await Trigger().ConfigureAwait(false);
                         }
                     }
                     catch (OperationCanceledException)
                     {
+                    }
+                }
+
+                public async Task Trigger()
+                {
+                    var toSend = "🔄 " + Repeater.Message;
+                    //var lastMsgInChannel = (await Channel.GetMessagesAsync(2)).FirstOrDefault();
+                    // if (lastMsgInChannel.Id == oldMsg?.Id) //don't send if it's the same message in the channel
+                    //     continue;
+
+                    if (oldMsg != null)
+                        try
+                        {
+                            await oldMsg.DeleteAsync();
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    try
+                    {
+                        if (Channel == null)
+                            Channel = Guild.GetTextChannel(Repeater.ChannelId);
+
+                        if (Channel != null)
+                            oldMsg = await Channel.SendMessageAsync(toSend.SanitizeMentions()).ConfigureAwait(false);
+                    }
+                    catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.Forbidden)
+                    {
+                        _log.Warn("Missing permissions. Repeater stopped. ChannelId : {0}", Channel?.Id);
+                        return;
+                    }
+                    catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        _log.Warn("Channel not found. Repeater stopped. ChannelId : {0}", Channel?.Id);
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Warn(ex);
                     }
                 }
 
@@ -124,7 +128,12 @@ namespace NadekoBot.Modules.Utility
             {
                 var _ = Task.Run(async () =>
                 {
+#if !GLOBAL_NADEKO
                     await Task.Delay(5000).ConfigureAwait(false);
+#else
+                    await Task.Delay(30000).ConfigureAwait(false);
+#endif
+                    //todo this is pretty terrible
                     Repeaters = new ConcurrentDictionary<ulong, ConcurrentQueue<RepeatRunner>>(NadekoBot.AllGuildConfigs
                         .ToDictionary(gc => gc.GuildId,
                             gc => new ConcurrentQueue<RepeatRunner>(gc.GuildRepeaters
@@ -132,6 +141,21 @@ namespace NadekoBot.Modules.Utility
                                 .Where(x => x.Guild != null))));
                     _ready = true;
                 });
+            }
+
+            public static void Unload()
+            {
+                _ready = false;
+                foreach (var kvp in Repeaters)
+                {
+                    RepeatRunner r;
+                    while (kvp.Value.TryDequeue(out r))
+                    {
+                        r.Stop();
+                    }
+                }
+
+                Repeaters.Clear();
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -157,9 +181,10 @@ namespace NadekoBot.Modules.Utility
                     return;
                 }
                 var repeater = repList[index].Repeater;
-
                 repList[index].Reset();
-                await Context.Channel.SendMessageAsync("🔄 " + repeater.Message).ConfigureAwait(false);
+                await repList[index].Trigger();
+
+                await Context.Channel.SendMessageAsync("🔄").ConfigureAwait(false);
             }
 
             [NadekoCommand, Usage, Description, Aliases]

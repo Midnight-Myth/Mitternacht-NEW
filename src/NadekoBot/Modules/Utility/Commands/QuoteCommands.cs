@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using NadekoBot.Attributes;
 using NadekoBot.Extensions;
@@ -34,7 +34,7 @@ namespace NadekoBot.Modules.Utility
 
                 if (quotes.Any())
                     await Context.Channel.SendConfirmAsync(GetText("quotes_page", page + 1),
-                            string.Join("\n", quotes.Select(q => $"`#{q.Id}` {Format.Bold(q.Keyword),-20} by {q.AuthorName}")))
+                            string.Join("\n", quotes.Select(q => $"`#{q.Id}` {Format.Bold(q.Keyword.SanitizeMentions()),-20} by {q.AuthorName.SanitizeMentions()}")))
                         .ConfigureAwait(false);
                 else
                     await ReplyErrorLocalized("quotes_page_none").ConfigureAwait(false);
@@ -100,7 +100,43 @@ namespace NadekoBot.Modules.Utility
                 await Context.Channel.SendMessageAsync($"`#{keywordquote.Id}` 💬 " + keyword.ToLowerInvariant() + ":  " +
                                                        keywordquote.Text.SanitizeMentions());
             }
-
+            
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task QuoteId(int id)
+            {  
+                if (id < 0)
+                    return;
+                
+                using (var uow = DbHandler.UnitOfWork())
+                { 
+                    var qfromid = uow.Quotes.Get(id);
+                    CREmbed crembed;
+                    
+                    if (qfromid == null)
+                    {
+                        await Context.Channel.SendErrorAsync(GetText("quotes_notfound"));
+                    }
+                    else if (CREmbed.TryParse(qfromid.Text, out crembed))
+                    {
+                        try 
+                        {
+                            await Context.Channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText ?? "")
+                                .ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.Warn("Sending CREmbed failed");
+                            _log.Warn(ex);    
+                        } 
+                        return;
+                    }
+                    
+                    else { await Context.Channel.SendMessageAsync($"`#{qfromid.Id}` 🗯️ " + qfromid.Keyword.ToLowerInvariant().SanitizeMentions() + ":  " +
+                                                       qfromid.Text.SanitizeMentions()); }
+                }
+            }        
+                          
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AddQuote(string keyword, [Remainder] string text)
@@ -130,8 +166,8 @@ namespace NadekoBot.Modules.Utility
             public async Task DeleteQuote(int id)
             {
                 var isAdmin = ((IGuildUser) Context.Message.Author).GuildPermissions.Administrator;
-
-                var sucess = false;
+                
+                var success = false;
                 string response;
                 using (var uow = DbHandler.UnitOfWork())
                 {
@@ -145,11 +181,11 @@ namespace NadekoBot.Modules.Utility
                     {
                         uow.Quotes.Remove(q);
                         await uow.CompleteAsync().ConfigureAwait(false);
-                        sucess = true;
+                        success = true;
                         response = GetText("quote_deleted", id);
                     }
                 }
-                if (sucess)
+                if (success)
                     await Context.Channel.SendConfirmAsync(response);
                 else
                     await Context.Channel.SendErrorAsync(response);
@@ -172,7 +208,7 @@ namespace NadekoBot.Modules.Utility
                     await uow.CompleteAsync();
                 }
 
-                await ReplyConfirmLocalized("quotes_deleted", Format.Bold(keyword)).ConfigureAwait(false);
+                await ReplyConfirmLocalized("quotes_deleted", Format.Bold(keyword.SanitizeMentions())).ConfigureAwait(false);
             }
         }
     }

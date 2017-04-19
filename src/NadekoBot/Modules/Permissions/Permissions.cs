@@ -62,6 +62,24 @@ namespace NadekoBot.Modules.Permissions
             log.Debug($"Loaded in {sw.Elapsed.TotalSeconds:F2}s");
         }
 
+        public static PermissionCache GetCache(ulong guildId)
+        {
+            PermissionCache pc;
+            if (!Permissions.Cache.TryGetValue(guildId, out pc))
+            {
+                using (var uow = DbHandler.UnitOfWork())
+                {
+                    var config = uow.GuildConfigs.For(guildId,
+                        set => set.Include(x => x.Permissions));
+                    Permissions.UpdateCache(config);
+                }
+                Permissions.Cache.TryGetValue(guildId, out pc);
+                if (pc == null)
+                    throw new Exception("Cache is null.");
+            }
+            return pc;
+        }
+
         private static void TryMigratePermissions()
         {
             var log = LogManager.GetCurrentClassLogger();
@@ -345,7 +363,7 @@ namespace NadekoBot.Modules.Permissions
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task SrvrMdl(ModuleInfo module, PermissionAction action)
+        public async Task SrvrMdl(ModuleOrCrInfo module, PermissionAction action)
         {
             await AddPermissions(Context.Guild.Id, new Permissionv2
             {
@@ -401,7 +419,7 @@ namespace NadekoBot.Modules.Permissions
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task UsrMdl(ModuleInfo module, PermissionAction action, [Remainder] IGuildUser user)
+        public async Task UsrMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] IGuildUser user)
         {
             await AddPermissions(Context.Guild.Id, new Permissionv2
             {
@@ -462,7 +480,7 @@ namespace NadekoBot.Modules.Permissions
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task RoleMdl(ModuleInfo module, PermissionAction action, [Remainder] IRole role)
+        public async Task RoleMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] IRole role)
         {
             if (role == role.Guild.EveryoneRole)
                 return;
@@ -524,7 +542,7 @@ namespace NadekoBot.Modules.Permissions
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task ChnlMdl(ModuleInfo module, PermissionAction action, [Remainder] ITextChannel chnl)
+        public async Task ChnlMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] ITextChannel chnl)
         {
             await AddPermissions(Context.Guild.Id, new Permissionv2
             {

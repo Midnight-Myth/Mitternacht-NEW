@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Discord.WebSocket;
 using NadekoBot.Services;
+using System.Diagnostics;
 
 namespace NadekoBot.Modules.Utility
 {
@@ -23,6 +24,12 @@ namespace NadekoBot.Modules.Utility
     public partial class Utility : NadekoTopLevelModule
     {
         private static ConcurrentDictionary<ulong, Timer> _rotatingRoleColors = new ConcurrentDictionary<ulong, Timer>();
+
+        public static void Unload()
+        {
+            _rotatingRoleColors.ForEach(x => x.Value?.Change(Timeout.Infinite, Timeout.Infinite));
+            _rotatingRoleColors.Clear();
+        }
 
         //[NadekoCommand, Usage, Description, Aliases]
         //[RequireContext(ContextType.Guild)]
@@ -48,7 +55,7 @@ namespace NadekoBot.Modules.Utility
 
         //    var roleStrings = roles
         //            .Select(x => $"{reactions[j++]} -> {x.Name}");
-            
+
         //    var msg = await Context.Channel.SendConfirmAsync("Pick a Role",
         //        string.Join("\n", roleStrings)).ConfigureAwait(false);
 
@@ -99,6 +106,7 @@ namespace NadekoBot.Modules.Utility
         //        }
         //    }));
         //}
+        
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
@@ -493,6 +501,17 @@ namespace NadekoBot.Modules.Utility
                 });
             await Context.User.SendFileAsync(
                 await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
+        }
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task Ping()
+        {
+            var sw = Stopwatch.StartNew();
+            var msg = await Context.Channel.SendMessageAsync("🏓").ConfigureAwait(false);
+            sw.Stop();
+            msg.DeleteAfter(0);
+
+            await Context.Channel.SendConfirmAsync($"{Format.Bold(Context.User.ToString())} 🏓 {(int)sw.Elapsed.TotalMilliseconds}ms").ConfigureAwait(false);
         }
     }
 }
