@@ -36,10 +36,7 @@ namespace NadekoBot.Modules.Games
 
             static PlantPickCommands()
             {
-
-#if !GLOBAL_NADEKO
                 NadekoBot.Client.MessageReceived += PotentialFlowerGeneration;
-#endif
                 generationChannels = new ConcurrentHashSet<ulong>(NadekoBot.AllGuildConfigs
                     .SelectMany(c => c.GenerateCurrencyChannelIds.Select(obj => obj.ChannelId)));
             }
@@ -82,9 +79,9 @@ namespace NadekoBot.Modules.Games
                                 var prefix = NadekoBot.ModulePrefixes[typeof(Games).Name];
                                 var toSend = dropAmount == 1 
                                     ? GetLocalText(channel, "curgen_sn", NadekoBot.BotConfig.CurrencySign) 
-                                        + GetLocalText(channel, "pick_sn", prefix)
+                                        + " " + GetLocalText(channel, "pick_sn", prefix)
                                     : GetLocalText(channel, "curgen_pl", dropAmount, NadekoBot.BotConfig.CurrencySign)
-                                        + GetLocalText(channel, "pick_pl", prefix);
+                                        + " " + GetLocalText(channel, "pick_pl", prefix);
                                 var file = GetRandomCurrencyImage();
                                 using (var fileStream = file.Value.ToStream())
                                 {
@@ -181,10 +178,13 @@ namespace NadekoBot.Modules.Games
                     return old;
                 });
             }
-#if !GLOBAL_NADEKO
+
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
+#if GLOBAL_NADEKO
+            [OwnerOnly]
+#endif
             public async Task GenCurrency()
             {
                 var channel = (ITextChannel)Context.Channel;
@@ -218,7 +218,6 @@ namespace NadekoBot.Modules.Games
                     await ReplyConfirmLocalized("curgen_disabled").ConfigureAwait(false);
                 }
             }
-#endif
 
             private static KeyValuePair<string, ImmutableArray<byte>> GetRandomCurrencyImage()
             {
