@@ -1,5 +1,10 @@
 #Manually added files
 
+patreon_rewards.json
+command_errors*.txt
+
+src/NadekoBot/Command Errors*.txt
+
 src/NadekoBot/credentials.json
 src/NadekoBot/data/NadekoBot.db
 src/NadekoBot/data/musicdata

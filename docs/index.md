@@ -1,6 +1,6 @@
 #NadekoBot Documentation
 
-To invite NadekoBot to your server, click on the image bellow:
+To invite public NadekoBot to your server, click on the image bellow:
 
 [![img][img]](https://discordapp.com/oauth2/authorize?client_id=170254782546575360&scope=bot&permissions=66186303)
 
@@ -10,9 +10,7 @@ NadekoBot is an open source project, and it can be found on our [GitHub][GitHub]
 
 Here you can read current [Issues][Issues].
 
-If you want to contribute, be sure to PR on the **[dev][dev]** branch.
-
-**NadekoBot 1.1 release currently does not support x86/32bit architecture.**
+If you want to contribute, be sure to PR on the **[1.4][1.4]** branch.
 
 ##Content
 - [About](about.md)
@@ -21,13 +19,16 @@ If you want to contribute, be sure to PR on the **[dev][dev]** branch.
 	- [Linux Guide](guides/Linux Guide.md)
 	- [OSX Guide](guides/OSX Guide.md)
 	- [Docker Guide](guides/Docker Guide.md)
+	- [From Source](guides/From Source.md)
 	- [Upgrading Guide](guides/Upgrading Guide.md)
 - Commands
 	- [Readme](Readme.md)
 	- [Commands List](Commands List.md)
-- [Permissions System](Permissions System.md)
-- [JSON Explanations](JSON Explanations.md)
-- [Custom Reactions](Custom Reactions.md)
+- Features Explained
+	- [Permissions System](Permissions System.md)
+	- [JSON Explanations](JSON Explanations.md)
+	- [Custom Reactions](Custom Reactions.md)
+	- [Placeholders](Placeholders.md)
 - [Frequently Asked Questions](Frequently Asked Questions.md)
 - [Contribution Guide](Contribution Guide.md)
 - [Donate](Donate.md)
@@ -36,4 +37,4 @@ If you want to contribute, be sure to PR on the **[dev][dev]** branch.
 [NadekoBot Server]: https://discord.gg/nadekobot
 [GitHub]: https://github.com/Kwoth/NadekoBot
 [Issues]: https://github.com/Kwoth/NadekoBot/issues
-[dev]: https://github.com/Kwoth/NadekoBot/tree/dev
+[1.4]: https://github.com/Kwoth/NadekoBot/tree/1.4

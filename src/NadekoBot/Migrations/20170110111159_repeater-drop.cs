@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace NadekoBot.Migrations
@@ -31,7 +30,7 @@ namespace NadekoBot.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Repeaters_ChannelId",
+                name: "IX_Repeaters_channelId",
                 table: "Repeaters",
                 column: "ChannelId",
                 unique: true);

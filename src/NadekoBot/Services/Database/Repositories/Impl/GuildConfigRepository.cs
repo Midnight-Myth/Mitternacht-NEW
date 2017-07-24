@@ -24,8 +24,10 @@ namespace NadekoBot.Services.Database.Repositories.Impl
                 }
             };
 
-        public IEnumerable<GuildConfig> GetAllGuildConfigs() =>
-            _set.Include(gc => gc.LogSetting)
+        public IEnumerable<GuildConfig> GetAllGuildConfigs(List<long> availableGuilds) =>
+            _set
+                .Where(gc => availableGuilds.Contains((long)gc.GuildId))
+                .Include(gc => gc.LogSetting)
                     .ThenInclude(ls => ls.IgnoredChannels)
                 .Include(gc => gc.MutedUsers)
                 .Include(gc => gc.CommandAliases)
@@ -42,6 +44,9 @@ namespace NadekoBot.Services.Database.Repositories.Impl
                 .Include(gc => gc.SlowmodeIgnoredUsers)
                 .Include(gc => gc.AntiSpamSetting)
                     .ThenInclude(x => x.IgnoredChannels)
+                .Include(gc => gc.FollowedStreams)
+                .Include(gc => gc.StreamRole)
+                .Include(gc => gc.NsfwBlacklistedTags)
                 .ToList();
 
         /// <summary>
@@ -126,10 +131,6 @@ namespace NadekoBot.Services.Database.Repositories.Impl
                 .Where(gc => gc.RootPermission != null)
                 .Include(gc => gc.RootPermission);
 
-            //todo this is possibly a disaster for performance
-            //What i could do instead is count the number of permissions in the permission table for this guild
-            // and make a for loop with those.
-            // or just select permissions for this guild and manually chain them
             for (int i = 0; i < 60; i++)
             {
                 query = query.ThenInclude(gc => gc.Next);
@@ -138,9 +139,10 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             return query.ToList();
         }
 
-        public IEnumerable<GuildConfig> Permissionsv2ForAll()
+        public IEnumerable<GuildConfig> Permissionsv2ForAll(List<long> include)
         {
             var query = _set
+                .Where(x => include.Contains((long)x.GuildId))
                 .Include(gc => gc.Permissions);
 
             return query.ToList();
@@ -171,8 +173,10 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             return config;
         }
 
-        public IEnumerable<FollowedStream> GetAllFollowedStreams() =>
-            _set.Include(gc => gc.FollowedStreams)
+        public IEnumerable<FollowedStream> GetAllFollowedStreams(List<long> included) =>
+            _set
+                .Where(gc => included.Contains((long)gc.GuildId))
+                .Include(gc => gc.FollowedStreams)
                 .SelectMany(gc => gc.FollowedStreams)
                 .ToList();
 

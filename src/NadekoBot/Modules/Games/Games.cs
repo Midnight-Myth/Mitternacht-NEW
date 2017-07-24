@@ -2,31 +2,23 @@
 using Discord;
 using NadekoBot.Services;
 using System.Threading.Tasks;
-using NadekoBot.Attributes;
 using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Collections.Immutable;
-using System.IO;
-using System.Threading;
+using NadekoBot.Common;
+using NadekoBot.Common.Attributes;
 using NadekoBot.Extensions;
-using System.Net.Http;
-using ImageSharp;
-using NadekoBot.DataStructures;
-using NLog;
+using NadekoBot.Modules.Games.Common;
+using NadekoBot.Modules.Games.Services;
 
 namespace NadekoBot.Modules.Games
 {
-    [NadekoModule("Games", ">")]
-    public partial class Games : NadekoTopLevelModule
+    public partial class Games : NadekoTopLevelModule<GamesService>
     {
-        private static readonly ImmutableArray<string> _8BallResponses = NadekoBot.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToImmutableArray();
+        private readonly IImagesService _images;
 
-        private static readonly Timer _t = new Timer((_) =>
+        public Games(IImagesService images)
         {
-            _girlRatings.Clear();
-
-        }, null, TimeSpan.FromDays(1), TimeSpan.FromDays(1));
+            _images = images;
+        }
 
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Choose([Remainder] string list = null)
@@ -48,7 +40,7 @@ namespace NadekoBot.Modules.Games
 
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(NadekoBot.OkColor)
                                .AddField(efb => efb.WithName("❓ " + GetText("question") ).WithValue(question).WithIsInline(false))
-                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(_8BallResponses[new NadekoRandom().Next(0, _8BallResponses.Length)]).WithIsInline(false)));
+                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(_service.EightBallResponses[new NadekoRandom().Next(0, _service.EightBallResponses.Length)]).WithIsInline(false)));
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -94,7 +86,7 @@ namespace NadekoBot.Modules.Games
             else if ((pick == 0 && nadekoPick == 1) ||
                      (pick == 1 && nadekoPick == 2) ||
                      (pick == 2 && nadekoPick == 0))
-                msg = GetText("rps_win", NadekoBot.Client.CurrentUser.Mention,
+                msg = GetText("rps_win", Context.Client.CurrentUser.Mention,
                     getRpsPick(nadekoPick), getRpsPick(pick));
             else
                 msg = GetText("rps_win", Context.User.Mention, getRpsPick(pick),
@@ -103,73 +95,12 @@ namespace NadekoBot.Modules.Games
             await Context.Channel.SendConfirmAsync(msg).ConfigureAwait(false);
         }
 
-        private static readonly ConcurrentDictionary<ulong, GirlRating> _girlRatings = new ConcurrentDictionary<ulong, GirlRating>();
-
-        public class GirlRating
-        {
-            private static readonly Logger _log = LogManager.GetCurrentClassLogger();
-
-            public double Crazy { get; }
-            public double Hot { get; }
-            public int Roll { get; }
-            public string Advice { get; }
-            public AsyncLazy<string> Url { get; }
-
-            public GirlRating(double crazy, double hot, int roll, string advice)
-            {
-                Crazy = crazy;
-                Hot = hot;
-                Roll = roll;
-                Advice = advice; // convenient to have it here, even though atm there are only few different ones.
-
-                Url = new AsyncLazy<string>(async () =>
-                {
-                    try
-                    {
-                        using (var ms = new MemoryStream(NadekoBot.Images.WifeMatrix.ToArray(), false))
-                        using (var img = new ImageSharp.Image(ms))
-                        {
-                            const int minx = 35;
-                            const int miny = 385;
-                            const int length = 345;
-
-                            var pointx = (int)(minx + length * (Hot / 10));
-                            var pointy = (int)(miny - length * ((Crazy - 4) / 6));
-                            
-                            using (var pointMs = new MemoryStream(NadekoBot.Images.RategirlDot.ToArray(), false))
-                            using (var pointImg = new ImageSharp.Image(pointMs))
-                            {
-                                img.DrawImage(pointImg, 100, default(Size), new Point(pointx - 10, pointy - 10));
-                            }
-
-                            string url;
-                            using (var http = new HttpClient())
-                            using (var imgStream = new MemoryStream())
-                            {
-                                img.Save(imgStream);
-                                var byteContent = new ByteArrayContent(imgStream.ToArray());
-                                http.AddFakeHeaders();
-
-                                var reponse = await http.PutAsync("https://transfer.sh/img.png", byteContent);
-                                url = await reponse.Content.ReadAsStringAsync();
-                            }
-                            return url;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Warn(ex);
-                        return null;
-                    }
-                });
-            }
-        }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task RateGirl(IGuildUser usr)
         {
-            var gr = _girlRatings.GetOrAdd(usr.Id, GetGirl);
+            var gr = _service.GirlRatings.GetOrAdd(usr.Id, GetGirl);
             var img = await gr.Url;
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                 .WithTitle("Girl Rating For " + usr)
@@ -255,7 +186,7 @@ namespace NadekoBot.Modules.Games
                          "and maybe look at how to replicate that.";
             }
 
-            return new GirlRating(crazy, hot, roll, advice);
+            return new GirlRating(_images, crazy, hot, roll, advice);
         }
 
         [NadekoCommand, Usage, Description, Aliases]

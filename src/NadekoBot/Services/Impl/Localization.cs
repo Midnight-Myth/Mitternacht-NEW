@@ -1,28 +1,25 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using System;
-using NadekoBot.Services.Database;
+using Discord;
 using NLog;
 
-namespace NadekoBot.Services
+namespace NadekoBot.Services.Impl
 {
-    public class Localization
+    public class Localization : ILocalization
     {
         private readonly Logger _log;
+        private readonly DbService _db;
 
         public ConcurrentDictionary<ulong, CultureInfo> GuildCultureInfos { get; }
         public CultureInfo DefaultCultureInfo { get; private set; } = CultureInfo.CurrentCulture;
 
         private Localization() { }
-        public Localization(string defaultCulture, IDictionary<ulong, string> cultureInfoNames)
+        public Localization(string defaultCulture, IDictionary<ulong, string> cultureInfoNames, DbService db)
         {
             _log = LogManager.GetCurrentClassLogger();
+            _db = db;
             if (string.IsNullOrWhiteSpace(defaultCulture))
                 DefaultCultureInfo = new CultureInfo("en-US");
             else
@@ -62,7 +59,7 @@ namespace NadekoBot.Services
                 return;
             }
 
-            using (var uow = DbHandler.UnitOfWork())
+            using (var uow = _db.UnitOfWork)
             {
                 var gc = uow.GuildConfigs.For(guildId, set => set);
                 gc.Locale = ci.Name;
@@ -80,7 +77,7 @@ namespace NadekoBot.Services
             CultureInfo throwaway;
             if (GuildCultureInfos.TryRemove(guildId, out throwaway))
             {
-                using (var uow = DbHandler.UnitOfWork())
+                using (var uow = _db.UnitOfWork)
                 {
                     var gc = uow.GuildConfigs.For(guildId, set => set);
                     gc.Locale = null;
@@ -91,7 +88,7 @@ namespace NadekoBot.Services
 
         public void SetDefaultCulture(CultureInfo ci)
         {
-            using (var uow = DbHandler.UnitOfWork())
+            using (var uow = _db.UnitOfWork)
             {
                 var bc = uow.BotConfig.GetOrCreate();
                 bc.Locale = ci.Name;

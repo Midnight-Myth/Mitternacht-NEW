@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,10 +16,11 @@ namespace NadekoBot.Services.Impl
 {
     public class StatsService : IStatsService
     {
-        private readonly DiscordShardedClient _client;
+        private readonly DiscordSocketClient _client;
+        private readonly IBotCredentials _creds;
         private readonly DateTime _started;
 
-        public const string BotVersion = "1.3b";
+        public const string BotVersion = "1.6";
 
         public string Author => "Kwoth#2560";
         public string Library => "Discord.Net";
@@ -33,33 +37,45 @@ namespace NadekoBot.Services.Impl
         private long _commandsRan;
         public long CommandsRan => Interlocked.Read(ref _commandsRan);
 
-        private Timer carbonitexTimer { get; }
+        private readonly Timer _carbonitexTimer;
+        private readonly Timer _dataTimer;
+        private readonly ShardsCoordinator _sc;
 
-        public StatsService(DiscordShardedClient client, CommandHandler cmdHandler)
+        public int GuildCount =>
+            _sc?.GuildCount ?? _client.Guilds.Count();
+
+        public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, NadekoBot nadeko)
         {
-
             _client = client;
+            _creds = creds;
+            _sc = nadeko.ShardCoord;
 
-            _started = DateTime.Now;
+            _started = DateTime.UtcNow;
             _client.MessageReceived += _ => Task.FromResult(Interlocked.Increment(ref _messageCounter));
             cmdHandler.CommandExecuted += (_, e) => Task.FromResult(Interlocked.Increment(ref _commandsRan));
 
             _client.ChannelCreated += (c) =>
             {
-                if (c is ITextChannel)
-                    Interlocked.Increment(ref _textChannels);
-                else if (c is IVoiceChannel)
-                    Interlocked.Increment(ref _voiceChannels);
+                var _ = Task.Run(() =>
+                {
+                    if (c is ITextChannel)
+                        Interlocked.Increment(ref _textChannels);
+                    else if (c is IVoiceChannel)
+                        Interlocked.Increment(ref _voiceChannels);
+                });
 
                 return Task.CompletedTask;
             };
 
             _client.ChannelDestroyed += (c) =>
             {
-                if (c is ITextChannel)
-                    Interlocked.Decrement(ref _textChannels);
-                else if (c is IVoiceChannel)
-                    Interlocked.Decrement(ref _voiceChannels);
+                var _ = Task.Run(() =>
+                {
+                    if (c is ITextChannel)
+                        Interlocked.Decrement(ref _textChannels);
+                    else if (c is IVoiceChannel)
+                        Interlocked.Decrement(ref _voiceChannels);
+                });
 
                 return Task.CompletedTask;
             };
@@ -114,56 +130,95 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            carbonitexTimer = new Timer(async (state) =>
+            if (_sc != null)
             {
-                if (string.IsNullOrWhiteSpace(NadekoBot.Credentials.CarbonKey))
-                    return;
-                try
+                _carbonitexTimer = new Timer(async (state) =>
                 {
-                    using (var http = new HttpClient())
+                    if (string.IsNullOrWhiteSpace(_creds.CarbonKey))
+                        return;
+                    try
                     {
-                        using (var content = new FormUrlEncodedContent(
-                            new Dictionary<string, string> {
-                                { "servercount", _client.GetGuildCount().ToString() },
-                                { "key", NadekoBot.Credentials.CarbonKey }}))
+                        using (var http = new HttpClient())
                         {
-                            content.Headers.Clear();
-                            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                            using (var content = new FormUrlEncodedContent(
+                                new Dictionary<string, string> {
+                                { "servercount", _sc.GuildCount.ToString() },
+                                { "key", _creds.CarbonKey }}))
+                            {
+                                content.Headers.Clear();
+                                content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                            await http.PostAsync("https://www.carbonitex.net/discord/data/botdata.php", content).ConfigureAwait(false);
+                                await http.PostAsync("https://www.carbonitex.net/discord/data/botdata.php", content).ConfigureAwait(false);
+                            }
                         }
                     }
-                }
-                catch
+                    catch
+                    {
+                        // ignored
+                    }
+                }, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
+
+                var platform = "other";
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    platform = "linux";
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    platform = "osx";
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    platform = "windows";
+
+                _dataTimer = new Timer(async (state) =>
                 {
-                    // ignored
-                }
-            }, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
+                    try
+                    {
+                        using (var http = new HttpClient())
+                        {
+                            using (var content = new FormUrlEncodedContent(
+                                new Dictionary<string, string> {
+                                    { "id", string.Concat(MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(_creds.ClientId.ToString())).Select(x => x.ToString("X2"))) },
+                                    { "guildCount", _sc.GuildCount.ToString() },
+                                    { "version", BotVersion },
+                                    { "platform", platform }}))
+                            {
+                                content.Headers.Clear();
+                                content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+
+                                await http.PostAsync("https://selfstats.nadekobot.me/", content).ConfigureAwait(false);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }, null, TimeSpan.FromSeconds(1), TimeSpan.FromHours(1));
+            }
         }
 
         public void Initialize()
         {
-            var guilds = _client.GetGuilds().ToArray();
+            var guilds = _client.Guilds.ToArray();
             _textChannels = guilds.Sum(g => g.Channels.Count(cx => cx is ITextChannel));
             _voiceChannels = guilds.Sum(g => g.Channels.Count) - _textChannels;
         }
 
         public Task<string> Print()
         {
-            var curUser = _client.CurrentUser;
+            SocketSelfUser curUser;
+            while ((curUser = _client.CurrentUser) == null) Task.Delay(1000).ConfigureAwait(false);
+
             return Task.FromResult($@"
 Author: [{Author}] | Library: [{Library}]
 Bot Version: [{BotVersion}]
 Bot ID: {curUser.Id}
-Owner ID(s): {string.Join(", ", NadekoBot.Credentials.OwnerIds)}
+Owner ID(s): {string.Join(", ", _creds.OwnerIds)}
 Uptime: {GetUptimeString()}
-Servers: {_client.GetGuildCount()} | TextChannels: {TextChannels} | VoiceChannels: {VoiceChannels}
+Servers: {_client.Guilds.Count} | TextChannels: {TextChannels} | VoiceChannels: {VoiceChannels}
 Commands Ran this session: {CommandsRan}
 Messages: {MessageCounter} [{MessagesPerSecond:F2}/sec] Heap: [{Heap} MB]");
         }
 
         public TimeSpan GetUptime() =>
-            DateTime.Now - _started;
+            DateTime.UtcNow - _started;
 
         public string GetUptimeString(string separator = ", ")
         {

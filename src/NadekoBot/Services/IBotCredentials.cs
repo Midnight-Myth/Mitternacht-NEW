@@ -1,5 +1,4 @@
 ﻿using Discord;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace NadekoBot.Services
@@ -14,10 +13,17 @@ namespace NadekoBot.Services
         string MashapeKey { get; }
         string LoLApiKey { get; }
         string PatreonAccessToken { get; }
+        string CarbonKey { get; }
 
         DBConfig Db { get; }
+        string OsuApiKey { get; }
 
         bool IsOwner(IUser u);
+        int TotalShards { get; }
+        string ShardRunCommand { get; }
+        string ShardRunArguments { get; }
+        string PatreonCampaignId { get; }
+        string CleverbotApiKey { get; }
     }
 
     public class DBConfig

@@ -1,11 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
 using NadekoBot.Extensions;
+using NadekoBot.Services;
 using NLog;
-using System;
-using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading.Tasks;
+using Discord.WebSocket;
+using NadekoBot.Services.Impl;
 
 namespace NadekoBot.Modules
 {
@@ -13,26 +14,27 @@ namespace NadekoBot.Modules
     {
         protected readonly Logger _log;
         protected CultureInfo _cultureInfo;
-        public readonly string Prefix;
+
         public readonly string ModuleTypeName;
         public readonly string LowerModuleTypeName;
+
+        public NadekoStrings _strings { get; set; }
+        public CommandHandler _cmdHandler { get; set; }
+        public ILocalization _localization { get; set; }
+
+        public string Prefix => _cmdHandler.GetPrefix(Context.Guild);
 
         protected NadekoTopLevelModule(bool isTopLevelModule = true)
         {
             //if it's top level module
             ModuleTypeName = isTopLevelModule ? this.GetType().Name : this.GetType().DeclaringType.Name;
             LowerModuleTypeName = ModuleTypeName.ToLowerInvariant();
-
-            if (!NadekoBot.ModulePrefixes.TryGetValue(ModuleTypeName, out Prefix))
-                Prefix = "?err?";
             _log = LogManager.GetCurrentClassLogger();
         }
 
-        protected override void BeforeExecute()
+        protected override void BeforeExecute(CommandInfo cmd)
         {
-            _cultureInfo = NadekoBot.Localization.GetCultureInfo(Context.Guild?.Id);
-
-            _log.Info("Culture info is {0}", _cultureInfo);
+            _cultureInfo = _localization.GetCultureInfo(Context.Guild?.Id);
         }
 
         //public Task<IUserMessage> ReplyConfirmLocalized(string titleKey, string textKey, string url = null, string footer = null)
@@ -55,45 +57,11 @@ namespace NadekoBot.Modules
         //    return Context.Channel.SendErrorAsync(title, text, url, footer);
         //}
 
-        /// <summary>
-        /// Used as failsafe in case response key doesn't exist in the selected or default language.
-        /// </summary>
-        private static readonly CultureInfo _usCultureInfo = new CultureInfo("en-US");
-
-        public static string GetTextStatic(string key, CultureInfo cultureInfo, string lowerModuleTypeName)
-        {
-            var text = NadekoBot.ResponsesResourceManager.GetString(lowerModuleTypeName + "_" + key, cultureInfo);
-
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                LogManager.GetCurrentClassLogger().Warn(lowerModuleTypeName + "_" + key + " key is missing from " + cultureInfo + " response strings. PLEASE REPORT THIS.");
-                text = NadekoBot.ResponsesResourceManager.GetString(lowerModuleTypeName + "_" + key, _usCultureInfo) ?? $"Error: dkey {lowerModuleTypeName + "_" + key} not found!";
-                if (string.IsNullOrWhiteSpace(text))
-                    return "I can't tell you if the command is executed, because there was an error printing out the response. Key '" +
-                        lowerModuleTypeName + "_" + key + "' " + "is missing from resources. Please report this.";
-            }
-            return text;
-        }
-
-        public static string GetTextStatic(string key, CultureInfo cultureInfo, string lowerModuleTypeName,
-            params object[] replacements)
-        {
-            try
-            {
-                return string.Format(GetTextStatic(key, cultureInfo, lowerModuleTypeName), replacements);
-            }
-            catch (FormatException)
-            {
-                return "I can't tell you if the command is executed, because there was an error printing out the response. Key '" +
-                       lowerModuleTypeName + "_" + key + "' " + "is not properly formatted. Please report this.";
-            }
-        }
-
         protected string GetText(string key) =>
-            GetTextStatic(key, _cultureInfo, LowerModuleTypeName);
+            _strings.GetText(key, _cultureInfo, LowerModuleTypeName);
 
         protected string GetText(string key, params object[] replacements) =>
-            GetTextStatic(key, _cultureInfo, LowerModuleTypeName, replacements);
+            _strings.GetText(key, _cultureInfo, LowerModuleTypeName, replacements);
 
         public Task<IUserMessage> ErrorLocalized(string textKey, params object[] replacements)
         {
@@ -118,9 +86,66 @@ namespace NadekoBot.Modules
             var text = GetText(textKey, replacements);
             return Context.Channel.SendConfirmAsync(Context.User.Mention + " " + text);
         }
+        
+        // TypeConverter typeConverter = TypeDescriptor.GetConverter(propType); ?
+        public async Task<string> GetUserInputAsync(ulong userId, ulong channelId)
+        {
+            var userInputTask = new TaskCompletionSource<string>();
+            var dsc = (DiscordSocketClient)Context.Client;
+            try
+            {
+                dsc.MessageReceived += MessageReceived;
+
+                if ((await Task.WhenAny(userInputTask.Task, Task.Delay(10000))) != userInputTask.Task)
+                {
+                    return null;
+                }
+
+                return await userInputTask.Task;
+            }
+            finally
+            {
+                dsc.MessageReceived -= MessageReceived;
+            }
+
+            Task MessageReceived(SocketMessage arg)
+            {
+                var _ = Task.Run(() =>
+                {
+                    if (!(arg is SocketUserMessage userMsg) ||
+                        !(userMsg.Channel is ITextChannel chan) ||
+                        userMsg.Author.Id != userId ||
+                        userMsg.Channel.Id != channelId)
+                    {
+                        return Task.CompletedTask;
+                    }
+
+                    if (userInputTask.TrySetResult(arg.Content))
+                    {
+                        userMsg.DeleteAfter(1);
+                    }
+                    return Task.CompletedTask;
+                });
+                return Task.CompletedTask;
+            }
+        }
+    }
+    
+    public abstract class NadekoTopLevelModule<TService> : NadekoTopLevelModule where TService : INService
+    {
+        public TService _service { get; set; }
+
+        public NadekoTopLevelModule(bool isTopLevel = true) : base(isTopLevel)
+        {
+        }
     }
 
     public abstract class NadekoSubmodule : NadekoTopLevelModule
+    {
+        protected NadekoSubmodule() : base(false) { }
+    }
+
+    public abstract class NadekoSubmodule<TService> : NadekoTopLevelModule<TService> where TService : INService
     {
         protected NadekoSubmodule() : base(false)
         {

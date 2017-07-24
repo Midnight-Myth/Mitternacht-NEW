@@ -19,7 +19,9 @@ namespace NadekoBot.Services.Database
         {
             var optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseSqlite("Filename=./data/NadekoBot.db");
-            return new NadekoContext(optionsBuilder.Options);
+            var ctx = new NadekoContext(optionsBuilder.Options);
+            ctx.Database.SetCommandTimeout(60);
+            return ctx;
         }
     }
 
@@ -167,13 +169,19 @@ namespace NadekoBot.Services.Database
 
             #endregion
 
+            #region streamrole
+            modelBuilder.Entity<StreamRoleSettings>()
+                .HasOne(x => x.GuildConfig)
+                .WithOne(x => x.StreamRole);
+            #endregion
+
             #region BotConfig
             //var botConfigEntity = modelBuilder.Entity<BotConfig>();
             //botConfigEntity
             //    .HasMany(c => c.ModulePrefixes)
             //    .WithOne(mp => mp.BotConfig)
             //    .HasForeignKey(mp => mp.BotConfigId);
-                
+
             #endregion
 
             #region ClashOfClans

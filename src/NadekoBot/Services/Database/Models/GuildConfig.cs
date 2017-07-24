@@ -6,6 +6,9 @@ namespace NadekoBot.Services.Database.Models
     public class GuildConfig : DbEntity
     {
         public ulong GuildId { get; set; }
+
+        public string Prefix { get; set; } = null;
+
         public bool DeleteMessageOnCommand { get; set; }
         public ulong AutoAssignRoleId { get; set; }
         //greet stuff
@@ -75,11 +78,32 @@ namespace NadekoBot.Services.Database.Models
         public bool WarningsInitialized { get; set; }
         public HashSet<SlowmodeIgnoredUser> SlowmodeIgnoredUsers { get; set; }
         public HashSet<SlowmodeIgnoredRole> SlowmodeIgnoredRoles { get; set; }
+        public HashSet<NsfwBlacklitedTag> NsfwBlacklistedTags { get; set; } = new HashSet<NsfwBlacklitedTag>();
 
         public List<ShopEntry> ShopEntries { get; set; }
         public ulong? GameVoiceChannel { get; set; } = null;
+        public bool VerboseErrors { get; set; } = false;
+
+        public StreamRoleSettings StreamRole { get; set; }
 
         //public List<ProtectionIgnoredChannel> ProtectionIgnoredChannels { get; set; } = new List<ProtectionIgnoredChannel>();
+    }
+
+    public class NsfwBlacklitedTag : DbEntity
+    {
+        public string Tag { get; set; }
+
+        public override int GetHashCode()
+        {
+            return Tag.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is NsfwBlacklitedTag x
+                ? x.Tag == Tag
+                : false;
+        }
     }
 
     public class SlowmodeIgnoredUser : DbEntity

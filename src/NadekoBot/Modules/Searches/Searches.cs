@@ -3,32 +3,37 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using System.Text;
 using System.Net.Http;
 using NadekoBot.Services;
 using System.Threading.Tasks;
 using System.Net;
-using NadekoBot.Modules.Searches.Models;
 using System.Collections.Generic;
 using NadekoBot.Extensions;
 using System.IO;
-using NadekoBot.Modules.Searches.Commands.OMDB;
-using NadekoBot.Modules.Searches.Commands.Models;
 using AngleSharp;
 using AngleSharp.Dom.Html;
 using AngleSharp.Dom;
-using System.Xml;
 using Configuration = AngleSharp.Configuration;
-using NadekoBot.Attributes;
 using Discord.Commands;
-using ImageSharp.Processing.Processors;
 using ImageSharp;
+using NadekoBot.Common;
+using NadekoBot.Common.Attributes;
+using NadekoBot.Modules.Searches.Common;
+using NadekoBot.Modules.Searches.Services;
 
 namespace NadekoBot.Modules.Searches
 {
-    [NadekoModule("Searches", "~")]
-    public partial class Searches : NadekoTopLevelModule
+    public partial class Searches : NadekoTopLevelModule<SearchesService>
     {
+        private readonly IBotCredentials _creds;
+        private readonly IGoogleApiService _google;
+
+        public Searches(IBotCredentials creds, IGoogleApiService google)
+        {
+            _creds = creds;
+            _google = google;
+        }
+
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Weather([Remainder] string query)
         {
@@ -42,33 +47,33 @@ namespace NadekoBot.Modules.Searches
             var data = JsonConvert.DeserializeObject<WeatherData>(response);
 
             var embed = new EmbedBuilder()
-                .AddField(fb => fb.WithName("🌍 " + Format.Bold(GetText("location"))).WithValue($"[{data.name + ", " + data.sys.country}](https://openweathermap.org/city/{data.id})").WithIsInline(true))
-                .AddField(fb => fb.WithName("📏 " + Format.Bold(GetText("latlong"))).WithValue($"{data.coord.lat}, {data.coord.lon}").WithIsInline(true))
-                .AddField(fb => fb.WithName("☁ " + Format.Bold(GetText("condition"))).WithValue(string.Join(", ", data.weather.Select(w => w.main))).WithIsInline(true))
-                .AddField(fb => fb.WithName("😓 " + Format.Bold(GetText("humidity"))).WithValue($"{data.main.humidity}%").WithIsInline(true))
-                .AddField(fb => fb.WithName("💨 " + Format.Bold(GetText("wind_speed"))).WithValue(data.wind.speed + " m/s").WithIsInline(true))
-                .AddField(fb => fb.WithName("🌡 " + Format.Bold(GetText("temperature"))).WithValue(data.main.temp + "°C").WithIsInline(true))
-                .AddField(fb => fb.WithName("🔆 " + Format.Bold(GetText("min_max"))).WithValue($"{data.main.temp_min}°C - {data.main.temp_max}°C").WithIsInline(true))
-                .AddField(fb => fb.WithName("🌄 " + Format.Bold(GetText("sunrise"))).WithValue($"{data.sys.sunrise.ToUnixTimestamp():HH:mm} UTC").WithIsInline(true))
-                .AddField(fb => fb.WithName("🌇 " + Format.Bold(GetText("sunset"))).WithValue($"{data.sys.sunset.ToUnixTimestamp():HH:mm} UTC").WithIsInline(true))
+                .AddField(fb => fb.WithName("🌍 " + Format.Bold(GetText("location"))).WithValue($"[{data.Name + ", " + data.Sys.Country}](https://openweathermap.org/city/{data.Id})").WithIsInline(true))
+                .AddField(fb => fb.WithName("📏 " + Format.Bold(GetText("latlong"))).WithValue($"{data.Coord.Lat}, {data.Coord.Lon}").WithIsInline(true))
+                .AddField(fb => fb.WithName("☁ " + Format.Bold(GetText("condition"))).WithValue(string.Join(", ", data.Weather.Select(w => w.Main))).WithIsInline(true))
+                .AddField(fb => fb.WithName("😓 " + Format.Bold(GetText("humidity"))).WithValue($"{data.Main.Humidity}%").WithIsInline(true))
+                .AddField(fb => fb.WithName("💨 " + Format.Bold(GetText("wind_speed"))).WithValue(data.Wind.Speed + " m/s").WithIsInline(true))
+                .AddField(fb => fb.WithName("🌡 " + Format.Bold(GetText("temperature"))).WithValue(data.Main.Temp + "°C").WithIsInline(true))
+                .AddField(fb => fb.WithName("🔆 " + Format.Bold(GetText("min_max"))).WithValue($"{data.Main.TempMin}°C - {data.Main.TempMax}°C").WithIsInline(true))
+                .AddField(fb => fb.WithName("🌄 " + Format.Bold(GetText("sunrise"))).WithValue($"{data.Sys.Sunrise.ToUnixTimestamp():HH:mm} UTC").WithIsInline(true))
+                .AddField(fb => fb.WithName("🌇 " + Format.Bold(GetText("sunset"))).WithValue($"{data.Sys.Sunset.ToUnixTimestamp():HH:mm} UTC").WithIsInline(true))
                 .WithOkColor()
-                .WithFooter(efb => efb.WithText("Powered by openweathermap.org").WithIconUrl($"http://openweathermap.org/img/w/{data.weather[0].icon}.png"));
+                .WithFooter(efb => efb.WithText("Powered by openweathermap.org").WithIconUrl($"http://openweathermap.org/img/w/{data.Weather[0].Icon}.png"));
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Time([Remainder] string arg)
         {
-            if (string.IsNullOrWhiteSpace(arg) || string.IsNullOrWhiteSpace(NadekoBot.Credentials.GoogleApiKey))
+            if (string.IsNullOrWhiteSpace(arg) || string.IsNullOrWhiteSpace(_creds.GoogleApiKey))
                 return;
 
             using (var http = new HttpClient())
             {
-                var res = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/geocode/json?address={arg}&key={NadekoBot.Credentials.GoogleApiKey}").ConfigureAwait(false);
+                var res = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/geocode/json?address={arg}&key={_creds.GoogleApiKey}").ConfigureAwait(false);
                 var obj = JsonConvert.DeserializeObject<GeolocationResult>(res);
 
                 var currentSeconds = DateTime.UtcNow.UnixTimestamp();
-                var timeRes = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/timezone/json?location={obj.results[0].Geometry.Location.Lat},{obj.results[0].Geometry.Location.Lng}&timestamp={currentSeconds}&key={NadekoBot.Credentials.GoogleApiKey}").ConfigureAwait(false);
+                var timeRes = await http.GetStringAsync($"https://maps.googleapis.com/maps/api/timezone/json?location={obj.results[0].Geometry.Location.Lat},{obj.results[0].Geometry.Location.Lng}&timestamp={currentSeconds}&key={_creds.GoogleApiKey}").ConfigureAwait(false);
                 var timeObj = JsonConvert.DeserializeObject<TimeZoneResult>(timeRes);
 
                 var time = DateTime.UtcNow.AddSeconds(timeObj.DstOffset + timeObj.RawOffset);
@@ -81,7 +86,7 @@ namespace NadekoBot.Modules.Searches
         public async Task Youtube([Remainder] string query = null)
         {
             if (!await ValidateQuery(Context.Channel, query).ConfigureAwait(false)) return;
-            var result = (await NadekoBot.Google.GetVideosByKeywordsAsync(query, 1)).FirstOrDefault();
+            var result = (await _google.GetVideoLinksByKeywordAsync(query, 1)).FirstOrDefault();
             if (string.IsNullOrWhiteSpace(result))
             {
                 await ReplyErrorLocalized("no_results").ConfigureAwait(false);
@@ -97,7 +102,7 @@ namespace NadekoBot.Modules.Searches
             if (!(await ValidateQuery(Context.Channel, query).ConfigureAwait(false))) return;
             await Context.Channel.TriggerTypingAsync().ConfigureAwait(false);
 
-            var movie = await OmdbProvider.FindMovie(query);
+            var movie = await OmdbProvider.FindMovie(query, _google);
             if (movie == null)
             {
                 await ReplyErrorLocalized("imdb_fail").ConfigureAwait(false);
@@ -137,7 +142,7 @@ namespace NadekoBot.Modules.Searches
 
             try
             {
-                var res = await NadekoBot.Google.GetImageAsync(terms).ConfigureAwait(false);
+                var res = await _google.GetImageAsync(terms).ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithAuthor(eab => eab.WithName(GetText("image_search_for") + " " + terms.TrimTo(50))
@@ -189,7 +194,7 @@ namespace NadekoBot.Modules.Searches
             terms = WebUtility.UrlEncode(terms).Replace(' ', '+');
             try
             {
-                var res = await NadekoBot.Google.GetImageAsync(terms, new NadekoRandom().Next(0, 50)).ConfigureAwait(false);
+                var res = await _google.GetImageAsync(terms, new NadekoRandom().Next(0, 50)).ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithAuthor(eab => eab.WithName(GetText("image_search_for") + " " + terms.TrimTo(50))
@@ -239,7 +244,7 @@ namespace NadekoBot.Modules.Searches
             if (string.IsNullOrWhiteSpace(ffs))
                 return;
 
-            await Context.Channel.SendConfirmAsync("<" + await NadekoBot.Google.ShortenUrl($"http://lmgtfy.com/?q={ Uri.EscapeUriString(ffs) }") + ">")
+            await Context.Channel.SendConfirmAsync("<" + await _google.ShortenUrl($"http://lmgtfy.com/?q={ Uri.EscapeUriString(ffs) }") + ">")
                            .ConfigureAwait(false);
         }
 
@@ -249,7 +254,7 @@ namespace NadekoBot.Modules.Searches
             if (string.IsNullOrWhiteSpace(arg))
                 return;
 
-            var shortened = await NadekoBot.Google.ShortenUrl(arg).ConfigureAwait(false);
+            var shortened = await _google.ShortenUrl(arg).ConfigureAwait(false);
 
             if (shortened == arg)
             {
@@ -315,7 +320,7 @@ namespace NadekoBot.Modules.Searches
                 .WithFooter(efb => efb.WithText(totalResults));
 
             var desc = await Task.WhenAll(results.Select(async res =>
-                    $"[{Format.Bold(res?.Title)}]({(await NadekoBot.Google.ShortenUrl(res?.Link))})\n{res?.Text}\n\n"))
+                    $"[{Format.Bold(res?.Title)}]({(await _google.ShortenUrl(res?.Link))})\n{res?.Text}\n\n"))
                 .ConfigureAwait(false);
             await Context.Channel.EmbedAsync(embed.WithDescription(string.Concat(desc))).ConfigureAwait(false);
         }
@@ -339,7 +344,7 @@ namespace NadekoBot.Modules.Searches
                     if (items == null || items.Length == 0)
                         throw new KeyNotFoundException("Cannot find a card by that name");
                     var item = items[new NadekoRandom().Next(0, items.Length)];
-                    var storeUrl = await NadekoBot.Google.ShortenUrl(item["store_url"].ToString());
+                    var storeUrl = await _google.ShortenUrl(item["store_url"].ToString());
                     var cost = item["cost"].ToString();
                     var desc = item["text"].ToString();
                     var types = string.Join(",\n", item["types"].ToObject<string[]>());
@@ -351,7 +356,7 @@ namespace NadekoBot.Modules.Searches
                                     .AddField(efb => efb.WithName(GetText("store_url")).WithValue(storeUrl).WithIsInline(true))
                                     .AddField(efb => efb.WithName(GetText("cost")).WithValue(cost).WithIsInline(true))
                                     .AddField(efb => efb.WithName(GetText("types")).WithValue(types).WithIsInline(true));
-                    //.AddField(efb => efb.WithName("Store Url").WithValue(await NadekoBot.Google.ShortenUrl(items[0]["store_url"].ToString())).WithIsInline(true));
+                    //.AddField(efb => efb.WithName("Store Url").WithValue(await _google.ShortenUrl(items[0]["store_url"].ToString())).WithIsInline(true));
 
                     await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
                 }
@@ -369,7 +374,7 @@ namespace NadekoBot.Modules.Searches
             if (string.IsNullOrWhiteSpace(arg))
                 return;
 
-            if (string.IsNullOrWhiteSpace(NadekoBot.Credentials.MashapeKey))
+            if (string.IsNullOrWhiteSpace(_creds.MashapeKey))
             {
                 await ReplyErrorLocalized("mashape_api_missing").ConfigureAwait(false);
                 return;
@@ -379,13 +384,13 @@ namespace NadekoBot.Modules.Searches
             using (var http = new HttpClient())
             {
                 http.DefaultRequestHeaders.Clear();
-                http.DefaultRequestHeaders.Add("X-Mashape-Key", NadekoBot.Credentials.MashapeKey);
+                http.DefaultRequestHeaders.Add("X-Mashape-Key", _creds.MashapeKey);
                 var response = await http.GetStringAsync($"https://omgvamp-hearthstone-v1.p.mashape.com/cards/search/{Uri.EscapeUriString(arg)}")
                     .ConfigureAwait(false);
                 try
                 {
                     var items = JArray.Parse(response).Shuffle().ToList();
-                    var images = new List<ImageSharp.Image>();
+                    var images = new List<Image<Rgba32>>();
                     if (items == null)
                         throw new KeyNotFoundException("Cannot find a card by that name");
                     foreach (var item in items.Where(item => item.HasValues && item["img"] != null).Take(4))
@@ -397,7 +402,7 @@ namespace NadekoBot.Modules.Searches
                                 var imgStream = new MemoryStream();
                                 await sr.CopyToAsync(imgStream);
                                 imgStream.Position = 0;
-                                images.Add(new ImageSharp.Image(imgStream));
+                                images.Add(ImageSharp.Image.Load(imgStream));
                             }
                         }).ConfigureAwait(false);
                     }
@@ -407,7 +412,7 @@ namespace NadekoBot.Modules.Searches
                         msg = GetText("hs_over_x", 4);
                     }
                     var ms = new MemoryStream();
-                    await Task.Run(() => images.AsEnumerable().Merge().Save(ms));
+                    await Task.Run(() => images.AsEnumerable().Merge().SaveAsPng(ms));
                     ms.Position = 0;
                     await Context.Channel.SendFileAsync(ms, arg + ".png", msg).ConfigureAwait(false);
                 }
@@ -422,7 +427,7 @@ namespace NadekoBot.Modules.Searches
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Yodify([Remainder] string query = null)
         {
-            if (string.IsNullOrWhiteSpace(NadekoBot.Credentials.MashapeKey))
+            if (string.IsNullOrWhiteSpace(_creds.MashapeKey))
             {
                 await ReplyErrorLocalized("mashape_api_missing").ConfigureAwait(false);
                 return;
@@ -435,7 +440,7 @@ namespace NadekoBot.Modules.Searches
             using (var http = new HttpClient())
             {
                 http.DefaultRequestHeaders.Clear();
-                http.DefaultRequestHeaders.Add("X-Mashape-Key", NadekoBot.Credentials.MashapeKey);
+                http.DefaultRequestHeaders.Add("X-Mashape-Key", _creds.MashapeKey);
                 http.DefaultRequestHeaders.Add("Accept", "text/plain");
                 var res = await http.GetStringAsync($"https://yoda.p.mashape.com/yoda?sentence={Uri.EscapeUriString(query)}").ConfigureAwait(false);
                 try
@@ -457,7 +462,7 @@ namespace NadekoBot.Modules.Searches
         [NadekoCommand, Usage, Description, Aliases]
         public async Task UrbanDict([Remainder] string query = null)
         {
-            if (string.IsNullOrWhiteSpace(NadekoBot.Credentials.MashapeKey))
+            if (string.IsNullOrWhiteSpace(_creds.MashapeKey))
             {
                 await ReplyErrorLocalized("mashape_api_missing").ConfigureAwait(false);
                 return;
@@ -507,7 +512,10 @@ namespace NadekoBot.Modules.Searches
                 var sense = data.Results.FirstOrDefault(x => x.Senses?[0].Definition != null)?.Senses[0];
 
                 if (sense?.Definition == null)
+                {
+                    await ReplyErrorLocalized("define_unknown").ConfigureAwait(false);
                     return;
+                }
 
                 var definition = sense.Definition.ToString();
                 if (!(sense.Definition is string))
@@ -531,7 +539,7 @@ namespace NadekoBot.Modules.Searches
             if (string.IsNullOrWhiteSpace(query))
                 return;
 
-            if (string.IsNullOrWhiteSpace(NadekoBot.Credentials.MashapeKey))
+            if (string.IsNullOrWhiteSpace(_creds.MashapeKey))
             {
                 await ReplyErrorLocalized("mashape_api_missing").ConfigureAwait(false);
                 return;
@@ -542,7 +550,7 @@ namespace NadekoBot.Modules.Searches
             using (var http = new HttpClient())
             {
                 http.DefaultRequestHeaders.Clear();
-                http.DefaultRequestHeaders.Add("X-Mashape-Key", NadekoBot.Credentials.MashapeKey);
+                http.DefaultRequestHeaders.Add("X-Mashape-Key", _creds.MashapeKey);
                 res = await http.GetStringAsync($"https://tagdef.p.mashape.com/one.{Uri.EscapeUriString(query)}.json").ConfigureAwait(false);
             }
 
@@ -581,10 +589,11 @@ namespace NadekoBot.Modules.Searches
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Revav([Remainder] IUser usr = null)
+        [RequireContext(ContextType.Guild)]
+        public async Task Revav([Remainder] IGuildUser usr = null)
         {
             if (usr == null)
-                usr = Context.User;
+                usr = (IGuildUser)Context.User;
             await Context.Channel.SendConfirmAsync($"https://images.google.com/searchbyimage?image_url={usr.RealAvatarUrl()}").ConfigureAwait(false);
         }
 
@@ -625,15 +634,28 @@ namespace NadekoBot.Modules.Searches
             color = color?.Trim().Replace("#", "");
             if (string.IsNullOrWhiteSpace(color))
                 return;
-            var img = new ImageSharp.Image(50, 50);
+            Rgba32 clr;
+            try
+            {
+                clr = Rgba32.FromHex(color);
+            }
+            catch
+            {
+                await ReplyErrorLocalized("hex_invalid").ConfigureAwait(false);
+                return;
+            }
+            
 
-            img.BackgroundColor(ImageSharp.Color.FromHex(color));
+            var img = new ImageSharp.Image<Rgba32>(50, 50);
+
+            img.BackgroundColor(clr);
 
             await Context.Channel.SendFileAsync(img.ToStream(), $"{color}.png").ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Videocall(params IUser[] users)
+        [RequireContext(ContextType.Guild)]
+        public async Task Videocall(params IGuildUser[] users)
         {
             var allUsrs = users.Append(Context.User);
             var allUsrsArray = allUsrs.ToArray();
@@ -641,22 +663,22 @@ namespace NadekoBot.Modules.Searches
             str += new NadekoRandom().Next();
             foreach (var usr in allUsrsArray)
             {
-                await (await usr.CreateDMChannelAsync()).SendConfirmAsync(str).ConfigureAwait(false);
+                await (await usr.GetOrCreateDMChannelAsync()).SendConfirmAsync(str).ConfigureAwait(false);
             }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Avatar([Remainder] IUser usr = null)
+        [RequireContext(ContextType.Guild)]
+        public async Task Avatar([Remainder] IGuildUser usr = null)
         {
             if (usr == null)
-                usr = Context.User;
+                usr = (IGuildUser)Context.User;
 
             var avatarUrl = usr.RealAvatarUrl();
-            var shortenedAvatarUrl = await NadekoBot.Google.ShortenUrl(avatarUrl).ConfigureAwait(false);
+            var shortenedAvatarUrl = await _google.ShortenUrl(avatarUrl).ConfigureAwait(false);
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                 .AddField(efb => efb.WithName("Username").WithValue(usr.ToString()).WithIsInline(false))
                 .AddField(efb => efb.WithName("Avatar Url").WithValue(shortenedAvatarUrl).WithIsInline(false))
-                //.AddField(efb => efb.WithName("Avatar Id").WithValue(usr.AvatarId).WithIsInline(false))
                 .WithThumbnailUrl(avatarUrl), Context.User.Mention).ConfigureAwait(false);
         }
 
@@ -679,7 +701,7 @@ namespace NadekoBot.Modules.Searches
                     var found = items["items"][0];
                     var response = $@"`{GetText("title")}` {found["title"]}
 `{GetText("quality")}` {found["quality"]}
-`{GetText("url")}:` {await NadekoBot.Google.ShortenUrl(found["url"].ToString()).ConfigureAwait(false)}";
+`{GetText("url")}:` {await _google.ShortenUrl(found["url"].ToString()).ConfigureAwait(false)}";
                     await Context.Channel.SendMessageAsync(response).ConfigureAwait(false);
                 }
                 catch
@@ -759,14 +781,6 @@ namespace NadekoBot.Modules.Searches
         //    }
         //}
 
-        public enum DapiSearchType
-        {
-            Safebooru,
-            Gelbooru,
-            Konachan,
-            Rule34,
-            Yandere
-        }
 
         public async Task InternalDapiCommand(IUserMessage umsg, string tag, DapiSearchType type)
         {
@@ -774,65 +788,17 @@ namespace NadekoBot.Modules.Searches
 
             tag = tag?.Trim() ?? "";
 
-            var url = await InternalDapiSearch(tag, type).ConfigureAwait(false);
+            var imgObj = await _service.DapiSearch(tag, type, Context.Guild?.Id).ConfigureAwait(false);
 
-            if (url == null)
+            if (imgObj == null)
                 await channel.SendErrorAsync(umsg.Author.Mention + " " + GetText("no_results"));
             else
                 await channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                    .WithDescription(umsg.Author.Mention + " " + tag)
-                    .WithImageUrl(url)
+                    .WithDescription($"{umsg.Author.Mention} [{tag ?? "url"}]({imgObj.FileUrl})")
+                    .WithImageUrl(imgObj.FileUrl)
                     .WithFooter(efb => efb.WithText(type.ToString()))).ConfigureAwait(false);
         }
 
-        public static async Task<string> InternalDapiSearch(string tag, DapiSearchType type)
-        {
-            tag = tag?.Replace(" ", "_");
-            var website = "";
-            switch (type)
-            {
-                case DapiSearchType.Safebooru:
-                    website = $"https://safebooru.org/index.php?page=dapi&s=post&q=index&limit=100&tags={tag}";
-                    break;
-                case DapiSearchType.Gelbooru:
-                    website = $"http://gelbooru.com/index.php?page=dapi&s=post&q=index&limit=100&tags={tag}";
-                    break;
-                case DapiSearchType.Rule34:
-                    website = $"https://rule34.xxx/index.php?page=dapi&s=post&q=index&limit=100&tags={tag}";
-                    break;
-                case DapiSearchType.Konachan:
-                    website = $"https://konachan.com/post.xml?s=post&q=index&limit=100&tags={tag}";
-                    break;
-                case DapiSearchType.Yandere:
-                    website = $"https://yande.re/post.xml?limit=100&tags={tag}";
-                    break;
-            }
-            try
-            {
-                var toReturn = await Task.Run(async () =>
-                {
-                    using (var http = new HttpClient())
-                    {
-                        http.AddFakeHeaders();
-                        var data = await http.GetStreamAsync(website).ConfigureAwait(false);
-                        var doc = new XmlDocument();
-                        doc.Load(data);
-
-                        var node = doc.LastChild.ChildNodes[new NadekoRandom().Next(0, doc.LastChild.ChildNodes.Count)];
-
-                        var url = node.Attributes["file_url"].Value;
-                        if (!url.StartsWith("http"))
-                            url = "https:" + url;
-                        return url;
-                    }
-                }).ConfigureAwait(false);
-                return toReturn;
-            }
-            catch
-            {
-                return null;
-            }
-        }
         public async Task<bool> ValidateQuery(IMessageChannel ch, string query)
         {
             if (!string.IsNullOrWhiteSpace(query)) return true;

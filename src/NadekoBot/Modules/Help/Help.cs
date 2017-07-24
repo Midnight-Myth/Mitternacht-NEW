@@ -4,24 +4,35 @@ using System.Linq;
 using Discord;
 using NadekoBot.Services;
 using System.Threading.Tasks;
-using NadekoBot.Attributes;
 using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using NadekoBot.Common.Attributes;
+using NadekoBot.Modules.Help.Services;
+using NadekoBot.Modules.Permissions.Services;
 
 namespace NadekoBot.Modules.Help
 {
-    [NadekoModule("Help", "-")]
-    public class Help : NadekoTopLevelModule
+    public class Help : NadekoTopLevelModule<HelpService>
     {
-        private static string helpString { get; } = NadekoBot.BotConfig.HelpString;
-        public static string HelpString => String.Format(helpString, NadekoBot.Credentials.ClientId, NadekoBot.ModulePrefixes[typeof(Help).Name]);
-
-        public static string DMHelpString { get; } = NadekoBot.BotConfig.DMHelpString;
-
         public const string PatreonUrl = "https://patreon.com/nadekobot";
         public const string PaypalUrl = "https://paypal.me/Kwoth";
+        private readonly IBotCredentials _creds;
+        private readonly IBotConfigProvider _config;
+        private readonly CommandService _cmds;
+        private readonly GlobalPermissionService _perms;
+
+        public string HelpString => String.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
+        public string DMHelpString => _config.BotConfig.DMHelpString;
+
+        public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds)
+        {
+            _creds = creds;
+            _config = config;
+            _cmds = cmds;
+            _perms = perms;
+        }
 
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Modules()
@@ -30,8 +41,8 @@ namespace NadekoBot.Modules.Help
                 .WithFooter(efb => efb.WithText("ℹ️" + GetText("modules_footer", Prefix)))
                 .WithTitle(GetText("list_of_modules"))
                 .WithDescription(string.Join("\n",
-                                     NadekoBot.CommandService.Modules.GroupBy(m => m.GetTopLevelModule())
-                                         .Where(m => !Permissions.Permissions.GlobalPermissionCommands.BlockedModules.Contains(m.Key.Name.ToLowerInvariant()))
+                                     _cmds.Modules.GroupBy(m => m.GetTopLevelModule())
+                                         .Where(m => !_perms.BlockedModules.Contains(m.Key.Name.ToLowerInvariant()))
                                          .Select(m => "• " + m.Key.Name)
                                          .OrderBy(s => s)));
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -45,8 +56,8 @@ namespace NadekoBot.Modules.Help
             module = module?.Trim().ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(module))
                 return;
-            var cmds = NadekoBot.CommandService.Commands.Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
-                                                  .Where(c => !Permissions.Permissions.GlobalPermissionCommands.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
+            var cmds = _cmds.Commands.Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
+                                                .Where(c => !_perms.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
                                                   .OrderBy(c => c.Aliases.First())
                                                   .Distinct(new CommandTextEqualityComparer())
                                                   .AsEnumerable();
@@ -62,57 +73,40 @@ namespace NadekoBot.Modules.Help
 
             for (int i = 0; i < groups.Count(); i++)
             {
-                await channel.SendTableAsync(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "", groups.ElementAt(i), el => $"{el.Aliases.First(),-15} {"[" + el.Aliases.Skip(1).FirstOrDefault() + "]",-8}").ConfigureAwait(false);
+                await channel.SendTableAsync(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "", groups.ElementAt(i), el => $"{Prefix + el.Aliases.First(),-15} {"[" + el.Aliases.Skip(1).FirstOrDefault() + "]",-8}").ConfigureAwait(false);
             }
-            
 
             await ConfirmLocalized("commands_instr", Prefix).ConfigureAwait(false);
         }
+        [NadekoCommand, Usage, Description, Aliases]
+        [Priority(0)]
+        public async Task H([Remainder] string fail)
+        {
+            await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
+        }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task H([Remainder] string comToFind = null)
+        [Priority(1)]
+        public async Task H([Remainder] CommandInfo com = null)
         {
             var channel = Context.Channel;
 
-            comToFind = comToFind?.ToLowerInvariant();
-            if (string.IsNullOrWhiteSpace(comToFind))
+            if (com == null)
             {
-                IMessageChannel ch = channel is ITextChannel ? await ((IGuildUser)Context.User).CreateDMChannelAsync() : channel;
+                IMessageChannel ch = channel is ITextChannel ? await ((IGuildUser)Context.User).GetOrCreateDMChannelAsync() : channel;
                 await ch.SendMessageAsync(HelpString).ConfigureAwait(false);
                 return;
             }
-            var com = NadekoBot.CommandService.Commands.FirstOrDefault(c => c.Aliases.Select(a=>a.ToLowerInvariant()).Contains(comToFind));
 
-            if (com == null)
-            {
-                await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
-                return;
-            }
-            var str = string.Format("**`{0}`**", com.Aliases.First());
-            var alias = com.Aliases.Skip(1).FirstOrDefault();
-            if (alias != null)
-                str += string.Format(" **/ `{0}`**", alias);
-            var embed = new EmbedBuilder()
-                .AddField(fb => fb.WithName(str).WithValue($"{string.Format(com.Summary, com.Module.Aliases.First())} {GetCommandRequirements(com)}").WithIsInline(true))
-                .AddField(fb => fb.WithName(GetText("usage")).WithValue(string.Format(com.Remarks, com.Module.Aliases.First())).WithIsInline(false))
-                .WithColor(NadekoBot.OkColor);
+            //if (com == null)
+            //{
+            //    await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
+            //    return;
+            //}
+
+            var embed = _service.GetCommandHelp(com, Context.Guild);
             await channel.EmbedAsync(embed).ConfigureAwait(false);
         }
-
-        private string GetCommandRequirements(CommandInfo cmd) => 
-            string.Join(" ", cmd.Preconditions
-                  .Where(ca => ca is OwnerOnlyAttribute || ca is RequireUserPermissionAttribute)
-                  .Select(ca =>
-                  {
-                      if (ca is OwnerOnlyAttribute)
-                          return Format.Bold(GetText("bot_owner_only"));
-                      var cau = (RequireUserPermissionAttribute)ca;
-                      if (cau.GuildPermission != null)
-                          return Format.Bold(GetText("server_permission", cau.GuildPermission))
-                                       .Replace("Guild", "Server");
-                      return Format.Bold(GetText("channel_permission", cau.ChannelPermission))
-                                       .Replace("Guild", "Server");
-                  }));
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
@@ -122,7 +116,7 @@ namespace NadekoBot.Modules.Help
             var helpstr = new StringBuilder();
             helpstr.AppendLine(GetText("cmdlist_donate", PatreonUrl, PaypalUrl) + "\n");
             helpstr.AppendLine("##"+ GetText("table_of_contents"));
-            helpstr.AppendLine(string.Join("\n", NadekoBot.CommandService.Modules.Where(m => m.GetTopLevelModule().Name.ToLowerInvariant() != "help")
+            helpstr.AppendLine(string.Join("\n", _cmds.Modules.Where(m => m.GetTopLevelModule().Name.ToLowerInvariant() != "help")
                 .Select(m => m.GetTopLevelModule().Name)
                 .Distinct()
                 .OrderBy(m => m)
@@ -130,7 +124,7 @@ namespace NadekoBot.Modules.Help
                 .Select(m => string.Format("- [{0}](#{1})", m, m.ToLowerInvariant()))));
             helpstr.AppendLine();
             string lastModule = null;
-            foreach (var com in NadekoBot.CommandService.Commands.OrderBy(com => com.Module.GetTopLevelModule().Name).GroupBy(c => c.Aliases.First()).Select(g => g.First()))
+            foreach (var com in _cmds.Commands.OrderBy(com => com.Module.GetTopLevelModule().Name).GroupBy(c => c.Aliases.First()).Select(g => g.First()))
             {
                 var module = com.Module.GetTopLevelModule();
                 if (module.Name != lastModule)
@@ -146,11 +140,10 @@ namespace NadekoBot.Modules.Help
                     helpstr.AppendLine("----------------|--------------|-------");
                     lastModule = module.Name;
                 }
-                helpstr.AppendLine($"{string.Join(" ", com.Aliases.Select(a => "`" + a + "`"))} |" +
-                                   $" {string.Format(com.Summary, com.Module.GetPrefix())} {GetCommandRequirements(com)} |" +
-                                   $" {string.Format(com.Remarks, com.Module.GetPrefix())}");
+                helpstr.AppendLine($"{string.Join(" ", com.Aliases.Select(a => "`" + Prefix + a + "`"))} |" +
+                                   $" {string.Format(com.Summary, Prefix)} {_service.GetCommandRequirements(com, Context.Guild)} |" +
+                                   $" {string.Format(com.Remarks, Prefix)}");
             }
-            helpstr = helpstr.Replace(NadekoBot.Client.CurrentUser.Username , "@BotName");
             File.WriteAllText("../../docs/Commands List.md", helpstr.ToString());
             await ReplyConfirmLocalized("commandlist_regen").ConfigureAwait(false);
         }
@@ -159,8 +152,8 @@ namespace NadekoBot.Modules.Help
         public async Task Guide()
         {
             await ConfirmLocalized("guide", 
-                "http://nadekobot.readthedocs.io/en/1.3x/Commands%20List/",
-                "http://nadekobot.readthedocs.io/en/1.3x/").ConfigureAwait(false);
+                "http://nadekobot.readthedocs.io/en/latest/Commands%20List/",
+                "http://nadekobot.readthedocs.io/en/latest/").ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]

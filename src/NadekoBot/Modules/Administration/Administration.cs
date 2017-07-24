@@ -5,83 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NadekoBot.Common.Attributes;
 using NadekoBot.Services;
-using NadekoBot.Attributes;
-using Discord.WebSocket;
+using NadekoBot.Modules.Administration.Services;
 using NadekoBot.Services.Database.Models;
-using static NadekoBot.Modules.Permissions.Permissions;
-using System.Collections.Concurrent;
-using NLog;
-using NadekoBot.Modules.Permissions;
 
 namespace NadekoBot.Modules.Administration
 {
-    [NadekoModule("Administration", ".")]
-    public partial class Administration : NadekoTopLevelModule
+    public partial class Administration : NadekoTopLevelModule<AdministrationService>
     {
-        private static ConcurrentHashSet<ulong> deleteMessagesOnCommand { get; }
+        private IGuild _nadekoSupportServer;
+        private readonly DbService _db;
 
-        private new static readonly Logger _log;
-
-        static Administration()
+        public Administration(DbService db)
         {
-            _log = LogManager.GetCurrentClassLogger();
-            NadekoBot.CommandHandler.CommandExecuted += DelMsgOnCmd_Handler;
-
-            deleteMessagesOnCommand = new ConcurrentHashSet<ulong>(NadekoBot.AllGuildConfigs.Where(g => g.DeleteMessageOnCommand).Select(g => g.GuildId));
-
-        }
-
-        private static Task DelMsgOnCmd_Handler(IUserMessage msg, CommandInfo cmd)
-        {
-            var _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var channel = msg.Channel as SocketTextChannel;
-                    if (channel == null)
-                        return;
-                    if (deleteMessagesOnCommand.Contains(channel.Guild.Id) && cmd.Name != "prune" && cmd.Name != "pick")
-                        await msg.DeleteAsync().ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    _log.Warn(ex, "Delmsgoncmd errored...");
-                }
-            });
-            return Task.CompletedTask;
-        }
-
-        [NadekoCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task ResetPermissions()
-        {
-            using (var uow = DbHandler.UnitOfWork())
-            {
-                var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-                config.Permissions = Permissionv2.GetDefaultPermlist;
-                await uow.CompleteAsync();
-                UpdateCache(config);
-            }
-            await ReplyConfirmLocalized("perms_reset").ConfigureAwait(false);
-        }
-
-        [NadekoCommand, Usage, Description, Aliases]
-        [OwnerOnly]
-        public async Task ResetGlobalPermissions()
-        {
-            using (var uow = DbHandler.UnitOfWork())
-            {
-                var gc = uow.BotConfig.GetOrCreate();
-                gc.BlockedCommands.Clear();
-                gc.BlockedModules.Clear();
-
-                GlobalPermissionCommands.BlockedCommands.Clear();
-                GlobalPermissionCommands.BlockedModules.Clear();
-                await uow.CompleteAsync();
-            }
-            await ReplyConfirmLocalized("global_perms_reset").ConfigureAwait(false);
+            _db = db;
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -91,7 +29,7 @@ namespace NadekoBot.Modules.Administration
         public async Task Delmsgoncmd()
         {
             bool enabled;
-            using (var uow = DbHandler.UnitOfWork())
+            using (var uow = _db.UnitOfWork)
             {
                 var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set);
                 enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
@@ -100,12 +38,12 @@ namespace NadekoBot.Modules.Administration
             }
             if (enabled)
             {
-                deleteMessagesOnCommand.Add(Context.Guild.Id);
+                _service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
                 await ReplyConfirmLocalized("delmsg_on").ConfigureAwait(false);
             }
             else
             {
-                deleteMessagesOnCommand.TryRemove(Context.Guild.Id);
+                _service.DeleteMessagesOnCommand.TryRemove(Context.Guild.Id);
                 await ReplyConfirmLocalized("delmsg_off").ConfigureAwait(false);
             }
         }
@@ -122,14 +60,14 @@ namespace NadekoBot.Modules.Administration
                 return;
             try
             {
-                await usr.AddRolesAsync(role).ConfigureAwait(false);
+                await usr.AddRoleAsync(role).ConfigureAwait(false);
                 await ReplyConfirmLocalized("setrole", Format.Bold(role.Name), Format.Bold(usr.ToString()))
                     .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 await ReplyErrorLocalized("setrole_err").ConfigureAwait(false);
-                Console.WriteLine(ex.ToString());
+                _log.Info(ex);
             }
         }
 
@@ -144,7 +82,7 @@ namespace NadekoBot.Modules.Administration
                 return;
             try
             {
-                await usr.RemoveRolesAsync(role).ConfigureAwait(false);
+                await usr.RemoveRoleAsync(role).ConfigureAwait(false);
                 await ReplyConfirmLocalized("remrole", Format.Bold(role.Name), Format.Bold(usr.ToString())).ConfigureAwait(false);
             }
             catch
@@ -186,16 +124,15 @@ namespace NadekoBot.Modules.Administration
         {
             var guser = (IGuildUser)Context.User;
 
-            var userRoles = user.GetRoles();
-            if (guser.Id != Context.Guild.OwnerId && 
-                (user.Id == Context.Guild.OwnerId || guser.GetRoles().Max(x => x.Position) <= userRoles.Max(x => x.Position)))
+            var userRoles = user.GetRoles().Except(new[] { guser.Guild.EveryoneRole });
+            if (user.Id == Context.Guild.OwnerId || (Context.User.Id != Context.Guild.OwnerId && guser.GetRoles().Max(x => x.Position) <= userRoles.Max(x => x.Position)))
                 return;
             try
             {
                 await user.RemoveRolesAsync(userRoles).ConfigureAwait(false);
                 await ReplyConfirmLocalized("rar", Format.Bold(user.ToString())).ConfigureAwait(false);
             }
-            catch
+            catch (Exception)
             {
                 await ReplyErrorLocalized("rar_err").ConfigureAwait(false);
             }
@@ -218,13 +155,10 @@ namespace NadekoBot.Modules.Administration
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task RoleHoist(string roleSearchName, PermissionAction targetState)
+        public async Task RoleHoist(IRole role)
         {
-            var roleName = roleSearchName.ToUpperInvariant();
-            var role = Context.Guild.Roles.FirstOrDefault(r => r.Name.ToUpperInvariant() == roleName);
-
-            await role.ModifyAsync(r => r.Hoist = targetState.Value).ConfigureAwait(false);
-            await ReplyConfirmLocalized("rh", Format.Bold(role.Name), Format.Bold(targetState.Value.ToString())).ConfigureAwait(false);
+            await role.ModifyAsync(r => r.Hoist = !role.IsHoisted).ConfigureAwait(false);
+            await ReplyConfirmLocalized("rh", Format.Bold(role.Name), Format.Bold(role.IsHoisted.ToString())).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -373,65 +307,6 @@ namespace NadekoBot.Modules.Administration
             await ReplyConfirmLocalized("set_channel_name").ConfigureAwait(false);
         }
 
-
-        //delets her own messages, no perm required
-        [NadekoCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        public async Task Prune()
-        {
-            var user = await Context.Guild.GetCurrentUserAsync().ConfigureAwait(false);
-
-            var enumerable = (await Context.Channel.GetMessagesAsync().Flatten())
-                .Where(x => x.Author.Id == user.Id && DateTime.Now - x.CreatedAt < twoWeeks);
-            await Context.Channel.DeleteMessagesAsync(enumerable).ConfigureAwait(false);
-            Context.Message.DeleteAfter(3);
-        }
-
-
-        private TimeSpan twoWeeks => TimeSpan.FromDays(14);
-        // prune x
-        [NadekoCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
-        [RequireBotPermission(GuildPermission.ManageMessages)]
-        [Priority(0)]
-        public async Task Prune(int count)
-        {
-            if (count < 1)
-                return;
-            await Context.Message.DeleteAsync().ConfigureAwait(false);
-            int limit = (count < 100) ? count + 1 : 100;
-            var enumerable = (await Context.Channel.GetMessagesAsync(limit: limit).Flatten().ConfigureAwait(false))
-                .Where(x => DateTime.Now - x.CreatedAt < twoWeeks);
-            if (enumerable.FirstOrDefault()?.Id == Context.Message.Id)
-                enumerable = enumerable.Skip(1).ToArray();
-            else
-                enumerable = enumerable.Take(count);
-            await Context.Channel.DeleteMessagesAsync(enumerable).ConfigureAwait(false);
-        }
-
-        //prune @user [x]
-        [NadekoCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        [RequireUserPermission(ChannelPermission.ManageMessages)]
-        [RequireBotPermission(GuildPermission.ManageMessages)]
-        [Priority(1)]
-        public async Task Prune(IGuildUser user, int count = 100)
-        {
-            if (count < 1)
-                return;
-
-            if (user.Id == Context.User.Id)
-                count += 1;
-
-            int limit = (count < 100) ? count : 100;
-            var enumerable = (await Context.Channel.GetMessagesAsync(limit: limit).Flatten())
-                .Where(m => m.Author == user && DateTime.Now - m.CreatedAt < twoWeeks);
-            await Context.Channel.DeleteMessagesAsync(enumerable).ConfigureAwait(false);
-
-            Context.Message.DeleteAfter(3);
-        }
-
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.MentionEveryone)]
@@ -457,19 +332,18 @@ namespace NadekoBot.Modules.Administration
             await Context.Channel.SendMessageAsync(send).ConfigureAwait(false);
         }
 
-        private IGuild _nadekoSupportServer;
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Donators()
         {
             IEnumerable<Donator> donatorsOrdered;
 
-            using (var uow = DbHandler.UnitOfWork())
+            using (var uow = _db.UnitOfWork)
             {
                 donatorsOrdered = uow.Donators.GetDonatorsOrdered();
             }
             await Context.Channel.SendConfirmAsync(GetText("donators"), string.Join("⭐", donatorsOrdered.Select(d => d.Name))).ConfigureAwait(false);
 
-            _nadekoSupportServer = _nadekoSupportServer ?? NadekoBot.Client.GetGuild(117523346618318850);
+            _nadekoSupportServer = _nadekoSupportServer ?? (await Context.Client.GetGuildAsync(117523346618318850));
 
             var patreonRole = _nadekoSupportServer?.GetRole(236667642088259585);
             if (patreonRole == null)
@@ -485,52 +359,12 @@ namespace NadekoBot.Modules.Administration
         public async Task Donadd(IUser donator, int amount)
         {
             Donator don;
-            using (var uow = DbHandler.UnitOfWork())
+            using (var uow = _db.UnitOfWork)
             {
                 don = uow.Donators.AddOrUpdateDonator(donator.Id, donator.Username, amount);
                 await uow.CompleteAsync();
             }
             await ReplyConfirmLocalized("donadd", don.Amount).ConfigureAwait(false);
         }
-
-        //[NadekoCommand, Usage, Description, Aliases]
-        //[RequireContext(ContextType.Guild)]
-        //public async Task Timezones(int page = 1)
-        //{
-        //    page -= 1;
-
-        //    if (page < 0 || page > 20)
-        //        return;
-
-        //    var timezones = TimeZoneInfo.GetSystemTimeZones();
-        //    var timezonesPerPage = 20;
-
-        //    await Context.Channel.SendPaginatedConfirmAsync(page + 1, (curPage) => new EmbedBuilder()
-        //        .WithOkColor()
-        //        .WithTitle("Available Timezones")
-        //        .WithDescription(string.Join("\n", timezones.Skip((curPage - 1) * timezonesPerPage).Take(timezonesPerPage).Select(x => $"`{x.Id,-25}` UTC{x.BaseUtcOffset:hhmm}"))),
-        //        timezones.Count / timezonesPerPage);
-        //}
-
-        //[NadekoCommand, Usage, Description, Aliases]
-        //[RequireContext(ContextType.Guild)]
-        //public async Task Timezone([Remainder] string id)
-        //{
-        //    TimeZoneInfo tz;
-        //    try
-        //    {
-        //        tz = TimeZoneInfo.FindSystemTimeZoneById(id);
-        //        if (tz != null)
-        //            await Context.Channel.SendConfirmAsync(tz.ToString()).ConfigureAwait(false);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        tz = null;
-        //        _log.Warn(ex);
-        //    }
-
-        //    if (tz == null)
-        //        await Context.Channel.SendErrorAsync("Timezone not found. You should specify one of the timezones listed in the 'timezones' command.").ConfigureAwait(false);
-        //}
     }
 }

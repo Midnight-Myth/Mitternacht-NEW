@@ -4,142 +4,258 @@ using Discord.WebSocket;
 using NadekoBot.Services;
 using NadekoBot.Services.Impl;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using NadekoBot.Modules.Permissions;
-using NadekoBot.TypeReaders;
-using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using NadekoBot.Modules.Music;
 using NadekoBot.Services.Database.Models;
-using System.Resources;
-using NadekoBot.Resources;
+using System.Threading;
+using System.IO;
+using NadekoBot.Extensions;
+using System.Collections.Generic;
+using NadekoBot.Common;
+using NadekoBot.Common.ShardCom;
+using NadekoBot.Common.TypeReaders;
+using NadekoBot.Common.TypeReaders.Models;
+using NadekoBot.Services.Database;
 
 namespace NadekoBot
 {
     public class NadekoBot
     {
         private Logger _log;
-        
-        public static Color OkColor { get; }
-        public static Color ErrorColor { get; }
 
-        public static CommandService CommandService { get; private set; }
-        public static CommandHandler CommandHandler { get; private set; }
-        public static DiscordShardedClient Client { get; private set; }
-        public static BotCredentials Credentials { get; }
+        public BotCredentials Credentials { get; }
 
-        public static Localization Localization { get; private set; }
-        public static ResourceManager ResponsesResourceManager { get; } = new ResourceManager(typeof(ResponseStrings));
+        public DiscordSocketClient Client { get; }
+        public CommandService CommandService { get; }
 
-        public static GoogleApiService Google { get; private set; }
-        public static StatsService Stats { get; private set; }
-        public static IImagesService Images { get; private set; }
+        public DbService Db { get; }
+        public ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
 
-        public static ConcurrentDictionary<string, string> ModulePrefixes { get; private set; }
-        public static bool Ready { get; private set; }
+        /* I don't know how to make this not be static
+         * and keep the convenience of .WithOkColor
+         * and .WithErrorColor extensions methods.
+         * I don't want to pass botconfig every time I 
+         * want to send a confirm or error message, so
+         * I'll keep this for now */
+        public static Color OkColor { get; private set; }
+        public static Color ErrorColor { get; private set; }
 
-        public static ImmutableArray<GuildConfig> AllGuildConfigs { get; }
-        public static BotConfig BotConfig { get; }
+        public TaskCompletionSource<bool> Ready { get; private set; } = new TaskCompletionSource<bool>();
 
-        static NadekoBot()
+        public INServiceProvider Services { get; private set; }
+
+        public ShardsCoordinator ShardCoord { get; private set; }
+
+        private readonly ShardComClient _comClient;
+
+        private readonly BotConfig _botConfig;
+
+        public NadekoBot(int shardId, int parentProcessId, int? port = null)
         {
-            SetupLogger();
-            Credentials = new BotCredentials();
+            if (shardId < 0)
+                throw new ArgumentOutOfRangeException(nameof(shardId));
 
-            using (var uow = DbHandler.UnitOfWork())
-            {
-                AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs().ToImmutableArray();
-                BotConfig = uow.BotConfig.GetOrCreate();
-                OkColor = new Color(Convert.ToUInt32(BotConfig.OkColor, 16));
-                ErrorColor = new Color(Convert.ToUInt32(BotConfig.ErrorColor, 16));
-            }
-
-            //ImageSharp.Configuration.Default.AddImageFormat(new ImageSharp.Formats.PngFormat());
-            //ImageSharp.Configuration.Default.AddImageFormat(new ImageSharp.Formats.JpegFormat());
-        }
-
-        public async Task RunAsync(params string[] args)
-        {
+            LogSetup.SetupLogger();
             _log = LogManager.GetCurrentClassLogger();
+            TerribleElevatedPermissionCheck();
 
-            _log.Info("Starting NadekoBot v" + StatsService.BotVersion);
-
-            //create client
-            Client = new DiscordShardedClient(new DiscordSocketConfig
+            Credentials = new BotCredentials();
+            Db = new DbService(Credentials);
+            Client = new DiscordSocketClient(new DiscordSocketConfig
             {
-                AudioMode = Discord.Audio.AudioMode.Outgoing,
                 MessageCacheSize = 10,
                 LogLevel = LogSeverity.Warning,
-                TotalShards = Credentials.TotalShards,
                 ConnectionTimeout = int.MaxValue,
-#if !GLOBAL_NADEKO
-                //AlwaysDownloadUsers = true,
-#endif
+                TotalShards = Credentials.TotalShards,
+                ShardId = shardId,
+                AlwaysDownloadUsers = false,
             });
+            CommandService = new CommandService(new CommandServiceConfig()
+            {
+                CaseSensitiveCommands = false,
+                DefaultRunMode = RunMode.Sync,
+            });
+
+            port = port ?? Credentials.ShardRunPort;
+            _comClient = new ShardComClient(port.Value);
+
+            using (var uow = Db.UnitOfWork)
+            {
+                _botConfig = uow.BotConfig.GetOrCreate();
+                OkColor = new Color(Convert.ToUInt32(_botConfig.OkColor, 16));
+                ErrorColor = new Color(Convert.ToUInt32(_botConfig.ErrorColor, 16));
+            }
+
+            SetupShard(parentProcessId, port.Value);
 
 #if GLOBAL_NADEKO
             Client.Log += Client_Log;
 #endif
+        }
 
-            //initialize Services
-            Localization = new Localization(NadekoBot.BotConfig.Locale, NadekoBot.AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale));
-            CommandService = new CommandService(new CommandServiceConfig() {
-                CaseSensitiveCommands = false,
-                DefaultRunMode = RunMode.Sync
+        private void StartSendingData()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await _comClient.Send(new ShardComMessage()
+                    {
+                        ConnectionState = Client.ConnectionState,
+                        Guilds = Client.ConnectionState == ConnectionState.Connected ? Client.Guilds.Count : 0,
+                        ShardId = Client.ShardId,
+                        Time = DateTime.UtcNow,
+                    });
+                    await Task.Delay(5000);
+                }
             });
-            Google = new GoogleApiService();
-            CommandHandler = new CommandHandler(Client, CommandService);
-            Stats = new StatsService(Client, CommandHandler);
-            Images = await ImagesService.Create().ConfigureAwait(false);
+        }
 
-            ////setup DI
-            //var depMap = new DependencyMap();
-            //depMap.Add<ILocalization>(Localizer);
-            //depMap.Add<ShardedDiscordClient>(Client);
-            //depMap.Add<CommandService>(CommandService);
-            //depMap.Add<IGoogleApiService>(Google);
+        private void AddServices()
+        {
+            var startingGuildIdList = Client.Guilds.Select(x => (long)x.Id).ToList();
 
+            //this unit of work will be used for initialization of all modules too, to prevent multiple queries from running
+            using (var uow = Db.UnitOfWork)
+            {
+                AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
 
-            //setup typereaders
-            CommandService.AddTypeReader<PermissionAction>(new PermissionActionTypeReader());
-            CommandService.AddTypeReader<CommandInfo>(new CommandTypeReader());
-            CommandService.AddTypeReader<CommandOrCrInfo>(new CommandOrCrTypeReader());
-            CommandService.AddTypeReader<ModuleInfo>(new ModuleTypeReader());
-            CommandService.AddTypeReader<ModuleOrCrInfo>(new ModuleOrCrTypeReader());
-            CommandService.AddTypeReader<IGuild>(new GuildTypeReader());
+                var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
 
+                //initialize Services
+                Services = new NServiceProvider.ServiceProviderBuilder()
+                    .AddManual<IBotCredentials>(Credentials)
+                    .AddManual(Db)
+                    .AddManual(_botConfig)
+                    .AddManual(Client)
+                    .AddManual(CommandService)
+                    .AddManual<ILocalization>(localization)
+                    .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs) //todo wrap this
+                    .AddManual<NadekoBot>(this)
+                    .AddManual<IUnitOfWork>(uow)
+                    .LoadFrom(Assembly.GetEntryAssembly())
+                    .Build();
+
+                var commandHandler = Services.GetService<CommandHandler>();
+                commandHandler.AddServices(Services);
+
+                //setup typereaders
+                CommandService.AddTypeReader<PermissionAction>(new PermissionActionTypeReader());
+                CommandService.AddTypeReader<CommandInfo>(new CommandTypeReader());
+                CommandService.AddTypeReader<CommandOrCrInfo>(new CommandOrCrTypeReader());
+                CommandService.AddTypeReader<ModuleInfo>(new ModuleTypeReader(CommandService));
+                CommandService.AddTypeReader<ModuleOrCrInfo>(new ModuleOrCrTypeReader(CommandService));
+                CommandService.AddTypeReader<IGuild>(new GuildTypeReader(Client));
+                CommandService.AddTypeReader<GuildDateTime>(new GuildDateTimeTypeReader());
+
+            }
+        }
+
+        private async Task LoginAsync(string token)
+        {
+            var clientReady = new TaskCompletionSource<bool>();
+
+            Task SetClientReady()
+            {
+                var _ = Task.Run(async () =>
+                {
+                    clientReady.TrySetResult(true);
+                    try
+                    {
+                        foreach (var chan in (await Client.GetDMChannelsAsync()))
+                        {
+                            await chan.CloseAsync().ConfigureAwait(false);
+                        }
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    finally
+                    {
+                        
+                    }
+                });
+                return Task.CompletedTask;
+            }
+
+            //connect
+            _log.Info("Shard {0} logging in ...", Client.ShardId);
+            await Client.LoginAsync(TokenType.Bot, token).ConfigureAwait(false);
+            await Client.StartAsync().ConfigureAwait(false);
+            Client.Ready += SetClientReady;
+            await clientReady.Task.ConfigureAwait(false);
+            Client.Ready -= SetClientReady;
+            Client.JoinedGuild += Client_JoinedGuild;
+            Client.LeftGuild += Client_LeftGuild;
+            _log.Info("Shard {0} logged in.", Client.ShardId);
+        }
+
+        private Task Client_LeftGuild(SocketGuild arg)
+        {
+            _log.Info("Left server: {0} [{1}]", arg?.Name, arg?.Id);
+            return Task.CompletedTask;
+        }
+
+        private Task Client_JoinedGuild(SocketGuild arg)
+        {
+            _log.Info("Joined server: {0} [{1}]", arg?.Name, arg?.Id);
+            return Task.CompletedTask;
+        }
+
+        public async Task RunAsync(params string[] args)
+        {
+            if(Client.ShardId == 0)
+            _log.Info("Starting NadekoBot v" + StatsService.BotVersion);
 
             var sw = Stopwatch.StartNew();
-            //connect
-            await Client.LoginAsync(TokenType.Bot, Credentials.Token).ConfigureAwait(false);
-            await Client.ConnectAsync().ConfigureAwait(false);
-            //await Client.DownloadAllUsersAsync().ConfigureAwait(false);
-            Stats.Initialize();
+
+            await LoginAsync(Credentials.Token).ConfigureAwait(false);
+
+            _log.Info($"Shard {Client.ShardId} loading services...");
+            AddServices();
 
             sw.Stop();
-            _log.Info("Connected in " + sw.Elapsed.TotalSeconds.ToString("F2"));
+            _log.Info($"Shard {Client.ShardId} connected in {sw.Elapsed.TotalSeconds:F2}s");
 
-            //load commands and prefixes
-
-            ModulePrefixes = new ConcurrentDictionary<string, string>(NadekoBot.BotConfig.ModulePrefixes.OrderByDescending(mp => mp.Prefix.Length).ToDictionary(m => m.ModuleName, m => m.Prefix));
+            var stats = Services.GetService<IStatsService>();
+            stats.Initialize();
+            var commandHandler = Services.GetService<CommandHandler>();
+            var CommandService = Services.GetService<CommandService>();
 
             // start handling messages received in commandhandler
-            
-            await CommandHandler.StartHandling().ConfigureAwait(false);
+            await commandHandler.StartHandling().ConfigureAwait(false);
 
-            var _ = await Task.Run(() => CommandService.AddModulesAsync(this.GetType().GetTypeInfo().Assembly)).ConfigureAwait(false);
-#if !GLOBAL_NADEKO
-            await CommandService.AddModuleAsync<Music>().ConfigureAwait(false);
+            var _ = await CommandService.AddModulesAsync(this.GetType().GetTypeInfo().Assembly);
+
+
+            bool isPublicNadeko = false;
+#if GLOBAL_NADEKO
+            isPublicNadeko = true;
 #endif
-            Ready = true;
-            Console.WriteLine(await Stats.Print().ConfigureAwait(false));
+            //_log.Info(string.Join(", ", CommandService.Commands
+            //    .Distinct(x => x.Name + x.Module.Name)
+            //    .SelectMany(x => x.Aliases)
+            //    .GroupBy(x => x)
+            //    .Where(x => x.Count() > 1)
+            //    .Select(x => x.Key + $"({x.Count()})")));
+
+            //unload modules which are not available on the public bot
+
+            if(isPublicNadeko)
+                CommandService
+                    .Modules
+                    .ToArray()
+                    .Where(x => x.Preconditions.Any(y => y.GetType() == typeof(NoPublicBot)))
+                    .ForEach(x => CommandService.RemoveModuleAsync(x));
+
+            Ready.TrySetResult(true);
+            _log.Info($"Shard {Client.ShardId} ready.");
+            //_log.Info(await stats.Print().ConfigureAwait(false));
         }
 
         private Task Client_Log(LogMessage arg)
@@ -154,28 +270,51 @@ namespace NadekoBot
         public async Task RunAndBlockAsync(params string[] args)
         {
             await RunAsync(args).ConfigureAwait(false);
-            await Task.Delay(-1).ConfigureAwait(false);
+            StartSendingData();
+            if (ShardCoord != null)
+                await ShardCoord.RunAndBlockAsync();
+            else
+            {
+                await Task.Delay(-1).ConfigureAwait(false);
+            }
         }
 
-        private static void SetupLogger()
+        private void TerribleElevatedPermissionCheck()
         {
             try
             {
-                var logConfig = new LoggingConfiguration();
-                var consoleTarget = new ColoredConsoleTarget();
-
-                consoleTarget.Layout = @"${date:format=HH\:mm\:ss} ${logger} | ${message}";
-
-                logConfig.AddTarget("Console", consoleTarget);
-
-                logConfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, consoleTarget));
-
-                LogManager.Configuration = logConfig;
+                File.WriteAllText("test", "test");
+                File.Delete("test");
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex);
+                _log.Error("You must run the application as an ADMINISTRATOR.");
+                Console.ReadKey();
+                Environment.Exit(2);
             }
+        }
+
+        private void SetupShard(int parentProcessId, int port)
+        {
+            if (Client.ShardId == 0)
+            {
+                ShardCoord = new ShardsCoordinator(port);
+                return;
+            }
+            new Thread(new ThreadStart(() =>
+            {
+                try
+                {
+                    var p = Process.GetProcessById(parentProcessId);
+                    if (p == null)
+                        return;
+                    p.WaitForExit();
+                }
+                finally
+                {
+                    Environment.Exit(10);
+                }
+            })).Start();
         }
     }
 }
