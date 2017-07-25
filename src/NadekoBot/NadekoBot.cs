@@ -91,6 +91,7 @@ namespace NadekoBot
             }
 
             SetupShard(parentProcessId, port.Value);
+            
 
 #if GLOBAL_NADEKO
             Client.Log += Client_Log;

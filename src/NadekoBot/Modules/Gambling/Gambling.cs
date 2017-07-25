@@ -8,6 +8,7 @@ using NadekoBot.Services.Database.Models;
 using System.Collections.Generic;
 using NadekoBot.Common;
 using NadekoBot.Common.Attributes;
+using System;
 
 namespace NadekoBot.Modules.Gambling
 {
@@ -248,6 +249,36 @@ namespace NadekoBot.Modules.Gambling
                 }
             }
             await Context.Channel.SendConfirmAsync(str).ConfigureAwait(false);
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        public async Task DailyMoney([Remainder] IUser user = null)
+        {
+            user = user ?? Context.User;
+
+            DateTime today = DateTime.Today;
+            var uid = Context.User.Id;
+            DailyMoney data;
+            using (var uow = _db.UnitOfWork)
+            {
+                data = uow.DailyMoney.GetOrCreate(uid);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+            if (data.LastTimeGotten.Date < today.Date)
+            {
+                using (var uow = _db.UnitOfWork)
+                {
+                    uow.DailyMoney.TryUpdateState(uid, today);
+                    await uow.CompleteAsync();
+                }
+                await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 20, false).ConfigureAwait(false);
+
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil von 20 {CurrencyName} abgeholt.");
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync("Du hast deinen täglichen Anteil heute bereits abgeholt.");
+            }
         }
 
         [NadekoCommand, Usage, Description, Aliases]

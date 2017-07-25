@@ -57,6 +57,12 @@ namespace NadekoBot.Services.Database
         private IWarningsRepository _warnings;
         public IWarningsRepository Warnings => _warnings ?? (_warnings = new WarningsRepository(_context));
 
+        private ILevelModelRepository _levelmodel;
+        public ILevelModelRepository LevelModel => _levelmodel ?? (_levelmodel = new LevelModelRepository(_context));
+
+        private IDailyMoneyRepository _dailymoney;
+        public IDailyMoneyRepository DailyMoney => _dailymoney ?? (_dailymoney = new DailyMoneyRepository(_context));
+
         public UnitOfWork(NadekoContext context)
         {
             _context = context;
