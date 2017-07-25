@@ -1701,7 +1701,7 @@
   <data name="save_usage" xml:space="preserve">
     <value>`{0}save classical1`</value>
   </data>
-    <data name="streamrole_cmd" xml:space="preserve">
+  <data name="streamrole_cmd" xml:space="preserve">
     <value>streamrole</value>
   </data>
   <data name="streamrole_desc" xml:space="preserve">
@@ -3599,5 +3599,50 @@
   </data>
   <data name="nsfwtagblacklist_desc" xml:space="preserve">
     <value>Toggles whether the tag is blacklisted or not in nsfw searches. Provide no parameters to see the list of blacklisted tags.</value>
+  </data>
+  <data name="addxp_cmd" xml:space="preserve">
+    <value>addxp</value>
+  </data>
+  <data name="addxp_desc" xml:space="preserve">
+    <value>Gibt einem Spieler XP aus der unendlich Bot-XP-Quelle</value>
+  </data>
+  <data name="addxp_usage" xml:space="preserve">
+    <value>`{0}addxp &lt;xp&gt; &lt;users&gt;`</value>
+  </data>
+  <data name="dailymoney_cmd" xml:space="preserve">
+    <value>dailymoney dm</value>
+  </data>
+  <data name="dailymoney_desc" xml:space="preserve">
+    <value>Tägliches Geld (20 Euro, wird um 0 Uhr zurückgesetzt)</value>
+  </data>
+  <data name="dailymoney_usage" xml:space="preserve">
+    <value>`{0}dm`</value>
+  </data>
+  <data name="ranks_cmd" xml:space="preserve">
+    <value>ranks ranklist</value>
+  </data>
+  <data name="ranks_desc" xml:space="preserve">
+    <value>Gibt eine geordnete Rangliste mit Nutzern und ihren Rängen zurück.</value>
+  </data>
+  <data name="ranks_usage" xml:space="preserve">
+    <value>`{0}ranks [anzahl] [startposition]`</value>
+  </data>
+  <data name="rank_cmd" xml:space="preserve">
+    <value>rank</value>
+  </data>
+  <data name="rank_desc" xml:space="preserve">
+    <value>Zeigt den Rang eines Nutzers an.</value>
+  </data>
+  <data name="rank_usage" xml:space="preserve">
+    <value>`{0}rank [user]`</value>
+  </data>
+  <data name="turntoxp_cmd" xml:space="preserve">
+    <value>turntoxp turntoexp</value>
+  </data>
+  <data name="turntoxp_desc" xml:space="preserve">
+    <value>Tauscht Geld in XP um. Umtauschrate 1 zu 5.</value>
+  </data>
+  <data name="turntoxp_usage" xml:space="preserve">
+    <value>`{0}turntoxp &lt;geld&gt;`</value>
   </data>
 </root>
