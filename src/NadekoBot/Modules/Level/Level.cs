@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 namespace NadekoBot.Modules.Level
 {
-    [NadekoModule("Level")]
     public partial class Level : NadekoTopLevelModule<LevelService>
     {
         public static string CurrencyName { get; set; }
