@@ -76,6 +76,8 @@ namespace NadekoBot.Modules.Level
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Ranks(int count, [Remainder]int position)
         {
+            var elementsPerList = 20;
+
             List<LevelModel> levelmodels = new List<LevelModel>();
             using (var uow = _db.UnitOfWork)
             {
@@ -96,9 +98,9 @@ namespace NadekoBot.Modules.Level
                 var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
                 if (lm.TotalXP == 0) break;
 
-                if ((i - position) % 20 == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
+                if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
                 if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(24, true)) ?? lm.UserId.ToString().TrimTo(24,true), -26} | LEVEL {lm.Level,3} | XP {lm.CurrentXP,6}/{LevelModelRepository.GetXPToLevel(lm.Level),6} | TOTAL XP {lm.TotalXP,8}");
-                if((i - position) % 20f == 1)
+                if((i - position) % elementsPerList == elementsPerList-1)
                 {
                     sb.Append("```");
                     rankstrings.Add(sb.ToString());
