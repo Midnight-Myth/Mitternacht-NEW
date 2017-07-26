@@ -26,7 +26,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.BanMembers)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task Warn(IGuildUser user, [Remainder] string reason = null)
             {
                 try
@@ -52,7 +52,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.BanMembers)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             [Priority(2)]
             public Task Warnlog(int page, IGuildUser user)
                 => Warnlog(page, user.Id);
@@ -61,18 +61,18 @@ namespace NadekoBot.Modules.Administration
             [RequireContext(ContextType.Guild)]
             [Priority(3)]
             public Task Warnlog(IGuildUser user)
-                => Context.User.Id == user.Id || ((IGuildUser)Context.User).GuildPermissions.BanMembers ? Warnlog(user.Id) : Task.CompletedTask;
+                => Context.User.Id == user.Id || ((IGuildUser)Context.User).GuildPermissions.KickMembers ? Warnlog(user.Id) : Task.CompletedTask;
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.BanMembers)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             [Priority(0)]
             public Task Warnlog(int page, ulong userId)
                 => InternalWarnlog(userId, page - 1);
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.BanMembers)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             [Priority(1)]
             public Task Warnlog(ulong userId)
                 => InternalWarnlog(userId, 0);
@@ -118,7 +118,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.BanMembers)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task WarnlogAll(int page = 1)
             {
                 if (--page < 0)
