@@ -69,7 +69,7 @@ namespace NadekoBot.Modules.Level
             else
             {
                 var user = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
-                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **{user?.Nickname ?? userId.ToString()}\'s Rang > LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXPToLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
+                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **{user?.Nickname ?? (user?.Username ?? userId.ToString())}\'s Rang > LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXPToLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
             }
         }
 
