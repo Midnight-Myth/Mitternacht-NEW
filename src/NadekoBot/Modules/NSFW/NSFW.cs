@@ -14,6 +14,7 @@ using NadekoBot.Common.Collections;
 using NadekoBot.Modules.Searches.Common;
 using NadekoBot.Modules.Searches.Services;
 using NadekoBot.Modules.NSFW.Exceptions;
+using System.Text.RegularExpressions;
 
 namespace NadekoBot.Modules.NSFW
 {
@@ -130,6 +131,23 @@ namespace NadekoBot.Modules.NSFW
         }
 
         [NadekoCommand, Usage, Description, Aliases]
+        public async Task Derpi([Remainder] string tag = null)
+        {
+            tag = tag?.Trim() ?? "";
+
+            var url = await GetDerpibooruImageLink(tag).ConfigureAwait(false);
+
+            if (url == null)
+                await ReplyErrorLocalized("not_found").ConfigureAwait(false);
+            else
+                await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
+                    .WithImageUrl(url)
+                    .WithFooter(efb => efb.WithText("Derpibooru")))
+                    .ConfigureAwait(false);
+        }
+
+
+        [NadekoCommand, Usage, Description, Aliases]
         public Task Yandere([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.Yandere, false);
 
@@ -242,5 +260,37 @@ namespace NadekoBot.Modules.NSFW
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
         }
+
+        public async Task<string> GetDerpibooruImageLink(string tag) => await Task.Run(async () =>
+         {
+             try
+             {
+                 var max = 101;
+                 var rng = new Random();
+                 GETIMAGE:
+                 using (var http = new HttpClient())
+                 {
+                     http.AddFakeHeaders();
+                     var url = $"https://derpibooru.org/search.json?q=explicit%2C-guro";
+                     if (!string.IsNullOrWhiteSpace(tag))
+                         url += ($"%2C{(tag.Replace("+", "%2C").Replace(" ", "+"))}");
+                     url += ($"&page={rng.Next(0, max)}&key=h-jh3W2FA7xpssjyyt1y");
+                     var json = await http.GetStringAsync(url).ConfigureAwait(false);
+
+                     var matches = Regex.Matches(json, @"derpicdn\.net\/img\/[0-9]+\/[0-9]+\/[0-9]+\/[0-9]+\/large\.png");
+                     if (matches.Count == 0)
+                     {
+                         max -= 5;
+                         goto GETIMAGE;
+                     }
+                     var match = matches[rng.Next(0, matches.Count)];
+                     return $"https://{match.Value}";
+                 }
+             }
+             catch
+             {
+                 return null;
+             }
+         });
     }
 }

@@ -252,12 +252,15 @@ namespace NadekoBot.Modules.Gambling
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task DailyMoney([Remainder] IUser user = null)
+        [RequireContext(ContextType.Guild)]
+        public async Task DailyMoney()
         {
-            user = user ?? Context.User;
+            var user = (IGuildUser)Context.User;
 
             DateTime today = DateTime.Today;
             var uid = Context.User.Id;
+            var perms = user.GuildPermissions;
+
             DailyMoney data;
             using (var uow = _db.UnitOfWork)
             {
@@ -271,9 +274,24 @@ namespace NadekoBot.Modules.Gambling
                     uow.DailyMoney.TryUpdateState(uid, today);
                     await uow.CompleteAsync();
                 }
-                await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 20, false).ConfigureAwait(false);
+                if(perms.Administrator)
+                {
+                    await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 50, false).ConfigureAwait(false);
 
-                await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil von 20 {CurrencyName} abgeholt.");
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil abgeholt.");
+                }
+                else if(perms.KickMembers)
+                {
+                    await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 30, false).ConfigureAwait(false);
+
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Lohn von 30 {CurrencyName} abgeholt.");
+                }
+                else
+                {
+                    await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 20, false).ConfigureAwait(false);
+
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil von 20 {CurrencyName} abgeholt.");
+                }
             }
             else
             {

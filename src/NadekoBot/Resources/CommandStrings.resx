@@ -3645,4 +3645,22 @@
   <data name="turntoxp_usage" xml:space="preserve">
     <value>`{0}turntoxp &lt;geld&gt;`</value>
   </data>
+ <data name="derpi_cmd" xml:space="preserve">
+    <value>derpi</value>
+  </data>
+  <data name="derpi_desc" xml:space="preserve">
+    <value>Zeigt ein zufälliges Hentai Bild von derpiboo.ru mit einem gegebenen Tag. Ein Tag ist optional aber bevorzugt. Benutze + für mehrere Tags.</value>
+  </data>
+  <data name="derpi_usage" xml:space="preserve">
+    <value>`{0}derpi vinyl scratch+kissing`</value>
+  </data>
+  <data name="ponybooru_cmd" xml:space="preserve">
+    <value>pony broni</value>
+  </data>
+  <data name="ponybooru_desc" xml:space="preserve">
+    <value>Shows a random image from bronibooru with a given tag. Tag is optional but preferred. (multiple tags are appended with +)</value>
+  </data>
+  <data name="ponybooru_usage" xml:space="preserve">
+    <value>`{0}pony scootaloo`</value>
+  </data>
 </root>

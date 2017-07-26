@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using NadekoBot.Common.Attributes;
 using NadekoBot.Modules.Administration.Services;
+using System.Linq;
 
 namespace NadekoBot.Modules.Administration
 {
@@ -49,7 +50,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageRoles)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
             [Priority(0)]
             public async Task Mute(IGuildUser user)
@@ -67,17 +68,42 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageRoles)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
             [Priority(1)]
-            public async Task Mute(int minutes, IGuildUser user)
+            public async Task Mute(string time, IGuildUser user)
             {
-                if (minutes < 1 || minutes > 1440)
-                    return;
+                string argTime = time;
+                int days = 0, hours = 0, minutes = 0;
+                string sdays = "0", shours = "0", sminutes = "0";
+
+
+                if (argTime.Contains('d'))
+                {
+                    sdays = argTime.Split('d')[0];
+                    argTime = argTime.Split('d')[1];
+                }
+
+                if (argTime.Contains('h'))
+                {
+                    shours = argTime.Split('h')[0];
+                    argTime = argTime.Split('h')[1];
+                }
+                if (argTime.Contains('m'))
+                {
+                    sminutes = argTime.Split('m')[0];
+                    argTime = argTime.Split('m')[1];
+                }
+
+                days = Convert.ToInt32(sdays);
+                hours = Convert.ToInt32(shours);
+                minutes = Convert.ToInt32(sminutes);
+
+                int muteTime = (days * 24 * 60) + (hours * 60) + minutes;
                 try
                 {
-                    await _service.TimedMute(user, TimeSpan.FromMinutes(minutes)).ConfigureAwait(false);
-                    await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), minutes).ConfigureAwait(false);
+                    await _service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +114,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageRoles)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
             public async Task Unmute(IGuildUser user)
             {
@@ -105,7 +131,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageRoles)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task ChatMute(IGuildUser user)
             {
                 try
@@ -121,7 +147,7 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageRoles)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task ChatUnmute(IGuildUser user)
             {
                 try
