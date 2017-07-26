@@ -43,6 +43,8 @@ namespace NadekoBot.Services.Database
         public DbSet<UserPokeTypes> PokeGame { get; set; }
         public DbSet<WaifuUpdate> WaifuUpdates { get; set; }
         public DbSet<Warning> Warnings { get; set; }
+        public DbSet<DailyMoney> DailyMoney { get; set; }
+        public DbSet<LevelModel> LevelModel { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -147,6 +149,18 @@ namespace NadekoBot.Services.Database
                 .HasIndex(d => d.UserId)
                 .IsUnique();
 
+            #endregion
+            
+            #region DailyMoney
+            var dailymoneyEntity = modelBuilder.Entity<DailyMoney>();
+
+            dailymoneyEntity
+                .HasIndex(c => c.UserId)
+                .IsUnique();
+            #endregion
+
+            #region LevelModule
+            modelBuilder.Entity<LevelModel>().HasIndex(c => c.UserId).IsUnique();
             #endregion
 
             #region GuildConfig
