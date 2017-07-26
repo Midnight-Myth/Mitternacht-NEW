@@ -48,8 +48,10 @@ namespace NadekoBot.Modules.Level
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Rank(ulong userId)
+        public async Task Rank([Remainder] ulong userId = 0)
         {
+            userId = userId != 0 ? userId : Context.User.Id;
+
             LevelModel lm;
             int total = 0;
             int rank = 0;
@@ -67,7 +69,7 @@ namespace NadekoBot.Modules.Level
             }
             else
             {
-                var user = (await Context.Guild.GetUsersAsync().ConfigureAwait(false)).FirstOrDefault(u => u.Id == userId);
+                var user = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
                 await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **{user?.Nickname ?? userId.ToString()}\'s Rang > LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXPToLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
             }
         }
@@ -78,15 +80,12 @@ namespace NadekoBot.Modules.Level
             List<LevelModel> levelmodels = new List<LevelModel>();
             using (var uow = _db.UnitOfWork)
             {
-                levelmodels = uow.LevelModel.GetAll().ToList();
+                levelmodels = uow.LevelModel.GetAll().OrderByDescending(p => p.TotalXP).ToList();
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
             position--;
             if(position < 0) position = 0;
-            
-
-            levelmodels = levelmodels.OrderByDescending(p => p.TotalXP).ToList();
             if (count <= 0) count = levelmodels.Count;
 
             List<string> rankstrings = new List<string>();
@@ -155,7 +154,7 @@ namespace NadekoBot.Modules.Level
             }
             else if(moneyToSpend == 0)
             {
-                await Context.Channel.SendMessageAsync($"{Context.User.Mention}, 0 {CurrencySign} umzuwandeln würde nichts bringen!");
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention}, 0 {CurrencySign} sind 0 XP!");
                 return;
             }
             using (var uow = _db.UnitOfWork)

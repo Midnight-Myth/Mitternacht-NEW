@@ -1,5 +1,4 @@
 ﻿using NadekoBot.Services.Database.Models;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,13 +30,17 @@ namespace NadekoBot.Services.Database.Repositories.Impl
         public DateTime GetUserDate(ulong userId) =>
             GetOrCreate(userId).LastTimeGotten;
 
-        public bool TryUpdateState(ulong userId, DateTime LastTimeGotten)
+        public bool TryUpdateState(ulong userId)
         {
-            var dailymoney = _set.Where(d => d.UserId == userId).FirstOrDefault();
-
-            dailymoney.LastTimeGotten = DateTime.Today;
-            _set.Update(dailymoney);
-            return true;
+            var dailymoney = GetOrCreate(userId);
+            if(dailymoney.LastTimeGotten.Date < DateTime.Today.Date)
+            {
+                dailymoney.LastTimeGotten = DateTime.Today;
+                _set.Update(dailymoney);
+                return true;
+            }
+            return false;
+            
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using NadekoBot.Services.Database.Models;
 using System;
-using System.Collections.Generic;
 
 namespace NadekoBot.Services.Database.Repositories
 {
@@ -8,6 +7,6 @@ namespace NadekoBot.Services.Database.Repositories
     {
         DailyMoney GetOrCreate(ulong userId);
         DateTime GetUserDate(ulong userId);
-        bool TryUpdateState(ulong userId, DateTime lastGotten);
+        bool TryUpdateState(ulong userId);
     }
 }

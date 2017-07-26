@@ -256,31 +256,25 @@ namespace NadekoBot.Modules.Gambling
         public async Task DailyMoney()
         {
             var user = (IGuildUser)Context.User;
-
-            DateTime today = DateTime.Today;
-            var uid = Context.User.Id;
+            
+            var uid = user.Id;
             var perms = user.GuildPermissions;
 
-            DailyMoney data;
+            bool receivedDailyMoney;
             using (var uow = _db.UnitOfWork)
             {
-                data = uow.DailyMoney.GetOrCreate(uid);
+                receivedDailyMoney = uow.DailyMoney.TryUpdateState(uid);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
-            if (data.LastTimeGotten.Date < today.Date)
+            if (receivedDailyMoney)
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    uow.DailyMoney.TryUpdateState(uid, today);
-                    await uow.CompleteAsync();
-                }
-                if(perms.Administrator)
+                if (perms.Administrator)
                 {
                     await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 50, false).ConfigureAwait(false);
 
-                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil abgeholt.");
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil von 50 {CurrencyName} abgeholt.");
                 }
-                else if(perms.KickMembers)
+                else if (perms.KickMembers)
                 {
                     await _currency.AddAsync(user, $"Daily Reward {Context.User.Username} ({Context.User.Id}).", 30, false).ConfigureAwait(false);
 
@@ -293,10 +287,7 @@ namespace NadekoBot.Modules.Gambling
                     await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen Anteil von 20 {CurrencyName} abgeholt.");
                 }
             }
-            else
-            {
-                await Context.Channel.SendMessageAsync("Du hast deinen täglichen Anteil heute bereits abgeholt.");
-            }
+            else await Context.Channel.SendMessageAsync("Du hast deinen täglichen Anteil heute bereits abgeholt.");
         }
 
         [NadekoCommand, Usage, Description, Aliases]
