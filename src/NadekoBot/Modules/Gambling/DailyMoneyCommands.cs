@@ -4,6 +4,7 @@ using NadekoBot.Common.Attributes;
 using NadekoBot.Extensions;
 using NadekoBot.Services;
 using NadekoBot.Services.Database.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -43,16 +44,19 @@ namespace NadekoBot.Modules.Gambling
                 }
                 if (canReceiveDailyMoney)
                 {
-                    var userRoles = user.GetRoles().OrderBy(r => -r.Position);
-                    IOrderedEnumerable<RoleMoney> roleMoneys;
+                    IEnumerable<IRole> userRoles = user.GetRoles().OrderBy(r => -r.Position);
+                    _log.Info($"userrolescount: {userRoles.Count()}");
+                    IEnumerable<RoleMoney> roleMoneys;
                     using (var uow = _db.UnitOfWork)
                     {
                         roleMoneys = uow.RoleMoney.GetAll().OrderBy(m => m.Priority);
                         await uow.CompleteAsync().ConfigureAwait(false);
                     }
+                    _log.Info($"rolemoneyscount: {roleMoneys.Count()}");
                     userRoles = userRoles.Where(r => roleMoneys.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
-                    roleMoneys = roleMoneys.Where(m => userRoles.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderBy(m => m.Priority);
-
+                    _log.Info($"userrolescount: {userRoles.Count()}");
+                    roleMoneys = roleMoneys.Where(m => userRoles.FirstOrDefault(r => r.Id == m.RoleId) != null);
+                    _log.Info($"rolemoneyscount: {roleMoneys.Count()}");
                     if (roleMoneys.Count() == 0)
                     {
                         await Context.Channel.SendMessageAsync($"Deine Rollen erlauben kein DailyMoney, also bekommst du nichts, {Context.User.Mention}!");
