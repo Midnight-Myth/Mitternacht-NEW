@@ -63,6 +63,9 @@ namespace NadekoBot.Services.Database
         private IDailyMoneyRepository _dailymoney;
         public IDailyMoneyRepository DailyMoney => _dailymoney ?? (_dailymoney = new DailyMoneyRepository(_context));
 
+        private IRoleMoneyRepository _rolemoney;
+        public IRoleMoneyRepository RoleMoney => _rolemoney ?? (_rolemoney = new RoleMoneyRepository(_context));
+
         public UnitOfWork(NadekoContext context)
         {
             _context = context;

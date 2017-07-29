@@ -27,20 +27,27 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             return cur;
         }
 
-        public DateTime GetUserDate(ulong userId) =>
-            GetOrCreate(userId).LastTimeGotten;
+        public DateTime GetUserDate(ulong userId) => GetOrCreate(userId).LastTimeGotten;
 
         public bool TryUpdateState(ulong userId)
         {
-            var dailymoney = GetOrCreate(userId);
-            if(dailymoney.LastTimeGotten.Date < DateTime.Today.Date)
+            var dm = GetOrCreate(userId);
+            if(dm.LastTimeGotten.Date < DateTime.Today.Date)
             {
-                dailymoney.LastTimeGotten = DateTime.Today;
-                _set.Update(dailymoney);
+                dm.LastTimeGotten = DateTime.Today;
+                _set.Update(dm);
                 return true;
             }
             return false;
-            
+        }
+
+        public bool TryResetReceived(ulong userId)
+        {
+            var dm = GetOrCreate(userId);
+            if (dm.LastTimeGotten.Date < DateTime.Today.Date) return false;
+            dm.LastTimeGotten = DateTime.Today.AddDays(-1);
+            _set.Update(dm);
+            return true;
         }
     }
 }

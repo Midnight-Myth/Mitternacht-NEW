@@ -8,5 +8,6 @@ namespace NadekoBot.Services.Database.Repositories
         DailyMoney GetOrCreate(ulong userId);
         DateTime GetUserDate(ulong userId);
         bool TryUpdateState(ulong userId);
+        bool TryResetReceived(ulong userId);
     }
 }

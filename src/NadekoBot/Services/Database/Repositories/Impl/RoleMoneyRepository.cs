@@ -1,0 +1,49 @@
+﻿using Microsoft.EntityFrameworkCore;
+using NadekoBot.Services.Database.Models;
+using System.Linq;
+
+namespace NadekoBot.Services.Database.Repositories.Impl
+{
+    public class RoleMoneyRepository : Repository<RoleMoney>, IRoleMoneyRepository
+    {
+        public RoleMoneyRepository(DbContext context) : base(context)
+        {
+        }
+
+        public RoleMoney GetOrCreate(ulong roleid)
+        {
+            var rm = _set.FirstOrDefault(m => m.RoleId == roleid);
+
+            if(rm == null)
+            {
+                _set.Add(rm = new RoleMoney()
+                {
+                    RoleId = roleid,
+                    Money = 0,
+                    Priority = 0
+                });
+                _context.SaveChanges();
+            }
+            return rm;
+        }
+
+        public void SetMoney(ulong roleid, long money)
+        {
+            var rm = GetOrCreate(roleid);
+            rm.Money = money;
+            _set.Update(rm);
+        }
+
+        public bool Exists(ulong roleid)
+        {
+            return _set.FirstOrDefault(rm => rm.RoleId == roleid) != null;
+        }
+
+        public void SetPriority(ulong roleid, int priority)
+        {
+            var rm = GetOrCreate(roleid);
+            rm.Priority = priority;
+            _set.Update(rm);
+        }
+    }
+}
