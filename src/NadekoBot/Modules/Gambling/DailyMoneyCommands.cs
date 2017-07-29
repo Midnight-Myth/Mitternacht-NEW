@@ -45,18 +45,14 @@ namespace NadekoBot.Modules.Gambling
                 if (canReceiveDailyMoney)
                 {
                     IEnumerable<IRole> userRolesAll = user.GetRoles().OrderBy(r => -r.Position);
-                    _log.Info($"userrolesAllcount: {userRolesAll.Count()}");
                     IEnumerable<RoleMoney> roleMoneysAll;
                     using (var uow = _db.UnitOfWork)
                     {
                         roleMoneysAll = uow.RoleMoney.GetAll().OrderBy(m => m.Priority);
                         await uow.CompleteAsync().ConfigureAwait(false);
                     }
-                    _log.Info($"rolemoneyAllcount: {roleMoneysAll.Count()}");
                     var userRoles = userRolesAll.Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
-                    _log.Info($"userrolescount: {userRoles.Count()}");
                     var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null);
-                    _log.Info($"rolemoneycount: {roleMoneys.Count()}");
                     if (roleMoneys.Count() == 0)
                     {
                         await Context.Channel.SendMessageAsync($"Deine Rollen erlauben kein DailyMoney, also bekommst du nichts, {Context.User.Mention}!");
