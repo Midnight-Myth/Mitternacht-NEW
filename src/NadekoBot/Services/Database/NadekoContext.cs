@@ -45,6 +45,7 @@ namespace NadekoBot.Services.Database
         public DbSet<Warning> Warnings { get; set; }
         public DbSet<DailyMoney> DailyMoney { get; set; }
         public DbSet<LevelModel> LevelModel { get; set; }
+        public DbSet<RoleMoney> RoleMoney { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -88,7 +89,8 @@ namespace NadekoBot.Services.Database
                     new ModulePrefix() { ModuleName = "Pokemon", Prefix = ">" },
                     new ModulePrefix() { ModuleName = "Utility", Prefix = "." },
                     new ModulePrefix() { ModuleName = "CustomReactions", Prefix = "." },
-                    new ModulePrefix() { ModuleName = "PokeGame", Prefix = ">" }
+                    new ModulePrefix() { ModuleName = "PokeGame", Prefix = ">" }, 
+                    new ModulePrefix() { ModuleName = "Level", Prefix = "!"}
                 });
                 bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
                 {
@@ -150,13 +152,10 @@ namespace NadekoBot.Services.Database
                 .IsUnique();
 
             #endregion
-            
-            #region DailyMoney
-            var dailymoneyEntity = modelBuilder.Entity<DailyMoney>();
 
-            dailymoneyEntity
-                .HasIndex(c => c.UserId)
-                .IsUnique();
+            #region DailyMoney
+            modelBuilder.Entity<DailyMoney>().HasIndex(c => c.UserId).IsUnique();
+            modelBuilder.Entity<RoleMoney>().HasIndex(c => c.RoleId).IsUnique();
             #endregion
 
             #region LevelModule

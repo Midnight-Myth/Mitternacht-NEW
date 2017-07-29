@@ -9,9 +9,10 @@ using NadekoBot.Services.Database.Models;
 namespace NadekoBot.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20170729004328_rolemoney")]
+    partial class rolemoney
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1");
@@ -1053,27 +1054,6 @@ namespace NadekoBot.Migrations
                         .IsUnique();
 
                     b.ToTable("RewardedUsers");
-                });
-
-            modelBuilder.Entity("NadekoBot.Services.Database.Models.RoleMoney", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("DateAdded");
-
-                    b.Property<long>("Money");
-
-                    b.Property<int>("Priority");
-
-                    b.Property<ulong>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId")
-                        .IsUnique();
-
-                    b.ToTable("RoleMoney");
                 });
 
             modelBuilder.Entity("NadekoBot.Services.Database.Models.SelfAssignedRole", b =>
