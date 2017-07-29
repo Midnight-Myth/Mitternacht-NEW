@@ -106,6 +106,20 @@ namespace NadekoBot.Modules.Gambling
                 }
                 await Context.Channel.SendMessageAsync(wasReset ? $"{user.Username} kann seinen täglichen Anteil nochmal abholen." : $"{user.Username} hat seinen täglichen Anteil noch nicht abgeholt.");
             }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [OwnerOnly]
+            public async Task RemoveRoleMoney(IRole role)
+            {
+                bool removed;
+                using (var uow = _db.UnitOfWork)
+                {
+                    removed = uow.RoleMoney.Remove(role.Id);
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+                await Context.Channel.SendMessageAsync(removed ? $"Rolle \"{role.Name}\" wurde von der Gehaltsliste entfernt." : $"Rolle \"{role.Name}\" steht nicht auf der Gehaltsliste!");
+            }
         }
     }
 }

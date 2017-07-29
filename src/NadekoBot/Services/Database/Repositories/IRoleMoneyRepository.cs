@@ -8,5 +8,6 @@ namespace NadekoBot.Services.Database.Repositories
         void SetMoney(ulong roleid, long money);
         bool Exists(ulong roleid);
         void SetPriority(ulong roleid, int priority);
+        bool Remove(ulong roleid);
     }
 }

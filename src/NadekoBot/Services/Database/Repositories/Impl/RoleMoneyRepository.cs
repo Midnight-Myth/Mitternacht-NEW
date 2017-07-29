@@ -32,6 +32,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             var rm = GetOrCreate(roleid);
             rm.Money = money;
             _set.Update(rm);
+            _context.SaveChanges();
         }
 
         public bool Exists(ulong roleid)
@@ -44,6 +45,14 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             var rm = GetOrCreate(roleid);
             rm.Priority = priority;
             _set.Update(rm);
+            _context.SaveChanges();
+        }
+
+        public bool Remove(ulong roleid)
+        {
+            if (!Exists(roleid)) return false;
+            _set.Remove(GetOrCreate(roleid));
+            _context.SaveChanges();
         }
     }
 }
