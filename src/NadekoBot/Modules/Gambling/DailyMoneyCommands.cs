@@ -150,7 +150,7 @@ namespace NadekoBot.Modules.Gambling
                     var role = Context.Guild.GetRole(rm.RoleId);
 
                     if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
-                    sb.AppendLine($"{i+1,3}. | {role.Name, -20} | {rm.Money,-5} {CurrencyName} | Priorität {rm.Priority}");
+                    sb.AppendLine($"{i+1,3}. | {role.Name, -20} | {rm.Money,-3} {CurrencyName} | Priorität {rm.Priority}");
                     if ((i - position) % elementsPerList == elementsPerList - 1)
                     {
                         sb.Append("```");

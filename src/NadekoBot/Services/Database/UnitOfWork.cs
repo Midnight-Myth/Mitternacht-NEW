@@ -66,6 +66,9 @@ namespace NadekoBot.Services.Database
         private IRoleMoneyRepository _rolemoney;
         public IRoleMoneyRepository RoleMoney => _rolemoney ?? (_rolemoney = new RoleMoneyRepository(_context));
 
+        private IRoleLevelBindingRepository _rolelevelbinding;
+        public IRoleLevelBindingRepository RoleLevelBinding => _rolelevelbinding ?? (_rolelevelbinding = new RoleLevelBindingRepository(_context));
+
         public UnitOfWork(NadekoContext context)
         {
             _context = context;

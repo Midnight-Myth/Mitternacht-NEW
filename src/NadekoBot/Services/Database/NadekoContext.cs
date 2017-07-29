@@ -46,6 +46,7 @@ namespace NadekoBot.Services.Database
         public DbSet<DailyMoney> DailyMoney { get; set; }
         public DbSet<LevelModel> LevelModel { get; set; }
         public DbSet<RoleMoney> RoleMoney { get; set; }
+        public DbSet<RoleLevelBinding> RoleLevelBinding { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -160,6 +161,7 @@ namespace NadekoBot.Services.Database
 
             #region LevelModule
             modelBuilder.Entity<LevelModel>().HasIndex(c => c.UserId).IsUnique();
+            modelBuilder.Entity<RoleLevelBinding>().HasIndex(c => c.RoleId).IsUnique();
             #endregion
 
             #region GuildConfig

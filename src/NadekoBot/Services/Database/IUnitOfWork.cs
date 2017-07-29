@@ -27,6 +27,7 @@ namespace NadekoBot.Services.Database
         ILevelModelRepository LevelModel { get; }
         IDailyMoneyRepository DailyMoney { get; }
         IRoleMoneyRepository RoleMoney { get; }
+        IRoleLevelBindingRepository RoleLevelBinding { get; }
 
         int Complete();
         Task<int> CompleteAsync();
