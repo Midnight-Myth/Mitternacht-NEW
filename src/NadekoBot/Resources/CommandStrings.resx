@@ -3699,4 +3699,31 @@
   <data name="payroll_usage" xml:space="preserve">
     <value>`{0}payroll [count] [position]`</value>
   </data>
+  <data name="rolelevelbindings_cmd" xml:space="preserve">
+    <value>rolelevelbindings rlb</value>
+  </data>
+  <data name="rolelevelbindings_desc" xml:space="preserve">
+    <value>Zeigt eine Liste von Rollen und dem für sie benötigten Level.</value>
+  </data>
+  <data name="rolelevelbindings_usage" xml:space="preserve">
+    <value>`{0}rolelevelbindings [count] [position]`</value>
+  </data>
+  <data name="setrolelevelbinding_cmd" xml:space="preserve">
+    <value>setrolelevelbinding srlb</value>
+  </data>
+  <data name="setrolelevelbinding_desc" xml:space="preserve">
+    <value>Setzt das benötigte Level für eine Rolle.</value>
+  </data>
+  <data name="setrolelevelbinding_usage" xml:space="preserve">
+    <value>`{0}setrolelevelbinding &lt;role&gt; &lt;minlevel&gt;`</value>
+  </data>
+  <data name="removerolelevelbinding_cmd" xml:space="preserve">
+    <value>removerolelevelbinding rrlb</value>
+  </data>
+  <data name="removerolelevelbinding_desc" xml:space="preserve">
+    <value>Entfernt die levelbezogene automatische Vergabe einer Rolle.</value>
+  </data>
+  <data name="removerolelevelbinding_usage" xml:space="preserve">
+    <value>`{0}removerolelevelbinding &lt;role&gt;`</value>
+  </data>
 </root>

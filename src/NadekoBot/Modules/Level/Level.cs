@@ -40,6 +40,7 @@ namespace NadekoBot.Modules.Level
         }
 
         [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
         public async Task Rank([Remainder] IUser user = null)
         {
             user = user ?? Context.User;
@@ -47,6 +48,7 @@ namespace NadekoBot.Modules.Level
         }
 
         [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
         public async Task Rank([Remainder] ulong userId = 0)
         {
             userId = userId != 0 ? userId : Context.User.Id;
@@ -130,6 +132,7 @@ namespace NadekoBot.Modules.Level
         }
 
         [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task AddXP(int xp, [Remainder] IUser user = null)
         {
@@ -144,6 +147,7 @@ namespace NadekoBot.Modules.Level
         }
 
         [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
         public async Task TurnToXP(long moneyToSpend, [Remainder] IUser user = null)
         {
             user = user != null && _creds.IsOwner(Context.User) ? user : Context.User;
@@ -173,5 +177,88 @@ namespace NadekoBot.Modules.Level
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task SetRoleLevelBinding(IRole role, int minlevel)
+        {
+            if (minlevel < 0) return;
+            using (var uow = _db.UnitOfWork)
+            {
+                uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+            await Context.Channel.SendMessageAsync($"Die Rolle {role.Name} wird nun Nutzern ab Level {minlevel} vergeben.");
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task RemoveRoleLevelBinding(IRole role)
+        {
+            bool wasRemoved;
+            using (var uow = _db.UnitOfWork)
+            {
+                wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+            await Context.Channel.SendMessageAsync(wasRemoved ? $"Die Rolle {role.Name} ist nun levelunabhängig." : $"Für die Rolle {role.Name} gibt es keine Steigerung der Levelunabhängigkeit!");
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task RoleLevelBindings(int count, [Remainder]int position)
+        {
+            var elementsPerList = 20;
+
+            IOrderedEnumerable<RoleLevelBinding> rlbs;
+            using (var uow = _db.UnitOfWork)
+            {
+                rlbs = uow.RoleLevelBinding.RoleLevelBindings.OrderByDescending(r => r.MinimumLevel);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+
+            position--;
+            if (position < 0 || position >= rlbs.Count()) position = 0;
+            if (count <= 0 || count > rlbs.Count() - position) count = rlbs.Count() - position;
+
+            List<string> rankstrings = new List<string>();
+            var sb = new StringBuilder();
+            sb.AppendLine("__**Rolle-Level-Beziehungen**__");
+            for (int i = position; i < count + position; i++)
+            {
+                var rlb = rlbs.ElementAt(i);
+                var role = Context.Guild.GetRole(rlb.RoleId);
+
+                if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
+                sb.AppendLine($"{i + 1,3}. | {role.Name, -20} | Level {rlb.MinimumLevel}+");
+                if ((i - position) % elementsPerList == elementsPerList - 1)
+                {
+                    sb.Append("```");
+                    rankstrings.Add(sb.ToString());
+                    sb.Clear();
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                sb.Append("```");
+                rankstrings.Add(sb.ToString());
+                sb.Clear();
+            }
+
+            var channel = count <= 20 ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync();
+
+            foreach (var s in rankstrings)
+            {
+                await channel.SendMessageAsync(s);
+                Thread.Sleep(250);
+            }
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task RoleLevelBindings([Remainder]int count = 20) => await RoleLevelBindings(count, 1);
     }
 }
