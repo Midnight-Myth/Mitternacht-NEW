@@ -4,8 +4,11 @@ using NadekoBot.Common.Attributes;
 using NadekoBot.Extensions;
 using NadekoBot.Services;
 using NadekoBot.Services.Database.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NadekoBot.Modules.Gambling
@@ -120,6 +123,61 @@ namespace NadekoBot.Modules.Gambling
                 }
                 await Context.Channel.SendMessageAsync(removed ? $"Rolle \"{role.Name}\" wurde von der Gehaltsliste entfernt." : $"Rolle \"{role.Name}\" steht nicht auf der Gehaltsliste!");
             }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task Payroll(int count, [Remainder]int position = 1)
+            {
+                var elementsPerList = 20;
+
+                IOrderedEnumerable<RoleMoney> roleMoneys;
+                using (var uow = _db.UnitOfWork)
+                {
+                    roleMoneys = uow.RoleMoney.GetAll().OrderByDescending(rm => (((long)rm.Priority << 32) - Context.Guild.GetRole(rm.RoleId).Position));
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+
+                position--;
+                if (position < 0 || position > roleMoneys.Count()) position = 0;
+                if (count <= 0 || count > roleMoneys.Count() - position) count = roleMoneys.Count() - position;
+
+                List<string> rankstrings = new List<string>();
+                var sb = new StringBuilder();
+                sb.AppendLine("__**Gehaltsliste**__");
+                for (int i = position; i < count + position; i++)
+                {
+                    var rm = roleMoneys.ElementAt(i);
+                    var role = Context.Guild.GetRole(rm.RoleId);
+
+                    if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
+                    sb.AppendLine($"{role.Name, -20} | {rm.Money,5}{CurrencySign} | Priority {rm.Priority}");
+                    if ((i - position) % elementsPerList == elementsPerList - 1)
+                    {
+                        sb.Append("```");
+                        rankstrings.Add(sb.ToString());
+                        sb.Clear();
+                    }
+                }
+
+                if (sb.Length > 0)
+                {
+                    sb.Append("```");
+                    rankstrings.Add(sb.ToString());
+                    sb.Clear();
+                }
+
+                var channel = count <= 20 ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync();
+
+                foreach (var s in rankstrings)
+                {
+                    await channel.SendMessageAsync(s);
+                    Thread.Sleep(250);
+                }
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task Payroll([Remainder]int count = 20) => await Payroll(count, 1);
         }
     }
 }

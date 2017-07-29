@@ -3670,7 +3670,7 @@
     <value>Weise einer Rolle einen anderen Betrag an täglichem Geld zu.</value>
   </data>
   <data name="setrolemoney_usage" xml:space="preserve">
-    <value>`{0}setrolemoney (role) (money) [priority]`</value>
+    <value>`{0}setrolemoney &lt;role&gt; &lt;money&gt; [priority]`</value>
   </data>
   <data name="resetdailymoney_cmd" xml:space="preserve">
     <value>resetdailymoney</value>
@@ -3682,12 +3682,21 @@
     <value>`{0}resetdailymoney [user]`</value>
   </data>
   <data name="removerolemoney_cmd" xml:space="preserve">
-    <value>removerolemoney</value>
+    <value>removerolemoney deleterolemoney</value>
   </data>
   <data name="removerolemoney_desc" xml:space="preserve">
     <value>Entferne eine Rolle von der Gehaltsliste</value>
   </data>
   <data name="removerolemoney_usage" xml:space="preserve">
-    <value>`{0}removerolemoney (role)`</value>
+    <value>`{0}removerolemoney &lt;role&gt;`</value>
+  </data>
+  <data name="payroll_cmd" xml:space="preserve">
+    <value>payroll</value>
+  </data>
+  <data name="payroll_desc" xml:space="preserve">
+    <value>Gibt die Gehaltsliste der verschiedenen Rollen nach Priorität und Rangordnung aus.</value>
+  </data>
+  <data name="payroll_usage" xml:space="preserve">
+    <value>`{0}payroll [count] [position]`</value>
   </data>
 </root>

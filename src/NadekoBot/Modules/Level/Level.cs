@@ -78,25 +78,24 @@ namespace NadekoBot.Modules.Level
         {
             var elementsPerList = 20;
 
-            List<LevelModel> levelmodels = new List<LevelModel>();
+            IOrderedEnumerable<LevelModel> levelmodels;
             using (var uow = _db.UnitOfWork)
             {
-                levelmodels = uow.LevelModel.GetAll().OrderByDescending(p => p.TotalXP).ToList();
+                levelmodels = uow.LevelModel.GetAll().Where(p => p.TotalXP > 0).OrderByDescending(p => p.TotalXP);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
             position--;
-            if(position < 0) position = 0;
-            if (count <= 0) count = levelmodels.Count;
+            if(position < 0 || position >= levelmodels.Count()) position = 0;
+            if (count <= 0 || count > levelmodels.Count() - position) count = levelmodels.Count() - position;
 
             List<string> rankstrings = new List<string>();
             var sb = new StringBuilder();
             sb.AppendLine("__**Rangliste**__");
-            for (int i = position; i < (levelmodels.Count > count ? count : levelmodels.Count) + position; i++)
+            for (int i = position; i < count + position; i++)
             {
                 var lm = levelmodels.ElementAt(i);
                 var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
-                if (lm.TotalXP == 0) break;
 
                 if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
                 if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(24, true)) ?? lm.UserId.ToString().TrimTo(24,true), -26} | LEVEL {lm.Level,3} | XP {lm.CurrentXP,6}/{LevelModelRepository.GetXPToLevel(lm.Level),6} | TOTAL XP {lm.TotalXP,8}");
