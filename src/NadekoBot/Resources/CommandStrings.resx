@@ -3663,4 +3663,31 @@
   <data name="ponybooru_usage" xml:space="preserve">
     <value>`{0}pony scootaloo`</value>
   </data>
+  <data name="setrolemoney_cmd" xml:space="preserve">
+    <value>setrolemoney</value>
+  </data>
+  <data name="setrolemoney_desc" xml:space="preserve">
+    <value>Weise einer Rolle einen anderen Betrag an täglichem Geld zu.</value>
+  </data>
+  <data name="setrolemoney_usage" xml:space="preserve">
+    <value>`{0}setrolemoney (role) (money) [priority]`</value>
+  </data>
+  <data name="resetdailymoney_cmd" xml:space="preserve">
+    <value>resetdailymoney</value>
+  </data>
+  <data name="resetdailymoney_desc" xml:space="preserve">
+    <value>Erlaube einem User, sein tägliches Geld nochmal zu holen.</value>
+  </data>
+  <data name="resetdailymoney_usage" xml:space="preserve">
+    <value>`{0}resetdailymoney [user]`</value>
+  </data>
+  <data name="removerolemoney_cmd" xml:space="preserve">
+    <value>removerolemoney</value>
+  </data>
+  <data name="removerolemoney_desc" xml:space="preserve">
+    <value>Entferne eine Rolle von der Gehaltsliste</value>
+  </data>
+  <data name="removerolemoney_usage" xml:space="preserve">
+    <value>`{0}removerolemoney (role)`</value>
+  </data>
 </root>
