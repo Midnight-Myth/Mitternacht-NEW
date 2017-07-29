@@ -53,6 +53,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             if (!Exists(roleid)) return false;
             _set.Remove(GetOrCreate(roleid));
             _context.SaveChanges();
+            return true;
         }
     }
 }
