@@ -31,7 +31,7 @@ namespace NadekoBot.Modules.Level.Services
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
-                var rlb = uow.RoleLevelBinding.RoleLevelBindings.Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
+                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
             }
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;

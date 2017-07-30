@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
-using System.Collections.Generic;
 
 namespace NadekoBot.Services.Database.Repositories.Impl
 {
@@ -10,16 +9,12 @@ namespace NadekoBot.Services.Database.Repositories.Impl
     {
         public RoleLevelBindingRepository(DbContext context) : base(context)
         {
-            UpdateRoleLevelBindingsCopy();
         }
-
-        private IEnumerable<RoleLevelBinding> rolelevelbindings;
-        public IEnumerable<RoleLevelBinding> RoleLevelBindings => rolelevelbindings;
 
         /// <exception cref="ArgumentException"></exception>
         public int GetMinimumLevel(ulong roleid)
         {
-            var rl = RoleLevelBindings.FirstOrDefault(r => r.RoleId == roleid);
+            var rl = _set.FirstOrDefault(r => r.RoleId == roleid);
             if (rl == null) throw new ArgumentException($"Role with Id {roleid} is not bound to a level!");
             return rl.MinimumLevel;
         }
@@ -30,7 +25,6 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             if (rl == null) return false;
             _set.Remove(rl);
             _context.SaveChanges();
-            UpdateRoleLevelBindingsCopy();
             return true;
         }
 
@@ -52,9 +46,6 @@ namespace NadekoBot.Services.Database.Repositories.Impl
                 _set.Update(rl);
             }
             _context.SaveChanges();
-            UpdateRoleLevelBindingsCopy();
         }
-
-        private void UpdateRoleLevelBindingsCopy() => rolelevelbindings = _set.AsEnumerable();
     }
 }
