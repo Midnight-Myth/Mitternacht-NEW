@@ -56,7 +56,6 @@ namespace NadekoBot.Modules.Level.Services
                 SendLevelChangedMessage(uow.LevelModel.CalculateLevel(sm.Author.Id), sm.Author, sm.Channel);
                 uow.Complete();
             }
-            AddLevelRole(sm);
             return Task.CompletedTask;
         }
 
