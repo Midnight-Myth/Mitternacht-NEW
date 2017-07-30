@@ -27,8 +27,6 @@ namespace NadekoBot.Modules.Level.Services
 
         public Task AddLevelRole(SocketMessage sm)
         {
-            sm.Channel.SendMessageAsync("@Timguin#2221 ist 1 nicer Elite-Nutzer.");
-            return Task.CompletedTask;
             //var user = (IGuildUser)sm.Channel.GetUserAsync(sm.Author.Id);
             //IEnumerable<IRole> rolesToAdd;
             //using (var uow = _db.UnitOfWork)
@@ -45,7 +43,7 @@ namespace NadekoBot.Modules.Level.Services
             //}
             //rolestring = rolestring.Substring(0, rolestring.Length - 3) + "\"";
             //sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count() > 1 ? "n" : "")} {rolestring} bekommen.");
-            //return Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public Task OnMessageReceived(SocketMessage sm)
