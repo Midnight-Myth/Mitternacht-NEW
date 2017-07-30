@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using NadekoBot.Common.Attributes;
 using Discord.WebSocket;
 using NadekoBot.Services;
 using NadekoBot.Services.Database.Repositories;
@@ -24,23 +23,18 @@ namespace NadekoBot.Modules.Level.Services
             client.MessageReceived += AddLevelRole;
         }
 
-        private Task AddLevelRole(SocketMessage sm)
+        public Task AddLevelRole(SocketMessage sm)
         {
-            _log.Info($"AddLevelRole Start");
             var user = (SocketGuildUser)sm.Author;
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
-            _log.Info($"AddLevelRole Getting RoleBindings");
                 var rlb = uow.RoleLevelBinding.RoleLevelBindings.Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && user.Roles.FirstOrDefault(r => r.Id == rl.RoleId) == null);
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
-                _log.Info($"AddLevelRole GottenRoleBindings");
             }
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
-            _log.Info($"AddLevelRole Adding Roles");
             user.AddRolesAsync(rolesToAdd);
             var rolestring = "\"";
-            _log.Info($"AddLevelRole Making String");
             foreach (var role in rolesToAdd)
             {
                 rolestring += role.Name + "\", \"";
@@ -50,7 +44,7 @@ namespace NadekoBot.Modules.Level.Services
             return Task.CompletedTask;
         }
 
-        private Task OnMessageReceived(SocketMessage sm)
+        public Task OnMessageReceived(SocketMessage sm)
         {
             if (sm.Content.Length < 10 || sm.Author.IsBot) return Task.CompletedTask;
             using (var uow = _db.UnitOfWork)
@@ -65,7 +59,7 @@ namespace NadekoBot.Modules.Level.Services
             return Task.CompletedTask;
         }
 
-        private Task OnMessageUpdated(Cacheable<IMessage, ulong> um, SocketMessage sm, ISocketMessageChannel smc)
+        public Task OnMessageUpdated(Cacheable<IMessage, ulong> um, SocketMessage sm, ISocketMessageChannel smc)
         {
             if (!um.HasValue || um.Value.Author.IsBot || (um.Value.Content.Length > 25 && sm.Content.Length > 25) || (um.Value.Content.Length < 10 && sm.Content.Length < 10)) return Task.CompletedTask;
             using (var uow = _db.UnitOfWork)
@@ -77,7 +71,7 @@ namespace NadekoBot.Modules.Level.Services
             return Task.CompletedTask;
         }
 
-        private Task OnMessageDeleted(Cacheable<IMessage, ulong> um, ISocketMessageChannel smc)
+        public Task OnMessageDeleted(Cacheable<IMessage, ulong> um, ISocketMessageChannel smc)
         {
             if (!um.HasValue || um.Value.Author.IsBot || um.Value.Content.Length < 10 || _cmds.Commands.Any(c => um.Value.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => um.Value.Content.StartsWith(c2)))) return Task.CompletedTask;
             using (var uow = _db.UnitOfWork)
@@ -89,7 +83,7 @@ namespace NadekoBot.Modules.Level.Services
             return Task.CompletedTask;
         }
 
-        private void SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
+        public void SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
         {
             if (cl.IsNewLevelHigher)
             {
