@@ -25,16 +25,21 @@ namespace NadekoBot.Modules.Level.Services
 
         private Task AddLevelRole(SocketMessage sm)
         {
+            _log.Info($"AddLevelRole Start");
             var user = (SocketGuildUser)sm.Author;
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
+            _log.Info($"AddLevelRole Getting RoleBindings");
                 var rlb = uow.RoleLevelBinding.RoleLevelBindings.Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && user.Roles.FirstOrDefault(r => r.Id == rl.RoleId) == null);
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
+                _log.Info($"AddLevelRole GottenRoleBindings");
             }
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
+            _log.Info($"AddLevelRole Adding Roles");
             user.AddRolesAsync(rolesToAdd);
             var rolestring = "\"";
+            _log.Info($"AddLevelRole Making String");
             foreach (var role in rolesToAdd)
             {
                 rolestring += role.Name + "\", \"";
