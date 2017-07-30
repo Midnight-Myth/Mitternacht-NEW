@@ -14,22 +14,24 @@ namespace NadekoBot.Modules.Level.Services
     {
         public readonly DbService _db;
         public readonly CommandService _cmds;
+        public readonly DiscordSocketClient _client;
         public LevelService(DiscordSocketClient client, DbService db, CommandService cmds)
         {
             _db = db;
+            _client = client;
             client.MessageReceived += OnMessageReceived;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
-            //client.MessageReceived += AddLevelRole;
+            client.MessageReceived += AddLevelRole;
         }
 
         public Task AddLevelRole(SocketMessage sm)
         {
-            var user = (SocketGuildUser)sm.Author;
+            var user = (IGuildUser)sm.Channel.GetUserAsync(sm.Author.Id);
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
-                var rlb = uow.RoleLevelBinding.RoleLevelBindings.Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && user.Roles.FirstOrDefault(r => r.Id == rl.RoleId) == null);
+                var rlb = uow.RoleLevelBinding.RoleLevelBindings.Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
             }
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
