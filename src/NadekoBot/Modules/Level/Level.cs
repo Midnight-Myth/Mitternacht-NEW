@@ -87,6 +87,7 @@ namespace NadekoBot.Modules.Level
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
+            if (levelmodels.Count() == 0) return;
             position--;
             if(position < 0 || position >= levelmodels.Count()) position = 0;
             if (count <= 0 || count > levelmodels.Count() - position) count = levelmodels.Count() - position;
@@ -187,6 +188,7 @@ namespace NadekoBot.Modules.Level
             using (var uow = _db.UnitOfWork)
             {
                 uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
             await Context.Channel.SendMessageAsync($"Die Rolle {role.Name} wird nun Nutzern ab Level {minlevel} vergeben.");
         }
@@ -200,6 +202,7 @@ namespace NadekoBot.Modules.Level
             using (var uow = _db.UnitOfWork)
             {
                 wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
             await Context.Channel.SendMessageAsync(wasRemoved ? $"Die Rolle {role.Name} ist nun levelunabhängig." : $"Für die Rolle {role.Name} gibt es keine Steigerung der Levelunabhängigkeit!");
         }
@@ -217,6 +220,7 @@ namespace NadekoBot.Modules.Level
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
+            if (rlbs.Count() == 0) return;
             position--;
             if (position < 0 || position >= rlbs.Count()) position = 0;
             if (count <= 0 || count > rlbs.Count() - position) count = rlbs.Count() - position;

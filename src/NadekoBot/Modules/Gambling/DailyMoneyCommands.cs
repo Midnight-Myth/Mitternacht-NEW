@@ -137,6 +137,7 @@ namespace NadekoBot.Modules.Gambling
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
+                if (roleMoneys.Count() == 0) return;
                 position--;
                 if (position < 0 || position > roleMoneys.Count()) position = 0;
                 if (count <= 0 || count > roleMoneys.Count() - position) count = roleMoneys.Count() - position;
