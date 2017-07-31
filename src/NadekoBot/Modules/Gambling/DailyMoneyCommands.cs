@@ -147,7 +147,7 @@ namespace NadekoBot.Modules.Gambling
                 IOrderedEnumerable<RoleMoney> roleMoneys;
                 using (var uow = _db.UnitOfWork)
                 {
-                    roleMoneys = uow.RoleMoney.GetAll().OrderByDescending(rm => (((long)rm.Priority << 32) - Context.Guild.GetRole(rm.RoleId).Position));
+                    roleMoneys = uow.RoleMoney.GetAll().OrderByDescending(rm => (((long)rm.Priority << 32) + Context.Guild.GetRole(rm.RoleId).Position));
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
