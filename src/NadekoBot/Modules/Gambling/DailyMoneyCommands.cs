@@ -126,6 +126,20 @@ namespace NadekoBot.Modules.Gambling
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
+            [OwnerOnly]
+            public async Task SetRoleMoneyPriority(IRole role, int priority)
+            {
+                bool exists;
+                using (var uow = _db.UnitOfWork)
+                {
+                    if(exists = uow.RoleMoney.Exists(role.Id)) uow.RoleMoney.SetPriority(role.Id, priority);
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+                await Context.Channel.SendMessageAsync(exists ? $"Die Priorität von Rolle \"{role.Name}\" wurde auf {priority} gesetzt." : $"Die Rolle \"{role.Name}\" bekommt kein DailyMoney!");
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
             public async Task Payroll(int count, [Remainder]int position = 1)
             {
                 var elementsPerList = 20;

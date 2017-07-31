@@ -3672,6 +3672,15 @@
   <data name="setrolemoney_usage" xml:space="preserve">
     <value>`{0}setrolemoney &lt;role&gt; &lt;money&gt; [priority]`</value>
   </data>
+  <data name="setrolemoneypriority_cmd" xml:space="preserve">
+    <value>setrolemoneypriority</value>
+  </data>
+  <data name="setrolemoneypriority_desc" xml:space="preserve">
+    <value>Weise einer DailyMoney-Rolle eine bestimmte Priorität zu.</value>
+  </data>
+  <data name="setrolemoneypriority_usage" xml:space="preserve">
+    <value>`{0}setrolemoneypriority &lt;role&gt; &lt;priority&gt;`</value>
+  </data>
   <data name="resetdailymoney_cmd" xml:space="preserve">
     <value>resetdailymoney</value>
   </data>
