@@ -63,7 +63,7 @@ namespace NadekoBot.Modules.Level.Services
         public async Task OnMessageUpdated(Cacheable<IMessage, ulong> um, SocketMessage sm, ISocketMessageChannel smc)
         {
             if (!um.HasValue || um.Value.Author.IsBot || (um.Value.Content.Length > 25 && sm.Content.Length > 25) || (um.Value.Content.Length < 10 && sm.Content.Length < 10))
-                return Task.CompletedTask;
+                return;
             using (var uow = _db.UnitOfWork) {
                 uow.LevelModel.TryAddXP(um.Value.Author.Id, sm.Content.Length - um.Value.Content.Length, false);
                 await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(sm.Author.Id), sm.Author, smc);
@@ -74,7 +74,7 @@ namespace NadekoBot.Modules.Level.Services
         public async Task OnMessageDeleted(Cacheable<IMessage, ulong> um, ISocketMessageChannel smc)
         {
             if (!um.HasValue || um.Value.Author.IsBot || um.Value.Content.Length < 10 || _cmds.Commands.Any(c => um.Value.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => um.Value.Content.StartsWith(c2))))
-                return Task.CompletedTask;
+                return;
             using (var uow = _db.UnitOfWork) {
                 uow.LevelModel.TryAddXP(um.Value.Author.Id, um.Value.Content.Length > 25 ? -25 : -um.Value.Content.Length);
                 await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(um.Value.Author.Id), um.Value.Author, smc);
