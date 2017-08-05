@@ -25,64 +25,74 @@ namespace NadekoBot.Modules.Level.Services
             client.MessageReceived += AddLevelRole;
         }
 
-        public async Task AddLevelRole(SocketMessage sm)
+        private async Task AddLevelRole(SocketMessage sm)
         {
+            await sm.Channel.SendMessageAsync("1");
             var user = (IGuildUser) sm.Channel.GetUserAsync(sm.Author.Id);
             IEnumerable<IRole> rolesToAdd;
+            await sm.Channel.SendMessageAsync("2");
             using (var uow = _db.UnitOfWork) {
                 var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
+                await sm.Channel.SendMessageAsync("3");
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
+                await sm.Channel.SendMessageAsync("4");
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
+            await sm.Channel.SendMessageAsync($"Rolecount: {rolesToAdd.Count()}");
             if (rolesToAdd.Count() == 0)
                 return;
-            await user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
+            await sm.Channel.SendMessageAsync("5");
+            await user.AddRolesAsync(rolesToAdd);
             var rolestring = "\"";
             foreach (var role in rolesToAdd) {
                 rolestring += role.Name + "\", \"";
             }
             rolestring = rolestring.Substring(0, rolestring.Length - 3) + "\"";
+            await sm.Channel.SendMessageAsync("6");
             await sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count() > 1 ? "n" : "")} {rolestring} bekommen.");
+            await sm.Channel.SendMessageAsync("7");
         }
 
-        public async Task OnMessageReceived(SocketMessage sm)
+        private async Task OnMessageReceived(SocketMessage after)
         {
-            if (sm.Content.Length < 10 || sm.Author.IsBot)
+            if (after.Content.Length < 10 || after.Author.IsBot)
                 return;
             using (var uow = _db.UnitOfWork) {
                 var time = DateTime.Now;
-                if (uow.LevelModel.CanGetMessageXP(sm.Author.Id, time)) {
-                    uow.LevelModel.TryAddXP(sm.Author.Id, sm.Content.Length > 25 ? 25 : sm.Content.Length, false);
-                    uow.LevelModel.ReplaceTimestamp(sm.Author.Id, time);
-                    await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(sm.Author.Id), sm.Author, sm.Channel);
+                if (uow.LevelModel.CanGetMessageXP(after.Author.Id, time)) {
+                    uow.LevelModel.TryAddXP(after.Author.Id, after.Content.Length > 25 ? 25 : after.Content.Length, false);
+                    uow.LevelModel.ReplaceTimestamp(after.Author.Id, time);
+                    await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, after.Channel);
                 }
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
-        public async Task OnMessageUpdated(Cacheable<IMessage, ulong> um, SocketMessage sm, ISocketMessageChannel smc)
+        private async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
-            if (!um.HasValue || um.Value.Author.IsBot || (um.Value.Content.Length > 25 && sm.Content.Length > 25) || (um.Value.Content.Length < 10 && sm.Content.Length < 10))
+            var msgBefore = await before.GetOrDownloadAsync();
+            if (msgBefore.Author.IsBot || (msgBefore.Content.Length > 25 && after.Content.Length > 25) || (msgBefore.Content.Length < 10 && after.Content.Length < 10))
                 return;
             using (var uow = _db.UnitOfWork) {
-                uow.LevelModel.TryAddXP(um.Value.Author.Id, sm.Content.Length - um.Value.Content.Length, false);
-                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(sm.Author.Id), sm.Author, smc);
+                uow.LevelModel.TryAddXP(msgBefore.Author.Id, after.Content.Length - msgBefore.Content.Length, false);
+                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, channel);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
-        public async Task OnMessageDeleted(Cacheable<IMessage, ulong> um, ISocketMessageChannel smc)
+        private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel)
         {
-            if (!um.HasValue || um.Value.Author.IsBot || um.Value.Content.Length < 10 || _cmds.Commands.Any(c => um.Value.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => um.Value.Content.StartsWith(c2))))
+            var msgBefore = await before.GetOrDownloadAsync();
+            if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 || _cmds.Commands.Any(c => msgBefore.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => msgBefore.Content.StartsWith(c2))))
                 return;
             using (var uow = _db.UnitOfWork) {
-                uow.LevelModel.TryAddXP(um.Value.Author.Id, um.Value.Content.Length > 25 ? -25 : -um.Value.Content.Length);
-                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(um.Value.Author.Id), um.Value.Author, smc);
+                uow.LevelModel.TryAddXP(msgBefore.Author.Id, msgBefore.Content.Length > 25 ? -25 : -msgBefore.Content.Length);
+                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(msgBefore.Author.Id), msgBefore.Author, channel);
                 uow.Complete();
             }
         }
 
-        public async Task SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
+        private async Task SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
         {
             if (cl.IsNewLevelHigher) {
                 await smc.SendMessageAsync($"Herzlichen Glückwunsch { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } aufgestiegen!");
