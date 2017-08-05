@@ -27,8 +27,10 @@ namespace NadekoBot.Modules.Level.Services
 
         private async Task AddLevelRole(SocketMessage sm)
         {
+            if (sm.Author.IsBot)
+                return;
             await sm.Channel.SendMessageAsync("1");
-            var user = (IGuildUser) sm.Channel.GetUserAsync(sm.Author.Id);
+            var user = (IGuildUser) await sm.Channel.GetUserAsync(sm.Author.Id);
             IEnumerable<IRole> rolesToAdd;
             await sm.Channel.SendMessageAsync("2");
             using (var uow = _db.UnitOfWork) {
