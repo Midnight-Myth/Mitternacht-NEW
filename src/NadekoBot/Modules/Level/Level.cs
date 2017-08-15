@@ -54,8 +54,8 @@ namespace NadekoBot.Modules.Level
             userId = userId != 0 ? userId : Context.User.Id;
 
             LevelModel lm;
-            int total = 0;
-            int rank = 0;
+            int total;
+            int rank;
             using (var uow = _db.UnitOfWork)
             {
                 lm = uow.LevelModel.GetOrCreate(userId);
@@ -78,7 +78,7 @@ namespace NadekoBot.Modules.Level
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Ranks(int count, [Remainder]int position)
         {
-            var elementsPerList = 20;
+            const int elementsPerList = 20;
 
             IOrderedEnumerable<LevelModel> levelmodels;
             using (var uow = _db.UnitOfWork)
@@ -87,27 +87,25 @@ namespace NadekoBot.Modules.Level
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
-            if (levelmodels.Count() == 0) return;
+            if (!levelmodels.Any()) return;
             position--;
             if(position < 0 || position >= levelmodels.Count()) position = 0;
             if (count <= 0 || count > levelmodels.Count() - position) count = levelmodels.Count() - position;
 
-            List<string> rankstrings = new List<string>();
+            var rankstrings = new List<string>();
             var sb = new StringBuilder();
             sb.AppendLine("__**Rangliste**__");
-            for (int i = position; i < count + position; i++)
+            for (var i = position; i < count + position; i++)
             {
                 var lm = levelmodels.ElementAt(i);
                 var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 
                 if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
                 if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(24, true)) ?? lm.UserId.ToString().TrimTo(24,true), -26} | LEVEL {lm.Level,3} | XP {lm.CurrentXP,6}/{LevelModelRepository.GetXPToLevel(lm.Level),6} | TOTAL XP {lm.TotalXP,8}");
-                if((i - position) % elementsPerList == elementsPerList-1)
-                {
-                    sb.Append("```");
-                    rankstrings.Add(sb.ToString());
-                    sb.Clear();
-                }
+                if ((i - position) % elementsPerList != elementsPerList - 1) continue;
+                sb.Append("```");
+                rankstrings.Add(sb.ToString());
+                sb.Clear();
             }
 
             if(sb.Length > 0)
@@ -138,7 +136,7 @@ namespace NadekoBot.Modules.Level
         public async Task AddXP(int xp, [Remainder] IUser user = null)
         {
             user = user ?? Context.User;
-            bool success = false;
+            bool success;
             using (var uow = _db.UnitOfWork)
             {
                 success = uow.LevelModel.TryAddXP(user.Id, xp);
@@ -157,7 +155,7 @@ namespace NadekoBot.Modules.Level
                 await Context.Channel.SendMessageAsync($"Pech gehabt, {Context.User.Mention}, du kannst XP nicht in Geld zurückverwandeln.");
                 return;
             }
-            else if(moneyToSpend == 0)
+            if(moneyToSpend == 0)
             {
                 await Context.Channel.SendMessageAsync($"{Context.User.Mention}, 0 {CurrencySign} sind 0 XP!");
                 return;
@@ -211,7 +209,7 @@ namespace NadekoBot.Modules.Level
         [RequireContext(ContextType.Guild)]
         public async Task RoleLevelBindings(int count, [Remainder]int position)
         {
-            var elementsPerList = 20;
+            const int elementsPerList = 20;
 
             IOrderedEnumerable<RoleLevelBinding> rlbs;
             using (var uow = _db.UnitOfWork)
@@ -220,27 +218,25 @@ namespace NadekoBot.Modules.Level
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
-            if (rlbs.Count() == 0) return;
+            if (!rlbs.Any()) return;
             position--;
             if (position < 0 || position >= rlbs.Count()) position = 0;
             if (count <= 0 || count > rlbs.Count() - position) count = rlbs.Count() - position;
 
-            List<string> rankstrings = new List<string>();
+            var rankstrings = new List<string>();
             var sb = new StringBuilder();
             sb.AppendLine("__**Rolle-Level-Beziehungen**__");
-            for (int i = position; i < count + position; i++)
+            for (var i = position; i < count + position; i++)
             {
                 var rlb = rlbs.ElementAt(i);
                 var role = Context.Guild.GetRole(rlb.RoleId);
 
                 if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
                 sb.AppendLine($"{i + 1,3}. | {role.Name, -20} | Level {rlb.MinimumLevel}+");
-                if ((i - position) % elementsPerList == elementsPerList - 1)
-                {
-                    sb.Append("```");
-                    rankstrings.Add(sb.ToString());
-                    sb.Clear();
-                }
+                if ((i - position) % elementsPerList != elementsPerList - 1) continue;
+                sb.Append("```");
+                rankstrings.Add(sb.ToString());
+                sb.Clear();
             }
 
             if (sb.Length > 0)

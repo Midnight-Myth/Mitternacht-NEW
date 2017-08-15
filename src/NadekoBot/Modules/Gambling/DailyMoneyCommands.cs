@@ -56,7 +56,7 @@ namespace NadekoBot.Modules.Gambling
                     }
                     var userRoles = userRolesAll.Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
                     var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderByDescending(m => m.Priority);
-                    if (roleMoneys.Count() == 0)
+                    if (!roleMoneys.Any())
                     {
                         await Context.Channel.SendMessageAsync($"Deine Rollen erlauben kein DailyMoney, also bekommst du nichts, {Context.User.Mention}!");
                         using (var uow = _db.UnitOfWork)
@@ -142,7 +142,7 @@ namespace NadekoBot.Modules.Gambling
             [RequireContext(ContextType.Guild)]
             public async Task Payroll(int count, [Remainder]int position = 1)
             {
-                var elementsPerList = 20;
+                const int elementsPerList = 20;
 
                 IOrderedEnumerable<RoleMoney> roleMoneys;
                 using (var uow = _db.UnitOfWork)
@@ -151,27 +151,25 @@ namespace NadekoBot.Modules.Gambling
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                if (roleMoneys.Count() == 0) return;
+                if (!roleMoneys.Any()) return;
                 position--;
                 if (position < 0 || position > roleMoneys.Count()) position = 0;
                 if (count <= 0 || count > roleMoneys.Count() - position) count = roleMoneys.Count() - position;
 
-                List<string> rankstrings = new List<string>();
+                var rankstrings = new List<string>();
                 var sb = new StringBuilder();
                 sb.AppendLine("__**Gehaltsliste**__");
-                for (int i = position; i < count + position; i++)
+                for (var i = position; i < count + position; i++)
                 {
                     var rm = roleMoneys.ElementAt(i);
                     var role = Context.Guild.GetRole(rm.RoleId);
 
                     if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
                     sb.AppendLine($"{i+1,3}. | {role.Name, -20} | {rm.Money,-3} {CurrencyName} | Priorität {rm.Priority}");
-                    if ((i - position) % elementsPerList == elementsPerList - 1)
-                    {
-                        sb.Append("```");
-                        rankstrings.Add(sb.ToString());
-                        sb.Clear();
-                    }
+                    if ((i - position) % elementsPerList != elementsPerList - 1) continue;
+                    sb.Append("```");
+                    rankstrings.Add(sb.ToString());
+                    sb.Clear();
                 }
 
                 if (sb.Length > 0)
