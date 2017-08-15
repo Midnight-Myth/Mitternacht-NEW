@@ -12,44 +12,32 @@ namespace NadekoBot.Modules.Level.Services
 {
     public class LevelService : INService
     {
-        public readonly DbService _db;
-        public readonly CommandService _cmds;
-        public readonly DiscordSocketClient _client;
+        private readonly DbService _db;
+        private readonly CommandService _cmds;
         public LevelService(DiscordSocketClient client, DbService db, CommandService cmds)
         {
             _db = db;
-            _client = client;
+            _cmds = cmds;
             client.MessageReceived += OnMessageReceived;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
             client.MessageReceived += AddLevelRole;
         }
 
-        private Task AddLevelRole(SocketMessage sm)
+        private async Task AddLevelRole(SocketMessage sm)
         {
-            if (sm.Author.IsBot)
-                return Task.CompletedTask;
-            sm.Channel.SendMessageAsync("1");
-            var user = (IGuildUser) sm.Channel.GetUserAsync(sm.Author.Id);
-            List<IRole> rolesToAdd;
-            sm.Channel.SendMessageAsync("2");
+            if (sm.Author.IsBot) return;
+            IEnumerable<SocketRole> rolesToAdd;
             using (var uow = _db.UnitOfWork) {
-                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
-                sm.Channel.SendMessageAsync("3");
-                rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null).ToList();
-                sm.Channel.SendMessageAsync("4");
+                var userLevel = uow.LevelModel.GetLevel(sm.Author.Id);
+                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= userLevel && ((SocketGuildUser) sm.Author).Roles.Any(r => r.Id == rl.RoleId));
+                rolesToAdd = ((SocketGuildUser) sm.Author).Guild.Roles.Where(r => rlb.Any(rl => rl.RoleId == r.Id)).ToList();
             }
-            sm.Channel.SendMessageAsync($"Rolecount: {rolesToAdd.Count()}");
-            if (!rolesToAdd.Any())
-                return Task.CompletedTask;
-            sm.Channel.SendMessageAsync("5");
-            user.AddRolesAsync(rolesToAdd);
-            var rolestring = rolesToAdd.Aggregate("\"", (current, role) => current + role.Name + "\", \"");
-            rolestring = rolestring.Substring(0, rolestring.Length - 3) + "\"";
-            sm.Channel.SendMessageAsync("6");
-            sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.");
-            sm.Channel.SendMessageAsync("7");
-            return Task.CompletedTask;
+            if (!rolesToAdd.Any()) return;
+            await ((SocketGuildUser) sm.Author).AddRolesAsync(rolesToAdd);
+            var rolestring = rolesToAdd.Aggregate("", (str, role) => str + "\"" + role + "\", ");
+            rolestring = rolestring.Substring(0, rolestring.Length - 2);
+            await sm.Channel.SendMessageAsync($"{sm.Author.Mention} hat die Rolle{(rolesToAdd.Count() > 1 ? "n" : "")} {rolestring} bekommen.");
         }
 
         private async Task OnMessageReceived(SocketMessage after)
