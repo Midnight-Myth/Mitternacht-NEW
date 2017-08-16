@@ -32,6 +32,7 @@ namespace NadekoBot.Modules.Level.Services
                 var userLevel = uow.LevelModel.GetLevel(sm.Author.Id);
                 var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= userLevel && ((SocketGuildUser) sm.Author).Roles.Any(r => r.Id == rl.RoleId));
                 rolesToAdd = ((SocketGuildUser) sm.Author).Guild.Roles.Where(r => rlb.Any(rl => rl.RoleId == r.Id)).ToList();
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
             if (!rolesToAdd.Any()) return;
             await ((SocketGuildUser) sm.Author).AddRolesAsync(rolesToAdd);

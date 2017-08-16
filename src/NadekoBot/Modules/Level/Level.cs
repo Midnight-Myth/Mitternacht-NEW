@@ -17,26 +17,18 @@ namespace NadekoBot.Modules.Level
 {
     public partial class Level : NadekoTopLevelModule<LevelService>
     {
-        public static string CurrencyName { get; set; }
-        public static string CurrencyPluralName { get; set; }
-        public static string CurrencySign { get; set; }
-        
+        private readonly IBotConfigProvider _bc;
         private readonly DbService _db;
         private readonly IBotCredentials _creds;
 
-        public Level(IBotCredentials creds, DbService db)
-        {
+        private string CurrencyName => _bc.BotConfig.CurrencyName;
+        private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
+        private string CurrencySign => _bc.BotConfig.CurrencySign;
+
+        public Level(IBotConfigProvider bc, IBotCredentials creds, DbService db) {
+            _bc = bc;
             _db = db;
             _creds = creds;
-
-            using (var uow = _db.UnitOfWork)
-            {
-                var conf = uow.BotConfig.GetOrCreate();
-
-                CurrencyName = conf.CurrencyName;
-                CurrencySign = conf.CurrencySign;
-                CurrencyPluralName = conf.CurrencyPluralName;
-            }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
