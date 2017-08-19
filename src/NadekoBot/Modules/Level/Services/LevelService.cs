@@ -27,7 +27,7 @@ namespace NadekoBot.Modules.Level.Services
         private async Task AddLevelRole(SocketMessage sm)
         {
             if (sm.Author.IsBot) return;
-            IEnumerable<SocketRole> rolesToAdd;
+            IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork) {
                 var userLevel = uow.LevelModel.GetLevel(sm.Author.Id);
                 var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= userLevel && ((SocketGuildUser) sm.Author).Roles.Any(r => r.Id == rl.RoleId));
