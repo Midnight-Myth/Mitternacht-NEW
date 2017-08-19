@@ -12,10 +12,11 @@ namespace NadekoBot.Modules.Level.Services
 {
     public class LevelService : INService
     {
+        private readonly DiscordSocketClient _client;
         private readonly DbService _db;
         private readonly CommandService _cmds;
-        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds)
-        {
+        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds) {
+            _client = client;
             _db = db;
             _cmds = cmds;
             client.MessageReceived += OnMessageReceived;
@@ -30,12 +31,12 @@ namespace NadekoBot.Modules.Level.Services
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork) {
                 var userLevel = uow.LevelModel.GetLevel(sm.Author.Id);
-                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= userLevel && ((SocketGuildUser) sm.Author).Roles.Any(r => r.Id == rl.RoleId));
-                rolesToAdd = ((SocketGuildUser) sm.Author).Guild.Roles.Where(r => rlb.Any(rl => rl.RoleId == r.Id)).ToList();
+                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= userLevel && ((SocketGuildUser)_client.GetUser(sm.Author.Id)).Roles.Any(r => r.Id == rl.RoleId));
+                rolesToAdd = ((SocketGuildUser) _client.GetUser(sm.Author.Id)).Roles.Where(r => rlb.Any(rl => rl.RoleId == r.Id)).ToList();
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
             //if (!rolesToAdd.Any()) return;
-            await ((SocketGuildUser) sm.Author).AddRolesAsync(rolesToAdd);
+            await ((SocketGuildUser) _client.GetUser(sm.Author.Id)).AddRolesAsync(rolesToAdd);
             var rolestring = rolesToAdd.Aggregate("", (str, role) => str + "\"" + role + "\", ");
             rolestring = rolestring.Substring(0, rolestring.Length - 2);
             await sm.Channel.SendMessageAsync($"{sm.Author.Mention} hat die Rolle{(rolesToAdd.Count() > 1 ? "n" : "")} {rolestring} bekommen.");
