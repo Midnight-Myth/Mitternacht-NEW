@@ -34,7 +34,7 @@ namespace NadekoBot.Modules.Level.Services
                 rolesToAdd = ((SocketGuildUser) sm.Author).Guild.Roles.Where(r => rlb.Any(rl => rl.RoleId == r.Id)).ToList();
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
-            if (!rolesToAdd.Any()) return;
+            //if (!rolesToAdd.Any()) return;
             await ((SocketGuildUser) sm.Author).AddRolesAsync(rolesToAdd);
             var rolestring = rolesToAdd.Aggregate("", (str, role) => str + "\"" + role + "\", ");
             rolestring = rolestring.Substring(0, rolestring.Length - 2);
