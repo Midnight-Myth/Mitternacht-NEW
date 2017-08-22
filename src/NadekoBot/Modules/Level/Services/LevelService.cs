@@ -28,8 +28,10 @@ namespace NadekoBot.Modules.Level.Services
         private Task AddLevelRole(SocketMessage sm)
         {
             if (sm.Author.IsBot) return Task.CompletedTask;
+            var stc = sm.Channel as SocketTextChannel;
+            if (stc == null) return Task.CompletedTask;
             List<IRole> rolesToAdd;
-            var user = (SocketGuildUser) _client.GetUser(sm.Author.Id);
+            var user = stc.GetUser(sm.Id);
             sm.Channel.SendMessageAsync($"username: {user.Mention}, guild: {user.Guild.Name}").GetAwaiter().GetResult();
             using (var uow = _db.UnitOfWork) {
                 var userLevel = uow.LevelModel.GetLevel(sm.Author.Id);
