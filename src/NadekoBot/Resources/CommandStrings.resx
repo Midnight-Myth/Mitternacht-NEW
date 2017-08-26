@@ -406,7 +406,7 @@
     <value>`{0}tesar`</value>
   </data>
   <data name="iam_cmd" xml:space="preserve">
-    <value>iam</value>
+    <value>iam ibims</value>
   </data>
   <data name="iam_desc" xml:space="preserve">
     <value>Adds a role to you that you choose. Role must be on a list of self-assignable roles.</value>
@@ -415,7 +415,7 @@
     <value>`{0}iam Gamer`</value>
   </data>
   <data name="iamnot_cmd" xml:space="preserve">
-    <value>iamnot iamn</value>
+    <value>iamnot iamn ibimsni</value>
   </data>
   <data name="iamnot_desc" xml:space="preserve">
     <value>Removes a specified role from you. Role must be on a list of self-assignable roles.</value>
@@ -3645,7 +3645,7 @@
   <data name="turntoxp_usage" xml:space="preserve">
     <value>`{0}turntoxp &lt;geld&gt;`</value>
   </data>
- <data name="derpi_cmd" xml:space="preserve">
+  <data name="derpi_cmd" xml:space="preserve">
     <value>derpi</value>
   </data>
   <data name="derpi_desc" xml:space="preserve">
