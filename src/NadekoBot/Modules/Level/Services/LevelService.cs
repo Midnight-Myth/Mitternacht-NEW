@@ -22,7 +22,7 @@ namespace NadekoBot.Modules.Level.Services
             client.MessageReceived += OnMessageReceived;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
-            client.MessageReceived += AddLevelRole;
+            //client.MessageReceived += AddLevelRole;
         }
 
         private Task AddLevelRole(SocketMessage sm)
