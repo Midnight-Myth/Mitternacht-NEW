@@ -51,9 +51,9 @@ namespace NadekoBot.Modules.Level.Services
                 var rlbs = uow.RoleLevelBinding.GetAll().ToList();
                 if(!rlbs.Any()) return Task.CompletedTask;
                 sm.Channel.SendMessageAsync($"rlbs: {rlbs.Aggregate("", (s, r) => $"{s}{r.RoleId}+{r.MinimumLevel},").TrimEnd(',')}").GetAwaiter().GetResult();
-                var rlb = rlbs.Where(rl => rl.MinimumLevel <= level) as RoleLevelBinding[] ?? new RoleLevelBinding[0];
-                sm.Channel.SendMessageAsync($"rlb count: {rlb.Length}").GetAwaiter().GetResult();
-                rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)) as List<IRole> ?? new List<IRole>();
+                var rlb = rlbs.Where(rl => rl.MinimumLevel <= level).ToList();
+                sm.Channel.SendMessageAsync($"rlb count: {rlb.Count}").GetAwaiter().GetResult();
+                rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).ToList();
                 sm.Channel.SendMessageAsync($"rolestoadd count: {rolesToAdd.Count}").GetAwaiter().GetResult();
             }
             //try
