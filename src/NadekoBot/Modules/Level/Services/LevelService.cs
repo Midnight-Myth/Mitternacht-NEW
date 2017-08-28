@@ -47,6 +47,8 @@ namespace NadekoBot.Modules.Level.Services
                 var level = uow.LevelModel.GetLevel(user.Id);
                 var userroles = user.GetRoles();
                 sm.Channel.SendMessageAsync("2").GetAwaiter().GetResult();
+                var rlbs = uow.RoleLevelBinding.GetAll();
+                sm.Channel.SendMessageAsync($"rlbs count: {rlbs.Count()}").GetAwaiter().GetResult();
                 var rlb = (from rl in uow.RoleLevelBinding.GetAll()
                            where rl.MinimumLevel <= level && userroles.All(r => r.Id != rl.RoleId) select rl) as List<RoleLevelBinding> ?? new List<RoleLevelBinding>();
                 sm.Channel.SendMessageAsync($"rlb count: {rlb?.Count}").GetAwaiter().GetResult();
