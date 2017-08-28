@@ -30,14 +30,20 @@ namespace NadekoBot.Modules.Level.Services
             if (sm.Content.Equals(".die"))
                 return Task.CompletedTask;
 
+            if (sm.Author.IsBot) return Task.CompletedTask;
+
             var user = (IGuildUser)sm.Author;
             sm.Channel.SendMessageAsync("User: " + user.Username);
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
+                sm.Channel.SendMessageAsync("1");
                 var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
+                sm.Channel.SendMessageAsync("2");
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
+                sm.Channel.SendMessageAsync("3");
                 uow.Complete();
+                sm.Channel.SendMessageAsync("4");
             }
             sm.Channel.SendMessageAsync("Anzahl Rollen: " + rolesToAdd.Count());
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
