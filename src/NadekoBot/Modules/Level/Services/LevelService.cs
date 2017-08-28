@@ -55,23 +55,23 @@ namespace NadekoBot.Modules.Level.Services
                 uow.Complete();
             }
             sm.Channel.SendMessageAsync("5").GetAwaiter().GetResult();
-            try
-            {
-                foreach (var role in rolesToAdd)
-                {
-                    sm.Channel.SendMessageAsync("Rolle: ");
-                    sm.Channel.SendMessageAsync(role.Name);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                sm.Channel.SendMessageAsync(e.Message);
-            }
+            //try
+            //{
+            //    foreach (var role in rolesToAdd)
+            //    {
+            //        sm.Channel.SendMessageAsync("Rolle: ").GetAwaiter().GetResult();
+            //        sm.Channel.SendMessageAsync(role.Name).GetAwaiter().GetResult();
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //    sm.Channel.SendMessageAsync(e.Message).GetAwaiter().GetResult();
+            //}
             if (!rolesToAdd.Any()) return Task.CompletedTask;
-            sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd).GetAwaiter().GetResult();
-            user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
-            var rolestring = rolesToAdd.Aggregate("\"", (s,r) => $"{s}{r.Name}\", \"").TrimEnd('"', ' ', ',');
+            var rolestring = rolesToAdd.Aggregate("\"", (s, r) => $"{s}{r.Name}\", \"").TrimEnd('"', ' ', ',');
+            sm.Channel.SendMessageAsync($"Rollen: {rolestring}").GetAwaiter().GetResult();
+            user.AddRolesAsync(rolesToAdd).GetAwaiter().GetResult();
             sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.").GetAwaiter().GetResult();
             return Task.CompletedTask;
         }
