@@ -45,18 +45,16 @@ namespace NadekoBot.Modules.Level.Services
             {
                 sm.Channel.SendMessageAsync("1").GetAwaiter().GetResult();
                 var level = uow.LevelModel.GetLevel(user.Id);
-                var userroles = user.GetRoles();
-                sm.Channel.SendMessageAsync("2").GetAwaiter().GetResult();
-                var rlbs = uow.RoleLevelBinding.GetAll();
-                sm.Channel.SendMessageAsync($"rlbs count: {rlbs.Count()}").GetAwaiter().GetResult();
-                var rlb = (from rl in uow.RoleLevelBinding.GetAll()
-                           where rl.MinimumLevel <= level && userroles.All(r => r.Id != rl.RoleId) select rl) as List<RoleLevelBinding> ?? new List<RoleLevelBinding>();
+                var userroles = user.GetRoles().ToList();
+                sm.Channel.SendMessageAsync($"userroles count: {userroles.Count()}").GetAwaiter().GetResult();
+                var rlbs = uow.RoleLevelBinding.GetAll().ToList();
+                if(!rlbs.Any()) return Task.CompletedTask;
+                sm.Channel.SendMessageAsync($"rlbs count: {rlbs.Count}").GetAwaiter().GetResult();
+                var rlb = (from rl in rlbs where rl.MinimumLevel <= level && userroles.All(r => r.Id == rl.RoleId) select rl) as List<RoleLevelBinding> ?? new List<RoleLevelBinding>();
                 sm.Channel.SendMessageAsync($"rlb count: {rlb?.Count}").GetAwaiter().GetResult();
                 rolesToAdd = (from r in user.Guild.Roles where rlb.Any(rs => rs.RoleId == r.Id) select r) as List<IRole> ?? new List<IRole>();
                 sm.Channel.SendMessageAsync($"rolestoadd count: {rolesToAdd.Count}").GetAwaiter().GetResult();
-                uow.Complete();
             }
-            sm.Channel.SendMessageAsync("5").GetAwaiter().GetResult();
             //try
             //{
             //    foreach (var role in rolesToAdd)
