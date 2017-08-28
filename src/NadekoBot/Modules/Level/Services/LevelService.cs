@@ -22,12 +22,16 @@ namespace NadekoBot.Modules.Level.Services
             client.MessageReceived += OnMessageReceived;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
-            //client.MessageReceived += AddLevelRole;
+            client.MessageReceived += AddLevelRole;
         }
 
         public Task AddLevelRole(SocketMessage sm)
         {
-            var user = (IGuildUser)sm.Channel.GetUserAsync(sm.Author.Id);
+            if(sm.Content.Equals(".die"))
+                return Task.CompletedTask;
+
+            var user = (IGuildUser)sm.Author;
+            sm.Channel.SendMessageAsync("User: " + user.Username);
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
@@ -35,7 +39,9 @@ namespace NadekoBot.Modules.Level.Services
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
                 uow.Complete();
             }
+            sm.Channel.SendMessageAsync("Anzahl Rollen: " + rolesToAdd.Count());
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
+            sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd);
             user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
             var rolestring = "\"";
             foreach (var role in rolesToAdd)
