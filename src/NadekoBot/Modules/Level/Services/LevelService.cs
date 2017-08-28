@@ -12,95 +12,90 @@ namespace NadekoBot.Modules.Level.Services
 {
     public class LevelService : INService
     {
-        public readonly DbService _db;
-        public readonly CommandService _cmds;
-        public readonly DiscordSocketClient _client;
-        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds)
-        {
-            _db = db;
+        private readonly DiscordSocketClient _client;
+        private readonly DbService _db;
+        private readonly CommandService _cmds;
+        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds) {
             _client = client;
+            _db = db;
+            _cmds = cmds;
             client.MessageReceived += OnMessageReceived;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
-            client.MessageReceived += AddLevelRole;
+            //client.MessageReceived += AddLevelRole;
         }
 
-        public Task AddLevelRole(SocketMessage sm)
+        private Task AddLevelRole(SocketMessage sm)
         {
-            if(sm.Content.Equals(".die"))
-                return Task.CompletedTask;
-
-            var user = (IGuildUser)sm.Author;
-            sm.Channel.SendMessageAsync("User: " + user.Username);
-            IEnumerable<IRole> rolesToAdd;
-            using (var uow = _db.UnitOfWork)
-            {
-                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
-                rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null);
+            if (sm.Author.IsBot) return Task.CompletedTask;
+            var stc = sm.Channel as SocketTextChannel;
+            if (stc == null) return Task.CompletedTask;
+            List<IRole> rolesToAdd;
+            var user = stc.GetUser(sm.Id);
+            sm.Channel.SendMessageAsync($"username: {user.Mention}, guild: {user.Guild.Name}").GetAwaiter().GetResult();
+            using (var uow = _db.UnitOfWork) {
+                var userLevel = uow.LevelModel.GetLevel(sm.Author.Id);
+                sm.Channel.SendMessageAsync($"level: {userLevel}").GetAwaiter().GetResult();
+                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= userLevel && user.Roles.Any(r => r.Id == rl.RoleId)).ToList();
+                sm.Channel.SendMessageAsync($"rlb count: {rlb.Count}").GetAwaiter().GetResult();
+                rolesToAdd = new List<IRole>(user.Roles.Where(r => rlb.Any(rl => rl.RoleId == r.Id)));
+                sm.Channel.SendMessageAsync($"rta count: {rolesToAdd.Count}").GetAwaiter().GetResult();
                 uow.Complete();
             }
-            sm.Channel.SendMessageAsync("Anzahl Rollen: " + rolesToAdd.Count());
-            if (rolesToAdd.Count() == 0) return Task.CompletedTask;
-            sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd);
-            user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
-            var rolestring = "\"";
-            foreach (var role in rolesToAdd)
-            {
-                rolestring += role.Name + "\", \"";
-            }
-            rolestring = rolestring.Substring(0, rolestring.Length - 3) + "\"";
-            sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count() > 1 ? "n" : "")} {rolestring} bekommen.");
+            if (!rolesToAdd.Any()) return Task.CompletedTask;
+            user.AddRolesAsync(rolesToAdd).GetAwaiter().GetResult();
+            var rolestring = rolesToAdd.Aggregate("", (str, role) => str + "\"" + role + "\", ");
+            rolestring = rolestring.Substring(0, rolestring.Length - 2);
+            sm.Channel.SendMessageAsync($"{sm.Author.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.").GetAwaiter().GetResult();
             return Task.CompletedTask;
         }
 
-        public Task OnMessageReceived(SocketMessage sm)
+        private async Task OnMessageReceived(SocketMessage after)
         {
-            if (sm.Content.Length < 10 || sm.Author.IsBot) return Task.CompletedTask;
-            using (var uow = _db.UnitOfWork)
-            {
+            if (after.Content.Length < 10 || after.Author.IsBot)
+                return;
+            using (var uow = _db.UnitOfWork) {
                 var time = DateTime.Now;
-                if (!uow.LevelModel.CanGetMessageXP(sm.Author.Id, time)) return Task.CompletedTask;
-                uow.LevelModel.TryAddXP(sm.Author.Id, sm.Content.Length > 25 ? 25 : sm.Content.Length, false);
-                uow.LevelModel.ReplaceTimestamp(sm.Author.Id, time);
-                SendLevelChangedMessage(uow.LevelModel.CalculateLevel(sm.Author.Id), sm.Author, sm.Channel);
-                uow.Complete();
+                if (uow.LevelModel.CanGetMessageXP(after.Author.Id, time)) {
+                    uow.LevelModel.TryAddXP(after.Author.Id, after.Content.Length > 25 ? 25 : after.Content.Length, false);
+                    uow.LevelModel.ReplaceTimestamp(after.Author.Id, time);
+                    await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, after.Channel);
+                }
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
-            return Task.CompletedTask;
         }
 
-        public Task OnMessageUpdated(Cacheable<IMessage, ulong> um, SocketMessage sm, ISocketMessageChannel smc)
+        private async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
-            if (!um.HasValue || um.Value.Author.IsBot || (um.Value.Content.Length > 25 && sm.Content.Length > 25) || (um.Value.Content.Length < 10 && sm.Content.Length < 10)) return Task.CompletedTask;
-            using (var uow = _db.UnitOfWork)
-            {
-                uow.LevelModel.TryAddXP(um.Value.Author.Id, sm.Content.Length - um.Value.Content.Length, false);
-                SendLevelChangedMessage(uow.LevelModel.CalculateLevel(sm.Author.Id), sm.Author, smc);
-                uow.Complete();
+            var msgBefore = await before.GetOrDownloadAsync();
+            if (msgBefore.Author.IsBot || (msgBefore.Content.Length > 25 && after.Content.Length > 25) || (msgBefore.Content.Length < 10 && after.Content.Length < 10))
+                return;
+            using (var uow = _db.UnitOfWork) {
+                uow.LevelModel.TryAddXP(msgBefore.Author.Id, after.Content.Length - msgBefore.Content.Length, false);
+                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, channel);
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
-            return Task.CompletedTask;
         }
 
-        public Task OnMessageDeleted(Cacheable<IMessage, ulong> um, ISocketMessageChannel smc)
+        private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel)
         {
-            if (!um.HasValue || um.Value.Author.IsBot || um.Value.Content.Length < 10 || _cmds.Commands.Any(c => um.Value.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => um.Value.Content.StartsWith(c2)))) return Task.CompletedTask;
-            using (var uow = _db.UnitOfWork)
-            {
-                uow.LevelModel.TryAddXP(um.Value.Author.Id, um.Value.Content.Length > 25 ? -25 : -um.Value.Content.Length);
-                SendLevelChangedMessage(uow.LevelModel.CalculateLevel(um.Value.Author.Id), um.Value.Author, smc);
+            var msgBefore = await before.GetOrDownloadAsync();
+            if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 || _cmds.Commands.Any(c => msgBefore.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => msgBefore.Content.StartsWith(c2))))
+                return;
+            using (var uow = _db.UnitOfWork) {
+                uow.LevelModel.TryAddXP(msgBefore.Author.Id, msgBefore.Content.Length > 25 ? -25 : -msgBefore.Content.Length);
+                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(msgBefore.Author.Id), msgBefore.Author, channel);
                 uow.Complete();
             }
-            return Task.CompletedTask;
         }
 
-        public void SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
+        private async Task SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
         {
-            if (cl.IsNewLevelHigher)
-            {
-                smc.SendMessageAsync($"Herzlichen Glückwunsch { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } aufgestiegen!");
+            if (cl.IsNewLevelHigher) {
+                await smc.SendMessageAsync($"Herzlichen Glückwunsch { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } aufgestiegen!");
             }
-            else if (cl.IsNewLevelLower)
-            {
-                smc.SendMessageAsync($"Schade { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } abgestiegen :(");
+            else if (cl.IsNewLevelLower) {
+                await smc.SendMessageAsync($"Schade { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } abgestiegen :(");
             }
         }
     }
