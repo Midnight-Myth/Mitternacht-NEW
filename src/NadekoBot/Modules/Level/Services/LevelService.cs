@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using NadekoBot.Extensions;
 using NadekoBot.Services;
+using NadekoBot.Services.Database.Models;
 using NadekoBot.Services.Database.Repositories;
 
 namespace NadekoBot.Modules.Level.Services
@@ -30,21 +32,29 @@ namespace NadekoBot.Modules.Level.Services
             if (sm.Content.Equals(".die") || sm.Author.IsBot)
                 return Task.CompletedTask;
             
-            var user = (IGuildUser)sm.Author;
-            sm.Channel.SendMessageAsync("User: " + user.Username);
-            sm.Channel.SendMessageAsync("Server: " + user.Guild);
-            IList<IRole> rolesToAdd;
+            var user = sm.Author as IGuildUser;
+            if (user == null)
+            {
+                sm.Channel.SendMessageAsync("user null").RunSynchronously();
+                return Task.CompletedTask;
+            }
+            sm.Channel.SendMessageAsync("User: " + user.Username).RunSynchronously();
+            sm.Channel.SendMessageAsync("Server: " + user.Guild).RunSynchronously();
+            List<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
-                sm.Channel.SendMessageAsync("1");
-                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= uow.LevelModel.GetLevel(user.Id) && !user.RoleIds.Contains(rl.RoleId));
-                sm.Channel.SendMessageAsync("2");
-                rolesToAdd = user.Guild.Roles.Where(r => rlb.FirstOrDefault(rl => rl.RoleId == r.Id) != null) as IList<IRole> ?? new List<IRole>();
-                sm.Channel.SendMessageAsync("3");
+                sm.Channel.SendMessageAsync("1").RunSynchronously();
+                var level = uow.LevelModel.GetLevel(user.Id);
+                var userroles = user.GetRoles();
+                sm.Channel.SendMessageAsync("2").RunSynchronously();
+                var rlb = (from rl in uow.RoleLevelBinding.GetAll()
+                           where rl.MinimumLevel <= level && userroles.All(r => r.Id != rl.RoleId) select rl) as List<RoleLevelBinding>;
+                sm.Channel.SendMessageAsync("3").RunSynchronously();
+                rolesToAdd = (from r in user.Guild.Roles where rlb.Any(rs => rs.RoleId == r.Id) select r) as List<IRole> ?? new List<IRole>();
+                sm.Channel.SendMessageAsync("4").RunSynchronously();
                 uow.Complete();
-                sm.Channel.SendMessageAsync("4");
             }
-            sm.Channel.SendMessageAsync("5");
+            sm.Channel.SendMessageAsync("5").RunSynchronously();
             try
             {
                 foreach (var role in rolesToAdd)
@@ -59,10 +69,10 @@ namespace NadekoBot.Modules.Level.Services
                 sm.Channel.SendMessageAsync(e.Message);
             }
             if (!rolesToAdd.Any()) return Task.CompletedTask;
-            sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd);
+            sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd).RunSynchronously();
             user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
             var rolestring = rolesToAdd.Aggregate("\"", (s,r) => $"{s}{r.Name}\", \"").TrimEnd('"', ' ', ',');
-            sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.");
+            sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.").RunSynchronously();
             return Task.CompletedTask;
         }
 
