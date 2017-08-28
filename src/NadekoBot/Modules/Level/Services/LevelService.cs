@@ -46,7 +46,10 @@ namespace NadekoBot.Modules.Level.Services
                 sm.Channel.SendMessageAsync("4");
             }
             sm.Channel.SendMessageAsync("5");
-            sm.Channel.SendMessageAsync("Anzahl Rollen: " + rolesToAdd.Count());
+            foreach (IRole role in rolesToAdd)
+            {
+                sm.Channel.SendMessageAsync(role.Name);
+            }
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
             sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd);
             user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
