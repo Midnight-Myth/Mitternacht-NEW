@@ -34,6 +34,7 @@ namespace NadekoBot.Modules.Level.Services
 
             var user = (IGuildUser)sm.Author;
             sm.Channel.SendMessageAsync("User: " + user.Username);
+            sm.Channel.SendMessageAsync("Server: " + user.Guild);
             IEnumerable<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
@@ -48,7 +49,9 @@ namespace NadekoBot.Modules.Level.Services
             sm.Channel.SendMessageAsync("5");
             foreach (IRole role in rolesToAdd)
             {
+                sm.Channel.SendMessageAsync("Rolle: ");
                 sm.Channel.SendMessageAsync(role.Name);
+                sm.Channel.SendMessageAsync("\n");
             }
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
             sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd);
