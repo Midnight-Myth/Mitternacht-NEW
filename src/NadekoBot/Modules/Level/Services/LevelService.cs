@@ -7,18 +7,15 @@ using Discord.Commands;
 using Discord.WebSocket;
 using NadekoBot.Extensions;
 using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
 using NadekoBot.Services.Database.Repositories;
 
 namespace NadekoBot.Modules.Level.Services
 {
     public class LevelService : INService
     {
-        private readonly DiscordSocketClient _client;
         private readonly DbService _db;
         private readonly CommandService _cmds;
         public LevelService(DiscordSocketClient client, DbService db, CommandService cmds) {
-            _client = client;
             _db = db;
             _cmds = cmds;
             client.MessageReceived += OnMessageReceived;
@@ -33,27 +30,18 @@ namespace NadekoBot.Modules.Level.Services
             
             var user = sm.Author as IGuildUser;
             if (user == null) return;
-            //sm.Channel.SendMessageAsync("User: " + user.Username);
-            //sm.Channel.SendMessageAsync("Server: " + user.Guild);
             List<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
-                //sm.Channel.SendMessageAsync("1");
                 var level = uow.LevelModel.GetLevel(user.Id);
-                //sm.Channel.SendMessageAsync($"level: {level}");
                 var userroles = user.GetRoles().ToList();
-                //sm.Channel.SendMessageAsync($"userroles: {userroles.Aggregate("", (s, r) => $"{s}{r.Name}+{r.Id},").TrimEnd(',')}");
                 var rlbs = uow.RoleLevelBinding.GetAll().ToList();
                 if(!rlbs.Any()) return;
-                //await sm.Channel.SendMessageAsync($"rlbs: {rlbs.Aggregate("", (s, r) => $"{s}{r.RoleId}+{r.MinimumLevel},").TrimEnd(',')}");
                 var rlb = rlbs.Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
-                //await sm.Channel.SendMessageAsync($"rlb count: {rlb.Count}");
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).ToList();
-                //await sm.Channel.SendMessageAsync($"rolestoadd count: {rolesToAdd.Count}");
             }
             if (!rolesToAdd.Any()) return;
-            var rolestring = rolesToAdd.Aggregate("\"", (s, r) => $"{s}{r.Name}\", \"").TrimEnd('"', ' ', ',');
-            //await sm.Channel.SendMessageAsync($"Rollen: {rolestring}");
+            var rolestring = rolesToAdd.Aggregate("\"", (s, r) => $"{s}{r.Name}\", \"", s => s.Substring(0, s.Length - 3));
             await user.AddRolesAsync(rolesToAdd);
             await sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.");
         }

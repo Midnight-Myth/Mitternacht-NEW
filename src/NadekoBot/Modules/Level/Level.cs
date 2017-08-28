@@ -15,14 +15,12 @@ using System.Threading.Tasks;
 
 namespace NadekoBot.Modules.Level
 {
-    public partial class Level : NadekoTopLevelModule<LevelService>
+    public class Level : NadekoTopLevelModule<LevelService>
     {
         private readonly IBotConfigProvider _bc;
         private readonly DbService _db;
         private readonly IBotCredentials _creds;
 
-        private string CurrencyName => _bc.BotConfig.CurrencyName;
-        private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
         private string CurrencySign => _bc.BotConfig.CurrencySign;
 
         public Level(IBotConfigProvider bc, IBotCredentials creds, DbService db) {
@@ -125,7 +123,7 @@ namespace NadekoBot.Modules.Level
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task AddXP(int xp, [Remainder] IUser user = null)
+        public async Task AddXp(int xp, [Remainder] IUser user = null)
         {
             user = user ?? Context.User;
             bool success;
@@ -139,7 +137,7 @@ namespace NadekoBot.Modules.Level
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task TurnToXP(long moneyToSpend, [Remainder] IUser user = null)
+        public async Task TurnToXp(long moneyToSpend, [Remainder] IUser user = null)
         {
             user = user != null && _creds.IsOwner(Context.User) ? user : Context.User;
             if(moneyToSpend < 0)
