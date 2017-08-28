@@ -45,6 +45,7 @@ namespace NadekoBot.Modules.Level.Services
                 uow.Complete();
                 sm.Channel.SendMessageAsync("4");
             }
+            sm.Channel.SendMessageAsync("5");
             sm.Channel.SendMessageAsync("Anzahl Rollen: " + rolesToAdd.Count());
             if (rolesToAdd.Count() == 0) return Task.CompletedTask;
             sm.Channel.SendMessageAsync("Rollen: " + rolesToAdd);
