@@ -30,9 +30,9 @@ namespace NadekoBot.Modules.Administration
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Slowmode()
             {
-                if (_service.RatelimitingChannels.TryRemove(Context.Channel.Id, out Ratelimiter throwaway))
+                if (_service.RatelimitingChannels.TryRemove(Context.Channel.Id, out Ratelimiter removed))
                 {
-                    throwaway.CancelSource.Cancel();
+                    removed.CancelSource.Cancel();
                     await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
                 }
             }
@@ -43,7 +43,7 @@ namespace NadekoBot.Modules.Administration
             public async Task Slowmode(int msg, int perSec)
             {
                 await Slowmode().ConfigureAwait(false); // disable if exists
-                
+
                 if (msg < 1 || perSec < 1 || msg > 100 || perSec > 3600)
                 {
                     await ReplyErrorLocalized("invalid_params").ConfigureAwait(false);
@@ -55,7 +55,7 @@ namespace NadekoBot.Modules.Administration
                     MaxMessages = msg,
                     PerSeconds = perSec,
                 };
-                if(_service.RatelimitingChannels.TryAdd(Context.Channel.Id, toAdd))
+                if (_service.RatelimitingChannels.TryAdd(Context.Channel.Id, toAdd))
                 {
                     await Context.Channel.SendConfirmAsync(GetText("slowmode_init"),
                             GetText("slowmode_desc", Format.Bold(toAdd.MaxMessages.ToString()), Format.Bold(toAdd.PerSeconds.ToString())))
@@ -89,7 +89,7 @@ namespace NadekoBot.Modules.Administration
 
                 _service.IgnoredUsers.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(usrs.Select(x => x.UserId)), (key, old) => new HashSet<ulong>(usrs.Select(x => x.UserId)));
 
-                if(removed)
+                if (removed)
                     await ReplyConfirmLocalized("slowmodewl_user_stop", Format.Bold(user.ToString())).ConfigureAwait(false);
                 else
                     await ReplyConfirmLocalized("slowmodewl_user_start", Format.Bold(user.ToString())).ConfigureAwait(false);

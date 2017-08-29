@@ -60,7 +60,7 @@ namespace NadekoBot.Modules.Permissions
             //    using (var uow = _db.UnitOfWork)
             //    {
             //        var bc = uow.BotConfig.GetOrCreate();
-                    
+
             //        if (cost != 0)
             //        {
             //            var elem = bc.CommandCosts.Where(cc => cc.CommandName == cmdPrice.CommandName).FirstOrDefault();
@@ -74,8 +74,7 @@ namespace NadekoBot.Modules.Permissions
             //        else
             //        {
             //            bc.CommandCosts.RemoveAt(bc.CommandCosts.IndexOf(cmdPrice));
-            //            int throwaway;
-            //            _commandCosts.TryRemove(cmdName, out throwaway);
+            //            _commandCosts.TryRemove(cmdName, out _);
             //        }
 
             //        await uow.CompleteAsync().ConfigureAwait(false);

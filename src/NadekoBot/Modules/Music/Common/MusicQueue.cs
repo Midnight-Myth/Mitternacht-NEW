@@ -72,15 +72,36 @@ namespace NadekoBot.Modules.Music.Common
             song.ThrowIfNull(nameof(song));
             lock (locker)
             {
-                if(MaxQueueSize != 0 && Songs.Count >= MaxQueueSize)
+                if (MaxQueueSize != 0 && Songs.Count >= MaxQueueSize)
                     throw new QueueFullException();
                 Songs.AddLast(song);
             }
         }
 
+        public int AddNext(SongInfo song)
+        {
+            song.ThrowIfNull(nameof(song));
+            lock (locker)
+            {
+                if (MaxQueueSize != 0 && Songs.Count >= MaxQueueSize)
+                    throw new QueueFullException();
+                var curSong = Current.Song;
+                if (curSong == null)
+                {
+                    Songs.AddLast(song);
+                    return Songs.Count;
+                }
+
+                var songlist = Songs.ToList();
+                songlist.Insert(CurrentIndex + 1, song);
+                Songs = new LinkedList<SongInfo>(songlist);
+                return CurrentIndex + 1;
+            }
+        }
+
         public void Next(int skipCount = 1)
         {
-            lock(locker)
+            lock (locker)
                 CurrentIndex += skipCount;
         }
 

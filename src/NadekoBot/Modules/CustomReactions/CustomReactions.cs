@@ -135,7 +135,7 @@ namespace NadekoBot.Modules.CustomReactions
             if (Context.Guild == null)
                 customReactions = _service.GlobalReactions.Where(cr => cr != null).ToArray();
             else
-                customReactions = _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[]{ }).Where(cr => cr != null).ToArray();
+                customReactions = _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null).ToArray();
 
             if (customReactions == null || !customReactions.Any())
             {
@@ -165,7 +165,7 @@ namespace NadekoBot.Modules.CustomReactions
             if (Context.Guild == null)
                 customReactions = _service.GlobalReactions.Where(cr => cr != null).ToArray();
             else
-                customReactions = _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[]{ }).Where(cr => cr != null).ToArray();
+                customReactions = _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null).ToArray();
 
             if (customReactions == null || !customReactions.Any())
             {
@@ -197,7 +197,7 @@ namespace NadekoBot.Modules.CustomReactions
             if (Context.Guild == null)
                 customReactions = _service.GlobalReactions;
             else
-                customReactions = _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[]{ });
+                customReactions = _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { });
 
             var found = customReactions.FirstOrDefault(cr => cr?.Id == id);
 
@@ -323,7 +323,7 @@ namespace NadekoBot.Modules.CustomReactions
         [NadekoCommand, Usage, Description, Aliases]
         public async Task CrDm(int id)
         {
-            if ((Context.Guild == null && !_creds.IsOwner(Context.User)) || 
+            if ((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
                 (Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator))
             {
                 await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
@@ -433,8 +433,7 @@ namespace NadekoBot.Modules.CustomReactions
             }
             else
             {
-                uint throwaway;
-                if (_service.ReactionStats.TryRemove(trigger, out throwaway))
+                if (_service.ReactionStats.TryRemove(trigger, out _))
                 {
                     await ReplyErrorLocalized("stats_cleared", Format.Bold(trigger)).ConfigureAwait(false);
                 }

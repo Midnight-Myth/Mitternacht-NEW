@@ -11,6 +11,8 @@ using NadekoBot.Common;
 using NadekoBot.Common.Attributes;
 using NadekoBot.Common.Collections;
 using NLog;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace NadekoBot.Modules.Gambling
 {
@@ -26,7 +28,7 @@ namespace NadekoBot.Modules.Gambling
             }
             //flower reaction event
             private static readonly ConcurrentHashSet<ulong> _sneakyGameAwardedUsers = new ConcurrentHashSet<ulong>();
-            
+
             private static readonly char[] _sneakyGameStatusChars = Enumerable.Range(48, 10)
                 .Concat(Enumerable.Range(65, 26))
                 .Concat(Enumerable.Range(97, 26))
@@ -77,7 +79,7 @@ namespace NadekoBot.Modules.Gambling
                 {
                     _secretCode += _sneakyGameStatusChars[rng.Next(0, _sneakyGameStatusChars.Length)];
                 }
-                
+
                 await _client.SetGameAsync($"type {_secretCode} for " + _bc.BotConfig.CurrencyPluralName)
                     .ConfigureAwait(false);
                 try
@@ -137,14 +139,14 @@ namespace NadekoBot.Modules.Gambling
                         desc, footer: footer)
                     .ConfigureAwait(false);
 
-                await new FlowerReactionEvent(_client, _cs).Start(msg, context, amount);
+                await new FlowerReactionEvent(_client, _cs, amount).Start(msg, context);
             }
         }
     }
 
     public abstract class CurrencyEvent
     {
-        public abstract Task Start(IUserMessage msg, ICommandContext channel, int amount);
+        public abstract Task Start(IUserMessage msg, ICommandContext channel);
     }
 
     public class FlowerReactionEvent : CurrencyEvent
@@ -160,28 +162,54 @@ namespace NadekoBot.Modules.Gambling
         private CancellationTokenSource Source { get; }
         private CancellationToken CancelToken { get; }
 
-        public FlowerReactionEvent(DiscordSocketClient client, CurrencyService cs)
+        private readonly ConcurrentQueue<ulong> _toGiveTo = new ConcurrentQueue<ulong>();
+        private readonly int _amount;
+
+        public FlowerReactionEvent(DiscordSocketClient client, CurrencyService cs, int amount)
         {
             _log = LogManager.GetCurrentClassLogger();
             _client = client;
             _cs = cs;
             _botUser = client.CurrentUser;
+            _amount = amount;
             Source = new CancellationTokenSource();
             CancelToken = Source.Token;
+
+            var _ = Task.Run(async () =>
+            {
+
+                var users = new List<ulong>();
+                while (!CancelToken.IsCancellationRequested)
+                {
+                    await Task.Delay(1000).ConfigureAwait(false);
+                    while (_toGiveTo.TryDequeue(out var usrId))
+                    {
+                        users.Add(usrId);
+                    }
+
+                    if (users.Count > 0)
+                    {
+                        await _cs.AddToManyAsync("", _amount, users.ToArray()).ConfigureAwait(false);
+                    }
+
+                    users.Clear();
+                }
+            }, CancelToken);
         }
 
         private async Task End()
         {
-            if(StartingMessage != null)
+            if (StartingMessage != null)
                 await StartingMessage.DeleteAsync().ConfigureAwait(false);
 
-            if(!Source.IsCancellationRequested)
+            if (!Source.IsCancellationRequested)
                 Source.Cancel();
 
             _client.MessageDeleted -= MessageDeletedEventHandler;
         }
 
-        private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, ISocketMessageChannel channel) {
+        private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, ISocketMessageChannel channel)
+        {
             if (StartingMessage?.Id == msg.Id)
             {
                 _log.Warn("Stopping flower reaction event because message is deleted.");
@@ -191,7 +219,7 @@ namespace NadekoBot.Modules.Gambling
             return Task.CompletedTask;
         }
 
-        public override async Task Start(IUserMessage umsg, ICommandContext context, int amount)
+        public override async Task Start(IUserMessage umsg, ICommandContext context)
         {
             StartingMessage = umsg;
             _client.MessageDeleted += MessageDeletedEventHandler;
@@ -206,7 +234,7 @@ namespace NadekoBot.Modules.Gambling
                     catch { return; }
                 }
             }
-            using (StartingMessage.OnReaction(_client, async (r) =>
+            using (StartingMessage.OnReaction(_client, (r) =>
             {
                 try
                 {
@@ -215,8 +243,7 @@ namespace NadekoBot.Modules.Gambling
 
                     if (r.Emote.Name == "🌸" && r.User.IsSpecified && ((DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5) && _flowerReactionAwardedUsers.Add(r.User.Value.Id))
                     {
-                        await _cs.AddAsync(r.User.Value, "Flower Reaction Event", amount, false)
-                            .ConfigureAwait(false);
+                        _toGiveTo.Enqueue(r.UserId);
                     }
                 }
                 catch
@@ -231,14 +258,14 @@ namespace NadekoBot.Modules.Gambling
                 }
                 catch (OperationCanceledException)
                 {
-                    
+
                 }
                 if (CancelToken.IsCancellationRequested)
                     return;
 
                 _log.Warn("Stopping flower reaction event because it expired.");
                 await End();
-                
+
             }
         }
     }

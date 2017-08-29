@@ -27,8 +27,8 @@ namespace NadekoBot.Modules.Searches
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
-            public async Task Hitbox([Remainder] string username) =>
-                await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Hitbox)
+            public async Task Smashcast([Remainder] string username) =>
+                await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Smashcast)
                     .ConfigureAwait(false);
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -41,8 +41,8 @@ namespace NadekoBot.Modules.Searches
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
-            public async Task Beam([Remainder] string username) =>
-                await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Beam)
+            public async Task Mixer([Remainder] string username) =>
+                await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Mixer)
                     .ConfigureAwait(false);
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -53,7 +53,7 @@ namespace NadekoBot.Modules.Searches
                 using (var uow = _db.UnitOfWork)
                 {
                     streams = uow.GuildConfigs
-                                 .For(Context.Guild.Id, 
+                                 .For(Context.Guild.Id,
                                       set => set.Include(gc => gc.FollowedStreams))
                                  .FollowedStreams;
                 }
@@ -67,12 +67,12 @@ namespace NadekoBot.Modules.Searches
                 var text = string.Join("\n", await Task.WhenAll(streams.Select(async snc =>
                 {
                     var ch = await Context.Guild.GetTextChannelAsync(snc.ChannelId);
-                    return string.Format("{0}'s stream on {1} channel. 【{2}】", 
-                        Format.Code(snc.Username), 
+                    return string.Format("{0}'s stream on {1} channel. 【{2}】",
+                        Format.Code(snc.Username),
                         Format.Bold(ch?.Name ?? "deleted-channel"),
                         Format.Code(snc.Type.ToString()));
                 })));
-                
+
                 await Context.Channel.SendConfirmAsync(GetText("streams_following", streams.Count()) + "\n\n" + text)
                     .ConfigureAwait(false);
             }

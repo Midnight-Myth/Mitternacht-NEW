@@ -120,7 +120,8 @@ namespace NadekoBot.Modules.Administration
                         _log.Info(++i);
                     }
                 }
-                catch {
+                catch
+                {
                     _log.Warn("Greet/bye messages won't be migrated");
                 }
                 var com2 = db.CreateCommand();
@@ -212,10 +213,10 @@ namespace NadekoBot.Modules.Administration
                                         type = FollowedStream.FollowedStreamType.Twitch;
                                         break;
                                     case StreamNotificationConfig0_9.StreamType.Beam:
-                                        type = FollowedStream.FollowedStreamType.Beam;
+                                        type = FollowedStream.FollowedStreamType.Mixer;
                                         break;
                                     case StreamNotificationConfig0_9.StreamType.Hitbox:
-                                        type = FollowedStream.FollowedStreamType.Hitbox;
+                                        type = FollowedStream.FollowedStreamType.Smashcast;
                                         break;
                                     default:
                                         break;

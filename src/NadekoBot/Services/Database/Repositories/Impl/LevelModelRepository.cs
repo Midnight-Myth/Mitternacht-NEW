@@ -15,67 +15,61 @@ namespace NadekoBot.Services.Database.Repositories.Impl
         {
             var lm = _set.FirstOrDefault(c => c.UserId == userId);
 
-            if(lm == null)
+            if (lm != null) return lm;
+            _set.Add(lm = new LevelModel
             {
-                _set.Add(lm = new LevelModel()
-                {
-                    UserId = userId,
-                    Level = 0,
-                    TotalXP = 0,
-                    CurrentXP = 0,
-                    timestamp = DateTime.MinValue
-                });
-                _context.SaveChanges();
-            }
+                UserId = userId,
+                Level = 0,
+                TotalXP = 0,
+                CurrentXP = 0,
+                timestamp = DateTime.MinValue
+            });
+            _context.SaveChanges();
             return lm;
         }
 
-        public bool TryAddXP(ulong userId, int xp, bool calculateLevel = true)
+        public bool TryAddXp(ulong userId, int xp, bool calculateLevel = true)
         {
             var lm = GetOrCreate(userId);
-            if (lm.TotalXP + xp < 0) return false;
-
+            if (lm.TotalXP + xp < 0) xp = -lm.TotalXP;
             lm.TotalXP += xp;
-            _set.Update(lm);
             if(calculateLevel) CalculateLevel(userId);
-            
             return true;
         }
 
-        public static int GetXPToLevel(int level)
+        public static int GetXpToLevel(int level)
         {
-            return (int)(5 * (Math.Pow(level, 2)) + 50 * level + 100);
+            return (int)(5 * Math.Pow(level, 2) + 50 * level + 100);
         }
 
         public bool TryAddLevel(ulong userId, int level, bool calculateLevel = true)
         {
             var lm = GetOrCreate(userId);
-            if (lm.Level + level < 0) return false;
-
-            return TryAddXP(userId, GetXPToLevel(lm.Level + level - 1) - GetXPToLevel(lm.Level - 1), calculateLevel);
+            return lm.Level + level >= 0 && TryAddXp(userId,
+                       GetXpToLevel(lm.Level + level - 1) - GetXpToLevel(lm.Level - 1), calculateLevel);
         }
 
         public CalculatedLevel CalculateLevel(ulong userId)
         {
             var lm = GetOrCreate(userId);
 
-            var copyOfTotalXP = lm.TotalXP;
+            var copyOfTotalXp = lm.TotalXP;
             var calculatedLevel = 0;
             var oldLevel = lm.Level;
 
-            while (copyOfTotalXP > 0)
+            while (copyOfTotalXp > 0)
             {
-                var xpNeededForNextLevel = GetXPToLevel(calculatedLevel);
+                var xpNeededForNextLevel = GetXpToLevel(calculatedLevel);
 
-                if (copyOfTotalXP > xpNeededForNextLevel)
+                if (copyOfTotalXp > xpNeededForNextLevel)
                 {
                     calculatedLevel++;
-                    copyOfTotalXP -= xpNeededForNextLevel;
+                    copyOfTotalXp -= xpNeededForNextLevel;
                 }
                 else
                 {
-                    lm.CurrentXP = copyOfTotalXP;
-                    copyOfTotalXP = 0;
+                    lm.CurrentXP = copyOfTotalXp;
+                    copyOfTotalXp = 0;
                 }
             }
             lm.Level = calculatedLevel;
@@ -84,11 +78,10 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             return new CalculatedLevel(oldLevel, calculatedLevel);
         }
 
-        public bool CanGetMessageXP(ulong userId, DateTime time)
+        public bool CanGetMessageXp(ulong userId, DateTime time)
         {
             var lm = GetOrCreate(userId);
-            if ((time - lm.timestamp).TotalSeconds > 60) return true;
-            return false;
+            return (time - lm.timestamp).TotalSeconds > 60;
         }
 
         public void ReplaceTimestamp(ulong userId, DateTime time)
@@ -101,6 +94,17 @@ namespace NadekoBot.Services.Database.Repositories.Impl
         public int GetLevel(ulong userId)
         {
             return GetOrCreate(userId).Level;
+        }
+
+        public int GetXp(ulong userId)
+        {
+            return GetOrCreate(userId).TotalXP;
+        }
+
+        public void SetXp(ulong userId, int xp, bool calculateLevel = true)
+        {
+            GetOrCreate(userId).TotalXP = xp;
+            if (calculateLevel) CalculateLevel(userId);
         }
     }
 }

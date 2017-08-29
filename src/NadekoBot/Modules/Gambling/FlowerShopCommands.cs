@@ -52,7 +52,7 @@ namespace NadekoBot.Modules.Gambling
                 List<ShopEntry> entries;
                 using (var uow = _db.UnitOfWork)
                 {
-                    entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id, 
+                    entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id,
                         set => set.Include(x => x.ShopEntries)
                                   .ThenInclude(x => x.Items)).ShopEntries);
                 }
@@ -69,7 +69,7 @@ namespace NadekoBot.Modules.Gambling
 
                     for (int i = 0; i < theseEntries.Length; i++)
                     {
-                        var entry = entries[i];
+                        var entry = theseEntries[i];
                         embed.AddField(efb => efb.WithName($"#{curPage * 9 + i + 1} - {entry.Price}{_bc.BotConfig.CurrencySign}").WithValue(EntryToString(entry)).WithIsInline(true));
                     }
                     return embed;
@@ -174,9 +174,9 @@ namespace NadekoBot.Modules.Gambling
                                 uow._context.Set<ShopEntryItem>().Add(item);
                                 uow.Complete();
 
-                                await _cs.AddAsync(Context.User.Id, 
-                                    $"Shop error refund - {entry.Name}", 
-                                    entry.Price, 
+                                await _cs.AddAsync(Context.User.Id,
+                                    $"Shop error refund - {entry.Name}",
+                                    entry.Price,
                                     uow).ConfigureAwait(false);
                             }
                             await ReplyErrorLocalized("shop_buy_error").ConfigureAwait(false);
@@ -193,7 +193,7 @@ namespace NadekoBot.Modules.Gambling
 
             }
 
-            private long GetProfitAmount(int price) => 
+            private long GetProfitAmount(int price) =>
                 (int)(Math.Ceiling(0.90 * price));
 
             [NadekoCommand, Usage, Description, Aliases]

@@ -32,7 +32,7 @@ namespace NadekoBot
         public DiscordSocketClient Client { get; }
         public CommandService CommandService { get; }
 
-        public DbService Db { get; }
+        private readonly DbService _db;
         public ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
 
         /* I don't know how to make this not be static
@@ -64,7 +64,7 @@ namespace NadekoBot
             TerribleElevatedPermissionCheck();
 
             Credentials = new BotCredentials();
-            Db = new DbService(Credentials);
+            _db = new DbService(Credentials);
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 MessageCacheSize = 10,
@@ -83,7 +83,7 @@ namespace NadekoBot
             port = port ?? Credentials.ShardRunPort;
             _comClient = new ShardComClient(port.Value);
 
-            using (var uow = Db.UnitOfWork)
+            using (var uow = _db.UnitOfWork)
             {
                 _botConfig = uow.BotConfig.GetOrCreate();
                 OkColor = new Color(Convert.ToUInt32(_botConfig.OkColor, 16));
@@ -91,7 +91,6 @@ namespace NadekoBot
             }
 
             SetupShard(parentProcessId, port.Value);
-            
 
 #if GLOBAL_NADEKO
             Client.Log += Client_Log;
@@ -121,20 +120,22 @@ namespace NadekoBot
             var startingGuildIdList = Client.Guilds.Select(x => (long)x.Id).ToList();
 
             //this unit of work will be used for initialization of all modules too, to prevent multiple queries from running
-            using (var uow = Db.UnitOfWork)
+            using (var uow = _db.UnitOfWork)
             {
                 AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
 
-                var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
+                IBotConfigProvider botConfigProvider = new BotConfigProvider(_db, _botConfig);
+
+                //var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
 
                 //initialize Services
                 Services = new NServiceProvider.ServiceProviderBuilder()
                     .AddManual<IBotCredentials>(Credentials)
-                    .AddManual(Db)
-                    .AddManual(_botConfig)
+                    .AddManual(_db)
                     .AddManual(Client)
                     .AddManual(CommandService)
-                    .AddManual<ILocalization>(localization)
+                    .AddManual(botConfigProvider)
+                    //.AddManual<ILocalization>(localization)
                     .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs) //todo wrap this
                     .AddManual<NadekoBot>(this)
                     .AddManual<IUnitOfWork>(uow)
@@ -178,7 +179,7 @@ namespace NadekoBot
                     }
                     finally
                     {
-                        
+
                     }
                 });
                 return Task.CompletedTask;
@@ -210,8 +211,8 @@ namespace NadekoBot
 
         public async Task RunAsync(params string[] args)
         {
-            if(Client.ShardId == 0)
-            _log.Info("Starting NadekoBot v" + StatsService.BotVersion);
+            if (Client.ShardId == 0)
+                _log.Info("Starting NadekoBot v" + StatsService.BotVersion);
 
             var sw = Stopwatch.StartNew();
 
@@ -247,7 +248,7 @@ namespace NadekoBot
 
             //unload modules which are not available on the public bot
 
-            if(isPublicNadeko)
+            if (isPublicNadeko)
                 CommandService
                     .Modules
                     .ToArray()

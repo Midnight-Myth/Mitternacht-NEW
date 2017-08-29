@@ -1,4 +1,5 @@
 ﻿using NadekoBot.Extensions;
+using System.Collections.Generic;
 
 namespace NadekoBot.Services.Database.Models
 {
@@ -14,6 +15,7 @@ namespace NadekoBot.Services.Database.Models
         public DiscordUser Affinity { get; set; }
 
         public int Price { get; set; }
+        public List<WaifuItem> Items { get; set; } = new List<WaifuItem>();
 
         public override string ToString()
         {
@@ -35,7 +37,8 @@ namespace NadekoBot.Services.Database.Models
             {
                 status = $"... and {waifuUsername} likes {claimerUsername} too <3";
             }
-            else {
+            else
+            {
                 status = $"... but {waifuUsername}'s heart belongs to {Affinity.Username.TrimTo(20)}#{Affinity.Discriminator}";
             }
             return $"**{waifuUsername}#{Waifu.Discriminator}** - claimed by **{claimer}**\n\t{status}";
