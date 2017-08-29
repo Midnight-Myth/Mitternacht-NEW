@@ -53,7 +53,7 @@ namespace NadekoBot.Modules.Utility
             private void Expr_EvaluateFunction(string name, FunctionArgs args)
             {
                 name = name.ToLowerInvariant();
-                var functions = from m in typeof(CustomNCalcEvalutions).GetTypeInfo().GetMethods()
+                var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
                     where m.IsStatic && m.IsPublic && m.ReturnType == typeof(void) && 
                           m.GetParameters().Length == 3 &&
                           m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
@@ -82,9 +82,9 @@ namespace NadekoBot.Modules.Utility
             }
         }
 
-        private class CustomNCalcEvalutions
+        private class CustomNCalcEvaluations
         {
-            public static void Level(ICommandContext context, DbService db, FunctionArgs args)
+            public static void Level(ICommandContext context, DbService db, ref FunctionArgs args)
             {
                 if (args.Parameters.Length > 1) return;
                 var user = context.User as IGuildUser;
@@ -93,15 +93,19 @@ namespace NadekoBot.Modules.Utility
                     var parameter = args.Parameters[0];
                     if (parameter.ParsedExpression == null)
                         parameter.Evaluate();
-                    var expr = parameter.ParsedExpression.ToString();
+                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']');
+                    context.Channel.SendMessageAsync($"expr: \"{expr}\"").GetAwaiter().GetResult();
                     if (ulong.TryParse(expr, out ulong id)) {
                         user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
                     }
                     else {
+                        context.Channel.SendMessageAsync($"usernames: {context.Guild.GetUsersAsync().GetAwaiter().GetResult().Aggregate("", (s,u) => $"{s}{u.Username}+{u.Mention.Substring(1)}+{u.Nickname} | ", s => s.Substring(0, s.Length - 3))}").GetAwaiter().GetResult();
                         user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
                             .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
                     }
                 }
+                context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}")
+                    .GetAwaiter().GetResult();
                 if (user == null) return;
 
                 using (var uow = db.UnitOfWork)
@@ -110,10 +114,10 @@ namespace NadekoBot.Modules.Utility
                 }
             }
 
-            public static void Cash(ICommandContext context, DbService db, FunctionArgs args)
-                => Money(context, db, args);
+            public static void Cash(ICommandContext context, DbService db, ref FunctionArgs args)
+                => Money(context, db, ref args);
             
-            public static void Money(ICommandContext context, DbService db, FunctionArgs args)
+            public static void Money(ICommandContext context, DbService db, ref FunctionArgs args)
             {
                 if (args.Parameters.Length > 1)
                     return;
@@ -140,7 +144,7 @@ namespace NadekoBot.Modules.Utility
                 }
             }
 
-            public static void Xp(ICommandContext context, DbService db, FunctionArgs args)
+            public static void Xp(ICommandContext context, DbService db, ref FunctionArgs args)
             {
                 if (args.Parameters.Length > 1)
                     return;
