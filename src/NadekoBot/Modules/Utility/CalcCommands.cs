@@ -1,11 +1,14 @@
-﻿using Discord.Commands;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using NadekoBot.Common.Attributes;
+using NadekoBot.Extensions;
+using NadekoBot.Services;
+using NCalc;
 
 namespace NadekoBot.Modules.Utility
 {
@@ -14,19 +17,27 @@ namespace NadekoBot.Modules.Utility
         [Group]
         public class CalcCommands : NadekoSubmodule
         {
+            private readonly DbService _db;
+
+            public CalcCommands(DbService db)
+            {
+                _db = db;
+            }
+
             [NadekoCommand, Usage, Description, Aliases]
             public async Task Calculate([Remainder] string expression)
             {
-                var expr = new NCalc.Expression(expression, NCalc.EvaluateOptions.IgnoreCase);
+                var expr = new Expression(expression, EvaluateOptions.IgnoreCase);
                 expr.EvaluateParameter += Expr_EvaluateParameter;
+                expr.EvaluateFunction += Expr_EvaluateFunction;
                 var result = expr.Evaluate();
                 if (expr.Error == null)
-                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), result.ToString());
+                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), expression.Trim() + "\n" + result);
                 else
                     await Context.Channel.SendErrorAsync("⚙ " + GetText("error"), expr.Error);
             }
 
-            private static void Expr_EvaluateParameter(string name, NCalc.ParameterArgs args)
+            private static void Expr_EvaluateParameter(string name, ParameterArgs args)
             {
                 switch (name.ToLowerInvariant())
                 {
@@ -37,6 +48,20 @@ namespace NadekoBot.Modules.Utility
                         args.Result = Math.E;
                         break;
                 }
+            }
+
+            private void Expr_EvaluateFunction(string name, FunctionArgs args)
+            {
+                name = name.ToLowerInvariant();
+                var functions = from m in typeof(CustomNCalcEvalutions).GetTypeInfo().GetMethods()
+                    where m.IsStatic && m.IsPublic && m.ReturnType == typeof(void) && 
+                          m.GetParameters().Length == 3 &&
+                          m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
+                          m.GetParameters()[1].ParameterType == typeof(DbService) &&
+                          m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
+                    select m;
+                var method = functions.FirstOrDefault(m => m.Name.ToLowerInvariant().Equals(name));
+                method?.Invoke(null, new object[]{Context, _db, args});
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -54,6 +79,91 @@ namespace NadekoBot.Modules.Utility
                         "GetType"
                     });
                 await Context.Channel.SendConfirmAsync(GetText("calcops", Prefix), string.Join(", ", selection));
+            }
+        }
+
+        private class CustomNCalcEvalutions
+        {
+            public static void Level(ICommandContext context, DbService db, FunctionArgs args)
+            {
+                if (args.Parameters.Length > 1) return;
+                var user = context.User as IGuildUser;
+                if (args.Parameters.Length == 1)
+                {
+                    var parameter = args.Parameters[0];
+                    if (parameter.ParsedExpression == null)
+                        parameter.Evaluate();
+                    var expr = parameter.ParsedExpression.ToString();
+                    if (ulong.TryParse(expr, out ulong id)) {
+                        user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
+                    }
+                    else {
+                        user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
+                            .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
+                    }
+                }
+                if (user == null) return;
+
+                using (var uow = db.UnitOfWork)
+                {
+                    args.Result = uow.LevelModel.GetLevel(user.Id);
+                }
+            }
+
+            public static void Cash(ICommandContext context, DbService db, FunctionArgs args)
+                => Money(context, db, args);
+            
+            public static void Money(ICommandContext context, DbService db, FunctionArgs args)
+            {
+                if (args.Parameters.Length > 1)
+                    return;
+                var user = context.User as IGuildUser;
+                if (args.Parameters.Length == 1) {
+                    var parameter = args.Parameters[0];
+                    if (parameter.ParsedExpression == null)
+                        parameter.Evaluate();
+                    var expr = parameter.ParsedExpression.ToString();
+                    if (ulong.TryParse(expr, out ulong id)) {
+                        user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
+                    }
+                    else {
+                        user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
+                            .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
+                    }
+                }
+                if (user == null)
+                    return;
+
+                using (var uow = db.UnitOfWork)
+                {
+                    args.Result = uow.Currency.GetUserCurrency(user.Id);
+                }
+            }
+
+            public static void Xp(ICommandContext context, DbService db, FunctionArgs args)
+            {
+                if (args.Parameters.Length > 1)
+                    return;
+                var user = context.User as IGuildUser;
+                if (args.Parameters.Length == 1) {
+                    var parameter = args.Parameters[0];
+                    if (parameter.ParsedExpression == null)
+                        parameter.Evaluate();
+                    var expr = parameter.ParsedExpression.ToString();
+                    if (ulong.TryParse(expr, out ulong id)) {
+                        user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
+                    }
+                    else {
+                        user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
+                            .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
+                    }
+                }
+                if (user == null)
+                    return;
+
+                using (var uow = db.UnitOfWork) {
+                    args.Result = uow.LevelModel.GetXp(user.Id);
+                }
             }
         }
 
