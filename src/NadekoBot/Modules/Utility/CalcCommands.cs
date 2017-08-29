@@ -94,8 +94,8 @@ namespace NadekoBot.Modules.Utility
         {
             public static object Level(ICommandContext context, DbService db, FunctionArgs args)
             {
-                context.Channel
-                    .SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
+                if(args.Parameters.Length > 0) context.Channel
+                    .SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ParsedExpression.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
                     .GetAwaiter().GetResult();
                 if (args.Parameters.Length > 1) return null;
                 var user = context.User as IGuildUser;
