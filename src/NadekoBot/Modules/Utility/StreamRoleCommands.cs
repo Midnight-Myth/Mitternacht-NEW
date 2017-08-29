@@ -11,7 +11,6 @@ namespace NadekoBot.Modules.Utility
 {
     public partial class Utility
     {
-        [NoPublicBot]
         public class StreamRoleCommands : NadekoSubmodule<StreamRoleService>
         {
             [NadekoCommand, Usage, Description, Aliases]
@@ -42,8 +41,8 @@ namespace NadekoBot.Modules.Utility
             public async Task StreamRoleKeyword([Remainder]string keyword = null)
             {
                 string kw = await this._service.SetKeyword(Context.Guild, keyword).ConfigureAwait(false);
-                
-                if(string.IsNullOrWhiteSpace(keyword))
+
+                if (string.IsNullOrWhiteSpace(keyword))
                     await ReplyConfirmLocalized("stream_role_kw_reset").ConfigureAwait(false);
                 else
                     await ReplyConfirmLocalized("stream_role_kw_set", Format.Bold(kw)).ConfigureAwait(false);
@@ -58,16 +57,16 @@ namespace NadekoBot.Modules.Utility
                 var success = await this._service.ApplyListAction(StreamRoleListType.Blacklist, Context.Guild, action, user.Id, user.ToString())
                     .ConfigureAwait(false);
 
-                if(action == AddRemove.Add)
-                    if(success)
+                if (action == AddRemove.Add)
+                    if (success)
                         await ReplyConfirmLocalized("stream_role_bl_add", Format.Bold(user.ToString())).ConfigureAwait(false);
                     else
                         await ReplyConfirmLocalized("stream_role_bl_add_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
                 else
                     if (success)
-                        await ReplyConfirmLocalized("stream_role_bl_rem", Format.Bold(user.ToString())).ConfigureAwait(false);
-                    else
-                        await ReplyErrorLocalized("stream_role_bl_rem_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("stream_role_bl_rem", Format.Bold(user.ToString())).ConfigureAwait(false);
+                else
+                    await ReplyErrorLocalized("stream_role_bl_rem_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -80,15 +79,15 @@ namespace NadekoBot.Modules.Utility
                     .ConfigureAwait(false);
 
                 if (action == AddRemove.Add)
-                    if(success)
+                    if (success)
                         await ReplyConfirmLocalized("stream_role_wl_add", Format.Bold(user.ToString())).ConfigureAwait(false);
                     else
                         await ReplyConfirmLocalized("stream_role_wl_add_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
-                else 
+                else
                     if (success)
-                        await ReplyConfirmLocalized("stream_role_wl_rem", Format.Bold(user.ToString())).ConfigureAwait(false);
-                    else
-                        await ReplyErrorLocalized("stream_role_wl_rem_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("stream_role_wl_rem", Format.Bold(user.ToString())).ConfigureAwait(false);
+                else
+                    await ReplyErrorLocalized("stream_role_wl_rem_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
             }
         }
     }

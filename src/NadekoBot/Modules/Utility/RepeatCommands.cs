@@ -69,7 +69,7 @@ namespace NadekoBot.Modules.Utility
                 if (index < 1)
                     return;
                 index -= 1;
-                
+
                 if (!_service.Repeaters.TryGetValue(Context.Guild.Id, out var rep))
                     return;
 
@@ -131,9 +131,9 @@ namespace NadekoBot.Modules.Utility
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                var rep = new RepeatRunner(_client, toAdd);
+                var rep = new RepeatRunner(_client, (SocketGuild)Context.Guild, toAdd);
 
-                _service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] {rep}), (key, old) =>
+                _service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] { rep }), (key, old) =>
                 {
                     old.Enqueue(rep);
                     return old;
@@ -179,7 +179,7 @@ namespace NadekoBot.Modules.Utility
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                var rep = new RepeatRunner(_client, toAdd);
+                var rep = new RepeatRunner(_client, (SocketGuild)Context.Guild, toAdd);
 
                 _service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] { rep }), (key, old) =>
                 {

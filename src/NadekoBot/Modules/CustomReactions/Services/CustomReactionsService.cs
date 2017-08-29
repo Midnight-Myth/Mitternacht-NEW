@@ -43,7 +43,7 @@ namespace NadekoBot.Modules.CustomReactions.Services
             _cmd = cmd;
             _bc = bc;
             _strings = strings;
-            
+
             var items = uow.CustomReactions.GetAll();
             GuildReactions = new ConcurrentDictionary<ulong, CustomReaction[]>(items.Where(g => g.GuildId != null && g.GuildId != 0).GroupBy(k => k.GuildId.Value).ToDictionary(g => g.Key, g => g.ToArray()));
             GlobalReactions = items.Where(g => g.GuildId == null || g.GuildId == 0).ToArray();
@@ -69,12 +69,10 @@ namespace NadekoBot.Modules.CustomReactions.Services
 
                         var hasTarget = cr.Response.ToLowerInvariant().Contains("%target%");
                         var trigger = cr.TriggerWithContext(umsg, _client).Trim().ToLowerInvariant();
-                        return ((cr.ContainsAnywhere && 
-                            (content.StartsWith(trigger + " ") 
-                                || content.EndsWith(" " + trigger) 
-                                || content.Contains(" " + trigger + " "))) 
-                            || (hasTarget && content.StartsWith(trigger + " ")) 
-                            || (_bc.BotConfig.CustomReactionsStartWith && content.StartsWith(trigger + " "))  
+                        return ((cr.ContainsAnywhere &&
+                            (content.GetWordPosition(trigger) != WordPosition.None))
+                            || (hasTarget && content.StartsWith(trigger + " "))
+                            || (_bc.BotConfig.CustomReactionsStartWith && content.StartsWith(trigger + " "))
                             || content == trigger);
                     }).ToArray();
 

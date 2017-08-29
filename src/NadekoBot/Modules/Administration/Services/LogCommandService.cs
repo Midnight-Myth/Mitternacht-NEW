@@ -12,9 +12,11 @@ using NadekoBot.Services;
 using NadekoBot.Services.Database.Models;
 using NadekoBot.Services.Impl;
 using NLog;
+using NadekoBot.Common;
 
 namespace NadekoBot.Modules.Administration.Services
 {
+    [NoPublicBot]
     public class LogCommandService : INService
     {
 
@@ -24,7 +26,7 @@ namespace NadekoBot.Modules.Administration.Services
         private string PrettyCurrentTime(IGuild g)
         {
             var time = DateTime.UtcNow;
-            if(g != null)
+            if (g != null)
                 time = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(g.Id));
             return $"【{time:HH:mm:ss}】";
         }

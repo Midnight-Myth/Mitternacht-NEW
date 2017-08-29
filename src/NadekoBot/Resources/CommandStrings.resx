@@ -1512,6 +1512,15 @@
   <data name="queue_usage" xml:space="preserve">
     <value>`{0}q Dream Of Venice`</value>
   </data>
+  <data name="queuenext_cmd" xml:space="preserve">
+      <value>queuenext qn</value>
+    </data>
+  <data name="queuenext_desc" xml:space="preserve">
+      <value>Works the same as `{0}queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.</value>
+    </data>
+  <data name="queuenext_usage" xml:space="preserve">
+      <value>`{0}qn Dream Of Venice`</value>
+    </data>
   <data name="queuesearch_cmd" xml:space="preserve">
     <value>queuesearch qs yqs</value>
   </data>
@@ -1773,14 +1782,14 @@
   <data name="lolban_usage" xml:space="preserve">
     <value>`{0}lolban`</value>
   </data>
-  <data name="hitbox_cmd" xml:space="preserve">
-    <value>hitbox hb</value>
+  <data name="smashcast_cmd" xml:space="preserve">
+    <value>smashcast hb</value>
   </data>
-  <data name="hitbox_desc" xml:space="preserve">
+  <data name="smashcast_desc" xml:space="preserve">
     <value>Notifies this channel when a certain user starts streaming.</value>
   </data>
-  <data name="hitbox_usage" xml:space="preserve">
-    <value>`{0}hitbox SomeStreamer`</value>
+  <data name="smashcast_usage" xml:space="preserve">
+    <value>`{0}smashcast SomeStreamer`</value>
   </data>
   <data name="twitch_cmd" xml:space="preserve">
     <value>twitch tw</value>
@@ -1791,14 +1800,14 @@
   <data name="twitch_usage" xml:space="preserve">
     <value>`{0}twitch SomeStreamer`</value>
   </data>
-  <data name="beam_cmd" xml:space="preserve">
-    <value>beam bm</value>
+  <data name="mixer_cmd" xml:space="preserve">
+    <value>mixer bm</value>
   </data>
-  <data name="beam_desc" xml:space="preserve">
+  <data name="mixer_desc" xml:space="preserve">
     <value>Notifies this channel when a certain user starts streaming.</value>
   </data>
-  <data name="beam_usage" xml:space="preserve">
-    <value>`{0}beam SomeStreamer`</value>
+  <data name="mixer_usage" xml:space="preserve">
+    <value>`{0}mixer SomeStreamer`</value>
   </data>
   <data name="removestream_cmd" xml:space="preserve">
     <value>removestream rms</value>
@@ -1807,7 +1816,7 @@
     <value>Removes notifications of a certain streamer from a certain platform on this channel.</value>
   </data>
   <data name="removestream_usage" xml:space="preserve">
-    <value>`{0}rms Twitch SomeGuy` or `{0}rms Beam SomeOtherGuy`</value>
+    <value>`{0}rms Twitch SomeGuy` or `{0}rms mixer SomeOtherGuy`</value>
   </data>
   <data name="liststreams_cmd" xml:space="preserve">
     <value>liststreams ls</value>
@@ -2222,87 +2231,6 @@
   </data>
   <data name="butts_usage" xml:space="preserve">
     <value>`{0}butts` or `{0}ass`</value>
-  </data>
-  <data name="createwar_cmd" xml:space="preserve">
-    <value>createwar cw</value>
-  </data>
-  <data name="createwar_desc" xml:space="preserve">
-    <value>Creates a new war by specifying a size (&gt;10 and multiple of 5) and enemy clan name.</value>
-  </data>
-  <data name="createwar_usage" xml:space="preserve">
-    <value>`{0}cw 15 The Enemy Clan`</value>
-  </data>
-  <data name="startwar_cmd" xml:space="preserve">
-    <value>startwar sw</value>
-  </data>
-  <data name="startwar_desc" xml:space="preserve">
-    <value>Starts a war with a given number.</value>
-  </data>
-  <data name="startwar_usage" xml:space="preserve">
-    <value>`{0}sw 15`</value>
-  </data>
-  <data name="listwar_cmd" xml:space="preserve">
-    <value>listwar lw</value>
-  </data>
-  <data name="listwar_desc" xml:space="preserve">
-    <value>Shows the active war claims by a number. Shows all wars in a short way if no number is specified.</value>
-  </data>
-  <data name="listwar_usage" xml:space="preserve">
-    <value>`{0}lw [war_number]` or `{0}lw`</value>
-  </data>
-  <data name="basecall_cmd" xml:space="preserve">
-    <value>basecall</value>
-  </data>
-  <data name="basecall_desc" xml:space="preserve">
-    <value>Claims a certain base from a certain war. You can supply a name in the third optional argument to claim in someone else's place.</value>
-  </data>
-  <data name="basecall_usage" xml:space="preserve">
-    <value>`{0}basecall [war_number] [base_number] [optional_other_name]`</value>
-  </data>
-  <data name="callfinish_cmd" xml:space="preserve">
-    <value>callfinish cf</value>
-  </data>
-  <data name="callfinish_desc" xml:space="preserve">
-    <value>Finish your claim with 3 stars if you destroyed a base. First argument is the war number, optional second argument is a base number if you want to finish for someone else.</value>
-  </data>
-  <data name="callfinish_usage" xml:space="preserve">
-    <value>`{0}cf 1` or `{0}cf 1 5`</value>
-  </data>
-  <data name="callfinish2_cmd" xml:space="preserve">
-    <value>callfinish2 cf2</value>
-  </data>
-  <data name="callfinish2_desc" xml:space="preserve">
-    <value>Finish your claim with 2 stars if you destroyed a base. First argument is the war number, optional second argument is a base number if you want to finish for someone else.</value>
-  </data>
-  <data name="callfinish2_usage" xml:space="preserve">
-    <value>`{0}cf2 1` or `{0}cf2 1 5`</value>
-  </data>
-  <data name="callfinish1_cmd" xml:space="preserve">
-    <value>callfinish1 cf1</value>
-  </data>
-  <data name="callfinish1_desc" xml:space="preserve">
-    <value>Finish your claim with 1 star if you destroyed a base. First argument is the war number, optional second argument is a base number if you want to finish for someone else.</value>
-  </data>
-  <data name="callfinish1_usage" xml:space="preserve">
-    <value>`{0}cf1 1` or `{0}cf1 1 5`</value>
-  </data>
-  <data name="unclaim_cmd" xml:space="preserve">
-    <value>uncall</value>
-  </data>
-  <data name="unclaim_desc" xml:space="preserve">
-    <value>Removes your claim from a certain war. Optional second argument denotes a person in whose place to unclaim</value>
-  </data>
-  <data name="unclaim_usage" xml:space="preserve">
-    <value>`{0}uc [war_number] [optional_other_name]`</value>
-  </data>
-  <data name="endwar_cmd" xml:space="preserve">
-    <value>endwar ew</value>
-  </data>
-  <data name="endwar_desc" xml:space="preserve">
-    <value>Ends the war with a given index.</value>
-  </data>
-  <data name="endwar_usage" xml:space="preserve">
-    <value>`{0}ew [war_number]`</value>
   </data>
   <data name="translate_cmd" xml:space="preserve">
     <value>translate trans</value>
@@ -2995,7 +2923,7 @@
     <value>Sets a price for a command. Running that command will take currency from users. Set 0 to remove the price.</value>
   </data>
   <data name="commandcost_usage" xml:space="preserve">
-    <value>`{0}cmdcost 0 !!q` or `{0}cmdcost 1 &gt;8ball`</value>
+    <value>`{0}cmdcost 0 !!q` or `{0}cmdcost 1 {0}8ball`</value>
   </data>
   <data name="startevent_cmd" xml:space="preserve">
     <value>startevent</value>
@@ -3051,6 +2979,15 @@
   <data name="waifuclaim_usage" xml:space="preserve">
     <value>`{0}claim 50 @Himesama`</value>
   </data>
+  <data name="waifugift_cmd" xml:space="preserve">
+      <value>waifugift gift gifts</value>
+    </data>
+  <data name="waifugift_desc" xml:space="preserve">
+      <value>Gift an item to someone. This will increase their waifu value by 50% of the gifted item's value if they don't have affinity set towards you, or 100% if they do. Provide no arguments to see a list of items that you can gift.</value>
+    </data>
+  <data name="waifugift_usage" xml:space="preserve">
+      <value>`{0}gifts` or `{0}gift Rose @Himesama`</value>
+    </data>
   <data name="waifuleaderboard_cmd" xml:space="preserve">
     <value>waifus waifulb</value>
   </data>
@@ -3139,7 +3076,7 @@
     <value>Starts a game of tic tac toe. Another user must run the command in the same channel in order to accept the challenge. Use numbers 1-9 to play. 15 seconds per move.</value>
   </data>
   <data name="tictactoe_usage" xml:space="preserve">
-    <value>&gt;ttt</value>
+    <value>{0}ttt</value>
   </data>
   <data name="timezones_cmd" xml:space="preserve">
     <value>timezones</value>
@@ -3735,4 +3672,40 @@
   <data name="removerolelevelbinding_usage" xml:space="preserve">
     <value>`{0}removerolelevelbinding &lt;role&gt;`</value>
   </data>
+<data name="wheeloffortune_cmd" xml:space="preserve">
+      <value>wheeloffortune wheel</value>
+    </data>
+    <data name="wheeloffortune_desc" xml:space="preserve">
+      <value>Bets a certain amount of currency on the wheel of fortune. Wheel can stop on one of many different multipliers. Won amount is rounded down to the nearest whole number.</value>
+    </data>
+    <data name="wheeloffortune_usage" xml:space="preserve">
+      <value>`{0}wheel 10`</value>
+    </data>
+  <data name="nunchi_cmd" xml:space="preserve">
+      <value>nunchi</value>
+    </data>
+  <data name="nunchi_desc" xml:space="preserve">
+     <value>Creates or joins an existing nunchi game. Users have to count up by 1 from the starting number shown by the bot. If someone makes a mistake (types an incorrent number, or repeats the same number) they are out of the game and a new round starts without them.  Minimum 3 users required.</value>
+     </data>
+  <data name="nunchi_usage" xml:space="preserve">
+      <value>`{0}nunchi`</value>
+    </data>
+  <data name="connect4_cmd" xml:space="preserve">
+    <value>connect4 con4</value>
+  </data>
+  <data name="connect4_desc" xml:space="preserve">
+    <value>Creates or joins an existing connect4 game. 2 players are required for the game. Objective of the game is to get 4 of your pieces next to each other in a vertical, horizontal or diagonal line.</value>
+  </data>
+  <data name="connect4_usage" xml:space="preserve">
+    <value>`{0}connect4`</value>
+  </data>
+  <data name="songautodelete_cmd" xml:space="preserve">
+      <value>songautodelete sad</value>
+    </data>
+  <data name="songautodelete_desc" xml:space="preserve">
+      <value>Toggles whether the song should be automatically removed from the music queue when it finishes playing.</value>
+    </data>
+  <data name="songautodelete_usage" xml:space="preserve">
+      <value>`{0}sad`</value>
+    </data>
 </root>

@@ -70,6 +70,8 @@ namespace NadekoBot.Migrations
 
                     b.Property<int>("MessageThreshold");
 
+                    b.Property<int>("MuteTime");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GuildConfigId")
@@ -1381,6 +1383,28 @@ namespace NadekoBot.Migrations
                     b.ToTable("WaifuInfo");
                 });
 
+            modelBuilder.Entity("NadekoBot.Services.Database.Models.WaifuItem", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd();
+
+                b.Property<DateTime?>("DateAdded");
+
+                b.Property<int>("Item");
+
+                b.Property<string>("ItemEmoji");
+
+                b.Property<int>("Price");
+
+                b.Property<int?>("WaifuInfoId");
+
+                b.HasKey("Id");
+
+                b.HasIndex("WaifuInfoId");
+
+                b.ToTable("WaifuItem");
+            });
+
             modelBuilder.Entity("NadekoBot.Services.Database.Models.WaifuUpdate", b =>
                 {
                     b.Property<int>("Id")
@@ -1737,6 +1761,13 @@ namespace NadekoBot.Migrations
                         .HasForeignKey("NadekoBot.Services.Database.Models.WaifuInfo", "WaifuId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
+
+            modelBuilder.Entity("NadekoBot.Services.Database.Models.WaifuItem", b =>
+            {
+                b.HasOne("NadekoBot.Services.Database.Models.WaifuInfo")
+                    .WithMany("Items")
+                    .HasForeignKey("WaifuInfoId");
+            });
 
             modelBuilder.Entity("NadekoBot.Services.Database.Models.WaifuUpdate", b =>
                 {
