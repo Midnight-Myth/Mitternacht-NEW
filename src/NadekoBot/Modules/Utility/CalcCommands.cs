@@ -79,7 +79,14 @@ namespace NadekoBot.Modules.Utility
                         "GetHashCode",
                         "GetType"
                     });
-                await Context.Channel.SendConfirmAsync(GetText("calcops", Prefix), string.Join(", ", selection));
+                var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
+                    where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
+                          m.GetParameters().Length == 3 &&
+                          m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
+                          m.GetParameters()[1].ParameterType == typeof(DbService) &&
+                          m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
+                    select m.Name;
+                await Context.Channel.SendConfirmAsync(GetText("calcops", Prefix), string.Join(", ", selection) + "\n" + string.Join(", ", functions));
             }
         }
 
@@ -87,6 +94,9 @@ namespace NadekoBot.Modules.Utility
         {
             public static object Level(ICommandContext context, DbService db, FunctionArgs args)
             {
+                context.Channel
+                    .SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
+                    .GetAwaiter().GetResult();
                 if (args.Parameters.Length > 1) return null;
                 var user = context.User as IGuildUser;
                 if (args.Parameters.Length == 1)
