@@ -34,7 +34,7 @@ namespace NadekoBot.Modules.Level.Services
                 return;
             if (sm.Author.IsBot ||
                 _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ")))) return;
+                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || sm.Content.Equals(_ch.GetPrefix(user.Guild) + c2)))) return;
             
             List<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
@@ -59,7 +59,7 @@ namespace NadekoBot.Modules.Level.Services
                 return;
             if (sm.Author.IsBot || sm.Content.Length < 10 ||
                 _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " "))))
+                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || sm.Content.Equals(_ch.GetPrefix(user.Guild) + c2))))
                 return;
 
             using (var uow = _db.UnitOfWork) {
@@ -82,7 +82,7 @@ namespace NadekoBot.Modules.Level.Services
 
             if (msgBefore.Author.IsBot || msgBefore.Content.Length > 25 && after.Content.Length > 25 || msgBefore.Content.Length < 10 && after.Content.Length < 10 ||
                 _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " "))))
+                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || msgBefore.Content.Equals(_ch.GetPrefix(user.Guild) + c2))))
                 return;
 
             using (var uow = _db.UnitOfWork) {
@@ -101,7 +101,7 @@ namespace NadekoBot.Modules.Level.Services
 
             if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 ||
                 _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " "))))
+                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || msgBefore.Content.Equals(_ch.GetPrefix(user.Guild) + c2))))
                 return;
             using (var uow = _db.UnitOfWork) {
                 uow.LevelModel.TryAddXp(msgBefore.Author.Id, msgBefore.Content.Length > 25 ? -25 : -msgBefore.Content.Length);
