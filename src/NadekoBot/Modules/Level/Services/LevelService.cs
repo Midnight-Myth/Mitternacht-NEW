@@ -15,9 +15,12 @@ namespace NadekoBot.Modules.Level.Services
     {
         private readonly DbService _db;
         private readonly CommandService _cmds;
-        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds) {
+        private readonly CommandHandler _ch;
+
+        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds, CommandHandler ch) {
             _db = db;
             _cmds = cmds;
+            _ch = ch;
             client.MessageReceived += OnMessageReceived;
             client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
@@ -26,10 +29,13 @@ namespace NadekoBot.Modules.Level.Services
 
         private async Task AddLevelRole(SocketMessage sm)
         {
-            if (sm.Content.Equals(".die") || sm.Author.IsBot) return;
-            
             var user = sm.Author as IGuildUser;
-            if (user == null) return;
+            if (user == null)
+                return;
+            if (sm.Author.IsBot ||
+                _cmds.Commands.Any(
+                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ")))) return;
+            
             List<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork)
             {
@@ -46,16 +52,22 @@ namespace NadekoBot.Modules.Level.Services
             await sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.");
         }
 
-        private async Task OnMessageReceived(SocketMessage after)
+        private async Task OnMessageReceived(SocketMessage sm)
         {
-            if (after.Content.Length < 10 || after.Author.IsBot)
+            var user = sm.Author as IGuildUser;
+            if (user == null)
                 return;
+            if (sm.Author.IsBot || sm.Content.Length < 10 ||
+                _cmds.Commands.Any(
+                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " "))))
+                return;
+
             using (var uow = _db.UnitOfWork) {
                 var time = DateTime.Now;
-                if (uow.LevelModel.CanGetMessageXp(after.Author.Id, time)) {
-                    uow.LevelModel.TryAddXp(after.Author.Id, after.Content.Length > 25 ? 25 : after.Content.Length, false);
-                    uow.LevelModel.ReplaceTimestamp(after.Author.Id, time);
-                    await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, after.Channel);
+                if (uow.LevelModel.CanGetMessageXp(user.Id, time)) {
+                    uow.LevelModel.TryAddXp(user.Id, sm.Content.Length > 25 ? 25 : sm.Content.Length, false);
+                    uow.LevelModel.ReplaceTimestamp(user.Id, time);
+                    await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(user.Id), user, sm.Channel);
                 }
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
@@ -64,8 +76,15 @@ namespace NadekoBot.Modules.Level.Services
         private async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             var msgBefore = await before.GetOrDownloadAsync();
-            if (msgBefore.Author.IsBot || (msgBefore.Content.Length > 25 && after.Content.Length > 25) || (msgBefore.Content.Length < 10 && after.Content.Length < 10))
+            var user = msgBefore.Author as IGuildUser;
+            if (user == null)
                 return;
+
+            if (msgBefore.Author.IsBot || msgBefore.Content.Length > 25 && after.Content.Length > 25 || msgBefore.Content.Length < 10 && after.Content.Length < 10 ||
+                _cmds.Commands.Any(
+                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " "))))
+                return;
+
             using (var uow = _db.UnitOfWork) {
                 uow.LevelModel.TryAddXp(msgBefore.Author.Id, after.Content.Length - msgBefore.Content.Length, false);
                 await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, channel);
@@ -76,7 +95,13 @@ namespace NadekoBot.Modules.Level.Services
         private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel)
         {
             var msgBefore = await before.GetOrDownloadAsync();
-            if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 || _cmds.Commands.Any(c => msgBefore.Content.StartsWith(c.Name + " ") || c.Aliases.Any(c2 => msgBefore.Content.StartsWith(c2))))
+            var user = msgBefore.Author as IGuildUser;
+            if (user == null)
+                return;
+
+            if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 ||
+                _cmds.Commands.Any(
+                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " "))))
                 return;
             using (var uow = _db.UnitOfWork) {
                 uow.LevelModel.TryAddXp(msgBefore.Author.Id, msgBefore.Content.Length > 25 ? -25 : -msgBefore.Content.Length);
@@ -85,7 +110,7 @@ namespace NadekoBot.Modules.Level.Services
             }
         }
 
-        private async Task SendLevelChangedMessage(CalculatedLevel cl, IUser user, ISocketMessageChannel smc)
+        private static async Task SendLevelChangedMessage(CalculatedLevel cl, IMentionable user, ISocketMessageChannel smc)
         {
             if (cl.IsNewLevelHigher) {
                 await smc.SendMessageAsync($"Herzlichen Glückwunsch { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } aufgestiegen!");
