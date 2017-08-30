@@ -260,7 +260,7 @@ namespace NadekoBot.Modules.Utility
         {            
             await Context.Channel.EmbedAsync(
                 new EmbedBuilder().WithOkColor()
-                    .WithAuthor(eab => eab.WithName($"NadekoBot v{StatsService.BotVersion}")
+                    .WithAuthor(eab => eab.WithName($"Mitternacht v{StatsService.BotVersion}")
                                           .WithUrl("http://nadekobot.readthedocs.io/en/latest/")
                                           .WithIconUrl("https://cdn.discordapp.com/avatars/116275390695079945/b21045e778ef21c96d175400e779f0fb.jpg"))
                     .AddField(efb => efb.WithName(GetText("author")).WithValue(_stats.Author).WithIsInline(true))
@@ -298,7 +298,7 @@ namespace NadekoBot.Modules.Utility
             if (page < 0)
                 return;
 
-            var guilds = await Task.Run(() => _client.Guilds.OrderBy(g => g.Name).Skip((page) * 15).Take(15)).ConfigureAwait(false);
+            var guilds = (await Task.Run(() => _client.Guilds.OrderBy(g => g.Name).Skip((page) * 15).Take(15)).ConfigureAwait(false)).ToList();
 
             if (!guilds.Any())
             {
@@ -307,12 +307,9 @@ namespace NadekoBot.Modules.Utility
             }
 
             await Context.Channel.EmbedAsync(guilds.Aggregate(new EmbedBuilder().WithOkColor(),
-                                     (embed, g) => embed.AddField(efb => efb.WithName(g.Name)
-                                                                           .WithValue(
-                                             GetText("listservers", g.Id, g.Users.Count,
-                                                 g.OwnerId))
-                                                                           .WithIsInline(false))))
-                         .ConfigureAwait(false);
+                    (embed, g) => embed.AddField(efb => efb.WithName(g.Name)
+                        .WithValue(GetText("listservers", g.Id, g.Users.Count, g.OwnerId)).WithIsInline(false))))
+                .ConfigureAwait(false);
         }
 
 

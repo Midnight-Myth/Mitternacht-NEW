@@ -22,7 +22,7 @@ namespace NadekoBot.Services.Impl
 
         public const string BotVersion = "1.7.1";
 
-        public string Author => "Midnight Myth#8888";
+        public string Author => "Midnight Myth#8888, expeehaa#1239";
         public string Library => "Discord.Net";
         public string Heap =>
             Math.Round((double)GC.GetTotalMemory(false) / 1.MiB(), 2).ToString(CultureInfo.InvariantCulture);
@@ -42,7 +42,7 @@ namespace NadekoBot.Services.Impl
         private readonly ShardsCoordinator _sc;
 
         public int GuildCount =>
-            _sc?.GuildCount ?? _client.Guilds.Count();
+            _sc?.GuildCount ?? _client.Guilds.Count;
 
         public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, NadekoBot nadeko)
         {
@@ -54,7 +54,7 @@ namespace NadekoBot.Services.Impl
             _client.MessageReceived += _ => Task.FromResult(Interlocked.Increment(ref _messageCounter));
             cmdHandler.CommandExecuted += (_, e) => Task.FromResult(Interlocked.Increment(ref _commandsRan));
 
-            _client.ChannelCreated += (c) =>
+            _client.ChannelCreated += c =>
             {
                 var _ = Task.Run(() =>
                 {
@@ -67,7 +67,7 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            _client.ChannelDestroyed += (c) =>
+            _client.ChannelDestroyed += c =>
             {
                 var _ = Task.Run(() =>
                 {
@@ -80,7 +80,7 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            _client.GuildAvailable += (g) =>
+            _client.GuildAvailable += g =>
             {
                 var _ = Task.Run(() =>
                 {
@@ -92,7 +92,7 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            _client.JoinedGuild += (g) =>
+            _client.JoinedGuild += g =>
             {
                 var _ = Task.Run(() =>
                 {
@@ -104,7 +104,7 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            _client.GuildUnavailable += (g) =>
+            _client.GuildUnavailable += g =>
             {
                 var _ = Task.Run(() =>
                 {
@@ -117,7 +117,7 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            _client.LeftGuild += (g) =>
+            _client.LeftGuild += g =>
             {
                 var _ = Task.Run(() =>
                 {
@@ -130,68 +130,66 @@ namespace NadekoBot.Services.Impl
                 return Task.CompletedTask;
             };
 
-            if (_sc != null)
+            if (_sc == null) return;
+            _carbonitexTimer = new Timer(async (state) =>
             {
-                _carbonitexTimer = new Timer(async (state) =>
+                if (string.IsNullOrWhiteSpace(_creds.CarbonKey))
+                    return;
+                try
                 {
-                    if (string.IsNullOrWhiteSpace(_creds.CarbonKey))
-                        return;
-                    try
+                    using (var http = new HttpClient())
                     {
-                        using (var http = new HttpClient())
-                        {
-                            using (var content = new FormUrlEncodedContent(
-                                new Dictionary<string, string> {
+                        using (var content = new FormUrlEncodedContent(
+                            new Dictionary<string, string> {
                                 { "servercount", _sc.GuildCount.ToString() },
                                 { "key", _creds.CarbonKey }}))
-                            {
-                                content.Headers.Clear();
-                                content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-                                await http.PostAsync("https://www.carbonitex.net/discord/data/botdata.php", content).ConfigureAwait(false);
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                }, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
-
-                var platform = "other";
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    platform = "linux";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    platform = "osx";
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    platform = "windows";
-
-                _dataTimer = new Timer(async (state) =>
-                {
-                    try
-                    {
-                        using (var http = new HttpClient())
                         {
-                            using (var content = new FormUrlEncodedContent(
-                                new Dictionary<string, string> {
-                                    { "id", string.Concat(MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(_creds.ClientId.ToString())).Select(x => x.ToString("X2"))) },
-                                    { "guildCount", _sc.GuildCount.ToString() },
-                                    { "version", BotVersion },
-                                    { "platform", platform }}))
-                            {
-                                content.Headers.Clear();
-                                content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                            content.Headers.Clear();
+                            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
 
-                                await http.PostAsync("https://selfstats.nadekobot.me/", content).ConfigureAwait(false);
-                            }
+                            await http.PostAsync("https://www.carbonitex.net/discord/data/botdata.php", content).ConfigureAwait(false);
                         }
                     }
-                    catch
+                }
+                catch
+                {
+                    // ignored
+                }
+            }, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
+
+            var platform = "other";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                platform = "linux";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                platform = "osx";
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                platform = "windows";
+
+            _dataTimer = new Timer(async state =>
+            {
+                try
+                {
+                    using (var http = new HttpClient())
                     {
-                        // ignored
+                        using (var content = new FormUrlEncodedContent(
+                            new Dictionary<string, string> {
+                                { "id", string.Concat(MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(_creds.ClientId.ToString())).Select(x => x.ToString("X2"))) },
+                                { "guildCount", _sc.GuildCount.ToString() },
+                                { "version", BotVersion },
+                                { "platform", platform }}))
+                        {
+                            content.Headers.Clear();
+                            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+
+                            await http.PostAsync("https://selfstats.nadekobot.me/", content).ConfigureAwait(false);
+                        }
                     }
-                }, null, TimeSpan.FromSeconds(1), TimeSpan.FromHours(1));
-            }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }, null, TimeSpan.FromSeconds(1), TimeSpan.FromHours(1));
         }
 
         public void Initialize()
