@@ -4,7 +4,6 @@ using System.Linq;
 using Discord;
 using NadekoBot.Services;
 using System.Threading.Tasks;
-using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
@@ -16,14 +15,14 @@ namespace NadekoBot.Modules.Help
 {
     public class Help : NadekoTopLevelModule<HelpService>
     {
-        public const string PatreonUrl = "https://patreon.com/nadekobot";
-        public const string PaypalUrl = "https://paypal.me/Kwoth";
+        public const string PatreonUrl = "https://patreon.com/plauderkonfi";
+        public const string PaypalUrl = "-- Not available --";
         private readonly IBotCredentials _creds;
         private readonly IBotConfigProvider _config;
         private readonly CommandService _cmds;
         private readonly GlobalPermissionService _perms;
 
-        public string HelpString => String.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
+        public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
         public string DMHelpString => _config.BotConfig.DMHelpString;
 
         public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds)
@@ -56,11 +55,12 @@ namespace NadekoBot.Modules.Help
             module = module?.Trim().ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(module))
                 return;
-            var cmds = _cmds.Commands.Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
-                                                .Where(c => !_perms.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
-                                                  .OrderBy(c => c.Aliases.First())
-                                                  .Distinct(new CommandTextEqualityComparer())
-                                                  .AsEnumerable();
+            var cmds = _cmds.Commands
+                .Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
+                .Where(c => !_perms.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
+                .OrderBy(c => c.Aliases.First())
+                .Distinct(new CommandTextEqualityComparer())
+                .AsEnumerable();
 
             var cmdsArray = cmds as CommandInfo[] ?? cmds.ToArray();
             if (!cmdsArray.Any())
@@ -71,7 +71,7 @@ namespace NadekoBot.Modules.Help
             var j = 0;
             var groups = cmdsArray.GroupBy(x => j++ / 48).ToArray();
 
-            for (int i = 0; i < groups.Count(); i++)
+            for (var i = 0; i < groups.Length; i++)
             {
                 await channel.SendTableAsync(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "", groups.ElementAt(i), el => $"{Prefix + el.Aliases.First(),-15} {"[" + el.Aliases.Skip(1).FirstOrDefault() + "]",-8}").ConfigureAwait(false);
             }
@@ -93,7 +93,7 @@ namespace NadekoBot.Modules.Help
 
             if (com == null)
             {
-                IMessageChannel ch = channel is ITextChannel ? await ((IGuildUser)Context.User).GetOrCreateDMChannelAsync() : channel;
+                var ch = channel is ITextChannel ? await ((IGuildUser)Context.User).GetOrCreateDMChannelAsync() : channel;
                 await ch.SendMessageAsync(HelpString).ConfigureAwait(false);
                 return;
             }
