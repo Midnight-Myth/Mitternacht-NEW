@@ -19,13 +19,12 @@ using NadekoBot.Common;
 using NadekoBot.Common.ShardCom;
 using NadekoBot.Common.TypeReaders;
 using NadekoBot.Common.TypeReaders.Models;
-using NadekoBot.Services.Database;
 
 namespace NadekoBot
 {
     public class NadekoBot
     {
-        private Logger _log;
+        private readonly Logger _log;
 
         public BotCredentials Credentials { get; }
 
@@ -44,7 +43,7 @@ namespace NadekoBot
         public static Color OkColor { get; private set; }
         public static Color ErrorColor { get; private set; }
 
-        public TaskCompletionSource<bool> Ready { get; private set; } = new TaskCompletionSource<bool>();
+        public TaskCompletionSource<bool> Ready { get; } = new TaskCompletionSource<bool>();
 
         public INServiceProvider Services { get; private set; }
 
@@ -137,8 +136,8 @@ namespace NadekoBot
                     .AddManual(botConfigProvider)
                     //.AddManual<ILocalization>(localization)
                     .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs) //todo wrap this
-                    .AddManual<NadekoBot>(this)
-                    .AddManual<IUnitOfWork>(uow)
+                    .AddManual(this)
+                    .AddManual(uow)
                     .LoadFrom(Assembly.GetEntryAssembly())
                     .Build();
 
@@ -168,7 +167,7 @@ namespace NadekoBot
                     clientReady.TrySetResult(true);
                     try
                     {
-                        foreach (var chan in (await Client.GetDMChannelsAsync()))
+                        foreach (var chan in await Client.GetDMChannelsAsync())
                         {
                             await chan.CloseAsync().ConfigureAwait(false);
                         }
@@ -176,10 +175,6 @@ namespace NadekoBot
                     catch
                     {
                         // ignored
-                    }
-                    finally
-                    {
-
                     }
                 });
                 return Task.CompletedTask;
@@ -227,15 +222,15 @@ namespace NadekoBot
             var stats = Services.GetService<IStatsService>();
             stats.Initialize();
             var commandHandler = Services.GetService<CommandHandler>();
-            var CommandService = Services.GetService<CommandService>();
+            var commandService = Services.GetService<CommandService>();
 
             // start handling messages received in commandhandler
             await commandHandler.StartHandling().ConfigureAwait(false);
 
-            var _ = await CommandService.AddModulesAsync(this.GetType().GetTypeInfo().Assembly);
+            var _ = await commandService.AddModulesAsync(GetType().GetTypeInfo().Assembly);
 
 
-            bool isPublicNadeko = false;
+            var isPublicNadeko = false;
 #if GLOBAL_NADEKO
             isPublicNadeko = true;
 #endif
@@ -249,11 +244,11 @@ namespace NadekoBot
             //unload modules which are not available on the public bot
 
             if (isPublicNadeko)
-                CommandService
+                commandService
                     .Modules
                     .ToArray()
                     .Where(x => x.Preconditions.Any(y => y.GetType() == typeof(NoPublicBot)))
-                    .ForEach(x => CommandService.RemoveModuleAsync(x));
+                    .ForEach(x => commandService.RemoveModuleAsync(x));
 
             Ready.TrySetResult(true);
             _log.Info($"Shard {Client.ShardId} ready.");
@@ -303,7 +298,7 @@ namespace NadekoBot
                 ShardCoord = new ShardsCoordinator(port);
                 return;
             }
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 try
                 {
@@ -316,7 +311,7 @@ namespace NadekoBot
                 {
                     Environment.Exit(10);
                 }
-            })).Start();
+            }).Start();
         }
     }
 }

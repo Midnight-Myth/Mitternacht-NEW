@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>General purpose Discord bot written in C#.</Description>
+    <Description>General purpose Discord bot written in C#. Modified for inofficial GommeHD.net Plauderkonfi Discord.</Description>
     <Copyright>Kwoth</Copyright>
-    <Authors>Kwoth</Authors>
+    <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
     <PublisherName>Kwoth</PublisherName>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>NadekoBot</AssemblyName>
+    <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>NadekoBot</PackageId>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
@@ -21,6 +21,8 @@
     <FileVersion>1.0.0.0</FileVersion>
     <ApplicationIcon>nadeko_icon.ico</ApplicationIcon>
     <RuntimeIdentifiers>win7-x64<!--;ubuntu.14.04-x64;osx.10.10-x64 --></RuntimeIdentifiers>
+    <PackageProjectUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Version)' == '' ">

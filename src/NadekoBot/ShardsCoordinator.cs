@@ -45,13 +45,13 @@ namespace NadekoBot
             Statuses[msg.ShardId] = msg;
 
             if (msg.ConnectionState == Discord.ConnectionState.Disconnected || msg.ConnectionState == Discord.ConnectionState.Disconnecting)
-                _log.Error("!!! SHARD {0} IS IN {1} STATE", msg.ShardId, msg.ConnectionState.ToString());
+                _log.Error("!!! SHARD {0} IS IN {1} STATE", msg.ShardId, msg.ConnectionState);
             return Task.CompletedTask;
         }
 
         public async Task RunAsync()
         {
-            for (int i = 1; i < _creds.TotalShards; i++)
+            for (var i = 1; i < _creds.TotalShards; i++)
             {
                 var p = Process.Start(new ProcessStartInfo()
                 {
