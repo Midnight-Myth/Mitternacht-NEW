@@ -110,7 +110,7 @@ namespace NadekoBot.Modules.Level.Services
             }
         }
 
-        private static async Task SendLevelChangedMessage(CalculatedLevel cl, IMentionable user, ISocketMessageChannel smc)
+        public async Task SendLevelChangedMessage(CalculatedLevel cl, IMentionable user, IMessageChannel smc)
         {
             if (cl.IsNewLevelHigher) {
                 await smc.SendMessageAsync($"Herzlichen Glückwunsch { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } aufgestiegen!");

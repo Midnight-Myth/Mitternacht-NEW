@@ -1513,14 +1513,14 @@
     <value>`{0}q Dream Of Venice`</value>
   </data>
   <data name="queuenext_cmd" xml:space="preserve">
-      <value>queuenext qn</value>
-    </data>
+    <value>queuenext qn</value>
+  </data>
   <data name="queuenext_desc" xml:space="preserve">
-      <value>Works the same as `{0}queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.</value>
-    </data>
+    <value>Works the same as `{0}queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.</value>
+  </data>
   <data name="queuenext_usage" xml:space="preserve">
-      <value>`{0}qn Dream Of Venice`</value>
-    </data>
+    <value>`{0}qn Dream Of Venice`</value>
+  </data>
   <data name="queuesearch_cmd" xml:space="preserve">
     <value>queuesearch qs yqs</value>
   </data>
@@ -2980,14 +2980,14 @@
     <value>`{0}claim 50 @Himesama`</value>
   </data>
   <data name="waifugift_cmd" xml:space="preserve">
-      <value>waifugift gift gifts</value>
-    </data>
+    <value>waifugift gift gifts</value>
+  </data>
   <data name="waifugift_desc" xml:space="preserve">
-      <value>Gift an item to someone. This will increase their waifu value by 50% of the gifted item's value if they don't have affinity set towards you, or 100% if they do. Provide no arguments to see a list of items that you can gift.</value>
-    </data>
+    <value>Gift an item to someone. This will increase their waifu value by 50% of the gifted item's value if they don't have affinity set towards you, or 100% if they do. Provide no arguments to see a list of items that you can gift.</value>
+  </data>
   <data name="waifugift_usage" xml:space="preserve">
-      <value>`{0}gifts` or `{0}gift Rose @Himesama`</value>
-    </data>
+    <value>`{0}gifts` or `{0}gift Rose @Himesama`</value>
+  </data>
   <data name="waifuleaderboard_cmd" xml:space="preserve">
     <value>waifus waifulb</value>
   </data>
@@ -3672,24 +3672,24 @@
   <data name="removerolelevelbinding_usage" xml:space="preserve">
     <value>`{0}removerolelevelbinding &lt;role&gt;`</value>
   </data>
-<data name="wheeloffortune_cmd" xml:space="preserve">
-      <value>wheeloffortune wheel</value>
-    </data>
-    <data name="wheeloffortune_desc" xml:space="preserve">
-      <value>Bets a certain amount of currency on the wheel of fortune. Wheel can stop on one of many different multipliers. Won amount is rounded down to the nearest whole number.</value>
-    </data>
-    <data name="wheeloffortune_usage" xml:space="preserve">
-      <value>`{0}wheel 10`</value>
-    </data>
+  <data name="wheeloffortune_cmd" xml:space="preserve">
+    <value>wheeloffortune wheel</value>
+  </data>
+  <data name="wheeloffortune_desc" xml:space="preserve">
+    <value>Bets a certain amount of currency on the wheel of fortune. Wheel can stop on one of many different multipliers. Won amount is rounded down to the nearest whole number.</value>
+  </data>
+  <data name="wheeloffortune_usage" xml:space="preserve">
+    <value>`{0}wheel 10`</value>
+  </data>
   <data name="nunchi_cmd" xml:space="preserve">
-      <value>nunchi</value>
-    </data>
+    <value>nunchi</value>
+  </data>
   <data name="nunchi_desc" xml:space="preserve">
-     <value>Creates or joins an existing nunchi game. Users have to count up by 1 from the starting number shown by the bot. If someone makes a mistake (types an incorrent number, or repeats the same number) they are out of the game and a new round starts without them.  Minimum 3 users required.</value>
-     </data>
+    <value>Creates or joins an existing nunchi game. Users have to count up by 1 from the starting number shown by the bot. If someone makes a mistake (types an incorrent number, or repeats the same number) they are out of the game and a new round starts without them.  Minimum 3 users required.</value>
+  </data>
   <data name="nunchi_usage" xml:space="preserve">
-      <value>`{0}nunchi`</value>
-    </data>
+    <value>`{0}nunchi`</value>
+  </data>
   <data name="connect4_cmd" xml:space="preserve">
     <value>connect4 con4</value>
   </data>
@@ -3700,12 +3700,21 @@
     <value>`{0}connect4`</value>
   </data>
   <data name="songautodelete_cmd" xml:space="preserve">
-      <value>songautodelete sad</value>
-    </data>
+    <value>songautodelete sad</value>
+  </data>
   <data name="songautodelete_desc" xml:space="preserve">
-      <value>Toggles whether the song should be automatically removed from the music queue when it finishes playing.</value>
-    </data>
+    <value>Toggles whether the song should be automatically removed from the music queue when it finishes playing.</value>
+  </data>
   <data name="songautodelete_usage" xml:space="preserve">
-      <value>`{0}sad`</value>
-    </data>
+    <value>`{0}sad`</value>
+  </data>
+  <data name="setxp_cmd" xml:space="preserve">
+    <value>setxp</value>
+  </data>
+  <data name="setxp_desc" xml:space="preserve">
+    <value>Set the XP of a specified user.</value>
+  </data>
+  <data name="setxp_usage" xml:space="preserve">
+    <value>`{0}setxp &lt;xp&gt; [user]`</value>
+  </data>
 </root>

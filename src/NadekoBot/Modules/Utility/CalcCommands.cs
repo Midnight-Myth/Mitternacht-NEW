@@ -125,13 +125,13 @@ namespace NadekoBot.Modules.Utility
                 }
             }
 
-            public static void Cash(ICommandContext context, DbService db, FunctionArgs args)
+            private static object Cash(ICommandContext context, DbService db, FunctionArgs args)
                 => Money(context, db, args);
-            
-            public static void Money(ICommandContext context, DbService db, FunctionArgs args)
+
+            private static object Money(ICommandContext context, DbService db, FunctionArgs args)
             {
                 if (args.Parameters.Length > 1)
-                    return;
+                    return null;
                 var user = context.User as IGuildUser;
                 if (args.Parameters.Length == 1) {
                     var parameter = args.Parameters[0];
@@ -147,18 +147,18 @@ namespace NadekoBot.Modules.Utility
                     }
                 }
                 if (user == null)
-                    return;
+                    return null;
 
                 using (var uow = db.UnitOfWork)
                 {
-                    args.Result = uow.Currency.GetUserCurrency(user.Id);
+                    return uow.Currency.GetUserCurrency(user.Id);
                 }
             }
 
-            public static void Xp(ICommandContext context, DbService db, FunctionArgs args)
+            private static object Xp(ICommandContext context, DbService db, FunctionArgs args)
             {
                 if (args.Parameters.Length > 1)
-                    return;
+                    return null;
                 var user = context.User as IGuildUser;
                 if (args.Parameters.Length == 1) {
                     var parameter = args.Parameters[0];
@@ -174,10 +174,10 @@ namespace NadekoBot.Modules.Utility
                     }
                 }
                 if (user == null)
-                    return;
+                    return null;
 
                 using (var uow = db.UnitOfWork) {
-                    args.Result = uow.LevelModel.GetXp(user.Id);
+                    return uow.LevelModel.GetXp(user.Id);
                 }
             }
         }

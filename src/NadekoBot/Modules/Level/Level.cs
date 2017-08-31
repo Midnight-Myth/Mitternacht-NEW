@@ -126,13 +126,30 @@ namespace NadekoBot.Modules.Level
         public async Task AddXp(int xp, [Remainder] IUser user = null)
         {
             user = user ?? Context.User;
-            bool success;
             using (var uow = _db.UnitOfWork)
             {
-                success = uow.LevelModel.TryAddXp(user.Id, xp);
+                var success = uow.LevelModel.TryAddXp(user.Id, xp, false);
+                await Context.Channel.SendConfirmAsync(success ? $"{Context.User.Mention}: {xp}XP an {user.Username} vergeben." : $"{Context.User.Mention}: Vergabe von {xp}XP an {user.Username} nicht möglich!");
+                var level = uow.LevelModel.CalculateLevel(user.Id);
+                await _service.SendLevelChangedMessage(level, user, Context.Channel);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
-            await Context.Channel.SendMessageAsync(success ? $"{Context.User.Mention}: {xp}XP an {user.Username} vergeben." : $"{Context.User.Mention}: Vergabe von {xp}XP an {user.Username} nicht möglich!");
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task SetXp(int xp, [Remainder] IUser user = null)
+        {
+            user = user ?? Context.User;
+            using (var uow = _db.UnitOfWork)
+            {
+                uow.LevelModel.SetXp(user.Id, xp, false);
+                await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {user.Username} auf {xp} gesetzt.");
+                var level = uow.LevelModel.CalculateLevel(user.Id);
+                await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
