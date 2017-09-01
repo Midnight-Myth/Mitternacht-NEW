@@ -176,9 +176,11 @@ namespace NadekoBot.Modules.Level
                 }
                 else
                 {
-                    uow.LevelModel.TryAddXp(user.Id, (int)moneyToSpend * 5);
+                    uow.LevelModel.TryAddXp(user.Id, (int)moneyToSpend * 5, false);
                     uow.Currency.TryUpdateState(user.Id, -moneyToSpend);
                     await Context.Channel.SendMessageAsync($"{Context.User.Mention}: {moneyToSpend}{CurrencySign} in {moneyToSpend * 5}XP umgewandelt" + (user != Context.User ? $" für {user.Username}" : ""));
+                    var level = uow.LevelModel.CalculateLevel(user.Id);
+                    await _service.SendLevelChangedMessage(level, user, Context.Channel);
                 }
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
