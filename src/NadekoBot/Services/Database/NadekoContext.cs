@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using NadekoBot.Extensions;
+using NadekoBot.Services.Database.Models;
 
 namespace NadekoBot.Services.Database
 {
@@ -59,7 +60,7 @@ namespace NadekoBot.Services.Database
         public DbSet<ModulePrefix> ModulePrefixes { get; set; }
         public DbSet<RewardedUser> RewardedUsers { get; set; }
 
-        public NadekoContext() : base()
+        public NadekoContext()
         {
 
         }
@@ -70,71 +71,69 @@ namespace NadekoBot.Services.Database
 
         public void EnsureSeedData()
         {
-            if (!BotConfig.Any())
+            if (BotConfig.Any()) return;
+            var bc = new BotConfig();
+
+            bc.ModulePrefixes.AddRange(new HashSet<ModulePrefix>
             {
-                var bc = new BotConfig();
+                new ModulePrefix { ModuleName = "Administration", Prefix = "." },
+                new ModulePrefix { ModuleName = "Searches", Prefix = "~" },
+                new ModulePrefix { ModuleName = "Translator", Prefix = "~" },
+                new ModulePrefix { ModuleName = "NSFW", Prefix = "~" },
+                new ModulePrefix { ModuleName = "ClashOfClans", Prefix = "," },
+                new ModulePrefix { ModuleName = "Help", Prefix = "-" },
+                new ModulePrefix { ModuleName = "Music", Prefix = "!!" },
+                new ModulePrefix { ModuleName = "Trello", Prefix = "trello" },
+                new ModulePrefix { ModuleName = "Games", Prefix = ">" },
+                new ModulePrefix { ModuleName = "Gambling", Prefix = "$" },
+                new ModulePrefix { ModuleName = "Permissions", Prefix = ";" },
+                new ModulePrefix { ModuleName = "Pokemon", Prefix = ">" },
+                new ModulePrefix { ModuleName = "Utility", Prefix = "." },
+                new ModulePrefix { ModuleName = "CustomReactions", Prefix = "." },
+                new ModulePrefix { ModuleName = "PokeGame", Prefix = ">" }, 
+                new ModulePrefix { ModuleName = "Level", Prefix = "!"}
+            });
+            bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
+            {
+                new RaceAnimal { Icon = "🐼", Name = "Panda" },
+                new RaceAnimal { Icon = "🐻", Name = "Bear" },
+                new RaceAnimal { Icon = "🐧", Name = "Pengu" },
+                new RaceAnimal { Icon = "🐨", Name = "Koala" },
+                new RaceAnimal { Icon = "🐬", Name = "Dolphin" },
+                new RaceAnimal { Icon = "🐞", Name = "Ladybird" },
+                new RaceAnimal { Icon = "🦀", Name = "Crab" },
+                new RaceAnimal { Icon = "🦄", Name = "Unicorn" }
+            });
+            bc.EightBallResponses.AddRange(new HashSet<EightBallResponse>
+            {
+                new EightBallResponse { Text = "Most definitely yes" },
+                new EightBallResponse { Text = "For sure" },
+                new EightBallResponse { Text = "Totally!" },
+                new EightBallResponse { Text = "Of course!" },
+                new EightBallResponse { Text = "As I see it, yes" },
+                new EightBallResponse { Text = "My sources say yes" },
+                new EightBallResponse { Text = "Yes" },
+                new EightBallResponse { Text = "Most likely" },
+                new EightBallResponse { Text = "Perhaps" },
+                new EightBallResponse { Text = "Maybe" },
+                new EightBallResponse { Text = "Not sure" },
+                new EightBallResponse { Text = "It is uncertain" },
+                new EightBallResponse { Text = "Ask me again later" },
+                new EightBallResponse { Text = "Don't count on it" },
+                new EightBallResponse { Text = "Probably not" },
+                new EightBallResponse { Text = "Very doubtful" },
+                new EightBallResponse { Text = "Most likely no" },
+                new EightBallResponse { Text = "Nope" },
+                new EightBallResponse { Text = "No" },
+                new EightBallResponse { Text = "My sources say no" },
+                new EightBallResponse { Text = "Dont even think about it" },
+                new EightBallResponse { Text = "Definitely no" },
+                new EightBallResponse { Text = "NO - It may cause disease contraction" }
+            });
 
-                bc.ModulePrefixes.AddRange(new HashSet<ModulePrefix>()
-                {
-                    new ModulePrefix() { ModuleName = "Administration", Prefix = "." },
-                    new ModulePrefix() { ModuleName = "Searches", Prefix = "~" },
-                    new ModulePrefix() { ModuleName = "Translator", Prefix = "~" },
-                    new ModulePrefix() { ModuleName = "NSFW", Prefix = "~" },
-                    new ModulePrefix() { ModuleName = "ClashOfClans", Prefix = "," },
-                    new ModulePrefix() { ModuleName = "Help", Prefix = "-" },
-                    new ModulePrefix() { ModuleName = "Music", Prefix = "!!" },
-                    new ModulePrefix() { ModuleName = "Trello", Prefix = "trello" },
-                    new ModulePrefix() { ModuleName = "Games", Prefix = ">" },
-                    new ModulePrefix() { ModuleName = "Gambling", Prefix = "$" },
-                    new ModulePrefix() { ModuleName = "Permissions", Prefix = ";" },
-                    new ModulePrefix() { ModuleName = "Pokemon", Prefix = ">" },
-                    new ModulePrefix() { ModuleName = "Utility", Prefix = "." },
-                    new ModulePrefix() { ModuleName = "CustomReactions", Prefix = "." },
-                    new ModulePrefix() { ModuleName = "PokeGame", Prefix = ">" }, 
-                    new ModulePrefix() { ModuleName = "Level", Prefix = "!"}
-                });
-                bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
-                {
-                    new RaceAnimal { Icon = "🐼", Name = "Panda" },
-                    new RaceAnimal { Icon = "🐻", Name = "Bear" },
-                    new RaceAnimal { Icon = "🐧", Name = "Pengu" },
-                    new RaceAnimal { Icon = "🐨", Name = "Koala" },
-                    new RaceAnimal { Icon = "🐬", Name = "Dolphin" },
-                    new RaceAnimal { Icon = "🐞", Name = "Ladybird" },
-                    new RaceAnimal { Icon = "🦀", Name = "Crab" },
-                    new RaceAnimal { Icon = "🦄", Name = "Unicorn" }
-                });
-                bc.EightBallResponses.AddRange(new HashSet<EightBallResponse>
-                {
-                    new EightBallResponse() { Text = "Most definitely yes" },
-                    new EightBallResponse() { Text = "For sure" },
-                    new EightBallResponse() { Text = "Totally!" },
-                    new EightBallResponse() { Text = "Of course!" },
-                    new EightBallResponse() { Text = "As I see it, yes" },
-                    new EightBallResponse() { Text = "My sources say yes" },
-                    new EightBallResponse() { Text = "Yes" },
-                    new EightBallResponse() { Text = "Most likely" },
-                    new EightBallResponse() { Text = "Perhaps" },
-                    new EightBallResponse() { Text = "Maybe" },
-                    new EightBallResponse() { Text = "Not sure" },
-                    new EightBallResponse() { Text = "It is uncertain" },
-                    new EightBallResponse() { Text = "Ask me again later" },
-                    new EightBallResponse() { Text = "Don't count on it" },
-                    new EightBallResponse() { Text = "Probably not" },
-                    new EightBallResponse() { Text = "Very doubtful" },
-                    new EightBallResponse() { Text = "Most likely no" },
-                    new EightBallResponse() { Text = "Nope" },
-                    new EightBallResponse() { Text = "No" },
-                    new EightBallResponse() { Text = "My sources say no" },
-                    new EightBallResponse() { Text = "Dont even think about it" },
-                    new EightBallResponse() { Text = "Definitely no" },
-                    new EightBallResponse() { Text = "NO - It may cause disease contraction" }
-                });
+            BotConfig.Add(bc);
 
-                BotConfig.Add(bc);
-
-                this.SaveChanges();
-            }
+            SaveChanges();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -254,7 +253,7 @@ namespace NadekoBot.Services.Database
             musicPlaylistEntity
                 .HasMany(p => p.Songs)
                 .WithOne()
-                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             #endregion

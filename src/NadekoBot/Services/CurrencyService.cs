@@ -4,7 +4,6 @@ using Discord;
 using NadekoBot.Extensions;
 using NadekoBot.Services.Database.Models;
 using NadekoBot.Services.Database;
-using NadekoBot.Services;
 
 namespace NadekoBot.Services
 {
@@ -23,10 +22,10 @@ namespace NadekoBot.Services
         {
             var success = await RemoveAsync(author.Id, reason, amount);
 
-            if (success && sendMessage)
-                try { await author.SendErrorAsync($"`You lost:` {amount} {_config.BotConfig.CurrencySign}\n`Reason:` {reason}").ConfigureAwait(false); } catch { }
+            if (!success || !sendMessage) return success;
+            try { await author.SendErrorAsync($"`You lost:` {amount} {_config.BotConfig.CurrencySign}\n`Reason:` {reason}").ConfigureAwait(false); } catch { }
 
-            return success;
+            return true;
         }
 
         public async Task<bool> RemoveAsync(ulong authorId, string reason, long amount, IUnitOfWork uow = null)
@@ -34,17 +33,13 @@ namespace NadekoBot.Services
             if (amount < 0)
                 throw new ArgumentNullException(nameof(amount));
 
-            if (uow == null)
+            if (uow != null) return InternalRemoveCurrency(authorId, reason, amount, uow);
+            using (uow = _db.UnitOfWork)
             {
-                using (uow = _db.UnitOfWork)
-                {
-                    var toReturn = InternalRemoveCurrency(authorId, reason, amount, uow);
-                    await uow.CompleteAsync().ConfigureAwait(false);
-                    return toReturn;
-                }
+                var toReturn = InternalRemoveCurrency(authorId, reason, amount, uow);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                return toReturn;
             }
-
-            return InternalRemoveCurrency(authorId, reason, amount, uow);
         }
 
         private bool InternalRemoveCurrency(ulong authorId, string reason, long amount, IUnitOfWork uow)
@@ -67,7 +62,7 @@ namespace NadekoBot.Services
             {
                 foreach (var userId in userIds)
                 {
-                    var transaction = new CurrencyTransaction()
+                    var transaction = new CurrencyTransaction
                     {
                         UserId = userId,
                         Reason = reason,
@@ -94,7 +89,7 @@ namespace NadekoBot.Services
             if (amount < 0)
                 throw new ArgumentNullException(nameof(amount));
 
-            var transaction = new CurrencyTransaction()
+            var transaction = new CurrencyTransaction
             {
                 UserId = receiverId,
                 Reason = reason,

@@ -202,7 +202,7 @@ namespace NadekoBot.Services
                 UserMessagesSent.AddOrUpdate(usrMsg.Author.Id, 1, (key, old) => ++old);
 #endif
 
-                var channel = msg.Channel as ISocketMessageChannel;
+                var channel = msg.Channel;
                 var guild = (msg.Channel as SocketTextChannel)?.Guild;
 
                 await TryRunCommand(guild, channel, usrMsg);
@@ -335,14 +335,13 @@ namespace NadekoBot.Services
 
                 if (parseResult.Error == CommandError.MultipleMatches)
                 {
-                    IReadOnlyList<TypeReaderValue> argList, paramList;
-                    switch (multiMatchHandling)
+                    if (multiMatchHandling == MultiMatchHandling.Best)
                     {
-                        case MultiMatchHandling.Best:
-                            argList = parseResult.ArgValues.Select(x => x.Values.OrderByDescending(y => y.Score).First()).ToImmutableArray();
-                            paramList = parseResult.ParamValues.Select(x => x.Values.OrderByDescending(y => y.Score).First()).ToImmutableArray();
-                            parseResult = ParseResult.FromSuccess(argList, paramList);
-                            break;
+                        IReadOnlyList<TypeReaderValue> argList = parseResult.ArgValues.Select(x => x.Values.OrderByDescending(y => y.Score).First())
+                            .ToImmutableArray();
+                        IReadOnlyList<TypeReaderValue> paramList = parseResult.ParamValues
+                            .Select(x => x.Values.OrderByDescending(y => y.Score).First()).ToImmutableArray();
+                        parseResult = ParseResult.FromSuccess(argList, paramList);
                     }
                 }
 
@@ -393,29 +392,27 @@ namespace NadekoBot.Services
             var commandName = cmd.Aliases.First();
             foreach (var svc in _services)
             {
-                if (svc is ILateBlocker exec &&
-                    await exec.TryBlockLate(_client, context.Message, context.Guild, context.Channel, context.User, cmd.Module.GetTopLevelModule().Name, commandName).ConfigureAwait(false))
-                {
-                    _log.Info("Late blocking User [{0}] Command: [{1}] in [{2}]", context.User, commandName, svc.GetType().Name);
-                    return (false, null, cmd);
-                }
+                if (!(svc is ILateBlocker exec) || !await exec
+                        .TryBlockLate(_client, context.Message, context.Guild, context.Channel, context.User,
+                            cmd.Module.GetTopLevelModule().Name, commandName).ConfigureAwait(false)) continue;
+                _log.Info("Late blocking User [{0}] Command: [{1}] in [{2}]", context.User, commandName, svc.GetType().Name);
+                return (false, null, cmd);
             }
 
             //If we get this far, at least one parse was successful. Execute the most likely overload.
             var chosenOverload = successfulParses[0];
             var execResult = (ExecuteResult)await chosenOverload.Key.ExecuteAsync(context, chosenOverload.Value, services).ConfigureAwait(false);
 
-            if (execResult.Exception != null && (!(execResult.Exception is HttpException he) || he.DiscordCode != 50013))
+            if (execResult.Exception == null || (execResult.Exception is HttpException he && he.DiscordCode == 50013))
+                return (true, null, cmd);
+            lock (errorLogLock)
             {
-                lock (errorLogLock)
-                {
-                    var now = DateTime.Now;
-                    File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt",
-                        $"[{now:HH:mm-yyyy-MM-dd}]" + Environment.NewLine
-                        + execResult.Exception.ToString() + Environment.NewLine
-                        + "------" + Environment.NewLine);
-                    _log.Warn(execResult.Exception);
-                }
+                var now = DateTime.Now;
+                File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt",
+                    $"[{now:HH:mm-yyyy-MM-dd}]" + Environment.NewLine
+                    + execResult.Exception + Environment.NewLine
+                    + "------" + Environment.NewLine);
+                _log.Warn(execResult.Exception);
             }
 
             return (true, null, cmd);

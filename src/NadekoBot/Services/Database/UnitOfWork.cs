@@ -80,14 +80,14 @@ namespace NadekoBot.Services.Database
         public Task<int> CompleteAsync() => 
             _context.SaveChangesAsync();
 
-        private bool disposed = false;
+        private bool _disposed;
 
         protected void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed)
                 if (disposing)
                     _context.Dispose();
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()
