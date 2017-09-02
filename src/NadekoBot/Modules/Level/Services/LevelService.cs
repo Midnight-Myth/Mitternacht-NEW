@@ -29,8 +29,7 @@ namespace NadekoBot.Modules.Level.Services
 
         private async Task AddLevelRole(SocketMessage sm)
         {
-            var user = sm.Author as IGuildUser;
-            if (user == null)
+            if (!(sm.Author is IGuildUser user))
                 return;
             if (sm.Author.IsBot ||
                 _cmds.Commands.Any(
@@ -54,8 +53,7 @@ namespace NadekoBot.Modules.Level.Services
 
         private async Task OnMessageReceived(SocketMessage sm)
         {
-            var user = sm.Author as IGuildUser;
-            if (user == null)
+            if (!(sm.Author is IGuildUser user))
                 return;
             if (sm.Author.IsBot || sm.Content.Length < 10 ||
                 _cmds.Commands.Any(
@@ -76,8 +74,7 @@ namespace NadekoBot.Modules.Level.Services
         private async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
         {
             var msgBefore = await before.GetOrDownloadAsync();
-            var user = msgBefore.Author as IGuildUser;
-            if (user == null)
+            if (!(msgBefore.Author is IGuildUser user))
                 return;
 
             if (msgBefore.Author.IsBot || msgBefore.Content.Length > 25 && after.Content.Length > 25 || msgBefore.Content.Length < 10 && after.Content.Length < 10 ||
@@ -95,8 +92,7 @@ namespace NadekoBot.Modules.Level.Services
         private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel)
         {
             var msgBefore = await before.GetOrDownloadAsync();
-            var user = msgBefore.Author as IGuildUser;
-            if (user == null)
+            if (!(msgBefore.Author is IGuildUser user))
                 return;
 
             if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 ||
