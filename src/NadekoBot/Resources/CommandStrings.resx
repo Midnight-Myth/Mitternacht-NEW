@@ -994,7 +994,7 @@
     <value>srvrmdl sm</value>
   </data>
   <data name="srvrmdl_desc" xml:space="preserve">
-    <value>Sets a module's permission at the server level.</value>
+    <value>Sets a module's permission at the server previous.</value>
   </data>
   <data name="srvrmdl_usage" xml:space="preserve">
     <value>`{0}sm ModuleName enable`</value>
@@ -1003,7 +1003,7 @@
     <value>srvrcmd sc</value>
   </data>
   <data name="srvrcmd_desc" xml:space="preserve">
-    <value>Sets a command's permission at the server level.</value>
+    <value>Sets a command's permission at the server previous.</value>
   </data>
   <data name="srvrcmd_usage" xml:space="preserve">
     <value>`{0}sc "command name" disable`</value>
@@ -1012,7 +1012,7 @@
     <value>rolemdl rm</value>
   </data>
   <data name="rolemdl_desc" xml:space="preserve">
-    <value>Sets a module's permission at the role level.</value>
+    <value>Sets a module's permission at the role previous.</value>
   </data>
   <data name="rolemdl_usage" xml:space="preserve">
     <value>`{0}rm ModuleName enable MyRole`</value>
@@ -1021,7 +1021,7 @@
     <value>rolecmd rc</value>
   </data>
   <data name="rolecmd_desc" xml:space="preserve">
-    <value>Sets a command's permission at the role level.</value>
+    <value>Sets a command's permission at the role previous.</value>
   </data>
   <data name="rolecmd_usage" xml:space="preserve">
     <value>`{0}rc "command name" disable MyRole`</value>
@@ -1030,7 +1030,7 @@
     <value>chnlmdl cm</value>
   </data>
   <data name="chnlmdl_desc" xml:space="preserve">
-    <value>Sets a module's permission at the channel level.</value>
+    <value>Sets a module's permission at the channel previous.</value>
   </data>
   <data name="chnlmdl_usage" xml:space="preserve">
     <value>`{0}cm ModuleName enable SomeChannel`</value>
@@ -1039,7 +1039,7 @@
     <value>chnlcmd cc</value>
   </data>
   <data name="chnlcmd_desc" xml:space="preserve">
-    <value>Sets a command's permission at the channel level.</value>
+    <value>Sets a command's permission at the channel previous.</value>
   </data>
   <data name="chnlcmd_usage" xml:space="preserve">
     <value>`{0}cc "command name" enable SomeChannel`</value>
@@ -1048,7 +1048,7 @@
     <value>usrmdl um</value>
   </data>
   <data name="usrmdl_desc" xml:space="preserve">
-    <value>Sets a module's permission at the user level.</value>
+    <value>Sets a module's permission at the user previous.</value>
   </data>
   <data name="usrmdl_usage" xml:space="preserve">
     <value>`{0}um ModuleName enable SomeUsername`</value>
@@ -1057,7 +1057,7 @@
     <value>usrcmd uc</value>
   </data>
   <data name="usrcmd_desc" xml:space="preserve">
-    <value>Sets a command's permission at the user level.</value>
+    <value>Sets a command's permission at the user previous.</value>
   </data>
   <data name="usrcmd_usage" xml:space="preserve">
     <value>`{0}uc "command name" enable SomeUsername`</value>
@@ -1417,7 +1417,7 @@
     <value>leet</value>
   </data>
   <data name="leet_desc" xml:space="preserve">
-    <value>Converts a text to leetspeak with 6 (1-6) severity levels</value>
+    <value>Converts a text to leetspeak with 6 (1-6) severity previouss</value>
   </data>
   <data name="leet_usage" xml:space="preserve">
     <value>`{0}leet 3 Hello`</value>
@@ -1459,10 +1459,10 @@
     <value>`{0}linux Spyware Windows`</value>
   </data>
   <data name="next_cmd" xml:space="preserve">
-    <value>next n</value>
+    <value>previous n</value>
   </data>
   <data name="next_desc" xml:space="preserve">
-    <value>Goes to the next song in the queue. You have to be in the same voice channel as the bot. You can skip multiple songs, but in that case songs will not be requeued if {0}rcs or {0}rpl is enabled.</value>
+    <value>Goes to the previous song in the queue. You have to be in the same voice channel as the bot. You can skip multiple songs, but in that case songs will not be requeued if {0}rcs or {0}rpl is enabled.</value>
   </data>
   <data name="next_usage" xml:space="preserve">
     <value>`{0}n` or `{0}n 5`</value>
@@ -1471,7 +1471,7 @@
     <value>play start</value>
   </data>
   <data name="play_desc" xml:space="preserve">
-    <value>If no arguments are specified, acts as `{0}next 1` command. If you specify a song number, it will jump to that song. If you specify a search query, acts as a `{0}q` command</value>
+    <value>If no arguments are specified, acts as `{0}previous 1` command. If you specify a song number, it will jump to that song. If you specify a search query, acts as a `{0}q` command</value>
   </data>
   <data name="play_usage" xml:space="preserve">
     <value>`{0}play` or `{0}play 5` or `{0}play Dream Of Venice`</value>
@@ -1513,7 +1513,7 @@
     <value>`{0}q Dream Of Venice`</value>
   </data>
   <data name="queuenext_cmd" xml:space="preserve">
-    <value>queuenext qn</value>
+    <value>queueprevious qn</value>
   </data>
   <data name="queuenext_desc" xml:space="preserve">
     <value>Works the same as `{0}queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.</value>
@@ -2758,7 +2758,7 @@
     <value>overwatch ow</value>
   </data>
   <data name="overwatch_desc" xml:space="preserve">
-    <value>Show's basic stats on a player (competitive rank, playtime, level etc) Region codes are: `eu` `us` `cn` `kr`</value>
+    <value>Show's basic stats on a player (competitive rank, playtime, previous etc) Region codes are: `eu` `us` `cn` `kr`</value>
   </data>
   <data name="overwatch_usage" xml:space="preserve">
     <value>`{0}ow us Battletag#1337` or  `{0}overwatch eu Battletag#2016`</value>
@@ -3646,31 +3646,31 @@
     <value>`{0}payroll [count] [position]`</value>
   </data>
   <data name="rolelevelbindings_cmd" xml:space="preserve">
-    <value>rolelevelbindings rlb</value>
+    <value>rolepreviousbindings rlb</value>
   </data>
   <data name="rolelevelbindings_desc" xml:space="preserve">
     <value>Zeigt eine Liste von Rollen und dem für sie benötigten Level.</value>
   </data>
   <data name="rolelevelbindings_usage" xml:space="preserve">
-    <value>`{0}rolelevelbindings [count] [position]`</value>
+    <value>`{0}rolepreviousbindings [count] [position]`</value>
   </data>
   <data name="setrolelevelbinding_cmd" xml:space="preserve">
-    <value>setrolelevelbinding srlb</value>
+    <value>setrolepreviousbinding srlb</value>
   </data>
   <data name="setrolelevelbinding_desc" xml:space="preserve">
     <value>Setzt das benötigte Level für eine Rolle.</value>
   </data>
   <data name="setrolelevelbinding_usage" xml:space="preserve">
-    <value>`{0}setrolelevelbinding &lt;role&gt; &lt;minlevel&gt;`</value>
+    <value>`{0}setrolepreviousbinding &lt;role&gt; &lt;minprevious&gt;`</value>
   </data>
   <data name="removerolelevelbinding_cmd" xml:space="preserve">
-    <value>removerolelevelbinding rrlb</value>
+    <value>removerolepreviousbinding rrlb</value>
   </data>
   <data name="removerolelevelbinding_desc" xml:space="preserve">
-    <value>Entfernt die levelbezogene automatische Vergabe einer Rolle.</value>
+    <value>Entfernt die previousbezogene automatische Vergabe einer Rolle.</value>
   </data>
   <data name="removerolelevelbinding_usage" xml:space="preserve">
-    <value>`{0}removerolelevelbinding &lt;role&gt;`</value>
+    <value>`{0}removerolepreviousbinding &lt;role&gt;`</value>
   </data>
   <data name="wheeloffortune_cmd" xml:space="preserve">
     <value>wheeloffortune wheel</value>
@@ -3694,7 +3694,7 @@
     <value>connect4 con4</value>
   </data>
   <data name="connect4_desc" xml:space="preserve">
-    <value>Creates or joins an existing connect4 game. 2 players are required for the game. Objective of the game is to get 4 of your pieces next to each other in a vertical, horizontal or diagonal line.</value>
+    <value>Creates or joins an existing connect4 game. 2 players are required for the game. Objective of the game is to get 4 of your pieces previous to each other in a vertical, horizontal or diagonal line.</value>
   </data>
   <data name="connect4_usage" xml:space="preserve">
     <value>`{0}connect4`</value>

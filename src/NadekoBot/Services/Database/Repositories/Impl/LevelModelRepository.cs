@@ -37,42 +37,31 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             return true;
         }
 
-        public static int GetXpToLevel(int level)
-        {
-            return (int)(5 * Math.Pow(level, 2) + 50 * level + 100);
-        }
+        public static int GetXpToNextLevel(int previous) 
+            => (int)(5 * Math.Pow(previous, 2) + 50 * previous + 100);
+
+        public static int GetXpForLevel(int level)
+            => (int) (10 / 6d * Math.Pow(level - 1, 3) + 165 / 6d * Math.Pow(level - 1, 2) + 755 / 6d * (level - 1));
 
         public bool TryAddLevel(ulong userId, int level, bool calculateLevel = true)
         {
             var lm = GetOrCreate(userId);
             return lm.Level + level >= 0 && TryAddXp(userId,
-                       GetXpToLevel(lm.Level + level - 1) - GetXpToLevel(lm.Level - 1), calculateLevel);
+                       GetXpToNextLevel(lm.Level + level - 1) - GetXpToNextLevel(lm.Level - 1), calculateLevel);
         }
 
         public CalculatedLevel CalculateLevel(ulong userId)
         {
             var lm = GetOrCreate(userId);
-
-            var copyOfTotalXp = lm.TotalXP;
+            
             var calculatedLevel = 0;
             var oldLevel = lm.Level;
 
-            while (copyOfTotalXp > 0)
-            {
-                var xpNeededForNextLevel = GetXpToLevel(calculatedLevel);
-
-                if (copyOfTotalXp > xpNeededForNextLevel)
-                {
-                    calculatedLevel++;
-                    copyOfTotalXp -= xpNeededForNextLevel;
-                }
-                else
-                {
-                    lm.CurrentXP = copyOfTotalXp;
-                    copyOfTotalXp = 0;
-                }
+            while (lm.TotalXP >= GetXpForLevel(calculatedLevel)) {
+                calculatedLevel++;
             }
             lm.Level = calculatedLevel;
+            lm.CurrentXP = lm.TotalXP - GetXpForLevel(calculatedLevel);
             _set.Update(lm);
 
             return new CalculatedLevel(oldLevel, calculatedLevel);

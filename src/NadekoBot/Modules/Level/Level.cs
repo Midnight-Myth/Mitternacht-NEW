@@ -56,12 +56,12 @@ namespace NadekoBot.Modules.Level
             
             if (userId == Context.User.Id)
             {
-                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXpToLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
+                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXpToNextLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
             }
             else
             {
                 var user = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
-                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **{user?.Nickname ?? (user?.Username ?? userId.ToString())}\'s Rang > LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXpToLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
+                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **{user?.Nickname ?? (user?.Username ?? userId.ToString())}\'s Rang > LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXpToNextLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
             }
         }
 
@@ -91,7 +91,7 @@ namespace NadekoBot.Modules.Level
                 var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 
                 if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
-                if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(24, true)) ?? lm.UserId.ToString().TrimTo(24,true), -26} | LEVEL {lm.Level,3} | XP {lm.CurrentXP,6}/{LevelModelRepository.GetXpToLevel(lm.Level),6} | TOTAL XP {lm.TotalXP,8}");
+                if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(24, true)) ?? lm.UserId.ToString().TrimTo(24,true), -26} | LEVEL {lm.Level,3} | XP {lm.CurrentXP,6}/{LevelModelRepository.GetXpToNextLevel(lm.Level),6} | TOTAL XP {lm.TotalXP,8}");
                 if ((i - position) % elementsPerList != elementsPerList - 1) continue;
                 sb.Append("```");
                 rankstrings.Add(sb.ToString());
