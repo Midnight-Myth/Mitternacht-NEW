@@ -54,14 +54,15 @@ namespace NadekoBot.Services.Database.Repositories.Impl
         {
             var lm = GetOrCreate(userId);
             
-            var calculatedLevel = 1;
+            var calculatedLevel = 0;
             var oldLevel = lm.Level;
 
-            while (lm.TotalXP >= GetXpForLevel(calculatedLevel)) {
+            do {
                 calculatedLevel++;
-            }
-            lm.Level = calculatedLevel;
-            lm.CurrentXP = lm.TotalXP - GetXpForLevel(calculatedLevel);
+            } while (lm.TotalXP >= GetXpForLevel(calculatedLevel));
+
+            lm.Level = calculatedLevel - 1;
+            lm.CurrentXP = lm.TotalXP - GetXpForLevel(calculatedLevel - 1);
             _set.Update(lm);
 
             return new CalculatedLevel(oldLevel, calculatedLevel);
