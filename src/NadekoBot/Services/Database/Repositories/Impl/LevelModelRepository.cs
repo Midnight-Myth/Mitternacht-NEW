@@ -41,7 +41,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             => (int)(5 * Math.Pow(previous, 2) + 50 * previous + 100);
 
         public static int GetXpForLevel(int level)
-            => (int) (10 / 6d * Math.Pow(level - 1, 3) + 165 / 6d * Math.Pow(level - 1, 2) + 755 / 6d * (level - 1));
+            => (int) (10 / 6d * Math.Pow(level, 3) + 165 / 6d * Math.Pow(level, 2) + 755 / 6d * level);
 
         public bool TryAddLevel(ulong userId, int level, bool calculateLevel = true)
         {
@@ -54,7 +54,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
         {
             var lm = GetOrCreate(userId);
             
-            var calculatedLevel = 0;
+            var calculatedLevel = -1;
             var oldLevel = lm.Level;
 
             do {
@@ -62,10 +62,10 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             } while (lm.TotalXP >= GetXpForLevel(calculatedLevel));
 
             lm.Level = calculatedLevel - 1;
-            lm.CurrentXP = lm.TotalXP - GetXpForLevel(calculatedLevel - 1);
+            lm.CurrentXP = lm.TotalXP - GetXpForLevel(lm.Level);
             _set.Update(lm);
 
-            return new CalculatedLevel(oldLevel, calculatedLevel);
+            return new CalculatedLevel(oldLevel, lm.Level);
         }
 
         public bool CanGetMessageXp(ulong userId, DateTime time)
