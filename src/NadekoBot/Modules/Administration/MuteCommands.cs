@@ -121,7 +121,11 @@ namespace NadekoBot.Modules.Administration
                 if (user == null) return;
                 var muteTime = _service.GetMuteTime(user);
                 if (muteTime == null || muteTime.Value < DateTime.UtcNow) await Context.Channel.SendErrorAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist nicht gemutet.");
-                else await Context.Channel.SendConfirmAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist noch {muteTime.Value - DateTime.UtcNow} gemutet.");
+                else {
+                    var ts = muteTime.Value - DateTime.UtcNow;
+                    var tstring = $"{((int) Math.Floor(ts.TotalDays) == 0 ? "" : (int) Math.Floor(ts.TotalDays) + "d")} {(ts.Hours == 0 ? "" : ts.Hours + "h")} {(ts.Minutes == 0 ? "" : ts.Minutes + "min")} {(ts.Seconds == 0 ? "" : ts.Seconds + "s")}".Trim();
+                    await Context.Channel.SendConfirmAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist noch {Format.Bold(tstring)} gemutet.");
+                }
             }
 
             [NadekoCommand, Usage, Description, Aliases]
