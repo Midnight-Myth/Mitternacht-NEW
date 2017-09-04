@@ -3726,4 +3726,31 @@
   <data name="mutetime_usage" xml:space="preserve">
     <value>`{0}mutetime &lt;user&gt;`</value>
   </data>
+  <data name="msgxprestrictionadd_cmd" xml:space="preserve">
+    <value>msgxprestrictionadd msgxpradd</value>
+  </data>
+  <data name="msgxprestrictionadd_desc" xml:space="preserve">
+    <value>Fügt einen Textkanal zur MessageXP Blacklist hinzu</value>
+  </data>
+  <data name="msgxprestrictionadd_usage" xml:space="preserve">
+    <value>`{0}msgxprestrictionadd &lt;textchannel&gt;`</value>
+  </data>
+  <data name="msgxprestrictionremove_cmd" xml:space="preserve">
+    <value>msgxprestrictionremove msgxprremove</value>
+  </data>
+  <data name="msgxprestrictionremove_desc" xml:space="preserve">
+    <value>Entfernt einen Textkanal von der MessageXP Blacklist</value>
+  </data>
+  <data name="msgxprestrictionremove_usage" xml:space="preserve">
+    <value>`{0}msgxprestrictionremove &lt;textchannel&gt;`</value>
+  </data>
+  <data name="msgxprestrictions_cmd" xml:space="preserve">
+    <value>msgxprestrictions msgxpr</value>
+  </data>
+  <data name="msgxprestrictions_desc" xml:space="preserve">
+    <value>Zeigt alle Textkanäle, die auf der MessageXP Blacklist stehen</value>
+  </data>
+  <data name="msgxprestrictions_usage" xml:space="preserve">
+    <value>`{0}msgxprestrictions`</value>
+  </data>
 </root>

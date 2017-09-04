@@ -266,6 +266,43 @@ namespace NadekoBot.Modules.Level
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task RoleLevelBindings([Remainder]int count = 20) => await RoleLevelBindings(count, 1);
+        public async Task RoleLevelBindings([Remainder]int count = 20) 
+            => await RoleLevelBindings(count, 1);
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task MsgXpRestrictionAdd(ITextChannel channel) {
+            using (var uow = _db.UnitOfWork) {
+                var success = await uow.MessageXpBlacklist.CreateRestrictionAsync(channel);
+                if (success)
+                    await Context.Channel.SendConfirmAsync($"Nachrichten in Kanal {channel.Mention} geben nun keine XP mehr.");
+                else
+                    await Context.Channel.SendErrorAsync($"In Kanal {channel.Mention} gibt es schon keine XP mehr auf Nachrichten.");
+            }
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task MsgXpRestrictionRemove(ITextChannel channel) {
+            using (var uow = _db.UnitOfWork) {
+                var success = await uow.MessageXpBlacklist.RemoveRestrictionAsync(channel);
+                if (success)
+                    await Context.Channel.SendConfirmAsync($"Nachrichten in Channel {channel.Mention} geben nun wieder XP.");
+                else
+                    await Context.Channel.SendErrorAsync($"In Channel {channel.Mention} gibt es schon XP auf Nachrichten.");
+            }
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task MsgXpRestrictions() {
+            using (var uow = _db.UnitOfWork) {
+                if (!uow.MessageXpBlacklist.GetAll().Any()) await Context.Channel.SendErrorAsync("Es gibt keine Kanäle, in denen es keine XP auf Nachrichten gibt.");
+                else
+                    await Context.Channel.SendConfirmAsync("Kanäle ohne Nachrichten-XP", uow.MessageXpBlacklist.GetAll().OrderByDescending(m => m.ChannelId).Aggregate("", (s, m) => $"{s}<#{m.ChannelId}>, ", s => s.Substring(0, s.Length - 2)));
+            }
+        }
     }
 }
