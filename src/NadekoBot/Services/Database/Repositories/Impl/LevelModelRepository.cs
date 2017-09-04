@@ -92,7 +92,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
 
         public void SetXp(ulong userId, int xp, bool calculateLevel = true)
         {
-            GetOrCreate(userId).TotalXP = xp;
+            GetOrCreate(userId).TotalXP = xp < 0 ? 0 : xp;
             if (calculateLevel) CalculateLevel(userId);
         }
     }
