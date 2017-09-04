@@ -48,6 +48,7 @@ namespace NadekoBot.Services.Database
         public DbSet<LevelModel> LevelModel { get; set; }
         public DbSet<RoleMoney> RoleMoney { get; set; }
         public DbSet<RoleLevelBinding> RoleLevelBinding { get; set; }
+        public DbSet<MessageXpRestriction> MessageXpRestrictions { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -154,13 +155,18 @@ namespace NadekoBot.Services.Database
             #endregion
 
             #region DailyMoney
+
             modelBuilder.Entity<DailyMoney>().HasIndex(c => c.UserId).IsUnique();
             modelBuilder.Entity<RoleMoney>().HasIndex(c => c.RoleId).IsUnique();
+
             #endregion
 
             #region LevelModule
+
             modelBuilder.Entity<LevelModel>().HasIndex(c => c.UserId).IsUnique();
             modelBuilder.Entity<RoleLevelBinding>().HasIndex(c => c.RoleId).IsUnique();
+            modelBuilder.Entity<MessageXpRestriction>().HasIndex(c => new {c.GuildId, c.ChannelId}).IsUnique();
+
             #endregion
 
             #region GuildConfig

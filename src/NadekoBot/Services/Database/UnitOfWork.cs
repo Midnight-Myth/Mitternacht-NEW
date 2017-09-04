@@ -69,6 +69,9 @@ namespace NadekoBot.Services.Database
         private IRoleLevelBindingRepository _rolelevelbinding;
         public IRoleLevelBindingRepository RoleLevelBinding => _rolelevelbinding ?? (_rolelevelbinding = new RoleLevelBindingRepository(_context));
 
+        private IMessageXpBlacklist _messagexpblacklist;
+        public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ?? (_messagexpblacklist = new MessageXpBlacklist(_context));
+
         public UnitOfWork(NadekoContext context)
         {
             _context = context;
