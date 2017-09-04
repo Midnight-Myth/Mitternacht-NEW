@@ -41,7 +41,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             => (int)(5 * Math.Pow(previous, 2) + 50 * previous + 100);
 
         public static int GetXpForLevel(int level)
-            => level <= 0 ? 0 : (int) (10 / 6d * Math.Pow(level, 3) + 165 / 6d * Math.Pow(level, 2) + 755 / 6d * level);
+            => level <= 0 ? 0 : (level == 1 ? 100 : (int) (10 / 6d * Math.Pow(level - 1, 3) + 165 / 6d * Math.Pow(level - 1, 2) + 755 / 6d * (level - 1)));
 
         public bool TryAddLevel(ulong userId, int level, bool calculateLevel = true)
         {
@@ -55,7 +55,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             var lm = GetOrCreate(userId);
 
             var oldLevel = lm.Level;
-            var lvl = 0;
+            var lvl = 1;
 
             while (lm.TotalXP >= GetXpForLevel(lvl)) {
                 lvl++;
