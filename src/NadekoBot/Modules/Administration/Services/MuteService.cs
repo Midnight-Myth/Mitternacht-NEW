@@ -267,6 +267,15 @@ namespace NadekoBot.Modules.Administration.Services
             }
         }
 
+        public DateTime? GetMuteTime(ulong guildId, ulong userId) {
+            using (var uow = _db.UnitOfWork) {
+                return uow.GuildConfigs.For(guildId, set => set.Include(x => x.UnmuteTimers)).UnmuteTimers.FirstOrDefault(ut => ut.UserId == userId)?.UnmuteAt;
+            }
+        }
+
+        public DateTime? GetMuteTime(IGuildUser user) 
+            => GetMuteTime(user.GuildId, user.Id);
+
         private void RemoveUnmuteTimerFromDb(ulong guildId, ulong userId)
         {
             using (var uow = _db.UnitOfWork)

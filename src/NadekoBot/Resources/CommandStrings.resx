@@ -3717,4 +3717,13 @@
   <data name="setxp_usage" xml:space="preserve">
     <value>`{0}setxp &lt;xp&gt; [user]`</value>
   </data>
+  <data name="mutetime_cmd" xml:space="preserve">
+    <value>mutetime</value>
+  </data>
+  <data name="mutetime_desc" xml:space="preserve">
+    <value>Zeigt die Zeit an, die ein User noch gemutet ist.</value>
+  </data>
+  <data name="mutetime_usage" xml:space="preserve">
+    <value>`{0}mutetime &lt;user&gt;`</value>
+  </data>
 </root>

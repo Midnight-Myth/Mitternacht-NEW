@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using NadekoBot.Common.Attributes;
 using NadekoBot.Modules.Administration.Services;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using NadekoBot.Extensions;
 
 namespace NadekoBot.Modules.Administration
 {
@@ -73,8 +75,8 @@ namespace NadekoBot.Modules.Administration
             [Priority(1)]
             public async Task Mute(string time, IGuildUser user)
             {
-                string argTime = time;
-                int days = 0, hours = 0, minutes = 0;
+                var argTime = time;
+                int days, hours, minutes;
                 string sdays = "0", shours = "0", sminutes = "0";
 
 
@@ -92,14 +94,13 @@ namespace NadekoBot.Modules.Administration
                 if (argTime.Contains('m'))
                 {
                     sminutes = argTime.Split('m')[0];
-                    argTime = argTime.Split('m')[1];
                 }
 
                 days = Convert.ToInt32(sdays);
                 hours = Convert.ToInt32(shours);
                 minutes = Convert.ToInt32(sminutes);
 
-                int muteTime = (days * 24 * 60) + (hours * 60) + minutes;
+                var muteTime = days * 24 * 60 + hours * 60 + minutes;
                 try
                 {
                     await _service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
@@ -110,6 +111,17 @@ namespace NadekoBot.Modules.Administration
                     _log.Warn(ex);
                     await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
                 }
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
+            [RequireUserPermission(GuildPermission.MuteMembers)]
+            public async Task MuteTime(IGuildUser user) {
+                if (user == null) return;
+                var muteTime = _service.GetMuteTime(user);
+                if (muteTime == null) await Context.Channel.SendErrorAsync($"User {user.Nickname} ist nicht gemutet.");
+                else await Context.Channel.SendConfirmAsync($"User {user.Nickname} ist noch {muteTime} gemutet.");
             }
 
             [NadekoCommand, Usage, Description, Aliases]
