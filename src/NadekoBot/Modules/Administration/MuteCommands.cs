@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using NadekoBot.Common.Attributes;
 using NadekoBot.Modules.Administration.Services;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using NadekoBot.Extensions;
 
 namespace NadekoBot.Modules.Administration
@@ -117,12 +116,19 @@ namespace NadekoBot.Modules.Administration
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
+            [Priority(1)]
             public async Task MuteTime(IGuildUser user) {
                 if (user == null) return;
                 var muteTime = _service.GetMuteTime(user);
-                if (muteTime == null) await Context.Channel.SendErrorAsync($"User {user.Nickname} ist nicht gemutet.");
-                else await Context.Channel.SendConfirmAsync($"User {user.Nickname} ist noch {muteTime} gemutet.");
+                if (muteTime == null || muteTime.Value < DateTime.UtcNow) await Context.Channel.SendErrorAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist nicht gemutet.");
+                else await Context.Channel.SendConfirmAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist noch {muteTime.Value - DateTime.UtcNow} gemutet.");
             }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [Priority(0)]
+            public async Task MuteTime()
+                => await MuteTime(Context.User as IGuildUser);
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
