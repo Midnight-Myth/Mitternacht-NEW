@@ -87,6 +87,9 @@ namespace NadekoBot.Services.Database.Models
         public StreamRoleSettings StreamRole { get; set; }
 
         //public List<ProtectionIgnoredChannel> ProtectionIgnoredChannels { get; set; } = new List<ProtectionIgnoredChannel>();
+
+        //support channel
+        public ulong? SupportChannelId { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity

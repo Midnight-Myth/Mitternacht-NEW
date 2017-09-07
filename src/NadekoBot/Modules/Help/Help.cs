@@ -13,7 +13,7 @@ using NadekoBot.Modules.Permissions.Services;
 
 namespace NadekoBot.Modules.Help
 {
-    public class Help : NadekoTopLevelModule<HelpService>
+    public partial class Help : NadekoTopLevelModule<HelpService>
     {
         public const string PatreonUrl = "https://patreon.com/plauderkonfi";
         public const string PaypalUrl = "-- Not available --";
