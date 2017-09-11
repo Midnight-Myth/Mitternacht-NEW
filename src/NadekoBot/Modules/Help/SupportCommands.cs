@@ -30,7 +30,7 @@ namespace NadekoBot.Modules.Help
                     await Context.Channel.SendErrorAsync("Der gespeicherte Supportkanal existiert nicht. Bitte melde das einem Botowner!");
                     return;
                 }
-                
+                var msg = await supportChannel.SendMessageAsync("");
             }
 
             [NadekoCommand, Usage, Description, Aliases]
