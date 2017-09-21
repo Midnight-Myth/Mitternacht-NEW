@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Design;
 using NadekoBot.Extensions;
 using NadekoBot.Services.Database.Models;
 
 namespace NadekoBot.Services.Database
 {
 
-    public class NadekoContextFactory : IDbContextFactory<NadekoContext>
+    public class NadekoContextFactory : IDesignTimeDbContextFactory<NadekoContext>
     {
         /// <summary>
         /// :\ Used for migrations
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        public NadekoContext Create(DbContextFactoryOptions options)
-        {
+        public NadekoContext CreateDbContext(string[] args) {
             var optionsBuilder = new DbContextOptionsBuilder();
             optionsBuilder.UseSqlite("Filename=./data/NadekoBot.db");
             var ctx = new NadekoContext(optionsBuilder.Options);
