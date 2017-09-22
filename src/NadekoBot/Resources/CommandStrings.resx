@@ -3574,7 +3574,7 @@
     <value>`{0}rank [user]`</value>
   </data>
   <data name="turntoxp_cmd" xml:space="preserve">
-    <value>turntoxp turntoexp</value>
+    <value>turntoxp turntoexp ttxp</value>
   </data>
   <data name="turntoxp_desc" xml:space="preserve">
     <value>Tauscht Geld in XP um. Umtauschrate 1 zu 5.</value>
