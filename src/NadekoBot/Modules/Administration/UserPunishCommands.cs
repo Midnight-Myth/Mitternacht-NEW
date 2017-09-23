@@ -19,7 +19,7 @@ namespace NadekoBot.Modules.Administration
         {
             private readonly DbService _db;
 
-            public UserPunishCommands(DbService db, MuteService muteService)
+            public UserPunishCommands(DbService db)
             {
                 _db = db;
             }
@@ -52,68 +52,47 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.KickMembers)]
-            [Priority(2)]
-            public Task Warnlog(int page, IGuildUser user)
-                => Warnlog(page, user.Id);
-
-            [NadekoCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [Priority(3)]
-            public Task Warnlog(IGuildUser user)
-                => Context.User.Id == user.Id || ((IGuildUser)Context.User).GuildPermissions.KickMembers ? Warnlog(user.Id) : Task.CompletedTask;
-
-            [NadekoCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.KickMembers)]
             [Priority(0)]
-            public Task Warnlog(int page, ulong userId)
-                => InternalWarnlog(userId, page - 1);
+            public async Task Warnlog(int page, [Remainder]IGuildUser user = null)
+                => await (user == null ? InternalWarnlog(Context.User.Id, page - 1) : (Context.User.Id == user.Id || ((IGuildUser)Context.User).GuildPermissions.KickMembers ? InternalWarnlog(user.Id, page - 1) : Task.CompletedTask));
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.KickMembers)]
             [Priority(1)]
-            public Task Warnlog(ulong userId)
-                => InternalWarnlog(userId, 0);
+            public async Task Warnlog([Remainder] IGuildUser user = null)
+                => await Warnlog(1, user);
 
             private async Task InternalWarnlog(ulong userId, int page)
             {
                 if (page < 0)
                     return;
-                Warning[] warnings;
+
+                const int warnsPerPage = 9;
+                Warning[] allWarnings;
                 using (var uow = _db.UnitOfWork)
                 {
-                    warnings = uow.Warnings.For(Context.Guild.Id, userId);
+                    allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
                 }
 
-                warnings = warnings.Skip(page * 9)
-                    .Take(9)
-                    .ToArray();
+                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, p => {
+                    var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
+                    var embed = new EmbedBuilder().WithOkColor()
+                        .WithTitle(GetText("warnlog_for", (Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString()));
 
-                var embed = new EmbedBuilder().WithOkColor()
-                    .WithTitle(GetText("warnlog_for", (Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString()))
-                    .WithFooter(efb => efb.WithText(GetText("page", page  + 1)));
+                    if (!warnings.Any())
+                        embed.WithDescription(GetText("warnings_none"));
+                    else
+                        foreach (var w in warnings) {
+                            var name = GetText("warned_on_by", w.DateAdded?.ToString("dd.MM.yyy"), w.DateAdded?.ToString("HH:mm"), w.Moderator);
+                            if (w.Forgiven)
+                                name = Format.Strikethrough(name) + " " + GetText("warn_cleared_by", w.ForgivenBy);
+                            embed.AddField(x => x
+                                .WithName(name)
+                                .WithValue(w.Reason));
+                        }
 
-                if (!warnings.Any())
-                {
-                    embed.WithDescription(GetText("warnings_none"));
-                }
-                else
-                {
-                    foreach (var w in warnings)
-                    {
-                        var name = GetText("warned_on_by", w.DateAdded.Value.ToString("dd.MM.yyy"), w.DateAdded.Value.ToString("HH:mm"), w.Moderator);
-                        if (w.Forgiven)
-                            name = Format.Strikethrough(name) + " " + GetText("warn_cleared_by", w.ForgivenBy);
-
-                        embed.AddField(x => x
-                            .WithName(name)
-                            .WithValue(w.Reason));
-                    }
-                }
-
-                await Context.Channel.EmbedAsync(embed);
+                    return embed;
+                }, allWarnings.Length / 9);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -121,15 +100,15 @@ namespace NadekoBot.Modules.Administration
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task WarnlogAll(int page = 1)
             {
-                if (--page < 0)
-                    return;
+                if (--page < 0) return;
+
                 IGrouping<ulong, Warning>[] warnings;
                 using (var uow = _db.UnitOfWork)
                 {
                     warnings = uow.Warnings.GetForGuild(Context.Guild.Id).GroupBy(x => x.UserId).ToArray();
                 }
 
-                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, async (curPage) =>
+                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, async curPage =>
                 {
                     var ws = await Task.WhenAll(warnings.Skip(curPage * 15)
                         .Take(15)
@@ -236,18 +215,8 @@ namespace NadekoBot.Modules.Administration
                         .ToArray();
                 }
 
-                string list;
-                if (ps.Any())
-                {
-                    list = string.Join("\n", ps.Select(x => $"{x.Count} -> {x.Punishment}"));
-                }
-                else
-                {
-                    list = GetText("warnpl_none");
-                }
-                await Context.Channel.SendConfirmAsync(
-                    GetText("warn_punish_list"),
-                    list).ConfigureAwait(false);
+                var list = ps.Any() ? string.Join("\n", ps.Select(x => $"{x.Count} -> {x.Punishment}")) : GetText("warnpl_none");
+                await Context.Channel.SendConfirmAsync(GetText("warn_punish_list"), list).ConfigureAwait(false);
             }
 
             [NadekoCommand, Usage, Description, Aliases]

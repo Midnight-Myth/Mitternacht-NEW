@@ -53,6 +53,8 @@ namespace NadekoBot.Modules.Utility
             private void Expr_EvaluateFunction(string name, FunctionArgs args)
             {
                 name = name.ToLowerInvariant();
+                // All methods have to in CustomNCalcEvaluations and be like:
+                // public static object calcfunctionname(ICommandContext context, DbService db, FunctionArgs args){ ... }
                 var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
                     where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) && 
                           m.GetParameters().Length == 3 &&
@@ -78,25 +80,29 @@ namespace NadekoBot.Modules.Utility
                         "Equals",
                         "GetHashCode",
                         "GetType"
-                    });
-                var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
+                    }).ToArray();
+                var functions = (from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
                     where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
                           m.GetParameters().Length == 3 &&
                           m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
                           m.GetParameters()[1].ParameterType == typeof(DbService) &&
                           m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
-                    select m.Name;
-                await Context.Channel.SendConfirmAsync(GetText("calcops", Prefix), string.Join(", ", selection) + "\n" + string.Join(", ", functions));
+                    select m.Name).ToArray();
+                var eb = new EmbedBuilder().WithOkColor()
+                    .WithTitle(GetText("calcops", Prefix));
+                if (selection.Any()) eb.AddField("Math", string.Join(", ", selection));
+                if (functions.Any()) eb.AddField("Custom", string.Join(", ", functions));
+                await Context.Channel.EmbedAsync(eb);
             }
         }
 
         private class CustomNCalcEvaluations
         {
-            public static object Level(ICommandContext context, DbService db, FunctionArgs args)
+            private static object Level(ICommandContext context, DbService db, FunctionArgs args)
             {
-                if(args.Parameters.Length > 0) context.Channel
-                    .SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ParsedExpression.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
-                    .GetAwaiter().GetResult();
+                if (args.Parameters.Length > 0) context.Channel
+                     .SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ParsedExpression.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
+                     .GetAwaiter().GetResult();
                 if (args.Parameters.Length > 1) return null;
                 var user = context.User as IGuildUser;
                 if (args.Parameters.Length == 1)
@@ -110,7 +116,7 @@ namespace NadekoBot.Modules.Utility
                         user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
                     }
                     else {
-                        context.Channel.SendMessageAsync($"usernames: {context.Guild.GetUsersAsync().GetAwaiter().GetResult().Aggregate("", (s,u) => $"{s}{u.Username}+{u.Mention.Substring(1)}+{u.Nickname} | ", s => s.Substring(0, s.Length - 3))}").GetAwaiter().GetResult();
+                        context.Channel.SendMessageAsync($"usernames: {context.Guild.GetUsersAsync().GetAwaiter().GetResult().Aggregate("", (s, u) => $"{s}{u.Username}+{u.Mention.Substring(1)}+{u.Nickname} | ", s => s.Substring(0, s.Length - 3))}").GetAwaiter().GetResult();
                         user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
                             .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
                     }
