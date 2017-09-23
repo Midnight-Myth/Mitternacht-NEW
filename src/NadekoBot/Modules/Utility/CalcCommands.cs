@@ -80,18 +80,19 @@ namespace NadekoBot.Modules.Utility
                         "Equals",
                         "GetHashCode",
                         "GetType"
-                    });
-                var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
+                    }).ToArray();
+                var functions = (from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
                     where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
                           m.GetParameters().Length == 3 &&
                           m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
                           m.GetParameters()[1].ParameterType == typeof(DbService) &&
                           m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
-                    select m.Name;
-                await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                    .WithTitle(GetText("calcops", Prefix))
-                    .AddField("Math", string.Join(", ", selection))
-                    .AddField("Custom", string.Join(", ", functions)));
+                    select m.Name).ToArray();
+                var eb = new EmbedBuilder().WithOkColor()
+                    .WithTitle(GetText("calcops", Prefix));
+                if (selection.Any()) eb.AddField("Math", string.Join(", ", selection));
+                if (functions.Any()) eb.AddField("Custom", string.Join(", ", functions));
+                await Context.Channel.EmbedAsync(eb);
             }
         }
 
