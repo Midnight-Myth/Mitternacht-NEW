@@ -5,19 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
 using NadekoBot.Extensions;
-using System.Reflection;
 using NadekoBot.Services.Impl;
 using System.Net.Http;
-using System.Collections.Concurrent;
-using System.Threading;
-using ImageSharp;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Discord.WebSocket;
 using System.Diagnostics;
 using NadekoBot.Common;
 using NadekoBot.Common.Attributes;
-using Color = Discord.Color;
 using NadekoBot.Services;
 
 namespace NadekoBot.Modules.Utility
@@ -152,35 +147,27 @@ namespace NadekoBot.Modules.Utility
 
             const int rolesPerPage = 20;
 
-            if (page < 1 || page > 100)
-                return;
+            if (--page < 0) return;
 
             if (target != null)
             {
-                var roles = target.GetRoles().Except(new[] { guild.EveryoneRole }).OrderBy(r => -r.Position).Skip((page - 1) * rolesPerPage).Take(rolesPerPage).ToArray();
-                if (!roles.Any())
-                {
+                var roles = target.GetRoles().Except(new[] { guild.EveryoneRole }).OrderBy(r => -r.Position).ToArray();
+                if (!roles.Skip(page * rolesPerPage).Take(rolesPerPage).Any())
                     await ReplyErrorLocalized("no_roles_on_page").ConfigureAwait(false);
-                }
                 else
-                {
-                    
-                    await channel.SendConfirmAsync(GetText("roles_page", page, Format.Bold(target.ToString())), 
-                        "\n• " + string.Join("\n• ", (IEnumerable<IRole>)roles).SanitizeMentions()).ConfigureAwait(false);
-                }
+                    await channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, p => new EmbedBuilder().WithOkColor()
+                        .WithTitle(GetText("roles_page", p + 1, Format.Bold(target.ToString())))
+                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage);
             }
             else
             {
-                var roles = guild.Roles.Except(new[] { guild.EveryoneRole }).OrderBy(r => -r.Position).Skip((page - 1) * rolesPerPage).Take(rolesPerPage).ToArray();
-                if (!roles.Any())
-                {
+                var roles = guild.Roles.Except(new[] { guild.EveryoneRole }).OrderBy(r => -r.Position).ToArray();
+                if (!roles.Skip(page * rolesPerPage).Take(rolesPerPage).Any())
                     await ReplyErrorLocalized("no_roles_on_page").ConfigureAwait(false);
-                }
                 else
-                {
-                    await channel.SendConfirmAsync(GetText("roles_all_page", page),
-                        "\n• " + string.Join("\n• ", (IEnumerable<IRole>)roles).SanitizeMentions()).ConfigureAwait(false);
-                }
+                    await channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, p => new EmbedBuilder().WithOkColor()
+                        .WithTitle(GetText("roles_all_page", p + 1))
+                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage);
             }
         }
 
@@ -221,7 +208,7 @@ namespace NadekoBot.Modules.Utility
             if (--page < 0)
                 return;
             var statuses = _shardCoord.Statuses.ToArray()
-                .Where(x => x != null);
+                .Where(x => x != null).ToArray();
 
             var status = string.Join(", ", statuses
                 .GroupBy(x => x.ConnectionState)
@@ -233,7 +220,7 @@ namespace NadekoBot.Modules.Utility
                 {
                     var timeDiff = DateTime.UtcNow - x.Time;
                     if (timeDiff > TimeSpan.FromSeconds(20))
-                        return $"Shard #{Format.Bold(x.ShardId.ToString())} **UNRESPONSIVE** for {timeDiff.ToString(@"hh\:mm\:ss")}";
+                        return $"Shard #{Format.Bold(x.ShardId.ToString())} **UNRESPONSIVE** for {timeDiff:hh\\:mm\\:ss}";
                     return GetText("shard_stats_txt", x.ShardId.ToString(),
                         Format.Bold(x.ConnectionState.ToString()), Format.Bold(x.Guilds.ToString()), timeDiff.ToString(@"hh\:mm\:ss"));
                         })
