@@ -1,0 +1,4 @@
+[submodule "GommeHDnetForumAPI"]
+	path = GommeHDnetForumAPI
+	url = https://github.com/expeehaa/GommeHDnetForumAPI
+	branch = master
