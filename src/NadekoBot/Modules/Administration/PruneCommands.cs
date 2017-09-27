@@ -18,6 +18,7 @@ namespace NadekoBot.Modules.Administration
             //delets her own messages, no perm required
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(ChannelPermission.ManageMessages)]
             public async Task Prune()
             {
                 var user = await Context.Guild.GetCurrentUserAsync().ConfigureAwait(false);
