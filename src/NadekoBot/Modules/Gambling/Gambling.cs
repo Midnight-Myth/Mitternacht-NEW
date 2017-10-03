@@ -74,8 +74,14 @@ namespace NadekoBot.Modules.Gambling
         [RequireContext(ContextType.Guild)]
         public async Task Give(long amount, [Remainder] IGuildUser receiver)
         {
-            if (amount <= 0 || Context.User.Id == receiver.Id)
+            if (amount <= 0) {
+                await Context.Channel.SendMessageAsync($"Geldbeträge von 0{CurrencySign} oder weniger können nicht verschenkt werden!");
                 return;
+            }
+            if (Context.User.Id == receiver.Id) {
+                await Context.Channel.SendMessageAsync("Geld kann man nicht an sich selbst verschenken!");
+                return;
+            }
             var success = await _currency.RemoveAsync((IGuildUser)Context.User, $"Gift to {receiver.Username} ({receiver.Id}).", amount, false).ConfigureAwait(false);
             if (!success)
             {
@@ -83,8 +89,7 @@ namespace NadekoBot.Modules.Gambling
                 return;
             }
             await _currency.AddAsync(receiver, $"Gift from {Context.User.Username} ({Context.User.Id}).", amount, true).ConfigureAwait(false);
-            await ReplyConfirmLocalized("gifted", amount + CurrencySign, Format.Bold(receiver.ToString()))
-                .ConfigureAwait(false);
+            await ReplyConfirmLocalized("gifted", amount + CurrencySign, Format.Bold(receiver.ToString())).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
