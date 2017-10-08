@@ -29,6 +29,7 @@ namespace NadekoBot.Services.Database
         IRoleMoneyRepository RoleMoney { get; }
         IRoleLevelBindingRepository RoleLevelBinding { get; }
         IMessageXpBlacklist MessageXpBlacklist { get; }
+        IVerificatedUserRepository VerificatedUser { get; }
 
         int Complete();
         Task<int> CompleteAsync();

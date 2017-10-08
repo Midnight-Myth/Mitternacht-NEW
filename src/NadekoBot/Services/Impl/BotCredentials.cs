@@ -40,6 +40,9 @@ namespace NadekoBot.Services.Impl
 
         public string PatreonCampaignId { get; }
 
+        public string ForumUsername { get; }
+        public string ForumPassword { get; }
+
         public BotCredentials()
         {
             _log = LogManager.GetCurrentClassLogger();
@@ -78,16 +81,12 @@ namespace NadekoBot.Services.Impl
                     ShardRunArguments = "run -c Release -- {0} {1} {2}";
                 
                 var portStr = data[nameof(ShardRunPort)];
-                if (string.IsNullOrWhiteSpace(portStr))
-                    ShardRunPort = new NadekoRandom().Next(5000, 6000);
-                else
-                    ShardRunPort = int.Parse(portStr);
+                ShardRunPort = string.IsNullOrWhiteSpace(portStr) ? new NadekoRandom().Next(5000, 6000) : int.Parse(portStr);
 
-                int ts = 1;
-                int.TryParse(data[nameof(TotalShards)], out ts);
+                int.TryParse(data[nameof(TotalShards)], out var ts);
                 TotalShards = ts < 1 ? 1 : ts;
 
-                ulong.TryParse(data[nameof(ClientId)], out ulong clId);
+                ulong.TryParse(data[nameof(ClientId)], out var clId);
                 ClientId = clId;
 
                 //var scId = data[nameof(SoundCloudClientId)];
@@ -97,12 +96,10 @@ namespace NadekoBot.Services.Impl
                 //    : scId;
                 CarbonKey = data[nameof(CarbonKey)];
                 var dbSection = data.GetSection("db");
-                Db = new DBConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) 
-                                ? "sqlite" 
-                                : dbSection["Type"], 
-                            string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) 
-                                ? "Filename=./data/NadekoBot.db"
-                                : dbSection["ConnectionString"]);
+                Db = new DBConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) ? "sqlite" : dbSection["Type"], string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) ? "Filename=./data/NadekoBot.db" : dbSection["ConnectionString"]);
+
+                ForumUsername = data[nameof(ForumUsername)];
+                ForumPassword = data[nameof(ForumPassword)];
             }
             catch (Exception ex)
             {
@@ -133,6 +130,8 @@ namespace NadekoBot.Services.Impl
             public string ShardRunCommand { get; set; } = "";
             public string ShardRunArguments { get; set; } = "";
             public int? ShardRunPort { get; set; } = null;
+            public string ForumUsername { get; set; } = null;
+            public string ForumPassword { get; set; } = null;
         }
 
         private class DbModel

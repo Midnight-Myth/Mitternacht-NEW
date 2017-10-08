@@ -72,6 +72,9 @@ namespace NadekoBot.Services.Database
         private IMessageXpBlacklist _messagexpblacklist;
         public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ?? (_messagexpblacklist = new MessageXpBlacklist(_context));
 
+        private IVerificatedUserRepository _verificateduser;
+        public IVerificatedUserRepository VerificatedUser => _verificateduser ?? (_verificateduser = new VerificatedUserRepository(_context));
+
         public UnitOfWork(NadekoContext context)
         {
             _context = context;

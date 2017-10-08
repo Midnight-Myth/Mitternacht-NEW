@@ -90,6 +90,8 @@ namespace NadekoBot.Services.Database.Models
 
         //support channel
         public ulong? SupportChannelId { get; set; } = null;
+        public ulong? VerifiedRoleId { get; set; } = null;
+        public string VerifyString { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity

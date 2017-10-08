@@ -25,10 +25,9 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             };
 
         public IEnumerable<GuildConfig> GetAllGuildConfigs(List<long> availableGuilds) =>
-            _set
-                .Where(gc => availableGuilds.Contains((long)gc.GuildId))
+            _set.Where(gc => availableGuilds.Contains((long)gc.GuildId))
                 .Include(gc => gc.LogSetting)
-                    .ThenInclude(ls => ls.IgnoredChannels)
+                .ThenInclude(ls => ls.IgnoredChannels)
                 .Include(gc => gc.MutedUsers)
                 .Include(gc => gc.CommandAliases)
                 .Include(gc => gc.UnmuteTimers)
@@ -43,7 +42,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
                 .Include(gc => gc.SlowmodeIgnoredRoles)
                 .Include(gc => gc.SlowmodeIgnoredUsers)
                 .Include(gc => gc.AntiSpamSetting)
-                    .ThenInclude(x => x.IgnoredChannels)
+                .ThenInclude(x => x.IgnoredChannels)
                 .Include(gc => gc.FollowedStreams)
                 .Include(gc => gc.StreamRole)
                 .Include(gc => gc.NsfwBlacklistedTags)
@@ -80,21 +79,19 @@ namespace NadekoBot.Services.Database.Repositories.Impl
 
             if (config == null)
             {
-                _set.Add((config = new GuildConfig
+                _set.Add(config = new GuildConfig
                 {
                     GuildId = guildId,
                     Permissions = Permissionv2.GetDefaultPermlist,
                     WarningsInitialized = true,
                     WarnPunishments = DefaultWarnPunishments,
-                }));
+                });
                 _context.SaveChanges();
             }
 
-            if (!config.WarningsInitialized)
-            {
-                config.WarningsInitialized = true;
-                config.WarnPunishments = DefaultWarnPunishments;
-            }
+            if (config.WarningsInitialized) return config;
+            config.WarningsInitialized = true;
+            config.WarnPunishments = DefaultWarnPunishments;
 
             return config;
         }
@@ -107,21 +104,19 @@ namespace NadekoBot.Services.Database.Repositories.Impl
 
             if (config == null)
             {
-                _set.Add((config = new GuildConfig
+                _set.Add(config = new GuildConfig
                 {
                     GuildId = guildId,
                     Permissions = Permissionv2.GetDefaultPermlist,
                     WarningsInitialized = true,
                     WarnPunishments = DefaultWarnPunishments,
-                }));
+                });
                 _context.SaveChanges();
             }
 
-            if (!config.WarningsInitialized)
-            {
-                config.WarningsInitialized = true;
-                config.WarnPunishments = DefaultWarnPunishments;
-            }
+            if (config.WarningsInitialized) return config;
+            config.WarningsInitialized = true;
+            config.WarnPunishments = DefaultWarnPunishments;
             return config;
         }
 
@@ -131,7 +126,7 @@ namespace NadekoBot.Services.Database.Repositories.Impl
                 .Where(gc => gc.RootPermission != null)
                 .Include(gc => gc.RootPermission);
 
-            for (int i = 0; i < 60; i++)
+            for (var i = 0; i < 60; i++)
             {
                 query = query.ThenInclude(gc => gc.Next);
             }
@@ -157,11 +152,11 @@ namespace NadekoBot.Services.Database.Repositories.Impl
 
             if (config == null) // if there is no guildconfig, create new one
             {
-                _set.Add((config = new GuildConfig
+                _set.Add(config = new GuildConfig
                 {
                     GuildId = guildId,
                     Permissions = Permissionv2.GetDefaultPermlist
-                }));
+                });
                 _context.SaveChanges();
             }
             else if (config.Permissions == null || !config.Permissions.Any()) // if no perms, add default ones

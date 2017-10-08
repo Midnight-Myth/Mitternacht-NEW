@@ -47,6 +47,7 @@ namespace NadekoBot.Services.Database
         public DbSet<RoleMoney> RoleMoney { get; set; }
         public DbSet<RoleLevelBinding> RoleLevelBinding { get; set; }
         public DbSet<MessageXpRestriction> MessageXpRestrictions { get; set; }
+        public DbSet<VerificatedUser> VerificatedUsers { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -309,6 +310,10 @@ namespace NadekoBot.Services.Database
             var pr = modelBuilder.Entity<RewardedUser>();
             pr.HasIndex(x => x.UserId)
                 .IsUnique();
+            #endregion
+
+            #region Verification
+            modelBuilder.Entity<VerificatedUser>().HasIndex(vu => new {vu.GuildId, vu.UserId}).IsUnique();
             #endregion
         }
     }
