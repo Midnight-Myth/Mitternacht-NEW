@@ -833,5 +833,8 @@
   "verification_role": "The current role applied after verifying is '{0}'",
   "verification_role_not_found": "The role with ID {0} could not be found!",
   "verification_role_not_set": "No role will be applied after verification.",
-  "verification_role_set_not_null": "The role '{0}' will now be applied after verification."
+  "verification_role_set_not_null": "The role '{0}' will now be applied after verification.",
+  "verification_verifystring": "The current verify string is '{0}'.",
+  "verification_verifystring_new": "The verify string was changed from '{0}' to '{1}'.",
+  "verification_verifystring_void": "The custom verify string is disabled."
 }

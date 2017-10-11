@@ -815,5 +815,8 @@
   "verification_role": "Die Rolle '{0}' wird nach der Verifizierung vergeben.",
   "verification_role_not_found": "Die Rolle mit der Id {0} konnte nicht gefunden werden.",
   "verification_role_not_set": "Nach der Verifizierung wird keine Rolle vergeben.",
-  "verification_role_set_not_null": "The role '{0}' will now be applied after verification."
+  "verification_role_set_not_null": "The role '{0}' will now be applied after verification.",
+  "verification_verifystring": "Der aktuelle Verifizierungsstring ist '{0}'.",
+  "verification_verifystring_new": "Der Verifizierungsstring wurde von '{0}' zu '{1}' geändert.",
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
 }
