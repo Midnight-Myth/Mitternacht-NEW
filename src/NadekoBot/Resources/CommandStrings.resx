@@ -3753,4 +3753,67 @@
   <data name="msgxprestrictions_usage" xml:space="preserve">
     <value>`{0}msgxprestrictions`</value>
   </data>
+  <data name="identityvalidationdmkey_cmd" xml:space="preserve">
+    <value>identityvalidationdmkey</value>
+  </data>
+  <data name="identityvalidationdmkey_desc" xml:space="preserve">
+    <value>Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.</value>
+  </data>
+  <data name="identityvalidationdmkey_usage" xml:space="preserve">
+    <value>`{0}identityvalidation &lt;forumuserid&gt;`</value>
+  </data>
+  <data name="identityvalidationsubmitkey_cmd" xml:space="preserve">
+    <value>identityvalidationsubmitkey</value>
+  </data>
+  <data name="identityvalidationsubmitkey_desc" xml:space="preserve">
+    <value>Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.</value>
+  </data>
+  <data name="identityvalidationsubmitkey_usage" xml:space="preserve">
+    <value>`{0}identityvalidationsubmitkey &lt;forumuserid&gt;`</value>
+  </data>
+  <data name="identityvalidationsubmit_cmd" xml:space="preserve">
+    <value>identityvalidationsubmit</value>
+  </data>
+  <data name="identityvalidationsubmit_desc" xml:space="preserve">
+    <value>Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.</value>
+  </data>
+  <data name="identityvalidationsubmit_usage" xml:space="preserve">
+    <value>`{0}identityvalidationsubmit &lt;key&gt;`</value>
+  </data>
+  <data name="removeforumvalidation_cmd" xml:space="preserve">
+    <value>removeforumvalidation</value>
+  </data>
+  <data name="removeforumvalidation_desc" xml:space="preserve">
+    <value>Entfernt die Verifizierung des Discordnutzers mit der angegebenen Forumaccount-Id.</value>
+  </data>
+  <data name="removeforumvalidation_usage" xml:space="preserve">
+    <value>`{0}removeforumvalidation &lt;forumaccountid&gt;`</value>
+  </data>
+  <data name="removevalidation_cmd" xml:space="preserve">
+    <value>removevalidation</value>
+  </data>
+  <data name="removevalidation_desc" xml:space="preserve">
+    <value>Entfernt die Verifizierung des angegebenen Discordnutzers.</value>
+  </data>
+  <data name="removevalidation_usage" xml:space="preserve">
+    <value>`{0}removevalidation &lt;user&gt;`</value>
+  </data>
+  <data name="verifiedrole_cmd" xml:space="preserve">
+    <value>verifiedrole</value>
+  </data>
+  <data name="verifiedrole_desc" xml:space="preserve">
+    <value>Zeigt oder setzt die Rolle, die bei erfolgreicher Verifizierung vergeben wird.</value>
+  </data>
+  <data name="verifiedrole_usage" xml:space="preserve">
+    <value>`{0}verifiedrole [role]`</value>
+  </data>
+  <data name="verifystring_cmd" xml:space="preserve">
+    <value>verifystring</value>
+  </data>
+  <data name="verifystring_desc" xml:space="preserve">
+    <value>Zeigt oder setzt die Zeichenkette, die bei der Verifizierungskonversation angegeben werden muss.</value>
+  </data>
+  <data name="verifystring_usage" xml:space="preserve">
+    <value>`{0}verifystring [string]`</value>
+  </data>
 </root>
