@@ -8,6 +8,7 @@ using Discord.Commands;
 using NadekoBot.Common.Attributes;
 using NadekoBot.Extensions;
 using NadekoBot.Services;
+using NadekoBot.Services.Database.Repositories.Impl;
 using NCalc;
 
 namespace NadekoBot.Modules.Utility
@@ -32,7 +33,7 @@ namespace NadekoBot.Modules.Utility
                 expr.EvaluateFunction += Expr_EvaluateFunction;
                 var result = expr.Evaluate();
                 if (expr.Error == null)
-                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), expression.Trim() + "\n" + result);
+                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), expression.Replace("*", "\\*").Replace("_", "\\_").Trim() + "\n" + result);
                 else
                     await Context.Channel.SendErrorAsync("⚙ " + GetText("error"), expr.Error);
             }
@@ -53,7 +54,7 @@ namespace NadekoBot.Modules.Utility
             private void Expr_EvaluateFunction(string name, FunctionArgs args)
             {
                 name = name.ToLowerInvariant();
-                // All methods have to in CustomNCalcEvaluations and be like:
+                // All methods have to be in CustomNCalcEvaluations and match the following template:
                 // public static object calcfunctionname(ICommandContext context, DbService db, FunctionArgs args){ ... }
                 var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
                     where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) && 
@@ -112,7 +113,7 @@ namespace NadekoBot.Modules.Utility
                         parameter.Evaluate();
                     var expr = parameter.ParsedExpression.ToString().Trim('[', ']');
                     context.Channel.SendMessageAsync($"expr: \"{expr}\"").GetAwaiter().GetResult();
-                    if (ulong.TryParse(expr, out ulong id)) {
+                    if (ulong.TryParse(expr, out var id)) {
                         user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
                     }
                     else {
@@ -144,7 +145,7 @@ namespace NadekoBot.Modules.Utility
                     if (parameter.ParsedExpression == null)
                         parameter.Evaluate();
                     var expr = parameter.ParsedExpression.ToString();
-                    if (ulong.TryParse(expr, out ulong id)) {
+                    if (ulong.TryParse(expr, out var id)) {
                         user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
                     }
                     else {
@@ -171,7 +172,7 @@ namespace NadekoBot.Modules.Utility
                     if (parameter.ParsedExpression == null)
                         parameter.Evaluate();
                     var expr = parameter.ParsedExpression.ToString();
-                    if (ulong.TryParse(expr, out ulong id)) {
+                    if (ulong.TryParse(expr, out var id)) {
                         user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
                     }
                     else {
@@ -185,6 +186,16 @@ namespace NadekoBot.Modules.Utility
                 using (var uow = db.UnitOfWork) {
                     return uow.LevelModel.GetXp(user.Id);
                 }
+            }
+
+            public static object XpForLvl(ICommandContext context, DbService db, FunctionArgs args) {
+                if (args.Parameters.Length != 1) return null;
+                var parameter = args.Parameters[0];
+                if (parameter.ParsedExpression == null)
+                    parameter.Evaluate();
+                var expr = parameter.ParsedExpression.ToString();
+                if (!int.TryParse(expr, out var lvl)) return null;
+                return LevelModelRepository.GetXpForLevel(lvl);
             }
         }
 
