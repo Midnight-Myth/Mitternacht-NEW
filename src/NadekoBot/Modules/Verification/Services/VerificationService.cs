@@ -11,7 +11,7 @@ namespace NadekoBot.Modules.Verification.Services
     {
         private readonly IBotCredentials _creds;
         private readonly DbService _db;
-        private readonly Logger _log;
+        public readonly Logger Log;
 
         private readonly Random _rnd = new Random();
 
@@ -23,13 +23,13 @@ namespace NadekoBot.Modules.Verification.Services
         public VerificationService(IBotCredentials creds, DbService db) {
             _creds = creds;
             _db = db;
-            _log = LogManager.GetCurrentClassLogger();
+            Log = LogManager.GetCurrentClassLogger();
             InitForumInstance();
         }
 
         public void InitForumInstance() {
             Forum = new Forum(_creds.ForumUsername, _creds.ForumPassword);
-            _log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed, ignoring verification actions")}!");
+            Log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed, ignoring verification actions")}!");
         }
 
         private string GenerateKey() {

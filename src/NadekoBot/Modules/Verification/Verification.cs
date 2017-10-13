@@ -55,10 +55,18 @@ namespace NadekoBot.Modules.Verification
                 return;
             }
             var forumkey = _service.ValidationKeys.FirstOrDefault(vk => vk.KeyScope == VerificationService.KeyScope.Forum && vk.ForumUserId == forumuserid && vk.DiscordUserId == Context.User.Id && vk.GuildId == Context.Guild.Id);
-            if (forumkey == null) return;
+            if (forumkey == null) {
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention}: Es existiert kein Key, der mit diesem Forum- und Discordaccount verknüpft ist!");
+                return;
+            }
             var conversations = await _service.Forum.GetConversations();
-            var con = conversations.FirstOrDefault(ci => ci.Title == "Verifizierung Plauderkonfi" && ci.Author.Id == forumuserid);
-            if (con == null) return;
+            var con = conversations.FirstOrDefault(ci => ci.Title.Equals("Verifizierung Plauderkonfi") && ci.Author.Id == forumuserid);
+            if (con == null) {
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention}: Der angegebene Forumaccount hat keine gültige Konversation erstellt!");
+                return;
+            }
+            _service.Log.Info(con.UrlPath);
+            _service.Log.Info(con);
             await con.DownloadMessagesAsync();
             var messageparts = con.Messages[0].Content.Split('\n');
             if (!(messageparts.Contains(Context.User.Id.ToString()) && messageparts.Contains(forumkey.Key) && (_service.GetVerifyString(Context.Guild.Id) == null || messageparts.Contains(_service.GetVerifyString(Context.Guild.Id))))) return;
