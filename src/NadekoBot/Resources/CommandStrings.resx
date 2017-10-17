@@ -3811,7 +3811,7 @@
     <value>verifystring</value>
   </data>
   <data name="verifystring_desc" xml:space="preserve">
-    <value>Zeigt oder setzt die Zeichenkette, die bei der Verifizierungskonversation angegeben werden muss.</value>
+    <value>Zeigt oder setzt die Zeichenkette, die bei der Verifizierungskonversation als Titel angegeben werden muss.</value>
   </data>
   <data name="verifystring_usage" xml:space="preserve">
     <value>`{0}verifystring [string]`</value>
@@ -3824,6 +3824,15 @@
   </data>
   <data name="howtoverify_usage" xml:space="preserve">
     <value>`{0}howtoverify`</value>
+  </data>
+  <data name="setverifytutorialtext_cmd" xml:space="preserve">
+    <value>setverifytutorialtext</value>
+  </data>
+  <data name="setverifytutorialtext_desc" xml:space="preserve">
+    <value>Setzt den Text, der mit `howtoverify` angezeigt wird.</value>
+  </data>
+  <data name="setverifytutorialtext_usage" xml:space="preserve">
+    <value>`{0}setverifytutorialtext &lt;text&gt;`</value>
   </data>
   <data name="verificationkeys_cmd" xml:space="preserve">
     <value>verificationkeys</value>

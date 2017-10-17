@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
@@ -182,18 +183,16 @@ namespace NadekoBot.Modules.Verification
             if (page < 1) return;
 
             const int keycount = 10;
-            await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
+            await Context.Channel.SendPaginatedMessageAsync(Context.Client as DiscordSocketClient, page - 1, p => {
                 var keys = _service.ValidationKeys.Where(k => k.GuildId == Context.Guild.Id).Skip(p * keycount).Take(keycount);
-                var sb = new StringBuilder($"{"Discorduser",-32} | {"ForumId", -8} | {"Key", -32} | {"Scope", -8}\n---------------------------------|----------|----------------------------------|---------\n");
+                var sb = new StringBuilder($"```Verifizierungsschlüssel\n{"Discorduser",-32} | {"ForumId", -8} | {"Key", -32} | {"Scope", -8}\n---------------------------------|----------|----------------------------------|---------\n");
                 var keystrings = (from key in keys
                     let user = Context.Guild.GetUserAsync(key.DiscordUserId).GetAwaiter().GetResult()
                     let discordname = string.IsNullOrWhiteSpace(user.Nickname) ? string.IsNullOrWhiteSpace(user.Username) ? user.Id.ToString() : user.Username : user.Nickname
                     select $"{discordname,-32} | {key.ForumUserId,-8} | {key.Key,-32} | {key.KeyScope,-8}").ToList();
                 sb.Append(string.Join("\n", keystrings));
-                return new EmbedBuilder()
-                    .WithTitle("Verifizierungsschlüssel")
-                    .WithOkColor()
-                    .WithDescription($"```{sb.ToString()}```");
+                sb.Append("```");
+                return sb.ToString();
             }, _service.ValidationKeys.Count / keycount);
         }
 

@@ -28,12 +28,9 @@ namespace NadekoBot.Extensions
 
         public static Task<IUserMessage> SendConfirmAsync(this IMessageChannel ch, string title, string text, string url = null, string footer = null)
         {
-            var eb = new EmbedBuilder().WithOkColor().WithDescription(text)
-                .WithTitle(title);
-            if (url != null && Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                eb.WithUrl(url);
-            if (!string.IsNullOrWhiteSpace(footer))
-                eb.WithFooter(efb => efb.WithText(footer));
+            var eb = new EmbedBuilder().WithOkColor().WithDescription(text).WithTitle(title);
+            if (url != null && Uri.IsWellFormedUriString(url, UriKind.Absolute)) eb.WithUrl(url);
+            if (!string.IsNullOrWhiteSpace(footer)) eb.WithFooter(efb => efb.WithText(footer));
             return ch.SendMessageAsync("", embed: eb);
         }
 
@@ -43,7 +40,7 @@ namespace NadekoBot.Extensions
         public static Task<IUserMessage> SendTableAsync<T>(this IMessageChannel ch, string seed, IEnumerable<T> items, Func<T, string> howToPrint, int columns = 3)
         {
             var i = 0;
-            return ch.SendMessageAsync($"{seed}```css\n{string.Join("\n", items.GroupBy(item => (i++) / columns).Select(ig => string.Concat(ig.Select(howToPrint))))}```");
+            return ch.SendMessageAsync($"{seed}```css\n{string.Join("\n", items.GroupBy(item => i++ / columns).Select(ig => string.Concat(ig.Select(howToPrint))))}```");
         }
 
         public static Task<IUserMessage> SendTableAsync<T>(this IMessageChannel ch, IEnumerable<T> items, Func<T, string> howToPrint, int columns = 3) =>
@@ -52,11 +49,9 @@ namespace NadekoBot.Extensions
         private static readonly IEmote ArrowLeft = new Emoji("⬅");
         private static readonly IEmote ArrowRight = new Emoji("➡");
 
-        public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? lastPage = null, bool addPaginatedFooter = true) =>
-            channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), lastPage, addPaginatedFooter);
-        /// <summary>
-        /// danny kamisama
-        /// </summary>
+        public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? lastPage = null, bool addPaginatedFooter = true) 
+            => channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), lastPage, addPaginatedFooter);
+
         public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true)
         {
             var embed = await pageFunc(currentPage).ConfigureAwait(false);
@@ -104,6 +99,51 @@ namespace NadekoBot.Extensions
             }
 
             await msg.RemoveAllReactionsAsync().ConfigureAwait(false);
+        }
+
+        public static Task SendPaginatedMessageAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, string> pageFunc, int? lastPage = null, bool addPaginatedFooter = true)
+            => channel.SendPaginatedMessageAsync(client, currentPage, p => Task.FromResult(pageFunc(p)), lastPage, addPaginatedFooter);
+
+        public static async Task SendPaginatedMessageAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<string>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true) {
+            var text = await pageFunc(currentPage);
+
+            if (addPaginatedFooter)
+                text += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
+
+            var msg = await channel.SendMessageAsync(text);
+            if (lastPage == 0) return;
+
+            await msg.AddReactionAsync(ArrowLeft);
+            await msg.AddReactionAsync(ArrowRight);
+
+            await Task.Delay(2000);
+
+            async void ChangePage(SocketReaction r) {
+                try {
+                    if (r.Emote.Name == ArrowLeft.Name) {
+                        if (currentPage == 0) return;
+                        var modtext = await pageFunc(--currentPage);
+                        if (addPaginatedFooter)
+                            modtext += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
+                        await msg.ModifyAsync(mp => mp.Content = modtext);
+                    }
+                    else if (r.Emote.Name == ArrowRight.Name) {
+                        if (lastPage != null && !(lastPage > currentPage)) return;
+                        var modtext = await pageFunc(++currentPage);
+                        if (addPaginatedFooter)
+                            modtext += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
+                        await msg.ModifyAsync(mp => mp.Content = modtext);
+                    }
+                }
+                catch (Exception) {
+                    //who needs exception handling?
+                }
+            }
+
+            using (msg.OnReaction(client, ChangePage, ChangePage)) {
+                await Task.Delay(30000);
+            }
+            await msg.RemoveAllReactionsAsync();
         }
     }
 }

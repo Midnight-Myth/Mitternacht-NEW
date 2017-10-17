@@ -53,12 +53,8 @@ namespace NadekoBot.Extensions
         public static string RealSummary(this CommandInfo cmd, string prefix) => string.Format(cmd.Summary, prefix);
         public static string RealRemarks(this CommandInfo cmd, string prefix) => string.Format(cmd.Remarks, prefix);
 
-        public static EmbedBuilder AddPaginatedFooter(this EmbedBuilder embed, int curPage, int? lastPage)
-        {
-            if (lastPage != null)
-                return embed.WithFooter(efb => efb.WithText($"{curPage + 1} / {lastPage + 1}"));
-            else
-                return embed.WithFooter(efb => efb.WithText(curPage.ToString()));
+        public static EmbedBuilder AddPaginatedFooter(this EmbedBuilder embed, int curPage, int? lastPage) {
+            return lastPage != null ? embed.WithFooter(efb => efb.WithText($"{curPage + 1} / {lastPage + 1}")) : embed.WithFooter(efb => efb.WithText(curPage.ToString()));
         }
 
         public static EmbedBuilder WithOkColor(this EmbedBuilder eb) =>
@@ -73,8 +69,8 @@ namespace NadekoBot.Extensions
                 reactionRemoved = delegate { };
 
             var wrap = new ReactionEventWrapper(client, msg);
-            wrap.OnReactionAdded += (r) => { var _ = Task.Run(() => reactionAdded(r)); };
-            wrap.OnReactionRemoved += (r) => { var _ = Task.Run(() => reactionRemoved(r)); };
+            wrap.OnReactionAdded += r => { var _ = Task.Run(() => reactionAdded(r)); };
+            wrap.OnReactionRemoved += r => { var _ = Task.Run(() => reactionRemoved(r)); };
             return wrap;
         }
 
@@ -127,12 +123,12 @@ namespace NadekoBot.Extensions
         public static double UnixTimestamp(this DateTime dt) => dt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
 
         public static async Task<IEnumerable<IGuildUser>> GetMembersAsync(this IRole role) =>
-            (await role.Guild.GetUsersAsync(CacheMode.CacheOnly)).Where(u => u.RoleIds.Contains(role.Id)) ?? Enumerable.Empty<IGuildUser>();
+            (await role.Guild.GetUsersAsync(CacheMode.CacheOnly)).Where(u => u.RoleIds.Contains(role.Id));
         
         public static string ToJson<T>(this T any, Formatting formatting = Formatting.Indented) =>
             JsonConvert.SerializeObject(any, formatting);
 
-        public static Stream ToStream(this ImageSharp.Image<Rgba32> img)
+        public static Stream ToStream(this Image<Rgba32> img)
         {
             var imageStream = new MemoryStream();
             img.SaveAsPng(imageStream);
@@ -144,7 +140,6 @@ namespace NadekoBot.Extensions
         /// returns an IEnumerable with randomized element order
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> items)
         {
             // Thanks to @Joe4Evr for finding a bug in the old version of the shuffle
@@ -154,15 +149,15 @@ namespace NadekoBot.Extensions
                 var n = list.Count;
                 while (n > 1)
                 {
-                    var box = new byte[(n / Byte.MaxValue) + 1];
+                    var box = new byte[n / byte.MaxValue + 1];
                     int boxSum;
                     do
                     {
                         provider.GetBytes(box);
                         boxSum = box.Sum(b => b);
                     }
-                    while (!(boxSum < n * ((Byte.MaxValue * box.Length) / n)));
-                    var k = (boxSum % n);
+                    while (!(boxSum < n * (byte.MaxValue * box.Length / n)));
+                    var k = boxSum % n;
                     n--;
                     var value = list[k];
                     list[k] = list[n];
@@ -206,10 +201,9 @@ namespace NadekoBot.Extensions
             var canvas = new Image<Rgba32>(imgs.Sum(img => img.Width), imgs.Max(img => img.Height));
 
             var xOffset = 0;
-            for (int i = 0; i < imgs.Length; i++)
-            {
-                canvas.DrawImage(imgs[i], 100, default(Size), new Point(xOffset, 0));
-                xOffset += imgs[i].Bounds.Width;
+            foreach (var t in imgs) {
+                canvas.DrawImage(t, 100, default(Size), new Point(xOffset, 0));
+                xOffset += t.Bounds.Width;
             }
 
             return canvas;
