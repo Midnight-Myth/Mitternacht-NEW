@@ -3816,4 +3816,31 @@
   <data name="verifystring_usage" xml:space="preserve">
     <value>`{0}verifystring [string]`</value>
   </data>
+  <data name="howtoverify_cmd" xml:space="preserve">
+    <value>howtoverify</value>
+  </data>
+  <data name="howtoverify_desc" xml:space="preserve">
+    <value>Zeigt eine Anleitung zur Verifizierung</value>
+  </data>
+  <data name="howtoverify_usage" xml:space="preserve">
+    <value>`{0}howtoverify`</value>
+  </data>
+  <data name="verificationkeys_cmd" xml:space="preserve">
+    <value>verificationkeys</value>
+  </data>
+  <data name="verificationkeys_desc" xml:space="preserve">
+    <value>Zeigt alle zur Zeit aktiven Verifizierungsschlüssel an.</value>
+  </data>
+  <data name="verificationkeys_usage" xml:space="preserve">
+    <value>`{0}verificationkeys [page]`</value>
+  </data>
+  <data name="verifiedusers_cmd" xml:space="preserve">
+    <value>verifiedusers</value>
+  </data>
+  <data name="verifiedusers_desc" xml:space="preserve">
+    <value>Zeigt alle verifizierten Nutzer an.</value>
+  </data>
+  <data name="verifiedusers_usage" xml:space="preserve">
+    <value>`{0}verifiedusers [page]`</value>
+  </data>
 </root>

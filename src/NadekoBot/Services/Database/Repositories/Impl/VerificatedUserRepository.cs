@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using NadekoBot.Services.Database.Models;
 
@@ -52,6 +53,14 @@ namespace NadekoBot.Services.Database.Repositories.Impl
             _set.Remove(vu);
             _context.SaveChanges();
             return true;
+        }
+
+        public IEnumerable<VerificatedUser> GetVerificatedUsers(ulong guildId) {
+            return _set.Where(v => v.GuildId == guildId);
+        }
+
+        public int GetCount(ulong guildId) {
+            return _set.Count(v => v.GuildId == guildId);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using NadekoBot.Common;
 using NadekoBot.Common.Attributes;
 using System;
+using Discord.WebSocket;
 
 namespace NadekoBot.Modules.Gambling
 {
@@ -259,43 +260,32 @@ namespace NadekoBot.Modules.Gambling
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Leaderboard(int page = 1)
         {
-            if (page < 1)
-                return;
+            if (page < 1) return;
 
-            List<Currency> richest;
+            const int elpp = 9;
+            int currcount;
             using (var uow = _db.UnitOfWork)
-            {
-                richest = uow.Currency.GetTopRichest(9, 9 * (page - 1)).ToList();
-            }
+                currcount = uow.Currency.GetAll().Count();
 
-            var embed = new EmbedBuilder()
-                .WithOkColor()
-                .WithTitle(CurrencySign +
-                           " " + GetText("leaderboard"))
-                .WithFooter(efb => efb.WithText(GetText("page", page)));
-
-            if (!richest.Any())
-            {
-                embed.WithDescription(GetText("no_users_found"));
-                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
-                return;
-            }
-
-            for (var i = 0; i < richest.Count; i++)
-            {
-                var x = richest[i];
-                var usr = await Context.Guild.GetUserAsync(x.UserId).ConfigureAwait(false);
-                var usrStr = usr == null 
-                    ? x.UserId.ToString() 
-                    : usr.Username?.TrimTo(20, true);
-
-                var j = i;
-                embed.AddField(efb => efb.WithName("#" + (9 * (page - 1) + j + 1) + " " + usrStr)
-                                         .WithValue(x.Amount.ToString() + " " + CurrencySign)
-                                         .WithIsInline(true));
-            }
-
-            await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+            await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
+                var embed = new EmbedBuilder()
+                    .WithOkColor()
+                    .WithTitle(CurrencySign + " " + GetText("leaderboard"));
+                List<Currency> richest;
+                using (var uow = _db.UnitOfWork)
+                    richest = uow.Currency.GetTopRichest(elpp, elpp * p).ToList();
+                if (!richest.Any()) {
+                    embed.WithDescription(GetText("no_users_found"));
+                }
+                else {
+                    foreach (var c in richest) {
+                        var user = Context.Guild.GetUserAsync(c.UserId).GetAwaiter().GetResult();
+                        var username = user?.Username.TrimTo(20, true) ?? c.UserId.ToString();
+                        embed.AddInlineField($"#{elpp * p + richest.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}");
+                    }
+                }
+                return embed;
+            },currcount/elpp);
         }
     }
 }

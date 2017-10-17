@@ -1,4 +1,5 @@
-﻿using NadekoBot.Services.Database.Models;
+﻿using System.Collections.Generic;
+using NadekoBot.Services.Database.Models;
 
 namespace NadekoBot.Services.Database.Repositories
 {
@@ -11,5 +12,7 @@ namespace NadekoBot.Services.Database.Repositories
         bool IsForumUserIndependentFromDiscordUser(ulong guildId, ulong userId, long forumUserId);
         bool RemoveVerification(ulong guildId, ulong userId);
         bool RemoveVerification(ulong guildId, long forumUserId);
+        IEnumerable<VerificatedUser> GetVerificatedUsers(ulong guildId);
+        int GetCount(ulong guildId);
     }
 }

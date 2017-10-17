@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GommeHDnetForumAPI;
 using NadekoBot.Common.Collections;
 using NadekoBot.Services;
+using NadekoBot.Services.Database.Models;
 using NLog;
 
 namespace NadekoBot.Modules.Verification.Services
@@ -49,6 +51,16 @@ namespace NadekoBot.Modules.Verification.Services
             return key.Key;
         }
 
+        public IEnumerable<VerificatedUser> GetVerifiedUsers(ulong guildId) {
+            using (var uow = _db.UnitOfWork)
+                return uow.VerificatedUser.GetVerificatedUsers(guildId);
+        }
+
+        public int GetVerifiedUserCount(ulong guildId) {
+            using (var uow = _db.UnitOfWork)
+                return uow.VerificatedUser.GetCount(guildId);
+        }
+
         public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId) {
             using (var uow = _db.UnitOfWork) {
                 return uow.VerificatedUser.IsForumUserIndependentFromDiscordUser(guildId, userId, forumUserId);
@@ -83,6 +95,17 @@ namespace NadekoBot.Modules.Verification.Services
         public string GetVerifyString(ulong guildId)
         {
             using (var uow = _db.UnitOfWork) return uow.GuildConfigs.For(guildId, set => set).VerifyString;
+        }
+
+        public string GetVerificationTutorialText(ulong guildId) {
+            using (var uow = _db.UnitOfWork) return uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText;
+        }
+
+        public async Task SetVerificationTutorialText(ulong guildId, string text) {
+            using (var uow = _db.UnitOfWork) {
+                uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText = text;
+                await uow.CompleteAsync();
+            }
         }
 
         public class ValidationKey
