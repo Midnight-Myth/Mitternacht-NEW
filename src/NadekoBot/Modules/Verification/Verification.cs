@@ -107,6 +107,7 @@ namespace NadekoBot.Modules.Verification
                 var roleid = _service.GetVerifiedRoleId(Context.Guild.Id);
                 var role = roleid != null ? Context.Guild.GetRole(roleid.Value) : null;
                 if (role != null && Context.User is IGuildUser guildUser) await guildUser.AddRoleAsync(role);
+                await uow.CompleteAsync();
             }
             _service.ValidationKeys.TryRemove(key);
             var ch = await Context.User.GetOrCreateDMChannelAsync();
