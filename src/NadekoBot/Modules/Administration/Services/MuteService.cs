@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Common.Collections;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public enum MuteType
     {

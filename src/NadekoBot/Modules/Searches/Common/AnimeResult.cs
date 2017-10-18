@@ -1,6 +1,6 @@
-﻿using NadekoBot.Extensions;
+﻿using Mitternacht.Extensions;
 
-namespace NadekoBot.Modules.Searches.Common
+namespace Mitternacht.Modules.Searches.Common
 {
     public class AnimeResult
     {

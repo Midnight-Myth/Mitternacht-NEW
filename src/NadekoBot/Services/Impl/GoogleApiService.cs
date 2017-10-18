@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Google.Apis.YouTube.v3;
-using Google.Apis.Services;
+using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Google.Apis.Customsearch.v1;
+using Google.Apis.Services;
 using Google.Apis.Urlshortener.v1;
 using Google.Apis.Urlshortener.v1.Data;
-using NLog;
-using Google.Apis.Customsearch.v1;
-using System.Net.Http;
-using System.Net;
+using Google.Apis.YouTube.v3;
+using Mitternacht.Extensions;
 using Newtonsoft.Json.Linq;
-using NadekoBot.Extensions;
+using NLog;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class GoogleApiService : IGoogleApiService
     {

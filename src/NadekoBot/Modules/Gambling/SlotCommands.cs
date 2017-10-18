@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Gambling
+namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {

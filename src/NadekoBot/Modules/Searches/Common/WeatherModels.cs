@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Searches.Common
+namespace Mitternacht.Modules.Searches.Common
 {
     public class Coord
     {

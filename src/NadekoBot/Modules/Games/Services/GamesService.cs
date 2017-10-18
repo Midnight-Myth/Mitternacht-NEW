@@ -8,17 +8,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Common;
-using NadekoBot.Common.Collections;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Games.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using Newtonsoft.Json;
 using NLog;
 
-namespace NadekoBot.Modules.Games.Services
+namespace Mitternacht.Modules.Games.Services
 {
     public class GamesService : INService
     {

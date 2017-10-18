@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Common.Collections
+namespace Mitternacht.Common.Collections
 {
     public class IndexedCollection<T> : IList<T> where T : class, IIndexed
     {

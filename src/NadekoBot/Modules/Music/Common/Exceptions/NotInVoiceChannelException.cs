@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.Music.Common.Exceptions
+namespace Mitternacht.Modules.Music.Common.Exceptions
 {
     public class NotInVoiceChannelException : Exception
     {

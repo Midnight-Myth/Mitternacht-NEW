@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.IO;
-using Discord;
-using System.Linq;
-using NLog;
-using Microsoft.Extensions.Configuration;
+﻿using System;
 using System.Collections.Immutable;
-using NadekoBot.Common;
+using System.IO;
+using System.Linq;
+using Discord;
+using Microsoft.Extensions.Configuration;
+using Mitternacht.Common;
+using Newtonsoft.Json;
+using NLog;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class BotCredentials : IBotCredentials
     {
@@ -96,7 +96,7 @@ namespace NadekoBot.Services.Impl
                 //    : scId;
                 CarbonKey = data[nameof(CarbonKey)];
                 var dbSection = data.GetSection("db");
-                Db = new DBConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) ? "sqlite" : dbSection["Type"], string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) ? "Filename=./data/NadekoBot.db" : dbSection["ConnectionString"]);
+                Db = new DBConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) ? "sqlite" : dbSection["Type"], string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) ? "Filename=./data/MitternachtBot.db" : dbSection["ConnectionString"]);
 
                 ForumUsername = data[nameof(ForumUsername)];
                 ForumPassword = data[nameof(ForumPassword)];
@@ -122,7 +122,7 @@ namespace NadekoBot.Services.Impl
             public string SoundCloudClientId { get; set; } = "";
             public string CleverbotApiKey { get; } = "";
             public string CarbonKey { get; set; } = "";
-            public DBConfig Db { get; set; } = new DBConfig("sqlite", "Filename=./data/NadekoBot.db");
+            public DBConfig Db { get; set; } = new DBConfig("sqlite", "Filename=./data/MitternachtBot.db");
             public int TotalShards { get; set; } = 1;
             public string PatreonAccessToken { get; set; } = "";
             public string PatreonCampaignId { get; set; } = "334038";

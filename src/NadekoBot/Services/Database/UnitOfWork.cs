@@ -1,9 +1,9 @@
-﻿using NadekoBot.Services.Database.Repositories;
-using NadekoBot.Services.Database.Repositories.Impl;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Mitternacht.Services.Database.Repositories;
+using Mitternacht.Services.Database.Repositories.Impl;
 
-namespace NadekoBot.Services.Database
+namespace Mitternacht.Services.Database
 {
     public class UnitOfWork : IUnitOfWork
     {

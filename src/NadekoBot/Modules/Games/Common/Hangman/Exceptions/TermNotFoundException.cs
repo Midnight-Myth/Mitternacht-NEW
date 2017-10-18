@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.Games.Common.Hangman.Exceptions
+namespace Mitternacht.Modules.Games.Common.Hangman.Exceptions
 {
     public class TermNotFoundException : Exception
     {

@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord.Commands;
-using NadekoBot.Services;
 using Discord;
-using NadekoBot.Services.Database.Models;
-using System.Collections.Generic;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.TypeReaders;
-using NadekoBot.Common.TypeReaders.Models;
-using NadekoBot.Modules.Permissions.Common;
-using NadekoBot.Modules.Permissions.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Modules.Permissions.Common;
+using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions
+namespace Mitternacht.Modules.Permissions
 {
     public partial class Permissions : NadekoTopLevelModule<PermissionService>
     {

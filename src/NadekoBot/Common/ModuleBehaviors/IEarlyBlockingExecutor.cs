@@ -2,7 +2,7 @@
 using Discord;
 using Discord.WebSocket;
 
-namespace NadekoBot.Common.ModuleBehaviors
+namespace Mitternacht.Common.ModuleBehaviors
 {
     /// <summary>
     /// Implemented by modules which can execute something and prevent further commands from being executed.

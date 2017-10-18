@@ -1,9 +1,9 @@
-﻿using Google.Apis.Customsearch.v1.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Google.Apis.Customsearch.v1.Data;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IGoogleApiService : INService
     {

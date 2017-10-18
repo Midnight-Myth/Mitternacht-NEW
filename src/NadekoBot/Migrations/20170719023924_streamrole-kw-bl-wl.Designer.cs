@@ -1,12 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NadekoBot.Services.Database;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services.Database;
 
-namespace NadekoBot.Migrations
+namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
     [Migration("20170719023924_streamrole-kw-bl-wl")]

@@ -1,17 +1,17 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Gambling.Common.AnimalRacing.Exceptions;
-using NadekoBot.Modules.Gambling.Common.AnimalRacing;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Gambling.Common.AnimalRacing;
+using Mitternacht.Modules.Gambling.Common.AnimalRacing.Exceptions;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Gambling
+namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {

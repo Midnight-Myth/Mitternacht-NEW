@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Games.Services;
-using NadekoBot.Modules.Games.Common.ChatterBot;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Modules.Games.Common.ChatterBot;
+using Mitternacht.Modules.Games.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {

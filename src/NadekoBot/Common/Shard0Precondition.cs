@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace NadekoBot.Common
+namespace Mitternacht.Common
 {
     public class Shard0Precondition : PreconditionAttribute
     {

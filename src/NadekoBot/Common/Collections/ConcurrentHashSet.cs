@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-namespace NadekoBot.Common.Collections
+namespace Mitternacht.Common.Collections
 {
     /// <summary>
     /// Represents a thread-safe hash-based unique collection.

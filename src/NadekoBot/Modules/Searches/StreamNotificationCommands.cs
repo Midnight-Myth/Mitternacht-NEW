@@ -1,16 +1,16 @@
-﻿using Discord.Commands;
-using Discord;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Services;
-using System.Collections.Generic;
-using NadekoBot.Services.Database.Models;
+using Discord;
+using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Searches.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {

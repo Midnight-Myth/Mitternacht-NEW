@@ -5,15 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Common.Replacements;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common.Replacements;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace NadekoBot.Modules.Utility.Services
+namespace Mitternacht.Modules.Utility.Services
 {
     public class RemindService : INService
     {

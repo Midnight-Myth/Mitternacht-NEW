@@ -1,16 +1,16 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.Collections;
-using NadekoBot.Modules.Games.Common.Trivia;
-using NadekoBot.Modules.Permissions.Services;
-using NadekoBot.Common.TypeReaders;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.Collections;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Modules.Games.Common.Trivia;
+using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions
+namespace Mitternacht.Modules.Permissions
 {
     public partial class Permissions
     {

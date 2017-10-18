@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Discord.Commands;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     public class RequireNoBotAttribute : PreconditionAttribute
     {

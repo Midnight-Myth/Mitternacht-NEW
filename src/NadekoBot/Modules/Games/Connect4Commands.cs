@@ -1,15 +1,15 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Games.Common.Connect4;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Common.Connect4;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {

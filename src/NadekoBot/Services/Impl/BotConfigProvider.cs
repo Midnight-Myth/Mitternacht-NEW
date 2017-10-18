@@ -1,9 +1,7 @@
-﻿using System;
-using NadekoBot.Common;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services;
+﻿using Mitternacht.Common;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class BotConfigProvider : IBotConfigProvider
     {

@@ -6,12 +6,12 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using NadekoBot.Common;
-using NadekoBot.Extensions;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
 using Newtonsoft.Json;
 using NLog;
 
-namespace NadekoBot.Modules.Searches.Common
+namespace Mitternacht.Modules.Searches.Common
 {
     public class SearchImageCacher
     {

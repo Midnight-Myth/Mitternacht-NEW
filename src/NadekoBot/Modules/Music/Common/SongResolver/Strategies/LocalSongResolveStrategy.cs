@@ -1,8 +1,8 @@
-﻿using NadekoBot.Services.Database.Models;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Music.Common.SongResolver.Strategies
+namespace Mitternacht.Modules.Music.Common.SongResolver.Strategies
 {
     public class LocalSongResolveStrategy : IResolveStrategy
     {

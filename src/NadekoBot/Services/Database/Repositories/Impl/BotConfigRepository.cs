@@ -1,9 +1,9 @@
-﻿using NadekoBot.Services.Database.Models;
+﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using System;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories.Impl
+namespace Mitternacht.Services.Database.Repositories.Impl
 {
     public class BotConfigRepository : Repository<BotConfig>, IBotConfigRepository
     {

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Impl;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace NadekoBot.Modules.Games.Common.Trivia
+namespace Mitternacht.Modules.Games.Common.Trivia
 {
     public class TriviaGame
     {

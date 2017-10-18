@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IStatsService : INService
     {

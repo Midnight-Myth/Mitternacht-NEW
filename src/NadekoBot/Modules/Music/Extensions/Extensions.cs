@@ -1,10 +1,10 @@
-﻿using NadekoBot.Modules.Music.Common;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Mitternacht.Modules.Music.Common;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 
-namespace NadekoBot.Modules.Music.Extensions
+namespace Mitternacht.Modules.Music.Extensions
 {
     public static class Extensions
     {

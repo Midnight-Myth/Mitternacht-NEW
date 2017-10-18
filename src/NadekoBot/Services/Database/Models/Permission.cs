@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
-    [DebuggerDisplay("{global::NadekoBot.Modules.Permissions.PermissionExtensions.GetCommand(this)}", Target = typeof(Permission))]
+    [DebuggerDisplay("{global::MitternachtBot.Modules.Permissions.PermissionExtensions.GetCommand(this)}", Target = typeof(Permission))]
     public class Permission : DbEntity
     {
         public Permission Previous { get; set; } = null;

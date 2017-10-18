@@ -1,21 +1,21 @@
-﻿using Discord;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using NadekoBot.Modules.Searches.Common;
-using NadekoBot.Modules.Searches.Common.Exceptions;
-using NadekoBot.Services.Impl;
+using Discord;
+using Discord.WebSocket;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Common;
+using Mitternacht.Modules.Searches.Common.Exceptions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Searches.Services
+namespace Mitternacht.Modules.Searches.Services
 {
     public class StreamNotificationService : INService
     {
@@ -165,7 +165,7 @@ namespace NadekoBot.Modules.Searches.Services
                                           .AddField(efb => efb.WithName(GetText(fs, "platform"))
                                                             .WithValue(fs.Type.ToString())
                                                             .WithIsInline(true))
-                                          .WithColor(status.IsLive ? NadekoBot.OkColor : NadekoBot.ErrorColor);
+                                          .WithColor(status.IsLive ? Mitternacht.MitternachtBot.OkColor : Mitternacht.MitternachtBot.ErrorColor);
 
             return embed;
         }

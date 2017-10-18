@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class UserPunishService : INService
     {

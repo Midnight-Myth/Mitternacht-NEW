@@ -1,22 +1,22 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
-using NLog;
-using System.IO;
-using System.Collections.Generic;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common;
-using NadekoBot.Services.Impl;
-using NadekoBot.Services;
-using NadekoBot.Modules.Music.Common;
-using NadekoBot.Modules.Music.Common.Exceptions;
-using NadekoBot.Modules.Music.Common.SongResolver;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Music.Common;
+using Mitternacht.Modules.Music.Common.Exceptions;
+using Mitternacht.Modules.Music.Common.SongResolver;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot.Modules.Music.Services
+namespace Mitternacht.Modules.Music.Services
 {
     public class MusicService : INService
     {

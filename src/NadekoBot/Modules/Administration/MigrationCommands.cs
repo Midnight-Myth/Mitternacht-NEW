@@ -1,21 +1,21 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using Newtonsoft.Json;
-using System.Collections.Concurrent;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database;
 using Microsoft.Data.Sqlite;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.Collections;
-using NadekoBot.Modules.Administration.Common.Migration;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Common.Migration;
+using Mitternacht.Services;
+using Mitternacht.Services.Database;
+using Mitternacht.Services.Database.Models;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {

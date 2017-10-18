@@ -1,20 +1,20 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Discord.WebSocket;
-using System.Threading;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.Collections;
-using NLog;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using NLog;
 
-namespace NadekoBot.Modules.Gambling
+namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {

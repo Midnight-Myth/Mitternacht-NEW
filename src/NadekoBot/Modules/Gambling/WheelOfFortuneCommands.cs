@@ -1,13 +1,12 @@
-﻿using Discord;
+﻿using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Gambling.Common.WheelOfFortune;
-using NadekoBot.Services;
-using System.Threading.Tasks;
-using Wof = NadekoBot.Modules.Gambling.Common.WheelOfFortune.WheelOfFortune;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Wof = Mitternacht.Modules.Gambling.Common.WheelOfFortune.WheelOfFortune;
 
-namespace NadekoBot.Modules.Gambling
+namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {
@@ -39,7 +38,7 @@ namespace NadekoBot.Modules.Gambling
                     return;
                 }
 
-                var wof = new WheelOfFortune();
+                var wof = new Wof();
 
                 var amount = (int)(bet * wof.Multiplier);
 

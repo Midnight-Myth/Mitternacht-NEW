@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Help.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Help.Services;
 
-namespace NadekoBot.Modules.Help
+namespace Mitternacht.Modules.Help
 {
     public partial class Help
     {

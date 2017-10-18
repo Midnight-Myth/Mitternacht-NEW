@@ -1,19 +1,19 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Level.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Database.Repositories.Impl;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Level.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Database.Repositories.Impl;
 
-namespace NadekoBot.Modules.Level
+namespace Mitternacht.Modules.Level
 {
     public class Level : NadekoTopLevelModule<LevelService>
     {

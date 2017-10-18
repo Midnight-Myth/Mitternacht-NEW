@@ -1,12 +1,12 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {

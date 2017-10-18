@@ -1,19 +1,19 @@
-using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using Image = ImageSharp.Image;
+using Discord;
+using Discord.Commands;
 using ImageSharp;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Image = ImageSharp.Image;
 
-namespace NadekoBot.Modules.Gambling
+namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {

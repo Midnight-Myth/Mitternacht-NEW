@@ -1,11 +1,11 @@
-﻿using Discord;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Discord;
 
-namespace NadekoBot.Extensions
+namespace Mitternacht.Extensions
 {
-    public static class IUserExtensions
+    public static class UserExtensions
     {
         public static async Task<IUserMessage> SendConfirmAsync(this IUser user, string text)
              => await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync("", embed: new EmbedBuilder().WithOkColor().WithDescription(text));
@@ -38,6 +38,6 @@ namespace NadekoBot.Extensions
         public static string RealAvatarUrl(this IUser usr) =>
             usr.AvatarId.StartsWith("a_")
                     ? $"{DiscordConfig.CDNUrl}avatars/{usr.Id}/{usr.AvatarId}.gif"
-                    : usr.GetAvatarUrl(ImageFormat.Auto);
+                    : usr.GetAvatarUrl();
     }
 }

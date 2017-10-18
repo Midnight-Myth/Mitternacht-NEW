@@ -8,11 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NadekoBot.Resources {
-    using System;
-    using System.Reflection;
-    
-    
+using System.Reflection;
+
+namespace Mitternacht.Resources {
     /// <summary>
     ///    A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -7305,7 +7303,7 @@ namespace NadekoBot.Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Sets a new avatar image for the NadekoBot. Argument is a direct link to an image..
+        ///    Looks up a localized string similar to Sets a new avatar image for the MitternachtBot. Argument is a direct link to an image..
         /// </summary>
         public static string setavatar_desc {
             get {

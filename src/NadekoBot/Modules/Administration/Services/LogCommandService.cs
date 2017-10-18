@@ -6,15 +6,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Administration.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
-using NadekoBot.Common;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     [NoPublicBot]
     public class LogCommandService : INService

@@ -1,13 +1,13 @@
-﻿using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
 
 // taken from 
 // http://www.codeproject.com/Tips/207582/L-t-Tr-nsl-t-r-Leet-Translator (thanks)
 // because i don't want to waste my time on this cancerous command
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {

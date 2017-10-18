@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Common.Collections;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Collections;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions.Services
+namespace Mitternacht.Modules.Permissions.Services
 {
     public class BlacklistService : IEarlyBlocker, INService
     {

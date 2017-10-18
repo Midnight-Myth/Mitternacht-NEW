@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NadekoBot.Common.Collections
+namespace Mitternacht.Common.Collections
 {
     public static class DisposableReadOnlyListExtensions
     {

@@ -1,7 +1,7 @@
-﻿using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories
+namespace Mitternacht.Services.Database.Repositories
 {
     public interface IUnitConverterRepository : IRepository<ConvertUnit>
     {

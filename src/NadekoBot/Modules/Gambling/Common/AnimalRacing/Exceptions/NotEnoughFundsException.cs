@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.Gambling.Common.AnimalRacing.Exceptions
+namespace Mitternacht.Modules.Gambling.Common.AnimalRacing.Exceptions
 {
     public class NotEnoughFundsException : Exception
     {

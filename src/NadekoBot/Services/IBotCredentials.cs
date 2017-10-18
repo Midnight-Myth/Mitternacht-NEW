@@ -1,7 +1,7 @@
-﻿using Discord;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Discord;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IBotCredentials
     {

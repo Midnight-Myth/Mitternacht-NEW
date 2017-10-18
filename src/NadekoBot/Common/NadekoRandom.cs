@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace NadekoBot.Common
+namespace Mitternacht.Common
 {
     public class NadekoRandom : Random
     {

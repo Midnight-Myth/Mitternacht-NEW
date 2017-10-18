@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Administration.Services;
-using NadekoBot.Modules.Music.Services;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Modules.Music.Services;
 
-namespace NadekoBot.Common.Replacements
+namespace Mitternacht.Common.Replacements
 {
     public class ReplacementBuilder
     {

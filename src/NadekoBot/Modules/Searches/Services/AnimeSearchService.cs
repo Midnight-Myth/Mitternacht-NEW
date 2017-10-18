@@ -1,12 +1,12 @@
-﻿using NadekoBot.Services;
-using Newtonsoft.Json;
-using NLog;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Modules.Searches.Common;
+using Mitternacht.Modules.Searches.Common;
+using Mitternacht.Services;
+using Newtonsoft.Json;
+using NLog;
 
-namespace NadekoBot.Modules.Searches.Services
+namespace Mitternacht.Modules.Searches.Services
 {
     public class AnimeSearchService : INService
     {

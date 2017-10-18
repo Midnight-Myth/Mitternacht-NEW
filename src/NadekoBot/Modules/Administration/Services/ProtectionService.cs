@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Modules.Administration.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Modules.Administration.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class ProtectionService : INService
     {

@@ -1,16 +1,16 @@
-﻿using NadekoBot.Common;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Gambling.Common.AnimalRacing.Exceptions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Gambling.Common.AnimalRacing.Exceptions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Gambling.Common.AnimalRacing
+namespace Mitternacht.Modules.Gambling.Common.AnimalRacing
 {
     public class AnimalRace : IDisposable
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace NadekoBot.Common.Collections
+namespace Mitternacht.Common.Collections
 {
     public class PoopyRingBuffer : IDisposable
     {

@@ -184,7 +184,7 @@
     <value>greetmsg</value>
   </data>
   <data name="greetmsg_desc" xml:space="preserve">
-    <value>Sets a new join announcement message which will be shown in the server's channel. Type `%user%` if you want to mention the new member. Using it with no message will show the current greet message. You can use embed json from &lt;http://nadekobot.me/embedbuilder/&gt; instead of a regular text, if you want the message to be embedded.</value>
+    <value>Sets a new join announcement message which will be shown in the server's channel. Type `%user%` if you want to mention the new member. Using it with no message will show the current greet message. You can use embed json from &lt;http://mitternachtbot.me/embedbuilder/&gt; instead of a regular text, if you want the message to be embedded.</value>
   </data>
   <data name="greetmsg_usage" xml:space="preserve">
     <value>`{0}greetmsg Welcome, %user%.`</value>
@@ -202,7 +202,7 @@
     <value>byemsg</value>
   </data>
   <data name="byemsg_desc" xml:space="preserve">
-    <value>Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from &lt;http://nadekobot.me/embedbuilder/&gt; instead of a regular text, if you want the message to be embedded.</value>
+    <value>Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from &lt;http://mitternachtbot.me/embedbuilder/&gt; instead of a regular text, if you want the message to be embedded.</value>
   </data>
   <data name="byemsg_usage" xml:space="preserve">
     <value>`{0}byemsg %user% has left.`</value>
@@ -427,7 +427,7 @@
     <value>addcustreact acr</value>
   </data>
   <data name="addcustreact_desc" xml:space="preserve">
-    <value>Add a custom reaction with a trigger and a response. Running this command in server requires the Administration permission. Running this command in DM is Bot Owner only and adds a new global custom reaction. Guide here: &lt;http://nadekobot.readthedocs.io/en/latest/Custom%20Reactions/&gt;</value>
+    <value>Add a custom reaction with a trigger and a response. Running this command in server requires the Administration permission. Running this command in DM is Bot Owner only and adds a new global custom reaction. Guide here: &lt;http://mitternachtbot.readthedocs.io/en/latest/Custom%20Reactions/&gt;</value>
   </data>
   <data name="addcustreact_usage" xml:space="preserve">
     <value>`{0}acr "hello" Hi there %user%`</value>
@@ -715,7 +715,7 @@
     <value>setavatar setav</value>
   </data>
   <data name="setavatar_desc" xml:space="preserve">
-    <value>Sets a new avatar image for the NadekoBot. Argument is a direct link to an image.</value>
+    <value>Sets a new avatar image for the MitternachtBot. Argument is a direct link to an image.</value>
   </data>
   <data name="setavatar_usage" xml:space="preserve">
     <value>`{0}setav http://i.imgur.com/xTG3a1I.jpg`</value>
@@ -2284,7 +2284,7 @@
     <value>`{0}greetdmmsg Welcome to the server, %user%`.</value>
   </data>
   <data name="greetdmmsg_desc" xml:space="preserve">
-    <value>Sets a new join announcement message which will be sent to the user who joined. Type `%user%` if you want to mention the new member. Using it with no message will show the current DM greet message. You can use embed json from &lt;http://nadekobot.me/embedbuilder/&gt; instead of a regular text, if you want the message to be embedded.</value>
+    <value>Sets a new join announcement message which will be sent to the user who joined. Type `%user%` if you want to mention the new member. Using it with no message will show the current DM greet message. You can use embed json from &lt;http://mitternachtbot.me/embedbuilder/&gt; instead of a regular text, if you want the message to be embedded.</value>
   </data>
   <data name="cash_desc" xml:space="preserve">
     <value>Check how much currency a person has. (Defaults to yourself)</value>
@@ -2443,7 +2443,7 @@
     <value>setmuterole</value>
   </data>
   <data name="setmuterole_desc" xml:space="preserve">
-    <value>Sets a name of the role which will be assigned to people who should be muted. Default is nadeko-mute.</value>
+    <value>Sets a name of the role which will be assigned to people who should be muted. Default is mitternacht-mute.</value>
   </data>
   <data name="setmuterole_usage" xml:space="preserve">
     <value>`{0}setmuterole Silenced`</value>
@@ -2929,7 +2929,7 @@
     <value>startevent</value>
   </data>
   <data name="startevent_desc" xml:space="preserve">
-    <value>Starts one of the events seen on public nadeko.</value>
+    <value>Starts one of the events seen on public mitternacht.</value>
   </data>
   <data name="startevent_usage" xml:space="preserve">
     <value>`{0}startevent flowerreaction`</value>

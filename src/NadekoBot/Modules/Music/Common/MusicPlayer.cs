@@ -1,18 +1,18 @@
-﻿using Discord;
-using Discord.Audio;
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Audio;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Music.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
-using System.Linq;
-using NadekoBot.Extensions;
-using System.Diagnostics;
-using NadekoBot.Common.Collections;
-using NadekoBot.Modules.Music.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
 
-namespace NadekoBot.Modules.Music.Common
+namespace Mitternacht.Modules.Music.Common
 {
     public enum StreamState
     {

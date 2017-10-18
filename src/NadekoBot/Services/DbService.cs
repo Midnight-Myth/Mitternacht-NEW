@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NadekoBot.Services.Database;
+using Mitternacht.Services.Database;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public class DbService
     {

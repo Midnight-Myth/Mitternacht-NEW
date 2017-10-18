@@ -1,9 +1,9 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using NLog;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class YtdlOperation : IDisposable
     {

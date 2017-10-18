@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using Discord.Commands;
-using NadekoBot.Services.Impl;
+using Mitternacht.Services.Impl;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     public class NadekoCommand : CommandAttribute
     {

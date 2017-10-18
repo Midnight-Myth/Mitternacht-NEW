@@ -1,12 +1,7 @@
-﻿using NadekoBot.Common;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Immutable;
+using Mitternacht.Common;
 
-namespace NadekoBot.Modules.Gambling.Common.WheelOfFortune
+namespace Mitternacht.Modules.Gambling.Common.WheelOfFortune
 {
     public class WheelOfFortune
     {

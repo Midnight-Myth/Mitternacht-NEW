@@ -1,17 +1,17 @@
-﻿using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Linq;
-using Discord;
-using NadekoBot.Services;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using System.Collections.Generic;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Help.Services;
-using NadekoBot.Modules.Permissions.Services;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Help.Services;
+using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Help
+namespace Mitternacht.Modules.Help
 {
     public partial class Help : NadekoTopLevelModule<HelpService>
     {

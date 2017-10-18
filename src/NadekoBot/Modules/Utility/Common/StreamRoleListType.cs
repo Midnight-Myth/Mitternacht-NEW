@@ -1,4 +1,4 @@
-﻿namespace NadekoBot.Modules.Utility.Common
+﻿namespace Mitternacht.Modules.Utility.Common
 {
     public enum StreamRoleListType
     {

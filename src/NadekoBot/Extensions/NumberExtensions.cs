@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Extensions
+namespace Mitternacht.Extensions
 {
     public static class NumberExtensions
     {

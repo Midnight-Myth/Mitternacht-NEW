@@ -1,14 +1,14 @@
 ﻿using System;
-using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Searches.Common;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Common;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {
@@ -66,7 +66,7 @@ namespace NadekoBot.Modules.Searches
                             .AddField(fb => fb.WithName(GetText("compet_rank")).WithValue(compet.OverallStats.comprank?.ToString() ?? "-").WithIsInline(true))
                             .AddField(fb => fb.WithName(GetText("compet_playtime")).WithValue(compet.GameStats.timePlayed + "hrs").WithIsInline(true))
                             .AddField(fb => fb.WithName(GetText("quick_playtime")).WithValue(qp.GameStats.timePlayed.ToString("F1") + "hrs").WithIsInline(true))
-                            .WithColor(NadekoBot.OkColor);
+                            .WithColor(Mitternacht.MitternachtBot.OkColor);
                         await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
                     }
                 }

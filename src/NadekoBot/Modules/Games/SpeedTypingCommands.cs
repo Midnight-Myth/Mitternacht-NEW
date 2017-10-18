@@ -1,17 +1,17 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using Newtonsoft.Json;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Games.Common;
-using NadekoBot.Modules.Games.Services;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Common;
+using Mitternacht.Modules.Games.Services;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {

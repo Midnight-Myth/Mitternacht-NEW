@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace NadekoBot.Common.Replacements
+namespace Mitternacht.Common.Replacements
 {
     public class Replacer
     {

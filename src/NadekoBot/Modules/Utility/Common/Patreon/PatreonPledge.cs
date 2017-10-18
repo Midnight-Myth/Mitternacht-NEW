@@ -1,4 +1,4 @@
-﻿namespace NadekoBot.Modules.Utility.Common.Patreon
+﻿namespace Mitternacht.Modules.Utility.Common.Patreon
 {
     public class Attributes
     {

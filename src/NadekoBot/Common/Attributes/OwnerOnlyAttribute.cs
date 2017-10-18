@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     public class OwnerOnlyAttribute : PreconditionAttribute
     {

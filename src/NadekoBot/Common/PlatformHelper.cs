@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Common
+namespace Mitternacht.Common
 {
     public static class PlatformHelper
     {

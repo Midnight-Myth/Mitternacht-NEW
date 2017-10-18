@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories
+namespace Mitternacht.Services.Database.Repositories
 {
     public interface IVerificatedUserRepository : IRepository<VerificatedUser>
     {

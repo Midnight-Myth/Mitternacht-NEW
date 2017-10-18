@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace NadekoBot.Extensions
+namespace Mitternacht.Extensions
 {
     public static class StringExtensions
     {

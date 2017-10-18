@@ -1,4 +1,4 @@
-﻿namespace NadekoBot.Modules.Games.Common
+﻿namespace Mitternacht.Modules.Games.Common
 {
     public class TypingArticle
     {

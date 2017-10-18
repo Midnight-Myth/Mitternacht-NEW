@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class SoundCloudApiService : INService
     {

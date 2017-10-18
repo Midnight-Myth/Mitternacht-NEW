@@ -1,22 +1,22 @@
-﻿using Discord;
-using Discord.WebSocket;
-using NadekoBot.Services.Database.Models;
-using NLog;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database;
-using NadekoBot.Services;
-using NadekoBot.Modules.CustomReactions.Extensions;
-using NadekoBot.Modules.Permissions.Common;
-using NadekoBot.Modules.Permissions.Services;
-using NadekoBot.Services.Impl;
+using Discord;
+using Discord.WebSocket;
+using Mitternacht.Common;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.CustomReactions.Extensions;
+using Mitternacht.Modules.Permissions.Common;
+using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot.Modules.CustomReactions.Services
+namespace Mitternacht.Modules.CustomReactions.Services
 {
     public class CustomReactionsService : IEarlyBlockingExecutor, INService
     {

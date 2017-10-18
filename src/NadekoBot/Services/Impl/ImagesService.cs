@@ -1,10 +1,10 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using NLog;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class ImagesService : IImagesService
     {

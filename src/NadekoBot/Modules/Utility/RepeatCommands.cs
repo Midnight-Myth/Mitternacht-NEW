@@ -1,21 +1,21 @@
-﻿using Discord;
-using Discord.Commands;
-using Microsoft.EntityFrameworkCore;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.TypeReaders;
-using NadekoBot.Modules.Utility.Common;
-using NadekoBot.Modules.Utility.Services;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Utility.Common;
+using Mitternacht.Modules.Utility.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {

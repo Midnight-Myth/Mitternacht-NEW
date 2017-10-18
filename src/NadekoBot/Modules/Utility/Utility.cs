@@ -1,21 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Text;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Impl;
-using System.Net.Http;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using Discord.WebSocket;
-using System.Diagnostics;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Services;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility : NadekoTopLevelModule
     {
@@ -24,12 +24,12 @@ namespace NadekoBot.Modules.Utility
         private readonly IBotCredentials _creds;
         private readonly ShardsCoordinator _shardCoord;
 
-        public Utility(NadekoBot nadeko, DiscordSocketClient client, IStatsService stats, IBotCredentials creds)
+        public Utility(Mitternacht.MitternachtBot mitternacht, DiscordSocketClient client, IStatsService stats, IBotCredentials creds)
         {
             _client = client;
             _stats = stats;
             _creds = creds;
-            _shardCoord = nadeko.ShardCoord;
+            _shardCoord = mitternacht.ShardCoord;
         }        
 
         [NadekoCommand, Usage, Description, Aliases]

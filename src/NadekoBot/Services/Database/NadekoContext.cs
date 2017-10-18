@@ -2,10 +2,10 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database
+namespace Mitternacht.Services.Database
 {
 
     public class NadekoContextFactory : IDesignTimeDbContextFactory<NadekoContext>
@@ -17,7 +17,7 @@ namespace NadekoBot.Services.Database
         /// <returns></returns>
         public NadekoContext CreateDbContext(string[] args) {
             var optionsBuilder = new DbContextOptionsBuilder();
-            optionsBuilder.UseSqlite("Filename=./data/NadekoBot.db");
+            optionsBuilder.UseSqlite("Filename=./data/MitternachtBot.db");
             var ctx = new NadekoContext(optionsBuilder.Options);
             ctx.Database.SetCommandTimeout(60);
             return ctx;

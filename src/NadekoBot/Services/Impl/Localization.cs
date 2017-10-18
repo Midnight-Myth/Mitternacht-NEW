@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Discord;
+using Mitternacht.Services.Database.Models;
 using NLog;
-using NadekoBot.Services.Database.Models;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class Localization : ILocalization
     {

@@ -7,13 +7,13 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord.WebSocket;
-using NadekoBot.Modules.Utility.Common.Patreon;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Modules.Utility.Common.Patreon;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using Newtonsoft.Json;
 using NLog;
 
-namespace NadekoBot.Modules.Utility.Services
+namespace Mitternacht.Modules.Utility.Services
 {
     public class PatreonRewardsService : INService
     {

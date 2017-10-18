@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common.Collections;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Collections;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class AdministrationService : INService
     {

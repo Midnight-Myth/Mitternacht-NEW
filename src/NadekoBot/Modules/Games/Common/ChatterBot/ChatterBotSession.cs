@@ -1,10 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Extensions;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
 using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Games.Common.ChatterBot
+namespace Mitternacht.Modules.Games.Common.ChatterBot
 {
     public class ChatterBotSession : IChatterBotSession
     {

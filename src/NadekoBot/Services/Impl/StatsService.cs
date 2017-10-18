@@ -1,7 +1,4 @@
-﻿using Discord;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,8 +8,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
+using Mitternacht.Extensions;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class StatsService : IStatsService
     {
@@ -44,11 +44,11 @@ namespace NadekoBot.Services.Impl
         public int GuildCount =>
             _sc?.GuildCount ?? _client.Guilds.Count;
 
-        public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, NadekoBot nadeko)
+        public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, Mitternacht.MitternachtBot mitternacht)
         {
             _client = client;
             _creds = creds;
-            _sc = nadeko.ShardCoord;
+            _sc = mitternacht.ShardCoord;
 
             _started = DateTime.UtcNow;
             _client.MessageReceived += _ => Task.FromResult(Interlocked.Increment(ref _messageCounter));

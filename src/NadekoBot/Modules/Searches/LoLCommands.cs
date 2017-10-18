@@ -1,17 +1,17 @@
-﻿using Discord;
-using NadekoBot.Extensions;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
+using Discord;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Newtonsoft.Json.Linq;
 
 //todo 50 drawing
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {

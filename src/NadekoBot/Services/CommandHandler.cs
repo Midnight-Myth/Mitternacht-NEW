@@ -1,23 +1,23 @@
-﻿using Discord.WebSocket;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
-using NLog;
 using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Collections.Immutable;
-using NadekoBot.Services.Database.Models;
-using System.IO;
 using Discord.Net;
-using NadekoBot.Common;
-using NadekoBot.Common.Collections;
-using NadekoBot.Common.ModuleBehaviors;
+using Discord.WebSocket;
+using Mitternacht.Common;
+using Mitternacht.Common.Collections;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
+using NLog;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public class GuildUserComparer : IEqualityComparer<IGuildUser>
     {
@@ -34,7 +34,7 @@ namespace NadekoBot.Services
         private readonly CommandService _commandService;
         private readonly Logger _log;
         private readonly IBotCredentials _creds;
-        private readonly NadekoBot _bot;
+        private readonly Mitternacht.MitternachtBot _bot;
         private INServiceProvider _services;
         public string DefaultPrefix { get; private set; }
         private ConcurrentDictionary<ulong, string> _prefixes { get; } = new ConcurrentDictionary<ulong, string>();
@@ -51,7 +51,7 @@ namespace NadekoBot.Services
         public ConcurrentHashSet<ulong> UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
         private readonly Timer _clearUsersOnShortCooldown;
 
-        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, CommandService commandService, IBotCredentials credentials, NadekoBot bot)
+        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, CommandService commandService, IBotCredentials credentials, Mitternacht.MitternachtBot bot)
         {
             _client = client;
             _commandService = commandService;

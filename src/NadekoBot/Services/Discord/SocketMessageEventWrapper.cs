@@ -1,9 +1,9 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 
-namespace NadekoBot.Services.Discord
+namespace Mitternacht.Services.Discord
 {
     public class ReactionEventWrapper : IDisposable
     {

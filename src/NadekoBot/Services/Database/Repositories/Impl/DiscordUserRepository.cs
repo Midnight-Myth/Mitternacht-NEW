@@ -1,9 +1,9 @@
-﻿using NadekoBot.Services.Database.Models;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
 using Discord;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories.Impl
+namespace Mitternacht.Services.Database.Repositories.Impl
 {
     public class DiscordUserRepository : Repository<DiscordUser>, IDiscordUserRepository
     {

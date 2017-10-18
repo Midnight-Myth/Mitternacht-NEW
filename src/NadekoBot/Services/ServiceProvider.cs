@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Reflection;
-using System.Linq;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using NLog;
+
 #if GLOBAL_NADEKO
-using NadekoBot.Common;
+using MitternachtBot.Common;
 #endif
 
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface INServiceProvider : IServiceProvider, IEnumerable<object>
     {

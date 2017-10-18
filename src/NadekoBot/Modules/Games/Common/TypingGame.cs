@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Common;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Games.Services;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Services;
 using NLog;
 
-namespace NadekoBot.Modules.Games.Common
+namespace Mitternacht.Modules.Games.Common
 {
     public class TypingGame
     {

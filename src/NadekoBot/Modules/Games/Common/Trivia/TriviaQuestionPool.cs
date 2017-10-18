@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using NadekoBot.Common;
-using NadekoBot.Extensions;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
 using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Games.Common.Trivia
+namespace Mitternacht.Modules.Games.Common.Trivia
 {
     public class TriviaQuestionPool
     {

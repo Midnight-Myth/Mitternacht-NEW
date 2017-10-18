@@ -1,9 +1,9 @@
-﻿using Discord;
+﻿using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
-using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
+using Mitternacht.Common.Attributes;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {

@@ -1,8 +1,8 @@
-﻿using NadekoBot.Modules.Music.Extensions;
-using NadekoBot.Services.Impl;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Mitternacht.Modules.Music.Extensions;
+using Mitternacht.Services.Impl;
 
-namespace NadekoBot.Modules.Music.Common.SongResolver.Strategies
+namespace Mitternacht.Modules.Music.Common.SongResolver.Strategies
 {
     public class SoundcloudResolveStrategy : IResolveStrategy
     {

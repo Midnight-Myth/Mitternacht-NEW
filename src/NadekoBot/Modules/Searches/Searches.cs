@@ -1,28 +1,28 @@
-﻿using Discord;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Net.Http;
-using NadekoBot.Services;
-using System.Threading.Tasks;
-using System.Net;
+﻿using System;
 using System.Collections.Generic;
-using NadekoBot.Extensions;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AngleSharp;
-using AngleSharp.Dom.Html;
 using AngleSharp.Dom;
-using Configuration = AngleSharp.Configuration;
+using AngleSharp.Dom.Html;
+using Discord;
 using Discord.Commands;
 using ImageSharp;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Searches.Common;
-using NadekoBot.Modules.Searches.Services;
-using System.Text.RegularExpressions;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Common;
+using Mitternacht.Modules.Searches.Services;
+using Mitternacht.Services;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Configuration = AngleSharp.Configuration;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches : NadekoTopLevelModule<SearchesService>
     {
@@ -263,7 +263,7 @@ namespace NadekoBot.Modules.Searches
                 return;
             }
 
-            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(NadekoBot.OkColor)
+            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
                                                            .AddField(efb => efb.WithName(GetText("original_url"))
                                                                                .WithValue($"<{arg}>"))
                                                             .AddField(efb => efb.WithName(GetText("short_url"))

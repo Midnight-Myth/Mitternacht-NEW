@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IImagesService : INService
     {

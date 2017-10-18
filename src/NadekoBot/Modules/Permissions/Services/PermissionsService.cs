@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Permissions.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Permissions.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace NadekoBot.Modules.Permissions.Services
+namespace Mitternacht.Modules.Permissions.Services
 {
     public class PermissionService : ILateBlocker, INService
     {
