@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -20,12 +15,11 @@ namespace Mitternacht.Services.Impl
         private readonly IBotCredentials _creds;
         private readonly DateTime _started;
 
-        public const string BotVersion = "1.7.1";
+        public const string BotVersion = "1.8";
 
         public string Author => "Midnight Myth#8888, expeehaa#1239";
-        public string Library => "Discord.Net";
-        public string Heap =>
-            Math.Round((double)GC.GetTotalMemory(false) / 1.MiB(), 2).ToString(CultureInfo.InvariantCulture);
+        public string Library => "Discord.Net, GommeHDnetForumAPI";
+        public string Heap => Math.Round((double)GC.GetTotalMemory(false) / 1.MiB(), 2).ToString(CultureInfo.InvariantCulture);
         public double MessagesPerSecond => MessageCounter / GetUptime().TotalSeconds;
 
         private long _textChannels;
@@ -36,15 +30,12 @@ namespace Mitternacht.Services.Impl
         public long MessageCounter => Interlocked.Read(ref _messageCounter);
         private long _commandsRan;
         public long CommandsRan => Interlocked.Read(ref _commandsRan);
-
-        private readonly Timer _carbonitexTimer;
-        private readonly Timer _dataTimer;
+        
         private readonly ShardsCoordinator _sc;
 
-        public int GuildCount =>
-            _sc?.GuildCount ?? _client.Guilds.Count;
+        public int GuildCount => _sc?.GuildCount ?? _client.Guilds.Count;
 
-        public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, Mitternacht.MitternachtBot mitternacht)
+        public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, MitternachtBot mitternacht)
         {
             _client = client;
             _creds = creds;
@@ -129,67 +120,6 @@ namespace Mitternacht.Services.Impl
 
                 return Task.CompletedTask;
             };
-
-            if (_sc == null) return;
-            _carbonitexTimer = new Timer(async (state) =>
-            {
-                if (string.IsNullOrWhiteSpace(_creds.CarbonKey))
-                    return;
-                try
-                {
-                    using (var http = new HttpClient())
-                    {
-                        using (var content = new FormUrlEncodedContent(
-                            new Dictionary<string, string> {
-                                { "servercount", _sc.GuildCount.ToString() },
-                                { "key", _creds.CarbonKey }}))
-                        {
-                            content.Headers.Clear();
-                            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-                            await http.PostAsync("https://www.carbonitex.net/discord/data/botdata.php", content).ConfigureAwait(false);
-                        }
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
-            }, null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
-
-            var platform = "other";
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                platform = "linux";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                platform = "osx";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                platform = "windows";
-
-            _dataTimer = new Timer(async state =>
-            {
-                try
-                {
-                    using (var http = new HttpClient())
-                    {
-                        using (var content = new FormUrlEncodedContent(
-                            new Dictionary<string, string> {
-                                { "id", string.Concat(MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(_creds.ClientId.ToString())).Select(x => x.ToString("X2"))) },
-                                { "guildCount", _sc.GuildCount.ToString() },
-                                { "version", BotVersion },
-                                { "platform", platform }}))
-                        {
-                            content.Headers.Clear();
-                            content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-                            await http.PostAsync("https://selfstats.nadekobot.me/", content).ConfigureAwait(false);
-                        }
-                    }
-                }
-                catch
-                {
-                    // ignored
-                }
-            }, null, TimeSpan.FromSeconds(1), TimeSpan.FromHours(1));
         }
 
         public void Initialize()
@@ -205,18 +135,18 @@ namespace Mitternacht.Services.Impl
             while ((curUser = _client.CurrentUser) == null) Task.Delay(1000).ConfigureAwait(false);
 
             return Task.FromResult($@"
-Author: [{Author}] | Library: [{Library}]
-Bot Version: [{BotVersion}]
-Bot ID: {curUser.Id}
-Owner ID(s): {string.Join(", ", _creds.OwnerIds)}
-Uptime: {GetUptimeString()}
-Servers: {_client.Guilds.Count} | TextChannels: {TextChannels} | VoiceChannels: {VoiceChannels}
-Commands Ran this session: {CommandsRan}
-Messages: {MessageCounter} [{MessagesPerSecond:F2}/sec] Heap: [{Heap} MB]");
+                Author: [{Author}] | Library: [{Library}]
+                Bot Version: [{BotVersion}]
+                Bot ID: {curUser.Id}
+                Owner ID(s): {string.Join(", ", _creds.OwnerIds)}
+                Uptime: {GetUptimeString()}
+                Servers: {_client.Guilds.Count} | TextChannels: {TextChannels} | VoiceChannels: {VoiceChannels}
+                Commands Ran this session: {CommandsRan}
+                Messages: {MessageCounter} [{MessagesPerSecond:F2}/sec] Heap: [{Heap} MB]");
         }
 
-        public TimeSpan GetUptime() =>
-            DateTime.UtcNow - _started;
+        public TimeSpan GetUptime() 
+            => DateTime.UtcNow - _started;
 
         public string GetUptimeString(string separator = ", ")
         {

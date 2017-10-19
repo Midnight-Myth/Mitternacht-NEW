@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Mitternacht.Common.Replacements
@@ -26,12 +27,7 @@ namespace Mitternacht.Common.Replacements
                     input = input.Replace(item.Key, item.Text());
             }
 
-            foreach (var item in _regex)
-            {
-                input = item.Regex.Replace(input, (m) => item.Replacement(m));
-            }
-
-            return input;
+            return _regex.Aggregate(input, (current, item) => item.Regex.Replace(current, m => item.Replacement(m)));
         }
 
         public void Replace(CREmbed embedData)

@@ -28,7 +28,7 @@ namespace Mitternacht.Common.Collections
 
         public DisposableReadOnlyList(IReadOnlyList<T> arr)
         {
-            this._arr = arr;
+            _arr = arr;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -57,7 +57,7 @@ namespace Mitternacht.Common.Collections
 
         public DisposableReadOnlyList(IReadOnlyList<KeyValuePair<T, U>> arr)
         {
-            this._arr = arr;
+            _arr = arr;
         }
 
         public IEnumerator<KeyValuePair<T, U>> GetEnumerator() =>

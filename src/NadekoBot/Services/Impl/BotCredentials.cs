@@ -12,8 +12,6 @@ namespace Mitternacht.Services.Impl
 {
     public class BotCredentials : IBotCredentials
     {
-        private Logger _log;
-
         public ulong ClientId { get; }
 
         public string GoogleApiKey { get; }
@@ -45,23 +43,22 @@ namespace Mitternacht.Services.Impl
 
         public BotCredentials()
         {
-            _log = LogManager.GetCurrentClassLogger();
+            var log = LogManager.GetCurrentClassLogger();
 
             try { File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new CredentialsModel(), Formatting.Indented)); } catch { }
             if(!File.Exists(_credsFileName))
-                _log.Warn($"credentials.json is missing. Attempting to load creds from environment variables prefixed with 'NadekoBot_'. Example is in {Path.GetFullPath("./credentials_example.json")}");
+                log.Warn($"credentials.json is missing. Attempting to load creds from environment variables prefixed with 'NadekoBot_'. Example is in {Path.GetFullPath("./credentials_example.json")}");
             try
             {
                 var configBuilder = new ConfigurationBuilder();
-                configBuilder.AddJsonFile(_credsFileName, true)
-                    .AddEnvironmentVariables("NadekoBot_");
+                configBuilder.AddJsonFile(_credsFileName, true).AddEnvironmentVariables("NadekoBot_");
 
                 var data = configBuilder.Build();
 
                 Token = data[nameof(Token)];
                 if (string.IsNullOrWhiteSpace(Token))
                 {
-                    _log.Error("Token is missing from credentials.json or Environment varibles. Add it and restart the program.");
+                    log.Error("Token is missing from credentials.json or Environment varibles. Add it and restart the program.");
                     Console.ReadKey();
                     Environment.Exit(3);
                 }
@@ -103,8 +100,8 @@ namespace Mitternacht.Services.Impl
             }
             catch (Exception ex)
             {
-                _log.Fatal(ex.Message);
-                _log.Fatal(ex);
+                log.Fatal(ex.Message);
+                log.Fatal(ex);
                 throw;
             }
             

@@ -32,8 +32,8 @@ namespace Mitternacht.Services
     {
         public DBConfig(string type, string connString)
         {
-            this.Type = type;
-            this.ConnectionString = connString;
+            Type = type;
+            ConnectionString = connString;
         }
         public string Type { get; }
         public string ConnectionString { get; }

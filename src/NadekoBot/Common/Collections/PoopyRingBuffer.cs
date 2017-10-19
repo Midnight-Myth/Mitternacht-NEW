@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 
 namespace Mitternacht.Common.Collections
 {
@@ -11,24 +10,17 @@ namespace Mitternacht.Common.Collections
         private byte[] _buffer;
         public int Capacity { get; }
 
-        private int ReadPos { get; set; } = 0;
-        private int WritePos { get; set; } = 0;
+        private int ReadPos { get; set; }
+        private int WritePos { get; set; }
 
-        public int Length => ReadPos <= WritePos 
-            ? WritePos - ReadPos 
-            : Capacity - (ReadPos - WritePos);
+        public int Length => ReadPos <= WritePos ? WritePos - ReadPos : Capacity - (ReadPos - WritePos);
 
-        public int RemainingCapacity
-        {
-            get => Capacity - Length - 1;
-        }
-
-        private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
+        public int RemainingCapacity => Capacity - Length - 1;
 
         public PoopyRingBuffer(int capacity = 81920 * 100)
         {
-            this.Capacity = capacity + 1;
-            this._buffer = new byte[this.Capacity];
+            Capacity = capacity + 1;
+            _buffer = new byte[Capacity];
         }
 
         public int Read(byte[] b, int offset, int toRead)
@@ -53,11 +45,9 @@ namespace Mitternacht.Common.Collections
                 Array.Copy(_buffer, ReadPos, b, offset, firstRead);
                 ReadPos += firstRead;
                 var secondRead = toRead - firstRead;
-                if (secondRead > 0)
-                {
-                    Array.Copy(_buffer, 0, b, offset + firstRead, secondRead);
-                    ReadPos = secondRead;
-                }
+                if (secondRead <= 0) return toRead;
+                Array.Copy(_buffer, 0, b, offset + firstRead, secondRead);
+                ReadPos = secondRead;
             }
             return toRead;
         }

@@ -5,10 +5,9 @@ namespace Mitternacht.Common
 {
     public class NadekoRandom : Random
     {
-        readonly RandomNumberGenerator _rng;
+        private readonly RandomNumberGenerator _rng;
 
-        public NadekoRandom() : base()
-        {
+        public NadekoRandom() {
             _rng = RandomNumberGenerator.Create();
         }
 
@@ -37,7 +36,7 @@ namespace Mitternacht.Common
             var bytes = new byte[sizeof(int)];
             _rng.GetBytes(bytes);
             var sign = Math.Sign(BitConverter.ToInt32(bytes, 0));
-            return (sign * BitConverter.ToInt32(bytes, 0)) % (maxValue - minValue) + minValue;
+            return sign * BitConverter.ToInt32(bytes, 0) % (maxValue - minValue) + minValue;
         }
 
         public override void NextBytes(byte[] buffer)

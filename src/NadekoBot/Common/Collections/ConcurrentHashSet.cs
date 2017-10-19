@@ -18,7 +18,7 @@ namespace Mitternacht.Common.Collections
     /// All public members of <see cref="ConcurrentHashSet{T}"/> are thread-safe and may be used
     /// concurrently from multiple threads.
     /// </remarks>
-    [DebuggerDisplay("Count = {Count}")]
+    [DebuggerDisplay("Count = {" + nameof(Count) + "}")]
     public sealed class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T>
     {
         private const int DefaultCapacity = 31;
@@ -45,14 +45,9 @@ namespace Mitternacht.Common.Collections
             get {
                 var count = 0;
                 var acquiredLocks = 0;
-                try
-                {
+                try {
                     AcquireAllLocks(ref acquiredLocks);
-
-                    for (var i = 0; i < _tables.CountPerLock.Length; i++)
-                    {
-                        count += _tables.CountPerLock[i];
-                    }
+                    count += _tables.CountPerLock.Sum();
                 }
                 finally
                 {
@@ -71,16 +66,11 @@ namespace Mitternacht.Common.Collections
         public bool IsEmpty {
             get {
                 var acquiredLocks = 0;
-                try
-                {
+                try {
                     AcquireAllLocks(ref acquiredLocks);
 
-                    for (var i = 0; i < _tables.CountPerLock.Length; i++)
-                    {
-                        if (_tables.CountPerLock[i] != 0)
-                        {
-                            return false;
-                        }
+                    if (_tables.CountPerLock.Any(t => t != 0)) {
+                        return false;
                     }
                 }
                 finally
@@ -98,8 +88,7 @@ namespace Mitternacht.Common.Collections
         /// class that is empty, has the default concurrency level, has the default initial capacity, and
         /// uses the default comparer for the item type.
         /// </summary>
-        public ConcurrentHashSet()
-            : this(DefaultConcurrencyLevel, DefaultCapacity, true, EqualityComparer<T>.Default)
+        public ConcurrentHashSet() : this(DefaultConcurrencyLevel, DefaultCapacity, true, EqualityComparer<T>.Default)
         {
         }
 
@@ -118,8 +107,7 @@ namespace Mitternacht.Common.Collections
         /// less than 1.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> <paramref name="capacity"/> is less than
         /// 0.</exception>
-        public ConcurrentHashSet(int concurrencyLevel, int capacity)
-            : this(concurrencyLevel, capacity, false, EqualityComparer<T>.Default)
+        public ConcurrentHashSet(int concurrencyLevel, int capacity) : this(concurrencyLevel, capacity, false, EqualityComparer<T>.Default)
         {
         }
 
@@ -129,13 +117,9 @@ namespace Mitternacht.Common.Collections
         /// cref="T:System.Collections.IEnumerable{T}"/>, has the default concurrency
         /// level, has the default initial capacity, and uses the default comparer for the item type.
         /// </summary>
-        /// <param name="collection">The <see
-        /// cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to
-        /// the new
-        /// <see cref="ConcurrentHashSet{T}"/>.</param>
+        /// <param name="collection">The <see cref="T:System.Collections.IEnumerable{T}"/> whose elements are copied to the new <see cref="ConcurrentHashSet{T}"/>.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is a null reference.</exception>
-        public ConcurrentHashSet(IEnumerable<T> collection)
-            : this(collection, EqualityComparer<T>.Default)
+        public ConcurrentHashSet(IEnumerable<T> collection) : this(collection, EqualityComparer<T>.Default)
         {
         }
 
@@ -147,8 +131,7 @@ namespace Mitternacht.Common.Collections
         /// <param name="comparer">The <see cref="T:System.Collections.Generic.IEqualityComparer{T}"/>
         /// implementation to use when comparing items.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="comparer"/> is a null reference.</exception>
-        public ConcurrentHashSet(IEqualityComparer<T> comparer)
-            : this(DefaultConcurrencyLevel, DefaultCapacity, true, comparer)
+        public ConcurrentHashSet(IEqualityComparer<T> comparer) : this(DefaultConcurrencyLevel, DefaultCapacity, true, comparer)
         {
         }
 
@@ -169,11 +152,9 @@ namespace Mitternacht.Common.Collections
         /// (Nothing in Visual Basic). -or-
         /// <paramref name="comparer"/> is a null reference (Nothing in Visual Basic).
         /// </exception>
-        public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
-            : this(comparer)
+        public ConcurrentHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer) : this(comparer)
         {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
-
             InitializeFromCollection(collection);
         }
 
@@ -233,7 +214,6 @@ namespace Mitternacht.Common.Collections
         {
             if (concurrencyLevel < 1) throw new ArgumentOutOfRangeException(nameof(concurrencyLevel));
             if (capacity < 0) throw new ArgumentOutOfRangeException(nameof(capacity));
-            if (comparer == null) throw new ArgumentNullException(nameof(comparer));
 
             // The capacity should be at least as large as the concurrency level. Otherwise, we would have locks that don't guard
             // any buckets.
@@ -254,7 +234,7 @@ namespace Mitternacht.Common.Collections
 
             _growLockArray = growLockArray;
             _budget = buckets.Length / locks.Length;
-            _comparer = comparer;
+            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
         }
 
         /// <summary>
@@ -265,8 +245,8 @@ namespace Mitternacht.Common.Collections
         /// successfully; false if it already exists.</returns>
         /// <exception cref="T:System.OverflowException">The <see cref="ConcurrentHashSet{T}"/>
         /// contains too many items.</exception>
-        public bool Add(T item) =>
-            AddInternal(item, _comparer.GetHashCode(item), true);
+        public bool Add(T item) 
+            => AddInternal(item, _comparer.GetHashCode(item), true);
 
         /// <summary>
         /// Removes all items from the <see cref="ConcurrentHashSet{T}"/>.
@@ -331,8 +311,7 @@ namespace Mitternacht.Common.Collections
             {
                 var tables = _tables;
 
-                int bucketNo, lockNo;
-                GetBucketAndLockNo(hashcode, out bucketNo, out lockNo, tables.Buckets.Length, tables.Locks.Length);
+                GetBucketAndLockNo(hashcode, out var bucketNo, out var lockNo, tables.Buckets.Length, tables.Locks.Length);
 
                 lock (tables.Locks[lockNo])
                 {
@@ -346,7 +325,7 @@ namespace Mitternacht.Common.Collections
                     Node previous = null;
                     for (var current = tables.Buckets[bucketNo]; current != null; current = current.Next)
                     {
-                        Debug.Assert((previous == null && current == tables.Buckets[bucketNo]) || previous.Next == current);
+                        Debug.Assert(previous == null && current == tables.Buckets[bucketNo] || previous?.Next == current);
 
                         if (hashcode == current.Hashcode && _comparer.Equals(current.Item, item))
                         {
@@ -451,10 +430,8 @@ namespace Mitternacht.Common.Collections
         {
             while (true)
             {
-                int bucketNo, lockNo;
-
                 var tables = _tables;
-                GetBucketAndLockNo(hashcode, out bucketNo, out lockNo, tables.Buckets.Length, tables.Locks.Length);
+                GetBucketAndLockNo(hashcode, out var bucketNo, out var lockNo, tables.Buckets.Length, tables.Locks.Length);
 
                 var resizeDesired = false;
                 var lockTaken = false;
@@ -639,14 +616,12 @@ namespace Mitternacht.Common.Collections
                 var newCountPerLock = new int[newLocks.Length];
 
                 // Copy all data into a new table, creating new nodes for all elements
-                for (var i = 0; i < tables.Buckets.Length; i++)
-                {
-                    var current = tables.Buckets[i];
+                foreach (var t in tables.Buckets) {
+                    var current = t;
                     while (current != null)
                     {
                         var next = current.Next;
-                        int newBucketNo, newLockNo;
-                        GetBucketAndLockNo(current.Hashcode, out newBucketNo, out newLockNo, newBuckets.Length, newLocks.Length);
+                        GetBucketAndLockNo(current.Hashcode, out var newBucketNo, out var newLockNo, newBuckets.Length, newLocks.Length);
 
                         newBuckets[newBucketNo] = new Node(current.Item, current.Hashcode, newBuckets[newBucketNo]);
 
@@ -675,13 +650,7 @@ namespace Mitternacht.Common.Collections
         public int RemoveWhere(Func<T, bool> predicate)
         {
             var elems = this.Where(predicate);
-            var removed = 0;
-            foreach (var elem in elems)
-            {
-                if (this.TryRemove(elem))
-                    removed++;
-            }
-            return removed;
+            return elems.Count(TryRemove);
         }
 
         private void AcquireAllLocks(ref int locksAcquired)
@@ -727,12 +696,10 @@ namespace Mitternacht.Common.Collections
             }
         }
 
-        private void CopyToItems(T[] array, int index)
-        {
+        private void CopyToItems(IList<T> array, int index) {
             var buckets = _tables.Buckets;
-            for (var i = 0; i < buckets.Length; i++)
-            {
-                for (var current = buckets[i]; current != null; current = current.Next)
+            foreach (var t in buckets) {
+                for (var current = t; current != null; current = current.Next)
                 {
                     array[index] = current.Item;
                     index++; //this should never flow, CopyToItems is only called when there's no overflow risk

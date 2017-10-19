@@ -10,10 +10,7 @@ namespace Mitternacht.Common
         public override Task<PreconditionResult> CheckPermissions(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             var c = (DiscordSocketClient)context.Client;
-            if (c.ShardId != 0)
-                return Task.FromResult(PreconditionResult.FromError("Must be ran from shard #0"));
-
-            return Task.FromResult(PreconditionResult.FromSuccess());
+            return Task.FromResult(c.ShardId != 0 ? PreconditionResult.FromError("Must be ran from shard #0") : PreconditionResult.FromSuccess());
         }
     }
 }
