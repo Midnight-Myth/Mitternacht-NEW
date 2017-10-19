@@ -10,11 +10,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Mitternacht.Common;
 using Mitternacht.Common.ShardCom;
 using Mitternacht.Common.TypeReaders;
 using Mitternacht.Common.TypeReaders.Models;
-using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
@@ -90,10 +88,8 @@ namespace Mitternacht
             }
 
             SetupShard(parentProcessId, port.Value);
-
-#if GLOBAL_NADEKO
+            
             Client.Log += Client_Log;
-#endif
         }
 
         private void StartSendingData()
@@ -102,8 +98,7 @@ namespace Mitternacht
             {
                 while (true)
                 {
-                    await _comClient.Send(new ShardComMessage()
-                    {
+                    await _comClient.Send(new ShardComMessage {
                         ConnectionState = Client.ConnectionState,
                         Guilds = Client.ConnectionState == ConnectionState.Connected ? Client.Guilds.Count : 0,
                         ShardId = Client.ShardId,
@@ -237,9 +232,7 @@ namespace Mitternacht
         private Task Client_Log(LogMessage arg)
         {
             _log.Warn(arg.Source + " | " + arg.Message);
-            if (arg.Exception != null)
-                _log.Warn(arg.Exception);
-
+            if (arg.Exception != null) _log.Warn(arg.Exception);
             return Task.CompletedTask;
         }
 
@@ -264,7 +257,7 @@ namespace Mitternacht
             }
             catch
             {
-                _log.Error("You must run the application as an ADMINISTRATOR.");
+                _log.Error("I really like sudo. Try testing it out (I won't start without :P).");
                 Console.ReadKey();
                 Environment.Exit(2);
             }
