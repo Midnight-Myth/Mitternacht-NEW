@@ -193,7 +193,7 @@ namespace Mitternacht.Modules.Administration
 
                     if (p != null)
                     {
-                        uow._context.Remove(p);
+                        uow.Context.Remove(p);
                         uow.Complete();
                     }
                 }

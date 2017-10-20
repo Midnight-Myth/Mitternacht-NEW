@@ -28,8 +28,8 @@ namespace Mitternacht.Services
 
         public ImageResult(Result.ImageData image, string link)
         {
-            this.Image = image;
-            this.Link = link;
+            Image = image;
+            Link = link;
         }
     }
 }

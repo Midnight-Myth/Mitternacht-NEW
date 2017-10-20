@@ -180,8 +180,7 @@ namespace Mitternacht.Services
 
         public GreetSettings GetOrAddSettingsForGuild(ulong guildId)
         {
-            GreetSettings settings;
-            GuildConfigsCache.TryGetValue(guildId, out settings);
+            GuildConfigsCache.TryGetValue(guildId, out var settings);
 
             if (settings != null)
                 return settings;

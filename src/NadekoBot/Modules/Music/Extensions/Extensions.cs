@@ -13,10 +13,10 @@ namespace Mitternacht.Modules.Music.Extensions
             {
                 Title = svideo.FullName,
                 Provider = "SoundCloud",
-                Uri = () => svideo.StreamLink(),
+                Uri = svideo.StreamLink,
                 ProviderType = MusicType.Soundcloud,
                 Query = svideo.TrackLink,
-                Thumbnail = svideo.artwork_url,
+                Thumbnail = svideo.ArtworkUrl,
                 TotalTime = TimeSpan.FromMilliseconds(svideo.Duration)
             });
     }

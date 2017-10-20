@@ -17,13 +17,13 @@ namespace Mitternacht.Modules.Utility.Services
 {
     public class PatreonRewardsService : INService
     {
-        private readonly SemaphoreSlim getPledgesLocker = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _getPledgesLocker = new SemaphoreSlim(1, 1);
 
         public ImmutableArray<PatreonUserAndReward> Pledges { get; private set; }
         public DateTime LastUpdate { get; private set; } = DateTime.UtcNow;
 
         public readonly Timer Updater;
-        private readonly SemaphoreSlim claimLockJustInCase = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _claimLockJustInCase = new SemaphoreSlim(1, 1);
         private readonly Logger _log;
 
         public readonly TimeSpan Interval = TimeSpan.FromMinutes(3);
@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Utility.Services
         private readonly DbService _db;
         private readonly CurrencyService _currency;
 
-        private readonly string cacheFileName = "./patreon-rewards.json";
+        private readonly string _cacheFileName = "./patreon-rewards.json";
 
         public PatreonRewardsService(IBotCredentials creds, DbService db, CurrencyService currency,
             DiscordSocketClient client)
@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Utility.Services
             if (shouldLoad)
             {
                 LastUpdate = DateTime.UtcNow;
-                await getPledgesLocker.WaitAsync().ConfigureAwait(false);
+                await _getPledgesLocker.WaitAsync().ConfigureAwait(false);
                 try
                 {
                     var rewards = new List<PatreonPledge>();
@@ -80,7 +80,7 @@ namespace Mitternacht.Modules.Utility.Services
                                 .Select(x => JsonConvert.DeserializeObject<PatreonUser>(x.ToString())));
                         } while (!string.IsNullOrWhiteSpace(data.Links.next));
                     }
-                    Pledges = rewards.Join(users, (r) => r.relationships?.patron?.data?.id, (u) => u.id, (x, y) => new PatreonUserAndReward()
+                    Pledges = rewards.Join(users, r => r.relationships?.patron?.data?.id, u => u.id, (x, y) => new PatreonUserAndReward
                     {
                         User = y,
                         Reward = x,
@@ -93,12 +93,12 @@ namespace Mitternacht.Modules.Utility.Services
                 }
                 finally
                 {
-                    getPledgesLocker.Release();
+                    _getPledgesLocker.Release();
                 }
             }
             else
             {
-                if(File.Exists(cacheFileName))
+                if(File.Exists(_cacheFileName))
                 Pledges = JsonConvert.DeserializeObject<PatreonUserAndReward[]>(File.ReadAllText("./patreon_rewards.json"))
                     .ToImmutableArray();
             }
@@ -106,7 +106,7 @@ namespace Mitternacht.Modules.Utility.Services
 
         public async Task<int> ClaimReward(ulong userId)
         {
-            await claimLockJustInCase.WaitAsync();
+            await _claimLockJustInCase.WaitAsync();
             var now = DateTime.UtcNow;
             try
             {
@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Utility.Services
 
                 using (var uow = _db.UnitOfWork)
                 {
-                    var users = uow._context.Set<RewardedUser>();
+                    var users = uow.Context.Set<RewardedUser>();
                     var usr = users.FirstOrDefault(x => x.PatreonUserId == data.User.id);
 
                     if (usr == null)
@@ -168,7 +168,7 @@ namespace Mitternacht.Modules.Utility.Services
             }
             finally
             {
-                claimLockJustInCase.Release();
+                _claimLockJustInCase.Release();
             }
         }
     }

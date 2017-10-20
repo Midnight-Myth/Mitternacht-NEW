@@ -10,6 +10,7 @@ namespace Mitternacht.Services.Database
 
     public class NadekoContextFactory : IDesignTimeDbContextFactory<NadekoContext>
     {
+        /// <inheritdoc />
         /// <summary>
         /// :\ Used for migrations
         /// </summary>
@@ -303,7 +304,7 @@ namespace Mitternacht.Services.Database
             #endregion
 
             #region Warnings
-            var warn = modelBuilder.Entity<Warning>();
+            modelBuilder.Entity<Warning>();
             #endregion
 
             #region PatreonRewards

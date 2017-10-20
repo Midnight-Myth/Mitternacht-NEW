@@ -16,9 +16,9 @@ namespace Mitternacht.Services.Impl
 
         public async Task<string> GetDataAsync(string url)
         {
-            using (Process process = new Process()
+            using (var process = new Process
             {
-                StartInfo = new ProcessStartInfo()
+                StartInfo = new ProcessStartInfo
                 {
                     FileName = "youtube-dl",
                     Arguments = $"-f bestaudio -e --get-url --get-id --get-thumbnail --get-duration --no-check-certificate --default-search \"ytsearch:\" \"{url}\"",

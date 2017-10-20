@@ -75,16 +75,7 @@ namespace Mitternacht.Modules.Permissions
             if (page < 1)
                 return;
 
-            IList<Permissionv2> perms;
-
-            if (_service.Cache.TryGetValue(Context.Guild.Id, out var permCache))
-            {
-                perms = permCache.Permissions.Source.ToList();
-            }
-            else
-            {
-                perms = Permissionv2.GetDefaultPermlist;
-            }
+            IList<Permissionv2> perms = _service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
 
             var startPos = 20 * (page - 1);
             var toSend = Format.Bold(GetText("page", page)) + "\n\n" + string.Join("\n",
@@ -119,7 +110,7 @@ namespace Mitternacht.Modules.Permissions
                     var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
                     p = permsCol[index];
                     permsCol.RemoveAt(index);
-                    uow._context.Remove(p);
+                    uow.Context.Remove(p);
                     await uow.CompleteAsync().ConfigureAwait(false);
                     _service.UpdateCache(config);
                 }

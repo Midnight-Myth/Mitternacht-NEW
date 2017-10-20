@@ -15,7 +15,7 @@ namespace Mitternacht.Services
         string PatreonAccessToken { get; }
         string CarbonKey { get; }
 
-        DBConfig Db { get; }
+        DbConfig Db { get; }
         string OsuApiKey { get; }
 
         bool IsOwner(IUser u);
@@ -28,9 +28,9 @@ namespace Mitternacht.Services
         string ForumPassword { get; }
     }
 
-    public class DBConfig
+    public class DbConfig
     {
-        public DBConfig(string type, string connString)
+        public DbConfig(string type, string connString)
         {
             Type = type;
             ConnectionString = connString;

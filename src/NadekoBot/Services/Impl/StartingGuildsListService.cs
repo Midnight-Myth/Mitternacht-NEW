@@ -12,7 +12,7 @@ namespace Mitternacht.Services.Impl
 
         public StartingGuildsService(DiscordSocketClient client)
         {
-            this._guilds = client.Guilds.Select(x => (long)x.Id).ToImmutableList();
+            _guilds = client.Guilds.Select(x => (long)x.Id).ToImmutableList();
         }
 
         public IEnumerator<long> GetEnumerator() =>

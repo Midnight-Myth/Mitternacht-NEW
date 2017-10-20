@@ -10,16 +10,14 @@ namespace Mitternacht.Services.Impl
 {
     public class Localization : ILocalization
     {
-        private readonly Logger _log;
         private readonly DbService _db;
 
         public ConcurrentDictionary<ulong, CultureInfo> GuildCultureInfos { get; }
-        public CultureInfo DefaultCultureInfo { get; private set; } = CultureInfo.CurrentCulture;
+        public CultureInfo DefaultCultureInfo { get; private set; }
 
-        private Localization() { }
         public Localization(IBotConfigProvider bcp, IEnumerable<GuildConfig> gcs, DbService db)
         {
-            _log = LogManager.GetCurrentClassLogger();
+            var log = LogManager.GetCurrentClassLogger();
 
             var cultureInfoNames = gcs.ToDictionary(x => x.GuildId, x => x.Locale);
             var defaultCulture = bcp.BotConfig.Locale;
@@ -36,7 +34,7 @@ namespace Mitternacht.Services.Impl
                 }
                 catch
                 {
-                    _log.Warn("Unable to load default bot's locale/language. Using en-US.");
+                    log.Warn("Unable to load default bot's locale/language. Using en-US.");
                     DefaultCultureInfo = new CultureInfo("en-US");
                 }
             }
@@ -59,7 +57,7 @@ namespace Mitternacht.Services.Impl
 
         public void SetGuildCulture(ulong guildId, CultureInfo ci)
         {
-            if (ci == DefaultCultureInfo)
+            if (Equals(ci, DefaultCultureInfo))
             {
                 RemoveGuildCulture(guildId);
                 return;
@@ -80,15 +78,12 @@ namespace Mitternacht.Services.Impl
 
         public void RemoveGuildCulture(ulong guildId)
         {
-
-            if (GuildCultureInfos.TryRemove(guildId, out var _))
+            if (!GuildCultureInfos.TryRemove(guildId, out var _)) return;
+            using (var uow = _db.UnitOfWork)
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    var gc = uow.GuildConfigs.For(guildId, set => set);
-                    gc.Locale = null;
-                    uow.Complete();
-                }
+                var gc = uow.GuildConfigs.For(guildId, set => set);
+                gc.Locale = null;
+                uow.Complete();
             }
         }
 
@@ -111,17 +106,14 @@ namespace Mitternacht.Services.Impl
 
         public CultureInfo GetCultureInfo(ulong? guildId)
         {
-            if (guildId == null)
-                return DefaultCultureInfo;
-            CultureInfo info = null;
-            GuildCultureInfos.TryGetValue(guildId.Value, out info);
+            if (guildId == null) return DefaultCultureInfo;
+            GuildCultureInfos.TryGetValue(guildId.Value, out var info);
             return info ?? DefaultCultureInfo;
         }
 
-        public static string LoadCommandString(string key)
-        {
-            string toReturn = Resources.CommandStrings.ResourceManager.GetString(key);
-            return string.IsNullOrWhiteSpace(toReturn) ? key : toReturn;
-        }
+        public static string LoadCommandString(string key) 
+            => string.IsNullOrWhiteSpace(Resources.CommandStrings.ResourceManager.GetString(key)) 
+                    ? key 
+                    : Resources.CommandStrings.ResourceManager.GetString(key);
     }
 }

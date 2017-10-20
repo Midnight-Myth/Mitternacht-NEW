@@ -77,14 +77,14 @@ namespace Mitternacht.Services.Discord
             OnReactionsCleared = null;
         }
 
-        private bool disposing = false;
+        private bool _disposing;
         private readonly DiscordSocketClient _client;
 
         public void Dispose()
         {
-            if (disposing)
+            if (_disposing)
                 return;
-            disposing = true;
+            _disposing = true;
             UnsubAll();
         }
     }

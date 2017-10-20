@@ -6,7 +6,7 @@ namespace Mitternacht.Services.Database
 {
     public interface IUnitOfWork : IDisposable
     {
-        NadekoContext _context { get; }
+        NadekoContext Context { get; }
 
         IQuoteRepository Quotes { get; }
         IGuildConfigRepository GuildConfigs { get; }

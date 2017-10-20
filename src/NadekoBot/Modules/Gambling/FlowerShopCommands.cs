@@ -57,7 +57,7 @@ namespace Mitternacht.Modules.Gambling
                                   .ThenInclude(x => x.Items)).ShopEntries);
                 }
 
-                await Context.Channel.SendPaginatedConfirmAsync(_client, page, (curPage) =>
+                await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage =>
                 {
                     var theseEntries = entries.Skip(curPage * 9).Take(9).ToArray();
 
@@ -67,13 +67,13 @@ namespace Mitternacht.Modules.Gambling
                     var embed = new EmbedBuilder().WithOkColor()
                         .WithTitle(GetText("shop", _bc.BotConfig.CurrencySign));
 
-                    for (int i = 0; i < theseEntries.Length; i++)
+                    for (var i = 0; i < theseEntries.Length; i++)
                     {
                         var entry = theseEntries[i];
                         embed.AddField(efb => efb.WithName($"#{curPage * 9 + i + 1} - {entry.Price}{_bc.BotConfig.CurrencySign}").WithValue(EntryToString(entry)).WithIsInline(true));
                     }
                     return embed;
-                }, entries.Count / 9, true);
+                }, entries.Count / 9);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -120,18 +120,16 @@ namespace Mitternacht.Modules.Gambling
                         catch (Exception ex)
                         {
                             _log.Warn(ex);
-                            await _cs.AddAsync(Context.User.Id, $"Shop error refund", entry.Price);
+                            await _cs.AddAsync(Context.User.Id, "Shop error refund", entry.Price);
                             await ReplyErrorLocalized("shop_role_purchase_error").ConfigureAwait(false);
                             return;
                         }
                         await _cs.AddAsync(entry.AuthorId, $"Shop sell item - {entry.Type}", GetProfitAmount(entry.Price));
                         await ReplyConfirmLocalized("shop_role_purchase", Format.Bold(role.Name)).ConfigureAwait(false);
-                        return;
                     }
                     else
                     {
                         await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
-                        return;
                     }
                 }
                 else if (entry.Type == ShopEntryType.List)
@@ -146,12 +144,10 @@ namespace Mitternacht.Modules.Gambling
 
                     if (await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price))
                     {
-                        int removed;
                         using (var uow = _db.UnitOfWork)
                         {
-                            var x = uow._context.Set<ShopEntryItem>().Remove(item);
-
-                            removed = uow.Complete();
+                            uow.Context.Set<ShopEntryItem>().Remove(item);
+                            uow.Complete();
                         }
                         try
                         {
@@ -171,7 +167,7 @@ namespace Mitternacht.Modules.Gambling
                         {
                             using (var uow = _db.UnitOfWork)
                             {
-                                uow._context.Set<ShopEntryItem>().Add(item);
+                                uow.Context.Set<ShopEntryItem>().Add(item);
                                 uow.Complete();
 
                                 await _cs.AddAsync(Context.User.Id,
@@ -187,14 +183,13 @@ namespace Mitternacht.Modules.Gambling
                     else
                     {
                         await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
-                        return;
                     }
                 }
 
             }
 
             private long GetProfitAmount(int price) =>
-                (int)(Math.Ceiling(0.90 * price));
+                (int)Math.Ceiling(0.90 * price);
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
@@ -202,7 +197,7 @@ namespace Mitternacht.Modules.Gambling
             [RequireBotPermission(GuildPermission.ManageRoles)]
             public async Task ShopAdd(Role _, int price, [Remainder] IRole role)
             {
-                var entry = new ShopEntry()
+                var entry = new ShopEntry
                 {
                     Name = "-",
                     Price = price,
@@ -231,7 +226,7 @@ namespace Mitternacht.Modules.Gambling
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task ShopAdd(List _, int price, [Remainder]string name)
             {
-                var entry = new ShopEntry()
+                var entry = new ShopEntry
                 {
                     Name = name.TrimTo(100),
                     Price = price,
@@ -262,20 +257,20 @@ namespace Mitternacht.Modules.Gambling
                 index -= 1;
                 if (index < 0)
                     return;
-                var item = new ShopEntryItem()
+                var item = new ShopEntryItem
                 {
                     Text = itemText
                 };
                 ShopEntry entry;
-                bool rightType = false;
-                bool added = false;
+                var rightType = false;
+                var added = false;
                 using (var uow = _db.UnitOfWork)
                 {
                     var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id,
                         set => set.Include(x => x.ShopEntries)
                                   .ThenInclude(x => x.Items)).ShopEntries);
                     entry = entries.ElementAtOrDefault(index);
-                    if (entry != null && (rightType = (entry.Type == ShopEntryType.List)))
+                    if (entry != null && (rightType = entry.Type == ShopEntryType.List))
                     {
                         if (added = entry.Items.Add(item))
                         {
@@ -330,35 +325,30 @@ namespace Mitternacht.Modules.Gambling
             {
                 var embed = new EmbedBuilder().WithOkColor();
 
-                if (entry.Type == ShopEntryType.Role)
-                    return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(GetText("shop_role", Format.Bold(entry.RoleName))).WithIsInline(true))
+                switch (entry.Type)
+                {
+                    case ShopEntryType.Role:
+                        return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(GetText("shop_role", Format.Bold(entry.RoleName))).WithIsInline(true))
                             .AddField(efb => efb.WithName(GetText("price")).WithValue(entry.Price.ToString()).WithIsInline(true))
                             .AddField(efb => efb.WithName(GetText("type")).WithValue(entry.Type.ToString()).WithIsInline(true));
-                else if (entry.Type == ShopEntryType.List)
-                    return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(entry.Name).WithIsInline(true))
+                    case ShopEntryType.List:
+                        return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(entry.Name).WithIsInline(true))
                             .AddField(efb => efb.WithName(GetText("price")).WithValue(entry.Price.ToString()).WithIsInline(true))
                             .AddField(efb => efb.WithName(GetText("type")).WithValue(GetText("random_unique_item")).WithIsInline(true));
-                //else if (entry.Type == ShopEntryType.Infinite_List)
-                //    return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(GetText("shop_role", Format.Bold(entry.RoleName))).WithIsInline(true))
-                //            .AddField(efb => efb.WithName(GetText("price")).WithValue(entry.Price.ToString()).WithIsInline(true))
-                //            .AddField(efb => efb.WithName(GetText("type")).WithValue(entry.Type.ToString()).WithIsInline(true));
-                else return null;
+                    default:
+                        return null;
+                }
             }
 
             public string EntryToString(ShopEntry entry)
             {
-                if (entry.Type == ShopEntryType.Role)
+                switch (entry.Type)
                 {
-                    return GetText("shop_role", Format.Bold(entry.RoleName));
+                    case ShopEntryType.Role:
+                        return GetText("shop_role", Format.Bold(entry.RoleName));
+                    case ShopEntryType.List:
+                        return GetText("unique_items_left", entry.Items.Count) + "\n" + entry.Name;
                 }
-                else if (entry.Type == ShopEntryType.List)
-                {
-                    return GetText("unique_items_left", entry.Items.Count) + "\n" + entry.Name;
-                }
-                //else if (entry.Type == ShopEntryType.Infinite_List)
-                //{
-
-                //}
                 return "";
             }
         }

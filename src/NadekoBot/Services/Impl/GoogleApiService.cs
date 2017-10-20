@@ -18,13 +18,13 @@ namespace Mitternacht.Services.Impl
 {
     public class GoogleApiService : IGoogleApiService
     {
-        const string search_engine_id = "018084019232060951019:hs5piey28-e";
+        const string SearchEngineId = "018084019232060951019:hs5piey28-e";
 
-        private YouTubeService yt;
-        private UrlshortenerService sh;
-        private CustomsearchService cs;
+        private readonly YouTubeService _yt;
+        private readonly UrlshortenerService _sh;
+        private readonly CustomsearchService _cs;
 
-        private Logger _log { get; }
+        private Logger Log { get; }
 
         public GoogleApiService(IBotCredentials creds)
         {
@@ -36,13 +36,13 @@ namespace Mitternacht.Services.Impl
                 ApiKey = _creds.GoogleApiKey,
             };
 
-            _log = LogManager.GetCurrentClassLogger();
+            Log = LogManager.GetCurrentClassLogger();
 
-            yt = new YouTubeService(bcs);
-            sh = new UrlshortenerService(bcs);
-            cs = new CustomsearchService(bcs);
+            _yt = new YouTubeService(bcs);
+            _sh = new UrlshortenerService(bcs);
+            _cs = new CustomsearchService(bcs);
         }
-        private static readonly Regex plRegex = new Regex("(?:youtu\\.be\\/|list=)(?<id>[\\da-zA-Z\\-_]*)", RegexOptions.Compiled);
+        private static readonly Regex PlRegex = new Regex("(?:youtu\\.be\\/|list=)(?<id>[\\da-zA-Z\\-_]*)", RegexOptions.Compiled);
         public async Task<IEnumerable<string>> GetPlaylistIdsByKeywordsAsync(string keywords, int count = 1)
         {
             await Task.Yield();
@@ -52,12 +52,12 @@ namespace Mitternacht.Services.Impl
             if (count <= 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
 
-            var match = plRegex.Match(keywords);
+            var match = PlRegex.Match(keywords);
             if (match.Length > 1)
             {
-                return new[] { match.Groups["id"].Value.ToString() };
+                return new[] { match.Groups["id"].Value };
             }
-            var query = yt.Search.List("snippet");
+            var query = _yt.Search.List("snippet");
             query.MaxResults = count;
             query.Type = "playlist";
             query.Q = keywords;
@@ -76,7 +76,7 @@ namespace Mitternacht.Services.Impl
 
             if (count <= 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            var query = yt.Search.List("snippet");
+            var query = _yt.Search.List("snippet");
             query.MaxResults = count;
             query.RelatedToVideoId = id;
             query.Type = "video";
@@ -92,7 +92,7 @@ namespace Mitternacht.Services.Impl
             if (count <= 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
             
-            var query = yt.Search.List("snippet");
+            var query = _yt.Search.List("snippet");
             query.MaxResults = count;
             query.Q = keywords;
             query.Type = "video";
@@ -108,7 +108,7 @@ namespace Mitternacht.Services.Impl
             if (count <= 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
 
-            var query = yt.Search.List("snippet");
+            var query = _yt.Search.List("snippet");
             query.MaxResults = count;
             query.Q = keywords;
             query.Type = "video";
@@ -126,12 +126,12 @@ namespace Mitternacht.Services.Impl
 
             try
             {
-                var response = await sh.Url.Insert(new Url { LongUrl = url }).ExecuteAsync();
+                var response = await _sh.Url.Insert(new Url { LongUrl = url }).ExecuteAsync();
                 return response.Id;
             }
             catch (Exception ex)
             {
-                _log.Warn(ex);
+                Log.Warn(ex);
                 return url;
             }
         }
@@ -154,7 +154,7 @@ namespace Mitternacht.Services.Impl
                 var toGet = count > 50 ? 50 : count;
                 count -= toGet;
 
-                var query = yt.PlaylistItems.List("contentDetails");
+                var query = _yt.PlaylistItems.List("contentDetails");
                 query.MaxResults = toGet;
                 query.PlaylistId = playlistId;
                 query.PageToken = nextPageToken;
@@ -174,19 +174,18 @@ namespace Mitternacht.Services.Impl
             await Task.Yield();
             var videoIdsList = videoIds as List<string> ?? videoIds.ToList();
 
-            Dictionary<string, TimeSpan> toReturn = new Dictionary<string, TimeSpan>();
+            var toReturn = new Dictionary<string, TimeSpan>();
 
             if (!videoIdsList.Any())
                 return toReturn;
-            var toGet = 0;
             var remaining = videoIdsList.Count;
 
             do
             {
-                toGet = remaining > 50 ? 50 : remaining;
+                var toGet = remaining > 50 ? 50 : remaining;
                 remaining -= toGet;
 
-                var q = yt.Videos.List("contentDetails");
+                var q = _yt.Videos.List("contentDetails");
                 q.Id = string.Join(",", videoIdsList.Take(toGet));
                 videoIdsList = videoIdsList.Skip(toGet).ToList();
                 var items = (await q.ExecuteAsync().ConfigureAwait(false)).Items;
@@ -206,8 +205,8 @@ namespace Mitternacht.Services.Impl
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentNullException(nameof(query));
 
-            var req = cs.Cse.List(query);
-            req.Cx = search_engine_id;
+            var req = _cs.Cse.List(query);
+            req.Cx = SearchEngineId;
             req.Num = 1;
             req.Fields = "items(image(contextLink,thumbnailLink),link)";
             req.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
@@ -219,7 +218,8 @@ namespace Mitternacht.Services.Impl
         }
 
         public IEnumerable<string> Languages => _languageDictionary.Keys.OrderBy(x => x);
-        private readonly Dictionary<string, string> _languageDictionary = new Dictionary<string, string>() {
+        private readonly Dictionary<string, string> _languageDictionary = new Dictionary<string, string>
+        {
                     { "afrikaans", "af"},
                     { "albanian", "sq"},
                     { "arabic", "ar"},
@@ -377,8 +377,7 @@ namespace Mitternacht.Services.Impl
 
         private string ConvertToLanguageCode(string language)
         {
-            string mode;
-            _languageDictionary.TryGetValue(language, out mode);
+            _languageDictionary.TryGetValue(language, out var mode);
             return mode;
         }
     }

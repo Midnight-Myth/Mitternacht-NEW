@@ -26,7 +26,7 @@ namespace Mitternacht.Services.Impl
         public string OsuApiKey { get; }
         public string CleverbotApiKey { get; }
 
-        public DBConfig Db { get; }
+        public DbConfig Db { get; }
         public int TotalShards { get; }
         public string CarbonKey { get; }
 
@@ -93,7 +93,7 @@ namespace Mitternacht.Services.Impl
                 //    : scId;
                 CarbonKey = data[nameof(CarbonKey)];
                 var dbSection = data.GetSection("db");
-                Db = new DBConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) ? "sqlite" : dbSection["Type"], string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) ? "Filename=./data/MitternachtBot.db" : dbSection["ConnectionString"]);
+                Db = new DbConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) ? "sqlite" : dbSection["Type"], string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) ? "Filename=./data/MitternachtBot.db" : dbSection["ConnectionString"]);
 
                 ForumUsername = data[nameof(ForumUsername)];
                 ForumPassword = data[nameof(ForumPassword)];
@@ -119,7 +119,7 @@ namespace Mitternacht.Services.Impl
             public string SoundCloudClientId { get; set; } = "";
             public string CleverbotApiKey { get; } = "";
             public string CarbonKey { get; set; } = "";
-            public DBConfig Db { get; set; } = new DBConfig("sqlite", "Filename=./data/MitternachtBot.db");
+            public DbConfig Db { get; set; } = new DbConfig("sqlite", "Filename=./data/MitternachtBot.db");
             public int TotalShards { get; set; } = 1;
             public string PatreonAccessToken { get; set; } = "";
             public string PatreonCampaignId { get; set; } = "334038";
