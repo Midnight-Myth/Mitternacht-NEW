@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Help.Services
                 .AddField(fb => fb.WithName(str).WithValue($"{com.RealSummary(prefix)} {GetCommandRequirements(com, guild)}").WithIsInline(true))
                 .AddField(fb => fb.WithName(GetText("usage", guild)).WithValue(com.RealRemarks(prefix)).WithIsInline(false))
                 .WithFooter(efb => efb.WithText(GetText("module", guild, com.Module.GetTopLevelModule().Name)))
-                .WithColor(Mitternacht.MitternachtBot.OkColor);
+                .WithColor(MitternachtBot.OkColor);
         }
 
         public string GetCommandRequirements(CommandInfo cmd, IGuild guild) =>

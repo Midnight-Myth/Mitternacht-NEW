@@ -111,9 +111,6 @@ namespace Mitternacht.Services.Impl
             return info ?? DefaultCultureInfo;
         }
 
-        public static string LoadCommandString(string key) 
-            => string.IsNullOrWhiteSpace(Resources.CommandStrings.ResourceManager.GetString(key)) 
-                    ? key 
-                    : Resources.CommandStrings.ResourceManager.GetString(key);
+        
     }
 }

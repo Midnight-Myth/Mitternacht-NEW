@@ -18,10 +18,6 @@ namespace Mitternacht.Services.Impl
         private const string CurrencyImagesPath = BasePath + "currency";
         private const string DiceImagesPath = BasePath + "dice";
 
-        private const string SlotBackgroundPath = BasePath + "slots/background2.png";
-        private const string SlotNumbersPath = BasePath + "slots/numbers/";
-        private const string SlotEmojisPath = BasePath + "slots/emojis/";
-
         private const string WifeMatrixPath = BasePath + "rategirl/wifematrix.png";
         private const string RategirlDotPath = BasePath + "rategirl/dot.png";
 
@@ -32,10 +28,6 @@ namespace Mitternacht.Services.Impl
         public ImmutableArray<(string, ImmutableArray<byte>)> Currency { get; private set; }
 
         public ImmutableArray<ImmutableArray<byte>> Dice { get; private set; }
-
-        public ImmutableArray<byte> SlotBackground { get; private set; }
-        public ImmutableArray<ImmutableArray<byte>> SlotNumbers { get; private set; }
-        public ImmutableArray<ImmutableArray<byte>> SlotEmojis { get; private set; }
 
         public ImmutableArray<byte> WifeMatrix { get; private set; }
         public ImmutableArray<byte> RategirlDot { get; private set; }
@@ -61,18 +53,6 @@ namespace Mitternacht.Services.Impl
                                 .OrderBy(x => int.Parse(Path.GetFileNameWithoutExtension(x)))
                                 .Select(x => File.ReadAllBytes(x).ToImmutableArray())
                                 .ToImmutableArray();
-                
-                SlotBackground = File.ReadAllBytes(SlotBackgroundPath).ToImmutableArray();
-
-                SlotNumbers = Directory.GetFiles(SlotNumbersPath)
-                    .OrderBy(f => int.Parse(Path.GetFileNameWithoutExtension(f)))
-                    .Select(x => File.ReadAllBytes(x).ToImmutableArray())
-                    .ToImmutableArray();
-
-                SlotEmojis = Directory.GetFiles(SlotEmojisPath)
-                    .OrderBy(f => int.Parse(Path.GetFileNameWithoutExtension(f)))
-                    .Select(x => File.ReadAllBytes(x).ToImmutableArray())
-                    .ToImmutableArray();
 
                 WifeMatrix = File.ReadAllBytes(WifeMatrixPath).ToImmutableArray();
                 RategirlDot = File.ReadAllBytes(RategirlDotPath).ToImmutableArray();

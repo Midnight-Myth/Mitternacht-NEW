@@ -13,6 +13,7 @@ using Discord.WebSocket;
 using Mitternacht.Common.ShardCom;
 using Mitternacht.Common.TypeReaders;
 using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Resources;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
@@ -69,12 +70,11 @@ namespace Mitternacht
                 ConnectionTimeout = int.MaxValue,
                 TotalShards = Credentials.TotalShards,
                 ShardId = shardId,
-                AlwaysDownloadUsers = false,
+                AlwaysDownloadUsers = false
             });
-            CommandService = new CommandService(new CommandServiceConfig()
-            {
+            CommandService = new CommandService(new CommandServiceConfig {
                 CaseSensitiveCommands = false,
-                DefaultRunMode = RunMode.Sync,
+                DefaultRunMode = RunMode.Sync
             });
 
             port = port ?? Credentials.ShardRunPort;
@@ -102,7 +102,7 @@ namespace Mitternacht
                         ConnectionState = Client.ConnectionState,
                         Guilds = Client.ConnectionState == ConnectionState.Connected ? Client.Guilds.Count : 0,
                         ShardId = Client.ShardId,
-                        Time = DateTime.UtcNow,
+                        Time = DateTime.UtcNow
                     });
                     await Task.Delay(5000);
                 }
