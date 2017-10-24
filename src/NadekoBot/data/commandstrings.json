@@ -168,7 +168,7 @@
     "aliases": [
       "clear"
     ],
-    "desc": "`{0}prune` removes all Nadeko's messages in the last 100 messages. `{0}prune X` removes last `X` number of messages from the channel (up to 100). `{0}prune @Someone` removes all Someone's messages in the last 100 messages. `{0}prune @Someone X` removes last `X` number of 'Someone's' messages in the channel.",
+    "desc": "`{0}prune` removes all Mitternacht's messages in the last 100 messages. `{0}prune X` removes last `X` number of messages from the channel (up to 100). `{0}prune @Someone` removes all Someone's messages in the last 100 messages. `{0}prune @Someone X` removes last `X` number of 'Someone's' messages in the channel.",
     "usage": "`{0}prune` or `{0}prune 5` or `{0}prune @Someone` or `{0}prune @Someone X`"
   },
   {
@@ -1072,7 +1072,7 @@
     "name": "slot",
     "cmd": "slot",
     "aliases": [],
-    "desc": "Play Nadeko slots. Max bet is 9999. 1.5 second cooldown per user.",
+    "desc": "Play Mitternacht slots. Max bet is 9999. 1.5 second cooldown per user.",
     "usage": "`{0}slot 5`"
   },
   {
@@ -1316,7 +1316,7 @@
     "name": "leave",
     "cmd": "leave",
     "aliases": [],
-    "desc": "Makes Nadeko leave the server. Either server name or server ID is required.",
+    "desc": "Makes Mitternacht leave the server. Either server name or server ID is required.",
     "usage": "`{0}leave 123123123331`"
   },
   {
@@ -1359,7 +1359,7 @@
     "aliases": [
       "pr"
     ],
-    "desc": "Sets a role which can change permissions. Supply no parameters to see the current one. Default is 'Nadeko'.",
+    "desc": "Sets a role which can change permissions. Supply no parameters to see the current one. Default is 'Mitternacht'.",
     "usage": "`{0}pr role`"
   },
   {
@@ -1944,7 +1944,7 @@
     "name": "stats",
     "cmd": "stats",
     "aliases": [],
-    "desc": "Shows some basic stats for Nadeko.",
+    "desc": "Shows some basic stats for Mitternacht.",
     "usage": "`{0}stats`"
   },
   {
@@ -2277,7 +2277,7 @@
     "name": "rps",
     "cmd": "rps",
     "aliases": [],
-    "desc": "Play a game of Rocket-Paperclip-Scissors with Nadeko.",
+    "desc": "Play a game of Rocket-Paperclip-Scissors with Mitternacht.",
     "usage": "`{0}rps scissors`"
   },
   {
@@ -2431,7 +2431,7 @@
     "name": "heal",
     "cmd": "heal",
     "aliases": [],
-    "desc": "Heals someone. Revives those who fainted. Costs a NadekoFlower. ",
+    "desc": "Heals someone. Revives those who fainted. Costs a Currency. ",
     "usage": "`{0}heal @someone`"
   },
   {
@@ -2449,7 +2449,7 @@
     "aliases": [
       "cmdmap"
     ],
-    "desc": "Create a custom alias for a certain Nadeko command. Provide no alias to remove the existing one.",
+    "desc": "Create a custom alias for a certain Mitternacht command. Provide no alias to remove the existing one.",
     "usage": "`{0}alias allin $bf 100 h` or `{0}alias \"linux thingy\" >loonix Spyware Windows`"
   },
   {
@@ -2463,7 +2463,7 @@
     "name": "settype",
     "cmd": "settype",
     "aliases": [],
-    "desc": "Set your poketype. Costs a NadekoFlower. Provide no arguments to see a list of available types.",
+    "desc": "Set your poketype. Costs a Currency. Provide no arguments to see a list of available types.",
     "usage": "`{0}settype fire` or `{0}settype`"
   },
   {
@@ -2790,8 +2790,8 @@
     "name": "startevent",
     "cmd": "startevent",
     "aliases": [],
-    "desc": "Starts one of the events seen on public mitternacht.",
-    "usage": "`{0}startevent flowerreaction`"
+    "desc": "Startet ein Event, bei dem man eine bestimmte Menge der Währung bekommen kann. Möglichkeiten sind `reaction` und `sneakygamestatus`.",
+    "usage": "`{0}startevent reaction`"
   },
   {
     "name": "anime",

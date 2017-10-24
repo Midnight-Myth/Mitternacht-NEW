@@ -12,6 +12,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
 namespace Mitternacht.Modules.Gambling
@@ -23,13 +24,13 @@ namespace Mitternacht.Modules.Gambling
         {
             public enum CurrencyEvent
             {
-                FlowerReaction,
+                Reaction,
                 SneakyGameStatus
             }
             //flower reaction event
-            private static readonly ConcurrentHashSet<ulong> _sneakyGameAwardedUsers = new ConcurrentHashSet<ulong>();
+            private static readonly ConcurrentHashSet<ulong> SneakyGameAwardedUsers = new ConcurrentHashSet<ulong>();
 
-            private static readonly char[] _sneakyGameStatusChars = Enumerable.Range(48, 10)
+            private static readonly char[] SneakyGameStatusChars = Enumerable.Range(48, 10)
                 .Concat(Enumerable.Range(65, 26))
                 .Concat(Enumerable.Range(97, 26))
                 .Select(x => (char)x)
@@ -54,8 +55,8 @@ namespace Mitternacht.Modules.Gambling
             {
                 switch (e)
                 {
-                    case CurrencyEvent.FlowerReaction:
-                        await FlowerReactionEvent(Context, arg).ConfigureAwait(false);
+                    case CurrencyEvent.Reaction:
+                        await ReactionEvent(Context, arg).ConfigureAwait(false);
                         break;
                     case CurrencyEvent.SneakyGameStatus:
                         await SneakyGameStatusEvent(Context, arg).ConfigureAwait(false);
@@ -77,7 +78,7 @@ namespace Mitternacht.Modules.Gambling
 
                 for (var i = 0; i < 5; i++)
                 {
-                    _secretCode += _sneakyGameStatusChars[rng.Next(0, _sneakyGameStatusChars.Length)];
+                    _secretCode += SneakyGameStatusChars[rng.Next(0, SneakyGameStatusChars.Length)];
                 }
 
                 await _client.SetGameAsync($"type {_secretCode} for " + _bc.BotConfig.CurrencyPluralName)
@@ -98,8 +99,8 @@ namespace Mitternacht.Modules.Gambling
                 await Task.Delay(num * 1000);
                 _client.MessageReceived -= SneakyGameMessageReceivedEventHandler;
 
-                var cnt = _sneakyGameAwardedUsers.Count;
-                _sneakyGameAwardedUsers.Clear();
+                var cnt = SneakyGameAwardedUsers.Count;
+                SneakyGameAwardedUsers.Clear();
                 _secretCode = string.Empty;
 
                 await _client.SetGameAsync(GetText("sneakygamestatus_end", cnt))
@@ -109,14 +110,14 @@ namespace Mitternacht.Modules.Gambling
             private Task SneakyGameMessageReceivedEventHandler(SocketMessage arg)
             {
                 if (arg.Content == _secretCode &&
-                    _sneakyGameAwardedUsers.Add(arg.Author.Id))
+                    SneakyGameAwardedUsers.Add(arg.Author.Id))
                 {
                     var _ = Task.Run(async () =>
                     {
                         await _cs.AddAsync(arg.Author, "Sneaky Game Event", 100, false)
                             .ConfigureAwait(false);
 
-                        try { await arg.DeleteAsync(new RequestOptions() { RetryMode = RetryMode.AlwaysFail }).ConfigureAwait(false); }
+                        try { await arg.DeleteAsync(new RequestOptions { RetryMode = RetryMode.AlwaysFail }).ConfigureAwait(false); }
                         catch
                         {
                             // ignored
@@ -127,19 +128,19 @@ namespace Mitternacht.Modules.Gambling
                 return Task.CompletedTask;
             }
 
-            public async Task FlowerReactionEvent(ICommandContext context, int amount)
+            public async Task ReactionEvent(ICommandContext context, int amount)
             {
                 if (amount <= 0)
                     amount = 100;
 
-                var title = GetText("flowerreaction_title");
-                var desc = GetText("flowerreaction_desc", "🌸", Format.Bold(amount.ToString()) + _bc.BotConfig.CurrencySign);
-                var footer = GetText("flowerreaction_footer", 24);
+                var title = GetText("reaction_title");
+                var desc = GetText("reaction_desc", _bc.BotConfig.CurrencySign, Format.Bold(amount.ToString()) + _bc.BotConfig.CurrencySign);
+                var footer = GetText("reaction_footer", 24);
                 var msg = await context.Channel.SendConfirmAsync(title,
                         desc, footer: footer)
                     .ConfigureAwait(false);
 
-                await new FlowerReactionEvent(_client, _cs, amount).Start(msg, context);
+                await new ReactionEvent(_bc.BotConfig, _client, _cs, amount).Start(msg, context);
             }
         }
     }
@@ -149,12 +150,12 @@ namespace Mitternacht.Modules.Gambling
         public abstract Task Start(IUserMessage msg, ICommandContext channel);
     }
 
-    public class FlowerReactionEvent : CurrencyEvent
+    public class ReactionEvent : CurrencyEvent
     {
-        private readonly ConcurrentHashSet<ulong> _flowerReactionAwardedUsers = new ConcurrentHashSet<ulong>();
+        private readonly ConcurrentHashSet<ulong> _reactionAwardedUsers = new ConcurrentHashSet<ulong>();
+        private readonly BotConfig _bc;
         private readonly Logger _log;
         private readonly DiscordSocketClient _client;
-        private readonly CurrencyService _cs;
         private readonly SocketSelfUser _botUser;
 
         private IUserMessage StartingMessage { get; set; }
@@ -163,15 +164,12 @@ namespace Mitternacht.Modules.Gambling
         private CancellationToken CancelToken { get; }
 
         private readonly ConcurrentQueue<ulong> _toGiveTo = new ConcurrentQueue<ulong>();
-        private readonly int _amount;
 
-        public FlowerReactionEvent(DiscordSocketClient client, CurrencyService cs, int amount)
-        {
+        public ReactionEvent(BotConfig bc, DiscordSocketClient client, CurrencyService cs, int amount) {
+            _bc = bc;
             _log = LogManager.GetCurrentClassLogger();
             _client = client;
-            _cs = cs;
             _botUser = client.CurrentUser;
-            _amount = amount;
             Source = new CancellationTokenSource();
             CancelToken = Source.Token;
 
@@ -189,7 +187,7 @@ namespace Mitternacht.Modules.Gambling
 
                     if (users.Count > 0)
                     {
-                        await _cs.AddToManyAsync("", _amount, users.ToArray()).ConfigureAwait(false);
+                        await cs.AddToManyAsync("", amount, users.ToArray()).ConfigureAwait(false);
                     }
 
                     users.Clear();
@@ -210,11 +208,9 @@ namespace Mitternacht.Modules.Gambling
 
         private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, ISocketMessageChannel channel)
         {
-            if (StartingMessage?.Id == msg.Id)
-            {
-                _log.Warn("Stopping flower reaction event because message is deleted.");
-                var __ = Task.Run(End);
-            }
+            if (StartingMessage?.Id != msg.Id) return Task.CompletedTask;
+            _log.Warn("Stopping flower reaction event because message is deleted.");
+            var __ = Task.Run(End, CancelToken);
 
             return Task.CompletedTask;
         }
@@ -224,7 +220,9 @@ namespace Mitternacht.Modules.Gambling
             StartingMessage = umsg;
             _client.MessageDeleted += MessageDeletedEventHandler;
 
-            try { await StartingMessage.AddReactionAsync(new Emoji("🌸")).ConfigureAwait(false); }
+            var iemote = Emote.TryParse(_bc.CurrencySign, out var emote) ? emote : new Emoji(_bc.CurrencySign) as IEmote;
+            
+            try { await StartingMessage.AddReactionAsync(iemote).ConfigureAwait(false); }
             catch
             {
                 try { await StartingMessage.AddReactionAsync(new Emoji("🌸")).ConfigureAwait(false); }
@@ -234,14 +232,14 @@ namespace Mitternacht.Modules.Gambling
                     catch { return; }
                 }
             }
-            using (StartingMessage.OnReaction(_client, (r) =>
+            using (StartingMessage.OnReaction(_client, r =>
             {
                 try
                 {
                     if (r.UserId == _botUser.Id)
                         return;
 
-                    if (r.Emote.Name == "🌸" && r.User.IsSpecified && ((DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5) && _flowerReactionAwardedUsers.Add(r.User.Value.Id))
+                    if (r.Emote.Name == iemote.Name && r.User.IsSpecified && ((DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5) && _reactionAwardedUsers.Add(r.User.Value.Id))
                     {
                         _toGiveTo.Enqueue(r.UserId);
                     }
