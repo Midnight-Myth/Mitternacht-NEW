@@ -4,7 +4,6 @@ using System.Linq;
 using Mitternacht.Common.Collections;
 using Newtonsoft.Json;
 using NLog;
-using SQLitePCL;
 
 namespace Mitternacht.Resources
 {

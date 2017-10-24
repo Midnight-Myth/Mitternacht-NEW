@@ -108,11 +108,25 @@ namespace Mitternacht.Modules.Administration
             [RequireContext(ContextType.Guild)]
             public async Task Lsar(int page = 1)
             {
-                if (--page < 0)
+                if (--page < 0) {
+                    List<IRole> rms;
+                    using (var uow = _db.UnitOfWork)
+                    {
+                        var roleModels = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToList();
+
+                        rms = (from rm in roleModels
+                            let role = Context.Guild.Roles.FirstOrDefault(r => r.Id == rm.RoleId)
+                            where role != null
+                            select role).ToList();
+
+                        uow.SelfAssignedRoles.RemoveRange(roleModels.Where(rm => rms.All(r => r.Id != rm.RoleId)).ToArray());
+                        await uow.CompleteAsync();
+                    }
+                    await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithTitle(GetText("self_assign_list", rms.Count)).WithDescription(rms.Aggregate("", (s, r) => s + Format.Bold(r.Name) + ", ", s => s.Substring(0, s.Length - 2))).WithOkColor().Build());
                     return;
+                }
 
                 var toRemove = new ConcurrentHashSet<SelfAssignedRole>();
-                var removeMsg = new StringBuilder();
                 var roles = new List<string>();
                 var roleCnt = 0;
                 using (var uow = _db.UnitOfWork)
@@ -133,20 +147,14 @@ namespace Mitternacht.Modules.Administration
                             roleCnt++;
                         }
                     }
-                    foreach (var role in toRemove)
-                    {
-                        roles.Add(GetText("role_clean", role.RoleId));
-                    }
+                    roles.AddRange(toRemove.Select(role => GetText("role_clean", role.RoleId)));
                     await uow.CompleteAsync();
                 }
 
-                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, (curPage) =>
-                {
-                    return new EmbedBuilder()
-                        .WithTitle(GetText("self_assign_list", roleCnt))
-                        .WithDescription(string.Join("\n", roles.Skip(curPage * 10).Take(10)))
-                        .WithOkColor();
-                }, roles.Count / 10);
+                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, curPage => new EmbedBuilder()
+                    .WithTitle(GetText("self_assign_list", roleCnt))
+                    .WithDescription(string.Join("\n", roles.Skip(curPage * 10).Take(10)))
+                    .WithOkColor(), roles.Count / 10);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -200,17 +208,15 @@ namespace Mitternacht.Modules.Administration
                     foreach (var roleId in sameRoles)
                     {
                         var sameRole = Context.Guild.GetRole(roleId);
-                        if (sameRole != null)
+                        if (sameRole == null) continue;
+                        try
                         {
-                            try
-                            {
-                                await guildUser.RemoveRoleAsync(sameRole).ConfigureAwait(false);
-                                await Task.Delay(300).ConfigureAwait(false);
-                            }
-                            catch (Exception ex)
-                            {
-                                _log.Warn(ex);
-                            }
+                            await guildUser.RemoveRoleAsync(sameRole).ConfigureAwait(false);
+                            await Task.Delay(300).ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.Warn(ex);
                         }
                     }
                 }

@@ -13,7 +13,6 @@ using Discord.WebSocket;
 using Mitternacht.Common.ShardCom;
 using Mitternacht.Common.TypeReaders;
 using Mitternacht.Common.TypeReaders.Models;
-using Mitternacht.Resources;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
@@ -202,7 +201,7 @@ namespace Mitternacht
         public async Task RunAsync(params string[] args)
         {
             if (Client.ShardId == 0)
-                _log.Info("Starting MitternachtBot (former NadekoBot) v" + StatsService.BotVersion);
+                _log.Info($"Starting MitternachtBot v{StatsService.BotVersion} (based on NadekoBot v1.7)");
 
             var sw = Stopwatch.StartNew();
 
