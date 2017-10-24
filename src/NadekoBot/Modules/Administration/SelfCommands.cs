@@ -114,20 +114,19 @@ namespace Mitternacht.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [OwnerOnly]
-            public async Task Wait(int miliseconds)
+            public async Task Wait(int ms)
             {
-                if (miliseconds <= 0)
+                if (ms <= 0)
                     return;
                 Context.Message.DeleteAfter(0);
                 try
                 {
-                    var msg = await Context.Channel.SendConfirmAsync($"⏲ {miliseconds}ms")
-                   .ConfigureAwait(false);
-                    msg.DeleteAfter(miliseconds / 1000);
+                    var msg = await Context.Channel.SendConfirmAsync($"⏲ {ms}ms").ConfigureAwait(false);
+                    msg.DeleteAfter(ms / 1000);
                 }
                 catch { }
 
-                await Task.Delay(miliseconds);
+                await Task.Delay(ms);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -414,11 +413,7 @@ namespace Mitternacht.Modules.Administration
             public async Task Announce([Remainder] string message)
             {
                 var channels = _client.Guilds.Select(g => g.DefaultChannel).ToArray();
-                if (channels == null)
-                    return;
-                await Task.WhenAll(channels.Where(c => c != null).Select(c => c.SendConfirmAsync(GetText("message_from_bo", Context.User.ToString()), message)))
-                        .ConfigureAwait(false);
-
+                await Task.WhenAll(channels.Where(c => c != null).Select(c => c.SendConfirmAsync(GetText("message_from_bo", Context.User.ToString()), message))).ConfigureAwait(false);
                 await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
             }
 

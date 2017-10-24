@@ -29,12 +29,15 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task Warn(IGuildUser user, [Remainder] string reason = null)
             {
-                try
-                {
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Select(r => r.Position).Max()) {
+                    await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
+                    return;
+                }
+                try {
                     await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor()
-                                     .WithDescription(GetText("warned_on", Context.Guild.ToString()))
-                                     .AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString()))
-                                     .AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-")))
+                            .WithDescription(GetText("warned_on", Context.Guild.ToString()))
+                            .AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString()))
+                            .AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-")))
                         .ConfigureAwait(false);
                 }
                 catch { }
