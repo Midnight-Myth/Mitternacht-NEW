@@ -27,8 +27,7 @@ namespace Mitternacht.Modules.Administration.Services
 
             var guildId = guild.Id;
 
-            var warn = new Warning()
-            {
+            var warn = new Warning {
                 UserId = userId,
                 GuildId = guildId,
                 Forgiven = false,
@@ -36,7 +35,7 @@ namespace Mitternacht.Modules.Administration.Services
                 Moderator = modName,
             };
 
-            int warnings = 1;
+            var warnings = 1;
             List<WarningPunishment> ps;
             using (var uow = _db.UnitOfWork)
             {
@@ -45,8 +44,7 @@ namespace Mitternacht.Modules.Administration.Services
 
                 warnings += uow.Warnings
                     .For(guildId, userId)
-                    .Where(w => !w.Forgiven && w.UserId == userId)
-                    .Count();
+                    .Count(w => !w.Forgiven && w.UserId == userId);
 
                 uow.Warnings.Add(warn);
 
@@ -55,43 +53,39 @@ namespace Mitternacht.Modules.Administration.Services
 
             var p = ps.FirstOrDefault(x => x.Count == warnings);
 
-            if (p != null)
+            if (p == null) return null;
+            var user = await guild.GetUserAsync(userId);
+            if (user == null)
+                return null;
+            switch (p.Punishment)
             {
-                var user = await guild.GetUserAsync(userId);
-                if (user == null)
-                    return null;
-                switch (p.Punishment)
-                {
-                    case PunishmentAction.Mute:
-                        if (p.Time == 0)
-                            await _mute.MuteUser(user).ConfigureAwait(false);
-                        else
-                            await _mute.TimedMute(user, TimeSpan.FromMinutes(p.Time)).ConfigureAwait(false);
-                        break;
-                    case PunishmentAction.Kick:
-                        await user.KickAsync().ConfigureAwait(false);
-                        break;
-                    case PunishmentAction.Ban:
-                        await guild.AddBanAsync(user).ConfigureAwait(false);
-                        break;
-                    case PunishmentAction.Softban:
-                        await guild.AddBanAsync(user, 7).ConfigureAwait(false);
-                        try
-                        {
-                            await guild.RemoveBanAsync(user).ConfigureAwait(false);
-                        }
-                        catch
-                        {
-                            await guild.RemoveBanAsync(user).ConfigureAwait(false);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return p.Punishment;
+                case PunishmentAction.Mute:
+                    if (p.Time == 0)
+                        await _mute.MuteUser(user).ConfigureAwait(false);
+                    else
+                        await _mute.TimedMute(user, TimeSpan.FromMinutes(p.Time)).ConfigureAwait(false);
+                    break;
+                case PunishmentAction.Kick:
+                    await user.KickAsync().ConfigureAwait(false);
+                    break;
+                case PunishmentAction.Ban:
+                    await guild.AddBanAsync(user).ConfigureAwait(false);
+                    break;
+                case PunishmentAction.Softban:
+                    await guild.AddBanAsync(user, 7).ConfigureAwait(false);
+                    try
+                    {
+                        await guild.RemoveBanAsync(user).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        await guild.RemoveBanAsync(user).ConfigureAwait(false);
+                    }
+                    break;
+                default:
+                    break;
             }
-
-            return null;
+            return p.Punishment;
         }
     }
 }

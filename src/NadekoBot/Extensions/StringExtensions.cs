@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -93,7 +94,7 @@ namespace Mitternacht.Extensions
                 for (var j = 1; j <= m; j++)
                 {
                     // Step 5
-                    var cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+                    var cost = t[j - 1] == s[i - 1] ? 0 : 1;
 
                     // Step 6
                     d[i, j] = Math.Min(
@@ -115,9 +116,9 @@ namespace Mitternacht.Extensions
             return ms;
         }
 
-        private static readonly Regex filterRegex = new Regex(@"(?:discord(?:\.gg|.me|app\.com\/invite)\/(?<id>([\w]{16}|(?:[\w]+-?){3})))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex FilterRegex = new Regex(@"(?:discord(?:\.gg|.me|app\.com\/invite)\/(?<id>([\w]{16}|(?:[\w]+-?){3})))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static bool IsDiscordInvite(this string str)
-            => filterRegex.IsMatch(str);
+            => FilterRegex.IsMatch(str);
 
         public static string Unmention(this string str) => str.Replace("@", "ම");
 
@@ -128,6 +129,15 @@ namespace Mitternacht.Extensions
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static int? FromHexToInt(this string hex) {
+            try {
+                return int.Parse(hex, NumberStyles.HexNumber);
+            }
+            catch (Exception) {
+                return null;
+            }
         }
 
         public static string GetInitials(this string txt, string glue = "") =>
