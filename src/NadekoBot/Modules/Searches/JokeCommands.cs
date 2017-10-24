@@ -1,15 +1,15 @@
-﻿using AngleSharp;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Searches.Services;
-using Newtonsoft.Json.Linq;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
+using AngleSharp;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Services;
+using Newtonsoft.Json.Linq;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {

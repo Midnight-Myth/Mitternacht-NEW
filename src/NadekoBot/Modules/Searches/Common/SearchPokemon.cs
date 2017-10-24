@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NadekoBot.Modules.Searches.Common
+namespace Mitternacht.Modules.Searches.Common
 {
     public class SearchPokemon
     {

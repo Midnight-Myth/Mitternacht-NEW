@@ -1,6 +1,6 @@
-﻿using NadekoBot.Services.Database.Models;
+﻿using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Gambling.Common.AnimalRacing
+namespace Mitternacht.Modules.Gambling.Common.AnimalRacing
 {
     public class AnimalRacingUser
     {

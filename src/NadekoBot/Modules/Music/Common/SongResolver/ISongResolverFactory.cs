@@ -1,8 +1,8 @@
-﻿using NadekoBot.Modules.Music.Common.SongResolver.Strategies;
-using NadekoBot.Services.Database.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Mitternacht.Modules.Music.Common.SongResolver.Strategies;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Music.Common.SongResolver
+namespace Mitternacht.Modules.Music.Common.SongResolver
 {
     public interface ISongResolverFactory
     {

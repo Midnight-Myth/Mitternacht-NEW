@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Common;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class SelfService : ILateExecutor, INService
     {
@@ -19,7 +19,7 @@ namespace NadekoBot.Modules.Administration.Services
         public bool ForwardDMs => _bc.BotConfig.ForwardMessages;
         public bool ForwardDMsToAllOwners => _bc.BotConfig.ForwardToAllOwners;
         
-        private readonly NadekoBot _bot;
+        private readonly Mitternacht.MitternachtBot _bot;
         private readonly CommandHandler _cmdHandler;
         private readonly DbService _db;
         private readonly Logger _log;
@@ -30,7 +30,7 @@ namespace NadekoBot.Modules.Administration.Services
         private ImmutableArray<AsyncLazy<IDMChannel>> ownerChannels = new ImmutableArray<AsyncLazy<IDMChannel>>();
         private readonly IBotConfigProvider _bc;
 
-        public SelfService(DiscordSocketClient client, NadekoBot bot, CommandHandler cmdHandler, DbService db,
+        public SelfService(DiscordSocketClient client, Mitternacht.MitternachtBot bot, CommandHandler cmdHandler, DbService db,
             IBotConfigProvider bc, ILocalization localization, NadekoStrings strings, IBotCredentials creds)
         {
             _bot = bot;

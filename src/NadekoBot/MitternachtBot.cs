@@ -1,28 +1,26 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using NadekoBot.Services;
-using NadekoBot.Services.Impl;
-using NLog;
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using NadekoBot.Services.Database.Models;
-using System.Threading;
 using System.IO;
-using NadekoBot.Extensions;
-using System.Collections.Generic;
-using NadekoBot.Common;
-using NadekoBot.Common.ShardCom;
-using NadekoBot.Common.TypeReaders;
-using NadekoBot.Common.TypeReaders.Models;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common.ShardCom;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot
+namespace Mitternacht
 {
-    public class NadekoBot
+    public class MitternachtBot
     {
         private readonly Logger _log;
 
@@ -53,7 +51,7 @@ namespace NadekoBot
 
         private readonly BotConfig _botConfig;
 
-        public NadekoBot(int shardId, int parentProcessId, int? port = null)
+        public MitternachtBot(int shardId, int parentProcessId, int? port = null)
         {
             if (shardId < 0)
                 throw new ArgumentOutOfRangeException(nameof(shardId));
@@ -71,12 +69,11 @@ namespace NadekoBot
                 ConnectionTimeout = int.MaxValue,
                 TotalShards = Credentials.TotalShards,
                 ShardId = shardId,
-                AlwaysDownloadUsers = false,
+                AlwaysDownloadUsers = false
             });
-            CommandService = new CommandService(new CommandServiceConfig()
-            {
+            CommandService = new CommandService(new CommandServiceConfig {
                 CaseSensitiveCommands = false,
-                DefaultRunMode = RunMode.Sync,
+                DefaultRunMode = RunMode.Sync
             });
 
             port = port ?? Credentials.ShardRunPort;
@@ -90,10 +87,8 @@ namespace NadekoBot
             }
 
             SetupShard(parentProcessId, port.Value);
-
-#if GLOBAL_NADEKO
+            
             Client.Log += Client_Log;
-#endif
         }
 
         private void StartSendingData()
@@ -102,12 +97,11 @@ namespace NadekoBot
             {
                 while (true)
                 {
-                    await _comClient.Send(new ShardComMessage()
-                    {
+                    await _comClient.Send(new ShardComMessage {
                         ConnectionState = Client.ConnectionState,
                         Guilds = Client.ConnectionState == ConnectionState.Connected ? Client.Guilds.Count : 0,
                         ShardId = Client.ShardId,
-                        Time = DateTime.UtcNow,
+                        Time = DateTime.UtcNow
                     });
                     await Task.Delay(5000);
                 }
@@ -207,7 +201,7 @@ namespace NadekoBot
         public async Task RunAsync(params string[] args)
         {
             if (Client.ShardId == 0)
-                _log.Info("Starting NadekoBot v" + StatsService.BotVersion);
+                _log.Info($"Starting MitternachtBot v{StatsService.BotVersion} (based on NadekoBot v1.7)");
 
             var sw = Stopwatch.StartNew();
 
@@ -229,27 +223,6 @@ namespace NadekoBot
 
             var _ = await commandService.AddModulesAsync(GetType().GetTypeInfo().Assembly);
 
-
-            var isPublicNadeko = false;
-#if GLOBAL_NADEKO
-            isPublicNadeko = true;
-#endif
-            //_log.Info(string.Join(", ", CommandService.Commands
-            //    .Distinct(x => x.Name + x.Module.Name)
-            //    .SelectMany(x => x.Aliases)
-            //    .GroupBy(x => x)
-            //    .Where(x => x.Count() > 1)
-            //    .Select(x => x.Key + $"({x.Count()})")));
-
-            //unload modules which are not available on the public bot
-
-            if (isPublicNadeko)
-                commandService
-                    .Modules
-                    .ToArray()
-                    .Where(x => x.Preconditions.Any(y => y.GetType() == typeof(NoPublicBot)))
-                    .ForEach(x => commandService.RemoveModuleAsync(x));
-
             Ready.TrySetResult(true);
             _log.Info($"Shard {Client.ShardId} ready.");
             //_log.Info(await stats.Print().ConfigureAwait(false));
@@ -258,9 +231,7 @@ namespace NadekoBot
         private Task Client_Log(LogMessage arg)
         {
             _log.Warn(arg.Source + " | " + arg.Message);
-            if (arg.Exception != null)
-                _log.Warn(arg.Exception);
-
+            if (arg.Exception != null) _log.Warn(arg.Exception);
             return Task.CompletedTask;
         }
 
@@ -285,7 +256,7 @@ namespace NadekoBot
             }
             catch
             {
-                _log.Error("You must run the application as an ADMINISTRATOR.");
+                _log.Error("I really like sudo. Try testing it out (I won't start without :P).");
                 Console.ReadKey();
                 Environment.Exit(2);
             }

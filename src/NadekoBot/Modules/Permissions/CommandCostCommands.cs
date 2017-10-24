@@ -1,8 +1,8 @@
-﻿using Discord.Commands;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Discord.Commands;
 
-namespace NadekoBot.Modules.Permissions
+namespace Mitternacht.Modules.Permissions
 {
     public partial class Permissions
     {
@@ -14,7 +14,7 @@ namespace NadekoBot.Modules.Permissions
 
             static CommandCostCommands()
             {
-                //_commandCosts = new ConcurrentDictionary<string, int>(NadekoBot.BotConfig.CommandCosts.ToDictionary(
+                //_commandCosts = new ConcurrentDictionary<string, int>(MitternachtBot.BotConfig.CommandCosts.ToDictionary(
                 //    x => x.CommandName.Trim().ToUpperInvariant(),
                 //    x => x.Cost));
             }
@@ -83,7 +83,7 @@ namespace NadekoBot.Modules.Permissions
             //    if (cost == 0)
             //        await Context.Channel.SendConfirmAsync($"Removed the cost from the {Format.Bold(cmd.Name)} command.").ConfigureAwait(false);
             //    else
-            //        await Context.Channel.SendConfirmAsync($"{Format.Bold(cmd.Name)} now costs {cost}{NadekoBot.BotConfig.CurrencySign} to run.").ConfigureAwait(false);
+            //        await Context.Channel.SendConfirmAsync($"{Format.Bold(cmd.Name)} now costs {cost}{MitternachtBot.BotConfig.CurrencySign} to run.").ConfigureAwait(false);
             //}
         }
     }

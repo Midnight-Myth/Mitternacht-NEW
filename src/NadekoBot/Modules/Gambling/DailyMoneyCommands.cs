@@ -1,17 +1,17 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Gambling
+namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {
@@ -140,14 +140,14 @@ namespace NadekoBot.Modules.Gambling
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            public async Task Payroll(int count, [Remainder]int position = 1)
+            public async Task Payroll(int count, int position = 1)
             {
                 const int elementsPerList = 20;
 
                 IOrderedEnumerable<RoleMoney> roleMoneys;
                 using (var uow = _db.UnitOfWork)
                 {
-                    roleMoneys = uow.RoleMoney.GetAll().OrderByDescending(rm => (((long)rm.Priority << 32) + Context.Guild.GetRole(rm.RoleId).Position));
+                    roleMoneys = uow.RoleMoney.GetAll().OrderByDescending(rm => ((long)rm.Priority << 32) + Context.Guild.GetRole(rm.RoleId).Position);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
@@ -190,7 +190,7 @@ namespace NadekoBot.Modules.Gambling
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            public async Task Payroll([Remainder]int count = 20) => await Payroll(count, 1);
+            public async Task Payroll(int count = 20) => await Payroll(count, 1);
         }
     }
 }

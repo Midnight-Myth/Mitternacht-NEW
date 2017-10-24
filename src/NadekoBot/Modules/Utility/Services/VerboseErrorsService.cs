@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using NadekoBot.Common.Collections;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Help.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Help.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Utility.Services
+namespace Mitternacht.Modules.Utility.Services
 {
     public class VerboseErrorsService : INService
     {

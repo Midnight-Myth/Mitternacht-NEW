@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using Discord;
 
-namespace NadekoBot.Modules.Administration.Common
+namespace Mitternacht.Modules.Administration.Common
 {
     public class UserSpamStats : IDisposable
     {

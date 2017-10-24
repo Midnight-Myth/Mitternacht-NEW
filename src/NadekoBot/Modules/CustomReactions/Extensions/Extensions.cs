@@ -1,19 +1,19 @@
-﻿using AngleSharp;
-using AngleSharp.Dom.Html;
-using Discord;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.CustomReactions.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Replacements;
+using AngleSharp;
+using AngleSharp.Dom.Html;
+using Discord;
+using Discord.WebSocket;
+using Mitternacht.Common;
+using Mitternacht.Common.Replacements;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.CustomReactions.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.CustomReactions.Extensions
+namespace Mitternacht.Modules.CustomReactions.Extensions
 {
     public static class Extensions
     {

@@ -1,12 +1,12 @@
-﻿using NadekoBot.Services.Database.Repositories;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Mitternacht.Services.Database.Repositories;
 
-namespace NadekoBot.Services.Database
+namespace Mitternacht.Services.Database
 {
     public interface IUnitOfWork : IDisposable
     {
-        NadekoContext _context { get; }
+        NadekoContext Context { get; }
 
         IQuoteRepository Quotes { get; }
         IGuildConfigRepository GuildConfigs { get; }

@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using Newtonsoft.Json;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {
@@ -26,7 +26,7 @@ namespace NadekoBot.Modules.Searches
                     {
                         var res = await http.GetStringAsync($"{_xkcdUrl}/info.0.json").ConfigureAwait(false);
                         var comic = JsonConvert.DeserializeObject<XkcdComic>(res);
-                        var embed = new EmbedBuilder().WithColor(NadekoBot.OkColor)
+                        var embed = new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
                                                   .WithImageUrl(comic.ImageLink)
                                                   .WithAuthor(eab => eab.WithName(comic.Title).WithUrl($"{_xkcdUrl}/{comic.Num}").WithIconUrl("http://xkcd.com/s/919f27.ico"))
                                                   .AddField(efb => efb.WithName(GetText("comic_number")).WithValue(comic.Num.ToString()).WithIsInline(true))
@@ -55,7 +55,7 @@ namespace NadekoBot.Modules.Searches
                     var res = await http.GetStringAsync($"{_xkcdUrl}/{num}/info.0.json").ConfigureAwait(false);
 
                     var comic = JsonConvert.DeserializeObject<XkcdComic>(res);
-                    var embed = new EmbedBuilder().WithColor(NadekoBot.OkColor)
+                    var embed = new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
                                                   .WithImageUrl(comic.ImageLink)
                                                   .WithAuthor(eab => eab.WithName(comic.Title).WithUrl($"{_xkcdUrl}/{num}").WithIconUrl("http://xkcd.com/s/919f27.ico"))
                                                   .AddField(efb => efb.WithName(GetText("comic_number")).WithValue(comic.Num.ToString()).WithIsInline(true))

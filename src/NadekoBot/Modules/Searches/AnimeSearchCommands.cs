@@ -1,15 +1,15 @@
-﻿using AngleSharp;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AngleSharp;
 using AngleSharp.Dom.Html;
 using Discord;
 using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Searches.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Services;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {
@@ -132,7 +132,7 @@ namespace NadekoBot.Modules.Searches
                     return;
                 }
 
-                var embed = new EmbedBuilder().WithColor(NadekoBot.OkColor)
+                var embed = new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
                     .WithDescription(animeData.Synopsis.Replace("<br>", Environment.NewLine))
                     .WithTitle(animeData.title_english)
                     .WithUrl(animeData.Link)
@@ -159,7 +159,7 @@ namespace NadekoBot.Modules.Searches
                     return;
                 }
 
-                var embed = new EmbedBuilder().WithColor(NadekoBot.OkColor)
+                var embed = new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
                     .WithDescription(mangaData.Synopsis.Replace("<br>", Environment.NewLine))
                     .WithTitle(mangaData.title_english)
                     .WithUrl(mangaData.Link)

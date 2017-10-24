@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Verification.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Verification.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Verification
+namespace Mitternacht.Modules.Verification
 {
     public class Verification : NadekoTopLevelModule<VerificationService>
     {

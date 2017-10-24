@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories
+namespace Mitternacht.Services.Database.Repositories
 {
     public interface IMessageXpBlacklist : IRepository<MessageXpRestriction>
     {

@@ -1,10 +1,4 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using ImageSharp;
-using NadekoBot.Services.Discord;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +8,16 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NadekoBot.Common.Collections;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using ImageSharp;
+using Mitternacht.Common.Collections;
+using Mitternacht.Services.Discord;
+using Newtonsoft.Json;
 using SixLabors.Primitives;
 
-namespace NadekoBot.Extensions
+namespace Mitternacht.Extensions
 {
     public static class Extensions
     {
@@ -58,10 +58,10 @@ namespace NadekoBot.Extensions
         }
 
         public static EmbedBuilder WithOkColor(this EmbedBuilder eb) =>
-            eb.WithColor(NadekoBot.OkColor);
+            eb.WithColor(MitternachtBot.OkColor);
 
         public static EmbedBuilder WithErrorColor(this EmbedBuilder eb) =>
-            eb.WithColor(NadekoBot.ErrorColor);
+            eb.WithColor(MitternachtBot.ErrorColor);
 
         public static ReactionEventWrapper OnReaction(this IUserMessage msg, DiscordSocketClient client, Action<SocketReaction> reactionAdded, Action<SocketReaction> reactionRemoved = null)
         {

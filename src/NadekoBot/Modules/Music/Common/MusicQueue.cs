@@ -1,12 +1,12 @@
-﻿using NadekoBot.Extensions;
-using NadekoBot.Modules.Music.Common.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Music.Common.Exceptions;
 
-namespace NadekoBot.Modules.Music.Common
+namespace Mitternacht.Modules.Music.Common
 {
     public class MusicQueue : IDisposable
     {

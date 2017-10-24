@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Modules.CustomReactions.Services;
-using NadekoBot.Services;
+using Mitternacht.Modules.CustomReactions.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Common.TypeReaders
+namespace Mitternacht.Common.TypeReaders
 {
     public class CommandTypeReader : TypeReader
     {

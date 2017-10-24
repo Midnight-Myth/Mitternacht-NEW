@@ -1,26 +1,26 @@
-﻿using Discord.Commands;
-using Discord.WebSocket;
-using NadekoBot.Services;
-using Discord;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using NadekoBot.Extensions;
+﻿using System;
 using System.Collections.Generic;
-using NadekoBot.Services.Database.Models;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.Collections;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Music.Common;
+using Mitternacht.Modules.Music.Common.Exceptions;
+using Mitternacht.Modules.Music.Extensions;
+using Mitternacht.Modules.Music.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using Newtonsoft.Json.Linq;
-using NadekoBot.Services.Impl;
-using NadekoBot.Modules.Music.Services;
-using NadekoBot.Modules.Music.Common.Exceptions;
-using NadekoBot.Modules.Music.Common;
-using NadekoBot.Modules.Music.Extensions;
 
-namespace NadekoBot.Modules.Music
+namespace Mitternacht.Modules.Music
 {
     [NoPublicBot]
     public class Music : NadekoTopLevelModule<MusicService>
@@ -813,7 +813,7 @@ namespace NadekoBot.Modules.Music
             .WithAuthor(eab => eab.WithName(GetText("song_moved")).WithIconUrl("https://cdn.discordapp.com/attachments/155726317222887425/258605269972549642/music1.png"))
             .AddField(fb => fb.WithName(GetText("from_position")).WithValue($"#{n1 + 1}").WithIsInline(true))
             .AddField(fb => fb.WithName(GetText("to_position")).WithValue($"#{n2 + 1}").WithIsInline(true))
-            .WithColor(NadekoBot.OkColor);
+            .WithColor(Mitternacht.MitternachtBot.OkColor);
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 

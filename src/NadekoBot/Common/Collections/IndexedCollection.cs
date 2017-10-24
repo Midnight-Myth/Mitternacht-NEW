@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Common.Collections
+namespace Mitternacht.Common.Collections
 {
     public class IndexedCollection<T> : IList<T> where T : class, IIndexed
     {
@@ -68,18 +68,15 @@ namespace NadekoBot.Common.Collections
         public virtual bool Remove(T item)
         {
             bool removed;
-            lock (_locker)
-            {
-                if (removed = Source.Remove(item))
+            lock (_locker) {
+                if (!(removed = Source.Remove(item))) return removed;
+                for (var i = 0; i < Source.Count; i++)
                 {
-                    for (int i = 0; i < Source.Count; i++)
-                    {
-                        // hm, no idea how ef works, so I don't want to set if it's not changed, 
-                        // maybe it will try to update db? 
-                        // But most likely it just compares old to new values, meh.
-                        if (Source[i].Index != i)
-                            Source[i].Index = i;
-                    }
+                    // hm, no idea how ef works, so I don't want to set if it's not changed, 
+                    // maybe it will try to update db? 
+                    // But most likely it just compares old to new values, meh.
+                    if (Source[i].Index != i)
+                        Source[i].Index = i;
                 }
             }
             return removed;
@@ -94,7 +91,7 @@ namespace NadekoBot.Common.Collections
             lock (_locker)
             {
                 Source.Insert(index, item);
-                for (int i = index; i < Source.Count; i++)
+                for (var i = index; i < Source.Count; i++)
                 {
                     Source[i].Index = i;
                 }
@@ -106,7 +103,7 @@ namespace NadekoBot.Common.Collections
             lock (_locker)
             {
                 Source.RemoveAt(index);
-                for (int i = index; i < Source.Count; i++)
+                for (var i = index; i < Source.Count; i++)
                 {
                     Source[i].Index = i;
                 }
@@ -114,7 +111,7 @@ namespace NadekoBot.Common.Collections
         }
 
         public virtual T this[int index] {
-            get { return Source[index]; }
+            get => Source[index];
             set {
                 lock (_locker)
                 {

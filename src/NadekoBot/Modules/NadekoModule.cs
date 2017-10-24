@@ -1,14 +1,14 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NLog;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Services.Impl;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot.Modules
+namespace Mitternacht.Modules
 {
     public abstract class NadekoTopLevelModule : ModuleBase
     {
@@ -39,21 +39,21 @@ namespace NadekoBot.Modules
 
         //public Task<IUserMessage> ReplyConfirmLocalized(string titleKey, string textKey, string url = null, string footer = null)
         //{
-        //    var title = NadekoBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
-        //    var text = NadekoBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
+        //    var title = MitternachtBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
+        //    var text = MitternachtBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
         //    return Context.Channel.SendConfirmAsync(title, text, url, footer);
         //}
 
         //public Task<IUserMessage> ReplyConfirmLocalized(string textKey)
         //{
-        //    var text = NadekoBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
+        //    var text = MitternachtBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
         //    return Context.Channel.SendConfirmAsync(Context.User.Mention + " " + textKey);
         //}
 
         //public Task<IUserMessage> ReplyErrorLocalized(string titleKey, string textKey, string url = null, string footer = null)
         //{
-        //    var title = NadekoBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
-        //    var text = NadekoBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
+        //    var title = MitternachtBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
+        //    var text = MitternachtBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
         //    return Context.Channel.SendErrorAsync(title, text, url, footer);
         //}
 

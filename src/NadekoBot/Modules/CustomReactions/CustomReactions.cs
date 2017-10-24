@@ -1,16 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Discord.Commands;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
 using Discord;
-using NadekoBot.Extensions;
+using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.CustomReactions.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.CustomReactions.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.CustomReactions
+namespace Mitternacht.Modules.CustomReactions
 {
     public class CustomReactions : NadekoTopLevelModule<CustomReactionsService>
     {

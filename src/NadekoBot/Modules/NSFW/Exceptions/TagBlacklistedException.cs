@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.NSFW.Exceptions
+namespace Mitternacht.Modules.NSFW.Exceptions
 {
     public class TagBlacklistedException : Exception
     {

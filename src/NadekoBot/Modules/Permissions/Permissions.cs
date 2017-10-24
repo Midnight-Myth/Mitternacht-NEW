@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord.Commands;
-using NadekoBot.Services;
 using Discord;
-using NadekoBot.Services.Database.Models;
-using System.Collections.Generic;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.TypeReaders;
-using NadekoBot.Common.TypeReaders.Models;
-using NadekoBot.Modules.Permissions.Common;
-using NadekoBot.Modules.Permissions.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Modules.Permissions.Common;
+using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions
+namespace Mitternacht.Modules.Permissions
 {
     public partial class Permissions : NadekoTopLevelModule<PermissionService>
     {
@@ -75,16 +75,7 @@ namespace NadekoBot.Modules.Permissions
             if (page < 1)
                 return;
 
-            IList<Permissionv2> perms;
-
-            if (_service.Cache.TryGetValue(Context.Guild.Id, out var permCache))
-            {
-                perms = permCache.Permissions.Source.ToList();
-            }
-            else
-            {
-                perms = Permissionv2.GetDefaultPermlist;
-            }
+            IList<Permissionv2> perms = _service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
 
             var startPos = 20 * (page - 1);
             var toSend = Format.Bold(GetText("page", page)) + "\n\n" + string.Join("\n",
@@ -119,7 +110,7 @@ namespace NadekoBot.Modules.Permissions
                     var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
                     p = permsCol[index];
                     permsCol.RemoveAt(index);
-                    uow._context.Remove(p);
+                    uow.Context.Remove(p);
                     await uow.CompleteAsync().ConfigureAwait(false);
                     _service.UpdateCache(config);
                 }

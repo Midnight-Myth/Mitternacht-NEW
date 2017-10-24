@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 
-namespace NadekoBot.Extensions
+namespace Mitternacht.Extensions
 {
-    public static class IMessageChannelExtensions
+    public static class MessageChannelExtensions
     {
         public static Task<IUserMessage> EmbedAsync(this IMessageChannel ch, EmbedBuilder embed, string msg = "")
             => ch.SendMessageAsync(msg, embed: embed);

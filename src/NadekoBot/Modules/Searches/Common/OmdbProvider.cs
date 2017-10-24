@@ -2,11 +2,11 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
 using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Searches.Common
+namespace Mitternacht.Modules.Searches.Common
 {
     public static class OmdbProvider
     {

@@ -9,7 +9,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>NadekoBot</PackageId>
+    <PackageId>MitternachtBot</PackageId>
     <RuntimeFrameworkVersion>2.0</RuntimeFrameworkVersion>
     <AssetTargetFallback>$(AssetTargetFallback);dnxcore50;portable-net45+win8+wpa81</AssetTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -23,6 +23,8 @@
     <RuntimeIdentifiers>win7-x64<!--;ubuntu.14.04-x64;osx.10.10-x64 --></RuntimeIdentifiers>
     <PackageProjectUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
+    <RootNamespace>Mitternacht</RootNamespace>
+    <StartupObject>Mitternacht.Program</StartupObject>
     </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Version)' == '' ">

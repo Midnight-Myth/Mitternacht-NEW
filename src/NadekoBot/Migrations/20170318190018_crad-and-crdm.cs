@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace NadekoBot.Migrations
+namespace Mitternacht.Migrations
 {
     public partial class cradandcrdm : Migration
     {

@@ -4,45 +4,42 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NLog;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class NadekoStrings : INService
     {
-        public const string stringsPath = @"_strings/";
+        public const string StringsPath = @"_strings/";
 
-        private readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> responseStrings;
-        private readonly Logger _log;
+        private readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> _responseStrings;
+
         /// <summary>
         /// Used as failsafe in case response key doesn't exist in the selected or default language.
         /// </summary>
         private readonly CultureInfo _usCultureInfo = new CultureInfo("en-US");
         private readonly ILocalization _localization;
 
-        private readonly Regex formatFinder = new Regex(@"{\d}", RegexOptions.Compiled);
-
         public NadekoStrings(ILocalization loc)
         {
-            _log = LogManager.GetCurrentClassLogger();
+            var log = LogManager.GetCurrentClassLogger();
             _localization = loc;
 
             var sw = Stopwatch.StartNew();
             var allLangsDict = new Dictionary<string, ImmutableDictionary<string, string>>(); // lang:(name:value)
-            foreach (var file in Directory.GetFiles(stringsPath))
+            foreach (var file in Directory.GetFiles(StringsPath))
             {
                 var langDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(file));
 
                 allLangsDict.Add(GetLocaleName(file).ToLowerInvariant(), langDict.ToImmutableDictionary());
             }
 
-            responseStrings = allLangsDict.ToImmutableDictionary();
+            _responseStrings = allLangsDict.ToImmutableDictionary();
             sw.Stop();
 
-            _log.Info("Loaded {0} languages in {1:F2}s",
-                responseStrings.Count,
+            log.Info("Loaded {0} languages in {1:F2}s",
+                _responseStrings.Count,
                 //string.Join(",", responseStrings.Keys),
                 sw.Elapsed.TotalSeconds);
 
@@ -82,10 +79,10 @@ namespace NadekoBot.Services.Impl
 
         private string GetString(string text, CultureInfo cultureInfo)
         {
-            if (!responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out ImmutableDictionary<string, string> strings))
+            if (!_responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var strings))
                 return null;
 
-            strings.TryGetValue(text, out string val);
+            strings.TryGetValue(text, out var val);
             return val;
         }
 
@@ -96,14 +93,12 @@ namespace NadekoBot.Services.Impl
         {
             var text = GetString(lowerModuleTypeName + "_" + key, cultureInfo);
 
+            if (!string.IsNullOrWhiteSpace(text)) return text;
+            LogManager.GetCurrentClassLogger().Warn(lowerModuleTypeName + "_" + key + " key is missing from " + cultureInfo + " response strings. PLEASE REPORT THIS.");
+            text = GetString(lowerModuleTypeName + "_" + key, _usCultureInfo) ?? $"Error: dkey {lowerModuleTypeName + "_" + key} not found!";
             if (string.IsNullOrWhiteSpace(text))
-            {
-                LogManager.GetCurrentClassLogger().Warn(lowerModuleTypeName + "_" + key + " key is missing from " + cultureInfo + " response strings. PLEASE REPORT THIS.");
-                text = GetString(lowerModuleTypeName + "_" + key, _usCultureInfo) ?? $"Error: dkey {lowerModuleTypeName + "_" + key} not found!";
-                if (string.IsNullOrWhiteSpace(text))
-                    return "I can't tell you if the command is executed, because there was an error printing out the response. Key '" +
-                        lowerModuleTypeName + "_" + key + "' " + "is missing from resources. Please report this.";
-            }
+                return "I can't tell you if the command is executed, because there was an error printing out the response. Key '" +
+                       lowerModuleTypeName + "_" + key + "' " + "is missing from resources. Please report this.";
             return text;
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.Administration.Common.Migration
+namespace Mitternacht.Modules.Administration.Common.Migration
 {
     public class MigrationException : Exception
     {

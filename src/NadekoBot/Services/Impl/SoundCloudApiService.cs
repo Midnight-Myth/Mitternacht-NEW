@@ -1,32 +1,23 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Services.Impl
+namespace Mitternacht.Services.Impl
 {
     public class SoundCloudApiService : INService
     {
-        private readonly IBotCredentials _creds;
-
-        public SoundCloudApiService(IBotCredentials creds)
-        {
-            _creds = creds;
-        }
-
         public async Task<SoundCloudVideo> ResolveVideoAsync(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentNullException(nameof(url));
 
-            string response = "";
-
+            string response;
             using (var http = new HttpClient())
             {
                 response = await http.GetStringAsync($"https://scapi.nadekobot.me/resolve?url={url}").ConfigureAwait(false);
             }
-                
 
             var responseObj = JsonConvert.DeserializeObject<SoundCloudVideo>(response);
             if (responseObj?.Kind != "track")
@@ -43,13 +34,13 @@ namespace NadekoBot.Services.Impl
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentNullException(nameof(query));
 
-            var response = "";
+            string response;
             using (var http = new HttpClient())
             {
                 response = await http.GetStringAsync($"https://scapi.nadekobot.me/tracks?q={Uri.EscapeDataString(query)}").ConfigureAwait(false);
             }
 
-            var responseObj = JsonConvert.DeserializeObject<SoundCloudVideo[]>(response).Where(s => s.Streamable).FirstOrDefault();
+            var responseObj = JsonConvert.DeserializeObject<SoundCloudVideo[]>(response).FirstOrDefault(s => s.Streamable);
             if (responseObj?.Kind != "track")
                 throw new InvalidOperationException("Query yielded no results.");
 
@@ -69,7 +60,7 @@ namespace NadekoBot.Services.Impl
         public int Duration { get; set; }
         [JsonProperty("permalink_url")]
         public string TrackLink { get; set; } = "";
-        public string artwork_url { get; set; } = "";
+        public string ArtworkUrl { get; set; } = "";
         public async Task<string> StreamLink()
         {
             using (var http = new HttpClient())

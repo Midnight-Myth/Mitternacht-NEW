@@ -1,17 +1,17 @@
-using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Linq;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using System;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Pokemon.Common;
-using NadekoBot.Modules.Pokemon.Services;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Pokemon.Common;
+using Mitternacht.Modules.Pokemon.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Pokemon
+namespace Mitternacht.Modules.Pokemon
 {
     public class Pokemon : NadekoTopLevelModule<PokemonService>
     {
@@ -281,7 +281,7 @@ namespace NadekoBot.Modules.Pokemon
                         (eb, pt) => eb.AddField(efb => efb.WithName(pt.Name)
                                                           .WithValue(pt.Icon)
                                                           .WithIsInline(true)))
-                            .WithColor(NadekoBot.OkColor)).ConfigureAwait(false);
+                            .WithColor(Mitternacht.MitternachtBot.OkColor)).ConfigureAwait(false);
                 return;
             }
             if (targetType == GetPokeType(user.Id))

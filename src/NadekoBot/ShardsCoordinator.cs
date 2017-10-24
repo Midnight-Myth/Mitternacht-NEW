@@ -1,13 +1,13 @@
-﻿using NadekoBot.Services;
-using NadekoBot.Services.Impl;
-using NLog;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.ShardCom;
+using Mitternacht.Common.ShardCom;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot
+namespace Mitternacht
 {
     public class ShardsCoordinator
     {

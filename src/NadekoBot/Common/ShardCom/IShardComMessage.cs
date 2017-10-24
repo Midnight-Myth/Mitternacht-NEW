@@ -1,7 +1,7 @@
 ﻿using System;
 using Discord;
 
-namespace NadekoBot.Common.ShardCom
+namespace Mitternacht.Common.ShardCom
 {
     public class ShardComMessage
     {

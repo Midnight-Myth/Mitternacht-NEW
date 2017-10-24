@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NadekoBot.Modules.Administration.Common.Migration
+namespace Mitternacht.Modules.Administration.Common.Migration
 {
     public class CommandPrefixes0_9
     {

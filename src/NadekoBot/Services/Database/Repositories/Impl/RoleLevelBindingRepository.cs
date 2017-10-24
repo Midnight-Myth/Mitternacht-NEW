@@ -1,9 +1,9 @@
-﻿using NadekoBot.Services.Database.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
 using System.Linq;
-using System;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories.Impl
+namespace Mitternacht.Services.Database.Repositories.Impl
 {
     public class RoleLevelBindingRepository : Repository<RoleLevelBinding>, IRoleLevelBindingRepository
     {

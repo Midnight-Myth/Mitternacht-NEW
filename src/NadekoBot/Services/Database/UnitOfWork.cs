@@ -1,90 +1,90 @@
-﻿using NadekoBot.Services.Database.Repositories;
-using NadekoBot.Services.Database.Repositories.Impl;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Mitternacht.Services.Database.Repositories;
+using Mitternacht.Services.Database.Repositories.Impl;
 
-namespace NadekoBot.Services.Database
+namespace Mitternacht.Services.Database
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public NadekoContext _context { get; }
+        public NadekoContext Context { get; }
 
         private IQuoteRepository _quotes;
-        public IQuoteRepository Quotes => _quotes ?? (_quotes = new QuoteRepository(_context));
+        public IQuoteRepository Quotes => _quotes ?? (_quotes = new QuoteRepository(Context));
 
         private IGuildConfigRepository _guildConfigs;
-        public IGuildConfigRepository GuildConfigs => _guildConfigs ?? (_guildConfigs = new GuildConfigRepository(_context));
+        public IGuildConfigRepository GuildConfigs => _guildConfigs ?? (_guildConfigs = new GuildConfigRepository(Context));
 
         private IDonatorsRepository _donators;
-        public IDonatorsRepository Donators => _donators ?? (_donators = new DonatorsRepository(_context));
+        public IDonatorsRepository Donators => _donators ?? (_donators = new DonatorsRepository(Context));
 
         private IClashOfClansRepository _clashOfClans;
-        public IClashOfClansRepository ClashOfClans => _clashOfClans ?? (_clashOfClans = new ClashOfClansRepository(_context));
+        public IClashOfClansRepository ClashOfClans => _clashOfClans ?? (_clashOfClans = new ClashOfClansRepository(Context));
 
         private IReminderRepository _reminders;
-        public IReminderRepository Reminders => _reminders ?? (_reminders = new ReminderRepository(_context));
+        public IReminderRepository Reminders => _reminders ?? (_reminders = new ReminderRepository(Context));
 
         private ISelfAssignedRolesRepository _selfAssignedRoles;
-        public ISelfAssignedRolesRepository SelfAssignedRoles => _selfAssignedRoles ?? (_selfAssignedRoles = new SelfAssignedRolesRepository(_context));
+        public ISelfAssignedRolesRepository SelfAssignedRoles => _selfAssignedRoles ?? (_selfAssignedRoles = new SelfAssignedRolesRepository(Context));
 
         private IBotConfigRepository _botConfig;
-        public IBotConfigRepository BotConfig => _botConfig ?? (_botConfig = new BotConfigRepository(_context));
+        public IBotConfigRepository BotConfig => _botConfig ?? (_botConfig = new BotConfigRepository(Context));
 
         private ICurrencyRepository _currency;
-        public ICurrencyRepository Currency => _currency ?? (_currency = new CurrencyRepository(_context));
+        public ICurrencyRepository Currency => _currency ?? (_currency = new CurrencyRepository(Context));
 
         private ICurrencyTransactionsRepository _currencyTransactions;
-        public ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ?? (_currencyTransactions = new CurrencyTransactionsRepository(_context));
+        public ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ?? (_currencyTransactions = new CurrencyTransactionsRepository(Context));
 
         private IUnitConverterRepository _conUnits;
-        public IUnitConverterRepository ConverterUnits => _conUnits ?? (_conUnits = new UnitConverterRepository(_context));
+        public IUnitConverterRepository ConverterUnits => _conUnits ?? (_conUnits = new UnitConverterRepository(Context));
 
         private IMusicPlaylistRepository _musicPlaylists;
-        public IMusicPlaylistRepository MusicPlaylists => _musicPlaylists ?? (_musicPlaylists = new MusicPlaylistRepository(_context));
+        public IMusicPlaylistRepository MusicPlaylists => _musicPlaylists ?? (_musicPlaylists = new MusicPlaylistRepository(Context));
 
         private ICustomReactionRepository _customReactions;
-        public ICustomReactionRepository CustomReactions => _customReactions ?? (_customReactions = new CustomReactionsRepository(_context));
+        public ICustomReactionRepository CustomReactions => _customReactions ?? (_customReactions = new CustomReactionsRepository(Context));
 
         private IPokeGameRepository _pokegame;
-        public IPokeGameRepository PokeGame => _pokegame ?? (_pokegame = new PokeGameRepository(_context));
+        public IPokeGameRepository PokeGame => _pokegame ?? (_pokegame = new PokeGameRepository(Context));
 
         private IWaifuRepository _waifus;
-        public IWaifuRepository Waifus => _waifus ?? (_waifus = new WaifuRepository(_context));
+        public IWaifuRepository Waifus => _waifus ?? (_waifus = new WaifuRepository(Context));
 
         private IDiscordUserRepository _discordUsers;
-        public IDiscordUserRepository DiscordUsers => _discordUsers ?? (_discordUsers = new DiscordUserRepository(_context));
+        public IDiscordUserRepository DiscordUsers => _discordUsers ?? (_discordUsers = new DiscordUserRepository(Context));
 
         private IWarningsRepository _warnings;
-        public IWarningsRepository Warnings => _warnings ?? (_warnings = new WarningsRepository(_context));
+        public IWarningsRepository Warnings => _warnings ?? (_warnings = new WarningsRepository(Context));
 
         private ILevelModelRepository _levelmodel;
-        public ILevelModelRepository LevelModel => _levelmodel ?? (_levelmodel = new LevelModelRepository(_context));
+        public ILevelModelRepository LevelModel => _levelmodel ?? (_levelmodel = new LevelModelRepository(Context));
 
         private IDailyMoneyRepository _dailymoney;
-        public IDailyMoneyRepository DailyMoney => _dailymoney ?? (_dailymoney = new DailyMoneyRepository(_context));
+        public IDailyMoneyRepository DailyMoney => _dailymoney ?? (_dailymoney = new DailyMoneyRepository(Context));
 
         private IRoleMoneyRepository _rolemoney;
-        public IRoleMoneyRepository RoleMoney => _rolemoney ?? (_rolemoney = new RoleMoneyRepository(_context));
+        public IRoleMoneyRepository RoleMoney => _rolemoney ?? (_rolemoney = new RoleMoneyRepository(Context));
 
         private IRoleLevelBindingRepository _rolelevelbinding;
-        public IRoleLevelBindingRepository RoleLevelBinding => _rolelevelbinding ?? (_rolelevelbinding = new RoleLevelBindingRepository(_context));
+        public IRoleLevelBindingRepository RoleLevelBinding => _rolelevelbinding ?? (_rolelevelbinding = new RoleLevelBindingRepository(Context));
 
         private IMessageXpBlacklist _messagexpblacklist;
-        public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ?? (_messagexpblacklist = new MessageXpBlacklist(_context));
+        public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ?? (_messagexpblacklist = new MessageXpBlacklist(Context));
 
         private IVerificatedUserRepository _verificateduser;
-        public IVerificatedUserRepository VerificatedUser => _verificateduser ?? (_verificateduser = new VerificatedUserRepository(_context));
+        public IVerificatedUserRepository VerificatedUser => _verificateduser ?? (_verificateduser = new VerificatedUserRepository(Context));
 
         public UnitOfWork(NadekoContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         public int Complete() =>
-            _context.SaveChanges();
+            Context.SaveChanges();
 
         public Task<int> CompleteAsync() => 
-            _context.SaveChangesAsync();
+            Context.SaveChangesAsync();
 
         private bool _disposed;
 
@@ -92,7 +92,7 @@ namespace NadekoBot.Services.Database
         {
             if (!_disposed)
                 if (disposing)
-                    _context.Dispose();
+                    Context.Dispose();
             _disposed = true;
         }
 

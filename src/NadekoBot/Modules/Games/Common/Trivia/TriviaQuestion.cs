@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NadekoBot.Extensions;
+using Mitternacht.Extensions;
 
 // THANKS @ShoMinamimoto for suggestions and coding help
-namespace NadekoBot.Modules.Games.Common.Trivia
+namespace Mitternacht.Modules.Games.Common.Trivia
 {
     public class TriviaQuestion
     {

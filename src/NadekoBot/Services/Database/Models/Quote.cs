@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class Quote : DbEntity
     {

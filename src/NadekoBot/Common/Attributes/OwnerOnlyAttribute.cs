@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     public class OwnerOnlyAttribute : PreconditionAttribute
     {
@@ -11,7 +11,7 @@ namespace NadekoBot.Common.Attributes
         {
             var creds = (IBotCredentials)services.GetService(typeof(IBotCredentials));
 
-            return Task.FromResult((creds.IsOwner(context.User) || context.Client.CurrentUser.Id == context.User.Id ? PreconditionResult.FromSuccess() : PreconditionResult.FromError("Not owner")));
+            return Task.FromResult(creds.IsOwner(context.User) || context.Client.CurrentUser.Id == context.User.Id ? PreconditionResult.FromSuccess() : PreconditionResult.FromError("Not owner"));
         }
     }
 }

@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Impl;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Impl;
 
-namespace NadekoBot.Modules.Games.Common
+namespace Mitternacht.Modules.Games.Common
 {
     public class Poll
     {

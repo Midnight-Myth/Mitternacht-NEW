@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IImagesService : INService
     {
@@ -9,10 +9,6 @@ namespace NadekoBot.Services
 
         ImmutableArray<(string, ImmutableArray<byte>)> Currency { get; }
         ImmutableArray<ImmutableArray<byte>> Dice { get; }
-
-        ImmutableArray<byte> SlotBackground { get; }
-        ImmutableArray<ImmutableArray<byte>> SlotEmojis { get; }
-        ImmutableArray<ImmutableArray<byte>> SlotNumbers { get; }
 
         ImmutableArray<byte> WifeMatrix { get; }
         ImmutableArray<byte> RategirlDot { get; }

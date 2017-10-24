@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Utility.Services;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Utility.Services;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
@@ -19,7 +19,7 @@ namespace NadekoBot.Modules.Utility
             {
                 var res = _service.Units.GroupBy(x => x.UnitType)
                                .Aggregate(new EmbedBuilder().WithTitle(GetText("convertlist"))
-                                                            .WithColor(NadekoBot.OkColor),
+                                                            .WithColor(Mitternacht.MitternachtBot.OkColor),
                                           (embed, g) => embed.AddField(efb =>
                                                                          efb.WithName(g.Key.ToTitleCase())
                                                                          .WithValue(String.Join(", ", g.Select(x => x.Triggers.FirstOrDefault())

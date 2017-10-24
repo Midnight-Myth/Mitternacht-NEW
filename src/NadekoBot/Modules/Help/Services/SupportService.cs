@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using NadekoBot.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Help.Services
+namespace Mitternacht.Modules.Help.Services
 {
     public class SupportService : INService
     {

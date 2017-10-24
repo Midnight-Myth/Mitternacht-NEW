@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using NadekoBot.Common.Collections;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Collections;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions.Common
+namespace Mitternacht.Modules.Permissions.Common
 {
     public class PermissionsCollection<T> : IndexedCollection<T> where T : class, IIndexed
     {

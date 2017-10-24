@@ -5,32 +5,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class VcRoleService : INService
     {
         private readonly Logger _log;
-        private readonly DbService _db;
-        private readonly DiscordSocketClient _client;
 
         public ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, IRole>> VcRoles { get; }
 
         public VcRoleService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, DbService db)
         {
             _log = LogManager.GetCurrentClassLogger();
-            _db = db;
-            _client = client;
-
-            _client.UserVoiceStateUpdated += ClientOnUserVoiceStateUpdated;
+            client.UserVoiceStateUpdated += ClientOnUserVoiceStateUpdated;
             VcRoles = new ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, IRole>>();
             var missingRoles = new List<VcRoleInfo>();
             foreach (var gconf in gcs)
             {
-                var g = _client.GetGuild(gconf.GuildId);
+                var g = client.GetGuild(gconf.GuildId);
                 if (g == null)
                     continue;
 
@@ -48,21 +43,19 @@ namespace NadekoBot.Modules.Administration.Services
                     infos.TryAdd(ri.VoiceChannelId, role);
                 }
             }
-            if(missingRoles.Any())
-                using (var uow = _db.UnitOfWork)
-                {
-                    _log.Warn($"Removing {missingRoles.Count} missing roles from {nameof(VcRoleService)}");
-                    uow._context.RemoveRange(missingRoles);
-                    uow.Complete();
-                }
+            if (!missingRoles.Any()) return;
+            using (var uow = db.UnitOfWork)
+            {
+                _log.Warn($"Removing {missingRoles.Count} missing roles from {nameof(VcRoleService)}");
+                uow.Context.RemoveRange(missingRoles);
+                uow.Complete();
+            }
         }
 
         private Task ClientOnUserVoiceStateUpdated(SocketUser usr, SocketVoiceState oldState,
             SocketVoiceState newState)
         {
-
-            var gusr = usr as SocketGuildUser;
-            if (gusr == null)
+            if (!(usr is SocketGuildUser gusr))
                 return Task.CompletedTask;
 
             var oldVc = oldState.VoiceChannel;
@@ -76,10 +69,10 @@ namespace NadekoBot.Modules.Administration.Services
                         ulong guildId;
                         guildId = newVc?.Guild.Id ?? oldVc.Guild.Id;
 
-                        if (VcRoles.TryGetValue(guildId, out ConcurrentDictionary<ulong, IRole> guildVcRoles))
+                        if (VcRoles.TryGetValue(guildId, out var guildVcRoles))
                         {
                             //remove old
-                            if (oldVc != null && guildVcRoles.TryGetValue(oldVc.Id, out IRole role))
+                            if (oldVc != null && guildVcRoles.TryGetValue(oldVc.Id, out var role))
                             {
                                 if (gusr.Roles.Contains(role))
                                 {

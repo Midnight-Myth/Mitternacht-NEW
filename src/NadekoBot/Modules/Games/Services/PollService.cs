@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Modules.Games.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Modules.Games.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace NadekoBot.Modules.Games.Services
+namespace Mitternacht.Modules.Games.Services
 {
     public class PollService : IEarlyBlockingExecutor, INService
     {

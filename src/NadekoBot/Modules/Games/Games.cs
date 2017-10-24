@@ -1,15 +1,15 @@
-﻿using Discord.Commands;
-using Discord;
-using NadekoBot.Services;
+﻿using System;
 using System.Threading.Tasks;
-using System;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Games.Common;
-using NadekoBot.Modules.Games.Services;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Common;
+using Mitternacht.Modules.Games.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games : NadekoTopLevelModule<GamesService>
     {
@@ -38,7 +38,7 @@ namespace NadekoBot.Modules.Games
             if (string.IsNullOrWhiteSpace(question))
                 return;
 
-            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(NadekoBot.OkColor)
+            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
                                .AddField(efb => efb.WithName("❓ " + GetText("question") ).WithValue(question).WithIsInline(false))
                                .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(_service.EightBallResponses[new NadekoRandom().Next(0, _service.EightBallResponses.Length)]).WithIsInline(false)));
         }

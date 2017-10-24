@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading;
 using Discord.WebSocket;
-using NadekoBot.Common.Replacements;
-using NadekoBot.Modules.Music.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Replacements;
+using Mitternacht.Modules.Music.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class PlayingRotateService : INService
     {

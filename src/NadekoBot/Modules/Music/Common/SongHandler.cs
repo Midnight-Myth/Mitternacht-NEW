@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace NadekoBot.Modules.Music.Common
+namespace Mitternacht.Modules.Music.Common
 {
     public static class SongHandler
     {

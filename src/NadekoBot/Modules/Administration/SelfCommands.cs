@@ -1,22 +1,22 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
-using NadekoBot.Modules.Music.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Modules.Music.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -114,20 +114,19 @@ namespace NadekoBot.Modules.Administration
 
             [NadekoCommand, Usage, Description, Aliases]
             [OwnerOnly]
-            public async Task Wait(int miliseconds)
+            public async Task Wait(int ms)
             {
-                if (miliseconds <= 0)
+                if (ms <= 0)
                     return;
                 Context.Message.DeleteAfter(0);
                 try
                 {
-                    var msg = await Context.Channel.SendConfirmAsync($"⏲ {miliseconds}ms")
-                   .ConfigureAwait(false);
-                    msg.DeleteAfter(miliseconds / 1000);
+                    var msg = await Context.Channel.SendConfirmAsync($"⏲ {ms}ms").ConfigureAwait(false);
+                    msg.DeleteAfter(ms / 1000);
                 }
                 catch { }
 
-                await Task.Delay(miliseconds);
+                await Task.Delay(ms);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -414,11 +413,7 @@ namespace NadekoBot.Modules.Administration
             public async Task Announce([Remainder] string message)
             {
                 var channels = _client.Guilds.Select(g => g.DefaultChannel).ToArray();
-                if (channels == null)
-                    return;
-                await Task.WhenAll(channels.Where(c => c != null).Select(c => c.SendConfirmAsync(GetText("message_from_bo", Context.User.ToString()), message)))
-                        .ConfigureAwait(false);
-
+                await Task.WhenAll(channels.Where(c => c != null).Select(c => c.SendConfirmAsync(GetText("message_from_bo", Context.User.ToString()), message))).ConfigureAwait(false);
                 await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
             }
 

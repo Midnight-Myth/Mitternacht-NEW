@@ -1,7 +1,7 @@
-﻿using Discord;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using Discord;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IBotCredentials
     {
@@ -15,7 +15,7 @@ namespace NadekoBot.Services
         string PatreonAccessToken { get; }
         string CarbonKey { get; }
 
-        DBConfig Db { get; }
+        DbConfig Db { get; }
         string OsuApiKey { get; }
 
         bool IsOwner(IUser u);
@@ -28,12 +28,12 @@ namespace NadekoBot.Services
         string ForumPassword { get; }
     }
 
-    public class DBConfig
+    public class DbConfig
     {
-        public DBConfig(string type, string connString)
+        public DbConfig(string type, string connString)
         {
-            this.Type = type;
-            this.ConnectionString = connString;
+            Type = type;
+            ConnectionString = connString;
         }
         public string Type { get; }
         public string ConnectionString { get; }

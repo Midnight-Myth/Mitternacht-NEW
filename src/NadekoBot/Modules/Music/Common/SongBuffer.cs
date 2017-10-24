@@ -1,11 +1,11 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using NLog;
 
-namespace NadekoBot.Modules.Music.Common
+namespace Mitternacht.Modules.Music.Common
 {
     public class SongBuffer : IDisposable
     {
@@ -205,7 +205,7 @@ Check the guides for your platform on how to setup ffmpeg correctly:
     }
 }
 
-//namespace NadekoBot.Services.Music
+//namespace MitternachtBot.Services.Music
 //{
 //    /// <summary>
 //    /// Create a buffer for a song file. It will create multiples files to ensure, that radio don't fill up disk space.

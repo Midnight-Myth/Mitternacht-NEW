@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Discord;
 
-namespace NadekoBot.Common.ModuleBehaviors
+namespace Mitternacht.Common.ModuleBehaviors
 {
     public interface IInputTransformer
     {

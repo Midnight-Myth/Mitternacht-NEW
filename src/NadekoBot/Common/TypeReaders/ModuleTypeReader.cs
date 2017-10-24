@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Extensions;
+using Mitternacht.Extensions;
 
-namespace NadekoBot.Common.TypeReaders
+namespace Mitternacht.Common.TypeReaders
 {
     public class ModuleTypeReader : TypeReader
     {

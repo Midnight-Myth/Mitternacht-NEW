@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using NadekoBot.Common.Collections;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Services;
+using Mitternacht.Common.Collections;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Permissions.Services
+namespace Mitternacht.Modules.Permissions.Services
 {
     public class GlobalPermissionService : ILateBlocker, INService
     {

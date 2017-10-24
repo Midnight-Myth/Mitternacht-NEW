@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class GuildConfig : DbEntity
     {

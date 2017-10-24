@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace NadekoBot.Modules.Music.Common.SongResolver.Strategies
+namespace Mitternacht.Modules.Music.Common.SongResolver.Strategies
 {
     public interface IResolveStrategy
     {

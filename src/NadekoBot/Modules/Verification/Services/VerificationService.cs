@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GommeHDnetForumAPI;
-using NadekoBot.Common.Collections;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Collections;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Verification.Services
+namespace Mitternacht.Modules.Verification.Services
 {
     public class VerificationService : INService
     {

@@ -1,12 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
 using Discord.Commands;
-using NadekoBot.Services.Impl;
+using Mitternacht.Resources;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     public class Usage : RemarksAttribute
     {
-        public Usage([CallerMemberName] string memberName="") : base(Localization.LoadCommandString(memberName.ToLowerInvariant()+"_usage"))
+        public Usage([CallerMemberName] string memberName="") : base(CommandStrings.GetCommandStringModel(memberName.ToLowerInvariant()).Usage)
         {
 
         }
