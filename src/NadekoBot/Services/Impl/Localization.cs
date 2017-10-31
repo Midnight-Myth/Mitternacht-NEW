@@ -14,6 +14,7 @@ namespace Mitternacht.Services.Impl
 
         public ConcurrentDictionary<ulong, CultureInfo> GuildCultureInfos { get; }
         public CultureInfo DefaultCultureInfo { get; private set; }
+        private static string FallbackCulture => "de-DE";
 
         public Localization(IBotConfigProvider bcp, IEnumerable<GuildConfig> gcs, DbService db)
         {
@@ -25,7 +26,7 @@ namespace Mitternacht.Services.Impl
             _db = db;
 
             if (string.IsNullOrWhiteSpace(defaultCulture))
-                DefaultCultureInfo = new CultureInfo("en-US");
+                DefaultCultureInfo = new CultureInfo(FallbackCulture);
             else
             {
                 try
@@ -34,8 +35,8 @@ namespace Mitternacht.Services.Impl
                 }
                 catch
                 {
-                    log.Warn("Unable to load default bot's locale/language. Using en-US.");
-                    DefaultCultureInfo = new CultureInfo("en-US");
+                    log.Warn($"Unable to load default bot's locale/language. Using {FallbackCulture}.");
+                    DefaultCultureInfo = new CultureInfo(FallbackCulture);
                 }
             }
             GuildCultureInfos = new ConcurrentDictionary<ulong, CultureInfo>(cultureInfoNames.ToDictionary(x => x.Key, x =>
@@ -110,7 +111,5 @@ namespace Mitternacht.Services.Impl
             GuildCultureInfos.TryGetValue(guildId.Value, out var info);
             return info ?? DefaultCultureInfo;
         }
-
-        
     }
 }
