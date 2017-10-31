@@ -58,7 +58,7 @@ namespace Mitternacht.Services.Impl
                 Token = data[nameof(Token)];
                 if (string.IsNullOrWhiteSpace(Token))
                 {
-                    log.Error("Token is missing from credentials.json or Environment varibles. Add it and restart the program.");
+                    log.Error($"Token is missing from '{_credsFileName}' or Environment variables. Add it and restart the program.");
                     Console.ReadKey();
                     Environment.Exit(3);
                 }

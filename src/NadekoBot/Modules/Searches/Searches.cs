@@ -571,9 +571,8 @@ namespace Mitternacht.Modules.Searches
                 var response = await http.GetStringAsync("https://catfact.ninja/fact").ConfigureAwait(false);
                 if (response == null)
                     return;
-
-                var fact = JObject.Parse(response)["fact"][0].ToString();
-                await Context.Channel.SendConfirmAsync("🐈" + GetText("catfact"), fact).ConfigureAwait(false);
+                
+                await Context.Channel.SendConfirmAsync($"🐈{GetText("catfact")}", JObject.Parse(response)["fact"].ToString()).ConfigureAwait(false);
             }
         }
 
