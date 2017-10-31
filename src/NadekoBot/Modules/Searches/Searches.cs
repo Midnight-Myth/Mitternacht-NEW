@@ -146,10 +146,9 @@ namespace Mitternacht.Modules.Searches
                 var res = await _google.GetImageAsync(terms).ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
-                    .WithAuthor(eab => eab.WithName(GetText("image_search_for") + " " + terms.TrimTo(50))
-                        .WithUrl("https://www.google.rs/search?q=" + terms + "&safe=medium&source=lnms&tbm=isch")
+                    .WithAuthor(eab => eab.WithName($"{GetText("image_search_for")} {terms.TrimTo(50)}")
+                        .WithUrl($"https://www.google.rs/search?q={terms}&safe=high&source=lnms&tbm=isch")
                         .WithIconUrl("http://i.imgur.com/G46fm8J.png"))
-                    .WithDescription(res.Link)
                     .WithImageUrl(res.Link)
                     .WithTitle(Context.User.ToString());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -158,7 +157,7 @@ namespace Mitternacht.Modules.Searches
             {
                 _log.Warn("Falling back to Imgur search.");
 
-                var fullQueryLink = $"http://imgur.com/search?q={ terms }";
+                var fullQueryLink = $"http://imgur.com/search?q={terms}";
                 var config = Configuration.Default.WithDefaultLoader();
                 var document = await BrowsingContext.New(config).OpenAsync(fullQueryLink);
 
@@ -167,7 +166,7 @@ namespace Mitternacht.Modules.Searches
                 if (!elems.Any())
                     return;
 
-                var img = (elems.FirstOrDefault()?.Children?.FirstOrDefault() as IHtmlImageElement);
+                var img = elems.FirstOrDefault()?.Children?.FirstOrDefault() as IHtmlImageElement;
 
                 if (img?.Source == null)
                     return;
@@ -176,10 +175,9 @@ namespace Mitternacht.Modules.Searches
 
                 var embed = new EmbedBuilder()
                     .WithOkColor()
-                    .WithAuthor(eab => eab.WithName("Image Search For: " + terms.TrimTo(50))
+                    .WithAuthor(eab => eab.WithName($"{GetText("image_search_for")} {terms.TrimTo(50)}")
                         .WithUrl(fullQueryLink)
                         .WithIconUrl("http://s.imgur.com/images/logo-1200-630.jpg?"))
-                    .WithDescription(source)
                     .WithImageUrl(source)
                     .WithTitle(Context.User.ToString());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);

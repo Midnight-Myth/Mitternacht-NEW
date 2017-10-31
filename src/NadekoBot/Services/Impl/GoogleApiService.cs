@@ -18,7 +18,7 @@ namespace Mitternacht.Services.Impl
 {
     public class GoogleApiService : IGoogleApiService
     {
-        const string SearchEngineId = "018084019232060951019:hs5piey28-e";
+        public const string SearchEngineId = "018084019232060951019:hs5piey28-e";
 
         private readonly YouTubeService _yt;
         private readonly UrlshortenerService _sh;
@@ -32,8 +32,8 @@ namespace Mitternacht.Services.Impl
 
             var bcs = new BaseClientService.Initializer
             {
-                ApplicationName = "Nadeko Bot",
-                ApiKey = _creds.GoogleApiKey,
+                ApplicationName = "MitternachtBot",
+                ApiKey = _creds.GoogleApiKey
             };
 
             Log = LogManager.GetCurrentClassLogger();
@@ -147,7 +147,7 @@ namespace Mitternacht.Services.Impl
 
             string nextPageToken = null;
 
-            List<string> toReturn = new List<string>(count);
+            var toReturn = new List<string>(count);
 
             do
             {
@@ -211,6 +211,7 @@ namespace Mitternacht.Services.Impl
             req.Fields = "items(image(contextLink,thumbnailLink),link)";
             req.SearchType = CseResource.ListRequest.SearchTypeEnum.Image;
             req.Start = start;
+            req.Safe = CseResource.ListRequest.SafeEnum.High;
 
             var search = await req.ExecuteAsync().ConfigureAwait(false);
 

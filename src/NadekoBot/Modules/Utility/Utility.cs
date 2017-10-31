@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Utility
         private readonly IBotCredentials _creds;
         private readonly ShardsCoordinator _shardCoord;
 
-        public Utility(Mitternacht.MitternachtBot mitternacht, DiscordSocketClient client, IStatsService stats, IBotCredentials creds)
+        public Utility(MitternachtBot mitternacht, DiscordSocketClient client, IStatsService stats, IBotCredentials creds)
         {
             _client = client;
             _stats = stats;
@@ -57,8 +57,7 @@ namespace Mitternacht.Modules.Utility
             if (string.IsNullOrWhiteSpace(game))
                 return;
 
-            var socketGuild = Context.Guild as SocketGuild;
-            if (socketGuild == null)
+            if (!(Context.Guild is SocketGuild socketGuild))
             {
                 _log.Warn("Can't cast guild to socket guild.");
                 return;
@@ -71,15 +70,11 @@ namespace Mitternacht.Modules.Utility
                     .Take(60)
                     .ToArray()).ConfigureAwait(false);
 
-            int i = 0;
+            var i = 0;
             if (arr.Length == 0)
                 await ReplyErrorLocalized("nobody_playing_game").ConfigureAwait(false);
             else
-            {
-                await Context.Channel.SendConfirmAsync("```css\n" + string.Join("\n", arr.GroupBy(item => (i++) / 2)
-                                                                                 .Select(ig => string.Concat(ig.Select(el => $"• {el,-27}")))) + "\n```")
-                                                                                 .ConfigureAwait(false);
-            }
+                await Context.Channel.SendConfirmAsync("```css\n" + string.Join("\n", arr.GroupBy(item => i++ / 2).Select(ig => string.Concat(ig.Select(el => $"• {el,-27}")))) + "\n```").ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -103,8 +98,7 @@ namespace Mitternacht.Modules.Utility
         [RequireContext(ContextType.Guild)]
         public async Task CheckMyPerms()
         {
-
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             var user = (IGuildUser) Context.User;
             var perms = user.GetPermissions((ITextChannel)Context.Channel);
             foreach (var p in perms.GetType().GetProperties().Where(p => !p.GetGetMethod().GetParameters().Any()))
@@ -173,8 +167,8 @@ namespace Mitternacht.Modules.Utility
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public Task Roles(int page = 1) =>
-            Roles(null, page);
+        public Task Roles(int page = 1) 
+            => Roles(null, page);
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
@@ -223,10 +217,10 @@ namespace Mitternacht.Modules.Utility
                         return $"Shard #{Format.Bold(x.ShardId.ToString())} **UNRESPONSIVE** for {timeDiff:hh\\:mm\\:ss}";
                     return GetText("shard_stats_txt", x.ShardId.ToString(),
                         Format.Bold(x.ConnectionState.ToString()), Format.Bold(x.Guilds.ToString()), timeDiff.ToString(@"hh\:mm\:ss"));
-                        })
+                })
                 .ToArray();
 
-            await Context.Channel.SendPaginatedConfirmAsync(_client, page, (curPage) =>
+            await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage =>
             {
 
                 var str = string.Join("\n", allShardStrings.Skip(25 * curPage).Take(25));
@@ -249,7 +243,7 @@ namespace Mitternacht.Modules.Utility
                 new EmbedBuilder().WithOkColor()
                     .WithAuthor(eab => eab.WithName($"Mitternacht v{StatsService.BotVersion}")
                                           .WithUrl("http://nadekobot.readthedocs.io/en/latest/")
-                                          .WithIconUrl("https://cdn.discordapp.com/avatars/116275390695079945/b21045e778ef21c96d175400e779f0fb.jpg"))
+                                          .WithIconUrl(_client.CurrentUser.GetAvatarUrl()))
                     .AddField(efb => efb.WithName(GetText("author")).WithValue(_stats.Author).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("botid")).WithValue(_client.CurrentUser.Id.ToString()).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("shard")).WithValue($"#{_client.ShardId} / {_creds.TotalShards}").WithIsInline(true))

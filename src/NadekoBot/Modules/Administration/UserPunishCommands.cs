@@ -211,6 +211,10 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
+            public async Task Warns() {
+                
+            }
+
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
