@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Searches
 
             string response;
             using (var http = new HttpClient())
-                response = await http.GetStringAsync($"http://api.openweathermap.org/data/2.5/weather?q={query}&appid=42cd627dd60debf25a5739e50a217d74&units=metric").ConfigureAwait(false);
+                response = await http.GetStringAsync($"https://api.openweathermap.org/data/2.5/weather?q={query}&appid=42cd627dd60debf25a5739e50a217d74&units=metric").ConfigureAwait(false);
 
             var data = JsonConvert.DeserializeObject<WeatherData>(response);
 
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Searches
                 .AddField(fb => fb.WithName("🌄 " + Format.Bold(GetText("sunrise"))).WithValue($"{data.Sys.Sunrise.ToUnixTimestamp():HH:mm} UTC").WithIsInline(true))
                 .AddField(fb => fb.WithName("🌇 " + Format.Bold(GetText("sunset"))).WithValue($"{data.Sys.Sunset.ToUnixTimestamp():HH:mm} UTC").WithIsInline(true))
                 .WithOkColor()
-                .WithFooter(efb => efb.WithText("Powered by openweathermap.org").WithIconUrl($"http://openweathermap.org/img/w/{data.Weather[0].Icon}.png"));
+                .WithFooter(efb => efb.WithText("Powered by openweathermap.org").WithIconUrl($"https://openweathermap.org/img/w/{data.Weather[0].Icon}.png"));
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Searches
         public async Task Youtube([Remainder] string query = null)
         {
             if (!await ValidateQuery(Context.Channel, query).ConfigureAwait(false)) return;
-            var result = (await _google.GetVideoLinksByKeywordAsync(query, 1)).FirstOrDefault();
+            var result = (await _google.GetVideoLinksByKeywordAsync(query)).FirstOrDefault();
             if (string.IsNullOrWhiteSpace(result))
             {
                 await ReplyErrorLocalized("no_results").ConfigureAwait(false);
@@ -100,7 +100,7 @@ namespace Mitternacht.Modules.Searches
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Imdb([Remainder] string query = null)
         {
-            if (!(await ValidateQuery(Context.Channel, query).ConfigureAwait(false))) return;
+            if (!await ValidateQuery(Context.Channel, query).ConfigureAwait(false)) return;
             await Context.Channel.TriggerTypingAsync().ConfigureAwait(false);
 
             var movie = await OmdbProvider.FindMovie(query, _google);
@@ -117,7 +117,7 @@ namespace Mitternacht.Modules.Searches
         {
             using (var http = new HttpClient())
             {
-                var res = JObject.Parse(await http.GetStringAsync("http://www.random.cat/meow").ConfigureAwait(false));
+                var res = JObject.Parse(await http.GetStringAsync("https://www.random.cat/meow").ConfigureAwait(false));
                 await Context.Channel.SendMessageAsync(Uri.EscapeUriString(res["file"].ToString())).ConfigureAwait(false);
             }
         }
@@ -127,8 +127,7 @@ namespace Mitternacht.Modules.Searches
         {
             using (var http = new HttpClient())
             {
-                await Context.Channel.SendMessageAsync("http://random.dog/" + await http.GetStringAsync("http://random.dog/woof")
-                             .ConfigureAwait(false)).ConfigureAwait(false);
+                await Context.Channel.SendMessageAsync($"https://random.dog/{await http.GetStringAsync("https://random.dog/woof").ConfigureAwait(false)}").ConfigureAwait(false);
             }
         }
 
@@ -148,7 +147,7 @@ namespace Mitternacht.Modules.Searches
                     .WithOkColor()
                     .WithAuthor(eab => eab.WithName($"{GetText("image_search_for")} {terms.TrimTo(50)}")
                         .WithUrl($"https://www.google.rs/search?q={terms}&safe=high&source=lnms&tbm=isch")
-                        .WithIconUrl("http://i.imgur.com/G46fm8J.png"))
+                        .WithIconUrl("https://i.imgur.com/G46fm8J.png"))
                     .WithImageUrl(res.Link)
                     .WithTitle(Context.User.ToString());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -157,7 +156,7 @@ namespace Mitternacht.Modules.Searches
             {
                 _log.Warn("Falling back to Imgur search.");
 
-                var fullQueryLink = $"http://imgur.com/search?q={terms}";
+                var fullQueryLink = $"https://imgur.com/search?q={terms}";
                 var config = Configuration.Default.WithDefaultLoader();
                 var document = await BrowsingContext.New(config).OpenAsync(fullQueryLink);
 
@@ -177,7 +176,7 @@ namespace Mitternacht.Modules.Searches
                     .WithOkColor()
                     .WithAuthor(eab => eab.WithName($"{GetText("image_search_for")} {terms.TrimTo(50)}")
                         .WithUrl(fullQueryLink)
-                        .WithIconUrl("http://s.imgur.com/images/logo-1200-630.jpg?"))
+                        .WithIconUrl("https://s.imgur.com/images/logo-1200-630.jpg"))
                     .WithImageUrl(source)
                     .WithTitle(Context.User.ToString());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -191,15 +190,15 @@ namespace Mitternacht.Modules.Searches
             if (string.IsNullOrWhiteSpace(terms))
                 return;
             terms = WebUtility.UrlEncode(terms).Replace(' ', '+');
+
             try
             {
                 var res = await _google.GetImageAsync(terms, new NadekoRandom().Next(0, 50)).ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
-                    .WithAuthor(eab => eab.WithName(GetText("image_search_for") + " " + terms.TrimTo(50))
-                        .WithUrl("https://www.google.rs/search?q=" + terms + "&safe=medium&source=lnms&tbm=isch")
-                        .WithIconUrl("http://i.imgur.com/G46fm8J.png"))
-                    .WithDescription(res.Link)
+                    .WithAuthor(eab => eab.WithName($"{GetText("image_search_for")} {terms.TrimTo(50)}")
+                        .WithUrl($"https://www.google.rs/search?q={terms}&safe=high&source=lnms&tbm=isch")
+                        .WithIconUrl("https://i.imgur.com/G46fm8J.png"))
                     .WithImageUrl(res.Link)
                     .WithTitle(Context.User.ToString());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -209,7 +208,7 @@ namespace Mitternacht.Modules.Searches
                 _log.Warn("Falling back to Imgur");
                 terms = WebUtility.UrlEncode(terms).Replace(' ', '+');
 
-                var fullQueryLink = $"http://imgur.com/search?q={ terms }";
+                var fullQueryLink = $"https://imgur.com/search?q={ terms }";
                 var config = Configuration.Default.WithDefaultLoader();
                 var document = await BrowsingContext.New(config).OpenAsync(fullQueryLink);
 
@@ -218,7 +217,7 @@ namespace Mitternacht.Modules.Searches
                 if (!elems.Any())
                     return;
 
-                var img = (elems.ElementAtOrDefault(new NadekoRandom().Next(0, elems.Count))?.Children?.FirstOrDefault() as IHtmlImageElement);
+                var img = elems.ElementAtOrDefault(new NadekoRandom().Next(0, elems.Count))?.Children?.FirstOrDefault() as IHtmlImageElement;
 
                 if (img?.Source == null)
                     return;
@@ -227,10 +226,9 @@ namespace Mitternacht.Modules.Searches
 
                 var embed = new EmbedBuilder()
                     .WithOkColor()
-                    .WithAuthor(eab => eab.WithName(GetText("image_search_for") + " " + terms.TrimTo(50))
+                    .WithAuthor(eab => eab.WithName($"{GetText("image_search_for")} {terms.TrimTo(50)}")
                         .WithUrl(fullQueryLink)
-                        .WithIconUrl("http://s.imgur.com/images/logo-1200-630.jpg?"))
-                    .WithDescription(source)
+                        .WithIconUrl("https://s.imgur.com/images/logo-1200-630.jpg"))
                     .WithImageUrl(source)
                     .WithTitle(Context.User.ToString());
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -243,8 +241,7 @@ namespace Mitternacht.Modules.Searches
             if (string.IsNullOrWhiteSpace(ffs))
                 return;
 
-            await Context.Channel.SendConfirmAsync("<" + await _google.ShortenUrl($"http://lmgtfy.com/?q={ Uri.EscapeUriString(ffs) }") + ">")
-                           .ConfigureAwait(false);
+            await Context.Channel.SendConfirmAsync("<" + await _google.ShortenUrl($"https://lmgtfy.com/?q={ Uri.EscapeUriString(ffs) }") + ">").ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -261,12 +258,12 @@ namespace Mitternacht.Modules.Searches
                 return;
             }
 
-            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
+            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(MitternachtBot.OkColor)
                                                            .AddField(efb => efb.WithName(GetText("original_url"))
                                                                                .WithValue($"<{arg}>"))
-                                                            .AddField(efb => efb.WithName(GetText("short_url"))
-                                                                                .WithValue($"<{shortened}>")))
-                                                            .ConfigureAwait(false);
+                                                           .AddField(efb => efb.WithName(GetText("short_url"))
+                                                                               .WithValue($"<{shortened}>")))
+                                                           .ConfigureAwait(false);
         }
 
         //private readonly Regex googleSearchRegex = new Regex(@"<h3 class=""r""><a href=""(?:\/url?q=)?(?<link>.*?)"".*?>(?<title>.*?)<\/a>.*?class=""st"">(?<text>.*?)<\/span>", RegexOptions.Compiled);
@@ -294,9 +291,8 @@ namespace Mitternacht.Modules.Searches
             if (!elems.Any())
                 return;
 
-            var results = elems.Select<IElement, GoogleSearchResult?>(elem =>
-            {
-                var aTag = (elem.Children.FirstOrDefault()?.Children.FirstOrDefault() as IHtmlAnchorElement); // <h3> -> <a>
+            var results = elems.Select<IElement, GoogleSearchResult?>(elem => {
+                var aTag = elem.Children.FirstOrDefault()?.Children.FirstOrDefault() as IHtmlAnchorElement; // <h3> -> <a>
                 var href = aTag?.Href;
                 var name = aTag?.TextContent;
                 if (href == null || name == null)
@@ -312,15 +308,13 @@ namespace Mitternacht.Modules.Searches
 
             var embed = new EmbedBuilder()
                 .WithOkColor()
-                .WithAuthor(eab => eab.WithName(GetText("search_for") + " " + terms.TrimTo(50))
+                .WithAuthor(eab => eab.WithName($"{GetText("search_for")} {terms.TrimTo(50)}")
                     .WithUrl(fullQueryLink)
-                    .WithIconUrl("http://i.imgur.com/G46fm8J.png"))
+                    .WithIconUrl("https://i.imgur.com/G46fm8J.png"))
                 .WithTitle(Context.User.ToString())
                 .WithFooter(efb => efb.WithText(totalResults));
 
-            var desc = await Task.WhenAll(results.Select(async res =>
-                    $"[{Format.Bold(res?.Title)}]({(await _google.ShortenUrl(res?.Link))})\n{res?.Text}\n\n"))
-                .ConfigureAwait(false);
+            var desc = await Task.WhenAll(results.Select(async res => $"[{Format.Bold(res?.Title)}]({await _google.ShortenUrl(res?.Link)})\n{res?.Text}\n\n")).ConfigureAwait(false);
             await Context.Channel.EmbedAsync(embed.WithDescription(string.Concat(desc))).ConfigureAwait(false);
         }
 
@@ -340,7 +334,7 @@ namespace Mitternacht.Modules.Searches
                 try
                 {
                     var items = JArray.Parse(response).ToArray();
-                    if (items == null || items.Length == 0)
+                    if (items.Length == 0)
                         throw new KeyNotFoundException("Cannot find a card by that name");
                     var item = items[new NadekoRandom().Next(0, items.Length)];
                     var storeUrl = await _google.ShortenUrl(item["store_url"].ToString());
@@ -390,14 +384,10 @@ namespace Mitternacht.Modules.Searches
                 {
                     var items = JArray.Parse(response).Shuffle().ToList();
                     var images = new List<Image<Rgba32>>();
-                    if (items == null)
-                        throw new KeyNotFoundException("Cannot find a card by that name");
                     foreach (var item in items.Where(item => item.HasValues && item["img"] != null).Take(4))
                     {
-                        await Task.Run(async () =>
-                        {
-                            using (var sr = await http.GetStreamAsync(item["img"].ToString()))
-                            {
+                        await Task.Run(async () => {
+                            using (var sr = await http.GetStreamAsync(item["img"].ToString())) {
                                 var imgStream = new MemoryStream();
                                 await sr.CopyToAsync(imgStream);
                                 imgStream.Position = 0;
@@ -445,8 +435,8 @@ namespace Mitternacht.Modules.Searches
                 try
                 {
                     var embed = new EmbedBuilder()
-                        .WithUrl("http://www.yodaspeak.co.uk/")
-                        .WithAuthor(au => au.WithName("Yoda").WithIconUrl("http://www.yodaspeak.co.uk/yoda-small1.gif"))
+                        .WithUrl("https://www.yodaspeak.co.uk/")
+                        .WithAuthor(au => au.WithName("Yoda").WithIconUrl("https://www.yodaspeak.co.uk/yoda-small1.gif"))
                         .WithDescription(res)
                         .WithOkColor();
                     await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -475,7 +465,7 @@ namespace Mitternacht.Modules.Searches
             {
                 http.DefaultRequestHeaders.Clear();
                 http.DefaultRequestHeaders.Add("Accept", "application/json");
-                var res = await http.GetStringAsync($"http://api.urbandictionary.com/v0/define?term={Uri.EscapeUriString(query)}").ConfigureAwait(false);
+                var res = await http.GetStringAsync($"https://api.urbandictionary.com/v0/define?term={Uri.EscapeUriString(query)}").ConfigureAwait(false);
                 try
                 {
                     var items = JObject.Parse(res);
@@ -485,7 +475,7 @@ namespace Mitternacht.Modules.Searches
                     var link = item["permalink"].ToString();
                     var embed = new EmbedBuilder().WithOkColor()
                                      .WithUrl(link)
-                                     .WithAuthor(eab => eab.WithIconUrl("http://i.imgur.com/nwERwQE.jpg").WithName(word))
+                                     .WithAuthor(eab => eab.WithIconUrl("https://i.imgur.com/nwERwQE.jpg").WithName(word))
                                      .WithDescription(def);
                     await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
                 }
@@ -504,7 +494,7 @@ namespace Mitternacht.Modules.Searches
 
             using (var http = new HttpClient())
             {
-                var res = await http.GetStringAsync("http://api.pearson.com/v2/dictionaries/entries?headword=" + WebUtility.UrlEncode(word.Trim())).ConfigureAwait(false);
+                var res = await http.GetStringAsync("https://api.pearson.com/v2/dictionaries/entries?headword=" + WebUtility.UrlEncode(word.Trim())).ConfigureAwait(false);
 
                 var data = JsonConvert.DeserializeObject<DefineModel>(res);
 
@@ -562,7 +552,7 @@ namespace Mitternacht.Modules.Searches
                 var desc = item["text"].ToString();
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                                                                  .WithAuthor(eab => eab.WithUrl(link)
-                                                                                       .WithIconUrl("http://res.cloudinary.com/urbandictionary/image/upload/a_exif,c_fit,h_200,w_200/v1394975045/b8oszuu3tbq7ebyo7vo1.jpg")
+                                                                                       .WithIconUrl("https://res.cloudinary.com/urbandictionary/image/upload/a_exif,c_fit,h_200,w_200/v1394975045/b8oszuu3tbq7ebyo7vo1.jpg")
                                                                                        .WithName(query))
                                                                  .WithDescription(desc))
                                                                  .ConfigureAwait(false);
@@ -578,22 +568,20 @@ namespace Mitternacht.Modules.Searches
         {
             using (var http = new HttpClient())
             {
-                var response = await http.GetStringAsync("http://catfacts-api.appspot.com/api/facts").ConfigureAwait(false);
+                var response = await http.GetStringAsync("https://catfact.ninja/fact").ConfigureAwait(false);
                 if (response == null)
                     return;
 
-                var fact = JObject.Parse(response)["facts"][0].ToString();
+                var fact = JObject.Parse(response)["fact"][0].ToString();
                 await Context.Channel.SendConfirmAsync("🐈" + GetText("catfact"), fact).ConfigureAwait(false);
             }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task Revav([Remainder] IGuildUser usr = null)
-        {
-            if (usr == null)
-                usr = (IGuildUser)Context.User;
-            await Context.Channel.SendConfirmAsync($"https://images.google.com/searchbyimage?image_url={usr.RealAvatarUrl()}").ConfigureAwait(false);
+        public async Task Revav([Remainder] IGuildUser user = null) {
+            user = user ?? (IGuildUser)Context.User;
+            await Context.Channel.SendConfirmAsync($"https://images.google.com/searchbyimage?image_url={user.RealAvatarUrl()}").ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -618,7 +606,7 @@ namespace Mitternacht.Modules.Searches
                 return;
             using (var http = new HttpClient())
             {
-                var result = await http.GetStringAsync("https://en.wikipedia.org//w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles=" + Uri.EscapeDataString(query));
+                var result = await http.GetStringAsync($"https://de.wikipedia.org//w/api.php?action=query&format=json&prop=info&redirects=1&formatversion=2&inprop=url&titles={Uri.EscapeDataString(query)}");
                 var data = JsonConvert.DeserializeObject<WikipediaApiModel>(result);
                 if (data.Query.Pages[0].Missing)
                     await ReplyErrorLocalized("wiki_page_not_found").ConfigureAwait(false);
@@ -638,7 +626,7 @@ namespace Mitternacht.Modules.Searches
                 await Context.Channel.SendErrorAsync(Context.User.Mention + " No results.").ConfigureAwait(false);
             else
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                    .WithDescription(Context.User.Mention + " " + tag)
+                    .WithDescription($"{Context.User.Mention} {tag}")
                     .WithImageUrl(url)
                     .WithFooter(efb => efb.WithText("Ponybooru")))
                     .ConfigureAwait(false);
@@ -662,25 +650,11 @@ namespace Mitternacht.Modules.Searches
             }
             
 
-            var img = new ImageSharp.Image<Rgba32>(50, 50);
+            var img = new Image<Rgba32>(50, 50);
 
             img.BackgroundColor(clr);
 
             await Context.Channel.SendFileAsync(img.ToStream(), $"{color}.png").ConfigureAwait(false);
-        }
-
-        [NadekoCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        public async Task Videocall(params IGuildUser[] users)
-        {
-            var allUsrs = users.Append(Context.User);
-            var allUsrsArray = allUsrs.ToArray();
-            var str = allUsrsArray.Aggregate("http://appear.in/", (current, usr) => current + Uri.EscapeUriString(usr.Username[0].ToString()));
-            str += new NadekoRandom().Next();
-            foreach (var usr in allUsrsArray)
-            {
-                await (await usr.GetOrCreateDMChannelAsync()).SendConfirmAsync(str).ConfigureAwait(false);
-            }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -712,12 +686,10 @@ namespace Mitternacht.Modules.Searches
                 http.DefaultRequestHeaders.Clear();
                 try
                 {
-                    var res = await http.GetStringAsync($"http://www.{Uri.EscapeUriString(target)}.wikia.com/api/v1/Search/List?query={Uri.EscapeUriString(query)}&limit=25&minArticleQuality=10&batch=1&namespaces=0%2C14").ConfigureAwait(false);
+                    var res = await http.GetStringAsync($"https://www.{Uri.EscapeUriString(target)}.wikia.com/api/v1/Search/List?query={Uri.EscapeUriString(query)}&limit=25&minArticleQuality=10&batch=1&namespaces=0%2C14").ConfigureAwait(false);
                     var items = JObject.Parse(res);
                     var found = items["items"][0];
-                    var response = $@"`{GetText("title")}` {found["title"]}
-`{GetText("quality")}` {found["quality"]}
-`{GetText("url")}:` {await _google.ShortenUrl(found["url"].ToString()).ConfigureAwait(false)}";
+                    var response = $"`{GetText("title")}` {found["title"]}\n`{GetText("quality")}` {found["quality"]}\n`{GetText("url")}:` {await _google.ShortenUrl(found["url"].ToString()).ConfigureAwait(false)}";
                     await Context.Channel.SendMessageAsync(response).ConfigureAwait(false);
                 }
                 catch
@@ -726,77 +698,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
         }
-
-        //[NadekoCommand, Usage, Description, Aliases]
-        //public async Task MCPing([Remainder] string query2 = null)
-        //{
-        //    var query = query2;
-        //    if (string.IsNullOrWhiteSpace(query))
-        //        return;
-        //    await Context.Channel.TriggerTypingAsync().ConfigureAwait(false);
-        //    using (var http = new HttpClient())
-        //    {
-        //        http.DefaultRequestHeaders.Clear();
-        //        var ip = query.Split(':')[0];
-        //        var port = query.Split(':')[1];
-        //        var res = await http.GetStringAsync($"https://api.minetools.eu/ping/{Uri.EscapeUriString(ip)}/{Uri.EscapeUriString(port)}").ConfigureAwait(false);
-        //        try
-        //        {
-        //            var items = JObject.Parse(res);
-        //            var sb = new StringBuilder();
-        //            var ping = (int)Math.Ceiling(double.Parse(items["latency"].ToString()));
-        //            sb.AppendLine($"`Server:` {query}");
-        //            sb.AppendLine($"`Version:` {items["version"]["name"]} / Protocol {items["version"]["protocol"]}");
-        //            sb.AppendLine($"`Description:` {items["description"]}");
-        //            sb.AppendLine($"`Online Players:` {items["players"]["online"]}/{items["players"]["max"]}");
-        //            sb.Append($"`Latency:` {ping}");
-        //            await Context.Channel.SendMessageAsync(sb.ToString());
-        //        }
-        //        catch
-        //        {
-        //            await Context.Channel.SendErrorAsync($"Failed finding `{query}`.").ConfigureAwait(false);
-        //        }
-        //    }
-        //}
-
-        //[NadekoCommand, Usage, Description, Aliases]
-        //public async Task MCQ([Remainder] string query = null)
-        //{
-        //    var arg = query;
-        //    if (string.IsNullOrWhiteSpace(arg))
-        //    {
-        //        await Context.Channel.SendErrorAsync("Please enter `ip:port`.").ConfigureAwait(false);
-        //        return;
-        //    }
-        //    await Context.Channel.TriggerTypingAsync().ConfigureAwait(false);
-        //    using (var http = new HttpClient())
-        //    {
-        //        http.DefaultRequestHeaders.Clear();
-        //        try
-        //        {
-        //            var ip = arg.Split(':')[0];
-        //            var port = arg.Split(':')[1];
-        //            var res = await http.GetStringAsync($"https://api.minetools.eu/query/{Uri.EscapeUriString(ip)}/{Uri.EscapeUriString(port)}").ConfigureAwait(false);
-        //            var items = JObject.Parse(res);
-        //            var sb = new StringBuilder();
-        //            sb.AppendLine($"`Server:` {arg} 〘Status: {items["status"]}〙");
-        //            sb.AppendLine("`Player List (First 5):`");
-        //            foreach (var item in items["Playerlist"].Take(5))
-        //            {
-        //                sb.AppendLine($"〔:rosette: {item}〕");
-        //            }
-        //            sb.AppendLine($"`Online Players:` {items["Players"]} / {items["MaxPlayers"]}");
-        //            sb.AppendLine($"`Plugins:` {items["Plugins"]}");
-        //            sb.Append($"`Version:` {items["Version"]}");
-        //            await Context.Channel.SendMessageAsync(sb.ToString());
-        //        }
-        //        catch
-        //        {
-        //            await Context.Channel.SendErrorAsync($"Failed finding server `{arg}`.").ConfigureAwait(false);
-        //        }
-        //    }
-        //}
-
+        
         public async Task<string> GetPonybooruImageLink(string tag) => await Task.Run(async () =>
         {
             try
@@ -804,16 +706,14 @@ namespace Mitternacht.Modules.Searches
                 using (var http = new HttpClient())
                 {
                     http.AddFakeHeaders();
-                    var url = $"http://www.bronibooru.com/posts/random?";
+                    var url = "https://www.bronibooru.com/posts/random?";
                     if (!string.IsNullOrWhiteSpace(tag))
                         url += $"tags={tag.Replace(" ", "_")}";
                     var webpage = await http.GetStringAsync(url).ConfigureAwait(false);
 
                     var match = Regex.Match(webpage, "data-large-file-url=\"(?<id>.*?)\"");
 
-                    if (!match.Success)
-                        return null;
-                    return $"http:{match.Groups["id"].Value}";
+                    return !match.Success ? null : $"http:{match.Groups["id"].Value}";
                 }
             }
             catch
@@ -826,7 +726,7 @@ namespace Mitternacht.Modules.Searches
         {
             var channel = umsg.Channel;
 
-            tag = tag?.Trim() ?? "";
+            tag = tag?.Trim() ?? "url";
 
             var imgObj = await _service.DapiSearch(tag, type, Context.Guild?.Id).ConfigureAwait(false);
 
@@ -834,7 +734,7 @@ namespace Mitternacht.Modules.Searches
                 await channel.SendErrorAsync(umsg.Author.Mention + " " + GetText("no_results"));
             else
                 await channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                    .WithDescription($"{umsg.Author.Mention} [{tag ?? "url"}]({imgObj.FileUrl})")
+                    .WithDescription($"{umsg.Author.Mention} [{tag}]({imgObj.FileUrl})")
                     .WithImageUrl(imgObj.FileUrl)
                     .WithFooter(efb => efb.WithText(type.ToString()))).ConfigureAwait(false);
         }

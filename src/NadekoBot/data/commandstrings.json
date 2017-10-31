@@ -659,13 +659,6 @@
     "usage": "`{0}danbooru yuri+kissing`"
   },
   {
-    "name": "videocall",
-    "cmd": "videocall",
-    "aliases": [],
-    "desc": "Creates a private <http://www.appear.in> video call link for you and other mentioned people. The link is sent to mentioned people via a private message.",
-    "usage": "`{0}videocall \"@the First\" \"@Xyz\"`"
-  },
-  {
     "name": "modules",
     "cmd": "modules",
     "aliases": [
@@ -1421,7 +1414,7 @@
     "name": "catfact",
     "cmd": "catfact",
     "aliases": [],
-    "desc": "Shows a random catfact from <http://catfacts-api.appspot.com/api/facts>",
+    "desc": "Shows a random catfact from <https://catfact.ninja/fact>",
     "usage": "`{0}catfact`"
   },
   {
