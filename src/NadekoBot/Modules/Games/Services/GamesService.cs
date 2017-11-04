@@ -27,32 +27,28 @@ namespace Mitternacht.Modules.Games.Services
         public readonly ConcurrentDictionary<ulong, GirlRating> GirlRatings = new ConcurrentDictionary<ulong, GirlRating>();
         public readonly ImmutableArray<string> EightBallResponses;
 
-        private readonly Timer _t;
-        private readonly DiscordSocketClient _client;
         private readonly NadekoStrings _strings;
         private readonly IImagesService _images;
-        private readonly Logger _log;
 
         public readonly string TypingArticlesPath = "data/typing_articles2.json";
         private readonly CommandHandler _cmdHandler;
 
-        public List<TypingArticle> TypingArticles { get; } = new List<TypingArticle>();
+        public List<TypingArticle> TypingArticles { get; }
 
         public GamesService(DiscordSocketClient client, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, 
             NadekoStrings strings, IImagesService images, CommandHandler cmdHandler)
         {
             _bc = bc;
-            _client = client;
             _strings = strings;
             _images = images;
             _cmdHandler = cmdHandler;
-            _log = LogManager.GetCurrentClassLogger();
+            var log = LogManager.GetCurrentClassLogger();
 
             //8ball
             EightBallResponses = _bc.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToImmutableArray();
 
             //girl ratings
-            _t = new Timer((_) =>
+            var timer = new Timer(_ =>
             {
                 GirlRatings.Clear();
 
@@ -60,8 +56,7 @@ namespace Mitternacht.Modules.Games.Services
 
             //plantpick
             client.MessageReceived += PotentialFlowerGeneration;
-            GenerationChannels = new ConcurrentHashSet<ulong>(gcs
-                .SelectMany(c => c.GenerateCurrencyChannelIds.Select(obj => obj.ChannelId)));
+            GenerationChannels = new ConcurrentHashSet<ulong>(gcs.SelectMany(c => c.GenerateCurrencyChannelIds.Select(obj => obj.ChannelId)));
 
             try
             {
@@ -69,7 +64,7 @@ namespace Mitternacht.Modules.Games.Services
             }
             catch (Exception ex)
             {
-                _log.Warn("Error while loading typing articles {0}", ex.ToString());
+                log.Warn(ex, "Error while loading typing articles {0}");
                 TypingArticles = new List<TypingArticle>();
             }
         }
@@ -91,25 +86,21 @@ namespace Mitternacht.Modules.Games.Services
         //channelId/last generation
         public ConcurrentDictionary<ulong, DateTime> LastGenerations { get; } = new ConcurrentDictionary<ulong, DateTime>();
 
-        private ConcurrentDictionary<ulong, object> _locks { get; } = new ConcurrentDictionary<ulong, object>();
-        
         public (string Name, ImmutableArray<byte> Data) GetRandomCurrencyImage()
         {
             var rng = new NadekoRandom();
             return _images.Currency[rng.Next(0, _images.Currency.Length)];
         }
 
-        private string GetText(ITextChannel ch, string key, params object[] rep)
+        private string GetText(IGuildChannel ch, string key, params object[] rep)
             => _strings.GetText(key, ch.GuildId, "Games".ToLowerInvariant(), rep);
 
         private Task PotentialFlowerGeneration(SocketMessage imsg)
         {
-            var msg = imsg as SocketUserMessage;
-            if (msg == null || msg.Author.IsBot)
+            if (!(imsg is SocketUserMessage msg) || msg.Author.IsBot)
                 return Task.CompletedTask;
 
-            var channel = imsg.Channel as ITextChannel;
-            if (channel == null)
+            if (!(imsg.Channel is ITextChannel channel))
                 return Task.CompletedTask;
 
             if (!GenerationChannels.Contains(channel.Id))

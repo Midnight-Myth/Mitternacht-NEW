@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Games
             if (string.IsNullOrWhiteSpace(question))
                 return;
 
-            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
+            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(MitternachtBot.OkColor)
                                .AddField(efb => efb.WithName("❓ " + GetText("question") ).WithValue(question).WithIsInline(false))
                                .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(_service.EightBallResponses[new NadekoRandom().Next(0, _service.EightBallResponses.Length)]).WithIsInline(false)));
         }
@@ -46,10 +46,8 @@ namespace Mitternacht.Modules.Games
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Rps(string input)
         {
-            Func<int,string> getRpsPick = (p) =>
-            {
-                switch (p)
-                {
+            string GetRpsPick(int p) {
+                switch (p) {
                     case 0:
                         return "🚀";
                     case 1:
@@ -57,7 +55,7 @@ namespace Mitternacht.Modules.Games
                     default:
                         return "✂️";
                 }
-            };
+            }
 
             int pick;
             switch (input)
@@ -82,15 +80,15 @@ namespace Mitternacht.Modules.Games
             var nadekoPick = new NadekoRandom().Next(0, 3);
             string msg;
             if (pick == nadekoPick)
-                msg = GetText("rps_draw", getRpsPick(pick));
+                msg = GetText("rps_draw", GetRpsPick(pick));
             else if ((pick == 0 && nadekoPick == 1) ||
                      (pick == 1 && nadekoPick == 2) ||
                      (pick == 2 && nadekoPick == 0))
                 msg = GetText("rps_win", Context.Client.CurrentUser.Mention,
-                    getRpsPick(nadekoPick), getRpsPick(pick));
+                    GetRpsPick(nadekoPick), GetRpsPick(pick));
             else
-                msg = GetText("rps_win", Context.User.Mention, getRpsPick(pick),
-                    getRpsPick(nadekoPick));
+                msg = GetText("rps_win", Context.User.Mention, GetRpsPick(pick),
+                    GetRpsPick(nadekoPick));
 
             await Context.Channel.SendConfirmAsync(msg).ConfigureAwait(false);
         }
@@ -122,15 +120,20 @@ namespace Mitternacht.Modules.Games
 
             var roll = rng.Next(1, 1001);
 
-            if ((uid == 185968432783687681 ||
-                 uid == 265642040950390784) && roll >= 900)
+            if ((uid == 119521688768610304 ||
+                 uid == 147390060742967296) && roll >= 900)
                 roll = 1000;
+            if (uid == 240476349116973067) roll = 0;
 
-
-            double hot;
-            double crazy;
+            double hot, crazy;
             string advice;
-            if (roll < 500)
+            if (roll <= 0) {
+                hot = 0;
+                crazy = 0;
+                advice = "This is your special NO-GO ZONE. You must be either from vulcan or a developer. Ignore every emotion like usually and don't try to have fun. " +
+                         "You won't. It is not hard. Just clone a repo and get to work. Alternatively, get a phaser and shoot some klingons.";
+            }
+            else if (roll < 500)
             {
                 hot = NextDouble(0, 5);
                 crazy = NextDouble(4, 10);
