@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                var guildVcRoles = _service.VcRoles.GetOrAdd(user.GuildId, new ConcurrentDictionary<ulong, IRole>());
+                var guildVcRoles = Service.VcRoles.GetOrAdd(user.GuildId, new ConcurrentDictionary<ulong, IRole>());
 
                 if (role == null)
                 {
@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Administration
             {
                 var guild = (SocketGuild) Context.Guild;
                 string text;
-                if (_service.VcRoles.TryGetValue(Context.Guild.Id, out ConcurrentDictionary<ulong, IRole> roles))
+                if (Service.VcRoles.TryGetValue(Context.Guild.Id, out ConcurrentDictionary<ulong, IRole> roles))
                 {
                     if (!roles.Any())
                     {

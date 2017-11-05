@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Games
             [RequireContext(ContextType.Guild)]
             public async Task PollStats()
             {
-                if (!_service.ActivePolls.TryGetValue(Context.Guild.Id, out var poll))
+                if (!Service.ActivePolls.TryGetValue(Context.Guild.Id, out var poll))
                     return;
 
                 await Context.Channel.EmbedAsync(poll.GetStats(GetText("current_poll_results")));
@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Games
 
             private async Task InternalStartPoll(string arg)
             {
-                if(await _service.StartPoll((ITextChannel)Context.Channel, Context.Message, arg) == false)
+                if(await Service.StartPoll((ITextChannel)Context.Channel, Context.Message, arg) == false)
                     await ReplyErrorLocalized("poll_already_running").ConfigureAwait(false);
             }
 
@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Games
             {
                 var channel = (ITextChannel)Context.Channel;
 
-                _service.ActivePolls.TryRemove(channel.Guild.Id, out var poll);
+                Service.ActivePolls.TryRemove(channel.Guild.Id, out var poll);
                 await poll.StopPoll().ConfigureAwait(false);
             }
         }

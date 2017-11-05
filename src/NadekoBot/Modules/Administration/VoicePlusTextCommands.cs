@@ -60,7 +60,7 @@ namespace Mitternacht.Modules.Administration
                     }
                     if (!isEnabled)
                     {
-                        _service.VoicePlusTextCache.TryRemove(guild.Id);
+                        Service.VoicePlusTextCache.TryRemove(guild.Id);
                         foreach (var textChannel in (await guild.GetTextChannelsAsync().ConfigureAwait(false)).Where(c => c.Name.EndsWith("-voice")))
                         {
                             try { await textChannel.DeleteAsync().ConfigureAwait(false); } catch { }
@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Administration
                         await ReplyConfirmLocalized("vt_disabled").ConfigureAwait(false);
                         return;
                     }
-                    _service.VoicePlusTextCache.Add(guild.Id);
+                    Service.VoicePlusTextCache.Add(guild.Id);
                     await ReplyConfirmLocalized("vt_enabled").ConfigureAwait(false);
 
                 }
@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Administration
                 var voiceChannels = await guild.GetVoiceChannelsAsync().ConfigureAwait(false);
 
                 var boundTextChannels = textChannels.Where(c => c.Name.EndsWith("-voice"));
-                var validTxtChannelNames = new HashSet<string>(voiceChannels.Select(c => _service.GetChannelName(c.Name).ToLowerInvariant()));
+                var validTxtChannelNames = new HashSet<string>(voiceChannels.Select(c => Service.GetChannelName(c.Name).ToLowerInvariant()));
                 var invalidTxtChannels = boundTextChannels.Where(c => !validTxtChannelNames.Contains(c.Name));
 
                 foreach (var c in invalidTxtChannels)
@@ -114,7 +114,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 
                 var boundRoles = guild.Roles.Where(r => r.Name.StartsWith("nvoice-"));
-                var validRoleNames = new HashSet<string>(voiceChannels.Select(c => _service.GetRoleName(c).ToLowerInvariant()));
+                var validRoleNames = new HashSet<string>(voiceChannels.Select(c => Service.GetRoleName(c).ToLowerInvariant()));
                 var invalidRoles = boundRoles.Where(r => !validRoleNames.Contains(r.Name));
 
                 foreach (var r in invalidRoles)

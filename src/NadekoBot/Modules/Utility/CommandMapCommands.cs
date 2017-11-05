@@ -42,7 +42,7 @@ namespace Mitternacht.Modules.Utility
 
                 if (string.IsNullOrWhiteSpace(mapping))
                 {
-                    if (!_service.AliasMaps.TryGetValue(Context.Guild.Id, out var maps) ||
+                    if (!Service.AliasMaps.TryGetValue(Context.Guild.Id, out var maps) ||
                         !maps.TryRemove(trigger, out _))
                     {
                         await ReplyErrorLocalized("alias_remove_fail", Format.Code(trigger)).ConfigureAwait(false);
@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Utility
                     await ReplyConfirmLocalized("alias_removed", Format.Code(trigger)).ConfigureAwait(false);
                     return;
                 }
-                _service.AliasMaps.AddOrUpdate(Context.Guild.Id, (_) =>
+                Service.AliasMaps.AddOrUpdate(Context.Guild.Id, (_) =>
                 {
                     using (var uow = _db.UnitOfWork)
                     {
@@ -111,7 +111,7 @@ namespace Mitternacht.Modules.Utility
                 if (page < 0)
                     return;
 
-                if (!_service.AliasMaps.TryGetValue(Context.Guild.Id, out var maps) || !maps.Any())
+                if (!Service.AliasMaps.TryGetValue(Context.Guild.Id, out var maps) || !maps.Any())
                 {
                     await ReplyErrorLocalized("aliases_none").ConfigureAwait(false);
                     return;

@@ -42,7 +42,7 @@ namespace Mitternacht.Modules.Administration
                         .ConfigureAwait(false);
                 }
                 catch { }
-                var punishment = await _service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
+                var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
 
                 if (punishment == null)
                 {
@@ -211,9 +211,9 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            public async Task Warns() {
+            //public async Task Warns() {
                 
-            }
+            //}
 
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]

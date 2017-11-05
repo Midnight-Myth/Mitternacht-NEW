@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Utility
             [NadekoCommand, Usage, Description, Aliases]
             public async Task ConvertList()
             {
-                var res = _service.Units.GroupBy(x => x.UnitType)
+                var res = Service.Units.GroupBy(x => x.UnitType)
                                .Aggregate(new EmbedBuilder().WithTitle(GetText("convertlist"))
                                                             .WithColor(Mitternacht.MitternachtBot.OkColor),
                                           (embed, g) => embed.AddField(efb =>
@@ -29,8 +29,8 @@ namespace Mitternacht.Modules.Utility
             [NadekoCommand, Usage, Description, Aliases]
             public async Task Convert(string origin, string target, decimal value)
             {
-                var originUnit = _service.Units.Find(x => x.Triggers.Select(y => y.ToLowerInvariant()).Contains(origin.ToLowerInvariant()));
-                var targetUnit = _service.Units.Find(x => x.Triggers.Select(y => y.ToLowerInvariant()).Contains(target.ToLowerInvariant()));
+                var originUnit = Service.Units.Find(x => x.Triggers.Select(y => y.ToLowerInvariant()).Contains(origin.ToLowerInvariant()));
+                var targetUnit = Service.Units.Find(x => x.Triggers.Select(y => y.ToLowerInvariant()).Contains(target.ToLowerInvariant()));
                 if (originUnit == null || targetUnit == null)
                 {
                     await ReplyErrorLocalized("convert_not_found", Format.Bold(origin), Format.Bold(target)).ConfigureAwait(false);

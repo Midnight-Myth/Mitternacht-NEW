@@ -52,17 +52,17 @@ namespace Mitternacht.Modules.Pokemon
             {
                 return StringToPokemonType(setTypes[id]);
             }
-            var count = _service.PokemonTypes.Count;
+            var count = Service.PokemonTypes.Count;
 
             var remainder = Math.Abs((int)(id % (ulong)count));
 
-            return _service.PokemonTypes[remainder];
+            return Service.PokemonTypes[remainder];
         }
         
         private PokemonType StringToPokemonType(string v)
         {
             var str = v?.ToUpperInvariant();
-            var list = _service.PokemonTypes;
+            var list = Service.PokemonTypes;
             foreach (var p in list)
             {
                 if (str == p.Name)
@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Pokemon
                    
             // Checking stats first, then move
             //Set up the userstats
-            var userStats = _service.Stats.GetOrAdd(user.Id, new PokeStats());
+            var userStats = Service.Stats.GetOrAdd(user.Id, new PokeStats());
 
             //Check if able to move
             //User not able if HP < 0, has made more than 4 attacks
@@ -117,7 +117,7 @@ namespace Mitternacht.Modules.Pokemon
                 return;
             }
             //get target stats
-            var targetStats = _service.Stats.GetOrAdd(targetUser.Id, new PokeStats());
+            var targetStats = Service.Stats.GetOrAdd(targetUser.Id, new PokeStats());
 
             //If target's HP is below 0, no use attacking
             if (targetStats.Hp <= 0)
@@ -181,8 +181,8 @@ namespace Mitternacht.Modules.Pokemon
 
             //update dictionary
             //This can stay the same right?
-            _service.Stats[user.Id] = userStats;
-            _service.Stats[targetUser.Id] = targetStats;
+            Service.Stats[user.Id] = userStats;
+            Service.Stats[targetUser.Id] = targetStats;
 
             await Context.Channel.SendConfirmAsync(Context.User.Mention + " " + response).ConfigureAwait(false);
         }
@@ -214,9 +214,9 @@ namespace Mitternacht.Modules.Pokemon
                 return;
             }
 
-            if (_service.Stats.ContainsKey(targetUser.Id))
+            if (Service.Stats.ContainsKey(targetUser.Id))
             {
-                var targetStats = _service.Stats[targetUser.Id];
+                var targetStats = Service.Stats[targetUser.Id];
                 if (targetStats.Hp == targetStats.MaxHp)
                 {
                     await ReplyErrorLocalized("already_full", Format.Bold(targetUser.ToString())).ConfigureAwait(false);
@@ -240,7 +240,7 @@ namespace Mitternacht.Modules.Pokemon
                 if (targetStats.Hp < 0)
                 {
                     //Could heal only for half HP?
-                    _service.Stats[targetUser.Id].Hp = (targetStats.MaxHp / 2);
+                    Service.Stats[targetUser.Id].Hp = (targetStats.MaxHp / 2);
                     if (target == "yourself")
                     {
                         await ReplyConfirmLocalized("revive_yourself", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
@@ -277,7 +277,7 @@ namespace Mitternacht.Modules.Pokemon
             var targetType = StringToPokemonType(typeTargeted);
             if (targetType == null)
             {
-                await Context.Channel.EmbedAsync(_service.PokemonTypes.Aggregate(new EmbedBuilder().WithDescription("List of the available types:"), 
+                await Context.Channel.EmbedAsync(Service.PokemonTypes.Aggregate(new EmbedBuilder().WithDescription("List of the available types:"), 
                         (eb, pt) => eb.AddField(efb => efb.WithName(pt.Name)
                                                           .WithValue(pt.Icon)
                                                           .WithIsInline(true)))

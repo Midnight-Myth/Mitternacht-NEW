@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     logSetting = uow.GuildConfigs.LogSettingsFor(channel.Guild.Id).LogSetting;
-                    _service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
+                    Service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
                     logSetting.LogOtherId =
                     logSetting.MessageUpdatedId =
                     logSetting.MessageDeletedId =
@@ -79,7 +79,7 @@ namespace Mitternacht.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     var config = uow.GuildConfigs.LogSettingsFor(channel.Guild.Id);
-                    LogSetting logSetting = _service.GuildLogSettings.GetOrAdd(channel.Guild.Id, (id) => config.LogSetting);
+                    LogSetting logSetting = Service.GuildLogSettings.GetOrAdd(channel.Guild.Id, (id) => config.LogSetting);
                     removed = logSetting.IgnoredChannels.RemoveWhere(ilc => ilc.ChannelId == channel.Id);
                     config.LogSetting.IgnoredChannels.RemoveWhere(ilc => ilc.ChannelId == channel.Id);
                     if (removed == 0)
@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     var logSetting = uow.GuildConfigs.LogSettingsFor(channel.Guild.Id).LogSetting;
-                    _service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
+                    Service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
                     switch (type)
                     {
                         case LogCommandService.LogType.Other:

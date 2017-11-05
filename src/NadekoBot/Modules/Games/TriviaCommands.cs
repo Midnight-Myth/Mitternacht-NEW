@@ -47,7 +47,7 @@ namespace Mitternacht.Modules.Games
                 var showHints = !additionalArgs.Contains("nohint");
                 var isPokemon = additionalArgs.Contains("pokemon");
 
-                var trivia = new TriviaGame(_strings, _client, _bc, _cs, channel.Guild, channel, showHints, winReq, isPokemon);
+                var trivia = new TriviaGame(Strings, _client, _bc, _cs, channel.Guild, channel, showHints, winReq, isPokemon);
                 if (RunningTrivias.TryAdd(channel.Guild.Id, trivia))
                 {
                     try

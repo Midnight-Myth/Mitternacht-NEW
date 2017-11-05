@@ -69,7 +69,7 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                if (_service.AntiRaidGuilds.TryRemove(Context.Guild.Id, out _))
+                if (Service.AntiRaidGuilds.TryRemove(Context.Guild.Id, out _))
                 {
                     using (var uow = _db.UnitOfWork)
                     {
@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Administration
                     }
                 };
 
-                _service.AntiRaidGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) => stats);
+                Service.AntiRaidGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) => stats);
 
                 using (var uow = _db.UnitOfWork)
                 {
@@ -123,7 +123,7 @@ namespace Mitternacht.Modules.Administration
             [Priority(1)]
             public async Task AntiSpam()
             {
-                if (_service.AntiSpamGuilds.TryRemove(Context.Guild.Id, out var removed))
+                if (Service.AntiSpamGuilds.TryRemove(Context.Guild.Id, out var removed))
                 {
                     removed.UserStats.ForEach(x => x.Value.Dispose());
                     using (var uow = _db.UnitOfWork)
@@ -174,7 +174,7 @@ namespace Mitternacht.Modules.Administration
                     }
                 };
 
-                _service.AntiSpamGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) =>
+                Service.AntiSpamGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) =>
                 {
                     stats.AntiSpamSettings.MessageThreshold = messageCount;
                     stats.AntiSpamSettings.Action = action;
@@ -217,7 +217,7 @@ namespace Mitternacht.Modules.Administration
                     if (spam.IgnoredChannels.Add(obj))
                     {
                         AntiSpamStats temp;
-                        if (_service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out temp))
+                        if (Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out temp))
                             temp.AntiSpamSettings.IgnoredChannels.Add(obj);
                         added = true;
                     }
@@ -225,7 +225,7 @@ namespace Mitternacht.Modules.Administration
                     {
                         spam.IgnoredChannels.Remove(obj);
                         AntiSpamStats temp;
-                        if (_service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out temp))
+                        if (Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out temp))
                             temp.AntiSpamSettings.IgnoredChannels.Remove(obj);
                         added = false;
                     }
@@ -244,10 +244,10 @@ namespace Mitternacht.Modules.Administration
             public async Task AntiList()
             {
                 AntiSpamStats spam;
-                _service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out spam);
+                Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out spam);
 
                 AntiRaidStats raid;
-                _service.AntiRaidGuilds.TryGetValue(Context.Guild.Id, out raid);
+                Service.AntiRaidGuilds.TryGetValue(Context.Guild.Id, out raid);
 
                 if (spam == null && raid == null)
                 {

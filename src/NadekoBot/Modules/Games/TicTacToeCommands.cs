@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Games
                         });
                         return;
                     }
-                    game = new TicTacToe(base._strings, (DiscordSocketClient)this._client, channel, (IGuildUser)Context.User);
+                    game = new TicTacToe(base.Strings, (DiscordSocketClient)this._client, channel, (IGuildUser)Context.User);
                     _games.Add(channel.Id, game);
                     await ReplyConfirmLocalized("ttt_created").ConfigureAwait(false);
 

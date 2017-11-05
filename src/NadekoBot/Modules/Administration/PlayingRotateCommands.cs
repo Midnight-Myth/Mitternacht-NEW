@@ -58,13 +58,13 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task ListPlaying()
             {
-                if (!_service.BotConfig.RotatingStatusMessages.Any())
+                if (!Service.BotConfig.RotatingStatusMessages.Any())
                     await ReplyErrorLocalized("ropl_not_set").ConfigureAwait(false);
                 else
                 {
                     var i = 1;
                     await ReplyConfirmLocalized("ropl_list",
-                            string.Join("\n\t", _service.BotConfig.RotatingStatusMessages.Select(rs => $"`{i++}.` {rs.Status}")))
+                            string.Join("\n\t", Service.BotConfig.RotatingStatusMessages.Select(rs => $"`{i++}.` {rs.Status}")))
                         .ConfigureAwait(false);
                 }
 

@@ -58,12 +58,12 @@ namespace Mitternacht.Modules.CustomReactions
 
             if (channel == null)
             {
-                Array.Resize(ref _service.GlobalReactions, _service.GlobalReactions.Length + 1);
-                _service.GlobalReactions[_service.GlobalReactions.Length - 1] = cr;
+                Array.Resize(ref Service.GlobalReactions, Service.GlobalReactions.Length + 1);
+                Service.GlobalReactions[Service.GlobalReactions.Length - 1] = cr;
             }
             else
             {
-                _service.GuildReactions.AddOrUpdate(Context.Guild.Id,
+                Service.GuildReactions.AddOrUpdate(Context.Guild.Id,
                     new[] { cr },
                     (k, old) =>
                     {
@@ -88,8 +88,8 @@ namespace Mitternacht.Modules.CustomReactions
             if (--page < 0 || page > 999)
                 return;
             var customReactions = Context.Guild == null
-                ? _service.GlobalReactions.Where(cr => cr != null).ToArray()
-                : _service.GuildReactions.GetOrAdd(Context.Guild.Id, Array.Empty<CustomReaction>())
+                ? Service.GlobalReactions.Where(cr => cr != null).ToArray()
+                : Service.GuildReactions.GetOrAdd(Context.Guild.Id, Array.Empty<CustomReaction>())
                     .Where(cr => cr != null).ToArray();
 
             if (customReactions == null || !customReactions.Any())
@@ -126,8 +126,8 @@ namespace Mitternacht.Modules.CustomReactions
         public async Task ListCustReact(All x)
         {
             var customReactions = Context.Guild == null
-                ? _service.GlobalReactions.Where(cr => cr != null).ToArray()
-                : _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null)
+                ? Service.GlobalReactions.Where(cr => cr != null).ToArray()
+                : Service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null)
                     .ToArray();
 
             if (customReactions == null || !customReactions.Any())
@@ -155,8 +155,8 @@ namespace Mitternacht.Modules.CustomReactions
             if (--page < 0 || page > 9999)
                 return;
             var customReactions = Context.Guild == null
-                ? _service.GlobalReactions.Where(cr => cr != null).ToArray()
-                : _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null)
+                ? Service.GlobalReactions.Where(cr => cr != null).ToArray()
+                : Service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null)
                     .ToArray();
 
             if (customReactions == null || !customReactions.Any())
@@ -186,8 +186,8 @@ namespace Mitternacht.Modules.CustomReactions
         public async Task ShowCustReact(int id)
         {
             var customReactions = Context.Guild == null
-                ? _service.GlobalReactions
-                : _service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { });
+                ? Service.GlobalReactions
+                : Service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { });
 
             var found = customReactions.FirstOrDefault(cr => cr?.Id == id);
 
@@ -223,7 +223,7 @@ namespace Mitternacht.Modules.CustomReactions
                     {
                         uow.CustomReactions.Remove(toDelete);
                         //todo 91 i can dramatically improve performance of this, if Ids are ordered.
-                        _service.GlobalReactions = _service.GlobalReactions.Where(cr => cr?.Id != toDelete.Id)
+                        Service.GlobalReactions = Service.GlobalReactions.Where(cr => cr?.Id != toDelete.Id)
                             .ToArray();
                         success = true;
                     }
@@ -231,7 +231,7 @@ namespace Mitternacht.Modules.CustomReactions
                              Context.Guild.Id == toDelete.GuildId)
                     {
                         uow.CustomReactions.Remove(toDelete);
-                        _service.GuildReactions.AddOrUpdate(Context.Guild.Id, new CustomReaction[] { },
+                        Service.GuildReactions.AddOrUpdate(Context.Guild.Id, new CustomReaction[] { },
                             (key, old) => old.Where(cr => cr?.Id != toDelete.Id).ToArray());
                         success = true;
                     }
@@ -267,10 +267,10 @@ namespace Mitternacht.Modules.CustomReactions
             CustomReaction[] reactions;
 
             if (Context.Guild == null)
-                reactions = _service.GlobalReactions;
+                reactions = Service.GlobalReactions;
             else
             {
-                _service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
+                Service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
             }
             if (reactions.Any())
             {
@@ -318,10 +318,10 @@ namespace Mitternacht.Modules.CustomReactions
             CustomReaction[] reactions;
 
             if (Context.Guild == null)
-                reactions = _service.GlobalReactions;
+                reactions = Service.GlobalReactions;
             else
             {
-                _service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
+                Service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
             }
             if (reactions.Any())
             {
@@ -369,10 +369,10 @@ namespace Mitternacht.Modules.CustomReactions
             CustomReaction[] reactions;
 
             if (Context.Guild == null)
-                reactions = _service.GlobalReactions;
+                reactions = Service.GlobalReactions;
             else
             {
-                _service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
+                Service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
             }
             if (reactions.Any())
             {
@@ -413,12 +413,12 @@ namespace Mitternacht.Modules.CustomReactions
         {
             if (string.IsNullOrWhiteSpace(trigger))
             {
-                _service.ClearStats();
+                Service.ClearStats();
                 await ReplyConfirmLocalized("all_stats_cleared").ConfigureAwait(false);
             }
             else
             {
-                if (_service.ReactionStats.TryRemove(trigger, out _))
+                if (Service.ReactionStats.TryRemove(trigger, out _))
                 {
                     await ReplyErrorLocalized("stats_cleared", Format.Bold(trigger)).ConfigureAwait(false);
                 }
@@ -434,7 +434,7 @@ namespace Mitternacht.Modules.CustomReactions
         {
             if (--page < 0)
                 return;
-            var ordered = _service.ReactionStats.OrderByDescending(x => x.Value).ToArray();
+            var ordered = Service.ReactionStats.OrderByDescending(x => x.Value).ToArray();
             if (!ordered.Any())
                 return;
             var lastPage = ordered.Length / 9;

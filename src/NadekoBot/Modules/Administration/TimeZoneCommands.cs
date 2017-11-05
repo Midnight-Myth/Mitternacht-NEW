@@ -43,14 +43,14 @@ namespace Mitternacht.Modules.Administration
             {
                 if (string.IsNullOrWhiteSpace(id))
                 {
-                    await ReplyConfirmLocalized("timezone_guild", _service.GetTimeZoneOrUtc(Context.Guild.Id)).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("timezone_guild", Service.GetTimeZoneOrUtc(Context.Guild.Id)).ConfigureAwait(false);
                     return;
                 }
 
                 TimeZoneInfo tz;
                 try { tz = TimeZoneInfo.FindSystemTimeZoneById(id); } catch { tz = null; }
 
-                _service.SetTimeZone(Context.Guild.Id, tz);
+                Service.SetTimeZone(Context.Guild.Id, tz);
 
                 if (tz == null)
                 {

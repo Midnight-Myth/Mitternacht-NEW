@@ -124,7 +124,7 @@ namespace Mitternacht.Modules.Searches
                 if (string.IsNullOrWhiteSpace(query))
                     return;
 
-                var animeData = await _service.GetAnimeData(query).ConfigureAwait(false);
+                var animeData = await Service.GetAnimeData(query).ConfigureAwait(false);
 
                 if (animeData == null)
                 {
@@ -151,7 +151,7 @@ namespace Mitternacht.Modules.Searches
                 if (string.IsNullOrWhiteSpace(query))
                     return;
 
-                var mangaData = await _service.GetMangaData(query).ConfigureAwait(false);
+                var mangaData = await Service.GetMangaData(query).ConfigureAwait(false);
 
                 if (mangaData == null)
                 {

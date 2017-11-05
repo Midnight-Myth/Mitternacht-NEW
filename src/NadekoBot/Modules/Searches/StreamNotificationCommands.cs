@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Searches
                     return;
                 try
                 {
-                    var streamStatus = (await _service.GetStreamStatus(new FollowedStream
+                    var streamStatus = (await Service.GetStreamStatus(new FollowedStream
                     {
                         Username = stream,
                         Type = platform,
@@ -157,7 +157,7 @@ namespace Mitternacht.Modules.Searches
                 StreamStatus status;
                 try
                 {
-                    status = await _service.GetStreamStatus(fs).ConfigureAwait(false);
+                    status = await Service.GetStreamStatus(fs).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -172,7 +172,7 @@ namespace Mitternacht.Modules.Searches
                                     .Add(fs);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await channel.EmbedAsync(_service.GetEmbed(fs, status, Context.Guild.Id), GetText("stream_tracked")).ConfigureAwait(false);
+                await channel.EmbedAsync(Service.GetEmbed(fs, status, Context.Guild.Id), GetText("stream_tracked")).ConfigureAwait(false);
             }
         }
     }

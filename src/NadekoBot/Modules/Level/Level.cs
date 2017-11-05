@@ -132,7 +132,7 @@ namespace Mitternacht.Modules.Level
                 var success = uow.LevelModel.TryAddXp(user.Id, xp, false);
                 await Context.Channel.SendConfirmAsync(success ? $"{Context.User.Mention}: {xp}XP an {user.Username} vergeben." : $"{Context.User.Mention}: Vergabe von {xp}XP an {user.Username} nicht möglich!");
                 var level = uow.LevelModel.CalculateLevel(user.Id);
-                await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -148,7 +148,7 @@ namespace Mitternacht.Modules.Level
                 uow.LevelModel.SetXp(user.Id, xp, false);
                 await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {user.Username} auf {xp} gesetzt.");
                 var level = uow.LevelModel.CalculateLevel(user.Id);
-                await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -181,7 +181,7 @@ namespace Mitternacht.Modules.Level
                     uow.Currency.TryUpdateState(user.Id, -moneyToSpend);
                     await Context.Channel.SendMessageAsync($"{Context.User.Mention}: {moneyToSpend}{CurrencySign} in {moneyToSpend * 5}XP umgewandelt" + (user != Context.User ? $" für {user.Username}" : ""));
                     var level = uow.LevelModel.CalculateLevel(user.Id);
-                    await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                    await Service.SendLevelChangedMessage(level, user, Context.Channel);
                 }
                 await uow.CompleteAsync().ConfigureAwait(false);
             }

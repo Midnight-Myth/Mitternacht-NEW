@@ -727,7 +727,7 @@ namespace Mitternacht.Modules.Searches
 
             tag = tag?.Trim() ?? "url";
 
-            var imgObj = await _service.DapiSearch(tag, type, Context.Guild?.Id).ConfigureAwait(false);
+            var imgObj = await Service.DapiSearch(tag, type, Context.Guild?.Id).ConfigureAwait(false);
 
             if (imgObj == null)
                 await channel.SendErrorAsync(umsg.Author.Mention + " " + GetText("no_results"));

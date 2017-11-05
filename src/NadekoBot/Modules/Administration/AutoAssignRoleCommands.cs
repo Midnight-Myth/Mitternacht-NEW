@@ -37,12 +37,12 @@ namespace Mitternacht.Modules.Administration
                     if (role == null)
                     {
                         conf.AutoAssignRoleId = 0;
-                        _service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
+                        Service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
                     }
                     else
                     {
                         conf.AutoAssignRoleId = role.Id;
-                        _service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
+                        Service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
                     }
 
                     await uow.CompleteAsync().ConfigureAwait(false);

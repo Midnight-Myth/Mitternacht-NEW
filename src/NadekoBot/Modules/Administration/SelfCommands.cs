@@ -185,7 +185,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 _bc.Reload();
                 
-                if (_service.ForwardDMs)
+                if (Service.ForwardDMs)
                     await ReplyConfirmLocalized("fwdm_start").ConfigureAwait(false);
                 else
                     await ReplyConfirmLocalized("fwdm_stop").ConfigureAwait(false);
@@ -204,7 +204,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 _bc.Reload();
 
-                if (_service.ForwardDMsToAllOwners)
+                if (Service.ForwardDMsToAllOwners)
                     await ReplyConfirmLocalized("fwall_start").ConfigureAwait(false);
                 else
                     await ReplyConfirmLocalized("fwall_stop").ConfigureAwait(false);

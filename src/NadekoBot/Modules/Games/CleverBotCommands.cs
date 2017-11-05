@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Games
             {
                 var channel = (ITextChannel)Context.Channel;
 
-                if (_service.ChatterBotGuilds.TryRemove(channel.Guild.Id, out _))
+                if (Service.ChatterBotGuilds.TryRemove(channel.Guild.Id, out _))
                 {
                     using (var uow = _db.UnitOfWork)
                     {
@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Games
                     return;
                 }
 
-                _service.ChatterBotGuilds.TryAdd(channel.Guild.Id, new Lazy<IChatterBotSession>(() => _service.CreateSession(), true));
+                Service.ChatterBotGuilds.TryAdd(channel.Guild.Id, new Lazy<IChatterBotSession>(() => Service.CreateSession(), true));
 
                 using (var uow = _db.UnitOfWork)
                 {

@@ -61,7 +61,7 @@ namespace Mitternacht.Modules.Utility
 
             public async Task RemindInternal(ulong targetId, bool isPrivate, string timeStr, [Remainder] string message)
             {
-                var m = _service.Regex.Match(timeStr);
+                var m = Service.Regex.Match(timeStr);
 
                 if (m.Length == 0)
                 {
@@ -72,7 +72,7 @@ namespace Mitternacht.Modules.Utility
                 string output = "";
                 var namesAndValues = new Dictionary<string, int>();
 
-                foreach (var groupName in _service.Regex.GetGroupNames())
+                foreach (var groupName in Service.Regex.GetGroupNames())
                 {
                     if (groupName == "0") continue;
                     int value;
@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Utility
                 {
                     // ignored
                 }
-                await _service.StartReminder(rem);
+                await Service.StartReminder(rem);
             }
             
             [NadekoCommand, Usage, Description, Aliases]

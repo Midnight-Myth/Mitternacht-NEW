@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Utility
             {
                 if (string.IsNullOrWhiteSpace(_creds.PatreonAccessToken))
                     return;
-                await _service.RefreshPledges(true).ConfigureAwait(false);
+                await Service.RefreshPledges(true).ConfigureAwait(false);
 
                 await Context.Channel.SendConfirmAsync("👌").ConfigureAwait(false);
             }
@@ -54,7 +54,7 @@ namespace Mitternacht.Modules.Utility
                 int amount = 0;
                 try
                 {
-                    amount = await _service.ClaimReward(Context.User.Id).ConfigureAwait(false);
+                    amount = await Service.ClaimReward(Context.User.Id).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -66,7 +66,7 @@ namespace Mitternacht.Modules.Utility
                     await ReplyConfirmLocalized("clpa_success", amount + _config.BotConfig.CurrencySign).ConfigureAwait(false);
                     return;
                 }
-                var rem = (_service.Interval - (DateTime.UtcNow - _service.LastUpdate));
+                var rem = (Service.Interval - (DateTime.UtcNow - Service.LastUpdate));
                 var helpcmd = Format.Code(Prefix + "donate");
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                     .WithDescription(GetText("clpa_fail"))

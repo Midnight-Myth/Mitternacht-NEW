@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Slowmode()
             {
-                if (_service.RatelimitingChannels.TryRemove(Context.Channel.Id, out Ratelimiter removed))
+                if (Service.RatelimitingChannels.TryRemove(Context.Channel.Id, out Ratelimiter removed))
                 {
                     removed.CancelSource.Cancel();
                     await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
@@ -49,13 +49,13 @@ namespace Mitternacht.Modules.Administration
                     await ReplyErrorLocalized("invalid_params").ConfigureAwait(false);
                     return;
                 }
-                var toAdd = new Ratelimiter(_service)
+                var toAdd = new Ratelimiter(Service)
                 {
                     ChannelId = Context.Channel.Id,
                     MaxMessages = msg,
                     PerSeconds = perSec,
                 };
-                if (_service.RatelimitingChannels.TryAdd(Context.Channel.Id, toAdd))
+                if (Service.RatelimitingChannels.TryAdd(Context.Channel.Id, toAdd))
                 {
                     await Context.Channel.SendConfirmAsync(GetText("slowmode_init"),
                             GetText("slowmode_desc", Format.Bold(toAdd.MaxMessages.ToString()), Format.Bold(toAdd.PerSeconds.ToString())))
@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Administration
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                _service.IgnoredUsers.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(usrs.Select(x => x.UserId)), (key, old) => new HashSet<ulong>(usrs.Select(x => x.UserId)));
+                Service.IgnoredUsers.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(usrs.Select(x => x.UserId)), (key, old) => new HashSet<ulong>(usrs.Select(x => x.UserId)));
 
                 if (removed)
                     await ReplyConfirmLocalized("slowmodewl_user_stop", Format.Bold(user.ToString())).ConfigureAwait(false);
@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Administration
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                _service.IgnoredRoles.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(roles.Select(x => x.RoleId)), (key, old) => new HashSet<ulong>(roles.Select(x => x.RoleId)));
+                Service.IgnoredRoles.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(roles.Select(x => x.RoleId)), (key, old) => new HashSet<ulong>(roles.Select(x => x.RoleId)));
 
                 if (removed)
                     await ReplyConfirmLocalized("slowmodewl_role_stop", Format.Bold(role.ToString())).ConfigureAwait(false);

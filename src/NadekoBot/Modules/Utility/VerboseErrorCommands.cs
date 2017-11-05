@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Utility
             [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
             public async Task VerboseError()
             {
-                var state = _service.ToggleVerboseErrors(Context.Guild.Id);
+                var state = Service.ToggleVerboseErrors(Context.Guild.Id);
 
                 if (state)
                     await ReplyConfirmLocalized("verbose_errors_enabled").ConfigureAwait(false);

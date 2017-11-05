@@ -15,8 +15,8 @@ namespace Mitternacht.Modules.Searches
         [Group]
         public class PokemonSearchCommands : NadekoSubmodule<SearchesService>
         {
-            public Dictionary<string, SearchPokemon> Pokemons => _service.Pokemons;
-            public Dictionary<string, SearchPokemonAbility> PokemonAbilities => _service.PokemonAbilities;
+            public Dictionary<string, SearchPokemon> Pokemons => Service.Pokemons;
+            public Dictionary<string, SearchPokemonAbility> PokemonAbilities => Service.PokemonAbilities;
 
             [NadekoCommand, Usage, Description, Aliases]
             public async Task Pokemon([Remainder] string pokemon = null)
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Searches
                                 ? kvp.Value.ShortDesc
                                 : kvp.Value.Desc)
                             .AddField(efb => efb.WithName(GetText("rating"))
-                                                .WithValue(kvp.Value.Rating.ToString(_cultureInfo)).WithIsInline(true))
+                                                .WithValue(kvp.Value.Rating.ToString(CultureInfo)).WithIsInline(true))
                             ).ConfigureAwait(false);
                         return;
                     }

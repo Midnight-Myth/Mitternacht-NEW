@@ -38,12 +38,12 @@ namespace Mitternacht.Modules.Administration
             }
             if (enabled)
             {
-                _service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
+                Service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
                 await ReplyConfirmLocalized("delmsg_on").ConfigureAwait(false);
             }
             else
             {
-                _service.DeleteMessagesOnCommand.TryRemove(Context.Guild.Id);
+                Service.DeleteMessagesOnCommand.TryRemove(Context.Guild.Id);
                 await ReplyConfirmLocalized("delmsg_off").ConfigureAwait(false);
             }
         }

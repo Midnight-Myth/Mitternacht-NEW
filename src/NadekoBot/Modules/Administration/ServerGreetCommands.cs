@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Administration
                 if (timer < 0 || timer > 600)
                     return;
 
-                await _service.SetGreetDel(Context.Guild.Id, timer).ConfigureAwait(false);
+                await Service.SetGreetDel(Context.Guild.Id, timer).ConfigureAwait(false);
 
                 if (timer > 0)
                     await ReplyConfirmLocalized("greetdel_on", timer).ConfigureAwait(false);
@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task Greet()
             {
-                var enabled = await _service.SetGreet(Context.Guild.Id, Context.Channel.Id).ConfigureAwait(false);
+                var enabled = await Service.SetGreet(Context.Guild.Id, Context.Channel.Id).ConfigureAwait(false);
 
                 if (enabled)
                     await ReplyConfirmLocalized("greet_on").ConfigureAwait(false);
@@ -65,7 +65,7 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                var sendGreetEnabled = _service.SetGreetMessage(Context.Guild.Id, ref text);
+                var sendGreetEnabled = Service.SetGreetMessage(Context.Guild.Id, ref text);
 
                 await ReplyConfirmLocalized("greetmsg_new").ConfigureAwait(false);
                 if (!sendGreetEnabled)
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task GreetDm()
             {
-                var enabled = await _service.SetGreetDm(Context.Guild.Id).ConfigureAwait(false);
+                var enabled = await Service.SetGreetDm(Context.Guild.Id).ConfigureAwait(false);
 
                 if (enabled)
                     await ReplyConfirmLocalized("greetdm_on").ConfigureAwait(false);
@@ -101,7 +101,7 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                var sendGreetEnabled = _service.SetGreetDmMessage(Context.Guild.Id, ref text);
+                var sendGreetEnabled = Service.SetGreetDmMessage(Context.Guild.Id, ref text);
 
                 await ReplyConfirmLocalized("greetdmmsg_new").ConfigureAwait(false);
                 if (!sendGreetEnabled)
@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task Bye()
             {
-                var enabled = await _service.SetBye(Context.Guild.Id, Context.Channel.Id).ConfigureAwait(false);
+                var enabled = await Service.SetBye(Context.Guild.Id, Context.Channel.Id).ConfigureAwait(false);
 
                 if (enabled)
                     await ReplyConfirmLocalized("bye_on").ConfigureAwait(false);
@@ -137,7 +137,7 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                var sendByeEnabled = _service.SetByeMessage(Context.Guild.Id, ref text);
+                var sendByeEnabled = Service.SetByeMessage(Context.Guild.Id, ref text);
 
                 await ReplyConfirmLocalized("byemsg_new").ConfigureAwait(false);
                 if (!sendByeEnabled)
@@ -149,7 +149,7 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task ByeDel(int timer = 30)
             {
-                await _service.SetByeDel(Context.Guild.Id, timer).ConfigureAwait(false);
+                await Service.SetByeDel(Context.Guild.Id, timer).ConfigureAwait(false);
 
                 if (timer > 0)
                     await ReplyConfirmLocalized("byedel_on", timer).ConfigureAwait(false);

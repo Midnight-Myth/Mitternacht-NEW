@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Games
 
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(MitternachtBot.OkColor)
                                .AddField(efb => efb.WithName("❓ " + GetText("question") ).WithValue(question).WithIsInline(false))
-                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(_service.EightBallResponses[new NadekoRandom().Next(0, _service.EightBallResponses.Length)]).WithIsInline(false)));
+                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(Service.EightBallResponses[new NadekoRandom().Next(0, Service.EightBallResponses.Length)]).WithIsInline(false)));
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -98,7 +98,7 @@ namespace Mitternacht.Modules.Games
         [RequireContext(ContextType.Guild)]
         public async Task RateGirl(IGuildUser user = null) {
             user = user ?? (IGuildUser) Context.User;
-            var gr = _service.GirlRatings.GetOrAdd(user.Id, GetGirl);
+            var gr = Service.GirlRatings.GetOrAdd(user.Id, GetGirl);
             var img = await gr.Url;
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                 .WithTitle("Girl Rating For " + user)

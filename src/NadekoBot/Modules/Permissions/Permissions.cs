@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Permissions
                 var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
                 config.VerbosePermissions = action.Value;
                 await uow.CompleteAsync().ConfigureAwait(false);
-                _service.UpdateCache(config);
+                Service.UpdateCache(config);
             }
             if (action.Value)
             {
@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Permissions
                 }
                 config.PermissionRole = role.Name.Trim();
                 await uow.CompleteAsync().ConfigureAwait(false);
-                _service.UpdateCache(config);
+                Service.UpdateCache(config);
             }
 
             await ReplyConfirmLocalized("permrole_changed", Format.Bold(role.Name)).ConfigureAwait(false);
@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Permissions
             if (page < 1)
                 return;
 
-            IList<Permissionv2> perms = _service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
+            IList<Permissionv2> perms = Service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
 
             var startPos = 20 * (page - 1);
             var toSend = Format.Bold(GetText("page", page)) + "\n\n" + string.Join("\n",
@@ -112,7 +112,7 @@ namespace Mitternacht.Modules.Permissions
                     permsCol.RemoveAt(index);
                     uow.Context.Remove(p);
                     await uow.CompleteAsync().ConfigureAwait(false);
-                    _service.UpdateCache(config);
+                    Service.UpdateCache(config);
                 }
                 await ReplyConfirmLocalized("removed",
                     index + 1,
@@ -159,7 +159,7 @@ namespace Mitternacht.Modules.Permissions
                         permsCol.RemoveAt(from);
                         permsCol.Insert(to, fromPerm);
                         await uow.CompleteAsync().ConfigureAwait(false);
-                        _service.UpdateCache(config);
+                        Service.UpdateCache(config);
                     }
                     await ReplyConfirmLocalized("moved_permission",
                             Format.Code(fromPerm.GetCommand(Prefix, (SocketGuild) Context.Guild)),
@@ -179,7 +179,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task SrvrCmd(CommandOrCrInfo command, PermissionAction action)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Server,
                 PrimaryTargetId = 0,
@@ -206,7 +206,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task SrvrMdl(ModuleOrCrInfo module, PermissionAction action)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Server,
                 PrimaryTargetId = 0,
@@ -233,7 +233,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task UsrCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] IGuildUser user)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.User,
                 PrimaryTargetId = user.Id,
@@ -262,7 +262,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task UsrMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] IGuildUser user)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.User,
                 PrimaryTargetId = user.Id,
@@ -294,7 +294,7 @@ namespace Mitternacht.Modules.Permissions
             if (role == role.Guild.EveryoneRole)
                 return;
 
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Role,
                 PrimaryTargetId = role.Id,
@@ -326,7 +326,7 @@ namespace Mitternacht.Modules.Permissions
             if (role == role.Guild.EveryoneRole)
                 return;
 
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Role,
                 PrimaryTargetId = role.Id,
@@ -356,7 +356,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task ChnlCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] ITextChannel chnl)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Channel,
                 PrimaryTargetId = chnl.Id,
@@ -385,7 +385,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task ChnlMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] ITextChannel chnl)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Channel,
                 PrimaryTargetId = chnl.Id,
@@ -414,7 +414,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task AllChnlMdls(PermissionAction action, [Remainder] ITextChannel chnl)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Channel,
                 PrimaryTargetId = chnl.Id,
@@ -442,7 +442,7 @@ namespace Mitternacht.Modules.Permissions
             if (role == role.Guild.EveryoneRole)
                 return;
 
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.Role,
                 PrimaryTargetId = role.Id,
@@ -467,7 +467,7 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task AllUsrMdls(PermissionAction action, [Remainder] IUser user)
         {
-            await _service.AddPermissions(Context.Guild.Id, new Permissionv2
+            await Service.AddPermissions(Context.Guild.Id, new Permissionv2
             {
                 PrimaryTarget = PrimaryPermissionType.User,
                 PrimaryTargetId = user.Id,
@@ -510,7 +510,7 @@ namespace Mitternacht.Modules.Permissions
                 State = true,
             };
 
-            await _service.AddPermissions(Context.Guild.Id,
+            await Service.AddPermissions(Context.Guild.Id,
                 newPerm,
                 allowUser);
 

@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Help
             //    return;
             //}
 
-            var embed = _service.GetCommandHelp(com, Context.Guild);
+            var embed = Service.GetCommandHelp(com, Context.Guild);
             await channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
@@ -141,7 +141,7 @@ namespace Mitternacht.Modules.Help
                     lastModule = module.Name;
                 }
                 helpstr.AppendLine($"{string.Join(" ", com.Aliases.Select(a => "`" + Prefix + a + "`"))} |" +
-                                   $" {string.Format(com.Summary, Prefix)} {_service.GetCommandRequirements(com, Context.Guild)} |" +
+                                   $" {string.Format(com.Summary, Prefix)} {Service.GetCommandRequirements(com, Context.Guild)} |" +
                                    $" {string.Format(com.Remarks, Prefix)}");
             }
             File.WriteAllText("../../docs/Commands List.md", helpstr.ToString());
