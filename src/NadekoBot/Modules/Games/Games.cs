@@ -96,12 +96,12 @@ namespace Mitternacht.Modules.Games
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task RateGirl(IGuildUser usr)
-        {
-            var gr = _service.GirlRatings.GetOrAdd(usr.Id, GetGirl);
+        public async Task RateGirl(IGuildUser user = null) {
+            user = user ?? (IGuildUser) Context.User;
+            var gr = _service.GirlRatings.GetOrAdd(user.Id, GetGirl);
             var img = await gr.Url;
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                .WithTitle("Girl Rating For " + usr)
+                .WithTitle("Girl Rating For " + user)
                 .AddField(efb => efb.WithName("Hot").WithValue(gr.Hot.ToString("F2")).WithIsInline(true))
                 .AddField(efb => efb.WithName("Crazy").WithValue(gr.Crazy.ToString("F2")).WithIsInline(true))
                 .AddField(efb => efb.WithName("Advice").WithValue(gr.Advice).WithIsInline(false))
@@ -120,9 +120,7 @@ namespace Mitternacht.Modules.Games
 
             var roll = rng.Next(1, 1001);
 
-            if ((uid == 119521688768610304 ||
-                 uid == 147390060742967296) && roll >= 900)
-                roll = 1000;
+            if (uid == 119521688768610304 || uid == 147390060742967296) roll = 1000;
             if (uid == 240476349116973067) roll = 0;
 
             double hot, crazy;
