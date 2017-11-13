@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Music
             _google = google;
             _db = db;
 
-            //_client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
+            _client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
             _client.LeftGuild += _client_LeftGuild;
         }
 
@@ -49,54 +49,54 @@ namespace Mitternacht.Modules.Music
         }
 
         //todo changing server region is bugged again
-        //private Task Client_UserVoiceStateUpdated(SocketUser iusr, SocketVoiceState oldState, SocketVoiceState newState)
-        //{
-        //    var t = Task.Run(() =>
-        //    {
-        //        var usr = iusr as SocketGuildUser;
-        //        if (usr == null ||
-        //            oldState.VoiceChannel == newState.VoiceChannel)
-        //            return;
+        private Task Client_UserVoiceStateUpdated(SocketUser iusr, SocketVoiceState oldState, SocketVoiceState newState)
+        {
+            var t = Task.Run(() =>
+            {
+                var usr = iusr as SocketGuildUser;
+                if (usr == null ||
+                    oldState.VoiceChannel == newState.VoiceChannel)
+                    return;
 
-        //        var player = _music.GetPlayerOrDefault(usr.Guild.Id);
+                var player = _music.GetPlayerOrDefault(usr.Guild.Id);
 
-        //        if (player == null)
-        //            return;
+                if (player == null)
+                    return;
 
-        //        try
-        //        {
-        //            //if bot moved
-        //            if ((player.VoiceChannel == oldState.VoiceChannel) &&
-        //                    usr.Id == _client.CurrentUser.Id)
-        //            {
-        //                //if (player.Paused && newState.VoiceChannel.Users.Count > 1) //unpause if there are people in the new channel
-        //                //    player.TogglePause();
-        //                //else if (!player.Paused && newState.VoiceChannel.Users.Count <= 1) // pause if there are no users in the new channel
-        //                //    player.TogglePause();
+                try
+                {
+                    //if bot moved
+                    if ((player.VoiceChannel == oldState.VoiceChannel) &&
+                            usr.Id == _client.CurrentUser.Id)
+                    {
+                        if (player.Paused && newState.VoiceChannel.Users.Count > 1) //unpause if there are people in the new channel
+                            player.TogglePause();
+                        else if (!player.Paused && newState.VoiceChannel.Users.Count <= 1) // pause if there are no users in the new channel
+                            player.TogglePause();
 
-        //               // player.SetVoiceChannel(newState.VoiceChannel);
-        //                return;
-        //            }
+                        player.SetVoiceChannel(newState.VoiceChannel);
+                        return;
+                    }
 
-        //            ////if some other user moved
-        //            //if ((player.VoiceChannel == newState.VoiceChannel && //if joined first, and player paused, unpause 
-        //            //        player.Paused &&
-        //            //        newState.VoiceChannel.Users.Count >= 2) ||  // keep in mind bot is in the channel (+1)
-        //            //    (player.VoiceChannel == oldState.VoiceChannel && // if left last, and player unpaused, pause
-        //            //        !player.Paused &&
-        //            //        oldState.VoiceChannel.Users.Count == 1))
-        //            //{
-        //            //    player.TogglePause();
-        //            //    return;
-        //            //}
-        //        }
-        //        catch
-        //        {
-        //            // ignored
-        //        }
-        //    });
-        //    return Task.CompletedTask;
-        //}
+                    //if some other user moved
+                    if ((player.VoiceChannel == newState.VoiceChannel && //if joined first, and player paused, unpause 
+                            player.Paused &&
+                            newState.VoiceChannel.Users.Count >= 2) ||  // keep in mind bot is in the channel (+1)
+                        (player.VoiceChannel == oldState.VoiceChannel && // if left last, and player unpaused, pause
+                            !player.Paused &&
+                            oldState.VoiceChannel.Users.Count == 1))
+                    {
+                        player.TogglePause();
+                        return;
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            });
+            return Task.CompletedTask;
+        }
 
         private async Task InternalQueue(MusicPlayer mp, SongInfo songInfo, bool silent, bool queueFirst = false)
         {
@@ -177,11 +177,16 @@ namespace Mitternacht.Modules.Music
         public async Task Queue([Remainder] string query)
         {
             var mp = await Service.GetOrCreatePlayer(Context);
+            mp.AutoDelete = true;
             var songInfo = await Service.ResolveSong(query, Context.User.ToString());
             try { await InternalQueue(mp, songInfo, false); } catch (QueueFullException) { return; }
             if ((await Context.Guild.GetCurrentUserAsync()).GetPermissions((IGuildChannel)Context.Channel).ManageMessages)
             {
                 Context.Message.DeleteAfter(10);
+            }
+            if(mp.Stopped)
+            {
+                mp.TogglePause();
             }
         }
 
@@ -307,7 +312,7 @@ namespace Mitternacht.Modules.Music
                     desc = add + "\n" + desc;
 
                 var embed = new EmbedBuilder()
-                    .WithAuthor(eab => eab.WithName(GetText("player_queue", curPage + 1, lastPage + 1))
+                    .WithAuthor(eab => eab.WithName(GetText("player_queue", curPage + 1, (songs.Length / itemsPerPage) + 1))
                         .WithMusicIcon())
                     .WithDescription(desc)
                     .WithFooter(ef => ef.WithText($"{mp.PrettyVolume} | {songs.Length} " +
@@ -316,7 +321,8 @@ namespace Mitternacht.Modules.Music
 
                 return embed;
             };
-            await Context.Channel.SendPaginatedConfirmAsync(_client, page, printAction, lastPage, false).ConfigureAwait(false);
+            await Context.Channel.SendPaginatedConfirmAsync(_client, 
+                page, printAction, songs.Length, itemsPerPage, false).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
