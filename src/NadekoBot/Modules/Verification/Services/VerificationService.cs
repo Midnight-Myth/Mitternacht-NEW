@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Discord;
 using GommeHDnetForumAPI;
 using Mitternacht.Common.Collections;
 using Mitternacht.Services;
@@ -34,26 +35,26 @@ namespace Mitternacht.Modules.Verification.Services
             Log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed, ignoring verification actions")}!");
         }
 
-        private string GenerateKey() {
+        private string InternalGenerateKey() {
             var bytes = new byte[32];
             _rnd.NextBytes(bytes);
             return Convert.ToBase64String(bytes, Base64FormattingOptions.None);
         }
 
-        public string GetKey(KeyScope keyscope, long forumuserid, ulong userid, ulong guildid) {
+        public ValidationKey GenerateKey(KeyScope keyscope, long forumuserid, ulong userid, ulong guildid) {
             ValidationKey key;
-            while (ValidationKeys.Contains(key = new ValidationKey(GenerateKey(), keyscope, forumuserid, userid, guildid))) ;
+            while (ValidationKeys.Contains(key = new ValidationKey(InternalGenerateKey(), keyscope, forumuserid, userid, guildid))) { }
             Task.Run(async () => {
                 await Task.Delay(600000);
                 ValidationKeys.TryRemove(key);
             });
             ValidationKeys.Add(key);
-            return key.Key;
+            return key;
         }
 
         public IEnumerable<VerificatedUser> GetVerifiedUsers(ulong guildId) {
             using (var uow = _db.UnitOfWork)
-                return uow.VerificatedUser.GetVerificatedUsers(guildId);
+                return uow.VerificatedUser.GetVerifiedUsers(guildId);
         }
 
         public int GetVerifiedUserCount(ulong guildId) {
@@ -62,9 +63,8 @@ namespace Mitternacht.Modules.Verification.Services
         }
 
         public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId) {
-            using (var uow = _db.UnitOfWork) {
-                return uow.VerificatedUser.IsForumUserIndependentFromDiscordUser(guildId, userId, forumUserId);
-            }
+            using (var uow = _db.UnitOfWork)
+                return uow.VerificatedUser.CanVerifyForumAccount(guildId, userId, forumUserId);
         }
 
         public async Task SetVerifiedRole(ulong guildId, ulong? roleId)
@@ -72,7 +72,7 @@ namespace Mitternacht.Modules.Verification.Services
             using (var uow = _db.UnitOfWork)
             {
                 uow.GuildConfigs.For(guildId, set => set).VerifiedRoleId = roleId;
-                await uow.CompleteAsync();
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Mitternacht.Modules.Verification.Services
         {
             using (var uow = _db.UnitOfWork) {
                 uow.GuildConfigs.For(guildId, set => set).VerifyString = verifystring;
-                await uow.CompleteAsync();
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
@@ -104,7 +104,18 @@ namespace Mitternacht.Modules.Verification.Services
         public async Task SetVerificationTutorialText(ulong guildId, string text) {
             using (var uow = _db.UnitOfWork) {
                 uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText = text;
-                await uow.CompleteAsync();
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task<bool> SetVerified(IGuild guild, IGuildUser user, long forumUserId) {
+            using (var uow = _db.UnitOfWork) {
+                if (!uow.VerificatedUser.SetVerified(guild.Id, user.Id, forumUserId)) return false;
+                var roleid = GetVerifiedRoleId(guild.Id);
+                var role = roleid != null ? guild.GetRole(roleid.Value) : null;
+                if (role != null) await user.AddRoleAsync(role).ConfigureAwait(false);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                return true;
             }
         }
 
@@ -115,6 +126,7 @@ namespace Mitternacht.Modules.Verification.Services
             public long ForumUserId { get; }
             public ulong DiscordUserId { get; }
             public ulong GuildId { get; }
+            public DateTime CreatedAt { get; }
 
             public ValidationKey(string key, KeyScope keyscope, long forumuserid, ulong userid, ulong guildid) {
                 Key = key;
@@ -122,6 +134,7 @@ namespace Mitternacht.Modules.Verification.Services
                 ForumUserId = forumuserid;
                 DiscordUserId = userid;
                 GuildId = guildid;
+                CreatedAt = DateTime.UtcNow;
             }
 
             public override bool Equals(object obj) {
@@ -129,16 +142,17 @@ namespace Mitternacht.Modules.Verification.Services
             }
 
             protected bool Equals(ValidationKey other) {
-                return string.Equals(Key, other.Key) && KeyScope == other.KeyScope && ForumUserId == other.ForumUserId && DiscordUserId == other.DiscordUserId && GuildId == other.GuildId;
+                return string.Equals(Key, other.Key) && KeyScope == other.KeyScope && ForumUserId == other.ForumUserId && DiscordUserId == other.DiscordUserId && GuildId == other.GuildId && CreatedAt == other.CreatedAt;
             }
 
             public override int GetHashCode() {
                 unchecked {
-                    var hashCode = (Key != null ? Key.GetHashCode() : 0);
+                    var hashCode = Key != null ? Key.GetHashCode() : 0;
                     hashCode = (hashCode * 397) ^ (int) KeyScope;
                     hashCode = (hashCode * 397) ^ ForumUserId.GetHashCode();
                     hashCode = (hashCode * 397) ^ DiscordUserId.GetHashCode();
                     hashCode = (hashCode * 397) ^ GuildId.GetHashCode();
+                    hashCode = (hashCode * 397) ^ CreatedAt.GetHashCode();
                     return hashCode;
                 }
             }

@@ -2235,13 +2235,6 @@
     "usage": "`{0}we Moscow, RU`"
   },
   {
-    "name": "removeforumvalidation",
-    "cmd": "removeforumvalidation",
-    "aliases": [],
-    "desc": "Entfernt die Verifizierung des Discordnutzers mit der angegebenen Forumaccount-Id.",
-    "usage": "`{0}removeforumvalidation <forumaccountid>`"
-  },
-  {
     "name": "raffle",
     "cmd": "raffle",
     "aliases": [],
@@ -3316,11 +3309,11 @@
     "usage": "`{0}yoda my feelings hurt`"
   },
   {
-    "name": "removevalidation",
-    "cmd": "removevalidation",
+    "name": "removeverification",
+    "cmd": "removeverification",
     "aliases": [],
-    "desc": "Entfernt die Verifizierung des angegebenen Discordnutzers.",
-    "usage": "`{0}removevalidation <user>`"
+    "desc": "Entfernt die Verifizierung des gegebenen Forumaccounts oder Discordusers.",
+    "usage": "`{0}removeverification <user/forumid>`"
   },
   {
     "name": "listperms",

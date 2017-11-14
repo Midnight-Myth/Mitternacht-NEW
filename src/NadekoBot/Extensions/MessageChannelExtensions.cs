@@ -108,7 +108,7 @@ namespace Mitternacht.Extensions
             var text = await pageFunc(currentPage);
 
             if (addPaginatedFooter)
-                text += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
+                text = text.Replace("{page}", lastPage == null ? currentPage.ToString() : $"{currentPage}/{lastPage}");
 
             var msg = await channel.SendMessageAsync(text);
             if (lastPage == 0) return;

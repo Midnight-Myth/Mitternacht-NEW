@@ -18,11 +18,13 @@ namespace Mitternacht.Modules.Utility
         {
             private readonly DiscordSocketClient _client;
             private readonly IStatsService _stats;
+            private readonly DbService _db;
 
-            public InfoCommands(DiscordSocketClient client, IStatsService stats)
+            public InfoCommands(DiscordSocketClient client, IStatsService stats, DbService db)
             {
                 _client = client;
                 _stats = stats;
+                _db = db;
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -36,11 +38,15 @@ namespace Mitternacht.Modules.Utility
                 var ownername = await guild.GetUserAsync(guild.OwnerId);
                 var textchn = (await guild.GetTextChannelsAsync()).Count;
                 var voicechn = (await guild.GetVoiceChannelsAsync()).Count;
-                //var createdAt = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(guild.Id >> 22);
                 var users = await guild.GetUsersAsync().ConfigureAwait(false);
                 var features = guild.Features.Any() ? string.Join("\n", guild.Features) : "-";
+                int verified;
+                using (var uow = _db.UnitOfWork) {
+                    verified = uow.VerificatedUser.GetCount(Context.Guild.Id);
+                }
 
                 var embed = new EmbedBuilder()
+                    .WithOkColor()
                     .WithAuthor(eab => eab.WithName(GetText("server_info")))
                     .WithTitle(guild.Name)
                     .AddField(fb => fb.WithName(GetText("id")).WithValue(guild.Id.ToString()).WithIsInline(true))
@@ -52,7 +58,8 @@ namespace Mitternacht.Modules.Utility
                     .AddField(fb => fb.WithName(GetText("region")).WithValue(guild.VoiceRegionId.ToString()).WithIsInline(true))
                     .AddField(fb => fb.WithName(GetText("roles")).WithValue((guild.Roles.Count - 1).ToString()).WithIsInline(true))
                     .AddField(fb => fb.WithName(GetText("features")).WithValue(features).WithIsInline(true))
-                    .WithOkColor();
+                    .AddField(fb => fb.WithName(GetText("verified_members")).WithValue(verified).WithIsInline(true));
+
                 if (Uri.IsWellFormedUriString(guild.IconUrl, UriKind.Absolute)) embed.WithImageUrl(guild.IconUrl);
                 if (guild.Emotes.Any())
                 {
@@ -66,9 +73,7 @@ namespace Mitternacht.Modules.Utility
             public async Task ChannelInfo(ITextChannel channel = null)
             {
                 var ch = channel ?? Context.Channel as ITextChannel;
-                if (ch == null)
-                    return;
-                //var createdAt = new DateTime(2015, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(ch.Id >> 22);
+                if (ch == null) return;
                 var usercount = (await ch.GetUsersAsync().Flatten()).Count();
                 var embed = new EmbedBuilder()
                     .WithTitle(ch.Name)
@@ -87,18 +92,21 @@ namespace Mitternacht.Modules.Utility
                 user = user ?? Context.User as IGuildUser;
                 if (user == null) return;
 
-                var embed = new EmbedBuilder().AddField(fb => fb.WithName(GetText("name")).WithValue($"**{user.Username}**#{user.Discriminator}").WithIsInline(true));
+                var embed = new EmbedBuilder()
+                    .WithOkColor()
+                    .AddInlineField(GetText("name"), $"**{user.Username}**#{user.Discriminator}");
                 if (!string.IsNullOrWhiteSpace(user.Nickname))
-                {
-                    embed.AddField(fb => fb.WithName(GetText("nickname")).WithValue(user.Nickname).WithIsInline(true));
-                }
-                embed.AddField(fb => fb.WithName(GetText("id")).WithValue(user.Id.ToString()).WithIsInline(true))
-                    .AddField(fb => fb.WithName(GetText("joined_server")).WithValue($"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}").WithIsInline(true))
-                    .AddField(fb => fb.WithName(GetText("joined_discord")).WithValue($"{user.CreatedAt:dd.MM.yyyy HH:mm}").WithIsInline(true))
-                    .AddField(fb => fb.WithName(GetText("roles")).WithValue($"**({user.RoleIds.Count - 1})** - {string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions()}").WithIsInline(true))
-                    .WithOkColor();
+                    embed.AddInlineField(GetText("nickname"), user.Nickname);
+                embed.AddInlineField(GetText("id"), user.Id.ToString())
+                    .AddInlineField(GetText("joined_server"), $"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}")
+                    .AddInlineField(GetText("joined_discord"), $"{user.CreatedAt:dd.MM.yyyy HH:mm}")
+                    .AddInlineField(GetText("roles"), $"**({user.RoleIds.Count - 1})** - {string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions()}");
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
+                using (var uow = _db.UnitOfWork) {
+                    var forumId = uow.VerificatedUser.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+                    if (forumId != null) embed.AddInlineField(GetText("forumid"), $"https://gommehd.net/forum/members/{forumId}");
+                }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
