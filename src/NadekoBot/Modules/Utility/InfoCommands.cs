@@ -57,8 +57,8 @@ namespace Mitternacht.Modules.Utility
                     .AddField(fb => fb.WithName(GetText("created_at")).WithValue($"{guild.CreatedAt:dd.MM.yyyy HH:mm}").WithIsInline(true))
                     .AddField(fb => fb.WithName(GetText("region")).WithValue(guild.VoiceRegionId.ToString()).WithIsInline(true))
                     .AddField(fb => fb.WithName(GetText("roles")).WithValue((guild.Roles.Count - 1).ToString()).WithIsInline(true))
-                    .AddField(fb => fb.WithName(GetText("features")).WithValue(features).WithIsInline(true))
-                    .AddField(fb => fb.WithName(GetText("verified_members")).WithValue(verified).WithIsInline(true));
+                    .AddField(fb => fb.WithName(GetText("features")).WithValue(features).WithIsInline(true));
+                if(verified > 0) embed.AddField(fb => fb.WithName(GetText("verified_members")).WithValue(verified).WithIsInline(true));
 
                 if (Uri.IsWellFormedUriString(guild.IconUrl, UriKind.Absolute)) embed.WithImageUrl(guild.IconUrl);
                 if (guild.Emotes.Any())
