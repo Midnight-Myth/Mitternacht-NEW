@@ -100,7 +100,7 @@ namespace Mitternacht.Modules.Utility
                 embed.AddInlineField(GetText("id"), user.Id.ToString())
                     .AddInlineField(GetText("joined_server"), $"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}")
                     .AddInlineField(GetText("joined_discord"), $"{user.CreatedAt:dd.MM.yyyy HH:mm}")
-                    .AddInlineField(GetText("roles", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions());
+                    .AddInlineField(GetText("roles_count", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions());
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
