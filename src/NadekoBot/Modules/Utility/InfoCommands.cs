@@ -100,12 +100,12 @@ namespace Mitternacht.Modules.Utility
                 embed.AddInlineField(GetText("id"), user.Id.ToString())
                     .AddInlineField(GetText("joined_server"), $"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}")
                     .AddInlineField(GetText("joined_discord"), $"{user.CreatedAt:dd.MM.yyyy HH:mm}")
-                    .AddInlineField(GetText("roles"), $"**({user.RoleIds.Count - 1})** - {string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions()}");
+                    .AddInlineField(GetText("roles", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions());
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
                     var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
-                    if (forumId != null) embed.AddInlineField(GetText("forumid"), $"{forumId}");
+                    if (forumId != null) embed.AddInlineField(GetText("forumid"), $"[{forumId}](https://gommehd.net/forum/members/{forumId})");
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
