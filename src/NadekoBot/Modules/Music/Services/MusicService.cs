@@ -28,15 +28,12 @@ namespace Mitternacht.Modules.Music.Services
         private readonly DbService _db;
         private readonly Logger _log;
         private readonly SoundCloudApiService _sc;
-        private readonly IBotCredentials _creds;
         private readonly ConcurrentDictionary<ulong, float> _defaultVolumes;
         private readonly DiscordSocketClient _client;
 
         public ConcurrentDictionary<ulong, MusicPlayer> MusicPlayers { get; } = new ConcurrentDictionary<ulong, MusicPlayer>();
 
-        public MusicService(DiscordSocketClient client, IGoogleApiService google,
-            NadekoStrings strings, ILocalization localization, DbService db,
-            SoundCloudApiService sc, IBotCredentials creds, IEnumerable<GuildConfig> gcs)
+        public MusicService(DiscordSocketClient client, IGoogleApiService google, NadekoStrings strings, ILocalization localization, DbService db, SoundCloudApiService sc, IEnumerable<GuildConfig> gcs)
         {
             _client = client;
             _google = google;
@@ -44,7 +41,6 @@ namespace Mitternacht.Modules.Music.Services
             _localization = localization;
             _db = db;
             _sc = sc;
-            _creds = creds;
             _log = LogManager.GetCurrentClassLogger();
 
             try { Directory.Delete(MusicDataPath, true); } catch { }
@@ -58,7 +54,7 @@ namespace Mitternacht.Modules.Music.Services
 
         public float GetDefaultVolume(ulong guildId)
         {
-            return _defaultVolumes.GetOrAdd(guildId, (id) =>
+            return _defaultVolumes.GetOrAdd(guildId, id =>
             {
                 using (var uow = _db.UnitOfWork)
                 {
@@ -172,12 +168,8 @@ namespace Mitternacht.Modules.Music.Services
             });
         }
 
-        public MusicPlayer GetPlayerOrDefault(ulong guildId)
-        {
-            if (MusicPlayers.TryGetValue(guildId, out var mp))
-                return mp;
-            else
-                return null;
+        public MusicPlayer GetPlayerOrDefault(ulong guildId) {
+            return MusicPlayers.TryGetValue(guildId, out var mp) ? mp : null;
         }
 
         public async Task TryQueueRelatedSongAsync(SongInfo song, ITextChannel txtCh, IVoiceChannel vch)

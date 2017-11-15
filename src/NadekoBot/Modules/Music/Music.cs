@@ -51,14 +51,12 @@ namespace Mitternacht.Modules.Music
         //todo changing server region is bugged again
         private Task Client_UserVoiceStateUpdated(SocketUser iusr, SocketVoiceState oldState, SocketVoiceState newState)
         {
-            var t = Task.Run(() =>
+            var t = Task.Run(async () =>
             {
-                var usr = iusr as SocketGuildUser;
-                if (usr == null ||
-                    oldState.VoiceChannel == newState.VoiceChannel)
+                if (!(iusr is SocketGuildUser usr) || oldState.VoiceChannel == newState.VoiceChannel)
                     return;
 
-                var player = _music.GetPlayerOrDefault(usr.Guild.Id);
+                var player = Service.GetPlayerOrDefault(usr.Guild.Id);
 
                 if (player == null)
                     return;
@@ -66,7 +64,7 @@ namespace Mitternacht.Modules.Music
                 try
                 {
                     //if bot moved
-                    if ((player.VoiceChannel == oldState.VoiceChannel) &&
+                    if (player.VoiceChannel == oldState.VoiceChannel &&
                             usr.Id == _client.CurrentUser.Id)
                     {
                         if (player.Paused && newState.VoiceChannel.Users.Count > 1) //unpause if there are people in the new channel
@@ -74,20 +72,19 @@ namespace Mitternacht.Modules.Music
                         else if (!player.Paused && newState.VoiceChannel.Users.Count <= 1) // pause if there are no users in the new channel
                             player.TogglePause();
 
-                        player.SetVoiceChannel(newState.VoiceChannel);
+                        await player.SetVoiceChannel(newState.VoiceChannel).ConfigureAwait(false);
                         return;
                     }
 
                     //if some other user moved
-                    if ((player.VoiceChannel == newState.VoiceChannel && //if joined first, and player paused, unpause 
-                            player.Paused &&
-                            newState.VoiceChannel.Users.Count >= 2) ||  // keep in mind bot is in the channel (+1)
-                        (player.VoiceChannel == oldState.VoiceChannel && // if left last, and player unpaused, pause
-                            !player.Paused &&
-                            oldState.VoiceChannel.Users.Count == 1))
+                    if (player.VoiceChannel == newState.VoiceChannel && //if joined first, and player paused, unpause 
+                        player.Paused &&
+                        newState.VoiceChannel.Users.Count >= 2 ||  // keep in mind bot is in the channel (+1)
+                        player.VoiceChannel == oldState.VoiceChannel && // if left last, and player unpaused, pause
+                        !player.Paused &&
+                        oldState.VoiceChannel.Users.Count == 1)
                     {
                         player.TogglePause();
-                        return;
                     }
                 }
                 catch
@@ -152,21 +149,18 @@ namespace Mitternacht.Modules.Music
         [RequireContext(ContextType.Guild)]
         public async Task Play([Remainder] string query = null)
         {
-            var mp = await Service.GetOrCreatePlayer(Context);
+            var mp = await Service.GetOrCreatePlayer(Context).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(query))
             {
-                await Next();
+                await Next().ConfigureAwait(false);
             }
             else if (int.TryParse(query, out var index))
-                if (index >= 1)
-                    mp.SetIndex(index - 1);
-                else
-                    return;
+                if (index >= 1) mp.SetIndex(index - 1);
             else
             {
                 try
                 {
-                    await Queue(query);
+                    await Queue(query).ConfigureAwait(false);
                 }
                 catch { }
             }
@@ -207,8 +201,7 @@ namespace Mitternacht.Modules.Music
         [RequireContext(ContextType.Guild)]
         public async Task QueueSearch([Remainder] string query)
         {
-            var videos = (await _google.GetVideoInfosByKeywordAsync(query, 5))
-                .ToArray();
+            var videos = (await _google.GetVideoInfosByKeywordAsync(query, 5)).ToArray();
 
             if (!videos.Any())
             {
@@ -269,22 +262,14 @@ namespace Mitternacht.Modules.Music
                 (int)total.TotalHours,
                 total.Minutes,
                 total.Seconds);
-            var maxPlaytime = mp.MaxPlaytimeSeconds;
             var lastPage = songs.Length / itemsPerPage;
-            Func<int, EmbedBuilder> printAction = curPage =>
-            {
+
+            EmbedBuilder PrintAction(int curPage) {
                 var startAt = itemsPerPage * curPage;
                 var number = 0 + startAt;
-                var desc = string.Join("\n", songs
-                        .Skip(startAt)
-                        .Take(itemsPerPage)
-                        .Select(v =>
-                        {
-                            if (number++ == current)
-                                return $"**⇒**`{number}.` {v.PrettyFullName}";
-                            else
-                                return $"`{number}.` {v.PrettyFullName}";
-                        }));
+                var desc = string.Join("\n", songs.Skip(startAt)
+                    .Take(itemsPerPage)
+                    .Select(v => number++ == current ? $"**⇒**`{number}.` {v.PrettyFullName}" : $"`{number}.` {v.PrettyFullName}"));
 
                 desc = $"`🔊` {songs[current].PrettyFullName}\n\n" + desc;
 
@@ -298,8 +283,7 @@ namespace Mitternacht.Modules.Music
                     add += "🔂 " + GetText("repeating_cur_song") + "\n";
                 else if (mp.Shuffle)
                     add += "🔀 " + GetText("shuffling_playlist") + "\n";
-                else
-                {
+                else {
                     if (mp.Autoplay)
                         add += "↪ " + GetText("autoplaying") + "\n";
                     if (mp.FairPlay && !mp.Autoplay)
@@ -311,18 +295,16 @@ namespace Mitternacht.Modules.Music
                 if (!string.IsNullOrWhiteSpace(add))
                     desc = add + "\n" + desc;
 
-                var embed = new EmbedBuilder()
-                    .WithAuthor(eab => eab.WithName(GetText("player_queue", curPage + 1, (songs.Length / itemsPerPage) + 1))
+                var embed = new EmbedBuilder().WithAuthor(eab => eab.WithName(GetText("player_queue", curPage + 1, (songs.Length / itemsPerPage) + 1))
                         .WithMusicIcon())
                     .WithDescription(desc)
-                    .WithFooter(ef => ef.WithText($"{mp.PrettyVolume} | {songs.Length} " +
-                                                  $"{("tracks".SnPl(songs.Length))} | {totalStr}"))
+                    .WithFooter(ef => ef.WithText($"{mp.PrettyVolume} | {songs.Length} " + $"{"tracks".SnPl(songs.Length)} | {totalStr}"))
                     .WithOkColor();
 
                 return embed;
-            };
-            await Context.Channel.SendPaginatedConfirmAsync(_client, 
-                page, printAction, songs.Length, itemsPerPage, false).ConfigureAwait(false);
+            }
+
+            await Context.Channel.SendPaginatedConfirmAsync(_client, page, (Func<int, EmbedBuilder>) PrintAction, lastPage, false).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -495,8 +477,7 @@ namespace Mitternacht.Modules.Music
             var mp = await Service.GetOrCreatePlayer(Context);
 
             var songs = mp.QueueArray().Songs
-                .Select(s => new PlaylistSong()
-                {
+                .Select(s => new PlaylistSong {
                     Provider = s.Provider,
                     ProviderType = s.ProviderType,
                     Title = s.Title,
@@ -797,7 +778,7 @@ namespace Mitternacht.Modules.Music
             if (string.IsNullOrWhiteSpace(fromto))
                 return;
 
-            MusicPlayer mp = Service.GetPlayerOrDefault(Context.Guild.Id);
+            var mp = Service.GetPlayerOrDefault(Context.Guild.Id);
             if (mp == null)
                 return;
 
@@ -816,10 +797,10 @@ namespace Mitternacht.Modules.Music
             var embed = new EmbedBuilder()
                 .WithTitle(s.Title.TrimTo(65))
                 .WithUrl(s.SongUrl)
-            .WithAuthor(eab => eab.WithName(GetText("song_moved")).WithIconUrl("https://cdn.discordapp.com/attachments/155726317222887425/258605269972549642/music1.png"))
-            .AddField(fb => fb.WithName(GetText("from_position")).WithValue($"#{n1 + 1}").WithIsInline(true))
-            .AddField(fb => fb.WithName(GetText("to_position")).WithValue($"#{n2 + 1}").WithIsInline(true))
-            .WithColor(Mitternacht.MitternachtBot.OkColor);
+                .WithAuthor(eab => eab.WithName(GetText("song_moved")).WithIconUrl("https://cdn.discordapp.com/attachments/155726317222887425/258605269972549642/music1.png"))
+                .AddField(fb => fb.WithName(GetText("from_position")).WithValue($"#{n1 + 1}").WithIsInline(true))
+                .AddField(fb => fb.WithName(GetText("to_position")).WithValue($"#{n2 + 1}").WithIsInline(true))
+                .WithOkColor();
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
@@ -827,8 +808,6 @@ namespace Mitternacht.Modules.Music
         [RequireContext(ContextType.Guild)]
         public async Task SetMaxQueue(uint size = 0)
         {
-            if (size < 0)
-                return;
             var mp = await Service.GetOrCreatePlayer(Context);
 
             mp.MaxQueueSize = size;
@@ -871,8 +850,7 @@ namespace Mitternacht.Modules.Music
                     .WithDescription(currentSong.PrettyName)
                     .WithFooter(ef => ef.WithText(currentSong.PrettyInfo))).ConfigureAwait(false);
             else
-                await Context.Channel.SendConfirmAsync("🔂 " + GetText("repeating_track_stopped"))
-                                            .ConfigureAwait(false);
+                await Context.Channel.SendConfirmAsync("🔂 " + GetText("repeating_track_stopped")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
