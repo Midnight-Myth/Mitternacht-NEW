@@ -42,7 +42,7 @@ namespace Mitternacht.Modules.Utility
                 var features = guild.Features.Any() ? string.Join("\n", guild.Features) : "-";
                 int verified;
                 using (var uow = _db.UnitOfWork) {
-                    verified = uow.VerificatedUser.GetCount(Context.Guild.Id);
+                    verified = uow.VerifiedUsers.GetCount(Context.Guild.Id);
                 }
 
                 var embed = new EmbedBuilder()
@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Utility
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
-                    var forumId = uow.VerificatedUser.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+                    var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
                     if (forumId != null) embed.AddInlineField(GetText("forumid"), $"https://gommehd.net/forum/members/{forumId}");
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);

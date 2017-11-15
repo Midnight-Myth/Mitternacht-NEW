@@ -5,9 +5,9 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
-    public class VerificatedUserRepository : Repository<VerificatedUser>, IVerificatedUserRepository
+    public class VerifiedUserRepository : Repository<VerifiedUser>, IVerifiedUserRepository
     {
-        public VerificatedUserRepository(DbContext context) : base(context)
+        public VerifiedUserRepository(DbContext context) : base(context)
         {
         }
 
@@ -16,7 +16,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 return false;
             var vu = _set.FirstOrDefault(v => v.GuildId == guildId && v.UserId == userId);
             if (vu == null) {
-                _set.Add(new VerificatedUser {
+                _set.Add(new VerifiedUser {
                     GuildId = guildId,
                     UserId = userId,
                     ForumUserId = forumUserId
@@ -59,7 +59,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             return true;
         }
 
-        public IEnumerable<VerificatedUser> GetVerifiedUsers(ulong guildId) {
+        public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId) {
             return _set.Where(v => v.GuildId == guildId);
         }
 

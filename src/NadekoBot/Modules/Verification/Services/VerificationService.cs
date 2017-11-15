@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using GommeHDnetForumAPI;
@@ -52,19 +53,19 @@ namespace Mitternacht.Modules.Verification.Services
             return key;
         }
 
-        public IEnumerable<VerificatedUser> GetVerifiedUsers(ulong guildId) {
+        public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId) {
             using (var uow = _db.UnitOfWork)
-                return uow.VerificatedUser.GetVerifiedUsers(guildId);
+                return uow.VerifiedUsers.GetVerifiedUsers(guildId).ToList();
         }
 
         public int GetVerifiedUserCount(ulong guildId) {
             using (var uow = _db.UnitOfWork)
-                return uow.VerificatedUser.GetCount(guildId);
+                return uow.VerifiedUsers.GetCount(guildId);
         }
 
         public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId) {
             using (var uow = _db.UnitOfWork)
-                return uow.VerificatedUser.CanVerifyForumAccount(guildId, userId, forumUserId);
+                return uow.VerifiedUsers.CanVerifyForumAccount(guildId, userId, forumUserId);
         }
 
         public async Task SetVerifiedRole(ulong guildId, ulong? roleId)
@@ -110,7 +111,7 @@ namespace Mitternacht.Modules.Verification.Services
 
         public async Task<bool> SetVerified(IGuild guild, IGuildUser user, long forumUserId) {
             using (var uow = _db.UnitOfWork) {
-                if (!uow.VerificatedUser.SetVerified(guild.Id, user.Id, forumUserId)) return false;
+                if (!uow.VerifiedUsers.SetVerified(guild.Id, user.Id, forumUserId)) return false;
                 var roleid = GetVerifiedRoleId(guild.Id);
                 var role = roleid != null ? guild.GetRole(roleid.Value) : null;
                 if (role != null) await user.AddRoleAsync(role).ConfigureAwait(false);

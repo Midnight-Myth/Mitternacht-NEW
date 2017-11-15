@@ -48,7 +48,7 @@ namespace Mitternacht.Services.Database
         public DbSet<RoleMoney> RoleMoney { get; set; }
         public DbSet<RoleLevelBinding> RoleLevelBinding { get; set; }
         public DbSet<MessageXpRestriction> MessageXpRestrictions { get; set; }
-        public DbSet<VerificatedUser> VerificatedUsers { get; set; }
+        public DbSet<VerifiedUser> VerifiedUsers { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -92,7 +92,8 @@ namespace Mitternacht.Services.Database
                 new ModulePrefix { ModuleName = "Utility", Prefix = "." },
                 new ModulePrefix { ModuleName = "CustomReactions", Prefix = "." },
                 new ModulePrefix { ModuleName = "PokeGame", Prefix = ">" }, 
-                new ModulePrefix { ModuleName = "Level", Prefix = "!"}
+                new ModulePrefix { ModuleName = "Level", Prefix = "!"},
+                new ModulePrefix { ModuleName = "Verification", Prefix = "." }
             });
             bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
             {
@@ -314,7 +315,7 @@ namespace Mitternacht.Services.Database
             #endregion
 
             #region Verification
-            modelBuilder.Entity<VerificatedUser>().HasIndex(vu => new {vu.GuildId, vu.UserId}).IsUnique();
+            modelBuilder.Entity<VerifiedUser>().HasIndex(vu => new {vu.GuildId, vu.UserId}).IsUnique();
             #endregion
         }
     }

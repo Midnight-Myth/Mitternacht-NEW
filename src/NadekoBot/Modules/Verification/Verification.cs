@@ -117,7 +117,7 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task AddVerification(IGuildUser user, long forumUserId) {
-            if (Service.CanVerifyForumAccount(Context.Guild.Id, Context.User.Id, forumUserId))
+            if (!Service.CanVerifyForumAccount(Context.Guild.Id, Context.User.Id, forumUserId))
             {
                 (await ReplyErrorLocalized("already_verified").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -132,9 +132,9 @@ namespace Mitternacht.Modules.Verification
         public async Task RemoveVerification(IUser user) {
             if (user == null) return;
             using (var uow = _db.UnitOfWork)
-                await (uow.VerificatedUser.RemoveVerification(Context.Guild.Id, user.Id) 
-                    ? ConfirmLocalized("removed_discord", user.Username) 
-                    : ErrorLocalized("removed_discord_fail", user.Username))
+                await (uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, user.Id) 
+                    ? ConfirmLocalized("removed_discord", user.ToString()) 
+                    : ErrorLocalized("removed_discord_fail", user.ToString()))
                     .ConfigureAwait(false);
         }
 
@@ -144,7 +144,7 @@ namespace Mitternacht.Modules.Verification
         [OwnerOnly]
         public async Task RemoveVerification(long forumUserId) {
             using (var uow = _db.UnitOfWork)
-                (await (uow.VerificatedUser.RemoveVerification(Context.Guild.Id, forumUserId) 
+                (await (uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, forumUserId) 
                     ? ConfirmLocalized("removed_forum", forumUserId) 
                     : ErrorLocalized("removed_forum_fail", forumUserId))
                     .ConfigureAwait(false)).DeleteAfter(60);
@@ -210,10 +210,11 @@ namespace Mitternacht.Modules.Verification
         [OwnerOnly]
         public async Task VerificationKeys(int page = 1) {
             if (page < 1) return;
+            if (Service.ValidationKeys.Count <= 0) return;
 
             const int keycount = 10;
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
-                var keys = Service.ValidationKeys.Where(k => k.GuildId == Context.Guild.Id).Skip(p * keycount).Take(keycount);
+                var keys = Service.ValidationKeys.Where(k => k.GuildId == Context.Guild.Id).Skip(p * keycount).Take(keycount).ToList();
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verification_keys"));
                 foreach (var key in keys) {
                     var user = await Context.Guild.GetUserAsync(key.DiscordUserId).ConfigureAwait(false);
@@ -229,10 +230,11 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         public async Task VerifiedUsers(int page = 1) {
             if (page < 1) return;
+            if (Service.GetVerifiedUserCount(Context.Guild.Id) <= 0) return;
 
             const int usercount = 20;
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
-                var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(p * usercount).Take(usercount);
+                var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(p * usercount).Take(usercount).ToList();
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verified_users"));
                 foreach (var vu in vus) {
                     var user = await Context.Guild.GetUserAsync(vu.UserId).ConfigureAwait(false);

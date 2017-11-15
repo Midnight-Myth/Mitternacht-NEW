@@ -72,8 +72,8 @@ namespace Mitternacht.Services.Database
         private IMessageXpBlacklist _messagexpblacklist;
         public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ?? (_messagexpblacklist = new MessageXpBlacklist(Context));
 
-        private IVerificatedUserRepository _verificateduser;
-        public IVerificatedUserRepository VerificatedUser => _verificateduser ?? (_verificateduser = new VerificatedUserRepository(Context));
+        private IVerifiedUserRepository _verifiedusers;
+        public IVerifiedUserRepository VerifiedUsers => _verifiedusers ?? (_verifiedusers = new VerifiedUserRepository(Context));
 
         public UnitOfWork(NadekoContext context)
         {

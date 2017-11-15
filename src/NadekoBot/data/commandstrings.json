@@ -3330,5 +3330,12 @@
     "aliases": [],
     "desc": "Erlaube einem User, sein tägliches Geld nochmal zu holen.",
     "usage": "`{0}resetdailymoney [user]`"
+  },
+  {
+    "name": "addverification",
+    "cmd": "addverification",
+    "aliases": [],
+    "desc": "Verifiziere einen Nutzer manuell.",
+    "usage": "`{0}addverification <user> <forumid>`"
   }
 ]
