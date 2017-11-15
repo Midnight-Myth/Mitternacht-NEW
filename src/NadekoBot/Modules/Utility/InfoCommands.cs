@@ -105,7 +105,7 @@ namespace Mitternacht.Modules.Utility
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
                     var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
-                    if (forumId != null) embed.AddInlineField(GetText("forumid"), $"https://gommehd.net/forum/members/{forumId}");
+                    if (forumId != null) embed.AddInlineField(GetText("forumid"), $"{forumId}");
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
