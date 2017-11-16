@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Music
                         var queuedMessage = await mp.OutputTextChannel.EmbedAsync(embed).ConfigureAwait(false);
                         if (mp.Stopped)
                         {
-                            (await ReplyErrorLocalized("queue_stopped", Format.Code(Prefix + "play")).ConfigureAwait(false)).DeleteAfter(10);
+                            mp.TogglePause();
                         }
                         queuedMessage?.DeleteAfter(10);
                     }
@@ -178,10 +178,7 @@ namespace Mitternacht.Modules.Music
             {
                 Context.Message.DeleteAfter(10);
             }
-            if(mp.Stopped)
-            {
-                mp.TogglePause();
-            }
+            
         }
 
         [NadekoCommand, Usage, Description, Aliases]
