@@ -103,6 +103,10 @@ namespace Mitternacht.Modules.Music
                     await ReplyErrorLocalized("song_not_found").ConfigureAwait(false);
                 return;
             }
+            if(mp.Paused)
+            {
+                mp.TogglePause();
+            }
 
             int index;
             try
@@ -129,12 +133,9 @@ namespace Mitternacht.Modules.Music
 
                         if (Uri.IsWellFormedUriString(songInfo.Thumbnail, UriKind.Absolute))
                             embed.WithThumbnailUrl(songInfo.Thumbnail);
-
+                        
                         var queuedMessage = await mp.OutputTextChannel.EmbedAsync(embed).ConfigureAwait(false);
-                        if (mp.Stopped)
-                        {
-                            mp.TogglePause();
-                        }
+                        
                         queuedMessage?.DeleteAfter(10);
                     }
                     catch
@@ -170,7 +171,7 @@ namespace Mitternacht.Modules.Music
         [RequireContext(ContextType.Guild)]
         public async Task Queue([Remainder] string query)
         {
-            var mp = await Service.GetOrCreatePlayer(Context);
+            var mp = await Service.GetOrCreatePlayer(Context).ConfigureAwait(false);
             mp.AutoDelete = true;
             var songInfo = await Service.ResolveSong(query, Context.User.ToString());
             try { await InternalQueue(mp, songInfo, false); } catch (QueueFullException) { return; }
