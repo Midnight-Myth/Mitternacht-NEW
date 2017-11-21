@@ -61,6 +61,8 @@
   "administration_invalid_format": "Ungültiges Eingabeformat.",
   "administration_invalid_params": "Ungültige Übergabevariable.",
   "administration_joined": "{0} ist {1} beigetreten",
+  "administration_joined_discord": "Discord beigetreten",
+  "administration_joined_server": "Server beigetreten",
   "administration_kickdm": "Sie haben {0} von dem Server gekickt.\nGrund: {1}",
   "administration_kicked_pl": "Kicked",
   "administration_kicked_user": "Benutzer wurde gekickt",

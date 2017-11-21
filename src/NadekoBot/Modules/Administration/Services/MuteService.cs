@@ -32,8 +32,6 @@ namespace Mitternacht.Modules.Administration.Services
         public event Action<IGuildUser, MuteType> UserMuted = delegate { };
         public event Action<IGuildUser, MuteType> UserUnmuted = delegate { };
 
-        private static readonly OverwritePermissions denyOverwrite = new OverwritePermissions(addReactions: PermValue.Deny, sendMessages: PermValue.Deny, attachFiles: PermValue.Deny);
-
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly DiscordSocketClient _client;
         private readonly DbService _db;
@@ -77,7 +75,7 @@ namespace Mitternacht.Modules.Administration.Services
         {
             try
             {
-                MutedUsers.TryGetValue(usr.Guild.Id, out ConcurrentHashSet<ulong> muted);
+                MutedUsers.TryGetValue(usr.Guild.Id, out var muted);
 
                 if (muted == null || !muted.Contains(usr.Id))
                     return Task.CompletedTask;
@@ -104,11 +102,10 @@ namespace Mitternacht.Modules.Administration.Services
                     var config = uow.GuildConfigs.For(usr.Guild.Id,
                         set => set.Include(gc => gc.MutedUsers)
                             .Include(gc => gc.UnmuteTimers));
-                    config.MutedUsers.Add(new MutedUserId()
-                    {
+                    config.MutedUsers.Add(new MutedUserId {
                         UserId = usr.Id
                     });
-                    if (MutedUsers.TryGetValue(usr.Guild.Id, out ConcurrentHashSet<ulong> muted))
+                    if (MutedUsers.TryGetValue(usr.Guild.Id, out var muted))
                         muted.Add(usr.Id);
 
                     config.UnmuteTimers.RemoveWhere(x => x.UserId == usr.Id);
@@ -134,17 +131,16 @@ namespace Mitternacht.Modules.Administration.Services
             if (type == MuteType.All)
             {
                 StopUnmuteTimer(usr.GuildId, usr.Id);
-                try { await usr.ModifyAsync(x => x.Mute = false).ConfigureAwait(false); } catch { }
+                try { await usr.ModifyAsync(x => x.Mute = false).ConfigureAwait(false); } catch { /*ignore*/ }
                 try { await usr.RemoveRoleAsync(await GetMuteRole(usr.Guild)).ConfigureAwait(false); } catch { /*ignore*/ }
                 using (var uow = _db.UnitOfWork)
                 {
                     var config = uow.GuildConfigs.For(usr.Guild.Id, set => set.Include(gc => gc.MutedUsers)
                         .Include(gc => gc.UnmuteTimers));
-                    config.MutedUsers.Remove(new MutedUserId()
-                    {
+                    config.MutedUsers.Remove(new MutedUserId {
                         UserId = usr.Id
                     });
-                    if (MutedUsers.TryGetValue(usr.Guild.Id, out ConcurrentHashSet<ulong> muted))
+                    if (MutedUsers.TryGetValue(usr.Guild.Id, out var muted))
                         muted.TryRemove(usr.Id);
 
                     config.UnmuteTimers.RemoveWhere(x => x.UserId == usr.Id);
@@ -165,24 +161,21 @@ namespace Mitternacht.Modules.Administration.Services
             }
         }
 
-        public async Task<IRole> GetMuteRole(IGuild guild)
-        {
-            const string defaultMuteRoleName = "Banned";
+        public async Task<IRole> GetMuteRole(IGuild guild) {
+            const string defaultMuteRoleName = "Muted";
 
             var muteRoleName = GuildMuteRoles.GetOrAdd(guild.Id, defaultMuteRoleName);
 
             var muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName);
-            if (muteRole == null)
-            {
-
-                //if it doesn't exist, create it 
-                try { muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None).ConfigureAwait(false); }
-                catch
-                {
-                    //if creations fails,  maybe the name is not correct, find default one, if doesn't work, create default one
-                    muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName) ??
-                        await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None).ConfigureAwait(false);
-                }
+            if (muteRole != null) return muteRole;
+            //if it doesn't exist, create it 
+            try {
+                muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None).ConfigureAwait(false);
+            }
+            catch {
+                //if creations fails,  maybe the name is not correct, find default one, if doesn't work, create default one
+                muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName) ??
+                           await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None).ConfigureAwait(false);
             }
 
             //foreach (var toOverwrite in (await guild.GetTextChannelsAsync()))
@@ -250,7 +243,7 @@ namespace Mitternacht.Modules.Administration.Services
             }, null, after, Timeout.InfiniteTimeSpan);
 
             //add it, or stop the old one and add this one
-            userUnmuteTimers.AddOrUpdate(userId, (key) => toAdd, (key, old) =>
+            userUnmuteTimers.AddOrUpdate(userId, key => toAdd, (key, old) =>
             {
                 old.Change(Timeout.Infinite, Timeout.Infinite);
                 return toAdd;
@@ -259,9 +252,9 @@ namespace Mitternacht.Modules.Administration.Services
 
         public void StopUnmuteTimer(ulong guildId, ulong userId)
         {
-            if (!UnmuteTimers.TryGetValue(guildId, out ConcurrentDictionary<ulong, Timer> userUnmuteTimers)) return;
+            if (!UnmuteTimers.TryGetValue(guildId, out var userUnmuteTimers)) return;
 
-            if (userUnmuteTimers.TryRemove(userId, out Timer removed))
+            if (userUnmuteTimers.TryRemove(userId, out var removed))
             {
                 removed.Change(Timeout.Infinite, Timeout.Infinite);
             }

@@ -26,15 +26,13 @@ namespace Mitternacht.Modules.Administration.Services
         private string PrettyCurrentTime(IGuild g)
         {
             var time = DateTime.UtcNow;
-            if (g != null)
-                time = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(g.Id));
+            if (g != null) time = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(g.Id));
             return $"【{time:HH:mm:ss}】";
         }
         private string CurrentTime(IGuild g)
         {
-            DateTime time = DateTime.UtcNow;
-            if (g != null)
-                time = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(g.Id));
+            var time = DateTime.UtcNow;
+            if (g != null) time = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(g.Id));
 
             return $"{time:HH:mm:ss}";
         }
@@ -42,11 +40,8 @@ namespace Mitternacht.Modules.Administration.Services
         public ConcurrentDictionary<ulong, LogSetting> GuildLogSettings { get; }
 
         private ConcurrentDictionary<ITextChannel, List<string>> PresenceUpdates { get; } = new ConcurrentDictionary<ITextChannel, List<string>>();
-        private readonly Timer _timerReference;
         private readonly NadekoStrings _strings;
         private readonly DbService _db;
-        private readonly MuteService _mute;
-        private readonly ProtectionService _prot;
         private readonly GuildTimezoneService _tz;
 
         public LogCommandService(DiscordSocketClient client, NadekoStrings strings,
@@ -56,15 +51,13 @@ namespace Mitternacht.Modules.Administration.Services
             _log = LogManager.GetCurrentClassLogger();
             _strings = strings;
             _db = db;
-            _mute = mute;
-            _prot = prot;
             _tz = tz;
 
             GuildLogSettings = gcs
                 .ToDictionary(g => g.GuildId, g => g.LogSetting)
                 .ToConcurrent();
 
-            _timerReference = new Timer(async (state) =>
+            var timer = new Timer(async state =>
             {
                 try
                 {
@@ -72,13 +65,10 @@ namespace Mitternacht.Modules.Administration.Services
 
                     await Task.WhenAll(keys.Select(key =>
                     {
-                        if (PresenceUpdates.TryRemove(key, out var msgs))
-                        {
-                            var title = GetText(key.Guild, "presence_updates");
-                            var desc = string.Join(Environment.NewLine, msgs);
-                            return key.SendConfirmAsync(title, desc.TrimTo(2048));
-                        }
-                        return Task.CompletedTask;
+                        if (!PresenceUpdates.TryRemove(key, out var msgs)) return Task.CompletedTask;
+                        var title = GetText(key.Guild, "presence_updates");
+                        var desc = string.Join(Environment.NewLine, msgs);
+                        return key.SendConfirmAsync(title, desc.TrimTo(2048));
                     }));
                 }
                 catch (Exception ex)
@@ -105,10 +95,10 @@ namespace Mitternacht.Modules.Administration.Services
             _client.ChannelDestroyed += _client_ChannelDestroyed;
             _client.ChannelUpdated += _client_ChannelUpdated;
 
-            _mute.UserMuted += MuteCommands_UserMuted;
-            _mute.UserUnmuted += MuteCommands_UserUnmuted;
+            mute.UserMuted += MuteCommands_UserMuted;
+            mute.UserUnmuted += MuteCommands_UserUnmuted;
 
-            _prot.OnAntiProtectionTriggered += TriggeredAntiProtection;
+            prot.OnAntiProtectionTriggered += TriggeredAntiProtection;
         }
 
         private string GetText(IGuild guild, string key, params object[] replacements) =>
@@ -120,15 +110,13 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var after = uAfter as SocketGuildUser;
-
-                    if (after == null)
+                    if (!(uAfter is SocketGuildUser after))
                         return;
 
                     var g = after.Guild;
 
-                    if (!GuildLogSettings.TryGetValue(g.Id, out LogSetting logSetting)
-                        || (logSetting.UserUpdatedId == null))
+                    if (!GuildLogSettings.TryGetValue(g.Id, out var logSetting)
+                        || logSetting.UserUpdatedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -195,8 +183,7 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var usr = iusr as IGuildUser;
-                    if (usr == null)
+                    if (!(iusr is IGuildUser usr))
                         return;
 
                     var beforeVch = before.VoiceChannel;
@@ -205,8 +192,8 @@ namespace Mitternacht.Modules.Administration.Services
                     if (beforeVch == afterVch)
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.LogVoicePresenceTTSId == null))
+                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out var logSetting)
+                        || logSetting.LogVoicePresenceTTSId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -243,8 +230,8 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.UserMutedId == null))
+                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out var logSetting)
+                        || logSetting.UserMutedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -285,8 +272,8 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.UserMutedId == null))
+                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out var logSetting)
+                        || logSetting.UserMutedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -331,8 +318,8 @@ namespace Mitternacht.Modules.Administration.Services
                     if (users.Length == 0)
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(users.First().Guild.Id, out LogSetting logSetting)
-                        || (logSetting.LogOtherId == null))
+                    if (!GuildLogSettings.TryGetValue(users.First().Guild.Id, out var logSetting)
+                        || logSetting.LogOtherId == null)
                         return;
                     ITextChannel logChannel;
                     if ((logChannel = await TryGetLogChannel(users.First().Guild, logSetting, LogType.Other)) == null)
@@ -377,19 +364,23 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(before.Guild.Id, out LogSetting logSetting))
+                    if (!GuildLogSettings.TryGetValue(before.Guild.Id, out var logSetting))
                         return;
 
                     ITextChannel logChannel;
                     if (logSetting.UserUpdatedId != null && (logChannel = await TryGetLogChannel(before.Guild, logSetting, LogType.UserUpdated)) != null)
                     {
-                        var embed = new EmbedBuilder().WithOkColor().WithFooter(efb => efb.WithText(CurrentTime(before.Guild)))
+                        var embed = new EmbedBuilder()
+                            .WithOkColor()
+                            .WithFooter(efb => efb.WithText(CurrentTime(before.Guild)))
                             .WithTitle($"{before.Username}#{before.Discriminator} | {before.Id}");
+                        var channel = logChannel;
                         if (before.Nickname != after.Nickname)
                         {
-                            embed.WithAuthor(eab => eab.WithName("👥 " + GetText(logChannel.Guild, "nick_change")))
-                                .AddField(efb => efb.WithName(GetText(logChannel.Guild, "old_nick")).WithValue($"{before.Nickname}#{before.Discriminator}"))
-                                .AddField(efb => efb.WithName(GetText(logChannel.Guild, "new_nick")).WithValue($"{after.Nickname}#{after.Discriminator}"));
+                            
+                            embed.WithAuthor(eab => eab.WithName("👥 " + GetText(channel.Guild, "nick_change")))
+                                .AddField(efb => efb.WithName(GetText(channel.Guild, "old_nick")).WithValue($"{before.Nickname}#{before.Discriminator}"))
+                                .AddField(efb => efb.WithName(GetText(channel.Guild, "new_nick")).WithValue($"{after.Nickname}#{after.Discriminator}"));
 
                             await logChannel.EmbedAsync(embed).ConfigureAwait(false);
                         }
@@ -398,20 +389,19 @@ namespace Mitternacht.Modules.Administration.Services
                             if (before.Roles.Count < after.Roles.Count)
                             {
                                 var diffRoles = after.Roles.Where(r => !before.Roles.Contains(r)).Select(r => r.Name);
-                                embed.WithAuthor(eab => eab.WithName("⚔ " + GetText(logChannel.Guild, "user_role_add")))
+                                embed.WithAuthor(eab => eab.WithName("⚔ " + GetText(channel.Guild, "user_role_add")))
                                     .WithDescription(string.Join(", ", diffRoles).SanitizeMentions());
                             }
                             else if (before.Roles.Count > after.Roles.Count)
                             {
                                 var diffRoles = before.Roles.Where(r => !after.Roles.Contains(r)).Select(r => r.Name);
-                                embed.WithAuthor(eab => eab.WithName("⚔ " + GetText(logChannel.Guild, "user_role_rem")))
+                                embed.WithAuthor(eab => eab.WithName("⚔ " + GetText(channel.Guild, "user_role_rem")))
                                     .WithDescription(string.Join(", ", diffRoles).SanitizeMentions());
                             }
                             await logChannel.EmbedAsync(embed).ConfigureAwait(false);
                         }
                     }
 
-                    logChannel = null;
                     if (logSetting.LogUserPresenceId != null && (logChannel = await TryGetLogChannel(before.Guild, logSetting, LogType.UserPresence)) != null)
                     {
                         if (before.Status != after.Status)
@@ -421,13 +411,13 @@ namespace Mitternacht.Modules.Administration.Services
                                         "👤" + Format.Bold(after.Username),
                                         Format.Bold(after.Status.ToString()));
                             PresenceUpdates.AddOrUpdate(logChannel,
-                                new List<string>() { str }, (id, list) => { list.Add(str); return list; });
+                                new List<string> { str }, (id, list) => { list.Add(str); return list; });
                         }
                         else if (before.Game?.Name != after.Game?.Name)
                         {
                             var str = $"👾`{PrettyCurrentTime(after.Guild)}`👤__**{after.Username}**__ is now playing **{after.Game?.Name ?? "-"}**.";
                             PresenceUpdates.AddOrUpdate(logChannel,
-                                new List<string>() { str }, (id, list) => { list.Add(str); return list; });
+                                new List<string> { str }, (id, list) => { list.Add(str); return list; });
                         }
                     }
                 }
@@ -445,13 +435,12 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var before = cbefore as IGuildChannel;
-                    if (before == null)
+                    if (!(cbefore is IGuildChannel before))
                         return;
                     var after = (IGuildChannel)cafter;
 
-                    if (!GuildLogSettings.TryGetValue(before.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.ChannelUpdatedId == null)
+                    if (!GuildLogSettings.TryGetValue(before.Guild.Id, out var logSetting)
+                        || logSetting.ChannelUpdatedId == null
                         || logSetting.IgnoredChannels.Any(ilc => ilc.ChannelId == after.Id))
                         return;
 
@@ -496,12 +485,11 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var ch = ich as IGuildChannel;
-                    if (ch == null)
+                    if (!(ich is IGuildChannel ch))
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(ch.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.ChannelDestroyedId == null)
+                    if (!GuildLogSettings.TryGetValue(ch.Guild.Id, out var logSetting)
+                        || logSetting.ChannelDestroyedId == null
                         || logSetting.IgnoredChannels.Any(ilc => ilc.ChannelId == ch.Id))
                         return;
 
@@ -535,12 +523,11 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var ch = ich as IGuildChannel;
-                    if (ch == null)
+                    if (!(ich is IGuildChannel ch))
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(ch.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.ChannelCreatedId == null))
+                    if (!GuildLogSettings.TryGetValue(ch.Guild.Id, out var logSetting)
+                        || logSetting.ChannelCreatedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -570,8 +557,7 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var usr = iusr as IGuildUser;
-                    if (usr == null)
+                    if (!(iusr is IGuildUser usr))
                         return;
 
                     var beforeVch = before.VoiceChannel;
@@ -580,8 +566,8 @@ namespace Mitternacht.Modules.Administration.Services
                     if (beforeVch == afterVch)
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.LogVoicePresenceId == null))
+                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out var logSetting)
+                        || logSetting.LogVoicePresenceId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -667,8 +653,8 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.UserLeftId == null))
+                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out var logSetting)
+                        || logSetting.UserLeftId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -700,8 +686,8 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.UserJoinedId == null))
+                    if (!GuildLogSettings.TryGetValue(usr.Guild.Id, out var logSetting)
+                        || logSetting.UserJoinedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -711,8 +697,10 @@ namespace Mitternacht.Modules.Administration.Services
                     var embed = new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle("✅ " + GetText(logChannel.Guild, "user_joined"))
-                        .WithDescription($"{usr}")
+                        .WithDescription($"{usr.Mention} `{usr}`")
                         .AddField(efb => efb.WithName("Id").WithValue(usr.Id.ToString()))
+                        .AddInlineField(GetText(logChannel.Guild, "joined_server"), $"{usr.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}")
+                        .AddInlineField(GetText(logChannel.Guild, "joined_discord"), $"{usr.CreatedAt:dd.MM.yyyy HH:mm}")
                         .WithFooter(efb => efb.WithText(CurrentTime(usr.Guild)));
 
                     if (Uri.IsWellFormedUriString(usr.GetAvatarUrl(), UriKind.Absolute))
@@ -731,8 +719,8 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(guild.Id, out LogSetting logSetting)
-                        || (logSetting.UserUnbannedId == null))
+                    if (!GuildLogSettings.TryGetValue(guild.Id, out var logSetting)
+                        || logSetting.UserUnbannedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -761,8 +749,8 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!GuildLogSettings.TryGetValue(guild.Id, out LogSetting logSetting)
-                        || (logSetting.UserBannedId == null))
+                    if (!GuildLogSettings.TryGetValue(guild.Id, out var logSetting)
+                        || logSetting.UserBannedId == null)
                         return;
 
                     ITextChannel logChannel;
@@ -793,16 +781,14 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var msg = (optMsg.HasValue ? optMsg.Value : null) as IUserMessage;
-                    if (msg == null || msg.IsAuthor(_client))
+                    if (!((optMsg.HasValue ? optMsg.Value : null) is IUserMessage msg) || msg.IsAuthor(_client))
                         return;
 
-                    var channel = ch as ITextChannel;
-                    if (channel == null)
+                    if (!(ch is ITextChannel channel))
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(channel.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.MessageDeletedId == null)
+                    if (!GuildLogSettings.TryGetValue(channel.Guild.Id, out var logSetting)
+                        || logSetting.MessageDeletedId == null
                         || logSetting.IgnoredChannels.Any(ilc => ilc.ChannelId == channel.Id))
                         return;
 
@@ -813,7 +799,7 @@ namespace Mitternacht.Modules.Administration.Services
                         .WithOkColor()
                         .WithTitle("🗑 " + GetText(logChannel.Guild, "msg_del", ((ITextChannel)msg.Channel).Name))
                         .WithDescription(msg.Author.ToString())
-                        .AddField(efb => efb.WithName(GetText(logChannel.Guild, "content")).WithValue(string.IsNullOrWhiteSpace(msg.Content) ? "-" : msg.Resolve(userHandling: TagHandling.FullName)).WithIsInline(false))
+                        .AddField(efb => efb.WithName(GetText(logChannel.Guild, "content")).WithValue(string.IsNullOrWhiteSpace(msg.Content) ? "-" : msg.Resolve(TagHandling.FullName)).WithIsInline(false))
                         .AddField(efb => efb.WithName("Id").WithValue(msg.Id.ToString()).WithIsInline(false))
                         .WithFooter(efb => efb.WithText(CurrentTime(channel.Guild)));
                     if (msg.Attachments.Any())
@@ -836,23 +822,20 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var after = imsg2 as IUserMessage;
-                    if (after == null || after.IsAuthor(_client))
+                    if (!(imsg2 is IUserMessage after) || after.IsAuthor(_client))
                         return;
 
-                    var before = (optmsg.HasValue ? optmsg.Value : null) as IUserMessage;
-                    if (before == null)
+                    if (!((optmsg.HasValue ? optmsg.Value : null) is IUserMessage before))
                         return;
 
-                    var channel = ch as ITextChannel;
-                    if (channel == null)
+                    if (!(ch is ITextChannel channel))
                         return;
 
                     if (before.Content == after.Content)
                         return;
 
-                    if (!GuildLogSettings.TryGetValue(channel.Guild.Id, out LogSetting logSetting)
-                        || (logSetting.MessageUpdatedId == null)
+                    if (!GuildLogSettings.TryGetValue(channel.Guild.Id, out var logSetting)
+                        || logSetting.MessageUpdatedId == null
                         || logSetting.IgnoredChannels.Any(ilc => ilc.ChannelId == channel.Id))
                         return;
 
@@ -864,8 +847,8 @@ namespace Mitternacht.Modules.Administration.Services
                         .WithOkColor()
                         .WithTitle("📝 " + GetText(logChannel.Guild, "msg_update", ((ITextChannel)after.Channel).Name))
                         .WithDescription(after.Author.ToString())
-                        .AddField(efb => efb.WithName(GetText(logChannel.Guild, "old_msg")).WithValue(string.IsNullOrWhiteSpace(before.Content) ? "-" : before.Resolve(userHandling: TagHandling.FullName)).WithIsInline(false))
-                        .AddField(efb => efb.WithName(GetText(logChannel.Guild, "new_msg")).WithValue(string.IsNullOrWhiteSpace(after.Content) ? "-" : after.Resolve(userHandling: TagHandling.FullName)).WithIsInline(false))
+                        .AddField(efb => efb.WithName(GetText(logChannel.Guild, "old_msg")).WithValue(string.IsNullOrWhiteSpace(before.Content) ? "-" : before.Resolve(TagHandling.FullName)).WithIsInline(false))
+                        .AddField(efb => efb.WithName(GetText(logChannel.Guild, "new_msg")).WithValue(string.IsNullOrWhiteSpace(after.Content) ? "-" : after.Resolve(TagHandling.FullName)).WithIsInline(false))
                         .AddField(efb => efb.WithName("Id").WithValue(after.Id.ToString()).WithIsInline(false))
                         .WithFooter(efb => efb.WithText(CurrentTime(channel.Guild)));
 
@@ -957,13 +940,9 @@ namespace Mitternacht.Modules.Administration.Services
             }
             var channel = await guild.GetTextChannelAsync(id.Value).ConfigureAwait(false);
 
-            if (channel == null)
-            {
-                UnsetLogSetting(guild.Id, logChannelType);
-                return null;
-            }
-            else
-                return channel;
+            if (channel != null) return channel;
+            UnsetLogSetting(guild.Id, logChannelType);
+            return null;
         }
 
         private void UnsetLogSetting(ulong guildId, LogType logChannelType)

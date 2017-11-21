@@ -60,6 +60,8 @@
   "administration_invalid_format": "Invalid input format.",
   "administration_invalid_params": "Invalid parameters.",
   "administration_joined": "{0} has joined {1}",
+  "administration_joined_discord": "Joined Discord",
+  "administration_joined_server": "Joined server",
   "administration_kickdm": "You have been kicked from {0} server.\nReason: {1}",
   "administration_kicked_pl": "Kicked",
   "administration_kicked_user": "User kicked",
