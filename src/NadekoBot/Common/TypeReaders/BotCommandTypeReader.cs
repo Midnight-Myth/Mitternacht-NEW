@@ -11,21 +11,18 @@ namespace Mitternacht.Common.TypeReaders
     {
         public override Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider services)
         {
-            var _cmds = ((INServiceProvider)services).GetService<CommandService>();
-            var _cmdHandler = ((INServiceProvider)services).GetService<CommandHandler>();
+            var cmds = ((INServiceProvider)services).GetService<CommandService>();
+            var cmdHandler = ((INServiceProvider)services).GetService<CommandHandler>();
             input = input.ToUpperInvariant();
-            var prefix = _cmdHandler.GetPrefix(context.Guild);
-            if (!input.StartsWith(prefix.ToUpperInvariant()))
+            var prefix = cmdHandler.GetPrefix(context.Guild);
+            if (!input.StartsWith(prefix.ToUpperInvariant(), StringComparison.Ordinal))
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "No such command found."));
 
             input = input.Substring(prefix.Length);
 
-            var cmd = _cmds.Commands.FirstOrDefault(c => 
+            var cmd = cmds.Commands.FirstOrDefault(c => 
                 c.Aliases.Select(a => a.ToUpperInvariant()).Contains(input));
-            if (cmd == null)
-                return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "No such command found."));
-
-            return Task.FromResult(TypeReaderResult.FromSuccess(cmd));
+            return Task.FromResult(cmd == null ? TypeReaderResult.FromError(CommandError.ParseFailed, "No such command found.") : TypeReaderResult.FromSuccess(cmd));
         }
     }
 
@@ -35,18 +32,18 @@ namespace Mitternacht.Common.TypeReaders
         {
             input = input.ToUpperInvariant();
 
-            var _crs = ((INServiceProvider)services).GetService<CustomReactionsService>();
+            var crs = ((INServiceProvider)services).GetService<CustomReactionsService>();
 
-            if (_crs.GlobalReactions.Any(x => x.Trigger.ToUpperInvariant() == input))
+            if (crs.GlobalReactions.Any(x => x.Trigger.ToUpperInvariant() == input))
             {
                 return TypeReaderResult.FromSuccess(new CommandOrCrInfo(input));
             }
             var guild = context.Guild;
             if (guild != null)
             {
-                if (_crs.GuildReactions.TryGetValue(guild.Id, out var crs))
+                if (crs.GuildReactions.TryGetValue(guild.Id, out var crs2))
                 {
-                    if (crs.Concat(_crs.GlobalReactions).Any(x => x.Trigger.ToUpperInvariant() == input))
+                    if (crs2.Concat(crs.GlobalReactions).Any(x => x.Trigger.ToUpperInvariant() == input))
                     {
                         return TypeReaderResult.FromSuccess(new CommandOrCrInfo(input));
                     }
@@ -54,11 +51,7 @@ namespace Mitternacht.Common.TypeReaders
             }
 
             var cmd = await base.Read(context, input, services);
-            if (cmd.IsSuccess)
-            {
-                return TypeReaderResult.FromSuccess(new CommandOrCrInfo(((CommandInfo)cmd.Values.First().Value).Name));
-            }
-            return TypeReaderResult.FromError(CommandError.ParseFailed, "No such command or cr found.");
+            return cmd.IsSuccess ? TypeReaderResult.FromSuccess(new CommandOrCrInfo(((CommandInfo)cmd.Values.First().Value).Name)) : TypeReaderResult.FromError(CommandError.ParseFailed, "No such command or cr found.");
         }
     }
 
@@ -68,7 +61,7 @@ namespace Mitternacht.Common.TypeReaders
 
         public CommandOrCrInfo(string input)
         {
-            this.Name = input;
+            Name = input;
         }
     }
 }

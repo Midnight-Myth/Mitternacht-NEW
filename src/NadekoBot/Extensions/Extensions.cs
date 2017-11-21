@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -207,6 +208,39 @@ namespace Mitternacht.Extensions
             }
 
             return canvas;
+        }
+
+        //modified code taken from Discord.Net.Commands.UserTypeReader 
+        public static async Task<IGuildUser> GetUserAsync(this IGuild guild, string input){
+            var guildUsers = await guild.GetUsersAsync().ConfigureAwait(false);
+            IGuildUser user;
+
+            if (MentionUtils.TryParseUser(input, out var id))
+            {
+                user = await guild.GetUserAsync(id).ConfigureAwait(false);
+                if (user != null) return user;
+            }
+
+            if (ulong.TryParse(input, NumberStyles.None, CultureInfo.InvariantCulture, out id))
+            {
+                user = await guild.GetUserAsync(id).ConfigureAwait(false);
+                if (user != null) return user;
+            }
+
+            var index = input.LastIndexOf('#');
+            if(index >= 0){
+                var username = input.Substring(0, index);
+                if(ushort.TryParse(input.Substring(index+1), out var discrim)){
+                    user = guildUsers.FirstOrDefault(x => x.DiscriminatorValue == discrim && string.Equals(username, x.Username, StringComparison.OrdinalIgnoreCase));
+                    if (user != null) return user;
+                }
+            }
+
+            user = guildUsers.FirstOrDefault(gu => string.Equals(input, gu.Username, StringComparison.OrdinalIgnoreCase));
+            if (user != null) return user;
+
+            user = guildUsers.FirstOrDefault(gu => string.Equals(input, gu.Nickname, StringComparison.OrdinalIgnoreCase));
+            return user;
         }
     }
 }

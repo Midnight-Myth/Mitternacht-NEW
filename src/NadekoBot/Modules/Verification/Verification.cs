@@ -47,7 +47,7 @@ namespace Mitternacht.Modules.Verification
 
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-            await ch.SendConfirmAsync(GetText("message_dm_forum_key", key.Key, Context.Guild.Name, (await Context.Guild.GetUserAsync(_creds.OwnerIds.First()).ConfigureAwait(false)).ToString()) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.Id, forumUserId) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -89,7 +89,7 @@ namespace Mitternacht.Modules.Verification
                 return;
             }
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-            await ch.SendMessageAsync(GetText("message_forum_discord_key", Context.Guild.Name, _ch.GetPrefix(Context.Guild))).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 2), GetText("message_forum_discord_key", Context.Guild.Name, _ch.GetPrefix(Context.Guild))).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -110,7 +110,7 @@ namespace Mitternacht.Modules.Verification
             await Service.SetVerified(Context.Guild, Context.User as IGuildUser, key.ForumUserId).ConfigureAwait(false);
             Service.ValidationKeys.TryRemove(key);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-            await ch.SendConfirmAsync(GetText("verification_completed", Context.Guild.Name, key.ForumUserId)).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 3), GetText("verification_completed", Context.Guild.Name, key.ForumUserId)).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -209,10 +209,16 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task VerificationKeys(int page = 1) {
-            if (page < 1) return;
-            if (Service.ValidationKeys.Count <= 0) return;
+            if (page < 1) page = 1;
+            if (Service.ValidationKeys.Count <= 0) {
+                await ConfirmLocalized("no_keys_present").ConfigureAwait(false);
+                return;
+            }
 
             const int keycount = 10;
+            var pagecount = Service.ValidationKeys.Count / keycount;
+            if (page > pagecount) page = pagecount;
+
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
                 var keys = Service.ValidationKeys.Where(k => k.GuildId == Context.Guild.Id).Skip(p * keycount).Take(keycount).ToList();
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verification_keys"));
@@ -222,17 +228,23 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope));
                 }
                 return embed;
-            }, Service.ValidationKeys.Count / keycount).ConfigureAwait(false);
+            }, pagecount).ConfigureAwait(false);
         }
 
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task VerifiedUsers(int page = 1) {
-            if (page < 1) return;
-            if (Service.GetVerifiedUserCount(Context.Guild.Id) <= 0) return;
+            if (page < 1) page = 1;
+            if (Service.GetVerifiedUserCount(Context.Guild.Id) <= 0) {
+                await ReplyConfirmLocalized("no_users_verified").ConfigureAwait(false);
+                return;
+            }
 
             const int usercount = 20;
+            var pagecount = Service.GetVerifiedUserCount(Context.Guild.Id) / usercount;
+            if (page > pagecount) page = pagecount;
+
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
                 var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(p * usercount).Take(usercount).ToList();
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verified_users"));
@@ -241,7 +253,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId);
                 }
                 return embed;
-            }, Service.GetVerifiedUserCount(Context.Guild.Id) / usercount).ConfigureAwait(false);
+            }, pagecount).ConfigureAwait(false);
         }
 
 
