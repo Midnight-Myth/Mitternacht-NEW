@@ -187,10 +187,10 @@
   },
   {
     "name": "identityvalidationdmkey",
-    "cmd": "identityvalidationdmkey",
-    "aliases": [],
+    "cmd": "verify1",
+    "aliases": [ "identityvalidationdmkey" ],
     "desc": "Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.",
-    "usage": "`{0}identityvalidation <forumuserid>`"
+    "usage": "`{0}verify1 <forumuserid>`"
   },
   {
     "name": "filterword",
@@ -1125,10 +1125,10 @@
   },
   {
     "name": "identityvalidationsubmitkey",
-    "cmd": "identityvalidationsubmitkey",
-    "aliases": [],
+    "cmd": "verify2",
+    "aliases": [ "identityvalidationsubmitkey" ],
     "desc": "Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.",
-    "usage": "`{0}identityvalidationsubmitkey <forumuserid>`"
+    "usage": "`{0}verify2 <forumuserid>`"
   },
   {
     "name": "userinfo",
@@ -1291,10 +1291,10 @@
   },
   {
     "name": "identityvalidationsubmit",
-    "cmd": "identityvalidationsubmit",
-    "aliases": [],
+    "cmd": "verify3",
+    "aliases": [ "identityvalidationsubmit" ],
     "desc": "Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.",
-    "usage": "`{0}identityvalidationsubmit <key>`"
+    "usage": "`{0}verify3 <key>`"
   },
   {
     "name": "creatxtchanl",
