@@ -3337,5 +3337,12 @@
     "aliases": [],
     "desc": "Verifiziere einen Nutzer manuell.",
     "usage": "`{0}addverification <user> <forumid>`"
+  },
+  {
+    "name": "reinitforum",
+    "cmd": "reinitforum",
+    "aliases": [],
+    "desc": "Starte die Reinitialisierung der Foruminstanz.",
+    "usage": "`{0}reinitforum`"
   }
 ]

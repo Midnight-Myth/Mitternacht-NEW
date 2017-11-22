@@ -287,5 +287,12 @@ namespace Mitternacht.Modules.Verification
             await Service.SetVerificationTutorialText(Context.Guild.Id, text).ConfigureAwait(false);
             (await ConfirmLocalized("tutorial_now_set").ConfigureAwait(false)).DeleteAfter(60);
         }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [OwnerOnly]
+        public async Task ReinitForum() {
+            Service.InitForumInstance();
+            await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using GommeHDnetForumAPI;
@@ -20,9 +21,11 @@ namespace Mitternacht.Modules.Verification.Services
         private readonly Random _rnd = new Random();
 
         public Forum Forum { get; private set; }
-        public bool Enabled => Forum.LoggedIn;
+        public bool Enabled => Forum?.LoggedIn ?? false;
 
         public readonly ConcurrentHashSet<ValidationKey> ValidationKeys = new ConcurrentHashSet<ValidationKey>();
+
+        private Task _loginTask;
 
         public VerificationService(IBotCredentials creds, DbService db) {
             _creds = creds;
@@ -32,8 +35,11 @@ namespace Mitternacht.Modules.Verification.Services
         }
 
         public void InitForumInstance() {
-            Forum = new Forum(_creds.ForumUsername, _creds.ForumPassword);
-            Log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed, ignoring verification actions")}!");
+            _loginTask?.Dispose();
+            _loginTask = Task.Run(() => {
+                Forum = new Forum(_creds.ForumUsername, _creds.ForumPassword);
+                Log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed, ignoring verification actions")}!");
+            });
         }
 
         private string InternalGenerateKey() {
