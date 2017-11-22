@@ -820,7 +820,7 @@
   "verification_forum_conversation_reply_failure": "Das Antworten auf die Konversation schlug fehl. Bitte kontaktiere die Botowner oder -entwickler oder versuche es später nochmal!",
   "verification_key_existing": "Es existiert schon ein Key für diese Kombination.",
   "verification_key_replaced": "Dein bisheriger Key `{0}` ist nicht mehr gültig!",
-  "verification_message_dm_forum_key": "**Key:** `{0}`\n**Deine Discord-ID:** `{1}`\nDieser Key ist **10min** gültig und kann nur in einer privaten Nachricht im GommeHD.net-Forum von dem Forumaccount mit der Id `{2}` verwendet werden!",
+  "verification_message_dm_forum_key": "**Key:** `{0}`\n**Dein Discordname:** `{1}`\nDieser Key ist **10min** gültig und kann nur in einer privaten Nachricht im GommeHD.net-Forum von dem Forumaccount mit der Id `{2}` verwendet werden!",
   "verification_message_forum_discord_key": "Auf deine Konversation im Forum wurde mit einem Key geantwortet. Nutze ihn innerhalb der nächsten 10min auf dem Discordserver `{0}` mit dem Befehl `{1}identityvalidationsubmit <key>`",
   "verification_message_title": "Verifizierung - Schritt {0}/3",
   "verification_no_keys_present": "Es existieren keine aktiven Verifizierungsschlüssel!",

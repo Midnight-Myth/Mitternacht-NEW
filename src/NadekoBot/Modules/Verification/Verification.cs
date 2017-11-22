@@ -47,7 +47,7 @@ namespace Mitternacht.Modules.Verification
 
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.Id, forumUserId) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), forumUserId) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -83,7 +83,12 @@ namespace Mitternacht.Modules.Verification
 
             await con.DownloadMessagesAsync().ConfigureAwait(false);
             var messageparts = con.Messages[0].Content.Split('\n');
-            if (!(messageparts.Contains(Context.User.Id.ToString()) && messageparts.Contains(forumkey.Key))) return;
+            if (!(messageparts.Any(mp => mp.Trim().Equals(Context.User.Id.ToString(), StringComparison.OrdinalIgnoreCase)) 
+                    || messageparts.Any(mp => mp.Trim().Equals(Context.User.ToString(), StringComparison.OrdinalIgnoreCase))) 
+                  || !messageparts.Any(mp => mp.Trim().Equals(forumkey.Key, StringComparison.OrdinalIgnoreCase))) {
+                (await ReplyErrorLocalized("no_valid_conversation").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
 
             Service.ValidationKeys.TryRemove(forumkey);
             var success = await con.Reply(Service.GenerateKey(VerificationService.KeyScope.Discord, forumuserid, Context.User.Id, Context.Guild.Id).Key).ConfigureAwait(false);
