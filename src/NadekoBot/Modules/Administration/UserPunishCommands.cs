@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -9,7 +10,6 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using NLog.Targets.Wrappers;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Administration
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task Warn(IGuildUser user, [Remainder] string reason = null)
             {
-                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Select(r => r.Position).Max()) {
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max()) {
                     await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
                     return;
                 }
@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Administration
                             .AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-")))
                         .ConfigureAwait(false);
                 }
-                catch { }
+                catch { /*ignored*/ }
                 var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
 
                 if (punishment == null)
@@ -290,7 +290,7 @@ namespace Mitternacht.Modules.Administration
             [RequireBotPermission(GuildPermission.BanMembers)]
             public async Task Ban(IGuildUser user, [Remainder] string msg = null)
             {
-                if (Context.User.Id != user.Guild.OwnerId && (user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Select(r => r.Position).Max()))
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max())
                 {
                     await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
                     return;
@@ -323,7 +323,7 @@ namespace Mitternacht.Modules.Administration
             {
                 var bans = await Context.Guild.GetBansAsync();
 
-                var bun = bans.FirstOrDefault(x => x.User.ToString().ToLowerInvariant() == user.ToLowerInvariant());
+                var bun = bans.FirstOrDefault(x => string.Equals(x.User.ToString(), user, StringComparison.InvariantCultureIgnoreCase));
 
                 if (bun == null)
                 {
@@ -367,7 +367,7 @@ namespace Mitternacht.Modules.Administration
             [RequireBotPermission(GuildPermission.BanMembers)]
             public async Task Softban(IGuildUser user, [Remainder] string msg = null)
             {
-                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Select(r => r.Position).Max())
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max())
                 {
                     await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
                     return;
@@ -413,7 +413,7 @@ namespace Mitternacht.Modules.Administration
                     {
                         await user.SendErrorAsync(GetText("kickdm", Format.Bold(Context.Guild.Name), msg));
                     }
-                    catch { }
+                    catch { /*ignored*/ }
                 }
 
                 await user.KickAsync().ConfigureAwait(false);
