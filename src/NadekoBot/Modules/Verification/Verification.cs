@@ -64,6 +64,7 @@ namespace Mitternacht.Modules.Verification
                 (await ReplyErrorLocalized("already_verified").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
+
             var forumkey = Service.ValidationKeys.FirstOrDefault(vk => vk.KeyScope == VerificationService.KeyScope.Forum && vk.ForumUserId == forumuserid && vk.DiscordUserId == Context.User.Id && vk.GuildId == Context.Guild.Id);
             if (forumkey == null) {
                 (await ReplyErrorLocalized("no_valid_key").ConfigureAwait(false)).DeleteAfter(60);
@@ -75,8 +76,11 @@ namespace Mitternacht.Modules.Verification
                 (await ReplyErrorLocalized("no_valid_conversation").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
-            Service.Log.Info(con.UrlPath);
-            Service.Log.Info(con);
+            if (con.Author.Username.Length > 16) {
+                (await ReplyErrorLocalized("forum_acc_not_connected").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
             await con.DownloadMessagesAsync().ConfigureAwait(false);
             var messageparts = con.Messages[0].Content.Split('\n');
             if (!(messageparts.Contains(Context.User.Id.ToString()) && messageparts.Contains(forumkey.Key))) return;
