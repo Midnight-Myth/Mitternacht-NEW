@@ -101,7 +101,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="data\commandstrings.json">
+    <None Update="_strings\commandstrings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

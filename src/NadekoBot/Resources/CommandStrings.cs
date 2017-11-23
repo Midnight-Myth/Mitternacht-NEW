@@ -10,7 +10,7 @@ namespace Mitternacht.Resources
     public class CommandStrings
     {
         private static readonly Logger Log;
-        private const string CmdStringPath = @"data/commandstrings.json";
+        private const string CmdStringPath = @"./_strings/commandstrings.json";
         private static ConcurrentHashSet<CommandStringsModel> _commandStrings;
 
         static CommandStrings() {
