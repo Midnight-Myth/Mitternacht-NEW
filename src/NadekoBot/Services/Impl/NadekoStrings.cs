@@ -11,7 +11,7 @@ namespace Mitternacht.Services.Impl
 {
     public class NadekoStrings : INService
     {
-        public const string StringsPath = @"_strings/";
+        public const string StringsPath = @"_strings/responsestrings";
 
         private readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> _responseStrings;
 
