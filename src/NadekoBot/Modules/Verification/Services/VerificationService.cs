@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using GommeHDnetForumAPI;
@@ -43,7 +42,7 @@ namespace Mitternacht.Modules.Verification.Services
         }
 
         private string InternalGenerateKey() {
-            var bytes = new byte[32];
+            var bytes = new byte[8];
             _rnd.NextBytes(bytes);
             return Convert.ToBase64String(bytes, Base64FormattingOptions.None);
         }

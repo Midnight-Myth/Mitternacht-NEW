@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Help
         private readonly GlobalPermissionService _perms;
 
         public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
-        public string DMHelpString => _config.BotConfig.DMHelpString;
+        public string DmHelpString => _config.BotConfig.DMHelpString;
 
         public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds)
         {
@@ -53,8 +53,7 @@ namespace Mitternacht.Modules.Help
             var channel = Context.Channel;
 
             module = module?.Trim().ToUpperInvariant();
-            if (string.IsNullOrWhiteSpace(module))
-                return;
+            if (string.IsNullOrWhiteSpace(module)) return;
             var cmds = _cmds.Commands
                 .Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
                 .Where(c => !_perms.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
@@ -73,6 +72,14 @@ namespace Mitternacht.Modules.Help
 
             for (var i = 0; i < groups.Length; i++)
             {
+                //var embed = new EmbedBuilder()
+                //    .WithOkColor()
+                //    .WithTitle($"📃 {GetText("list_of_commands")}")
+                //    .WithFooter($"{i+1}/{groups.Length}");
+                //foreach (var cmdInfo in groups.ElementAt(i)) {
+                //    embed.AddInlineField(Prefix + cmdInfo.Aliases.First(), cmdInfo.Aliases.Skip(1).Aggregate("", (s, a) => $"{s}{Prefix}{a}\n", s => s.Length > 0 ? s.Substring(0, s.Length - 1) : "-"));
+                //}
+                //await channel.SendMessageAsync("", embed: embed.Build());
                 await channel.SendTableAsync(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "", groups.ElementAt(i), el => $"{Prefix + el.Aliases.First(),-15} {"[" + el.Aliases.Skip(1).FirstOrDefault() + "]",-8}").ConfigureAwait(false);
             }
 
