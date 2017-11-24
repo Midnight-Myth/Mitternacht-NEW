@@ -93,6 +93,7 @@ namespace Mitternacht.Services.Database.Models
         public ulong? VerifiedRoleId { get; set; } = null;
         public string VerifyString { get; set; } = null;
         public string VerificationTutorialText { get; set; } = null;
+        public string AdditionalVerificationUsers { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity
