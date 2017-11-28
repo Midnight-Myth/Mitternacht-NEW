@@ -8,6 +8,7 @@ using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Utility
 {
@@ -19,12 +20,14 @@ namespace Mitternacht.Modules.Utility
             private readonly DiscordSocketClient _client;
             private readonly IStatsService _stats;
             private readonly DbService _db;
+            private readonly ForumService _fs;
 
-            public InfoCommands(DiscordSocketClient client, IStatsService stats, DbService db)
+            public InfoCommands(DiscordSocketClient client, IStatsService stats, DbService db, ForumService fs)
             {
                 _client = client;
                 _stats = stats;
                 _db = db;
+                _fs = fs;
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -105,7 +108,10 @@ namespace Mitternacht.Modules.Utility
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
                     var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
-                    if (forumId != null) embed.AddInlineField(GetText("forumid"), $"[{forumId}](https://gommehd.net/forum/members/{forumId})");
+                    if (forumId != null) {
+                        var username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
+                        embed.AddInlineField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})");
+                    }
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }

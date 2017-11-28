@@ -19,8 +19,6 @@ namespace Mitternacht.Modules.Verification
         private readonly CommandHandler _ch;
         private readonly ForumService _fs;
 
-        private bool Enabled => _fs.Forum?.LoggedIn ?? false;
-
         public Verification(DbService db, IBotCredentials creds, CommandHandler ch, ForumService fs) {
             _db = db;
             _creds = creds;
@@ -32,7 +30,7 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationDmKey(long forumUserId) {
-            if (!Enabled) {
+            if (!_fs.LoggedIn) {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
@@ -60,7 +58,7 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationSubmitkey(long forumuserid) {
-            if (!Enabled)
+            if (!_fs.LoggedIn)
             {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -111,7 +109,7 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationSubmit([Remainder]string discordkey) {
-            if (!Enabled)
+            if (!_fs.LoggedIn)
             {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -323,7 +321,7 @@ namespace Mitternacht.Modules.Verification
         [OwnerOnly]
         public async Task ConversationLink() {
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
-            if (Enabled)
+            if (_fs.LoggedIn)
                 await ConfirmLocalized("conversation_start_link", _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())).ConfigureAwait(false);
             else {
                 var msg = await ErrorLocalized("disabled").ConfigureAwait(false);

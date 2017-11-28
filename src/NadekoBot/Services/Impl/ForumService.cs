@@ -10,6 +10,7 @@ namespace Mitternacht.Services.Impl
         private readonly Logger _log;
         
         public Forum Forum { get; private set; }
+        public bool LoggedIn => Forum?.LoggedIn ?? false;
         private Task _loginTask;
 
         public ForumService(IBotCredentials creds) {
