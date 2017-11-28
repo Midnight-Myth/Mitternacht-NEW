@@ -109,7 +109,13 @@ namespace Mitternacht.Modules.Utility
                 using (var uow = _db.UnitOfWork) {
                     var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
                     if (forumId != null) {
-                        var username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
+                        var username = string.Empty;
+                        try {
+                            username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
+                        }
+                        catch (Exception e) {
+                            _log.Warn(e, "Exception catched, executing without username!");
+                        }
                         embed.AddInlineField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})");
                     }
                 }

@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Verification
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
-            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), forumUserId, _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), Context.Guild.Name, forumUserId, _ch.GetPrefix(Context.Guild), _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
