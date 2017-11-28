@@ -8,6 +8,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification
 {
@@ -16,18 +17,22 @@ namespace Mitternacht.Modules.Verification
         private readonly DbService _db;
         private readonly IBotCredentials _creds;
         private readonly CommandHandler _ch;
+        private readonly ForumService _fs;
 
-        public Verification(DbService db, IBotCredentials creds, CommandHandler ch) {
+        private bool Enabled => _fs.Forum?.LoggedIn ?? false;
+
+        public Verification(DbService db, IBotCredentials creds, CommandHandler ch, ForumService fs) {
             _db = db;
             _creds = creds;
             _ch = ch;
+            _fs = fs;
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationDmKey(long forumUserId) {
-            if (!Service.Enabled) {
+            if (!Enabled) {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
@@ -48,14 +53,14 @@ namespace Mitternacht.Modules.Verification
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
-            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), forumUserId, Service.Forum.GetConversationCreationUrl(users.Prepend(Service.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), forumUserId, _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationSubmitkey(long forumuserid) {
-            if (!Service.Enabled)
+            if (!Enabled)
             {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -71,7 +76,7 @@ namespace Mitternacht.Modules.Verification
                 (await ReplyErrorLocalized("no_valid_key").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
-            var conversations = await Service.Forum.GetConversations().ConfigureAwait(false);
+            var conversations = await _fs.Forum.GetConversations().ConfigureAwait(false);
             var con = conversations.FirstOrDefault(ci => (string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)) || ci.Title.Trim().Equals(Service.GetVerifyString(Context.Guild.Id))) && ci.Author.Id == forumuserid);
             if (con == null) {
                 (await ReplyErrorLocalized("no_valid_conversation").ConfigureAwait(false)).DeleteAfter(60);
@@ -106,7 +111,7 @@ namespace Mitternacht.Modules.Verification
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationSubmit([Remainder]string discordkey) {
-            if (!Service.Enabled)
+            if (!Enabled)
             {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -292,7 +297,7 @@ namespace Mitternacht.Modules.Verification
         [NadekoCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task ReinitForum() {
-            Service.InitForumInstance();
+            _fs.InitForumInstance();
             await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
         }
 
@@ -318,8 +323,8 @@ namespace Mitternacht.Modules.Verification
         [OwnerOnly]
         public async Task ConversationLink() {
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
-            if (Service.Enabled)
-                await ConfirmLocalized("conversation_start_link", Service.Forum.GetConversationCreationUrl(users.Prepend(Service.Forum.SelfUser.Username).ToArray())).ConfigureAwait(false);
+            if (Enabled)
+                await ConfirmLocalized("conversation_start_link", _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())).ConfigureAwait(false);
             else {
                 var msg = await ErrorLocalized("disabled").ConfigureAwait(false);
                 msg.DeleteAfter(60);
