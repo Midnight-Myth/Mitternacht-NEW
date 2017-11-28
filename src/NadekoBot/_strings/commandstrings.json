@@ -3344,5 +3344,26 @@
     "aliases": [],
     "desc": "Starte die Reinitialisierung der Foruminstanz.",
     "usage": "`{0}reinitforum`"
+  },
+  {
+    "name": "additionalverificationusers",
+    "cmd": "additionalverificationusers",
+    "aliases": [ "adverius" ],
+    "desc": "Zeigt alle zusätzlichen Verifizierungsnachrichtenempfänger an.",
+    "usage": "`{0}additionalverificationusers`"
+  },
+  {
+    "name": "setadditionalverificationusers",
+    "cmd": "setadditionalverificationusers",
+    "aliases": [ "setadverius" ],
+    "desc": "Setzt die zusätzlichen Verifizierungsnachrichtenempfänger.",
+    "usage": "`{0}setadditionalverificationusers [user1] [user2] ... [userN]`"
+  },
+  {
+    "name": "conversationlink",
+    "cmd": "conversationlink",
+    "aliases": [],
+    "desc": "Zeigt den Konversationslink mit aktuellen Einstellungen an.",
+    "usage": "`{0}conversationlink`"
   }
 ]

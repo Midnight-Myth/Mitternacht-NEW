@@ -125,6 +125,22 @@ namespace Mitternacht.Modules.Verification.Services
             }
         }
 
+        public string[] GetAdditionalVerificationUsers(ulong guildId) {
+            using (var uow = _db.UnitOfWork) {
+                var gc = uow.GuildConfigs.For(guildId, set => set);
+                return string.IsNullOrWhiteSpace(gc.AdditionalVerificationUsers) ? new string[0] : gc.AdditionalVerificationUsers.Split(',');
+            }
+        }
+
+        public async Task SetAdditionalVerificationUsers(ulong guildId, string[] users) {
+            using (var uow = _db.UnitOfWork) {
+                var gc = uow.GuildConfigs.For(guildId, set => set);
+                gc.AdditionalVerificationUsers = string.Join(',', users);
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync();
+            }
+        }
+
         public class ValidationKey
         {
             public string Key { get; }

@@ -47,7 +47,8 @@ namespace Mitternacht.Modules.Verification
 
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), forumUserId) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
+            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), forumUserId, Service.Forum.GetConversationCreationUrl(users.Prepend(Service.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -293,6 +294,36 @@ namespace Mitternacht.Modules.Verification
         public async Task ReinitForum() {
             Service.InitForumInstance();
             await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [OwnerOnly]
+        public async Task AdditionalVerificationUsers() {
+            var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
+            if (users.Any())
+                await Context.Channel.SendConfirmAsync(GetText("additional_verification_users_title"), users.Aggregate("", (s, u) => $"{s}- {u}\n", s => s.Substring(0, s.Length - 1))).ConfigureAwait(false);
+            else
+                await ErrorLocalized("additional_verification_users_not_set").ConfigureAwait(false);
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [OwnerOnly]
+        public async Task SetAdditionalVerificationUsers([Remainder] string names = null) {
+            var namesarray = string.IsNullOrWhiteSpace(names) ? new string[0] : names.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            await Service.SetAdditionalVerificationUsers(Context.Guild.Id, namesarray);
+            await (namesarray.Any() ? ConfirmLocalized("additional_verification_users_set") : ConfirmLocalized("additional_verification_users_set_void"));
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [OwnerOnly]
+        public async Task ConversationLink() {
+            var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
+            if (Service.Enabled)
+                await ConfirmLocalized("conversation_start_link", Service.Forum.GetConversationCreationUrl(users.Prepend(Service.Forum.SelfUser.Username).ToArray())).ConfigureAwait(false);
+            else {
+                var msg = await ErrorLocalized("disabled").ConfigureAwait(false);
+                msg.DeleteAfter(60);
+            }
         }
     }
 }
