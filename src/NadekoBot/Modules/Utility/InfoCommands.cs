@@ -115,9 +115,9 @@ namespace Mitternacht.Modules.Utility
                     if (forumId != null) {
                         var username = string.Empty;
                         try {
-                            username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
+                            username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value))?.Username : null;
                         }
-                        catch (HttpRequestException e) {
+                        catch (Exception e) {
                             _log.Warn(e, "Exception catched, executing without username!");
                             var hrm = await _fs.Forum.GetData($"forum/members/{forumId.Value}").ConfigureAwait(false);
                             using (var clienthandler = new HttpClientHandler
