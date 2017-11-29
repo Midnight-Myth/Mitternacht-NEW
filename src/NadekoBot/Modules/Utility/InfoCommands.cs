@@ -115,29 +115,10 @@ namespace Mitternacht.Modules.Utility
                     if (forumId != null) {
                         var username = string.Empty;
                         try {
-                            username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value))?.Username : null;
+                            username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
                         }
                         catch (Exception e) {
                             _log.Warn(e, "Exception catched, executing without username!");
-                            var hrm = await _fs.Forum.GetData($"forum/members/{forumId.Value}").ConfigureAwait(false);
-                            using (var clienthandler = new HttpClientHandler
-                            {
-                                ServerCertificateCustomValidationCallback = (m, c, a1, a2) => true,
-                                SslProtocols = SslProtocols.Tls12
-                            })
-                            using (var client = new HttpClient(clienthandler)
-                            {
-                                BaseAddress = new Uri("https://hastebin.com/")
-                            })
-                            {
-                                var post = await client.PostAsync("https://hastebin.com/documents", new StringContent(await hrm.Content.ReadAsStringAsync().ConfigureAwait(false)));
-                                if (!post.IsSuccessStatusCode) _log.Warn("Could not write to hastebin!");
-                                else
-                                {
-                                    var dic = JsonConvert.DeserializeObject<Dictionary<string, string>>(await post.Content.ReadAsStringAsync().ConfigureAwait(false));
-                                    await Context.Channel.SendMessageAsync(!dic.ContainsKey("key") ? "Hastebin answer contains no key!" : $"Hastebin key: {dic["key"]}").ConfigureAwait(false);
-                                }
-                            }
                         }
                         embed.AddInlineField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})");
                     }
