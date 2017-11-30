@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
@@ -12,7 +9,6 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Impl;
-using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.Utility
 {
@@ -124,7 +120,22 @@ namespace Mitternacht.Modules.Utility
                     }
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
-                
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [OwnerOnly]
+            public async Task ForumInfo() {
+                if (_fs.Forum == null) {
+                    await Context.Channel.SendErrorAsync("Forum not instantiated!").ConfigureAwait(false);
+                    return;
+                }
+                var embed = new EmbedBuilder()
+                    .WithOkColor()
+                    .WithTitle("ForumInfo")
+                    .WithImageUrl(_fs.Forum.SelfUser.AvatarUrl)
+                    .AddInlineField("Logged In", _fs.LoggedIn + " | " + _fs.Forum.LoggedIn)
+                    .AddInlineField("Selfuser", $"[{_fs.Forum.SelfUser.Username}]({_fs.Forum.SelfUser.UrlPath})");
+                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
             [NadekoCommand, Usage, Description, Aliases]

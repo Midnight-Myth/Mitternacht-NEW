@@ -3365,5 +3365,12 @@
     "aliases": [],
     "desc": "Zeigt den Konversationslink mit aktuellen Einstellungen an.",
     "usage": "`{0}conversationlink`"
+  },
+  {
+    "name": "foruminfo",
+    "cmd": "foruminfo",
+    "aliases": [ "finfo" ],
+    "desc": "Zeigt Informationen zur aktuellen Forum-Instanz an.",
+    "usage": "`{0}foruminfo`"
   }
 ]
