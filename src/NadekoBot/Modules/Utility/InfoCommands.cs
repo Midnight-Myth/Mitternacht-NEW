@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using GommeHDnetForumAPI.DataModels.Entities;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
@@ -117,6 +118,43 @@ namespace Mitternacht.Modules.Utility
                         embed.AddInlineField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})");
                     }
                 }
+                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task UserInfoForum(IGuildUser user = null) {
+                user = user ?? Context.User as IGuildUser;
+                if (user == null) return;
+
+                UserInfo uinfo = null;
+                using (var uow = _db.UnitOfWork) {
+                    var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+                    if (forumId != null) {
+                        try {
+                            uinfo = await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false);
+                        }
+                        catch (Exception) { /*ignored*/ }
+                    }
+                }
+
+                if (uinfo == null) {
+                    (await ReplyErrorLocalized("forum_user_not_accessible").ConfigureAwait(false)).DeleteAfter(60);
+                    return;
+                }
+
+                var embed = new EmbedBuilder()
+                    .WithOkColor()
+                    .WithThumbnailUrl(uinfo.AvatarUrl)
+                    .AddInlineField(GetText("name"), uinfo.Username)
+                    .AddInlineField(GetText("id"), uinfo.Id)
+                    .AddInlineField(GetText("gender"), uinfo.Gender.ToString());
+                if (!string.IsNullOrWhiteSpace(uinfo.Status)) embed.AddInlineField(GetText("status"), uinfo.Status);
+                if (uinfo.PostCount != null) embed.AddInlineField(GetText("posts"), uinfo.PostCount.Value);
+                if (uinfo.LikeCount != null) embed.AddInlineField(GetText("likes"), uinfo.LikeCount.Value);
+                if (uinfo.Trophies != null) embed.AddInlineField(GetText("trophies"), uinfo.Trophies.Value);
+                if (!string.IsNullOrWhiteSpace(uinfo.Location)) embed.AddInlineField(GetText("location"), uinfo.Location);
+
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 

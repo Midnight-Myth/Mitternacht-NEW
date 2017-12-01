@@ -3372,5 +3372,12 @@
     "aliases": [ "finfo" ],
     "desc": "Zeigt Informationen zur aktuellen Forum-Instanz an.",
     "usage": "`{0}foruminfo`"
+  },
+  {
+    "name": "userinfoforum",
+    "cmd": "userinfoforum",
+    "aliases": [ "uinfof" ],
+    "desc": "Zeigt Informationen zum Forumaccount des angegebenen Discordnutzers an",
+    "usage": "`{0}userinfoforum <user>`"
   }
 ]
