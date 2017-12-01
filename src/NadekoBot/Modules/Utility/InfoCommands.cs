@@ -146,7 +146,8 @@ namespace Mitternacht.Modules.Utility
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithThumbnailUrl(uinfo.AvatarUrl)
-                    .AddInlineField(GetText("name"), uinfo.Username)
+                    .WithTitle(GetText("uinfof_title", user.ToString()))
+                    .AddInlineField(GetText("name"), $"[{uinfo.Username}]({uinfo.UrlPath})")
                     .AddInlineField(GetText("id"), uinfo.Id)
                     .AddInlineField(GetText("gender"), uinfo.Gender.ToString());
                 if (!string.IsNullOrWhiteSpace(uinfo.Status)) embed.AddInlineField(GetText("status"), uinfo.Status);
