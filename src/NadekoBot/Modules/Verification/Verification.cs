@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using GommeHDnetForumAPI.DataModels.Entities;
+using GommeHDnetForumAPI.DataModels.Exceptions;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Verification.Services;
@@ -28,12 +30,32 @@ namespace Mitternacht.Modules.Verification
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
+        [Priority(1)]
         [RequireNoBot]
         public async Task IdentityValidationDmKey(long forumUserId) {
             if (!_fs.LoggedIn) {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
+
+            UserInfo uinfo = null;
+            try
+            {
+                uinfo = await _fs.Forum.GetUserInfo(forumUserId);
+            }
+            catch (UserProfileAccessException)
+            {
+                (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            catch (Exception) { /*ignore*/ }
+
+            if (uinfo == null)
+            {
+                (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
             if (!Service.CanVerifyForumAccount(Context.Guild.Id, Context.User.Id, forumUserId)) {
                 (await ReplyErrorLocalized("already_verified").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -51,31 +73,78 @@ namespace Mitternacht.Modules.Verification
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
-            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), Context.Guild.Name, forumUserId, _ch.GetPrefix(Context.Guild), _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), Context.Guild.Name, $"{uinfo.Username} (ID {uinfo.Id})", _ch.GetPrefix(Context.Guild), _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
+        [Priority(0)]
         [RequireNoBot]
-        public async Task IdentityValidationSubmitkey(long forumuserid) {
+        public async Task IdentityValidationDmKey(string forumUsername) {
             if (!_fs.LoggedIn)
             {
                 (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
-            if (!Service.CanVerifyForumAccount(Context.Guild.Id, Context.User.Id, forumuserid))
+            UserInfo uinfo = null;
+            try {
+                uinfo = await _fs.Forum.GetUserInfo(forumUsername);
+            }
+            catch (UserProfileAccessException) {
+                (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            catch (Exception) { /*ignore*/ }
+
+            if (uinfo == null) {
+                (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            await IdentityValidationDmKey(uinfo.Id).ConfigureAwait(false);
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(1)]
+        [RequireNoBot]
+        public async Task IdentityValidationSubmitkey(long forumUserId) {
+            if (!_fs.LoggedIn)
+            {
+                (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
+            UserInfo uinfo = null;
+            try
+            {
+                uinfo = await _fs.Forum.GetUserInfo(forumUserId);
+            }
+            catch (UserProfileAccessException)
+            {
+                (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            catch (Exception) { /*ignore*/ }
+
+            if (uinfo == null)
+            {
+                (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
+            if (!Service.CanVerifyForumAccount(Context.Guild.Id, Context.User.Id, forumUserId))
             {
                 (await ReplyErrorLocalized("already_verified").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
 
-            var forumkey = Service.ValidationKeys.FirstOrDefault(vk => vk.KeyScope == VerificationService.KeyScope.Forum && vk.ForumUserId == forumuserid && vk.DiscordUserId == Context.User.Id && vk.GuildId == Context.Guild.Id);
+            var forumkey = Service.ValidationKeys.FirstOrDefault(vk => vk.KeyScope == VerificationService.KeyScope.Forum && vk.ForumUserId == forumUserId && vk.DiscordUserId == Context.User.Id && vk.GuildId == Context.Guild.Id);
             if (forumkey == null) {
                 (await ReplyErrorLocalized("no_valid_key").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
             var conversations = await _fs.Forum.GetConversations().ConfigureAwait(false);
-            var con = conversations.FirstOrDefault(ci => (string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)) || ci.Title.Trim().Equals(Service.GetVerifyString(Context.Guild.Id))) && ci.Author.Id == forumuserid);
+            var con = conversations.FirstOrDefault(ci => (string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)) || ci.Title.Trim().Equals(Service.GetVerifyString(Context.Guild.Id))) && ci.Author.Id == forumUserId);
             if (con == null) {
                 (await ReplyErrorLocalized("no_valid_conversation").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -95,7 +164,7 @@ namespace Mitternacht.Modules.Verification
             }
 
             Service.ValidationKeys.TryRemove(forumkey);
-            var success = await con.Reply(Service.GenerateKey(VerificationService.KeyScope.Discord, forumuserid, Context.User.Id, Context.Guild.Id).Key).ConfigureAwait(false);
+            var success = await con.Reply(Service.GenerateKey(VerificationService.KeyScope.Discord, forumUserId, Context.User.Id, Context.Guild.Id).Key).ConfigureAwait(false);
 
             if (!success) {
                 (await ReplyErrorLocalized("forum_conversation_reply_failure").ConfigureAwait(false)).DeleteAfter(60);
@@ -104,6 +173,39 @@ namespace Mitternacht.Modules.Verification
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             await ch.SendConfirmAsync(GetText("message_title", 2), GetText("message_forum_discord_key", Context.Guild.Name, _ch.GetPrefix(Context.Guild))).ConfigureAwait(false);
         }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        [RequireNoBot]
+        public async Task IdentityValidationSubmitkey(string forumUsername) {
+            if (!_fs.LoggedIn)
+            {
+                (await ReplyErrorLocalized("disabled").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
+            UserInfo uinfo = null;
+            try
+            {
+                uinfo = await _fs.Forum.GetUserInfo(forumUsername);
+            }
+            catch (UserProfileAccessException)
+            {
+                (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            catch (Exception) { /*ignore*/ }
+
+            if (uinfo == null)
+            {
+                (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            await IdentityValidationSubmitkey(uinfo.Id).ConfigureAwait(false);
+        }
+
+
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
@@ -122,8 +224,26 @@ namespace Mitternacht.Modules.Verification
             }
             await Service.SetVerified(Context.Guild, Context.User as IGuildUser, key.ForumUserId).ConfigureAwait(false);
             Service.ValidationKeys.TryRemove(key);
+            UserInfo uinfo = null;
+            try
+            {
+                uinfo = await _fs.Forum.GetUserInfo(key.ForumUserId);
+            }
+            catch (UserProfileAccessException)
+            {
+                (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            catch (Exception) { /*ignore*/ }
+
+            if (uinfo == null)
+            {
+                (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-            await ch.SendConfirmAsync(GetText("message_title", 3), GetText("verification_completed", Context.Guild.Name, key.ForumUserId)).ConfigureAwait(false);
+            await ch.SendConfirmAsync(GetText("message_title", 3), GetText("verification_completed", Context.Guild.Name, uinfo.Username)).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -140,7 +260,7 @@ namespace Mitternacht.Modules.Verification
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(1)]
+        [Priority(2)]
         [OwnerOnly]
         public async Task RemoveVerification(IUser user) {
             if (user == null) return;
@@ -153,7 +273,7 @@ namespace Mitternacht.Modules.Verification
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(0)]
+        [Priority(1)]
         [OwnerOnly]
         public async Task RemoveVerification(long forumUserId) {
             using (var uow = _db.UnitOfWork)
@@ -163,6 +283,27 @@ namespace Mitternacht.Modules.Verification
                     .ConfigureAwait(false)).DeleteAfter(60);
         }
 
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        [OwnerOnly]
+        public async Task RemoveVerification(string forumUsername)
+        {
+            UserInfo uinfo = null;
+            try {
+                uinfo = await _fs.Forum.GetUserInfo(forumUsername).ConfigureAwait(false);
+            }
+            catch (Exception) {/*ignore*/}
+            if (uinfo == null) {
+                (await ErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+            using (var uow = _db.UnitOfWork)
+                (await (uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, uinfo.Id)
+                        ? ConfirmLocalized("removed_forum", uinfo.Username)
+                        : ErrorLocalized("removed_forum_fail", uinfo.Username))
+                    .ConfigureAwait(false)).DeleteAfter(60);
+        }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]

@@ -113,9 +113,7 @@ namespace Mitternacht.Modules.Utility
                         try {
                             username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
                         }
-                        catch (Exception e) {
-                            _log.Warn(e, "Exception catched, executing without username!");
-                        }
+                        catch (Exception) { /*ignored*/ }
                         embed.AddInlineField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})");
                     }
                 }
@@ -133,7 +131,7 @@ namespace Mitternacht.Modules.Utility
                     .WithOkColor()
                     .WithTitle("ForumInfo")
                     .WithImageUrl(_fs.Forum.SelfUser.AvatarUrl)
-                    .AddInlineField("Logged In", _fs.LoggedIn + " | " + _fs.Forum.LoggedIn)
+                    .AddInlineField("Logged In", _fs.LoggedIn)
                     .AddInlineField("Selfuser", $"[{_fs.Forum.SelfUser.Username}]({_fs.Forum.SelfUser.UrlPath})");
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
