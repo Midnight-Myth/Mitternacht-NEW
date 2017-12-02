@@ -139,7 +139,7 @@ namespace Mitternacht.Modules.Utility
                 }
 
                 if (uinfo == null) {
-                    (await ReplyErrorLocalized("forum_user_not_accessible").ConfigureAwait(false)).DeleteAfter(60);
+                    (await ReplyErrorLocalized("forum_user_not_accessible", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
                     return;
                 }
 
