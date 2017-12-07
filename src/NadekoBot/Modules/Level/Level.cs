@@ -139,6 +139,7 @@ namespace Mitternacht.Modules.Level
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
+        [Priority(1)]
         [OwnerOnly]
         public async Task SetXp(int xp, [Remainder] IUser user = null)
         {
@@ -149,6 +150,25 @@ namespace Mitternacht.Modules.Level
                 await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {user.Username} auf {xp} gesetzt.");
                 var level = uow.LevelModel.CalculateLevel(user.Id);
                 await Service.SendLevelChangedMessage(level, user, Context.Channel);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        [OwnerOnly]
+        public async Task SetXp(int xp, ulong? userIdNullable = null) {
+            var userId = userIdNullable ?? Context.User.Id;
+            var user = await Context.Guild.GetUserAsync(userId);
+            if (user != null) {
+                await SetXp(xp, user);
+                return;
+            }
+            using (var uow = _db.UnitOfWork)
+            {
+                uow.LevelModel.SetXp(userId, xp, false);
+                await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {userId} auf {xp} gesetzt.");
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
