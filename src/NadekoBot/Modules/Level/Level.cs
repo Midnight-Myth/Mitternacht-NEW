@@ -158,8 +158,7 @@ namespace Mitternacht.Modules.Level
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [OwnerOnly]
-        public async Task SetXp(int xp, ulong? userIdNullable = null) {
-            var userId = userIdNullable ?? Context.User.Id;
+        public async Task SetXp(int xp, ulong userId) {
             var user = await Context.Guild.GetUserAsync(userId);
             if (user != null) {
                 await SetXp(xp, user);
