@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories
+namespace Mitternacht.Services.Database.Repositories
 {
     public interface IGuildConfigRepository : IRepository<GuildConfig>
     {

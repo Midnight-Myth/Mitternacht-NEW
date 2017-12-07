@@ -1,12 +1,12 @@
-﻿using Discord.Commands;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -58,13 +58,13 @@ namespace NadekoBot.Modules.Administration
             [OwnerOnly]
             public async Task ListPlaying()
             {
-                if (!_service.BotConfig.RotatingStatusMessages.Any())
+                if (!Service.BotConfig.RotatingStatusMessages.Any())
                     await ReplyErrorLocalized("ropl_not_set").ConfigureAwait(false);
                 else
                 {
                     var i = 1;
                     await ReplyConfirmLocalized("ropl_list",
-                            string.Join("\n\t", _service.BotConfig.RotatingStatusMessages.Select(rs => $"`{i++}.` {rs.Status}")))
+                            string.Join("\n\t", Service.BotConfig.RotatingStatusMessages.Select(rs => $"`{i++}.` {rs.Status}")))
                         .ConfigureAwait(false);
                 }
 

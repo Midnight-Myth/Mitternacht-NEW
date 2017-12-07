@@ -1,17 +1,17 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using System.Threading.Tasks;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Administration.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -43,7 +43,7 @@ namespace NadekoBot.Modules.Administration
                     return;
                 }
 
-                var guildVcRoles = _service.VcRoles.GetOrAdd(user.GuildId, new ConcurrentDictionary<ulong, IRole>());
+                var guildVcRoles = Service.VcRoles.GetOrAdd(user.GuildId, new ConcurrentDictionary<ulong, IRole>());
 
                 if (role == null)
                 {
@@ -82,7 +82,7 @@ namespace NadekoBot.Modules.Administration
             {
                 var guild = (SocketGuild) Context.Guild;
                 string text;
-                if (_service.VcRoles.TryGetValue(Context.Guild.Id, out ConcurrentDictionary<ulong, IRole> roles))
+                if (Service.VcRoles.TryGetValue(Context.Guild.Id, out ConcurrentDictionary<ulong, IRole> roles))
                 {
                     if (!roles.Any())
                     {

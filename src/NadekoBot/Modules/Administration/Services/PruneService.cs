@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Common.Collections;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Administration.Services
+namespace Mitternacht.Modules.Administration.Services
 {
     public class PruneService : INService
     {

@@ -1,16 +1,17 @@
-﻿using Discord;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System.Linq;
-using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -29,16 +30,19 @@ namespace NadekoBot.Modules.Administration
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task Warn(IGuildUser user, [Remainder] string reason = null)
             {
-                try
-                {
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max()) {
+                    await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
+                    return;
+                }
+                try {
                     await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor()
-                                     .WithDescription(GetText("warned_on", Context.Guild.ToString()))
-                                     .AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString()))
-                                     .AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-")))
+                            .WithDescription(GetText("warned_on", Context.Guild.ToString()))
+                            .AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString()))
+                            .AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-")))
                         .ConfigureAwait(false);
                 }
-                catch { }
-                var punishment = await _service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
+                catch { /*ignored*/ }
+                var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
 
                 if (punishment == null)
                 {
@@ -84,15 +88,17 @@ namespace NadekoBot.Modules.Administration
                     else
                         foreach (var w in warnings) {
                             var name = GetText("warned_on_by", w.DateAdded?.ToString("dd.MM.yyy"), w.DateAdded?.ToString("HH:mm"), w.Moderator);
+                            
                             if (w.Forgiven)
                                 name = Format.Strikethrough(name) + " " + GetText("warn_cleared_by", w.ForgivenBy);
+                            name += $" ({w.Id.ToHex()})";
                             embed.AddField(x => x
                                 .WithName(name)
                                 .WithValue(w.Reason));
                         }
 
                     return embed;
-                }, allWarnings.Length / 9);
+                }, allWarnings.Length / warnsPerPage);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
@@ -118,7 +124,7 @@ namespace NadekoBot.Modules.Administration
                             var all = x.Count();
                             var forgiven = x.Count(y => y.Forgiven);
                             var total = all - forgiven;
-                            return ((await Context.Guild.GetUserAsync(x.Key))?.ToString() ?? x.Key.ToString()) + $" | {total} ({all} - {forgiven})";
+                            return $"{(await Context.Guild.GetUserAsync(x.Key))?.ToString() ?? x.Key.ToString()} | {total} ({all} - {forgiven})";
                         }));
 
                     return new EmbedBuilder()
@@ -152,6 +158,66 @@ namespace NadekoBot.Modules.Administration
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
+            public async Task Warnremove(IGuildUser user, string hexid) {
+                var id = hexid.FromHexToInt();
+                if (id == null) {
+                    await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                    return;
+                }
+                using (var uow = _db.UnitOfWork) {
+                    var warning = uow.Warnings.Get(id.Value);
+                    if (warning == null) {
+                        await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                        return;
+                    }
+                    if (warning.UserId != user.Id) {
+                        await ReplyErrorLocalized("warning_remove_other_user", Format.Bold(hexid)).ConfigureAwait(false);
+                        return;
+                    }
+                    uow.Warnings.Remove(warning);
+                    await ReplyConfirmLocalized("warning_removed", Format.Bold(hexid), Format.Bold(user.ToString())).ConfigureAwait(false);
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.KickMembers)]
+            public async Task Warnid(string hexid) {
+                var id = hexid.FromHexToInt();
+                if (id == null) {
+                    await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                    return;
+                }
+                using (var uow = _db.UnitOfWork) {
+                    var w = uow.Warnings.Get(id.Value);
+                    if (w == null) {
+                        await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                        return;
+                    }
+                    var title = GetText("warned_by", w.Moderator);
+                    if (w.Forgiven) title = $"{Format.Strikethrough(title)} {GetText("warn_cleared_by", w.ForgivenBy)}";
+                    title += $" ({w.Id.ToHex()})";
+                    var embed = new EmbedBuilder()
+                        .WithOkColor()
+                        .WithTitle(title)
+                        .WithDescription(w.Reason);
+                    var user = await Context.Guild.GetUserAsync(w.UserId);
+                    if (user == null) embed.WithAuthor(w.UserId.ToString());
+                    else embed.WithAuthor(user);
+                    if (w.DateAdded != null) embed.WithTimestamp(w.DateAdded.Value);
+                    await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+            }
+
+            //public async Task Warns() {
+                
+            //}
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.BanMembers)]
             public async Task WarnPunish(int number, PunishmentAction punish, int time = 0)
             {
                 if (punish != PunishmentAction.Mute && time != 0)
@@ -164,8 +230,7 @@ namespace NadekoBot.Modules.Administration
                     var ps = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.WarnPunishments)).WarnPunishments;
                     ps.RemoveAll(x => x.Count == number);
 
-                    ps.Add(new WarningPunishment()
-                    {
+                    ps.Add(new WarningPunishment {
                         Count = number,
                         Punishment = punish,
                         Time = time,
@@ -193,7 +258,7 @@ namespace NadekoBot.Modules.Administration
 
                     if (p != null)
                     {
-                        uow._context.Remove(p);
+                        uow.Context.Remove(p);
                         uow.Complete();
                     }
                 }
@@ -225,7 +290,7 @@ namespace NadekoBot.Modules.Administration
             [RequireBotPermission(GuildPermission.BanMembers)]
             public async Task Ban(IGuildUser user, [Remainder] string msg = null)
             {
-                if (Context.User.Id != user.Guild.OwnerId && (user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Select(r => r.Position).Max()))
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max())
                 {
                     await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
                     return;
@@ -258,7 +323,7 @@ namespace NadekoBot.Modules.Administration
             {
                 var bans = await Context.Guild.GetBansAsync();
 
-                var bun = bans.FirstOrDefault(x => x.User.ToString().ToLowerInvariant() == user.ToLowerInvariant());
+                var bun = bans.FirstOrDefault(x => string.Equals(x.User.ToString(), user, StringComparison.InvariantCultureIgnoreCase));
 
                 if (bun == null)
                 {
@@ -302,7 +367,7 @@ namespace NadekoBot.Modules.Administration
             [RequireBotPermission(GuildPermission.BanMembers)]
             public async Task Softban(IGuildUser user, [Remainder] string msg = null)
             {
-                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Select(r => r.Position).Max())
+                if (Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max())
                 {
                     await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
                     return;
@@ -348,7 +413,7 @@ namespace NadekoBot.Modules.Administration
                     {
                         await user.SendErrorAsync(GetText("kickdm", Format.Bold(Context.Guild.Name), msg));
                     }
-                    catch { }
+                    catch { /*ignored*/ }
                 }
 
                 await user.KickAsync().ConfigureAwait(false);

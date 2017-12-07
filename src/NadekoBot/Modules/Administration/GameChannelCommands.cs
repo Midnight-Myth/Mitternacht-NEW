@@ -1,11 +1,11 @@
-﻿using Discord;
+﻿using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
-using NadekoBot.Services;
-using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -39,14 +39,14 @@ namespace NadekoBot.Modules.Administration
 
                     if (gc.GameVoiceChannel == vch.Id)
                     {
-                        _service.GameVoiceChannels.TryRemove(vch.Id);
+                        Service.GameVoiceChannels.TryRemove(vch.Id);
                         id = gc.GameVoiceChannel = null;
                     }
                     else
                     {
                         if(gc.GameVoiceChannel != null)
-                            _service.GameVoiceChannels.TryRemove(gc.GameVoiceChannel.Value);
-                        _service.GameVoiceChannels.Add(vch.Id);
+                            Service.GameVoiceChannels.TryRemove(gc.GameVoiceChannel.Value);
+                        Service.GameVoiceChannels.Add(vch.Id);
                         id = gc.GameVoiceChannel = vch.Id;
                     }
 
@@ -59,7 +59,7 @@ namespace NadekoBot.Modules.Administration
                 }
                 else
                 {
-                    _service.GameVoiceChannels.Add(vch.Id);
+                    Service.GameVoiceChannels.Add(vch.Id);
                     await ReplyConfirmLocalized("gvc_enabled", Format.Bold(vch.Name)).ConfigureAwait(false);
                 }
             }

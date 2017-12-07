@@ -1,13 +1,13 @@
-﻿using System.Threading.Tasks;
-using Discord.Commands;
-using System;
-using NadekoBot.Services;
-using NadekoBot.Extensions;
+﻿using System;
+using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Utility.Services;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Utility.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
@@ -34,7 +34,7 @@ namespace NadekoBot.Modules.Utility
             {
                 if (string.IsNullOrWhiteSpace(_creds.PatreonAccessToken))
                     return;
-                await _service.RefreshPledges(true).ConfigureAwait(false);
+                await Service.RefreshPledges(true).ConfigureAwait(false);
 
                 await Context.Channel.SendConfirmAsync("👌").ConfigureAwait(false);
             }
@@ -54,7 +54,7 @@ namespace NadekoBot.Modules.Utility
                 int amount = 0;
                 try
                 {
-                    amount = await _service.ClaimReward(Context.User.Id).ConfigureAwait(false);
+                    amount = await Service.ClaimReward(Context.User.Id).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -66,7 +66,7 @@ namespace NadekoBot.Modules.Utility
                     await ReplyConfirmLocalized("clpa_success", amount + _config.BotConfig.CurrencySign).ConfigureAwait(false);
                     return;
                 }
-                var rem = (_service.Interval - (DateTime.UtcNow - _service.LastUpdate));
+                var rem = (Service.Interval - (DateTime.UtcNow - Service.LastUpdate));
                 var helpcmd = Format.Code(Prefix + "donate");
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                     .WithDescription(GetText("clpa_fail"))

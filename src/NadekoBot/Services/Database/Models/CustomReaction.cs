@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class CustomReaction : DbEntity
     {

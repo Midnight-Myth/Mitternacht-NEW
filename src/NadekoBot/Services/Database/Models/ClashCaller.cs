@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class ClashCaller : DbEntity
     {

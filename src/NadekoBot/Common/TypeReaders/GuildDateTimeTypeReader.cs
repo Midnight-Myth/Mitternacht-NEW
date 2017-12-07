@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Modules.Administration.Services;
+using Mitternacht.Modules.Administration.Services;
 
-namespace NadekoBot.Common.TypeReaders
+namespace Mitternacht.Common.TypeReaders
 {
     public class GuildDateTimeTypeReader : TypeReader
     {

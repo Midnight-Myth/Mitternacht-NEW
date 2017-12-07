@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Games.Services;
-using NadekoBot.Modules.Games.Common.ChatterBot;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Modules.Games.Common.ChatterBot;
+using Mitternacht.Modules.Games.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {
@@ -28,7 +28,7 @@ namespace NadekoBot.Modules.Games
             {
                 var channel = (ITextChannel)Context.Channel;
 
-                if (_service.ChatterBotGuilds.TryRemove(channel.Guild.Id, out _))
+                if (Service.ChatterBotGuilds.TryRemove(channel.Guild.Id, out _))
                 {
                     using (var uow = _db.UnitOfWork)
                     {
@@ -39,7 +39,7 @@ namespace NadekoBot.Modules.Games
                     return;
                 }
 
-                _service.ChatterBotGuilds.TryAdd(channel.Guild.Id, new Lazy<IChatterBotSession>(() => _service.CreateSession(), true));
+                Service.ChatterBotGuilds.TryAdd(channel.Guild.Id, new Lazy<IChatterBotSession>(() => Service.CreateSession(), true));
 
                 using (var uow = _db.UnitOfWork)
                 {

@@ -1,19 +1,19 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Level.Services;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Database.Repositories.Impl;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Level.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Database.Repositories.Impl;
 
-namespace NadekoBot.Modules.Level
+namespace Mitternacht.Modules.Level
 {
     public class Level : NadekoTopLevelModule<LevelService>
     {
@@ -90,8 +90,9 @@ namespace NadekoBot.Modules.Level
                 var lm = levelmodels.ElementAt(i);
                 var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 
-                if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
-                if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(24, true)) ?? lm.UserId.ToString().TrimTo(24,true), -26} | LEVEL {lm.Level,3} | XP {lm.CurrentXP,6}/{LevelModelRepository.GetXpToNextLevel(lm.Level),6} | TOTAL XP {lm.TotalXP,8}");
+                if ((i - position) % elementsPerList == 0)
+                    sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}\nRang | {"Username", -37} | Lvl | {"XP", -13} | Total XP\n-----|---------------------------------------|-----|---------------|---------");
+                if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(32, true) ?? lm.UserId.ToString().TrimTo(32,true)) + (user == null ? "" : $"#{user.DiscriminatorValue:D4}"), -37} | {lm.Level,3} | {lm.CurrentXP,6}/{LevelModelRepository.GetXpToNextLevel(lm.Level),6} | {lm.TotalXP,8}");
                 if ((i - position) % elementsPerList != elementsPerList - 1) continue;
                 sb.Append("```");
                 rankstrings.Add(sb.ToString());
@@ -131,13 +132,14 @@ namespace NadekoBot.Modules.Level
                 var success = uow.LevelModel.TryAddXp(user.Id, xp, false);
                 await Context.Channel.SendConfirmAsync(success ? $"{Context.User.Mention}: {xp}XP an {user.Username} vergeben." : $"{Context.User.Mention}: Vergabe von {xp}XP an {user.Username} nicht möglich!");
                 var level = uow.LevelModel.CalculateLevel(user.Id);
-                await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
+        [Priority(1)]
         [OwnerOnly]
         public async Task SetXp(int xp, [Remainder] IUser user = null)
         {
@@ -147,7 +149,25 @@ namespace NadekoBot.Modules.Level
                 uow.LevelModel.SetXp(user.Id, xp, false);
                 await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {user.Username} auf {xp} gesetzt.");
                 var level = uow.LevelModel.CalculateLevel(user.Id);
-                await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+        }
+
+        [NadekoCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        [OwnerOnly]
+        public async Task SetXp(int xp, ulong userId) {
+            var user = await Context.Guild.GetUserAsync(userId);
+            if (user != null) {
+                await SetXp(xp, user);
+                return;
+            }
+            using (var uow = _db.UnitOfWork)
+            {
+                uow.LevelModel.SetXp(userId, xp, false);
+                await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {userId} auf {xp} gesetzt.");
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -180,7 +200,7 @@ namespace NadekoBot.Modules.Level
                     uow.Currency.TryUpdateState(user.Id, -moneyToSpend);
                     await Context.Channel.SendMessageAsync($"{Context.User.Mention}: {moneyToSpend}{CurrencySign} in {moneyToSpend * 5}XP umgewandelt" + (user != Context.User ? $" für {user.Username}" : ""));
                     var level = uow.LevelModel.CalculateLevel(user.Id);
-                    await _service.SendLevelChangedMessage(level, user, Context.Channel);
+                    await Service.SendLevelChangedMessage(level, user, Context.Channel);
                 }
                 await uow.CompleteAsync().ConfigureAwait(false);
             }

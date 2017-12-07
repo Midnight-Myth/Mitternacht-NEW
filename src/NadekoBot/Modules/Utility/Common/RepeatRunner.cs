@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace NadekoBot.Modules.Utility.Common
+namespace Mitternacht.Modules.Utility.Common
 {
     public class RepeatRunner
     {

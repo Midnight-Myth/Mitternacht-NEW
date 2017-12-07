@@ -5,12 +5,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Repositories.Impl;
 using NCalc;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
@@ -32,7 +33,7 @@ namespace NadekoBot.Modules.Utility
                 expr.EvaluateFunction += Expr_EvaluateFunction;
                 var result = expr.Evaluate();
                 if (expr.Error == null)
-                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), expression.Trim() + "\n" + result);
+                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), expression.Replace("*", "\\*").Replace("_", "\\_").Trim() + "\n" + result);
                 else
                     await Context.Channel.SendErrorAsync("⚙ " + GetText("error"), expr.Error);
             }
@@ -53,17 +54,17 @@ namespace NadekoBot.Modules.Utility
             private void Expr_EvaluateFunction(string name, FunctionArgs args)
             {
                 name = name.ToLowerInvariant();
-                // All methods have to in CustomNCalcEvaluations and be like:
+                // All methods have to be in CustomNCalcEvaluations and match the following template:
                 // public static object calcfunctionname(ICommandContext context, DbService db, FunctionArgs args){ ... }
                 var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
-                    where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) && 
-                          m.GetParameters().Length == 3 &&
-                          m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
-                          m.GetParameters()[1].ParameterType == typeof(DbService) &&
-                          m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
-                    select m;
+                                where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
+                                      m.GetParameters().Length == 3 &&
+                                      m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
+                                      m.GetParameters()[1].ParameterType == typeof(DbService) &&
+                                      m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
+                                select m;
                 var method = functions.FirstOrDefault(m => m.Name.ToLowerInvariant().Equals(name));
-                var result = method?.Invoke(null, new object[]{Context, _db, args});
+                var result = method?.Invoke(null, new object[] {Context, _db, args});
                 if (result != null) args.Result = result;
             }
 
@@ -82,12 +83,12 @@ namespace NadekoBot.Modules.Utility
                         "GetType"
                     }).ToArray();
                 var functions = (from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
-                    where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
-                          m.GetParameters().Length == 3 &&
-                          m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
-                          m.GetParameters()[1].ParameterType == typeof(DbService) &&
-                          m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
-                    select m.Name).ToArray();
+                                 where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
+                                       m.GetParameters().Length == 3 &&
+                                       m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
+                                       m.GetParameters()[1].ParameterType == typeof(DbService) &&
+                                       m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
+                                 select m.Name).ToArray();
                 var eb = new EmbedBuilder().WithOkColor()
                     .WithTitle(GetText("calcops", Prefix));
                 if (selection.Any()) eb.AddField("Math", string.Join(", ", selection));
@@ -98,31 +99,22 @@ namespace NadekoBot.Modules.Utility
 
         private class CustomNCalcEvaluations
         {
-            private static object Level(ICommandContext context, DbService db, FunctionArgs args)
+            //ulevel(user): level of a given user
+            public static object ULevel(ICommandContext context, DbService db, FunctionArgs args)
             {
-                if (args.Parameters.Length > 0) context.Channel
-                     .SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ParsedExpression.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
-                     .GetAwaiter().GetResult();
+                //if (args.Parameters.Length > 0) context.Channel.SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ParsedExpression.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
+                //    .GetAwaiter().GetResult();
                 if (args.Parameters.Length > 1) return null;
                 var user = context.User as IGuildUser;
                 if (args.Parameters.Length == 1)
                 {
                     var parameter = args.Parameters[0];
-                    if (parameter.ParsedExpression == null)
-                        parameter.Evaluate();
-                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']');
-                    context.Channel.SendMessageAsync($"expr: \"{expr}\"").GetAwaiter().GetResult();
-                    if (ulong.TryParse(expr, out ulong id)) {
-                        user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
-                    }
-                    else {
-                        context.Channel.SendMessageAsync($"usernames: {context.Guild.GetUsersAsync().GetAwaiter().GetResult().Aggregate("", (s, u) => $"{s}{u.Username}+{u.Mention.Substring(1)}+{u.Nickname} | ", s => s.Substring(0, s.Length - 3))}").GetAwaiter().GetResult();
-                        user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
-                            .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
-                    }
+                    if (parameter.ParsedExpression == null) parameter.Evaluate();
+                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
+                    //context.Channel.SendMessageAsync($"expr: {expr}").GetAwaiter().GetResult();
+                    user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
                 }
-                context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}")
-                    .GetAwaiter().GetResult();
+                //context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}").GetAwaiter().GetResult();
                 if (user == null) return null;
 
                 using (var uow = db.UnitOfWork)
@@ -131,60 +123,58 @@ namespace NadekoBot.Modules.Utility
                 }
             }
 
-            private static object Cash(ICommandContext context, DbService db, FunctionArgs args)
-                => Money(context, db, args);
-
-            private static object Money(ICommandContext context, DbService db, FunctionArgs args)
+            //money(user): money of a given user
+            public static object UMoney(ICommandContext context, DbService db, FunctionArgs args)
             {
-                if (args.Parameters.Length > 1)
-                    return null;
+                if (args.Parameters.Length > 1) return null;
                 var user = context.User as IGuildUser;
-                if (args.Parameters.Length == 1) {
+                if (args.Parameters.Length == 1)
+                {
                     var parameter = args.Parameters[0];
-                    if (parameter.ParsedExpression == null)
-                        parameter.Evaluate();
-                    var expr = parameter.ParsedExpression.ToString();
-                    if (ulong.TryParse(expr, out ulong id)) {
-                        user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
-                    }
-                    else {
-                        user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
-                            .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
-                    }
+                    if (parameter.ParsedExpression == null) parameter.Evaluate();
+                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
+                    user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
                 }
-                if (user == null)
-                    return null;
+                if (user == null) return null;
 
                 using (var uow = db.UnitOfWork)
-                {
                     return uow.Currency.GetUserCurrency(user.Id);
-                }
             }
 
-            private static object Xp(ICommandContext context, DbService db, FunctionArgs args)
+            //xp(user): xp of a given user
+            public static object UXp(ICommandContext context, DbService db, FunctionArgs args)
             {
-                if (args.Parameters.Length > 1)
-                    return null;
+                if (args.Parameters.Length > 1) return null;
                 var user = context.User as IGuildUser;
-                if (args.Parameters.Length == 1) {
+                if (args.Parameters.Length == 1)
+                {
                     var parameter = args.Parameters[0];
-                    if (parameter.ParsedExpression == null)
-                        parameter.Evaluate();
-                    var expr = parameter.ParsedExpression.ToString();
-                    if (ulong.TryParse(expr, out ulong id)) {
-                        user = context.Guild.GetUserAsync(id).GetAwaiter().GetResult();
-                    }
-                    else {
-                        user = context.Guild.GetUsersAsync().GetAwaiter().GetResult()
-                            .FirstOrDefault(u => u.Username == expr || u.Mention == expr);
-                    }
+                    if (parameter.ParsedExpression == null) parameter.Evaluate();
+                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
+                    user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
                 }
-                if (user == null)
-                    return null;
+                if (user == null) return null;
 
-                using (var uow = db.UnitOfWork) {
+                using (var uow = db.UnitOfWork)
                     return uow.LevelModel.GetXp(user.Id);
-                }
+            }
+
+            //levelxp(lvl): xp needed to reach the given level beginning at level 0
+            //levelxp(lvl1, lvl2): xp needed to get to lvl2 from lvl1
+            public static object LevelXp(ICommandContext context, DbService db, FunctionArgs args)
+            {
+                if (args.Parameters.Length < 1 || args.Parameters.Length > 2) return null;
+                var arg1 = args.Parameters[0];
+                if (arg1.ParsedExpression == null) arg1.Evaluate();
+                var expr = arg1.ParsedExpression.ToString();
+                if (!int.TryParse(expr, out var lvl1)) return null;
+                if (args.Parameters.Length < 2) return LevelModelRepository.GetXpForLevel(lvl1);
+
+                var arg2 = args.Parameters[1];
+                if (arg2.ParsedExpression == null) arg2.Evaluate();
+                expr = arg2.ParsedExpression.ToString();
+                if (!int.TryParse(expr, out var lvl2)) return null;
+                return LevelModelRepository.GetXpForLevel(lvl2) - LevelModelRepository.GetXpForLevel(lvl1);
             }
         }
 

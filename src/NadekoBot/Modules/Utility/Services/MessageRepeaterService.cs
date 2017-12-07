@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
-using NadekoBot.Modules.Utility.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Modules.Utility.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Utility.Services
+namespace Mitternacht.Modules.Utility.Services
 {
     public class MessageRepeaterService : INService
     {
@@ -16,7 +16,7 @@ namespace NadekoBot.Modules.Utility.Services
         public ConcurrentDictionary<ulong, ConcurrentQueue<RepeatRunner>> Repeaters { get; set; }
         public bool RepeaterReady { get; private set; }
 
-        public MessageRepeaterService(NadekoBot bot, DiscordSocketClient client, IEnumerable<GuildConfig> gcs)
+        public MessageRepeaterService(Mitternacht.MitternachtBot bot, DiscordSocketClient client, IEnumerable<GuildConfig> gcs)
         {
             var _ = Task.Run(async () =>
             {

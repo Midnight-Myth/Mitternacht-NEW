@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Discord.Commands;
-using NadekoBot.Services.Impl;
+using Mitternacht.Resources;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     public class Aliases : AliasAttribute
     {
-        public Aliases([CallerMemberName] string memberName = "") : base(Localization.LoadCommandString(memberName.ToLowerInvariant() + "_cmd").Split(' ').Skip(1).ToArray())
+        public Aliases([CallerMemberName] string memberName = "") : base(CommandStrings.GetCommandStringModel(memberName.ToLowerInvariant()).Aliases)
         {
         }
     }

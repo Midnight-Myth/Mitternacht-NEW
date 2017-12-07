@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Help.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Help.Services;
 
-namespace NadekoBot.Modules.Help
+namespace Mitternacht.Modules.Help
 {
     public partial class Help
     {
@@ -20,7 +20,7 @@ namespace NadekoBot.Modules.Help
             [NadekoCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Support(string text) {
-                var supportChannelId = _service.GetSupportChannelId(Context.Guild.Id);
+                var supportChannelId = Service.GetSupportChannelId(Context.Guild.Id);
                 if (!supportChannelId.HasValue) {
                     await Context.Channel.SendErrorAsync("Für diesen Server ist kein Supportkanal festgelegt!");
                     return;
@@ -37,7 +37,7 @@ namespace NadekoBot.Modules.Help
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task SetSupportChannel([Remainder]ITextChannel channel = null) {
-                await _service.SetSupportChannel(Context.Guild.Id, channel?.Id);
+                await Service.SetSupportChannel(Context.Guild.Id, channel?.Id);
                 await Context.Channel.SendConfirmAsync($"Supportkanal wurde {(channel == null ? "deaktiviert" : $"auf Kanal {channel.Mention} gesetzt")}.");
             }
         }

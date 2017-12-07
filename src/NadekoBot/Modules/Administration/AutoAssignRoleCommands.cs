@@ -1,13 +1,13 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -37,12 +37,12 @@ namespace NadekoBot.Modules.Administration
                     if (role == null)
                     {
                         conf.AutoAssignRoleId = 0;
-                        _service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
+                        Service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
                     }
                     else
                     {
                         conf.AutoAssignRoleId = role.Id;
-                        _service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
+                        Service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
                     }
 
                     await uow.CompleteAsync().ConfigureAwait(false);

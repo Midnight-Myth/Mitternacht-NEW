@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NadekoBot.Services.Database;
+using Mitternacht.Services.Database;
 
-namespace NadekoBot.Migrations
+namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
     [Migration("20170408162851_game-voice-channel")]

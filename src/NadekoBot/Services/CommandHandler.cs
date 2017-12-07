@@ -1,23 +1,22 @@
-﻿using Discord.WebSocket;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
-using NLog;
 using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Collections.Immutable;
-using NadekoBot.Services.Database.Models;
-using System.IO;
 using Discord.Net;
-using NadekoBot.Common;
-using NadekoBot.Common.Collections;
-using NadekoBot.Common.ModuleBehaviors;
+using Discord.WebSocket;
+using Mitternacht.Common.Collections;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
+using NLog;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public class GuildUserComparer : IEqualityComparer<IGuildUser>
     {
@@ -33,13 +32,10 @@ namespace NadekoBot.Services
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commandService;
         private readonly Logger _log;
-        private readonly IBotCredentials _creds;
-        private readonly NadekoBot _bot;
+        private readonly MitternachtBot _bot;
         private INServiceProvider _services;
         public string DefaultPrefix { get; private set; }
-        private ConcurrentDictionary<ulong, string> _prefixes { get; } = new ConcurrentDictionary<ulong, string>();
-
-        private ImmutableArray<AsyncLazy<IDMChannel>> ownerChannels { get; set; } = new ImmutableArray<AsyncLazy<IDMChannel>>();
+        private ConcurrentDictionary<ulong, string> Prefixes { get; }
 
         public event Func<IUserMessage, CommandInfo, Task> CommandExecuted = delegate { return Task.CompletedTask; };
         public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored = delegate { return Task.CompletedTask; };
@@ -51,11 +47,10 @@ namespace NadekoBot.Services
         public ConcurrentHashSet<ulong> UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
         private readonly Timer _clearUsersOnShortCooldown;
 
-        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, CommandService commandService, IBotCredentials credentials, NadekoBot bot)
+        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot)
         {
             _client = client;
             _commandService = commandService;
-            _creds = credentials;
             _bot = bot;
             _db = db;
 
@@ -67,7 +62,7 @@ namespace NadekoBot.Services
             }, null, GlobalCommandsCooldown, GlobalCommandsCooldown);
 
             DefaultPrefix = bc.BotConfig.DefaultPrefix;
-            _prefixes = gcs
+            Prefixes = gcs
                 .Where(x => x.Prefix != null)
                 .ToDictionary(x => x.GuildId, x => x.Prefix)
                 .ToConcurrent();
@@ -77,7 +72,7 @@ namespace NadekoBot.Services
 
         public string GetPrefix(ulong? id)
         {
-            if (id == null || !_prefixes.TryGetValue(id.Value, out var prefix))
+            if (id == null || !Prefixes.TryGetValue(id.Value, out var prefix))
                 return DefaultPrefix;
 
             return prefix;
@@ -113,7 +108,7 @@ namespace NadekoBot.Services
                 gc.Prefix = prefix;
                 uow.Complete();
             }
-            _prefixes.AddOrUpdate(guild.Id, prefix, (key, old) => prefix);
+            Prefixes.AddOrUpdate(guild.Id, prefix, (key, old) => prefix);
 
             return prefix;
         }
@@ -129,8 +124,7 @@ namespace NadekoBot.Services
             if (guildId != null)
             {
                 var guild = _client.GetGuild(guildId.Value);
-                var channel = guild?.GetChannel(channelId) as SocketTextChannel;
-                if (channel == null)
+                if (!(guild?.GetChannel(channelId) is SocketTextChannel channel))
                 {
                     _log.Warn("Channel for external execution not found.");
                     return;
@@ -153,12 +147,12 @@ namespace NadekoBot.Services
             return Task.CompletedTask;
         }
 
-        private const float _oneThousandth = 1.0f / 1000;
+        private const float OneThousandth = 1.0f / 1000;
         private readonly DbService _db;
 
-        private Task LogSuccessfulExecution(IUserMessage usrMsg, ITextChannel channel, params int[] execPoints)
+        private Task LogSuccessfulExecution(IMessage usrMsg, IGuildChannel channel, params int[] execPoints)
         {
-            _log.Info("Command Executed after " + string.Join("/", execPoints.Select(x => x * _oneThousandth)) + "s\n\t" +
+            _log.Info("Command Executed after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) + "s\n\t" +
                         "User: {0}\n\t" +
                         "Server: {1}\n\t" +
                         "Channel: {2}\n\t" +
@@ -171,9 +165,9 @@ namespace NadekoBot.Services
             return Task.CompletedTask;
         }
 
-        private void LogErroredExecution(string errorMessage, IUserMessage usrMsg, ITextChannel channel, params int[] execPoints)
+        private void LogErroredExecution(string errorMessage, IMessage usrMsg, IGuildChannel channel, params int[] execPoints)
         {
-            _log.Warn("Command Errored after " + string.Join("/", execPoints.Select(x => x * _oneThousandth)) + "s\n\t" +
+            _log.Warn("Command Errored after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) + "s\n\t" +
                         "User: {0}\n\t" +
                         "Server: {1}\n\t" +
                         "Channel: {2}\n\t" +
@@ -228,38 +222,29 @@ namespace NadekoBot.Services
             //highest priority. :thinking:
             foreach (var svc in _services)
             {
-                if (svc is IEarlyBlocker blocker &&
-                    await blocker.TryBlockEarly(guild, usrMsg).ConfigureAwait(false))
-                {
-                    _log.Info("Blocked User: [{0}] Message: [{1}] Service: [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
-                    return;
-                }
+                if (!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, usrMsg).ConfigureAwait(false)) continue;
+                _log.Info("Blocked User: [{0}] Message: [{1}] Service: [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
+                return;
             }
 
             var exec2 = Environment.TickCount - execTime;
 
             foreach (var svc in _services)
             {
-                if (svc is IEarlyBlockingExecutor exec &&
-                    await exec.TryExecuteEarly(_client, guild, usrMsg).ConfigureAwait(false))
-                {
-                    _log.Info("User [{0}] executed [{1}] in [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
-                    return;
-                }
+                if (!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, usrMsg).ConfigureAwait(false)) continue;
+                _log.Info("User [{0}] executed [{1}] in [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
+                return;
             }
 
             var exec3 = Environment.TickCount - execTime;
 
-            string messageContent = usrMsg.Content;
+            var messageContent = usrMsg.Content;
             foreach (var svc in _services)
             {
                 string newContent;
-                if (svc is IInputTransformer exec &&
-                    (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent).ConfigureAwait(false)) != messageContent.ToLowerInvariant())
-                {
-                    messageContent = newContent;
-                    break;
-                }
+                if (!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
+                messageContent = newContent;
+                break;
             }
             var prefix = GetPrefix(guild?.Id);
             var isPrefixCommand = messageContent.StartsWith(".prefix");
@@ -405,7 +390,7 @@ namespace NadekoBot.Services
 
             if (execResult.Exception == null || (execResult.Exception is HttpException he && he.DiscordCode == 50013))
                 return (true, null, cmd);
-            lock (errorLogLock)
+            lock (_errorLogLock)
             {
                 var now = DateTime.Now;
                 File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt",
@@ -418,6 +403,6 @@ namespace NadekoBot.Services
             return (true, null, cmd);
         }
 
-        private readonly object errorLogLock = new object();
+        private readonly object _errorLogLock = new object();
     }
 }

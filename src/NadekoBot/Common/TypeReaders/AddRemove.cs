@@ -1,4 +1,4 @@
-﻿namespace NadekoBot.Common.TypeReaders
+﻿namespace Mitternacht.Common.TypeReaders
 {
     public enum AddRemove
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Common.TypeReaders.Models;
+using Mitternacht.Common.TypeReaders.Models;
 
-namespace NadekoBot.Common.TypeReaders
+namespace Mitternacht.Common.TypeReaders
 {
     /// <summary>
     /// Used instead of bool for more flexible keywords for true/false only in the permission module

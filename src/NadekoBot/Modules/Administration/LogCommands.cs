@@ -1,18 +1,17 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.TypeReaders.Models;
-using NadekoBot.Modules.Administration.Services;
-using static NadekoBot.Modules.Administration.Services.LogCommandService;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -44,7 +43,7 @@ namespace NadekoBot.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     logSetting = uow.GuildConfigs.LogSettingsFor(channel.Guild.Id).LogSetting;
-                    _service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
+                    Service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
                     logSetting.LogOtherId =
                     logSetting.MessageUpdatedId =
                     logSetting.MessageDeletedId =
@@ -80,7 +79,7 @@ namespace NadekoBot.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     var config = uow.GuildConfigs.LogSettingsFor(channel.Guild.Id);
-                    LogSetting logSetting = _service.GuildLogSettings.GetOrAdd(channel.Guild.Id, (id) => config.LogSetting);
+                    LogSetting logSetting = Service.GuildLogSettings.GetOrAdd(channel.Guild.Id, (id) => config.LogSetting);
                     removed = logSetting.IgnoredChannels.RemoveWhere(ilc => ilc.ChannelId == channel.Id);
                     config.LogSetting.IgnoredChannels.RemoveWhere(ilc => ilc.ChannelId == channel.Id);
                     if (removed == 0)
@@ -105,7 +104,7 @@ namespace NadekoBot.Modules.Administration
             public async Task LogEvents()
             {
                 await Context.Channel.SendConfirmAsync(Format.Bold(GetText("log_events")) + "\n" +
-                                                       $"```fix\n{string.Join(", ", Enum.GetNames(typeof(LogType)).Cast<string>())}```")
+                                                       $"```fix\n{string.Join(", ", Enum.GetNames(typeof(LogCommandService.LogType)).Cast<string>())}```")
                     .ConfigureAwait(false);
             }
 
@@ -113,59 +112,59 @@ namespace NadekoBot.Modules.Administration
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [OwnerOnly]
-            public async Task Log(LogType type)
+            public async Task Log(LogCommandService.LogType type)
             {
                 var channel = (ITextChannel)Context.Channel;
                 ulong? channelId = null;
                 using (var uow = _db.UnitOfWork)
                 {
                     var logSetting = uow.GuildConfigs.LogSettingsFor(channel.Guild.Id).LogSetting;
-                    _service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
+                    Service.GuildLogSettings.AddOrUpdate(channel.Guild.Id, (id) => logSetting, (id, old) => logSetting);
                     switch (type)
                     {
-                        case LogType.Other:
+                        case LogCommandService.LogType.Other:
                             channelId = logSetting.LogOtherId = (logSetting.LogOtherId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.MessageUpdated:
+                        case LogCommandService.LogType.MessageUpdated:
                             channelId = logSetting.MessageUpdatedId = (logSetting.MessageUpdatedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.MessageDeleted:
+                        case LogCommandService.LogType.MessageDeleted:
                             channelId = logSetting.MessageDeletedId = (logSetting.MessageDeletedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserJoined:
+                        case LogCommandService.LogType.UserJoined:
                             channelId = logSetting.UserJoinedId = (logSetting.UserJoinedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserLeft:
+                        case LogCommandService.LogType.UserLeft:
                             channelId = logSetting.UserLeftId = (logSetting.UserLeftId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserBanned:
+                        case LogCommandService.LogType.UserBanned:
                             channelId = logSetting.UserBannedId = (logSetting.UserBannedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserUnbanned:
+                        case LogCommandService.LogType.UserUnbanned:
                             channelId = logSetting.UserUnbannedId = (logSetting.UserUnbannedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserUpdated:
+                        case LogCommandService.LogType.UserUpdated:
                             channelId = logSetting.UserUpdatedId = (logSetting.UserUpdatedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserMuted:
+                        case LogCommandService.LogType.UserMuted:
                             channelId = logSetting.UserMutedId = (logSetting.UserMutedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.ChannelCreated:
+                        case LogCommandService.LogType.ChannelCreated:
                             channelId = logSetting.ChannelCreatedId = (logSetting.ChannelCreatedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.ChannelDestroyed:
+                        case LogCommandService.LogType.ChannelDestroyed:
                             channelId = logSetting.ChannelDestroyedId = (logSetting.ChannelDestroyedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.ChannelUpdated:
+                        case LogCommandService.LogType.ChannelUpdated:
                             channelId = logSetting.ChannelUpdatedId = (logSetting.ChannelUpdatedId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.UserPresence:
+                        case LogCommandService.LogType.UserPresence:
                             channelId = logSetting.LogUserPresenceId = (logSetting.LogUserPresenceId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.VoicePresence:
+                        case LogCommandService.LogType.VoicePresence:
                             channelId = logSetting.LogVoicePresenceId = (logSetting.LogVoicePresenceId == null ? channel.Id : default(ulong?));
                             break;
-                        case LogType.VoicePresenceTTS:
+                        case LogCommandService.LogType.VoicePresenceTTS:
                             channelId = logSetting.LogVoicePresenceTTSId = (logSetting.LogVoicePresenceTTSId == null ? channel.Id : default(ulong?));
                             break;
                     }

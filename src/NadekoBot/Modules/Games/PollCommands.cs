@@ -1,12 +1,12 @@
-﻿using Discord;
+﻿using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Games.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Services;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {
@@ -31,7 +31,7 @@ namespace NadekoBot.Modules.Games
             [RequireContext(ContextType.Guild)]
             public async Task PollStats()
             {
-                if (!_service.ActivePolls.TryGetValue(Context.Guild.Id, out var poll))
+                if (!Service.ActivePolls.TryGetValue(Context.Guild.Id, out var poll))
                     return;
 
                 await Context.Channel.EmbedAsync(poll.GetStats(GetText("current_poll_results")));
@@ -39,7 +39,7 @@ namespace NadekoBot.Modules.Games
 
             private async Task InternalStartPoll(string arg)
             {
-                if(await _service.StartPoll((ITextChannel)Context.Channel, Context.Message, arg) == false)
+                if(await Service.StartPoll((ITextChannel)Context.Channel, Context.Message, arg) == false)
                     await ReplyErrorLocalized("poll_already_running").ConfigureAwait(false);
             }
 
@@ -50,7 +50,7 @@ namespace NadekoBot.Modules.Games
             {
                 var channel = (ITextChannel)Context.Channel;
 
-                _service.ActivePolls.TryRemove(channel.Guild.Id, out var poll);
+                Service.ActivePolls.TryRemove(channel.Guild.Id, out var poll);
                 await poll.StopPoll().ConfigureAwait(false);
             }
         }

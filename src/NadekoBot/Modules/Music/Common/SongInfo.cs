@@ -1,12 +1,12 @@
-﻿using Discord;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Discord;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Music.Common
+namespace Mitternacht.Modules.Music.Common
 {
     public class SongInfo
     {

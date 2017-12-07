@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class GuildConfig : DbEntity
     {
@@ -90,6 +90,10 @@ namespace NadekoBot.Services.Database.Models
 
         //support channel
         public ulong? SupportChannelId { get; set; } = null;
+        public ulong? VerifiedRoleId { get; set; } = null;
+        public string VerifyString { get; set; } = null;
+        public string VerificationTutorialText { get; set; } = null;
+        public string AdditionalVerificationUsers { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity
@@ -103,9 +107,7 @@ namespace NadekoBot.Services.Database.Models
 
         public override bool Equals(object obj)
         {
-            return obj is NsfwBlacklitedTag x
-                ? x.Tag == Tag
-                : false;
+            return obj is NsfwBlacklitedTag x && x.Tag == Tag;
         }
     }
 
@@ -199,8 +201,7 @@ namespace NadekoBot.Services.Database.Models
 
         public override bool Equals(object obj)
         {
-            var ut = obj as UnmuteTimer;
-            if (ut == null)
+            if (!(obj is UnmuteTimer ut))
                 return false;
             return ut.UserId == UserId;
         }
@@ -227,11 +228,10 @@ namespace NadekoBot.Services.Database.Models
 
         public override bool Equals(object obj)
         {
-            var mui = obj as MutedUserId;
-            if (mui == null)
+            if (!(obj is MutedUserId mui))
                 return false;
 
-            return mui.UserId == this.UserId;
+            return mui.UserId == UserId;
         }
     }
 
@@ -241,14 +241,13 @@ namespace NadekoBot.Services.Database.Models
 
         public override bool Equals(object obj)
         {
-            var gc = obj as GCChannelId;
-            if (gc == null)
+            if (!(obj is GCChannelId gc))
                 return false;
 
-            return gc.ChannelId == this.ChannelId;
+            return gc.ChannelId == ChannelId;
         }
 
         public override int GetHashCode() =>
-            this.ChannelId.GetHashCode();
+            ChannelId.GetHashCode();
     }
 }

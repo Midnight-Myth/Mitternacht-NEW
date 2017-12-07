@@ -1,6 +1,6 @@
-﻿using NadekoBot.Services.Database.Models;
+﻿using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions.Common
+namespace Mitternacht.Modules.Permissions.Common
 {
     public class OldPermissionCache
     {

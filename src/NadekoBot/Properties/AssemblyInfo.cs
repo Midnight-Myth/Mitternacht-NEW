@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NadekoBot")]
+[assembly: AssemblyProduct("Mitternacht")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyInformationalVersion("1.0")]
 

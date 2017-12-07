@@ -1,16 +1,16 @@
-﻿using Discord;
-using Discord.Commands;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Services.Impl;
+using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Impl;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {
@@ -45,7 +45,7 @@ namespace NadekoBot.Modules.Games
                         });
                         return;
                     }
-                    game = new TicTacToe(base._strings, (DiscordSocketClient)this._client, channel, (IGuildUser)Context.User);
+                    game = new TicTacToe(base.Strings, (DiscordSocketClient)this._client, channel, (IGuildUser)Context.User);
                     _games.Add(channel.Id, game);
                     await ReplyConfirmLocalized("ttt_created").ConfigureAwait(false);
 

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
-using NadekoBot.Modules.Music.Common.SongResolver.Strategies;
+using Mitternacht.Modules.Music.Common.SongResolver.Strategies;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 
-namespace NadekoBot.Modules.Music.Common.SongResolver
+namespace Mitternacht.Modules.Music.Common.SongResolver
 {
     public class SongResolverFactory : ISongResolverFactory
     {

@@ -1,13 +1,13 @@
-﻿using NadekoBot.Common;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
 
-namespace NadekoBot.Modules.Games.Common.Acrophobia
+namespace Mitternacht.Modules.Games.Common.Acrophobia
 {
     /// <summary>
     /// Platform-agnostic acrophobia game

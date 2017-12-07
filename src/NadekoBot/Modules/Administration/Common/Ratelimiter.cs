@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord.WebSocket;
-using NadekoBot.Modules.Administration.Services;
+using Mitternacht.Modules.Administration.Services;
 
-namespace NadekoBot.Modules.Administration.Common
+namespace Mitternacht.Modules.Administration.Common
 {
     public class Ratelimiter
     {

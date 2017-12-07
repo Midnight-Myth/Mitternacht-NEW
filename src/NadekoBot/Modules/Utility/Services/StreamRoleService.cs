@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NLog;
-using NadekoBot.Modules.Utility.Extensions;
-using NadekoBot.Common.TypeReaders;
-using NadekoBot.Modules.Utility.Common;
-using NadekoBot.Modules.Utility.Common.Exceptions;
 using Discord.Net;
+using Discord.WebSocket;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Utility.Common;
+using Mitternacht.Modules.Utility.Common.Exceptions;
+using Mitternacht.Modules.Utility.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using NLog;
 
-namespace NadekoBot.Modules.Utility.Services
+namespace Mitternacht.Modules.Utility.Services
 {
     public class StreamRoleService : INService
     {

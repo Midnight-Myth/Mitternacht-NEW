@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.Utility.Common.Exceptions
+namespace Mitternacht.Modules.Utility.Common.Exceptions
 {
     public class StreamRolePermissionException : Exception
     {

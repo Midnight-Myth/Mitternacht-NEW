@@ -1,10 +1,10 @@
 ﻿using System;
 using Discord.Commands;
 
-namespace NadekoBot.Common.Attributes
+namespace Mitternacht.Common.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    sealed class NadekoModuleAttribute : GroupAttribute
+    internal sealed class NadekoModuleAttribute : GroupAttribute
     {
         public NadekoModuleAttribute(string moduleName) : base(moduleName)
         {

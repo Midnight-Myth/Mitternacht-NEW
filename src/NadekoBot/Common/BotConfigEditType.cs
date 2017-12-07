@@ -1,4 +1,4 @@
-﻿namespace NadekoBot.Common
+﻿namespace Mitternacht.Common
 {
     public enum BotConfigEditType
     {

@@ -1,4 +1,4 @@
-﻿namespace NadekoBot.Common.ModuleBehaviors
+﻿namespace Mitternacht.Common.ModuleBehaviors
 {
     public interface IEarlyExecutor
     {

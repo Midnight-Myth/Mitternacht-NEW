@@ -1,16 +1,16 @@
-﻿using Discord.Commands;
-using Discord;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Services;
-using System.Collections.Generic;
-using NadekoBot.Services.Database.Models;
+using Discord;
+using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Searches.Services;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {
@@ -119,7 +119,7 @@ namespace NadekoBot.Modules.Searches
                     return;
                 try
                 {
-                    var streamStatus = (await _service.GetStreamStatus(new FollowedStream
+                    var streamStatus = (await Service.GetStreamStatus(new FollowedStream
                     {
                         Username = stream,
                         Type = platform,
@@ -157,7 +157,7 @@ namespace NadekoBot.Modules.Searches
                 StreamStatus status;
                 try
                 {
-                    status = await _service.GetStreamStatus(fs).ConfigureAwait(false);
+                    status = await Service.GetStreamStatus(fs).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -172,7 +172,7 @@ namespace NadekoBot.Modules.Searches
                                     .Add(fs);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await channel.EmbedAsync(_service.GetEmbed(fs, status, Context.Guild.Id), GetText("stream_tracked")).ConfigureAwait(false);
+                await channel.EmbedAsync(Service.GetEmbed(fs, status, Context.Guild.Id), GetText("stream_tracked")).ConfigureAwait(false);
             }
         }
     }

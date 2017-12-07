@@ -1,12 +1,12 @@
-﻿using NadekoBot.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mitternacht.Common;
 
-namespace NadekoBot.Modules.Games.Common.Nunchi
+namespace Mitternacht.Modules.Games.Common.Nunchi
 {
     public class Nunchi : IDisposable
     {

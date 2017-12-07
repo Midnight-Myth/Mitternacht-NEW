@@ -1,21 +1,21 @@
-﻿using Discord;
-using Discord.Commands;
-using Microsoft.EntityFrameworkCore;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.TypeReaders;
-using NadekoBot.Modules.Utility.Common;
-using NadekoBot.Modules.Utility.Services;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.TypeReaders;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Utility.Common;
+using Mitternacht.Modules.Utility.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
@@ -36,10 +36,10 @@ namespace NadekoBot.Modules.Utility
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RepeatInvoke(int index)
             {
-                if (!_service.RepeaterReady)
+                if (!Service.RepeaterReady)
                     return;
                 index -= 1;
-                if (!_service.Repeaters.TryGetValue(Context.Guild.Id, out var rep))
+                if (!Service.Repeaters.TryGetValue(Context.Guild.Id, out var rep))
                 {
                     await ReplyErrorLocalized("repeat_invoke_none").ConfigureAwait(false);
                     return;
@@ -64,13 +64,13 @@ namespace NadekoBot.Modules.Utility
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RepeatRemove(int index)
             {
-                if (!_service.RepeaterReady)
+                if (!Service.RepeaterReady)
                     return;
                 if (index < 1)
                     return;
                 index -= 1;
 
-                if (!_service.Repeaters.TryGetValue(Context.Guild.Id, out var rep))
+                if (!Service.Repeaters.TryGetValue(Context.Guild.Id, out var rep))
                     return;
 
                 var repeaterList = rep.ToList();
@@ -93,7 +93,7 @@ namespace NadekoBot.Modules.Utility
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
-                if (_service.Repeaters.TryUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(repeaterList), rep))
+                if (Service.Repeaters.TryUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(repeaterList), rep))
                     await Context.Channel.SendConfirmAsync(GetText("message_repeater"),
                         GetText("repeater_stopped", index + 1) + $"\n\n{repeater}").ConfigureAwait(false);
             }
@@ -104,7 +104,7 @@ namespace NadekoBot.Modules.Utility
             [Priority(0)]
             public async Task Repeat(int minutes, [Remainder] string message)
             {
-                if (!_service.RepeaterReady)
+                if (!Service.RepeaterReady)
                     return;
                 if (minutes < 1 || minutes > 10080)
                     return;
@@ -133,7 +133,7 @@ namespace NadekoBot.Modules.Utility
 
                 var rep = new RepeatRunner(_client, (SocketGuild)Context.Guild, toAdd);
 
-                _service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] { rep }), (key, old) =>
+                Service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] { rep }), (key, old) =>
                 {
                     old.Enqueue(rep);
                     return old;
@@ -153,7 +153,7 @@ namespace NadekoBot.Modules.Utility
             [Priority(1)]
             public async Task Repeat(GuildDateTime gt, [Remainder] string message)
             {
-                if (!_service.RepeaterReady)
+                if (!Service.RepeaterReady)
                     return;
 
                 if (string.IsNullOrWhiteSpace(message))
@@ -181,7 +181,7 @@ namespace NadekoBot.Modules.Utility
 
                 var rep = new RepeatRunner(_client, (SocketGuild)Context.Guild, toAdd);
 
-                _service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] { rep }), (key, old) =>
+                Service.Repeaters.AddOrUpdate(Context.Guild.Id, new ConcurrentQueue<RepeatRunner>(new[] { rep }), (key, old) =>
                 {
                     old.Enqueue(rep);
                     return old;
@@ -204,9 +204,9 @@ namespace NadekoBot.Modules.Utility
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RepeatList()
             {
-                if (!_service.RepeaterReady)
+                if (!Service.RepeaterReady)
                     return;
-                if (!_service.Repeaters.TryGetValue(Context.Guild.Id, out var repRunners))
+                if (!Service.Repeaters.TryGetValue(Context.Guild.Id, out var repRunners))
                 {
                     await ReplyConfirmLocalized("repeaters_none").ConfigureAwait(false);
                     return;

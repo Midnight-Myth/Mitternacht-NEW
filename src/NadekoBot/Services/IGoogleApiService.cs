@@ -1,9 +1,9 @@
-﻿using Google.Apis.Customsearch.v1.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Google.Apis.Customsearch.v1.Data;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IGoogleApiService : INService
     {
@@ -28,8 +28,8 @@ namespace NadekoBot.Services
 
         public ImageResult(Result.ImageData image, string link)
         {
-            this.Image = image;
-            this.Link = link;
+            Image = image;
+            Link = link;
         }
     }
 }

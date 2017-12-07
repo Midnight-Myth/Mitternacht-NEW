@@ -1,17 +1,17 @@
-﻿using Discord.Commands;
-using NadekoBot.Extensions;
-using System.Linq;
-using Discord;
-using NadekoBot.Services;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using System.Collections.Generic;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Help.Services;
-using NadekoBot.Modules.Permissions.Services;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Help.Services;
+using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Help
+namespace Mitternacht.Modules.Help
 {
     public partial class Help : NadekoTopLevelModule<HelpService>
     {
@@ -23,7 +23,7 @@ namespace NadekoBot.Modules.Help
         private readonly GlobalPermissionService _perms;
 
         public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
-        public string DMHelpString => _config.BotConfig.DMHelpString;
+        public string DmHelpString => _config.BotConfig.DMHelpString;
 
         public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds)
         {
@@ -53,8 +53,7 @@ namespace NadekoBot.Modules.Help
             var channel = Context.Channel;
 
             module = module?.Trim().ToUpperInvariant();
-            if (string.IsNullOrWhiteSpace(module))
-                return;
+            if (string.IsNullOrWhiteSpace(module)) return;
             var cmds = _cmds.Commands
                 .Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
                 .Where(c => !_perms.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
@@ -73,6 +72,14 @@ namespace NadekoBot.Modules.Help
 
             for (var i = 0; i < groups.Length; i++)
             {
+                //var embed = new EmbedBuilder()
+                //    .WithOkColor()
+                //    .WithTitle($"📃 {GetText("list_of_commands")}")
+                //    .WithFooter($"{i+1}/{groups.Length}");
+                //foreach (var cmdInfo in groups.ElementAt(i)) {
+                //    embed.AddInlineField(Prefix + cmdInfo.Aliases.First(), cmdInfo.Aliases.Skip(1).Aggregate("", (s, a) => $"{s}{Prefix}{a}\n", s => s.Length > 0 ? s.Substring(0, s.Length - 1) : "-"));
+                //}
+                //await channel.SendMessageAsync("", embed: embed.Build());
                 await channel.SendTableAsync(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "", groups.ElementAt(i), el => $"{Prefix + el.Aliases.First(),-15} {"[" + el.Aliases.Skip(1).FirstOrDefault() + "]",-8}").ConfigureAwait(false);
             }
 
@@ -104,7 +111,7 @@ namespace NadekoBot.Modules.Help
             //    return;
             //}
 
-            var embed = _service.GetCommandHelp(com, Context.Guild);
+            var embed = Service.GetCommandHelp(com, Context.Guild);
             await channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
@@ -141,7 +148,7 @@ namespace NadekoBot.Modules.Help
                     lastModule = module.Name;
                 }
                 helpstr.AppendLine($"{string.Join(" ", com.Aliases.Select(a => "`" + Prefix + a + "`"))} |" +
-                                   $" {string.Format(com.Summary, Prefix)} {_service.GetCommandRequirements(com, Context.Guild)} |" +
+                                   $" {string.Format(com.Summary, Prefix)} {Service.GetCommandRequirements(com, Context.Guild)} |" +
                                    $" {string.Format(com.Remarks, Prefix)}");
             }
             File.WriteAllText("../../docs/Commands List.md", helpstr.ToString());

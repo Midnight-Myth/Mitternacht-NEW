@@ -1,17 +1,17 @@
-﻿using Discord;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Replacements;
+using Discord;
+using Discord.WebSocket;
+using Mitternacht.Common;
+using Mitternacht.Common.Replacements;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
+using NLog;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public class GreetSettingsService : INService
     {
@@ -180,8 +180,7 @@ namespace NadekoBot.Services
 
         public GreetSettings GetOrAddSettingsForGuild(ulong guildId)
         {
-            GreetSettings settings;
-            GuildConfigsCache.TryGetValue(guildId, out settings);
+            GuildConfigsCache.TryGetValue(guildId, out var settings);
 
             if (settings != null)
                 return settings;

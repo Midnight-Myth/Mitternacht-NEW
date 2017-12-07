@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace NadekoBot.Common.ShardCom
+namespace Mitternacht.Common.ShardCom
 {
     public class ShardComClient
     {

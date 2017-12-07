@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Common.ModuleBehaviors;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Permissions.Common;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Impl;
+using Mitternacht.Common.ModuleBehaviors;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Permissions.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace NadekoBot.Modules.Permissions.Services
+namespace Mitternacht.Modules.Permissions.Services
 {
     public class PermissionService : ILateBlocker, INService
     {
@@ -23,17 +22,13 @@ namespace NadekoBot.Modules.Permissions.Services
         private readonly NadekoStrings _strings;
 
         //guildid, root permission
-        public ConcurrentDictionary<ulong, PermissionCache> Cache { get; } =
-            new ConcurrentDictionary<ulong, PermissionCache>();
+        public ConcurrentDictionary<ulong, PermissionCache> Cache { get; } = new ConcurrentDictionary<ulong, PermissionCache>();
 
         public PermissionService(DiscordSocketClient client, DbService db, CommandHandler cmd, NadekoStrings strings)
         {
             _db = db;
             _cmd = cmd;
             _strings = strings;
-
-            var sw = Stopwatch.StartNew();
-            //if (client.ShardId == 0) TryMigratePermissions();
 
             using (var uow = _db.UnitOfWork)
             {
@@ -93,7 +88,7 @@ namespace NadekoBot.Modules.Permissions.Services
                             var gc = uow.GuildConfigs.GcWithPermissionsv2For(oc.Key);
 
                             var oldPerms = oc.Value.RootPermission.AsEnumerable().Reverse().ToList();
-                            uow._context.Set<Permission>().RemoveRange(oldPerms);
+                            uow.Context.Set<Permission>().RemoveRange(oldPerms);
                             gc.RootPermission = null;
                             if (oldPerms.Count <= 2) continue;
                             var newPerms = oldPerms.Take(oldPerms.Count - 1)
@@ -124,7 +119,7 @@ namespace NadekoBot.Modules.Permissions.Services
                 }
                 if (bc.PermissionVersion > 2) return;
                 var oldPrefixes = new[] { ".", ";", "!!", "!m", "!", "+", "-", "$", ">" };
-                uow._context.Database.ExecuteSqlCommand(
+                uow.Context.Database.ExecuteSqlCommand(
                     $@"UPDATE {nameof(Permissionv2)}
                     SET secondaryTargetName=trim(substr(secondaryTargetName, 3))
                     WHERE secondaryTargetName LIKE '!!%' OR secondaryTargetName LIKE '!m%';
@@ -181,7 +176,7 @@ namespace NadekoBot.Modules.Permissions.Services
             var resetCommand = commandName == "resetperms";
 
             var pc = GetCache(guild.Id);
-            if (!resetCommand && !pc.Permissions.CheckPermissions(msg, commandName, moduleName, out int index))
+            if (!resetCommand && !pc.Permissions.CheckPermissions(msg, commandName, moduleName, out var index))
             {
                 if (!pc.Verbose) return true;
                 try { await channel.SendErrorAsync(_strings.GetText("trigger", guild.Id, "Permissions".ToLowerInvariant(), index + 1, Format.Bold(pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), (SocketGuild)guild)))).ConfigureAwait(false); } catch { }

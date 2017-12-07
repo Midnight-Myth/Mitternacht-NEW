@@ -1,10 +1,10 @@
 ﻿using System;
 using Discord;
-using NadekoBot.Extensions;
+using Mitternacht.Extensions;
 using Newtonsoft.Json;
 using NLog;
 
-namespace NadekoBot.Common
+namespace Mitternacht.Common
 {
     public class CREmbed
     {

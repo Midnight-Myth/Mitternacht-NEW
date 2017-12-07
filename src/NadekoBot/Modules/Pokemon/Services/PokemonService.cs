@@ -1,12 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using NadekoBot.Modules.Pokemon.Common;
-using NadekoBot.Services;
+using Mitternacht.Modules.Pokemon.Common;
+using Mitternacht.Services;
 using Newtonsoft.Json;
 using NLog;
 
-namespace NadekoBot.Modules.Pokemon.Services
+namespace Mitternacht.Modules.Pokemon.Services
 {
     public class PokemonService : INService
     {

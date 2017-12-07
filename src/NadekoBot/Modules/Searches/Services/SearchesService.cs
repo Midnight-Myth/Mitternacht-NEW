@@ -1,21 +1,21 @@
-﻿using Discord;
-using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using Newtonsoft.Json;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using NadekoBot.Modules.Searches.Common;
-using NadekoBot.Services.Database.Models;
 using System.Linq;
+using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using NadekoBot.Modules.NSFW.Exceptions;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.NSFW.Exceptions;
+using Mitternacht.Modules.Searches.Common;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Newtonsoft.Json;
+using NLog;
 
-namespace NadekoBot.Modules.Searches.Services
+namespace Mitternacht.Modules.Searches.Services
 {
     public class SearchesService : INService
     {

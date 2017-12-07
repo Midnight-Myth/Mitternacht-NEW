@@ -3,13 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using ImageSharp;
-using NadekoBot.Common;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
 using NLog;
 using SixLabors.Primitives;
 
-namespace NadekoBot.Modules.Games.Common
+namespace Mitternacht.Modules.Games.Common
 {
     public class GirlRating
     {

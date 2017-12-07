@@ -1,22 +1,22 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Searches.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Searches.Common;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Common;
+using Mitternacht.Modules.Searches.Services;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {
         [Group]
         public class PokemonSearchCommands : NadekoSubmodule<SearchesService>
         {
-            public Dictionary<string, SearchPokemon> Pokemons => _service.Pokemons;
-            public Dictionary<string, SearchPokemonAbility> PokemonAbilities => _service.PokemonAbilities;
+            public Dictionary<string, SearchPokemon> Pokemons => Service.Pokemons;
+            public Dictionary<string, SearchPokemonAbility> PokemonAbilities => Service.PokemonAbilities;
 
             [NadekoCommand, Usage, Description, Aliases]
             public async Task Pokemon([Remainder] string pokemon = null)
@@ -58,7 +58,7 @@ namespace NadekoBot.Modules.Searches
                                 ? kvp.Value.ShortDesc
                                 : kvp.Value.Desc)
                             .AddField(efb => efb.WithName(GetText("rating"))
-                                                .WithValue(kvp.Value.Rating.ToString(_cultureInfo)).WithIsInline(true))
+                                                .WithValue(kvp.Value.Rating.ToString(CultureInfo)).WithIsInline(true))
                             ).ConfigureAwait(false);
                         return;
                     }

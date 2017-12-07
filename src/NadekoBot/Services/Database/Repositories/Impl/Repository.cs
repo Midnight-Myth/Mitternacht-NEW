@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NadekoBot.Services.Database.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database.Repositories.Impl
+namespace Mitternacht.Services.Database.Repositories.Impl
 {
     public class Repository<T> : IRepository<T> where T : DbEntity
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NadekoBot.Common;
-using NadekoBot.Extensions;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
 
-namespace NadekoBot.Modules.Gambling.Common
+namespace Mitternacht.Modules.Gambling.Common
 {
     public class Cards
     {

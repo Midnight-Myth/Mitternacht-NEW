@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Database;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public class CurrencyService : INService
     {

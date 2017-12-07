@@ -1,67 +1,66 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NLog;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Services.Impl;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot.Modules
+namespace Mitternacht.Modules
 {
     public abstract class NadekoTopLevelModule : ModuleBase
     {
         protected readonly Logger _log;
-        protected CultureInfo _cultureInfo;
+        protected CultureInfo CultureInfo;
 
         public readonly string ModuleTypeName;
-        public readonly string LowerModuleTypeName;
+        public string LowerModuleTypeName => ModuleTypeName?.ToLowerInvariant();
 
-        public NadekoStrings _strings { get; set; }
-        public CommandHandler _cmdHandler { get; set; }
-        public ILocalization _localization { get; set; }
+        public NadekoStrings Strings { get; set; }
+        public CommandHandler CmdHandler { get; set; }
+        public ILocalization Localization { get; set; }
 
-        public string Prefix => _cmdHandler.GetPrefix(Context.Guild);
+        public string Prefix => CmdHandler.GetPrefix(Context.Guild);
 
         protected NadekoTopLevelModule(bool isTopLevelModule = true)
         {
             //if it's top level module
-            ModuleTypeName = isTopLevelModule ? this.GetType().Name : this.GetType().DeclaringType.Name;
-            LowerModuleTypeName = ModuleTypeName.ToLowerInvariant();
+            ModuleTypeName = isTopLevelModule ? GetType().Name : GetType().DeclaringType.Name;
             _log = LogManager.GetCurrentClassLogger();
         }
 
         protected override void BeforeExecute(CommandInfo cmd)
         {
-            _cultureInfo = _localization.GetCultureInfo(Context.Guild?.Id);
+            CultureInfo = Localization.GetCultureInfo(Context.Guild?.Id);
         }
 
         //public Task<IUserMessage> ReplyConfirmLocalized(string titleKey, string textKey, string url = null, string footer = null)
         //{
-        //    var title = NadekoBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
-        //    var text = NadekoBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
+        //    var title = MitternachtBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
+        //    var text = MitternachtBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
         //    return Context.Channel.SendConfirmAsync(title, text, url, footer);
         //}
 
         //public Task<IUserMessage> ReplyConfirmLocalized(string textKey)
         //{
-        //    var text = NadekoBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
+        //    var text = MitternachtBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
         //    return Context.Channel.SendConfirmAsync(Context.User.Mention + " " + textKey);
         //}
 
         //public Task<IUserMessage> ReplyErrorLocalized(string titleKey, string textKey, string url = null, string footer = null)
         //{
-        //    var title = NadekoBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
-        //    var text = NadekoBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
+        //    var title = MitternachtBot.ResponsesResourceManager.GetString(titleKey, cultureInfo);
+        //    var text = MitternachtBot.ResponsesResourceManager.GetString(textKey, cultureInfo);
         //    return Context.Channel.SendErrorAsync(title, text, url, footer);
         //}
 
         protected string GetText(string key) =>
-            _strings.GetText(key, _cultureInfo, LowerModuleTypeName);
+            Strings.GetText(key, CultureInfo, LowerModuleTypeName);
 
         protected string GetText(string key, params object[] replacements) =>
-            _strings.GetText(key, _cultureInfo, LowerModuleTypeName, replacements);
+            Strings.GetText(key, CultureInfo, LowerModuleTypeName, replacements);
 
         public Task<IUserMessage> ErrorLocalized(string textKey, params object[] replacements)
         {
@@ -113,7 +112,7 @@ namespace NadekoBot.Modules
                 var _ = Task.Run(() =>
                 {
                     if (!(arg is SocketUserMessage userMsg) ||
-                        !(userMsg.Channel is ITextChannel chan) ||
+                        !(userMsg.Channel is ITextChannel) ||
                         userMsg.Author.Id != userId ||
                         userMsg.Channel.Id != channelId)
                     {
@@ -133,9 +132,9 @@ namespace NadekoBot.Modules
     
     public abstract class NadekoTopLevelModule<TService> : NadekoTopLevelModule where TService : INService
     {
-        public TService _service { get; set; }
+        public TService Service { get; set; }
 
-        public NadekoTopLevelModule(bool isTopLevel = true) : base(isTopLevel)
+        protected NadekoTopLevelModule(bool isTopLevel = true) : base(isTopLevel)
         {
         }
     }

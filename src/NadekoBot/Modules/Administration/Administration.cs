@@ -1,16 +1,16 @@
-using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Services;
-using NadekoBot.Modules.Administration.Services;
-using NadekoBot.Services.Database.Models;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration : NadekoTopLevelModule<AdministrationService>
     {
@@ -38,12 +38,12 @@ namespace NadekoBot.Modules.Administration
             }
             if (enabled)
             {
-                _service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
+                Service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
                 await ReplyConfirmLocalized("delmsg_on").ConfigureAwait(false);
             }
             else
             {
-                _service.DeleteMessagesOnCommand.TryRemove(Context.Guild.Id);
+                Service.DeleteMessagesOnCommand.TryRemove(Context.Guild.Id);
                 await ReplyConfirmLocalized("delmsg_off").ConfigureAwait(false);
             }
         }

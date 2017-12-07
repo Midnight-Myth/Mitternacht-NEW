@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NadekoBot.Modules.Pokemon.Common
+namespace Mitternacht.Modules.Pokemon.Common
 {
     public class PokemonType
     {

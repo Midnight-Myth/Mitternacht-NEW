@@ -1,7 +1,7 @@
-﻿using NadekoBot.Extensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Mitternacht.Extensions;
 
-namespace NadekoBot.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class WaifuInfo : DbEntity
     {

@@ -1,12 +1,12 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
 
-namespace NadekoBot.Modules.Administration
+namespace Mitternacht.Modules.Administration
 {
     public partial class Administration
     {
@@ -23,7 +23,7 @@ namespace NadekoBot.Modules.Administration
             {
                 var user = await Context.Guild.GetCurrentUserAsync().ConfigureAwait(false);
 
-                await _service.PruneWhere((ITextChannel)Context.Channel, 100, (x) => x.Author.Id == user.Id).ConfigureAwait(false);
+                await Service.PruneWhere((ITextChannel)Context.Channel, 100, (x) => x.Author.Id == user.Id).ConfigureAwait(false);
                 Context.Message.DeleteAfter(3);
             }
             // prune x
@@ -39,7 +39,7 @@ namespace NadekoBot.Modules.Administration
                     return;
                 if (count > 1000)
                     count = 1000;
-                await _service.PruneWhere((ITextChannel)Context.Channel, count, x => true).ConfigureAwait(false);
+                await Service.PruneWhere((ITextChannel)Context.Channel, count, x => true).ConfigureAwait(false);
             }
 
             //prune @user [x]
@@ -58,7 +58,7 @@ namespace NadekoBot.Modules.Administration
 
                 if (count > 1000)
                     count = 1000;
-                await _service.PruneWhere((ITextChannel)Context.Channel, count, m => m.Author.Id == user.Id && DateTime.UtcNow - m.CreatedAt < twoWeeks);
+                await Service.PruneWhere((ITextChannel)Context.Channel, count, m => m.Author.Id == user.Id && DateTime.UtcNow - m.CreatedAt < twoWeeks);
             }
         }
     }

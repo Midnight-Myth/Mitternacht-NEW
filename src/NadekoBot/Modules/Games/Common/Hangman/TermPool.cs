@@ -1,13 +1,13 @@
-﻿using NadekoBot.Common;
-using NadekoBot.Modules.Games.Common.Hangman.Exceptions;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using Mitternacht.Common;
+using Mitternacht.Modules.Games.Common.Hangman.Exceptions;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Games.Common.Hangman
+namespace Mitternacht.Modules.Games.Common.Hangman
 {
     public class TermPool
     {

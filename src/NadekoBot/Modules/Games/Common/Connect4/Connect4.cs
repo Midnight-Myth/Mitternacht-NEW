@@ -1,11 +1,11 @@
-﻿using NadekoBot.Common;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mitternacht.Common;
 
-namespace NadekoBot.Modules.Games.Common.Connect4
+namespace Mitternacht.Modules.Games.Common.Connect4
 {
     public class Connect4Game : IDisposable
     {

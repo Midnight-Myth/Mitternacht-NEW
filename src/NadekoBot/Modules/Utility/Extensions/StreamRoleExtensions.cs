@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NadekoBot.Services.Database.Models;
-using NadekoBot.Services.Database.Repositories;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Database.Repositories;
 
-namespace NadekoBot.Modules.Utility.Extensions
+namespace Mitternacht.Modules.Utility.Extensions
 {
     public static class StreamRoleExtensions
     {

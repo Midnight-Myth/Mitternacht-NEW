@@ -1,7 +1,7 @@
-﻿using NadekoBot.Common;
-using NadekoBot.Services.Database.Models;
+﻿using Mitternacht.Common;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services
+namespace Mitternacht.Services
 {
     public interface IBotConfigProvider
     {

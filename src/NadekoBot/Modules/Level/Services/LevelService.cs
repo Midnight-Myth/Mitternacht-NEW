@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Repositories;
+using Mitternacht.Extensions;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Repositories;
 
-namespace NadekoBot.Modules.Level.Services
+namespace Mitternacht.Modules.Level.Services
 {
     public class LevelService : INService
     {

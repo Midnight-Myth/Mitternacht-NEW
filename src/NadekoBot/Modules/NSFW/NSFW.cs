@@ -1,22 +1,22 @@
-﻿using Discord;
-using Discord.Commands;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net.Http;
-using NadekoBot.Extensions;
-using System.Threading;
+﻿using System;
 using System.Collections.Concurrent;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Common.Collections;
-using NadekoBot.Modules.Searches.Common;
-using NadekoBot.Modules.Searches.Services;
-using NadekoBot.Modules.NSFW.Exceptions;
+using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Common.Collections;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.NSFW.Exceptions;
+using Mitternacht.Modules.Searches.Common;
+using Mitternacht.Modules.Searches.Services;
+using Newtonsoft.Json.Linq;
 
-namespace NadekoBot.Modules.NSFW
+namespace Mitternacht.Modules.NSFW
 {
     public class NSFW : NadekoTopLevelModule<SearchesService>
     {
@@ -31,7 +31,7 @@ namespace NadekoBot.Modules.NSFW
             ImageCacherObject img;
             try
             {
-                img = await _service.DapiSearch(tag, type, Context.Guild?.Id, true).ConfigureAwait(false);
+                img = await Service.DapiSearch(tag, type, Context.Guild?.Id, true).ConfigureAwait(false);
             }
             catch (TagBlacklistedException)
             {
@@ -110,10 +110,10 @@ namespace NadekoBot.Modules.NSFW
                 return;
             try
             {
-                var images = await Task.WhenAll(_service.DapiSearch(tag, DapiSearchType.Gelbooru, Context.Guild?.Id, true),
-                                                _service.DapiSearch(tag, DapiSearchType.Danbooru, Context.Guild?.Id, true),
-                                                _service.DapiSearch(tag, DapiSearchType.Konachan, Context.Guild?.Id, true),
-                                                _service.DapiSearch(tag, DapiSearchType.Yandere, Context.Guild?.Id, true)).ConfigureAwait(false);
+                var images = await Task.WhenAll(Service.DapiSearch(tag, DapiSearchType.Gelbooru, Context.Guild?.Id, true),
+                                                Service.DapiSearch(tag, DapiSearchType.Danbooru, Context.Guild?.Id, true),
+                                                Service.DapiSearch(tag, DapiSearchType.Konachan, Context.Guild?.Id, true),
+                                                Service.DapiSearch(tag, DapiSearchType.Yandere, Context.Guild?.Id, true)).ConfigureAwait(false);
 
                 var linksEnum = images?.Where(l => l != null).ToArray();
                 if (images == null || !linksEnum.Any())
@@ -213,7 +213,7 @@ namespace NadekoBot.Modules.NSFW
         {
             if (string.IsNullOrWhiteSpace(tag))
             {
-                var blTags = _service.GetBlacklistedTags(Context.Guild.Id);
+                var blTags = Service.GetBlacklistedTags(Context.Guild.Id);
                 await Context.Channel.SendConfirmAsync(GetText("blacklisted_tag_list"),
                     blTags.Any()
                     ? string.Join(", ", blTags)
@@ -222,7 +222,7 @@ namespace NadekoBot.Modules.NSFW
             else
             {
                 tag = tag.Trim().ToLowerInvariant();
-                var added = _service.ToggleBlacklistedTag(Context.Guild.Id, tag);
+                var added = Service.ToggleBlacklistedTag(Context.Guild.Id, tag);
 
                 if(added)
                     await ReplyConfirmLocalized("blacklisted_tag_add", tag).ConfigureAwait(false);
@@ -236,7 +236,7 @@ namespace NadekoBot.Modules.NSFW
             ImageCacherObject imgObj;
             try
             {
-                imgObj = await _service.DapiSearch(tag, type, Context.Guild?.Id, forceExplicit).ConfigureAwait(false);
+                imgObj = await Service.DapiSearch(tag, type, Context.Guild?.Id, forceExplicit).ConfigureAwait(false);
             }
             catch (TagBlacklistedException)
             {

@@ -1,22 +1,22 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
-using NLog;
-using System.IO;
-using System.Collections.Generic;
 using Discord.Commands;
 using Discord.WebSocket;
-using NadekoBot.Common;
-using NadekoBot.Services.Impl;
-using NadekoBot.Services;
-using NadekoBot.Modules.Music.Common;
-using NadekoBot.Modules.Music.Common.Exceptions;
-using NadekoBot.Modules.Music.Common.SongResolver;
+using Mitternacht.Common;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Music.Common;
+using Mitternacht.Modules.Music.Common.Exceptions;
+using Mitternacht.Modules.Music.Common.SongResolver;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
+using NLog;
 
-namespace NadekoBot.Modules.Music.Services
+namespace Mitternacht.Modules.Music.Services
 {
     public class MusicService : INService
     {
@@ -28,15 +28,12 @@ namespace NadekoBot.Modules.Music.Services
         private readonly DbService _db;
         private readonly Logger _log;
         private readonly SoundCloudApiService _sc;
-        private readonly IBotCredentials _creds;
         private readonly ConcurrentDictionary<ulong, float> _defaultVolumes;
         private readonly DiscordSocketClient _client;
 
         public ConcurrentDictionary<ulong, MusicPlayer> MusicPlayers { get; } = new ConcurrentDictionary<ulong, MusicPlayer>();
 
-        public MusicService(DiscordSocketClient client, IGoogleApiService google,
-            NadekoStrings strings, ILocalization localization, DbService db,
-            SoundCloudApiService sc, IBotCredentials creds, IEnumerable<GuildConfig> gcs)
+        public MusicService(DiscordSocketClient client, IGoogleApiService google, NadekoStrings strings, ILocalization localization, DbService db, SoundCloudApiService sc, IEnumerable<GuildConfig> gcs)
         {
             _client = client;
             _google = google;
@@ -44,7 +41,6 @@ namespace NadekoBot.Modules.Music.Services
             _localization = localization;
             _db = db;
             _sc = sc;
-            _creds = creds;
             _log = LogManager.GetCurrentClassLogger();
 
             try { Directory.Delete(MusicDataPath, true); } catch { }
@@ -58,7 +54,7 @@ namespace NadekoBot.Modules.Music.Services
 
         public float GetDefaultVolume(ulong guildId)
         {
-            return _defaultVolumes.GetOrAdd(guildId, (id) =>
+            return _defaultVolumes.GetOrAdd(guildId, id =>
             {
                 using (var uow = _db.UnitOfWork)
                 {
@@ -172,12 +168,8 @@ namespace NadekoBot.Modules.Music.Services
             });
         }
 
-        public MusicPlayer GetPlayerOrDefault(ulong guildId)
-        {
-            if (MusicPlayers.TryGetValue(guildId, out var mp))
-                return mp;
-            else
-                return null;
+        public MusicPlayer GetPlayerOrDefault(ulong guildId) {
+            return MusicPlayers.TryGetValue(guildId, out var mp) ? mp : null;
         }
 
         public async Task TryQueueRelatedSongAsync(SongInfo song, ITextChannel txtCh, IVoiceChannel vch)

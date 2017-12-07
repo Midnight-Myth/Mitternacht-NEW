@@ -1,11 +1,11 @@
-﻿using NadekoBot.Services.Database.Models;
-using NLog;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Mitternacht.Services.Database.Models;
+using NLog;
 
-namespace NadekoBot.Modules.Music.Common.SongResolver.Strategies
+namespace Mitternacht.Modules.Music.Common.SongResolver.Strategies
 {
     public class RadioResolveStrategy : IResolveStrategy
     {

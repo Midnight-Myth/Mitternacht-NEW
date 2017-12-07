@@ -2,14 +2,15 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using NadekoBot.Extensions;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Extensions;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Services.Database
+namespace Mitternacht.Services.Database
 {
 
     public class NadekoContextFactory : IDesignTimeDbContextFactory<NadekoContext>
     {
+        /// <inheritdoc />
         /// <summary>
         /// :\ Used for migrations
         /// </summary>
@@ -17,7 +18,7 @@ namespace NadekoBot.Services.Database
         /// <returns></returns>
         public NadekoContext CreateDbContext(string[] args) {
             var optionsBuilder = new DbContextOptionsBuilder();
-            optionsBuilder.UseSqlite("Filename=./data/NadekoBot.db");
+            optionsBuilder.UseSqlite("Filename=./data/MitternachtBot.db");
             var ctx = new NadekoContext(optionsBuilder.Options);
             ctx.Database.SetCommandTimeout(60);
             return ctx;
@@ -47,6 +48,7 @@ namespace NadekoBot.Services.Database
         public DbSet<RoleMoney> RoleMoney { get; set; }
         public DbSet<RoleLevelBinding> RoleLevelBinding { get; set; }
         public DbSet<MessageXpRestriction> MessageXpRestrictions { get; set; }
+        public DbSet<VerifiedUser> VerifiedUsers { get; set; }
 
         //logging
         public DbSet<LogSetting> LogSettings { get; set; }
@@ -90,7 +92,8 @@ namespace NadekoBot.Services.Database
                 new ModulePrefix { ModuleName = "Utility", Prefix = "." },
                 new ModulePrefix { ModuleName = "CustomReactions", Prefix = "." },
                 new ModulePrefix { ModuleName = "PokeGame", Prefix = ">" }, 
-                new ModulePrefix { ModuleName = "Level", Prefix = "!"}
+                new ModulePrefix { ModuleName = "Level", Prefix = "!"},
+                new ModulePrefix { ModuleName = "Verification", Prefix = "." }
             });
             bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
             {
@@ -302,13 +305,17 @@ namespace NadekoBot.Services.Database
             #endregion
 
             #region Warnings
-            var warn = modelBuilder.Entity<Warning>();
+            modelBuilder.Entity<Warning>();
             #endregion
 
             #region PatreonRewards
             var pr = modelBuilder.Entity<RewardedUser>();
             pr.HasIndex(x => x.UserId)
                 .IsUnique();
+            #endregion
+
+            #region Verification
+            modelBuilder.Entity<VerifiedUser>().HasIndex(vu => new {vu.GuildId, vu.UserId}).IsUnique();
             #endregion
         }
     }

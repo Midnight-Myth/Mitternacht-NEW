@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Permissions.Services
+namespace Mitternacht.Modules.Permissions.Services
 {
     public class ResetPermissionsService : INService
     {

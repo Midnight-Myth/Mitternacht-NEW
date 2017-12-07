@@ -1,15 +1,15 @@
-﻿using Discord.Commands;
-using Discord;
-using NadekoBot.Services;
+﻿using System;
 using System.Threading.Tasks;
-using System;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Games.Common;
-using NadekoBot.Modules.Games.Services;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Games.Common;
+using Mitternacht.Modules.Games.Services;
+using Mitternacht.Services;
 
-namespace NadekoBot.Modules.Games
+namespace Mitternacht.Modules.Games
 {
     public partial class Games : NadekoTopLevelModule<GamesService>
     {
@@ -38,18 +38,16 @@ namespace NadekoBot.Modules.Games
             if (string.IsNullOrWhiteSpace(question))
                 return;
 
-            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(NadekoBot.OkColor)
+            await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(MitternachtBot.OkColor)
                                .AddField(efb => efb.WithName("❓ " + GetText("question") ).WithValue(question).WithIsInline(false))
-                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(_service.EightBallResponses[new NadekoRandom().Next(0, _service.EightBallResponses.Length)]).WithIsInline(false)));
+                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(Service.EightBallResponses[new NadekoRandom().Next(0, Service.EightBallResponses.Length)]).WithIsInline(false)));
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Rps(string input)
         {
-            Func<int,string> getRpsPick = (p) =>
-            {
-                switch (p)
-                {
+            string GetRpsPick(int p) {
+                switch (p) {
                     case 0:
                         return "🚀";
                     case 1:
@@ -57,7 +55,7 @@ namespace NadekoBot.Modules.Games
                     default:
                         return "✂️";
                 }
-            };
+            }
 
             int pick;
             switch (input)
@@ -82,15 +80,15 @@ namespace NadekoBot.Modules.Games
             var nadekoPick = new NadekoRandom().Next(0, 3);
             string msg;
             if (pick == nadekoPick)
-                msg = GetText("rps_draw", getRpsPick(pick));
+                msg = GetText("rps_draw", GetRpsPick(pick));
             else if ((pick == 0 && nadekoPick == 1) ||
                      (pick == 1 && nadekoPick == 2) ||
                      (pick == 2 && nadekoPick == 0))
                 msg = GetText("rps_win", Context.Client.CurrentUser.Mention,
-                    getRpsPick(nadekoPick), getRpsPick(pick));
+                    GetRpsPick(nadekoPick), GetRpsPick(pick));
             else
-                msg = GetText("rps_win", Context.User.Mention, getRpsPick(pick),
-                    getRpsPick(nadekoPick));
+                msg = GetText("rps_win", Context.User.Mention, GetRpsPick(pick),
+                    GetRpsPick(nadekoPick));
 
             await Context.Channel.SendConfirmAsync(msg).ConfigureAwait(false);
         }
@@ -98,12 +96,12 @@ namespace NadekoBot.Modules.Games
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task RateGirl(IGuildUser usr)
-        {
-            var gr = _service.GirlRatings.GetOrAdd(usr.Id, GetGirl);
+        public async Task RateGirl(IGuildUser user = null) {
+            user = user ?? (IGuildUser) Context.User;
+            var gr = Service.GirlRatings.GetOrAdd(user.Id, GetGirl);
             var img = await gr.Url;
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-                .WithTitle("Girl Rating For " + usr)
+                .WithTitle("Girl Rating For " + user)
                 .AddField(efb => efb.WithName("Hot").WithValue(gr.Hot.ToString("F2")).WithIsInline(true))
                 .AddField(efb => efb.WithName("Crazy").WithValue(gr.Crazy.ToString("F2")).WithIsInline(true))
                 .AddField(efb => efb.WithName("Advice").WithValue(gr.Advice).WithIsInline(false))
@@ -122,15 +120,18 @@ namespace NadekoBot.Modules.Games
 
             var roll = rng.Next(1, 1001);
 
-            if ((uid == 185968432783687681 ||
-                 uid == 265642040950390784) && roll >= 900)
-                roll = 1000;
+            if (uid == 119521688768610304 || uid == 147390060742967296) roll = 1000;
+            if (uid == 240476349116973067) roll = 0;
 
-
-            double hot;
-            double crazy;
+            double hot, crazy;
             string advice;
-            if (roll < 500)
+            if (roll <= 0) {
+                hot = 0;
+                crazy = 0;
+                advice = "This is your special NO-GO ZONE. You must be either from vulcan or a developer. Ignore every emotion like usually and don't try to have fun. " +
+                         "You won't. It is not hard. Just clone a repo and get to work. Alternatively, get a phaser and shoot some klingons.";
+            }
+            else if (roll < 500)
             {
                 hot = NextDouble(0, 5);
                 crazy = NextDouble(4, 10);

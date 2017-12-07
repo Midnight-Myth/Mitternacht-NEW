@@ -1,16 +1,16 @@
-﻿using Discord;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Services;
-using NadekoBot.Services.Database.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Modules.Administration.Services;
-using NadekoBot.Modules.Utility.Services;
+using Discord;
+using Discord.Commands;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Administration.Services;
+using Mitternacht.Modules.Utility.Services;
+using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 
-namespace NadekoBot.Modules.Utility
+namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
@@ -61,7 +61,7 @@ namespace NadekoBot.Modules.Utility
 
             public async Task RemindInternal(ulong targetId, bool isPrivate, string timeStr, [Remainder] string message)
             {
-                var m = _service.Regex.Match(timeStr);
+                var m = Service.Regex.Match(timeStr);
 
                 if (m.Length == 0)
                 {
@@ -72,7 +72,7 @@ namespace NadekoBot.Modules.Utility
                 string output = "";
                 var namesAndValues = new Dictionary<string, int>();
 
-                foreach (var groupName in _service.Regex.GetGroupNames())
+                foreach (var groupName in Service.Regex.GetGroupNames())
                 {
                     if (groupName == "0") continue;
                     int value;
@@ -133,7 +133,7 @@ namespace NadekoBot.Modules.Utility
                 {
                     // ignored
                 }
-                await _service.StartReminder(rem);
+                await Service.StartReminder(rem);
             }
             
             [NadekoCommand, Usage, Description, Aliases]

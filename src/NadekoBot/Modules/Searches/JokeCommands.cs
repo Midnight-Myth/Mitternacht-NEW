@@ -1,15 +1,15 @@
-﻿using AngleSharp;
-using Discord.Commands;
-using NadekoBot.Extensions;
-using NadekoBot.Modules.Searches.Services;
-using Newtonsoft.Json.Linq;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using NadekoBot.Common;
-using NadekoBot.Common.Attributes;
+using AngleSharp;
+using Discord.Commands;
+using Mitternacht.Common;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Mitternacht.Modules.Searches.Services;
+using Newtonsoft.Json.Linq;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {
@@ -59,24 +59,24 @@ namespace NadekoBot.Modules.Searches
             [NadekoCommand, Usage, Description, Aliases]
             public async Task WowJoke()
             {
-                if (!_service.WowJokes.Any())
+                if (!Service.WowJokes.Any())
                 {
                     await ReplyErrorLocalized("jokes_not_loaded").ConfigureAwait(false);
                     return;
                 }
-                var joke = _service.WowJokes[new NadekoRandom().Next(0, _service.WowJokes.Count)];
+                var joke = Service.WowJokes[new NadekoRandom().Next(0, Service.WowJokes.Count)];
                 await Context.Channel.SendConfirmAsync(joke.Question, joke.Answer).ConfigureAwait(false);
             }
 
             [NadekoCommand, Usage, Description, Aliases]
             public async Task MagicItem()
             {
-                if (!_service.WowJokes.Any())
+                if (!Service.WowJokes.Any())
                 {
                     await ReplyErrorLocalized("magicitems_not_loaded").ConfigureAwait(false);
                     return;
                 }
-                var item = _service.MagicItems[new NadekoRandom().Next(0, _service.MagicItems.Count)];
+                var item = Service.MagicItems[new NadekoRandom().Next(0, Service.MagicItems.Count)];
 
                 await Context.Channel.SendConfirmAsync("✨" + item.Name, item.Description).ConfigureAwait(false);
             }

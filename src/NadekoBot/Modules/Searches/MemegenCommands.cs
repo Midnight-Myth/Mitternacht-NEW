@@ -1,16 +1,16 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Discord.Commands;
-using NadekoBot.Common.Attributes;
-using NadekoBot.Extensions;
+using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
+using Newtonsoft.Json;
 
-namespace NadekoBot.Modules.Searches
+namespace Mitternacht.Modules.Searches
 {
     public partial class Searches
     {

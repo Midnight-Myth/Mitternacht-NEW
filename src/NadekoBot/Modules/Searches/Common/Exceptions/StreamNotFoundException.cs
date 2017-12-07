@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NadekoBot.Modules.Searches.Common.Exceptions
+namespace Mitternacht.Modules.Searches.Common.Exceptions
 {
     public class StreamNotFoundException : Exception
     {
