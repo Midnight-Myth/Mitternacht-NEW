@@ -463,7 +463,6 @@ namespace Mitternacht.Modules.Verification
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        [OwnerOnly]
         public async Task ConversationLink() {
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
             if (_fs.LoggedIn)
