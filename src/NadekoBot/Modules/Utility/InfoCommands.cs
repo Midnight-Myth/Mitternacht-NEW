@@ -143,10 +143,54 @@ namespace Mitternacht.Modules.Utility
                     return;
                 }
 
+                var embed = InternalForumUserInfoBuilder(uinfo)
+                    .WithTitle(GetText("uinfof_title", user.ToString()));
+
+                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [Priority(0)]
+            [RequireContext(ContextType.Guild)]
+            public async Task ForumUserInfo(string username = null) {
+                if (string.IsNullOrWhiteSpace(username)) return;
+                UserInfo uinfo = null;
+                try
+                {
+                    uinfo = await _fs.Forum.GetUserInfo(username).ConfigureAwait(false);
+                }
+                catch (Exception) { /*ignored*/ }
+                if (uinfo == null)
+                {
+                    (await ReplyErrorLocalized("forum_user_not_accessible", username).ConfigureAwait(false)).DeleteAfter(60);
+                    return;
+                }
+                await Context.Channel.EmbedAsync(InternalForumUserInfoBuilder(uinfo)).ConfigureAwait(false);
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [Priority(1)]
+            [RequireContext(ContextType.Guild)]
+            public async Task ForumUserInfo(long userId) {
+                UserInfo uinfo = null;
+                try
+                {
+                    uinfo = await _fs.Forum.GetUserInfo(userId).ConfigureAwait(false);
+                }
+                catch (Exception) { /*ignored*/ }
+                if (uinfo == null)
+                {
+                    (await ReplyErrorLocalized("forum_user_not_accessible", userId).ConfigureAwait(false)).DeleteAfter(60);
+                    return;
+                }
+                await Context.Channel.EmbedAsync(InternalForumUserInfoBuilder(uinfo)).ConfigureAwait(false);
+            }
+
+
+            private EmbedBuilder InternalForumUserInfoBuilder(UserInfo uinfo) {
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithThumbnailUrl(uinfo.AvatarUrl)
-                    .WithTitle(GetText("uinfof_title", user.ToString()))
                     .AddInlineField(GetText("name"), $"[{uinfo.Username}]({uinfo.UrlPath})")
                     .AddInlineField(GetText("id"), uinfo.Id)
                     .AddInlineField(GetText("gender"), uinfo.Gender.ToString());
@@ -155,8 +199,7 @@ namespace Mitternacht.Modules.Utility
                 if (uinfo.LikeCount != null) embed.AddInlineField(GetText("likes"), uinfo.LikeCount.Value);
                 if (uinfo.Trophies != null) embed.AddInlineField(GetText("trophies"), uinfo.Trophies.Value);
                 if (!string.IsNullOrWhiteSpace(uinfo.Location)) embed.AddInlineField(GetText("location"), uinfo.Location);
-
-                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+                return embed;
             }
 
             [NadekoCommand, Usage, Description, Aliases]
