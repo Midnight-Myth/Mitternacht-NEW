@@ -73,7 +73,11 @@ namespace Mitternacht.Modules.Verification
             var key = Service.GenerateKey(VerificationService.KeyScope.Forum, forumUserId, Context.User.Id, Context.Guild.Id);
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
-            await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), Context.Guild.Name, $"{uinfo.Username} (ID {uinfo.Id})", _ch.GetPrefix(Context.Guild), _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            var msg = await ch.SendConfirmAsync(GetText("message_title", 1), GetText("message_dm_forum_key", key.Key, Context.User.ToString(), Context.Guild.Name, $"{uinfo.Username} (ID {uinfo.Id})", _ch.GetPrefix(Context.Guild), _fs.Forum.GetConversationCreationUrl(users.Prepend(_fs.Forum.SelfUser.Username).ToArray())) + (oldkey != null ? "\n\n" + GetText("key_replaced", oldkey.Key) : "")).ConfigureAwait(false);
+            if (msg == null) {
+                (await ReplyErrorLocalized("conversation_failed").ConfigureAwait(false)).DeleteAfter(60);
+                Service.ValidationKeys.TryRemove(key);
+            }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -156,9 +160,9 @@ namespace Mitternacht.Modules.Verification
 
             await con.DownloadMessagesAsync().ConfigureAwait(false);
             var messageparts = con.Messages[0].Content.Split('\n');
-            if (!(messageparts.Any(mp => mp.Trim().Equals(Context.User.Id.ToString(), StringComparison.OrdinalIgnoreCase)) 
-                    || messageparts.Any(mp => mp.Trim().Equals(Context.User.ToString(), StringComparison.OrdinalIgnoreCase))) 
-                  || !messageparts.Any(mp => mp.Trim().Equals(forumkey.Key, StringComparison.OrdinalIgnoreCase))) {
+            if (!(messageparts.Any(mp => mp.Trim().Contains(Context.User.Id.ToString())) 
+                    || messageparts.Any(mp => mp.Trim().Contains(Context.User.ToString()))) 
+                  || !messageparts.Any(mp => mp.Trim().Contains(forumkey.Key))) {
                 (await ReplyErrorLocalized("no_valid_conversation").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
@@ -401,7 +405,7 @@ namespace Mitternacht.Modules.Verification
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
                 var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(p * usercount).Take(usercount).ToList();
-                var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verified_users"));
+                var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verified_users", Service.GetVerifiedUserCount(Context.Guild.Id)));
                 foreach (var vu in vus) {
                     var user = await Context.Guild.GetUserAsync(vu.UserId).ConfigureAwait(false);
                     embed.AddInlineField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId);

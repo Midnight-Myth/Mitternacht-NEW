@@ -693,7 +693,7 @@
   {
     "name": "verifiedusers",
     "cmd": "verifiedusers",
-    "aliases": [],
+    "aliases": ["vu"],
     "desc": "Zeigt alle verifizierten Nutzer an.",
     "usage": "`{0}verifiedusers [page]`"
   },
