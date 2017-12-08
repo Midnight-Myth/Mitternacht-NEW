@@ -15,7 +15,7 @@ namespace Mitternacht.Services.Impl
         private readonly IBotCredentials _creds;
         private readonly DateTime _started;
 
-        public const string BotVersion = "1.8";
+        public const string BotVersion = "1.8.1";
 
         public string Author => "Midnight Myth#8888, expeehaa#1239";
         public string Library => "Discord.Net, GommeHDnetForumAPI";
@@ -47,12 +47,15 @@ namespace Mitternacht.Services.Impl
 
             _client.ChannelCreated += c =>
             {
-                var _ = Task.Run(() =>
-                {
-                    if (c is ITextChannel)
-                        Interlocked.Increment(ref _textChannels);
-                    else if (c is IVoiceChannel)
-                        Interlocked.Increment(ref _voiceChannels);
+                var _ = Task.Run(() => {
+                    switch (c) {
+                        case ITextChannel _:
+                            Interlocked.Increment(ref _textChannels);
+                            break;
+                        case IVoiceChannel _:
+                            Interlocked.Increment(ref _voiceChannels);
+                            break;
+                    }
                 });
 
                 return Task.CompletedTask;
@@ -60,12 +63,15 @@ namespace Mitternacht.Services.Impl
 
             _client.ChannelDestroyed += c =>
             {
-                var _ = Task.Run(() =>
-                {
-                    if (c is ITextChannel)
-                        Interlocked.Decrement(ref _textChannels);
-                    else if (c is IVoiceChannel)
-                        Interlocked.Decrement(ref _voiceChannels);
+                var _ = Task.Run(() => {
+                    switch (c) {
+                        case ITextChannel _:
+                            Interlocked.Decrement(ref _textChannels);
+                            break;
+                        case IVoiceChannel _:
+                            Interlocked.Decrement(ref _voiceChannels);
+                            break;
+                    }
                 });
 
                 return Task.CompletedTask;
