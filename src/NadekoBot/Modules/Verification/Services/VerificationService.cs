@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
+using GommeHDnetForumAPI.DataModels.Entities;
 using Mitternacht.Common.Collections;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
@@ -15,6 +17,9 @@ namespace Mitternacht.Modules.Verification.Services
 
         private readonly Random _rnd = new Random();
         public readonly ConcurrentHashSet<ValidationKey> ValidationKeys = new ConcurrentHashSet<ValidationKey>();
+
+        public event Func<SocketGuildUser, UserInfo, EventTrigger> UserVerified;
+        public event Func<SocketGuildUser, UserInfo, EventTrigger> UserUnverified;
 
         public VerificationService(DbService db) {
             _db = db;
@@ -162,6 +167,11 @@ namespace Mitternacht.Modules.Verification.Services
         public enum KeyScope
         {
             Forum, Discord
+        }
+
+        public enum EventTrigger
+        {
+            User, Admin
         }
     }
 }

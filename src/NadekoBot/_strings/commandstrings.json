@@ -693,7 +693,7 @@
   {
     "name": "verifiedusers",
     "cmd": "verifiedusers",
-    "aliases": [],
+    "aliases": [ "vu" ],
     "desc": "Zeigt alle verifizierten Nutzer an.",
     "usage": "`{0}verifiedusers [page]`"
   },
@@ -3379,5 +3379,12 @@
     "aliases": [ "uinfof" ],
     "desc": "Zeigt Informationen zum Forumaccount des angegebenen Discordnutzers an",
     "usage": "`{0}userinfoforum <user>`"
+  },
+  {
+    "name": "forumuserinfo",
+    "cmd": "forumuserinfo",
+    "aliases": [ "fuinfo" ],
+    "desc": "Zeigt Informationen zum angegebenen Forumaccount an",
+    "usage": "`{0}forumuserinfo <forumUsername>` oder `{0}forumuserinfo <forumUserId>`"
   }
 ]
