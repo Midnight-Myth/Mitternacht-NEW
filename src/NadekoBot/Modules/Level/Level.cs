@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Level.Services;
@@ -32,107 +33,90 @@ namespace Mitternacht.Modules.Level
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Rank([Remainder] IUser user = null)
-        {
-            user = user ?? Context.User;
-            await Rank(user.Id);
-        }
+            => await Rank(user?.Id ?? 0);
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task Rank([Remainder] ulong userId = 0)
+        public async Task Rank(ulong userId = 0)
         {
             userId = userId != 0 ? userId : Context.User.Id;
 
             LevelModel lm;
-            int total;
-            int rank;
+            int totalRanks, rank;
             using (var uow = _db.UnitOfWork)
             {
                 lm = uow.LevelModel.GetOrCreate(userId);
-                total = uow.LevelModel.GetAll().Count();
+                totalRanks = uow.LevelModel.GetAll().Count(m => m.TotalXP > 0);
                 rank = uow.LevelModel.GetAll().OrderByDescending(p => p.TotalXP).ToList().IndexOf(lm) + 1;
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
-            
-            if (userId == Context.User.Id)
-            {
-                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXpToNextLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
+
+            if (userId == Context.User.Id) {
+                await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, lm.Level, lm.CurrentXP, LevelModelRepository.GetXpToNextLevel(lm.Level), lm.TotalXP, lm.TotalXP > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
             }
-            else
-            {
+            else {
                 var user = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
-                await Context.Channel.SendMessageAsync($"{ Context.User.Mention }: **{user?.Nickname ?? (user?.Username ?? userId.ToString())}\'s Rang > LEVEL { lm.Level } | XP { lm.CurrentXP }/{ LevelModelRepository.GetXpToNextLevel(lm.Level) } | TOTAL XP { lm.TotalXP } | RANK { rank }/{ total }**");
+                var namestring = user?.Nickname ?? (user?.Username ?? userId.ToString());
+                await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, lm.Level, lm.CurrentXP, LevelModelRepository.GetXpToNextLevel(lm.Level), lm.TotalXP, lm.TotalXP > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
             }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Ranks(int count, [Remainder]int position)
+        [RequireContext(ContextType.Guild)]
+        public async Task Ranks(int count, int position)
         {
             const int elementsPerList = 20;
 
-            IOrderedEnumerable<LevelModel> levelmodels;
+            List<LevelModel> levelModels;
             using (var uow = _db.UnitOfWork)
             {
-                levelmodels = uow.LevelModel.GetAll().Where(p => p.TotalXP > 0).OrderByDescending(p => p.TotalXP);
-                await uow.CompleteAsync().ConfigureAwait(false);
+                levelModels = uow.LevelModel.GetAll().Where(p => p.TotalXP > 0).OrderByDescending(p => p.TotalXP).Skip(position-1 <= 0 ? 0 : position-1).Take(count).ToList();
             }
 
-            if (!levelmodels.Any()) return;
-            position--;
-            if(position < 0 || position >= levelmodels.Count()) position = 0;
-            if (count <= 0 || count > levelmodels.Count() - position) count = levelmodels.Count() - position;
+            if (!levelModels.Any()) return;
 
-            var rankstrings = new List<string>();
+            var groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
+            var rankStrings = new List<string>();
             var sb = new StringBuilder();
-            sb.AppendLine("__**Rangliste**__");
-            for (var i = position; i < count + position; i++)
-            {
-                var lm = levelmodels.ElementAt(i);
-                var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
-
-                if ((i - position) % elementsPerList == 0)
-                    sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}\nRang | {"Username", -37} | Lvl | {"XP", -13} | Total XP\n-----|---------------------------------------|-----|---------------|---------");
-                if (lm.TotalXP > 0) sb.AppendLine($"{i + 1,3}. | {(user?.Username.TrimTo(32, true) ?? lm.UserId.ToString().TrimTo(32,true)) + (user == null ? "" : $"#{user.DiscriminatorValue:D4}"), -37} | {lm.Level,3} | {lm.CurrentXP,6}/{LevelModelRepository.GetXpToNextLevel(lm.Level),6} | {lm.TotalXP,8}");
-                if ((i - position) % elementsPerList != elementsPerList - 1) continue;
+            sb.AppendLine(GetText("ranks_header"));
+            foreach (var glm in groupedLevelModels) {
+                var listNumber = glm.Key + 1;
+                if (!glm.Any()) continue;
+                sb.Append($"```{GetText("ranks_list_header", listNumber)}");
+                foreach (var lm in glm) {
+                    var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
+                    sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{user?.ToString() ?? lm.UserId.ToString(),-37}", $"{lm.Level,3}", $"{lm.CurrentXP,6}", $"{LevelModelRepository.GetXpToNextLevel(lm.Level),6}", $"{lm.TotalXP,8}"));
+                }
                 sb.Append("```");
-                rankstrings.Add(sb.ToString());
+                rankStrings.Add(sb.ToString());
                 sb.Clear();
             }
 
-            if(sb.Length > 0)
+            var channel = count <= 20 ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+            foreach (var s in rankStrings)
             {
-                sb.Append("```");
-                rankstrings.Add(sb.ToString());
-                sb.Clear();
-            }
-
-            var channel = count <= 20 ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync();
-
-            foreach (var s in rankstrings)
-            {
-                await channel.SendMessageAsync(s);
+                await channel.SendMessageAsync(s).ConfigureAwait(false);
                 Thread.Sleep(250);
             }
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Ranks([Remainder] int count = 20)
-        {
-            await Ranks(count, 0);
-        }
+        [RequireContext(ContextType.Guild)]
+        public async Task Ranks(int count = 20) 
+            => await Ranks(count, 1);
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task AddXp(int xp, [Remainder] IUser user = null)
+        public async Task AddXp(int xp, [Remainder]IUser user = null)
         {
             user = user ?? Context.User;
             using (var uow = _db.UnitOfWork)
             {
-                var success = uow.LevelModel.TryAddXp(user.Id, xp, false);
-                await Context.Channel.SendConfirmAsync(success ? $"{Context.User.Mention}: {xp}XP an {user.Username} vergeben." : $"{Context.User.Mention}: Vergabe von {xp}XP an {user.Username} nicht möglich!");
+                uow.LevelModel.TryAddXp(user.Id, xp, false);
+                await ConfirmLocalized("addxp", xp, user.ToString()).ConfigureAwait(false);
                 var level = uow.LevelModel.CalculateLevel(user.Id);
-                await Service.SendLevelChangedMessage(level, user, Context.Channel);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel).ConfigureAwait(false);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -147,9 +131,9 @@ namespace Mitternacht.Modules.Level
             using (var uow = _db.UnitOfWork)
             {
                 uow.LevelModel.SetXp(user.Id, xp, false);
-                await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {user.Username} auf {xp} gesetzt.");
+                await ConfirmLocalized("setxp", user.ToString(), xp).ConfigureAwait(false);
                 var level = uow.LevelModel.CalculateLevel(user.Id);
-                await Service.SendLevelChangedMessage(level, user, Context.Channel);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel).ConfigureAwait(false);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -161,13 +145,13 @@ namespace Mitternacht.Modules.Level
         public async Task SetXp(int xp, ulong userId) {
             var user = await Context.Guild.GetUserAsync(userId);
             if (user != null) {
-                await SetXp(xp, user);
+                await SetXp(xp, user).ConfigureAwait(false);
                 return;
             }
             using (var uow = _db.UnitOfWork)
             {
                 uow.LevelModel.SetXp(userId, xp, false);
-                await Context.Channel.SendConfirmAsync($"{Context.User.Mention}: XP von {userId} auf {xp} gesetzt.");
+                await ConfirmLocalized("setxp", userId, xp).ConfigureAwait(false);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -177,31 +161,26 @@ namespace Mitternacht.Modules.Level
         public async Task TurnToXp(long moneyToSpend, [Remainder] IUser user = null)
         {
             user = user != null && _creds.IsOwner(Context.User) ? user : Context.User;
-            if(moneyToSpend < 0)
-            {
-                await Context.Channel.SendMessageAsync($"Pech gehabt, {Context.User.Mention}, du kannst XP nicht in Geld zurückverwandeln.");
+            if(moneyToSpend < 0) {
+                await ReplyErrorLocalized("ttxp_error_negative_value").ConfigureAwait(false);
                 return;
             }
-            if(moneyToSpend == 0)
-            {
-                await Context.Channel.SendMessageAsync($"{Context.User.Mention}, 0 {CurrencySign} sind 0 XP!");
+            if(moneyToSpend == 0) {
+                await ReplyErrorLocalized("ttxp_error_zero_value", CurrencySign).ConfigureAwait(false);
                 return;
             }
             using (var uow = _db.UnitOfWork)
             {
-                var cur = uow.Currency.GetUserCurrency(user.Id);
-                if(cur < moneyToSpend)
-                {
-                    await Context.Channel.SendMessageAsync(user == Context.User ? $"Du hast nicht genug Geld, {Context.User.Mention}!" : $"{Context.User.Mention}: {user.Username} hat nicht genügend Geld!");
+                if(!uow.Currency.TryUpdateState(user.Id, -moneyToSpend)) {
+                    if (user == Context.User) await ReplyErrorLocalized("ttxp_error_no_money_self").ConfigureAwait(false);
+                    else await ReplyErrorLocalized("ttxp_error_no_money_other", user.ToString()).ConfigureAwait(false);
+                    return;
                 }
-                else
-                {
-                    uow.LevelModel.TryAddXp(user.Id, (int)moneyToSpend * 5, false);
-                    uow.Currency.TryUpdateState(user.Id, -moneyToSpend);
-                    await Context.Channel.SendMessageAsync($"{Context.User.Mention}: {moneyToSpend}{CurrencySign} in {moneyToSpend * 5}XP umgewandelt" + (user != Context.User ? $" für {user.Username}" : ""));
-                    var level = uow.LevelModel.CalculateLevel(user.Id);
-                    await Service.SendLevelChangedMessage(level, user, Context.Channel);
-                }
+                uow.LevelModel.TryAddXp(user.Id, (int)moneyToSpend * 5, false);
+                if (user == Context.User) await ReplyConfirmLocalized("ttxp_turned_self", moneyToSpend, CurrencySign, moneyToSpend * 5).ConfigureAwait(false);
+                else await ReplyConfirmLocalized("ttxp_turned_other", user.ToString(), moneyToSpend, CurrencySign, moneyToSpend * 5).ConfigureAwait(false);
+                var level = uow.LevelModel.CalculateLevel(user.Id);
+                await Service.SendLevelChangedMessage(level, user, Context.Channel).ConfigureAwait(false);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -209,15 +188,17 @@ namespace Mitternacht.Modules.Level
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task SetRoleLevelBinding(IRole role, int minlevel)
-        {
-            if (minlevel < 0) return;
+        public async Task SetRoleLevelBinding(IRole role, int minlevel) {
+            if (minlevel < 0) {
+                await ErrorLocalized("rlb_set_minlevel").ConfigureAwait(false);
+                return;
+            }
             using (var uow = _db.UnitOfWork)
             {
                 uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
-            await Context.Channel.SendMessageAsync($"Die Rolle {role.Name} wird nun Nutzern ab Level {minlevel} vergeben.");
+            await ConfirmLocalized("rlb_set", role.Name, minlevel);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -231,74 +212,55 @@ namespace Mitternacht.Modules.Level
                 wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
-            await Context.Channel.SendMessageAsync(wasRemoved ? $"Die Rolle {role.Name} ist nun levelunabhängig." : $"Für die Rolle {role.Name} gibt es keine Steigerung der Levelunabhängigkeit!");
+            if (wasRemoved) await ConfirmLocalized("rlb_removed", role.Name).ConfigureAwait(false);
+            else await ErrorLocalized("rlb_already_independent", role.Name).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task RoleLevelBindings(int count, [Remainder]int position)
+        public async Task RoleLevelBindings(int page = 1)
         {
-            const int elementsPerList = 20;
+            const int elementsPerPage = 9;
 
-            IOrderedEnumerable<RoleLevelBinding> rlbs;
+            List<RoleLevelBinding> roleLevelBindings;
             using (var uow = _db.UnitOfWork)
             {
-                rlbs = uow.RoleLevelBinding.GetAll().OrderByDescending(r => r.MinimumLevel);
-                await uow.CompleteAsync().ConfigureAwait(false);
+                roleLevelBindings = uow.RoleLevelBinding.GetAll().OrderByDescending(r => r.MinimumLevel).ToList();
             }
 
-            if (!rlbs.Any()) return;
-            position--;
-            if (position < 0 || position >= rlbs.Count()) position = 0;
-            if (count <= 0 || count > rlbs.Count() - position) count = rlbs.Count() - position;
-
-            var rankstrings = new List<string>();
-            var sb = new StringBuilder();
-            sb.AppendLine("__**Rolle-Level-Beziehungen**__");
-            for (var i = position; i < count + position; i++)
-            {
-                var rlb = rlbs.ElementAt(i);
-                var role = Context.Guild.GetRole(rlb.RoleId);
-
-                if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
-                sb.AppendLine($"{i + 1,3}. | {role.Name, -20} | Level {rlb.MinimumLevel}+");
-                if ((i - position) % elementsPerList != elementsPerList - 1) continue;
-                sb.Append("```");
-                rankstrings.Add(sb.ToString());
-                sb.Clear();
+            if (!roleLevelBindings.Any()) {
+                await ReplyErrorLocalized("rlb_none").ConfigureAwait(false);
+                return;
             }
-
-            if (sb.Length > 0)
-            {
-                sb.Append("```");
-                rankstrings.Add(sb.ToString());
-                sb.Clear();
+            var pagecount = (int)Math.Ceiling(roleLevelBindings.Count*1d / elementsPerPage);
+            if (page > pagecount) {
+                await ReplyErrorLocalized("rlb_page_too_high").ConfigureAwait(false);
+                return;
             }
+            if (page < 1) page = 1;
 
-            var channel = count <= 20 ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync();
-
-            foreach (var s in rankstrings)
-            {
-                await channel.SendMessageAsync(s);
-                Thread.Sleep(250);
-            }
+            await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
+                var embed = new EmbedBuilder()
+                    .WithTitle(GetText("rlb_title"));
+                var rlbs = roleLevelBindings.Skip(elementsPerPage * p).Take(elementsPerPage).ToList();
+                foreach (var rlb in rlbs) {
+                    var rolename = Context.Guild.GetRole(rlb.RoleId)?.Name ?? rlb.RoleId.ToString();
+                    embed.AddInlineField($"#{elementsPerPage * p + rlbs.IndexOf(rlb) + 1} - {rolename}", rlb.MinimumLevel);
+                }
+                return embed;
+            }, pagecount-1).ConfigureAwait(false);
         }
-
-        [NadekoCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        public async Task RoleLevelBindings([Remainder]int count = 20) 
-            => await RoleLevelBindings(count, 1);
 
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task MsgXpRestrictionAdd(ITextChannel channel) {
             using (var uow = _db.UnitOfWork) {
-                var success = await uow.MessageXpBlacklist.CreateRestrictionAsync(channel);
+                var success = await uow.MessageXpBlacklist.CreateRestrictionAsync(channel).ConfigureAwait(false);
                 if (success)
-                    await Context.Channel.SendConfirmAsync($"Nachrichten in Kanal {channel.Mention} geben nun keine XP mehr.");
+                    await ConfirmLocalized("msgxpr_add_success", channel.Mention).ConfigureAwait(false);
                 else
-                    await Context.Channel.SendErrorAsync($"In Kanal {channel.Mention} gibt es schon keine XP mehr auf Nachrichten.");
+                    await ErrorLocalized("msgxpr_add_fail", channel.Mention).ConfigureAwait(false);
             }
         }
 
@@ -307,11 +269,11 @@ namespace Mitternacht.Modules.Level
         [OwnerOnly]
         public async Task MsgXpRestrictionRemove(ITextChannel channel) {
             using (var uow = _db.UnitOfWork) {
-                var success = await uow.MessageXpBlacklist.RemoveRestrictionAsync(channel);
+                var success = await uow.MessageXpBlacklist.RemoveRestrictionAsync(channel).ConfigureAwait(false);
                 if (success)
-                    await Context.Channel.SendConfirmAsync($"Nachrichten in Channel {channel.Mention} geben nun wieder XP.");
+                    await ConfirmLocalized("msgxpr_remove_success", channel.Mention).ConfigureAwait(false);
                 else
-                    await Context.Channel.SendErrorAsync($"In Channel {channel.Mention} gibt es schon XP auf Nachrichten.");
+                    await ErrorLocalized("msgxpr_remove_fail", channel.Mention).ConfigureAwait(false);
             }
         }
 
@@ -319,9 +281,14 @@ namespace Mitternacht.Modules.Level
         [RequireContext(ContextType.Guild)]
         public async Task MsgXpRestrictions() {
             using (var uow = _db.UnitOfWork) {
-                if (!uow.MessageXpBlacklist.GetAll().Any()) await Context.Channel.SendErrorAsync("Es gibt keine Kanäle, in denen es keine XP auf Nachrichten gibt.");
+                if (!uow.MessageXpBlacklist.GetAll().Any()) await ErrorLocalized("msgxpr_none").ConfigureAwait(false);
                 else
-                    await Context.Channel.SendConfirmAsync("Kanäle ohne Nachrichten-XP", uow.MessageXpBlacklist.GetAll().OrderByDescending(m => m.ChannelId).Aggregate("", (s, m) => $"{s}<#{m.ChannelId}>, ", s => s.Substring(0, s.Length - 2)));
+                    await Context.Channel.SendConfirmAsync(GetText("msgxpr_title"),
+                            uow.MessageXpBlacklist
+                                .GetAll()
+                                .OrderByDescending(m => m.ChannelId)
+                                .Aggregate("", (s, m) => $"{s}{MentionUtils.MentionChannel(m.ChannelId)}, ", s => s.Substring(0, s.Length - 2)))
+                        .ConfigureAwait(false);
             }
         }
     }
