@@ -245,10 +245,10 @@ namespace Mitternacht.Modules.Level
                 var rlbs = roleLevelBindings.Skip(elementsPerPage * p).Take(elementsPerPage).ToList();
                 foreach (var rlb in rlbs) {
                     var rolename = Context.Guild.GetRole(rlb.RoleId)?.Name ?? rlb.RoleId.ToString();
-                    embed.AddInlineField($"#{elementsPerPage * p + rlbs.IndexOf(rlb)} - {rolename}", rlb.MinimumLevel);
+                    embed.AddInlineField($"#{elementsPerPage * p + rlbs.IndexOf(rlb) + 1} - {rolename}", rlb.MinimumLevel);
                 }
                 return embed;
-            }, pagecount).ConfigureAwait(false);
+            }, pagecount-1).ConfigureAwait(false);
         }
 
         [NadekoCommand, Usage, Description, Aliases]
