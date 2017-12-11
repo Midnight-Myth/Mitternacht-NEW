@@ -232,7 +232,7 @@ namespace Mitternacht.Modules.Level
                 await ReplyErrorLocalized("rlb_none").ConfigureAwait(false);
                 return;
             }
-            var pagecount = roleLevelBindings.Count / elementsPerPage;
+            var pagecount = (int)Math.Ceiling(roleLevelBindings.Count*1d / elementsPerPage);
             if (page > pagecount) {
                 await ReplyErrorLocalized("rlb_page_too_high").ConfigureAwait(false);
                 return;
