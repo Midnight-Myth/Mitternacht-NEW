@@ -8,6 +8,6 @@ namespace Mitternacht.Common.ModuleBehaviors
     /// </summary>
     public interface IEarlyBlocker
     {
-        Task<bool> TryBlockEarly(IGuild guild, IUserMessage msg);
+        Task<bool> TryBlockEarly(IGuild guild, IUserMessage msg, bool realExecution = true);
     }
 }

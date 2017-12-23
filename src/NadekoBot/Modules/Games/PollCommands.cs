@@ -31,9 +31,7 @@ namespace Mitternacht.Modules.Games
             [RequireContext(ContextType.Guild)]
             public async Task PollStats()
             {
-                if (!Service.ActivePolls.TryGetValue(Context.Guild.Id, out var poll))
-                    return;
-
+                if (!Service.ActivePolls.TryGetValue(Context.Guild.Id, out var poll))return;
                 await Context.Channel.EmbedAsync(poll.GetStats(GetText("current_poll_results")));
             }
 

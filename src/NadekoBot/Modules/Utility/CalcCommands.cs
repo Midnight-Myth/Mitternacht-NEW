@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Utility
 
                 using (var uow = db.UnitOfWork)
                 {
-                    return uow.LevelModel.GetLevel(user.Id);
+                    return uow.LevelModel.GetLevel(context.Guild.Id, user.Id);
                 }
             }
 
@@ -156,7 +156,7 @@ namespace Mitternacht.Modules.Utility
                 if (user == null) return null;
 
                 using (var uow = db.UnitOfWork)
-                    return uow.LevelModel.GetXp(user.Id);
+                    return uow.LevelModel.GetTotalXp(context.Guild.Id, user.Id);
             }
 
             //levelxp(lvl): xp needed to reach the given level beginning at level 0

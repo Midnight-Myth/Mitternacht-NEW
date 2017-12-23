@@ -26,18 +26,15 @@ namespace Mitternacht.Modules.CustomReactions.Services
         public ConcurrentDictionary<string, uint> ReactionStats { get; } = new ConcurrentDictionary<string, uint>();
 
         private readonly Logger _log;
-        private readonly DbService _db;
         private readonly DiscordSocketClient _client;
         private readonly PermissionService _perms;
         private readonly CommandHandler _cmd;
         private readonly IBotConfigProvider _bc;
         private readonly NadekoStrings _strings;
 
-        public CustomReactionsService(PermissionService perms, DbService db, NadekoStrings strings,
-            DiscordSocketClient client, CommandHandler cmd, IBotConfigProvider bc, IUnitOfWork uow)
+        public CustomReactionsService(PermissionService perms, NadekoStrings strings, DiscordSocketClient client, CommandHandler cmd, IBotConfigProvider bc, IUnitOfWork uow)
         {
             _log = LogManager.GetCurrentClassLogger();
-            _db = db;
             _client = client;
             _perms = perms;
             _cmd = cmd;
@@ -45,7 +42,7 @@ namespace Mitternacht.Modules.CustomReactions.Services
             _strings = strings;
 
             var items = uow.CustomReactions.GetAll().ToList();
-            GuildReactions = new ConcurrentDictionary<ulong, CustomReaction[]>(items.Where(g => g.GuildId != null && g.GuildId != 0).GroupBy(k => k.GuildId.Value).ToDictionary(g => g.Key, g => g.ToArray()));
+            GuildReactions = new ConcurrentDictionary<ulong, CustomReaction[]>(items.Where(cr => cr.GuildId != null && cr.GuildId != 0).GroupBy(cr => cr.GuildId.Value).ToDictionary(cr => cr.Key, cr => cr.ToArray()));
             GlobalReactions = items.Where(g => g.GuildId == null || g.GuildId == 0).ToArray();
         }
 
@@ -53,40 +50,29 @@ namespace Mitternacht.Modules.CustomReactions.Services
 
         public CustomReaction TryGetCustomReaction(IUserMessage umsg)
         {
-            var channel = umsg.Channel as SocketTextChannel;
-            if (channel == null)
-                return null;
+            if (!(umsg.Channel is SocketTextChannel channel)) return null;
 
             var content = umsg.Content.Trim().ToLowerInvariant();
 
-            if (GuildReactions.TryGetValue(channel.Guild.Id, out CustomReaction[] reactions))
-                if (reactions != null && reactions.Any())
-                {
-                    var rs = reactions.Where(cr =>
-                    {
-                        if (cr == null)
-                            return false;
+            if (GuildReactions.TryGetValue(channel.Guild.Id, out var reactions) && reactions != null && reactions.Any()) {
+                var rs = reactions.Where(cr => {
+                    if (cr == null) return false;
 
-                        var hasTarget = cr.Response.ToLowerInvariant().Contains("%target%");
-                        var trigger = cr.TriggerWithContext(umsg, _client).Trim().ToLowerInvariant();
-                        return ((cr.ContainsAnywhere &&
-                            (content.GetWordPosition(trigger) != WordPosition.None))
-                            || (hasTarget && content.StartsWith(trigger + " "))
-                            || (_bc.BotConfig.CustomReactionsStartWith && content.StartsWith(trigger + " "))
-                            || content == trigger);
-                    }).ToArray();
+                    var hasTarget = cr.Response.ToLowerInvariant().Contains("%target%");
+                    var trigger = cr.TriggerWithContext(umsg, _client).Trim().ToLowerInvariant();
+                    return cr.ContainsAnywhere && content.GetWordPosition(trigger) != WordPosition.None
+                           || hasTarget && content.StartsWith(trigger + " ")
+                           || _bc.BotConfig.CustomReactionsStartWith && content.StartsWith(trigger + " ")
+                           || content == trigger;
+                }).ToArray();
 
-                    if (rs.Length != 0)
-                    {
-                        var reaction = rs[new NadekoRandom().Next(0, rs.Length)];
-                        if (reaction != null)
-                        {
-                            if (reaction.Response == "-")
-                                return null;
-                            return reaction;
-                        }
+                if (rs.Length != 0) {
+                    var reaction = rs[new NadekoRandom().Next(0, rs.Length)];
+                    if (reaction != null) {
+                        return reaction.Response == "-" ? null : reaction;
                     }
                 }
+            }
 
             var grs = GlobalReactions.Where(cr =>
             {
@@ -94,7 +80,7 @@ namespace Mitternacht.Modules.CustomReactions.Services
                     return false;
                 var hasTarget = cr.Response.ToLowerInvariant().Contains("%target%");
                 var trigger = cr.TriggerWithContext(umsg, _client).Trim().ToLowerInvariant();
-                return ((hasTarget && content.StartsWith(trigger + " ")) || (_bc.BotConfig.CustomReactionsStartWith && content.StartsWith(trigger + " ")) || content == trigger);
+                return hasTarget && content.StartsWith(trigger + " ") || _bc.BotConfig.CustomReactionsStartWith && content.StartsWith(trigger + " ") || content == trigger;
             }).ToArray();
             if (grs.Length == 0)
                 return null;
@@ -103,22 +89,23 @@ namespace Mitternacht.Modules.CustomReactions.Services
             return greaction;
         }
 
-        public async Task<bool> TryExecuteEarly(DiscordSocketClient client, IGuild guild, IUserMessage msg)
+        public async Task<bool> TryExecuteEarly(DiscordSocketClient client, IGuild guild, IUserMessage msg, bool realExecution = true)
         {
             // maybe this message is a custom reaction
             var cr = await Task.Run(() => TryGetCustomReaction(msg)).ConfigureAwait(false);
             if (cr == null) return false;
+            if (!realExecution) return true;
+
             try
             {
                 if (guild is SocketGuild sg)
                 {
                     var pc = _perms.GetCache(guild.Id);
-                    if (!pc.Permissions.CheckPermissions(msg, cr.Trigger, "ActualCustomReactions",
-                        out int index))
+                    if (!pc.Permissions.CheckPermissions(msg, cr.Trigger, "ActualCustomReactions", out var index))
                     {
                         if (!pc.Verbose) return true;
-                        var returnMsg = _strings.GetText("trigger", guild.Id, "Permissions".ToLowerInvariant(), index + 1, Format.Bold(pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), (SocketGuild)guild)));
-                        try { await msg.Channel.SendErrorAsync(returnMsg).ConfigureAwait(false); } catch { }
+                        var returnMsg = _strings.GetText("trigger", guild.Id, "Permissions".ToLowerInvariant(), index + 1, Format.Bold(pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), sg)));
+                        try { await msg.Channel.SendErrorAsync(returnMsg).ConfigureAwait(false); } catch { /*ignored*/ }
                         _log.Info(returnMsg);
                         return true;
                     }
@@ -126,7 +113,7 @@ namespace Mitternacht.Modules.CustomReactions.Services
                 await cr.Send(msg, _client, this).ConfigureAwait(false);
 
                 if (!cr.AutoDeleteTrigger) return true;
-                try { await msg.DeleteAsync().ConfigureAwait(false); } catch { }
+                try { await msg.DeleteAsync().ConfigureAwait(false); } catch { /*ignored*/ }
                 return true;
             }
             catch (Exception ex)

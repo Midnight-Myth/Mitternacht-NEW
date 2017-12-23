@@ -388,7 +388,7 @@ namespace Mitternacht.Services
             var chosenOverload = successfulParses[0];
             var execResult = (ExecuteResult)await chosenOverload.Key.ExecuteAsync(context, chosenOverload.Value, services).ConfigureAwait(false);
 
-            if (execResult.Exception == null || (execResult.Exception is HttpException he && he.DiscordCode == 50013))
+            if (execResult.Exception == null || execResult.Exception is HttpException he && he.DiscordCode == 50013)
                 return (true, null, cmd);
             lock (_errorLogLock)
             {
@@ -401,6 +401,45 @@ namespace Mitternacht.Services
             }
 
             return (true, null, cmd);
+        }
+
+        public async Task<bool> WouldGetExecuted(IMessage msg) {
+            try
+            {
+                if (msg.Author.IsBot || !_bot.Ready.Task.IsCompleted) return false;
+                if (!(msg is SocketUserMessage usrMsg)) return false;
+
+                var guild = (msg.Channel as SocketTextChannel)?.Guild;
+
+                foreach (var svc in _services)
+                {
+                    if (!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, usrMsg, false).ConfigureAwait(false)) continue;
+                    return false;
+                }
+
+                foreach (var svc in _services)
+                {
+                    if (!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, usrMsg, false).ConfigureAwait(false)) continue;
+                    return false;
+                }
+
+                var messageContent = usrMsg.Content;
+                foreach (var svc in _services)
+                {
+                    string newContent;
+                    if (!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent, false).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
+                    messageContent = newContent;
+                    break;
+                }
+
+                var prefix = GetPrefix(guild?.Id);
+                var isPrefixCommand = messageContent.StartsWith(".prefix");
+
+                return messageContent.StartsWith(prefix) || isPrefixCommand;
+            }
+            catch (Exception) {
+                return false;
+            }
         }
 
         private readonly object _errorLogLock = new object();

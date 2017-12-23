@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services.Database.Repositories
@@ -12,12 +11,5 @@ namespace Mitternacht.Services.Database.Repositories
         bool IsRestricted(ulong guildId, ulong channelId);
         bool RemoveRestriction(ITextChannel channel);
         bool RemoveRestriction(ulong guildId, ulong channelId);
-
-        Task<bool> CreateRestrictionAsync(ITextChannel channel);
-        Task<bool> CreateRestrictionAsync(ulong guildId, ulong channelId);
-        Task<bool> IsRestrictedAsync(ITextChannel channel);
-        Task<bool> IsRestrictedAsync(ulong guildId, ulong channelId);
-        Task<bool> RemoveRestrictionAsync(ITextChannel channel);
-        Task<bool> RemoveRestrictionAsync(ulong guildId, ulong channelId);
     }
 }

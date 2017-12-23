@@ -3,122 +3,112 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
 using Discord.WebSocket;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Repositories;
+using Mitternacht.Services.Database.Repositories.Impl;
+using NLog;
 
 namespace Mitternacht.Modules.Level.Services
 {
     public class LevelService : INService
     {
+        private readonly DiscordSocketClient _client;
         private readonly DbService _db;
-        private readonly CommandService _cmds;
         private readonly CommandHandler _ch;
+        private readonly Logger _log;
 
-        public LevelService(DiscordSocketClient client, DbService db, CommandService cmds, CommandHandler ch) {
+        public LevelService(DiscordSocketClient client, DbService db, CommandHandler ch) {
+            _client = client;
             _db = db;
-            _cmds = cmds;
             _ch = ch;
-            client.MessageReceived += OnMessageReceived;
-            client.MessageUpdated += OnMessageUpdated;
+            _ch.OnMessageNoTrigger += OnMessageNoTrigger;
+            //client.MessageUpdated += OnMessageUpdated;
             client.MessageDeleted += OnMessageDeleted;
             client.MessageReceived += AddLevelRole;
+            LevelModelRepository.LevelChanged += SendLevelChangedMessage;
+            _log = LogManager.GetCurrentClassLogger();
         }
 
         private async Task AddLevelRole(SocketMessage sm)
         {
-            if (!(sm.Author is IGuildUser user))
-                return;
-            if (sm.Author.IsBot ||
-                _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || sm.Content.Equals(_ch.GetPrefix(user.Guild) + c2)))) return;
+            if (!(sm.Author is IGuildUser user)) return;
             
             List<IRole> rolesToAdd;
             using (var uow = _db.UnitOfWork) {
-                var level = uow.LevelModel.GetLevel(user.Id);
+                var level = uow.LevelModel.GetLevel(user.GuildId, user.Id);
                 var userroles = user.GetRoles().ToList();
-                var rlbs = uow.RoleLevelBinding.GetAll().ToList();
-                if(!rlbs.Any()) return;
-                var rlb = rlbs.Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
+                var rlb = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
                 rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).ToList();
             }
             if (!rolesToAdd.Any()) return;
             var rolestring = rolesToAdd.Aggregate("\"", (s, r) => $"{s}{r.Name}\", \"", s => s.Substring(0, s.Length - 3));
-            await user.AddRolesAsync(rolesToAdd);
-            await sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.");
+            await user.AddRolesAsync(rolesToAdd).ConfigureAwait(false);
+            await sm.Channel.SendMessageAsync($"{user.Mention} hat die Rolle{(rolesToAdd.Count > 1 ? "n" : "")} {rolestring} bekommen.").ConfigureAwait(false);
         }
 
-        private async Task OnMessageReceived(SocketMessage sm)
+        private async Task OnMessageNoTrigger(IUserMessage um)
         {
-            if (!(sm.Author is IGuildUser user))
-                return;
-            if (sm.Author.IsBot || sm.Content.Length < 10 ||
-                _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => sm.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || sm.Content.Equals(_ch.GetPrefix(user.Guild) + c2))))
-                return;
-
+            _log.Info("No Trigger!");
+            if (!(um.Author is IGuildUser user)) return;
+            _log.Info("No Trigger 2!");
             using (var uow = _db.UnitOfWork) {
-                if (await uow.MessageXpBlacklist.IsRestrictedAsync(sm.Channel as ITextChannel))
+                if (uow.MessageXpBlacklist.IsRestricted(um.Channel as ITextChannel) 
+                    || um.Content.Length < uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMin)
                     return;
+                _log.Info("No Trigger 3!");
+
                 var time = DateTime.Now;
-                if (uow.LevelModel.CanGetMessageXp(user.Id, time)) {
-                    uow.LevelModel.TryAddXp(user.Id, sm.Content.Length > 25 ? 25 : sm.Content.Length, false);
-                    uow.LevelModel.ReplaceTimestamp(user.Id, time);
-                    await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(user.Id), user, sm.Channel);
+                if (uow.LevelModel.CanGetMessageXp(user.GuildId, user.Id, time)) {
+                    _log.Info("No Trigger 4!");
+                    var maxXp = uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax;
+                    uow.LevelModel.AddXp(user.GuildId, user.Id, um.Content.Length > maxXp ? maxXp : um.Content.Length, um.Channel.Id);
+                    uow.LevelModel.ReplaceTimestamp(user.GuildId, user.Id, time);
                 }
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
-        private async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
+        //private async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
+        //{
+        //    var msgBefore = await before.GetOrDownloadAsync();
+        //    if (!(msgBefore.Author is IGuildUser user)) return;
+
+        //    var execBefore = await _ch.WouldGetExecuted(msgBefore);
+        //    var execAfter = await _ch.WouldGetExecuted(after);
+
+        //    if (execBefore && execAfter || msgBefore.Content.Length == after.Content.Length) return;
+
+        //    using (var uow = _db.UnitOfWork) {
+        //        if (await uow.MessageXpBlacklist.IsRestrictedAsync(channel as ITextChannel)) return;
+        //        uow.LevelModel.AddXp(user.GuildId, user.Id, after.Content.Length - msgBefore.Content.Length, channel.Id); //todo: fix XP leak
+        //        await uow.CompleteAsync().ConfigureAwait(false);
+        //    }
+        //}
+
+        private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel)
         {
-            var msgBefore = await before.GetOrDownloadAsync();
-            if (!(msgBefore.Author is IGuildUser user))
-                return;
+            var msg = await before.GetOrDownloadAsync();
+            if (!(msg.Author is IGuildUser user) || await _ch.WouldGetExecuted(msg)) return;
 
-            if (msgBefore.Author.IsBot || msgBefore.Content.Length > 25 && after.Content.Length > 25 || msgBefore.Content.Length < 10 && after.Content.Length < 10 ||
-                _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || msgBefore.Content.Equals(_ch.GetPrefix(user.Guild) + c2))))
-                return;
-
-            using (var uow = _db.UnitOfWork) {
-                if (await uow.MessageXpBlacklist.IsRestrictedAsync(channel as ITextChannel))
-                    return;
-                uow.LevelModel.TryAddXp(msgBefore.Author.Id, after.Content.Length - msgBefore.Content.Length, false);
-                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(after.Author.Id), after.Author, channel);
+            using (var uow = _db.UnitOfWork)
+            {
+                if (uow.MessageXpBlacklist.IsRestricted(channel as ITextChannel)) return;
+                uow.LevelModel.AddXp(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax, channel.Id);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
-        private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel)
-        {
-            var msgBefore = await before.GetOrDownloadAsync();
-            if (!(msgBefore.Author is IGuildUser user))
-                return;
+        private async Task SendLevelChangedMessage(LevelChangedArgs lc) {
+            if (lc.ChannelId == null) return;
+            var channel = _client.GetGuild(lc.GuildId)?.GetTextChannel(lc.ChannelId.Value);
+            if (channel == null) return;
 
-            if (msgBefore.Author.IsBot || msgBefore.Content.Length < 10 ||
-                _cmds.Commands.Any(
-                    c => c.Aliases.Any(c2 => msgBefore.Content.StartsWith(_ch.GetPrefix(user.Guild) + c2 + " ") || msgBefore.Content.Equals(_ch.GetPrefix(user.Guild) + c2))))
-                return;
-            using (var uow = _db.UnitOfWork) {
-                if (await uow.MessageXpBlacklist.IsRestrictedAsync(channel as ITextChannel))
-                    return;
-                uow.LevelModel.TryAddXp(msgBefore.Author.Id, msgBefore.Content.Length > 25 ? -25 : -msgBefore.Content.Length);
-                await SendLevelChangedMessage(uow.LevelModel.CalculateLevel(msgBefore.Author.Id), msgBefore.Author, channel);
-                uow.Complete();
-            }
-        }
-
-        public async Task SendLevelChangedMessage(CalculatedLevel cl, IMentionable user, IMessageChannel smc)
-        {
-            if (cl.IsNewLevelHigher) {
-                await smc.SendMessageAsync($"Herzlichen Glückwunsch { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } aufgestiegen!");
-            }
-            else if (cl.IsNewLevelLower) {
-                await smc.SendMessageAsync($"Schade { user.Mention }, du bist von Level { cl.OldLevel } auf Level { cl.NewLevel } abgestiegen :(");
-            }
+            if (lc.ChangeType == LevelChangedArgs.ChangeTypes.Up)
+                await channel.SendConfirmAsync($"Herzlichen Glückwunsch {MentionUtils.MentionUser(lc.UserId)}, du bist von Level {lc.OldLevel} auf Level {lc.NewLevel} aufgestiegen!").ConfigureAwait(false);
+            else if (lc.ChangeType == LevelChangedArgs.ChangeTypes.Down)
+                await channel.SendConfirmAsync($"Schade {MentionUtils.MentionUser(lc.UserId)}, du bist von Level {lc.OldLevel} auf Level {lc.NewLevel} abgestiegen.").ConfigureAwait(false);
         }
     }
 }

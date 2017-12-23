@@ -132,6 +132,7 @@
   "administration_renrole": "Rolle umbenannt.",
   "administration_renrole_err": "Umbenennen der Rolle fehlgeschlagen. Ich habe nicht die erforderlichen Rechte.",
   "administration_renrole_perms": "Sie kännen keine Rollen bearbeiten die höher als Ihre eigenen sind.",
+  "administration_replacedefaultlevelmodelguild": "{0} Einträge geupdatet!",
   "administration_reprm": "Die Abspielnachricht wurde entfernt: {0}",
   "administration_rh": "Die Anzeige der Gildenrolle {0} wurde auf {1} gesetzt.",
   "administration_role_added": "Die Rolle {0} wurde zur Liste hinzugefügt.",
@@ -466,6 +467,8 @@
   "help_table_of_contents": "Inhaltsverzeichnis",
   "help_usage": "Verwendung",
   "level_addxp": "{0} XP an {1} vergeben.",
+  "level_levelguilddata": "{0} ist gesetzt auf {1}",
+  "level_levelguilddata_changed": "{0} wurde von {1} auf {2} gesetzt.",
   "level_msgxpr_add_fail": "In Kanal {0} gibt es schon keine XP auf Nachrichten.",
   "level_msgxpr_add_success": "Nachrichten in Kanal {0} geben nun keine XP mehr.",
   "level_msgxpr_none": "Es gibt keine Kanäle, in denen es keine XP auf Nachrichten gibt.",
@@ -478,8 +481,11 @@
   "level_ranks_list_header": "Liste {0}\nRang | Username                              | Lvl | XP            | Total XP\n-----|---------------------------------------|-----|---------------|---------",
   "level_ranks_list_row": "{0}. | {1} | {2} | {3}/{4} | {5}",
   "level_rlb_already_independent": "Für die Rolle {0} gibt es keine Steigerung der Levelunabhängigkeit!",
+  "level_rlb_none": "Es existieren keine Rolle-Level-Beziehungen.",
+  "level_rlb_page_too_high": "Die Seitenzahl ist zu groß.",
   "level_rlb_removed": "Die Rolle {0} ist nun levelunabhängig.",
   "level_rlb_set": "Die Rolle {0} wird nun Nutzern ab Level {1} vergeben.",
+  "level_rlb_set_minlevel": "Das Mindestlevel muss mindestens 0 sein.",
   "level_rlb_title": "Rolle-Level-Beziehungen",
   "level_setxp": "XP von {0} auf {1} gesetzt.",
   "level_ttxp_error_negative_value": "Du kannst XP nicht in Geld zurückverwandeln!",
@@ -885,8 +891,5 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
-  "level_rlb_set_minlevel": "Das Mindestlevel muss mindestens 0 sein.",
-  "level_rlb_page_too_high": "Die Seitenzahl ist zu groß.",
-  "level_rlb_none": "Es existieren keine Rolle-Level-Beziehungen." 
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
 }

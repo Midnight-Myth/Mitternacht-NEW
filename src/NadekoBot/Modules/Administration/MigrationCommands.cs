@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class MigrationCommands : NadekoSubmodule
         {
-            private const int CURRENT_VERSION = 1;
+            private const int CurrentVersion = 1;
             private readonly DbService _db;
 
             public MigrationCommands(DbService db)
@@ -34,21 +34,15 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task MigrateData()
             {
-                var version = 0;
+                int version;
                 using (var uow = _db.UnitOfWork)
                 {
                     version = uow.BotConfig.GetOrCreate().MigrationVersion;
                 }
                 try
                 {
-                    for (var i = version; i < CURRENT_VERSION; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                Migrate0_9To1_0();
-                                break;
-                        }
+                    for (var i = version; i < CurrentVersion; i++) {
+                        if (i == 0) Migrate0_9To1_0();
                     }
                     await ReplyConfirmLocalized("migration_done").ConfigureAwait(false);
                 }
@@ -98,7 +92,7 @@ namespace Mitternacht.Modules.Administration
                     {
                         var gid = (ulong)(long)reader["ServerId"];
                         var greet = (long)reader["Greet"] == 1;
-                        var greetDM = (long)reader["GreetPM"] == 1;
+                        var greetDm = (long)reader["GreetPM"] == 1;
                         var greetChannel = (ulong)(long)reader["GreetChannelId"];
                         var greetMsg = (string)reader["GreetText"];
                         var bye = (long)reader["Bye"] == 1;
@@ -106,7 +100,7 @@ namespace Mitternacht.Modules.Administration
                         var byeMsg = (string)reader["ByeText"];
                         var gc = uow.GuildConfigs.For(gid, set => set);
 
-                        if (greetDM)
+                        if (greetDm)
                             gc.SendDmGreetMessage = greet;
                         else
                             gc.SendChannelGreetMessage = greet;
@@ -134,8 +128,7 @@ namespace Mitternacht.Modules.Administration
                     while (reader2.Read())
                     {
                         _log.Info(++i);
-                        var curr = new Currency()
-                        {
+                        var curr = new Currency {
                             Amount = (long)reader2["Value"],
                             UserId = (ulong)(long)reader2["UserId"]
                         };
@@ -147,7 +140,7 @@ namespace Mitternacht.Modules.Administration
                     _log.Warn("Currency won't be migrated");
                 }
                 db.Close();
-                try { File.Move("data/nadekobot.sqlite", "data/DELETE_ME_nadekobot.sqlite"); } catch { }
+                try { File.Move("data/nadekobot.sqlite", "data/DELETE_ME_nadekobot.sqlite"); } catch { /*ignored*/ }
             }
 
             private void MigrateServerSpecificConfigs0_9(IUnitOfWork uow)
@@ -160,7 +153,7 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                var configs = new ConcurrentDictionary<ulong, ServerSpecificConfig>();
+                ConcurrentDictionary<ulong, ServerSpecificConfig> configs;
                 try
                 {
                     configs = JsonConvert
@@ -197,16 +190,16 @@ namespace Mitternacht.Modules.Administration
                             guildConfig.DeleteMessageOnCommand = data.AutoDeleteMessagesOnCommand;
                             guildConfig.DefaultMusicVolume = data.DefaultMusicVolume;
                             guildConfig.ExclusiveSelfAssignedRoles = data.ExclusiveSelfAssignedRoles;
-                            guildConfig.GenerateCurrencyChannelIds = new HashSet<GCChannelId>(data.GenerateCurrencyChannels.Select(gc => new GCChannelId() { ChannelId = gc.Key }));
-                            selfAssRoles.AddRange(data.ListOfSelfAssignableRoles.Select(r => new SelfAssignedRole() { GuildId = guildConfig.GuildId, RoleId = r }).ToArray());
-                            guildConfig.LogSetting.IgnoredChannels = new HashSet<IgnoredLogChannel>(data.LogserverIgnoreChannels.Select(id => new IgnoredLogChannel() { ChannelId = id }));
+                            guildConfig.GenerateCurrencyChannelIds = new HashSet<GCChannelId>(data.GenerateCurrencyChannels.Select(gc => new GCChannelId { ChannelId = gc.Key }));
+                            selfAssRoles.AddRange(data.ListOfSelfAssignableRoles.Select(r => new SelfAssignedRole { GuildId = guildConfig.GuildId, RoleId = r }).ToArray());
+                            guildConfig.LogSetting.IgnoredChannels = new HashSet<IgnoredLogChannel>(data.LogserverIgnoreChannels.Select(id => new IgnoredLogChannel { ChannelId = id }));
 
                             guildConfig.LogSetting.LogUserPresenceId = data.LogPresenceChannel;
 
 
                             guildConfig.FollowedStreams = new HashSet<FollowedStream>(data.ObservingStreams.Select(x =>
                             {
-                                FollowedStream.FollowedStreamType type = FollowedStream.FollowedStreamType.Twitch;
+                                var type = FollowedStream.FollowedStreamType.Twitch;
                                 switch (x.Type)
                                 {
                                     case StreamNotificationConfig0_9.StreamType.Twitch:
@@ -218,12 +211,11 @@ namespace Mitternacht.Modules.Administration
                                     case StreamNotificationConfig0_9.StreamType.Hitbox:
                                         type = FollowedStream.FollowedStreamType.Smashcast;
                                         break;
-                                    default:
+                                    case StreamNotificationConfig0_9.StreamType.YoutubeGaming:
                                         break;
                                 }
 
-                                return new FollowedStream()
-                                {
+                                return new FollowedStream {
                                     ChannelId = x.ChannelId,
                                     GuildId = guildConfig.GuildId,
                                     Username = x.Username.ToLowerInvariant(),
@@ -239,7 +231,7 @@ namespace Mitternacht.Modules.Administration
                         }
                     });
                 uow.SelfAssignedRoles.AddRange(selfAssRoles.ToArray());
-                try { File.Move("data/ServerSpecificConfigs.json", "data/DELETE_ME_ServerSpecificCOnfigs.json"); } catch { }
+                try { File.Move("data/ServerSpecificConfigs.json", "data/DELETE_ME_ServerSpecificCOnfigs.json"); } catch { /*ignored*/ }
             }
 
             private void MigratePermissions0_9(IUnitOfWork uow)
@@ -279,32 +271,31 @@ namespace Mitternacht.Modules.Administration
                             gconfig.PermissionRole = data.PermissionsControllerRole;
                             gconfig.VerbosePermissions = data.Verbose;
                             gconfig.FilteredWords = new HashSet<FilteredWord>(data.Words.Select(w => w.ToLowerInvariant())
-                                                                                        .Distinct()
-                                                                                        .Select(w => new FilteredWord() { Word = w }));
+                                .Distinct()
+                                .Select(w => new FilteredWord {
+                                    Word = w
+                                }));
                             gconfig.FilterWords = data.Permissions.FilterWords;
                             gconfig.FilterInvites = data.Permissions.FilterInvites;
 
                             gconfig.FilterInvitesChannelIds = new HashSet<FilterChannelId>();
                             gconfig.FilterInvitesChannelIds.AddRange(data.ChannelPermissions.Where(kvp => kvp.Value.FilterInvites)
-                                                                                            .Select(cp => new FilterChannelId()
-                                                                                            {
-                                                                                                ChannelId = cp.Key
-                                                                                            }));
+                                .Select(cp => new FilterChannelId {
+                                    ChannelId = cp.Key
+                                }));
 
                             gconfig.FilterWordsChannelIds = new HashSet<FilterChannelId>();
                             gconfig.FilterWordsChannelIds.AddRange(data.ChannelPermissions.Where(kvp => kvp.Value.FilterWords)
-                                                                                            .Select(cp => new FilterChannelId()
-                                                                                            {
-                                                                                                ChannelId = cp.Key
-                                                                                            }));
+                                .Select(cp => new FilterChannelId {
+                                    ChannelId = cp.Key
+                                }));
 
                             gconfig.CommandCooldowns = new HashSet<CommandCooldown>(data.CommandCooldowns
-                                                                                        .Where(cc => !string.IsNullOrWhiteSpace(cc.Key) && cc.Value > 0)
-                                                                                        .Select(cc => new CommandCooldown()
-                                                                                        {
-                                                                                            CommandName = cc.Key,
-                                                                                            Seconds = cc.Value
-                                                                                        }));
+                                .Where(cc => !string.IsNullOrWhiteSpace(cc.Key) && cc.Value > 0)
+                                .Select(cc => new CommandCooldown {
+                                    CommandName = cc.Key,
+                                    Seconds = cc.Value
+                                }));
                             _log.Info("Migrating data from permissions folder for {0} done ({1})", gconfig.GuildId, ++i);
                         }
                         catch (Exception ex)
@@ -313,7 +304,7 @@ namespace Mitternacht.Modules.Administration
                         }
                     });
 
-                try { Directory.Move("data/permissions", "data/DELETE_ME_permissions"); } catch { }
+                try { Directory.Move("data/permissions", "data/DELETE_ME_permissions"); } catch { /*ignored*/ }
 
             }
 
@@ -355,66 +346,78 @@ namespace Mitternacht.Modules.Administration
 
                 //Prefix
                 botConfig.ModulePrefixes.Clear();
-                botConfig.ModulePrefixes.AddRange(new HashSet<ModulePrefix>
-                {
-                    new ModulePrefix()
-                    {
+                botConfig.ModulePrefixes.AddRange(new HashSet<ModulePrefix> {
+                    new ModulePrefix {
                         ModuleName = "Administration",
                         Prefix = oldConfig.CommandPrefixes.Administration
                     },
-                    new ModulePrefix()
-                    {
+                    new ModulePrefix {
                         ModuleName = "Searches",
                         Prefix = oldConfig.CommandPrefixes.Searches
                     },
-                    new ModulePrefix() {ModuleName = "NSFW", Prefix = oldConfig.CommandPrefixes.NSFW},
-                    new ModulePrefix()
-                    {
+                    new ModulePrefix {
+                        ModuleName = "NSFW",
+                        Prefix = oldConfig.CommandPrefixes.NSFW
+                    },
+                    new ModulePrefix {
                         ModuleName = "Conversations",
                         Prefix = oldConfig.CommandPrefixes.Conversations
                     },
-                    new ModulePrefix()
-                    {
+                    new ModulePrefix {
                         ModuleName = "ClashOfClans",
                         Prefix = oldConfig.CommandPrefixes.ClashOfClans
                     },
-                    new ModulePrefix() {ModuleName = "Help", Prefix = oldConfig.CommandPrefixes.Help},
-                    new ModulePrefix() {ModuleName = "Music", Prefix = oldConfig.CommandPrefixes.Music},
-                    new ModulePrefix() {ModuleName = "Trello", Prefix = oldConfig.CommandPrefixes.Trello},
-                    new ModulePrefix() {ModuleName = "Games", Prefix = oldConfig.CommandPrefixes.Games},
-                    new ModulePrefix()
-                    {
+                    new ModulePrefix {
+                        ModuleName = "Help",
+                        Prefix = oldConfig.CommandPrefixes.Help
+                    },
+                    new ModulePrefix {
+                        ModuleName = "Music",
+                        Prefix = oldConfig.CommandPrefixes.Music
+                    },
+                    new ModulePrefix {
+                        ModuleName = "Trello",
+                        Prefix = oldConfig.CommandPrefixes.Trello
+                    },
+                    new ModulePrefix {
+                        ModuleName = "Games",
+                        Prefix = oldConfig.CommandPrefixes.Games
+                    },
+                    new ModulePrefix {
                         ModuleName = "Gambling",
                         Prefix = oldConfig.CommandPrefixes.Gambling
                     },
-                    new ModulePrefix()
-                    {
+                    new ModulePrefix {
                         ModuleName = "Permissions",
                         Prefix = oldConfig.CommandPrefixes.Permissions
                     },
-                    new ModulePrefix()
-                    {
+                    new ModulePrefix {
                         ModuleName = "Programming",
                         Prefix = oldConfig.CommandPrefixes.Programming
                     },
-                    new ModulePrefix() {ModuleName = "Pokemon", Prefix = oldConfig.CommandPrefixes.Pokemon},
-                    new ModulePrefix() {ModuleName = "Utility", Prefix = oldConfig.CommandPrefixes.Utility}
+                    new ModulePrefix {
+                        ModuleName = "Pokemon",
+                        Prefix = oldConfig.CommandPrefixes.Pokemon
+                    },
+                    new ModulePrefix {
+                        ModuleName = "Utility",
+                        Prefix = oldConfig.CommandPrefixes.Utility
+                    }
                 });
 
                 //Blacklist
-                var blacklist = new HashSet<BlacklistItem>(oldConfig.ServerBlacklist.Select(server => new BlacklistItem() { ItemId = server, Type = BlacklistType.Server }));
-                blacklist.AddRange(oldConfig.ChannelBlacklist.Select(channel => new BlacklistItem() { ItemId = channel, Type = BlacklistType.Channel }));
-                blacklist.AddRange(oldConfig.UserBlacklist.Select(user => new BlacklistItem() { ItemId = user, Type = BlacklistType.User }));
+                var blacklist = new HashSet<BlacklistItem>(oldConfig.ServerBlacklist.Select(server => new BlacklistItem { ItemId = server, Type = BlacklistType.Server }));
+                blacklist.AddRange(oldConfig.ChannelBlacklist.Select(channel => new BlacklistItem { ItemId = channel, Type = BlacklistType.Channel }));
+                blacklist.AddRange(oldConfig.UserBlacklist.Select(user => new BlacklistItem { ItemId = user, Type = BlacklistType.User }));
                 botConfig.Blacklist = blacklist;
 
                 //Eightball
-                botConfig.EightBallResponses = new HashSet<EightBallResponse>(oldConfig._8BallResponses.Select(response => new EightBallResponse() { Text = response }));
+                botConfig.EightBallResponses = new HashSet<EightBallResponse>(oldConfig._8BallResponses.Select(response => new EightBallResponse { Text = response }));
 
                 //customreactions
                 uow.CustomReactions.AddRange(oldConfig.CustomReactions.SelectMany(cr =>
                 {
-                    return cr.Value.Select(res => new CustomReaction()
-                    {
+                    return cr.Value.Select(res => new CustomReaction {
                         GuildId = null,
                         IsRegex = false,
                         OwnerOnly = false,
@@ -423,7 +426,23 @@ namespace Mitternacht.Modules.Administration
                     });
                 }).ToArray());
 
-                try { File.Move(configPath, "./data/DELETE_ME_config.json"); } catch { }
+                try { File.Move(configPath, "./data/DELETE_ME_config.json"); } catch { /*ignored*/ }
+            }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [OwnerOnly]
+            public async Task ReplaceDefaultLevelModelGuild(ulong guildId) {
+                var counter = 0;
+                using (var uow = _db.UnitOfWork) {
+                    foreach (var lm in uow.LevelModel.GetAll()) {
+                        if (lm.GuildId != 0) continue;
+                        lm.GuildId = guildId;
+                        uow.LevelModel.Update(lm);
+                        counter++;
+                    }
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+                await ConfirmLocalized("replacedefaultlevelmodelguild", counter).ConfigureAwait(false);
             }
         }
     }

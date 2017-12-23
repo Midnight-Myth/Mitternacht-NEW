@@ -37,33 +37,5 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             _set.Remove(_set.First(m => m.GuildId == guildId && m.ChannelId == channelId));
             return true;
         }
-
-        public async Task<bool> CreateRestrictionAsync(ITextChannel channel)
-            => await CreateRestrictionAsync(channel.GuildId, channel.Id);
-
-        public async Task<bool> CreateRestrictionAsync(ulong guildId, ulong channelId) {
-            if (await IsRestrictedAsync(guildId, channelId)) return false;
-            await _set.AddAsync(new MessageXpRestriction {
-                ChannelId = channelId,
-                GuildId = guildId
-            });
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> IsRestrictedAsync(ITextChannel channel)
-            => await IsRestrictedAsync(channel.GuildId, channel.Id);
-
-        public async Task<bool> IsRestrictedAsync(ulong guildId, ulong channelId)
-            => await _set.AnyAsync(m => m.GuildId == guildId && m.ChannelId == channelId);
-
-        public async Task<bool> RemoveRestrictionAsync(ITextChannel channel)
-            => await RemoveRestrictionAsync(channel.GuildId, channel.Id);
-
-        public async Task<bool> RemoveRestrictionAsync(ulong guildId, ulong channelId) {
-            if (!await IsRestrictedAsync(guildId, channelId)) return false;
-            _set.Remove(await _set.FirstAsync(m => m.GuildId == guildId && m.ChannelId == channelId));
-            return true;
-        }
     }
 }
