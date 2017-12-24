@@ -3407,5 +3407,12 @@
     "aliases": [],
     "desc": "Zeigt die möglichen levelmodulrelevanten Gildenkonfigurationen an.",
     "usage": "`{0}levelguilddatachoices`"
+  },
+  {
+    "name": "setguildconfigleveldefaults",
+    "cmd": "setguildconfigleveldefaults",
+    "aliases": [],
+    "desc": "Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück.",
+    "usage": "`{0}setguildconfigleveldefaults [guildId1] ... [guildIdX]`"
   }
 ]

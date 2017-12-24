@@ -458,6 +458,26 @@ namespace Mitternacht.Modules.Administration
                 }
                 await ConfirmLocalized("replacedefaultlevelmodelguild", counter).ConfigureAwait(false);
             }
+
+            [NadekoCommand, Usage, Description, Aliases]
+            [OwnerOnly]
+            public async Task SetGuildConfigLevelDefaults(params ulong[] guildIds) {
+                int count;
+                using (var uow = _db.UnitOfWork) {
+                    var gcs = uow.GuildConfigs.GetAll().ToList();
+                    if (guildIds.Length > 0) gcs = gcs.Where(gc => guildIds.Contains(gc.GuildId)).ToList();
+                    count = gcs.Count;
+                    gcs.ForEach(gc => {
+                        gc.TurnToXpMultiplier = 5;
+                        gc.MessageXpTimeDifference = 60;
+                        gc.MessageXpCharCountMin = 10;
+                        gc.MessageXpCharCountMax = 25;
+                    });
+                    uow.GuildConfigs.UpdateRange(gcs.ToArray());
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+                await ConfirmLocalized("setguildconfigleveldefaults", count).ConfigureAwait(false);
+            }
         }
     }
 }
