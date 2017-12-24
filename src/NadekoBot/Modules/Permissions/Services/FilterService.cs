@@ -29,7 +29,7 @@ namespace Mitternacht.Modules.Permissions.Services
 
         public ConcurrentHashSet<string> FilteredWordsForChannel(ulong channelId, ulong guildId)
         {
-            ConcurrentHashSet<string> words = new ConcurrentHashSet<string>();
+            var words = new ConcurrentHashSet<string>();
             if (WordFilteringChannels.Contains(channelId))
                 ServerFilteredWords.TryGetValue(guildId, out words);
             return words;
@@ -43,10 +43,11 @@ namespace Mitternacht.Modules.Permissions.Services
             return words;
         }
 
-        public FilterService(DiscordSocketClient _client, IEnumerable<GuildConfig> gcs)
+        public FilterService(DiscordSocketClient client, IEnumerable<GuildConfig> igcs)
         {
             _log = LogManager.GetCurrentClassLogger();
-
+            var gcs = igcs.ToList();
+            
             InviteFilteringServers = new ConcurrentHashSet<ulong>(gcs.Where(gc => gc.FilterInvites).Select(gc => gc.GuildId));
             InviteFilteringChannels = new ConcurrentHashSet<ulong>(gcs.SelectMany(gc => gc.FilterInvitesChannelIds.Select(fci => fci.ChannelId)));
 
@@ -59,14 +60,13 @@ namespace Mitternacht.Modules.Permissions.Services
 
             WordFilteringChannels = new ConcurrentHashSet<ulong>(gcs.SelectMany(gc => gc.FilterWordsChannelIds.Select(fwci => fwci.ChannelId)));
 
-            _client.MessageUpdated += (oldData, newMsg, channel) =>
+            client.MessageUpdated += (oldData, newMsg, channel) =>
             {
                 var _ = Task.Run(() =>
                 {
                     var guild = (channel as ITextChannel)?.Guild;
-                    var usrMsg = newMsg as IUserMessage;
 
-                    if (guild == null || usrMsg == null)
+                    if (guild == null || !(newMsg is IUserMessage usrMsg))
                         return Task.CompletedTask;
 
                     return TryBlockEarly(guild, usrMsg);
@@ -75,66 +75,46 @@ namespace Mitternacht.Modules.Permissions.Services
             };
         }
 
-        public async Task<bool> TryBlockEarly(IGuild guild, IUserMessage msg)
-            => !(msg.Author is IGuildUser gu) //it's never filtered outside of guilds, and never block administrators
-                ? false
-                : !gu.GuildPermissions.Administrator && (await FilterInvites(guild, msg) || await FilterWords(guild, msg));
+        public async Task<bool> TryBlockEarly(IGuild guild, IUserMessage msg, bool realExecution = true)
+            => msg.Author is IGuildUser gu && !gu.GuildPermissions.Administrator && (await FilterInvites(guild, msg, realExecution) || await FilterWords(guild, msg, realExecution));
 
-        public async Task<bool> FilterWords(IGuild guild, IUserMessage usrMsg)
+        public async Task<bool> FilterWords(IGuild guild, IUserMessage usrMsg, bool realExecution = true)
         {
-            if (guild is null)
-                return false;
-            if (usrMsg is null)
-                return false;
+            if (guild is null || usrMsg is null) return false;
 
             var filteredChannelWords = FilteredWordsForChannel(usrMsg.Channel.Id, guild.Id) ?? new ConcurrentHashSet<string>();
             var filteredServerWords = FilteredWordsForServer(guild.Id) ?? new ConcurrentHashSet<string>();
             var wordsInMessage = usrMsg.Content.ToLowerInvariant().Split(' ');
-            if (filteredChannelWords.Count != 0 || filteredServerWords.Count != 0)
+            if (filteredChannelWords.Count == 0 && filteredServerWords.Count == 0) return false;
+            if (!wordsInMessage.Any(word => filteredChannelWords.Contains(word) || filteredServerWords.Contains(word))) return false;
+            if (!realExecution) return true;
+            try
             {
-                foreach (var word in wordsInMessage)
-                {
-                    if (filteredChannelWords.Contains(word) ||
-                        filteredServerWords.Contains(word))
-                    {
-                        try
-                        {
-                            await usrMsg.DeleteAsync().ConfigureAwait(false);
-                        }
-                        catch (HttpException ex)
-                        {
-                            _log.Warn("I do not have permission to filter words in channel with id " + usrMsg.Channel.Id, ex);
-                        }
-                        return true;
-                    }
-                }
+                await usrMsg.DeleteAsync().ConfigureAwait(false);
             }
-            return false;
+            catch (HttpException ex)
+            {
+                _log.Warn("I do not have permission to filter words in channel with id " + usrMsg.Channel.Id, ex);
+            }
+            return true;
         }
 
-        public async Task<bool> FilterInvites(IGuild guild, IUserMessage usrMsg)
+        public async Task<bool> FilterInvites(IGuild guild, IUserMessage usrMsg, bool realExecution = true)
         {
-            if (guild is null)
-                return false;
-            if (usrMsg is null)
-                return false;
+            if (guild is null || usrMsg is null) return false;
 
-            if ((InviteFilteringChannels.Contains(usrMsg.Channel.Id)
-                || InviteFilteringServers.Contains(guild.Id))
-                && usrMsg.Content.IsDiscordInvite())
+            if (!InviteFilteringChannels.Contains(usrMsg.Channel.Id) && !InviteFilteringServers.Contains(guild.Id) || !usrMsg.Content.IsDiscordInvite()) return false;
+            if (!realExecution) return true;
+            try
             {
-                try
-                {
-                    await usrMsg.DeleteAsync().ConfigureAwait(false);
-                    return true;
-                }
-                catch (HttpException ex)
-                {
-                    _log.Warn("I do not have permission to filter invites in channel with id " + usrMsg.Channel.Id, ex);
-                    return true;
-                }
+                await usrMsg.DeleteAsync().ConfigureAwait(false);
+                return true;
             }
-            return false;
+            catch (HttpException ex)
+            {
+                _log.Warn("I do not have permission to filter invites in channel with id " + usrMsg.Channel.Id, ex);
+                return true;
+            }
         }
     }
 }

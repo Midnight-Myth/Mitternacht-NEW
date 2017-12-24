@@ -32,7 +32,7 @@ namespace Mitternacht
         private readonly DbService _db;
         public ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
 
-        private ForumService _fs;
+        private readonly ForumService _fs;
 
         /* I don't know how to make this not be static
          * and keep the convenience of .WithOkColor
@@ -132,7 +132,7 @@ namespace Mitternacht
                     .AddManual(CommandService)
                     .AddManual(botConfigProvider)
                     //.AddManual<ILocalization>(localization)
-                    .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs) //todo wrap this
+                    .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
                     .AddManual(this)
                     .AddManual(uow)
                     .AddManual(_fs)

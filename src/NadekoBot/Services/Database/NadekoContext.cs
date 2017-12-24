@@ -164,7 +164,7 @@ namespace Mitternacht.Services.Database
 
             #region LevelModule
 
-            modelBuilder.Entity<LevelModel>().HasIndex(c => c.UserId).IsUnique();
+            modelBuilder.Entity<LevelModel>().HasIndex(c => new {c.GuildId, c.UserId}).IsUnique();
             modelBuilder.Entity<RoleLevelBinding>().HasIndex(c => c.RoleId).IsUnique();
             modelBuilder.Entity<MessageXpRestriction>().HasIndex(c => new {c.GuildId, c.ChannelId}).IsUnique();
 

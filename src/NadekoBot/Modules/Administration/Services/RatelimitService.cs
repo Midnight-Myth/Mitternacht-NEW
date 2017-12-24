@@ -17,37 +17,34 @@ namespace Mitternacht.Modules.Administration.Services
     public class SlowmodeService : IEarlyBlocker, INService
     {
         public ConcurrentDictionary<ulong, Ratelimiter> RatelimitingChannels = new ConcurrentDictionary<ulong, Ratelimiter>();
-        public ConcurrentDictionary<ulong, HashSet<ulong>> IgnoredRoles = new ConcurrentDictionary<ulong, HashSet<ulong>>();
-        public ConcurrentDictionary<ulong, HashSet<ulong>> IgnoredUsers = new ConcurrentDictionary<ulong, HashSet<ulong>>();
+        public ConcurrentDictionary<ulong, HashSet<ulong>> IgnoredRoles;
+        public ConcurrentDictionary<ulong, HashSet<ulong>> IgnoredUsers;
 
         private readonly Logger _log;
         private readonly DiscordSocketClient _client;
 
-        public SlowmodeService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs)
+        public SlowmodeService(DiscordSocketClient client, IEnumerable<GuildConfig> igcs)
         {
             _log = LogManager.GetCurrentClassLogger();
             _client = client;
+            var gcs = igcs.ToList();
 
             IgnoredRoles = new ConcurrentDictionary<ulong, HashSet<ulong>>(
-                gcs.ToDictionary(x => x.GuildId,
-                                 x => new HashSet<ulong>(x.SlowmodeIgnoredRoles.Select(y => y.RoleId))));
+                gcs.ToDictionary(x => x.GuildId, x => new HashSet<ulong>(x.SlowmodeIgnoredRoles.Select(y => y.RoleId))));
 
             IgnoredUsers = new ConcurrentDictionary<ulong, HashSet<ulong>>(
-                gcs.ToDictionary(x => x.GuildId,
-                                 x => new HashSet<ulong>(x.SlowmodeIgnoredUsers.Select(y => y.UserId))));
+                gcs.ToDictionary(x => x.GuildId, x => new HashSet<ulong>(x.SlowmodeIgnoredUsers.Select(y => y.UserId))));
         }
 
-        public async Task<bool> TryBlockEarly(IGuild guild, IUserMessage usrMsg)
+        public async Task<bool> TryBlockEarly(IGuild guild, IUserMessage usrMsg, bool realExecution = true)
         {
-            if (guild == null)
-                return false;
+            if (guild == null || !realExecution) return false;
+
             try
             {
-                var channel = usrMsg?.Channel as SocketTextChannel;
-
-                if (channel == null || usrMsg == null || usrMsg.IsAuthor(_client))
+                if (!(usrMsg?.Channel is SocketTextChannel channel) || usrMsg.IsAuthor(_client))
                     return false;
-                if (!RatelimitingChannels.TryGetValue(channel.Id, out Ratelimiter limiter))
+                if (!RatelimitingChannels.TryGetValue(channel.Id, out var limiter))
                     return false;
 
                 if (limiter.CheckUserRatelimit(usrMsg.Author.Id, channel.Guild.Id, usrMsg.Author as SocketGuildUser))

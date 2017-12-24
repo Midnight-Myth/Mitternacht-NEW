@@ -3386,5 +3386,33 @@
     "aliases": [ "fuinfo" ],
     "desc": "Zeigt Informationen zum angegebenen Forumaccount an",
     "usage": "`{0}forumuserinfo <forumUsername>` oder `{0}forumuserinfo <forumUserId>`"
+  },
+  {
+    "name": "replacedefaultlevelmodelguild",
+    "cmd": "replacedefaultlevelmodelguild",
+    "aliases": [],
+    "desc": "Ersetzt die Standardgilde der Id 0 für jeden Eintrag in der DB-Tabelle LevelModel mit der angegebenen Id.",
+    "usage": "`{0}replacedefaultlevelmodelguild <guildId>`"
+  },
+  {
+    "name": "levelguilddata",
+    "cmd": "levelguilddata",
+    "aliases": [],
+    "desc": "Ersetzt eine der angegebenen Gildenkonfigurationen aus `levelguilddatachoices` mit dem angegebenen Wert oder zeigt diesen an.",
+    "usage": "`{0}levelguilddata <levelGuildDataChoice> [value]`"
+  },
+  {
+    "name": "levelguilddatachoices",
+    "cmd": "levelguilddatachoices",
+    "aliases": [],
+    "desc": "Zeigt die möglichen levelmodulrelevanten Gildenkonfigurationen an.",
+    "usage": "`{0}levelguilddatachoices`"
+  },
+  {
+    "name": "setguildconfigleveldefaults",
+    "cmd": "setguildconfigleveldefaults",
+    "aliases": [],
+    "desc": "Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück.",
+    "usage": "`{0}setguildconfigleveldefaults [guildId1] ... [guildIdX]`"
   }
 ]

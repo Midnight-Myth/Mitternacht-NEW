@@ -88,12 +88,15 @@ namespace Mitternacht.Services.Database.Models
 
         //public List<ProtectionIgnoredChannel> ProtectionIgnoredChannels { get; set; } = new List<ProtectionIgnoredChannel>();
 
-        //support channel
-        public ulong? SupportChannelId { get; set; } = null;
+        public ulong? SupportChannelId { get; set; }
         public ulong? VerifiedRoleId { get; set; } = null;
         public string VerifyString { get; set; } = null;
         public string VerificationTutorialText { get; set; } = null;
         public string AdditionalVerificationUsers { get; set; } = null;
+        public double TurnToXpMultiplier { get; set; } = 5;
+        public double MessageXpTimeDifference { get; set; } = 60;
+        public int MessageXpCharCountMin { get; set; } = 10;
+        public int MessageXpCharCountMax { get; set; } = 25;
     }
 
     public class NsfwBlacklitedTag : DbEntity

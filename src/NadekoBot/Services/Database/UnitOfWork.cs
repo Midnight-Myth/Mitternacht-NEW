@@ -58,7 +58,7 @@ namespace Mitternacht.Services.Database
         public IWarningsRepository Warnings => _warnings ?? (_warnings = new WarningsRepository(Context));
 
         private ILevelModelRepository _levelmodel;
-        public ILevelModelRepository LevelModel => _levelmodel ?? (_levelmodel = new LevelModelRepository(Context));
+        public ILevelModelRepository LevelModel => _levelmodel ?? (_levelmodel = new LevelModelRepository(Context, this));
 
         private IDailyMoneyRepository _dailymoney;
         public IDailyMoneyRepository DailyMoney => _dailymoney ?? (_dailymoney = new DailyMoneyRepository(Context));
@@ -88,11 +88,8 @@ namespace Mitternacht.Services.Database
 
         private bool _disposed;
 
-        protected void Dispose(bool disposing)
-        {
-            if (!_disposed)
-                if (disposing)
-                    Context.Dispose();
+        protected void Dispose(bool disposing) {
+            if (!_disposed && disposing) Context.Dispose();
             _disposed = true;
         }
 

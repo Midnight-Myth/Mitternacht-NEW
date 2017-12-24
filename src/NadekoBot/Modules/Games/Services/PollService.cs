@@ -28,33 +28,25 @@ namespace Mitternacht.Modules.Games.Services
 
         public async Task<bool?> StartPoll(ITextChannel channel, IUserMessage msg, string arg)
         {
-            if (string.IsNullOrWhiteSpace(arg) || !arg.Contains(";"))
-                return null;
-            var data = arg.Split(';');
-            if (data.Length < 3)
-                return null;
+            if (string.IsNullOrWhiteSpace(arg) || !arg.Contains(";")) return null;
+            var data = (from choice in arg.Split(';') where !string.IsNullOrWhiteSpace(choice) select choice).ToArray();
+            if (data.Length < 3) return null;
 
             var poll = new Poll(_client, _strings, msg, data[0], data.Skip(1));
-            if (ActivePolls.TryAdd(channel.Guild.Id, poll))
+            if (!ActivePolls.TryAdd(channel.Guild.Id, poll)) return false;
+            poll.OnEnded += gid =>
             {
-                poll.OnEnded += (gid) =>
-                {
-                    ActivePolls.TryRemove(gid, out _);
-                };
+                ActivePolls.TryRemove(gid, out _);
+            };
 
-                await poll.StartPoll().ConfigureAwait(false);
-                return true;
-            }
-            return false;
+            await poll.StartPoll().ConfigureAwait(false);
+            return true;
         }
 
-        public async Task<bool> TryExecuteEarly(DiscordSocketClient client, IGuild guild, IUserMessage msg)
+        public async Task<bool> TryExecuteEarly(DiscordSocketClient client, IGuild guild, IUserMessage msg, bool realExecution = true)
         {
-            if (guild == null)
-                return false;
-
-            if (!ActivePolls.TryGetValue(guild.Id, out var poll))
-                return false;
+            if (guild == null || !ActivePolls.TryGetValue(guild.Id, out var poll)) return false;
+            if (!realExecution) return true;
 
             try
             {

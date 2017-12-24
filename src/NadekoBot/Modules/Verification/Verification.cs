@@ -374,7 +374,7 @@ namespace Mitternacht.Modules.Verification
             }
 
             const int keycount = 10;
-            var pagecount = Service.ValidationKeys.Count / keycount;
+            var pagecount = (int) Math.Ceiling(Service.ValidationKeys.Count / (keycount * 1d));
             if (page > pagecount) page = pagecount;
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
@@ -386,7 +386,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope));
                 }
                 return embed;
-            }, pagecount).ConfigureAwait(false);
+            }, pagecount - 1).ConfigureAwait(false);
         }
 
 
@@ -400,7 +400,7 @@ namespace Mitternacht.Modules.Verification
             }
 
             const int usercount = 20;
-            var pagecount = Service.GetVerifiedUserCount(Context.Guild.Id) / usercount;
+            var pagecount = (int) Math.Ceiling(Service.GetVerifiedUserCount(Context.Guild.Id) / (usercount * 1d));
             if (page > pagecount) page = pagecount;
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
@@ -411,7 +411,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId);
                 }
                 return embed;
-            }, pagecount).ConfigureAwait(false);
+            }, pagecount - 1).ConfigureAwait(false);
         }
 
 

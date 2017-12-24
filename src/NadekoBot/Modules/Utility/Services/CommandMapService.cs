@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Utility.Services
     {
         private readonly Logger _log;
 
-        public ConcurrentDictionary<ulong, ConcurrentDictionary<string, string>> AliasMaps { get; } = new ConcurrentDictionary<ulong, ConcurrentDictionary<string, string>>();
+        public ConcurrentDictionary<ulong, ConcurrentDictionary<string, string>> AliasMaps { get; }
         //commandmap
         public CommandMapService(IEnumerable<GuildConfig> gcs)
         {
@@ -28,40 +28,29 @@ namespace Mitternacht.Modules.Utility.Services
                             .ToDictionary(ca => ca.Trigger, ca => ca.Mapping))));
         }
 
-        public async Task<string> TransformInput(IGuild guild, IMessageChannel channel, IUser user, string input)
+        public async Task<string> TransformInput(IGuild guild, IMessageChannel channel, IUser user, string input, bool realExecution = true)
         {
             await Task.Yield();
 
             if (guild == null || string.IsNullOrWhiteSpace(input))
                 return input;
             
-            if (guild != null)
+            input = input.ToLowerInvariant();
+            if (!AliasMaps.TryGetValue(guild.Id, out var maps)) return input;
+            var keys = maps.Keys.OrderByDescending(x => x.Length);
+
+            foreach (var k in keys)
             {
-                input = input.ToLowerInvariant();
-                if (AliasMaps.TryGetValue(guild.Id, out ConcurrentDictionary<string, string> maps))
-                {
-                    var keys = maps.Keys
-                        .OrderByDescending(x => x.Length);
+                string newInput;
+                if (input.StartsWith(k + " ")) newInput = maps[k] + input.Substring(k.Length, input.Length - k.Length);
+                else if (input == k) newInput = maps[k];
+                else continue;
 
-                    foreach (var k in keys)
-                    {
-                        string newInput;
-                        if (input.StartsWith(k + " "))
-                            newInput = maps[k] + input.Substring(k.Length, input.Length - k.Length);
-                        else if (input == k)
-                            newInput = maps[k];
-                        else
-                            continue;
+                if (!realExecution) return newInput;
 
-                        _log.Info(@"--Mapping Command--
-            GuildId: {0}
-            Trigger: {1}
-            Mapping: {2}", guild.Id, input, newInput);
-
-                        try { await channel.SendConfirmAsync($"{input} => {newInput}").ConfigureAwait(false); } catch { }
-                        return newInput;
-                    }
-                }
+                _log.Info($"--Mapping Command--\nGuildId: {guild.Id}\nTrigger: {input}\nMapping: {newInput}");
+                try { await channel.SendConfirmAsync($"{input} => {newInput}").ConfigureAwait(false); } catch { /*ignore*/ }
+                return newInput;
             }
 
             return input;
