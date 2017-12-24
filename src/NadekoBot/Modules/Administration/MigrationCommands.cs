@@ -434,11 +434,25 @@ namespace Mitternacht.Modules.Administration
             public async Task ReplaceDefaultLevelModelGuild(ulong guildId) {
                 var counter = 0;
                 using (var uow = _db.UnitOfWork) {
+                    var lms = uow.LevelModel.GetAll().ToList();
+                    var overlapping = lms.Where(lm => lm.GuildId == 0)
+                        .Concat(lms.Where(lm => lm.GuildId == guildId))
+                        .GroupBy(lm => lm.UserId)
+                        .Where(g => g.Any(lm => lm.GuildId == 0) && g.Any(lm => lm.GuildId == guildId));
+
+                    foreach (var ol in overlapping) {
+                        var given = ol.First(lm => lm.GuildId == guildId);
+                        var zero = ol.First(lm => lm.GuildId == 0);
+                        zero.TotalXP += given.TotalXP;
+                        uow.LevelModel.Update(zero);
+                        uow.LevelModel.Remove(given);
+                    }
+
                     foreach (var lm in uow.LevelModel.GetAll()) {
                         if (lm.GuildId != 0) continue;
                         lm.GuildId = guildId;
-                        uow.LevelModel.Update(lm);
                         counter++;
+                        uow.LevelModel.Update(lm);
                     }
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }

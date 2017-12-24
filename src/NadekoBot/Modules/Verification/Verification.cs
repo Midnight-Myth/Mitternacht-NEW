@@ -374,7 +374,7 @@ namespace Mitternacht.Modules.Verification
             }
 
             const int keycount = 10;
-            var pagecount = Service.ValidationKeys.Count / keycount;
+            var pagecount = (int) Math.Ceiling(Service.ValidationKeys.Count / (keycount * 1d));
             if (page > pagecount) page = pagecount;
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
@@ -400,7 +400,7 @@ namespace Mitternacht.Modules.Verification
             }
 
             const int usercount = 20;
-            var pagecount = Service.GetVerifiedUserCount(Context.Guild.Id) / usercount;
+            var pagecount = (int) Math.Ceiling(Service.GetVerifiedUserCount(Context.Guild.Id) / (usercount * 1d));
             if (page > pagecount) page = pagecount;
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
