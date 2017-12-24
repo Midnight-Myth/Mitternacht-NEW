@@ -386,7 +386,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope));
                 }
                 return embed;
-            }, pagecount).ConfigureAwait(false);
+            }, pagecount - 1).ConfigureAwait(false);
         }
 
 
@@ -411,7 +411,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId);
                 }
                 return embed;
-            }, pagecount).ConfigureAwait(false);
+            }, pagecount - 1).ConfigureAwait(false);
         }
 
 
