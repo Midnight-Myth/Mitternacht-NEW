@@ -48,8 +48,8 @@ namespace Mitternacht.Modules.Level
                 totalXp = uow.LevelModel.GetTotalXp(Context.Guild.Id, userId);
                 level = uow.LevelModel.GetLevel(Context.Guild.Id, userId);
                 currentXp = uow.LevelModel.GetCurrentXp(Context.Guild.Id, userId);
-                totalRanks = uow.LevelModel.GetAll().Count(m => m.TotalXP > 0);
-                rank = lm == null ? -1 : uow.LevelModel.GetAll().OrderByDescending(p => p.TotalXP).ToList().IndexOf(lm) + 1;
+                totalRanks = uow.LevelModel.GetAll().Count(m => m.TotalXP > 0 && m.GuildId == Context.Guild.Id);
+                rank = lm == null ? -1 : uow.LevelModel.GetAll().Where(p => p.GuildId == Context.Guild.Id).OrderByDescending(p => p.TotalXP).ToList().IndexOf(lm) + 1;
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
