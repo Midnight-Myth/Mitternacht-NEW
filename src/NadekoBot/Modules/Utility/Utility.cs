@@ -297,10 +297,16 @@ namespace Mitternacht.Modules.Utility
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task SaveChat(int cnt)
+        public async Task SaveChat(int count, IGuildUser user = null)
         {
-            var msgs = new List<IMessage>(cnt);
-            await Context.Channel.GetMessagesAsync(cnt).ForEachAsync(dled => msgs.AddRange(dled)).ConfigureAwait(false);
+            var msgs = new List<IMessage>();
+            if(user == null) await Context.Channel.GetMessagesAsync(count).ForEachAsync(dled => msgs.AddRange(dled)).ConfigureAwait(false);
+            else {
+                while (msgs.Count < count) {
+                    msgs.AddRange((await Context.Channel.GetMessagesAsync(count).Flatten().ConfigureAwait(false)).Where(m => m.Author.Id == user.Id));
+                }
+                if (msgs.Count > count) msgs = msgs.Take(count).ToList();
+            }
 
             var title = $"Chatlog-{Context.Guild.Name}/#{Context.Channel.Name}-{DateTime.Now}.txt";
             var grouping = msgs.GroupBy(x => $"{x.CreatedAt.Date:dd.MM.yyyy}")
@@ -328,8 +334,7 @@ namespace Mitternacht.Modules.Utility
                         return msg;
                     })
                 });
-            await Context.User.SendFileAsync(
-                await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
+            await Context.User.SendFileAsync(await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
         }
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Ping()
