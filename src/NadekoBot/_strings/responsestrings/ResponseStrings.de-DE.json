@@ -618,6 +618,10 @@
   "permissions_word_filter_channel_on": "Filterung für Wörter in diesem Kanal aktiviert.",
   "permissions_word_filter_server_off": "Filterung für Wörter auf diesem Server deaktiviert.",
   "permissions_word_filter_server_on": "Filterung für Wörter auf diesem Server aktiviert.",
+  "permissions_zalgo_filter_channel_off": "Filterung für Zalgo in diesem Kanal deaktiviert.",
+  "permissions_zalgo_filter_channel_on": "Filterung für Zalgo in diesem Kanal aktiviert.",
+  "permissions_zalgo_filter_server_off": "Filterung für Zalgo auf diesem Server deaktiviert.",
+  "permissions_zalgo_filter_server_on": "Filterung für Zalgo auf diesem Server aktiviert.",
   "pokemon_already_fainted": "{0} ist bereits ohnmächtig.",
   "pokemon_already_full": "{0} hat bereits volle LP.",
   "pokemon_already_that_type": "Dein Typ ist bereits {0}",
@@ -892,5 +896,5 @@
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
   "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
-  "administration_setguildconfigleveldefaults": "Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt." 
+  "administration_setguildconfigleveldefaults": "Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt."
 }
