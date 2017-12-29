@@ -221,7 +221,7 @@ namespace Mitternacht.Modules.Permissions
                 bool enabled;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var gc = uow.GuildConfigs.For(channel.Guild.Id, set => set.Include(tgc => tgc.FilterZalgo));
+                    var gc = uow.GuildConfigs.For(channel.Guild.Id, set => set);
                     enabled = gc.FilterZalgo = !gc.FilterZalgo;
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
