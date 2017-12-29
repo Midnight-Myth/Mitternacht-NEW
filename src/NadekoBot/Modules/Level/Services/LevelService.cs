@@ -8,7 +8,6 @@ using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Repositories;
 using Mitternacht.Services.Database.Repositories.Impl;
-using NLog;
 
 namespace Mitternacht.Modules.Level.Services
 {
@@ -17,7 +16,6 @@ namespace Mitternacht.Modules.Level.Services
         private readonly DiscordSocketClient _client;
         private readonly DbService _db;
         private readonly CommandHandler _ch;
-        private readonly Logger _log;
 
         public LevelService(DiscordSocketClient client, DbService db, CommandHandler ch) {
             _client = client;
@@ -28,7 +26,6 @@ namespace Mitternacht.Modules.Level.Services
             client.MessageDeleted += OnMessageDeleted;
             client.MessageReceived += AddLevelRole;
             LevelModelRepository.LevelChanged += SendLevelChangedMessage;
-            _log = LogManager.GetCurrentClassLogger();
         }
 
         private async Task AddLevelRole(SocketMessage sm)
