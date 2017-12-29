@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Description>General purpose Discord bot written in C#. Modified for inofficial GommeHD.net Plauderkonfi Discord.</Description>
     <Copyright>Kwoth</Copyright>
@@ -25,14 +24,12 @@
     <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     <RootNamespace>Mitternacht</RootNamespace>
     <StartupObject>Mitternacht.Program</StartupObject>
-    </PropertyGroup>
-
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Version)' == '' ">
     <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">1.4.1</VersionPrefix>
     <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix).$(VersionSuffix)</Version>
     <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
   </PropertyGroup>
-  
   <ItemGroup>
     <Compile Remove="data\**\*;credentials.json" />
     <Compile Remove="Modules\Music\Classes\**" />
@@ -85,26 +82,25 @@
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
   </ItemGroup>
-
   <PropertyGroup Condition=" '$(Configuration)' == 'GlobalNadeko' ">
     <DefineConstants>$(DefineConstants);GLOBAL_NADEKO</DefineConstants>
     <NoWarn>$(NoWarn);CS1573;CS1591</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="_strings\commandstrings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
