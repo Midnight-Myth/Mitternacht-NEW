@@ -51,6 +51,8 @@ namespace Mitternacht.Services
 
         public ConcurrentHashSet<ulong> UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
 
+        private readonly Timer _clearUsersOnShortCooldown;
+        
         public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc,
             IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot)
         {
@@ -61,7 +63,7 @@ namespace Mitternacht.Services
 
             _log = LogManager.GetCurrentClassLogger();
 
-            var unused = new Timer(_ => { UsersOnShortCooldown.Clear(); }, null, GlobalCommandsCooldown,
+            _clearUsersOnShortCooldown = new Timer(_ => { UsersOnShortCooldown.Clear(); }, null, GlobalCommandsCooldown,
                 GlobalCommandsCooldown);
 
             DefaultPrefix = bc.BotConfig.DefaultPrefix;
