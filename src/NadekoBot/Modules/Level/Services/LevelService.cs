@@ -50,18 +50,14 @@ namespace Mitternacht.Modules.Level.Services
 
         private async Task OnMessageNoTrigger(IUserMessage um)
         {
-            _log.Info("No Trigger!");
             if (!(um.Author is IGuildUser user)) return;
-            _log.Info("No Trigger 2!");
             using (var uow = _db.UnitOfWork) {
                 if (uow.MessageXpBlacklist.IsRestricted(um.Channel as ITextChannel) 
                     || um.Content.Length < uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMin)
                     return;
-                _log.Info("No Trigger 3!");
 
                 var time = DateTime.Now;
                 if (uow.LevelModel.CanGetMessageXp(user.GuildId, user.Id, time)) {
-                    _log.Info("No Trigger 4!");
                     var maxXp = uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax;
                     uow.LevelModel.AddXp(user.GuildId, user.Id, um.Content.Length > maxXp ? maxXp : um.Content.Length, um.Channel.Id);
                     uow.LevelModel.ReplaceTimestamp(user.GuildId, user.Id, time);
