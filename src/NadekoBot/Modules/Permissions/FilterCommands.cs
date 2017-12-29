@@ -213,12 +213,12 @@ namespace Mitternacht.Modules.Permissions
 
                 if (enabled)
                 {
-                    _service.WordFilteringServers.Add(channel.Guild.Id);
+                    _service.ZalgoFilteringServers.Add(channel.Guild.Id);
                     await ReplyConfirmLocalized("zalgo_filter_server_on").ConfigureAwait(false);
                 }
                 else
                 {
-                    _service.WordFilteringServers.TryRemove(channel.Guild.Id);
+                    _service.ZalgoFilteringServers.TryRemove(channel.Guild.Id);
                     await ReplyConfirmLocalized("zalgo_filter_server_off").ConfigureAwait(false);
                 }
             }
@@ -245,12 +245,12 @@ namespace Mitternacht.Modules.Permissions
 
                 if (removed == 0)
                 {
-                    _service.WordFilteringChannels.Add(channel.Id);
+                    _service.ZalgoFilteringChannels.Add(channel.Id);
                     await ReplyConfirmLocalized("zalgo_filter_channel_on").ConfigureAwait(false);
                 }
                 else
                 {
-                    _service.WordFilteringChannels.TryRemove(channel.Id);
+                    _service.ZalgoFilteringChannels.TryRemove(channel.Id);
                     await ReplyConfirmLocalized("zalgo_filter_channel_off").ConfigureAwait(false);
                 }
             }
