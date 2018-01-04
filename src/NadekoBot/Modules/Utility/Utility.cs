@@ -11,6 +11,7 @@ using Discord.WebSocket;
 using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
+using Mitternacht.Modules.Utility.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 using Newtonsoft.Json;
@@ -237,13 +238,12 @@ namespace Mitternacht.Modules.Utility
         }
 
         [NadekoCommand, Usage, Description, Aliases]
-        public async Task Stats()
-        {            
+        public async Task Stats() {
             await Context.Channel.EmbedAsync(
                 new EmbedBuilder().WithOkColor()
                     .WithAuthor(eab => eab.WithName($"Mitternacht v{StatsService.BotVersion}")
-                                          .WithUrl("http://nadekobot.readthedocs.io/en/latest/")
-                                          .WithIconUrl(_client.CurrentUser.GetAvatarUrl()))
+                        .WithUrl("http://nadekobot.readthedocs.io/en/latest/")
+                        .WithIconUrl(_client.CurrentUser.GetAvatarUrl()))
                     .AddField(efb => efb.WithName(GetText("author")).WithValue(_stats.Author).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("botid")).WithValue(_client.CurrentUser.Id.ToString()).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("shard")).WithValue($"#{_client.ShardId} / {_creds.TotalShards}").WithIsInline(true))
@@ -253,8 +253,7 @@ namespace Mitternacht.Modules.Utility
                     .AddField(efb => efb.WithName(GetText("owner_ids")).WithValue(string.Join("\n", _creds.OwnerIds)).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("uptime")).WithValue(_stats.GetUptimeString("\n")).WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("presence")).WithValue(
-                        GetText("presence_txt",
-                            _stats.GuildCount, _stats.TextChannels, _stats.VoiceChannels)).WithIsInline(true)));
+                        GetText("presence_txt", _stats.GuildCount, _stats.TextChannels, _stats.VoiceChannels)).WithIsInline(true)));
         }
 
         [NadekoCommand, Usage, Description, Aliases]
@@ -297,45 +296,31 @@ namespace Mitternacht.Modules.Utility
         [NadekoCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task SaveChat(int count, IGuildUser user = null)
-        {
+        public async Task SaveChat(int count, IGuildUser user = null) {
+            if (count < 1) return;
             var msgs = new List<IMessage>();
             if(user == null) await Context.Channel.GetMessagesAsync(count).ForEachAsync(dled => msgs.AddRange(dled)).ConfigureAwait(false);
             else {
+                IMessage last = null;
                 while (msgs.Count < count) {
-                    msgs.AddRange((await Context.Channel.GetMessagesAsync(count).Flatten().ConfigureAwait(false)).Where(m => m.Author.Id == user.Id));
+                    var tmpMsgs = (last is null ? await Context.Channel.GetMessagesAsync(count).Flatten().ConfigureAwait(false) : await Context.Channel.GetMessagesAsync(last, Direction.Before, count).Flatten().ConfigureAwait(false)).ToList();
+                    msgs.AddRange(tmpMsgs.Where(m => m.Author.Id == user.Id));
+                    var beforeLast = last;
+                    last = tmpMsgs.OrderBy(m => m.Timestamp).FirstOrDefault();
+                    if (beforeLast != null && last != null && beforeLast.Id == last.Id) break;
                 }
                 if (msgs.Count > count) msgs = msgs.Take(count).ToList();
             }
 
-            var title = $"Chatlog-{Context.Guild.Name}/#{Context.Channel.Name}-{DateTime.Now}.txt";
+            var title = $"Chatlog{(user != null ? $"-{user.Username}" : "")}-{Context.Guild.Name}/#{Context.Channel.Name}-{DateTime.Now}.txt";
             var grouping = msgs.GroupBy(x => $"{x.CreatedAt.Date:dd.MM.yyyy}")
-                .Select(g => new
-                {
+                .Select(g => new {
                     date = g.Key,
-                    messages = g.OrderBy(x => x.CreatedAt).Select(s =>
-                    {
-                        var msg = $"【{s.Timestamp:HH:mm:ss}】{s.Author}:";
-                        if (string.IsNullOrWhiteSpace(s.ToString()))
-                        {
-                            if (s.Attachments.Any())
-                            {
-                                msg += "FILES_UPLOADED: " + string.Join("\n", s.Attachments.Select(x => x.Url));
-                            }
-                            else if (s.Embeds.Any())
-                            {
-                                msg += "EMBEDS: " + string.Join("\n--------\n", s.Embeds.Select(x => $"Description: {x.Description}"));
-                            }
-                        }
-                        else
-                        {
-                            msg += s.ToString();
-                        }
-                        return msg;
-                    })
+                    messages = g.OrderByDescending(x => x.CreatedAt).Select(s => new SavechatMessage(s.Author.ToString(), $"{s.Timestamp:HH:mm:ss}", s.ToString(), s.Attachments.Select(a => a.Url).ToList(), s.Embeds.Select(e => $"Description: {e.Description}").ToList()))
                 });
             await Context.User.SendFileAsync(await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
         }
+
         [NadekoCommand, Usage, Description, Aliases]
         public async Task Ping()
         {
