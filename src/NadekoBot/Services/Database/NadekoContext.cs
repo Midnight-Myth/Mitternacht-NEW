@@ -61,6 +61,8 @@ namespace Mitternacht.Services.Database
         public DbSet<ModulePrefix> ModulePrefixes { get; set; }
         public DbSet<RewardedUser> RewardedUsers { get; set; }
 
+        public DbSet<UsernameHistoryModel> UsernameHistory { get; set; }
+
         public NadekoContext()
         {
 

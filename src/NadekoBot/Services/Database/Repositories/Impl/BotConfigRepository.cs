@@ -30,11 +30,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             else
                 config = includes(_set).FirstOrDefault();
 
-            if (config == null)
-            {
-                _set.Add(config = new BotConfig());
-                _context.SaveChanges();
-            }
+            if (config != null) return config;
+            _set.Add(config = new BotConfig());
+            _context.SaveChanges();
             return config;
         }
     }
