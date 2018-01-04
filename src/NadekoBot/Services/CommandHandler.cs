@@ -38,16 +38,23 @@ namespace Mitternacht.Services
         private ConcurrentDictionary<ulong, string> Prefixes { get; }
 
         public event Func<IUserMessage, CommandInfo, Task> CommandExecuted = delegate { return Task.CompletedTask; };
-        public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored = delegate { return Task.CompletedTask; };
+
+        public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored = delegate
+        {
+            return Task.CompletedTask;
+        };
+
         public event Func<IUserMessage, Task> OnMessageNoTrigger = delegate { return Task.CompletedTask; };
 
         //userid/msg count
         public ConcurrentDictionary<ulong, uint> UserMessagesSent { get; } = new ConcurrentDictionary<ulong, uint>();
 
         public ConcurrentHashSet<ulong> UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
-        private readonly Timer _clearUsersOnShortCooldown;
 
-        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot)
+        private readonly Timer _clearUsersOnShortCooldown;
+        
+        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc,
+            IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot)
         {
             _client = client;
             _commandService = commandService;
@@ -56,10 +63,8 @@ namespace Mitternacht.Services
 
             _log = LogManager.GetCurrentClassLogger();
 
-            _clearUsersOnShortCooldown = new Timer(_ =>
-            {
-                UsersOnShortCooldown.Clear();
-            }, null, GlobalCommandsCooldown, GlobalCommandsCooldown);
+            _clearUsersOnShortCooldown = new Timer(_ => { UsersOnShortCooldown.Clear(); }, null, GlobalCommandsCooldown,
+                GlobalCommandsCooldown);
 
             DefaultPrefix = bc.BotConfig.DefaultPrefix;
             Prefixes = gcs
@@ -70,13 +75,8 @@ namespace Mitternacht.Services
 
         public string GetPrefix(IGuild guild) => GetPrefix(guild?.Id);
 
-        public string GetPrefix(ulong? id)
-        {
-            if (id == null || !Prefixes.TryGetValue(id.Value, out var prefix))
-                return DefaultPrefix;
-
-            return prefix;
-        }
+        public string GetPrefix(ulong? id) 
+            => id == null || !Prefixes.TryGetValue(id.Value, out var prefix) ? DefaultPrefix : prefix;
 
         public string SetDefaultPrefix(string prefix)
         {
@@ -93,6 +93,7 @@ namespace Mitternacht.Services
 
             return DefaultPrefix = prefix;
         }
+
         public string SetPrefix(IGuild guild, string prefix)
         {
             if (string.IsNullOrWhiteSpace(prefix))
@@ -108,6 +109,7 @@ namespace Mitternacht.Services
                 gc.Prefix = prefix;
                 uow.Complete();
             }
+
             Prefixes.AddOrUpdate(guild.Id, prefix, (key, old) => prefix);
 
             return prefix;
@@ -133,17 +135,23 @@ namespace Mitternacht.Services
                 try
                 {
                     IUserMessage msg = await channel.SendMessageAsync(commandText).ConfigureAwait(false);
-                    msg = (IUserMessage)await channel.GetMessageAsync(msg.Id).ConfigureAwait(false);
+                    msg = (IUserMessage) await channel.GetMessageAsync(msg.Id).ConfigureAwait(false);
                     await TryRunCommand(guild, channel, msg).ConfigureAwait(false);
                     //msg.DeleteAfter(5);
                 }
-                catch { }
+                catch
+                { /*ignored*/
+                }
             }
         }
 
         public Task StartHandling()
         {
-            _client.MessageReceived += (msg) => { var _ = Task.Run(() => MessageReceivedHandler(msg)); return Task.CompletedTask; };
+            _client.MessageReceived += (msg) =>
+            {
+                var _ = Task.Run(() => MessageReceivedHandler(msg));
+                return Task.CompletedTask;
+            };
             return Task.CompletedTask;
         }
 
@@ -152,41 +160,44 @@ namespace Mitternacht.Services
 
         private Task LogSuccessfulExecution(IMessage usrMsg, IGuildChannel channel, params int[] execPoints)
         {
-            _log.Info("Command Executed after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) + "s\n\t" +
-                        "User: {0}\n\t" +
-                        "Server: {1}\n\t" +
-                        "Channel: {2}\n\t" +
-                        "Message: {3}",
-                        usrMsg.Author + " [" + usrMsg.Author.Id + "]", // {0}
-                        (channel == null ? "PRIVATE" : channel.Guild.Name + " [" + channel.Guild.Id + "]"), // {1}
-                        (channel == null ? "PRIVATE" : channel.Name + " [" + channel.Id + "]"), // {2}
-                        usrMsg.Content // {3}
-                        );
+            _log.Info("Command Executed after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) +
+                      "s\n\t" +
+                      "User: {0}\n\t" +
+                      "Server: {1}\n\t" +
+                      "Channel: {2}\n\t" +
+                      "Message: {3}",
+                usrMsg.Author + " [" + usrMsg.Author.Id + "]", // {0}
+                (channel == null ? "PRIVATE" : channel.Guild.Name + " [" + channel.Guild.Id + "]"), // {1}
+                (channel == null ? "PRIVATE" : channel.Name + " [" + channel.Id + "]"), // {2}
+                usrMsg.Content // {3}
+            );
             return Task.CompletedTask;
         }
 
-        private void LogErroredExecution(string errorMessage, IMessage usrMsg, IGuildChannel channel, params int[] execPoints)
+        private void LogErroredExecution(string errorMessage, IMessage usrMsg, IGuildChannel channel,
+            params int[] execPoints)
         {
             _log.Warn("Command Errored after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) + "s\n\t" +
-                        "User: {0}\n\t" +
-                        "Server: {1}\n\t" +
-                        "Channel: {2}\n\t" +
-                        "Message: {3}\n\t" +
-                        "Error: {4}",
-                        usrMsg.Author + " [" + usrMsg.Author.Id + "]", // {0}
-                        (channel == null ? "PRIVATE" : channel.Guild.Name + " [" + channel.Guild.Id + "]"), // {1}
-                        (channel == null ? "PRIVATE" : channel.Name + " [" + channel.Id + "]"), // {2}
-                        usrMsg.Content,// {3}
-                        errorMessage
-                        //exec.Result.ErrorReason // {4}
-                        );
+                      "User: {0}\n\t" +
+                      "Server: {1}\n\t" +
+                      "Channel: {2}\n\t" +
+                      "Message: {3}\n\t" +
+                      "Error: {4}",
+                usrMsg.Author + " [" + usrMsg.Author.Id + "]", // {0}
+                (channel == null ? "PRIVATE" : channel.Guild.Name + " [" + channel.Guild.Id + "]"), // {1}
+                (channel == null ? "PRIVATE" : channel.Name + " [" + channel.Id + "]"), // {2}
+                usrMsg.Content, // {3}
+                errorMessage
+                //exec.Result.ErrorReason // {4}
+            );
         }
 
         private async Task MessageReceivedHandler(SocketMessage msg)
         {
             try
             {
-                if (msg.Author.IsBot || !_bot.Ready.Task.IsCompleted) //no bots, wait until bot connected and initialized
+                //no bots, wait until bot connected and initialized
+                if (msg.Author.IsBot || !_bot.Ready.Task.IsCompleted) 
                     return;
 
                 if (!(msg is SocketUserMessage usrMsg))
@@ -222,8 +233,10 @@ namespace Mitternacht.Services
             //highest priority. :thinking:
             foreach (var svc in _services)
             {
-                if (!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, usrMsg).ConfigureAwait(false)) continue;
-                _log.Info("Blocked User: [{0}] Message: [{1}] Service: [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
+                if (!(svc is IEarlyBlocker blocker) ||
+                    !await blocker.TryBlockEarly(guild, usrMsg).ConfigureAwait(false)) continue;
+                _log.Info("Blocked User: [{0}] Message: [{1}] Service: [{2}]", usrMsg.Author, usrMsg.Content,
+                    svc.GetType().Name);
                 return;
             }
 
@@ -231,7 +244,8 @@ namespace Mitternacht.Services
 
             foreach (var svc in _services)
             {
-                if (!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, usrMsg).ConfigureAwait(false)) continue;
+                if (!(svc is IEarlyBlockingExecutor exec) ||
+                    !await exec.TryExecuteEarly(_client, guild, usrMsg).ConfigureAwait(false)) continue;
                 _log.Info("User [{0}] executed [{1}] in [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
                 return;
             }
@@ -242,25 +256,30 @@ namespace Mitternacht.Services
             foreach (var svc in _services)
             {
                 string newContent;
-                if (!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
+                if (!(svc is IInputTransformer exec) ||
+                    (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent)
+                        .ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
                 messageContent = newContent;
                 break;
             }
+
             var prefix = GetPrefix(guild?.Id);
             var isPrefixCommand = messageContent.StartsWith(".prefix");
             // execute the command and measure the time it took
             if (messageContent.StartsWith(prefix) || isPrefixCommand)
             {
-                var result = await ExecuteCommandAsync(new CommandContext(_client, usrMsg), messageContent, isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
+                var result = await ExecuteCommandAsync(new CommandContext(_client, usrMsg), messageContent,
+                    isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
                 execTime = Environment.TickCount - execTime;
 
                 if (result.Success)
                 {
-                    await LogSuccessfulExecution(usrMsg, channel as ITextChannel, exec2, exec3, execTime).ConfigureAwait(false);
+                    await LogSuccessfulExecution(usrMsg, channel as ITextChannel, exec2, exec3, execTime)
+                        .ConfigureAwait(false);
                     await CommandExecuted(usrMsg, result.Info).ConfigureAwait(false);
                     return;
                 }
-                else if (result.Error != null)
+                if (result.Error != null)
                 {
                     LogErroredExecution(result.Error, usrMsg, channel as ITextChannel, exec2, exec3, execTime);
                     if (guild != null)
@@ -279,14 +298,17 @@ namespace Mitternacht.Services
                     await exec.LateExecute(_client, guild, usrMsg).ConfigureAwait(false);
                 }
             }
-
         }
 
-        public Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommandAsync(CommandContext context, string input, int argPos, IServiceProvider serviceProvider, MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception)
+        public Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommandAsync(CommandContext context,
+            string input, int argPos, IServiceProvider serviceProvider,
+            MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception)
             => ExecuteCommand(context, input.Substring(argPos), serviceProvider, multiMatchHandling);
 
 
-        public async Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommand(CommandContext context, string input, IServiceProvider services, MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception)
+        public async Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommand(CommandContext context,
+            string input, IServiceProvider services,
+            MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception)
         {
             var searchResult = _commandService.Search(context, input);
             if (!searchResult.IsSuccess)
@@ -297,7 +319,8 @@ namespace Mitternacht.Services
 
             foreach (var match in commands)
             {
-                preconditionResults[match] = await match.Command.CheckPreconditionsAsync(context, services).ConfigureAwait(false);
+                preconditionResults[match] =
+                    await match.Command.CheckPreconditionsAsync(context, services).ConfigureAwait(false);
             }
 
             var successfulPreconditions = preconditionResults
@@ -316,13 +339,15 @@ namespace Mitternacht.Services
             var parseResultsDict = new Dictionary<CommandMatch, ParseResult>();
             foreach (var pair in successfulPreconditions)
             {
-                var parseResult = await pair.Key.ParseAsync(context, searchResult, pair.Value, services).ConfigureAwait(false);
+                var parseResult = await pair.Key.ParseAsync(context, searchResult, pair.Value, services)
+                    .ConfigureAwait(false);
 
                 if (parseResult.Error == CommandError.MultipleMatches)
                 {
                     if (multiMatchHandling == MultiMatchHandling.Best)
                     {
-                        IReadOnlyList<TypeReaderValue> argList = parseResult.ArgValues.Select(x => x.Values.OrderByDescending(y => y.Score).First())
+                        IReadOnlyList<TypeReaderValue> argList = parseResult.ArgValues
+                            .Select(x => x.Values.OrderByDescending(y => y.Score).First())
                             .ToImmutableArray();
                         IReadOnlyList<TypeReaderValue> paramList = parseResult.ParamValues
                             .Select(x => x.Values.OrderByDescending(y => y.Score).First()).ToImmutableArray();
@@ -332,6 +357,7 @@ namespace Mitternacht.Services
 
                 parseResultsDict[pair.Key] = parseResult;
             }
+
             // Calculates the 'score' of a command given a parse result
             float CalculateScore(CommandMatch match, ParseResult parseResult)
             {
@@ -339,8 +365,11 @@ namespace Mitternacht.Services
 
                 if (match.Command.Parameters.Count > 0)
                 {
-                    var argValuesSum = parseResult.ArgValues?.Sum(x => x.Values.OrderByDescending(y => y.Score).FirstOrDefault().Score) ?? 0;
-                    var paramValuesSum = parseResult.ParamValues?.Sum(x => x.Values.OrderByDescending(y => y.Score).FirstOrDefault().Score) ?? 0;
+                    var argValuesSum =
+                        parseResult.ArgValues?.Sum(x =>
+                            x.Values.OrderByDescending(y => y.Score).FirstOrDefault().Score) ?? 0;
+                    var paramValuesSum = parseResult.ParamValues?.Sum(x =>
+                                             x.Values.OrderByDescending(y => y.Score).FirstOrDefault().Score) ?? 0;
 
                     argValuesScore = argValuesSum / match.Command.Parameters.Count;
                     paramValuesScore = paramValuesSum / match.Command.Parameters.Count;
@@ -380,13 +409,15 @@ namespace Mitternacht.Services
                 if (!(svc is ILateBlocker exec) || !await exec
                         .TryBlockLate(_client, context.Message, context.Guild, context.Channel, context.User,
                             cmd.Module.GetTopLevelModule().Name, commandName).ConfigureAwait(false)) continue;
-                _log.Info("Late blocking User [{0}] Command: [{1}] in [{2}]", context.User, commandName, svc.GetType().Name);
+                _log.Info("Late blocking User [{0}] Command: [{1}] in [{2}]", context.User, commandName,
+                    svc.GetType().Name);
                 return (false, null, cmd);
             }
 
             //If we get this far, at least one parse was successful. Execute the most likely overload.
             var chosenOverload = successfulParses[0];
-            var execResult = (ExecuteResult)await chosenOverload.Key.ExecuteAsync(context, chosenOverload.Value, services).ConfigureAwait(false);
+            var execResult = (ExecuteResult) await chosenOverload.Key
+                .ExecuteAsync(context, chosenOverload.Value, services).ConfigureAwait(false);
 
             if (execResult.Exception == null || execResult.Exception is HttpException he && he.DiscordCode == 50013)
                 return (true, null, cmd);
@@ -395,15 +426,16 @@ namespace Mitternacht.Services
                 var now = DateTime.Now;
                 File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt",
                     $"[{now:HH:mm-yyyy-MM-dd}]" + Environment.NewLine
-                    + execResult.Exception + Environment.NewLine
-                    + "------" + Environment.NewLine);
+                                                + execResult.Exception + Environment.NewLine
+                                                + "------" + Environment.NewLine);
                 _log.Warn(execResult.Exception);
             }
 
             return (true, null, cmd);
         }
 
-        public async Task<bool> WouldGetExecuted(IMessage msg) {
+        public async Task<bool> WouldGetExecuted(IMessage msg)
+        {
             try
             {
                 if (msg.Author.IsBot || !_bot.Ready.Task.IsCompleted) return false;
@@ -413,21 +445,26 @@ namespace Mitternacht.Services
 
                 foreach (var svc in _services)
                 {
-                    if (!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, usrMsg, false).ConfigureAwait(false)) continue;
-                    return false;
+                    if (!(svc is IEarlyBlocker blocker) ||
+                        !await blocker.TryBlockEarly(guild, usrMsg, false).ConfigureAwait(false)) continue;
+                    return true;
                 }
 
                 foreach (var svc in _services)
                 {
-                    if (!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, usrMsg, false).ConfigureAwait(false)) continue;
-                    return false;
+                    if (!(svc is IEarlyBlockingExecutor exec) ||
+                        !await exec.TryExecuteEarly(_client, guild, usrMsg, false).ConfigureAwait(false)) continue;
+                    return true;
                 }
 
                 var messageContent = usrMsg.Content;
                 foreach (var svc in _services)
                 {
                     string newContent;
-                    if (!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent, false).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
+                    if (!(svc is IInputTransformer exec) ||
+                        (newContent = await exec
+                            .TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent, false)
+                            .ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
                     messageContent = newContent;
                     break;
                 }
@@ -437,7 +474,8 @@ namespace Mitternacht.Services
 
                 return messageContent.StartsWith(prefix) || isPrefixCommand;
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return false;
             }
         }

@@ -209,7 +209,7 @@ namespace Mitternacht.Modules.Gambling
         private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, ISocketMessageChannel channel)
         {
             if (StartingMessage?.Id != msg.Id) return Task.CompletedTask;
-            _log.Warn("Stopping flower reaction event because message is deleted.");
+            _log.Warn("Stopping reaction event because message is deleted.");
             var __ = Task.Run(End, CancelToken);
 
             return Task.CompletedTask;
@@ -236,10 +236,9 @@ namespace Mitternacht.Modules.Gambling
             {
                 try
                 {
-                    if (r.UserId == _botUser.Id)
-                        return;
+                    if (r.UserId == _botUser.Id) return;
 
-                    if (r.Emote.Name == iemote.Name && r.User.IsSpecified && ((DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5) && _reactionAwardedUsers.Add(r.User.Value.Id))
+                    if (string.Equals(r.Emote.Name, iemote.Name, StringComparison.Ordinal) && r.User.IsSpecified && (DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5 && _reactionAwardedUsers.Add(r.User.Value.Id))
                     {
                         _toGiveTo.Enqueue(r.UserId);
                     }
@@ -261,7 +260,7 @@ namespace Mitternacht.Modules.Gambling
                 if (CancelToken.IsCancellationRequested)
                     return;
 
-                _log.Warn("Stopping flower reaction event because it expired.");
+                _log.Warn("Stopping reaction event because it expired.");
                 await End();
 
             }

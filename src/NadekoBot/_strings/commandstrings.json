@@ -3414,5 +3414,19 @@
     "aliases": [],
     "desc": "Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück.",
     "usage": "`{0}setguildconfigleveldefaults [guildId1] ... [guildIdX]`"
+  },
+  {
+    "name": "chnlfilterzalgo",
+    "cmd": "channelfilterzalgo",
+    "aliases": [ "chnlfilterzalgo" ],
+    "desc": "Schaltet das Filtern von Zalgo in einem Kanal an oder ab.",
+    "usage": "`{0}channelfilterzalgo`"
+  },
+  {
+    "name": "srvrfilterzalgo",
+    "cmd": "serverfilterzalgo",
+    "aliases": [ "srvrfilterzalgo" ],
+    "desc": "Schaltet das Filtern von Zalgo in einem Server an oder ab.",
+    "usage": "`{0}serverfilterzalgo`"
   }
 ]

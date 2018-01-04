@@ -59,6 +59,9 @@ namespace Mitternacht.Services.Database.Models
         public HashSet<FilteredWord> FilteredWords { get; set; } = new HashSet<FilteredWord>();
         public HashSet<FilterChannelId> FilterWordsChannelIds { get; set; } = new HashSet<FilterChannelId>();
 
+        public bool FilterZalgo { get; set; }
+        public HashSet<ZalgoFilterChannel> FilterZalgoChannelIds { get; set; } = new HashSet<ZalgoFilterChannel>();
+
         public HashSet<MutedUserId> MutedUsers { get; set; } = new HashSet<MutedUserId>();
 
         public string MuteRoleName { get; set; }
@@ -211,6 +214,11 @@ namespace Mitternacht.Services.Database.Models
     }
 
     public class FilterChannelId : DbEntity
+    {
+        public ulong ChannelId { get; set; }
+    }
+
+    public class ZalgoFilterChannel : DbEntity
     {
         public ulong ChannelId { get; set; }
     }
