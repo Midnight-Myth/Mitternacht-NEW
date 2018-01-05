@@ -6,18 +6,27 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
-    public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository
+    public class NicknameHistoryRepository : Repository<NicknameHistoryModel>, INicknameHistoryRepository
     {
-        public UsernameHistoryRepository(DbContext context) : base(context) { }
+        public NicknameHistoryRepository(DbContext context) : base(context)
+        {
+        }
 
-        public bool AddUsername(ulong userId, string username) {
-            if (string.IsNullOrWhiteSpace(username)) return false;
+        public IEnumerable<NicknameHistoryModel> GetGuildUserNames(ulong guildId, ulong userId)
+            => _set.Where(n => n.GuildId == guildId && n.UserId == userId).OrderByDescending(n => n.DateAdded);
+
+        public IEnumerable<NicknameHistoryModel> GetUserNames(ulong userId)
+            => _set.Where(n => n.UserId == userId);
+
+        public bool AddUsername(ulong guildId, ulong userId, string nickname)
+        {
+            if (string.IsNullOrWhiteSpace(nickname)) return false;
 
             var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current != null)
             {
-                if (string.Equals(current.Name, username, StringComparison.Ordinal))
+                if (string.Equals(current.Name, nickname, StringComparison.Ordinal))
                 {
                     if (!current.DateReplaced.HasValue) return false;
                     current.DateReplaced = null;
@@ -31,15 +40,14 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 }
             }
 
-            _set.Add(new UsernameHistoryModel {
+            _set.Add(new NicknameHistoryModel
+            {
                 UserId = userId,
-                Name = username,
+                GuildId = guildId,
+                Name = nickname,
                 DateSet = now
             });
             return true;
         }
-
-        public IEnumerable<UsernameHistoryModel> GetUserNames(ulong userId)
-            => _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet);
     }
 }

@@ -20,8 +20,11 @@ namespace Mitternacht.Modules.Utility.Services
         private async Task UserJoined(SocketGuildUser user) {
             if (!IsGuildLoggingUsernames(user.Guild.Id)) return;
             var nick = string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname;
-            using (var uow = _db.UnitOfWork) {
-                uow.UsernameHistory.AddUsername(user.Guild.Id, user.Id, nick, !string.IsNullOrWhiteSpace(user.Nickname));
+            using (var uow = _db.UnitOfWork)
+            {
+                if (string.IsNullOrWhiteSpace(user.Nickname))
+                    uow.UsernameHistory.AddUsername(user.Id, nick);
+                else uow.NicknameHistory.AddUsername(user.Guild.Id, user.Id, nick);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
@@ -32,8 +35,11 @@ namespace Mitternacht.Modules.Utility.Services
             var nickafter = string.IsNullOrWhiteSpace(a.Nickname) ? a.Username : a.Nickname;
             if(string.Equals(nickbefore, nickafter, StringComparison.Ordinal)) return;
 
-            using (var uow = _db.UnitOfWork) {
-                uow.UsernameHistory.AddUsername(b.GuildId, b.Id, nickafter, !string.IsNullOrWhiteSpace(a.Nickname));
+            using (var uow = _db.UnitOfWork)
+            {
+                if (string.IsNullOrWhiteSpace(b.Nickname))
+                    uow.UsernameHistory.AddUsername(a.Id, nickafter);
+                else uow.NicknameHistory.AddUsername(a.GuildId, a.Id, nickafter);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
         }

@@ -896,5 +896,13 @@
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
   "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
-  "administration_setguildconfigleveldefaults": "Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt."
+  "administration_setguildconfigleveldefaults": "Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt.",
+  "utility_unh_active": "aktiviert",
+  "utility_unh_inactive": "deaktiviert",
+  "utility_unh_global": "global",
+  "utility_unh_log_global": "Globales Loggen der Nutzernamen wurde **{0}**.",
+  "utility_unh_log_guild": "Loggen der Nutzernamen auf Server **{0}** wurde von **{1}** auf **{2}** gesetzt.",
+  "utility_unh_log_global_append": "Globales loggen ist **{0}**",
+  "utility_unh_guild_null": "Es muss ein gültiger Discordserver angegeben werden!",
+  "utility_unh_guild_log_equals": "Die Einstellung zum Loggen der Nutzernamen auf Server **{0}** ist schon auf **{1}**!" 
 }

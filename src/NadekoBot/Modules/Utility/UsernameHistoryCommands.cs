@@ -3,6 +3,7 @@ using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
 using Mitternacht.Modules.Utility.Services;
 using Mitternacht.Services;
 
@@ -29,15 +30,17 @@ namespace Mitternacht.Modules.Utility
                     uow.BotConfig.Update(bc);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                //todo: messages
+
+                await ConfirmLocalized("unh_log_global", GetActiveText(logging)).ConfigureAwait(false);
             }
 
             [NadekoCommand, Description, Usage, Aliases]
             [OwnerOnly]
             public async Task ToggleUsernameHistoryGuild(IGuild guild, bool? toggle = null) {
                 guild = guild ?? Context.Guild;
-                if (guild == null) {
-                    //todo: message
+                if (guild == null)
+                {
+                    await ErrorLocalized("unh_guild_null").ConfigureAwait(false);
                     return;
                 }
 
@@ -47,10 +50,26 @@ namespace Mitternacht.Modules.Utility
                     globalLogging = uow.BotConfig.GetOrCreate(set => set.Include(s => s.LogUsernames)).LogUsernames;
                     var gc = uow.GuildConfigs.For(guild.Id, set => set.Include(s => s.LogUsernameHistory));
                     loggingBefore = gc.LogUsernameHistory;
+                    if (loggingBefore == toggle)
+                    {
+                        await ErrorLocalized("unh_guild_log_equals", guild.Name, GetActiveText(toggle)).ConfigureAwait(false);
+                        return;
+                    }
                     gc.LogUsernameHistory = toggle;
                 }
-                //todo: messages
+
+                await Context.Channel.SendConfirmAsync(GetText("unh_log_guild", guild.Name, GetActiveText(loggingBefore), GetActiveText(toggle)).Trim() + " " + GetText("unh_log_global_append", GetActiveText(globalLogging)).Trim()).ConfigureAwait(false);
             }
+
+            [NadekoCommand, Description, Usage, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task UsernameHistory(IGuildUser user)
+            {
+
+            }
+
+            private string GetActiveText(bool? setting)
+                => GetText(setting.HasValue ? setting.Value ? "unh_active" : "unh_inactive" : "unh_global");
         }
     }
 }

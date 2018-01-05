@@ -31,6 +31,7 @@ namespace Mitternacht.Services.Database
         IMessageXpBlacklist MessageXpBlacklist { get; }
         IVerifiedUserRepository VerifiedUsers { get; }
         IUsernameHistoryRepository UsernameHistory { get; }
+        INicknameHistoryRepository NicknameHistory { get; }
 
         int Complete();
         Task<int> CompleteAsync();
