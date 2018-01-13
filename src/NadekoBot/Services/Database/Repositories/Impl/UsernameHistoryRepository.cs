@@ -10,18 +10,20 @@ namespace Mitternacht.Services.Database.Repositories.Impl
     {
         public UsernameHistoryRepository(DbContext context) : base(context) { }
 
-        public bool AddUsername(ulong userId, string username) {
+        public bool AddUsername(ulong userId, string username, ushort discriminator) {
             if (string.IsNullOrWhiteSpace(username)) return false;
 
+            username = username.Trim();
             var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current != null)
             {
-                if (string.Equals(current.Name, username, StringComparison.Ordinal))
+                if (string.Equals(current.Name, username, StringComparison.Ordinal) && current.DiscordDiscriminator == discriminator)
                 {
                     if (!current.DateReplaced.HasValue) return false;
                     current.DateReplaced = null;
-                    return true;
+                    _set.Update(current);
+                    return false;
                 }
 
                 if (!current.DateReplaced.HasValue)
@@ -34,12 +36,13 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             _set.Add(new UsernameHistoryModel {
                 UserId = userId,
                 Name = username,
+                DiscordDiscriminator = discriminator,
                 DateSet = now
             });
             return true;
         }
 
         public IEnumerable<UsernameHistoryModel> GetUserNames(ulong userId)
-            => _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet);
+            => _set.Where(u => u.UserId == userId && !(u is NicknameHistoryModel)).OrderByDescending(u => u.DateSet);
     }
 }

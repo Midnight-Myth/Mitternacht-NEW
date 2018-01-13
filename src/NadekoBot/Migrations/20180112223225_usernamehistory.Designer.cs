@@ -13,9 +13,10 @@ using System;
 namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20180112223225_usernamehistory")]
+    partial class usernamehistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1377,8 +1378,6 @@ namespace Mitternacht.Migrations
                     b.Property<DateTime?>("DateReplaced");
 
                     b.Property<DateTime>("DateSet");
-
-                    b.Property<ushort>("DiscordDiscriminator");
 
                     b.Property<string>("Discriminator")
                         .IsRequired();

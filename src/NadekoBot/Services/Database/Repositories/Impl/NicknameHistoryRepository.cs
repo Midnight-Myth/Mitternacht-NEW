@@ -18,19 +18,21 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public IEnumerable<NicknameHistoryModel> GetUserNames(ulong userId)
             => _set.Where(n => n.UserId == userId);
 
-        public bool AddUsername(ulong guildId, ulong userId, string nickname)
+        public bool AddUsername(ulong guildId, ulong userId, string nickname, ushort discriminator)
         {
             if (string.IsNullOrWhiteSpace(nickname)) return false;
 
+            nickname = nickname.Trim();
             var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current != null)
             {
-                if (string.Equals(current.Name, nickname, StringComparison.Ordinal))
+                if (string.Equals(current.Name, nickname, StringComparison.Ordinal) && current.DiscordDiscriminator == discriminator)
                 {
                     if (!current.DateReplaced.HasValue) return false;
                     current.DateReplaced = null;
-                    return true;
+                    _set.Update(current);
+                    return false;
                 }
 
                 if (!current.DateReplaced.HasValue)
@@ -45,6 +47,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 UserId = userId,
                 GuildId = guildId,
                 Name = nickname,
+                DiscordDiscriminator = discriminator,
                 DateSet = now
             });
             return true;

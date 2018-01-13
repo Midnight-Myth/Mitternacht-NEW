@@ -18,13 +18,15 @@ namespace Mitternacht.Services.Database.Repositories
         /// <param name="userId"></param>
         /// <returns></returns>
         IEnumerable<NicknameHistoryModel> GetUserNames(ulong userId);
+
         /// <summary>
         /// Closes the current nickname entry (if possible) and creates a new entry.
         /// </summary>
         /// <param name="guildId"></param>
         /// <param name="userId"></param>
         /// <param name="nickname"></param>
+        /// <param name="discriminator"></param>
         /// <returns></returns>
-        bool AddUsername(ulong guildId, ulong userId, string nickname);
+        bool AddUsername(ulong guildId, ulong userId, string nickname, ushort discriminator);
     }
 }

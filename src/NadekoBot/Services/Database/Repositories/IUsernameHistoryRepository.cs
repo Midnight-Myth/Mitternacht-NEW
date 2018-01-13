@@ -6,6 +6,6 @@ namespace Mitternacht.Services.Database.Repositories
     public interface IUsernameHistoryRepository : IRepository<UsernameHistoryModel>
     {
         IEnumerable<UsernameHistoryModel> GetUserNames(ulong userId);
-        bool AddUsername(ulong userId, string username);
+        bool AddUsername(ulong userId, string username, ushort discriminator);
     }
 }
