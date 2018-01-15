@@ -20,20 +20,19 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 
         public bool AddUsername(ulong guildId, ulong userId, string nickname, ushort discriminator)
         {
-            if (string.IsNullOrWhiteSpace(nickname)) return false;
-
             nickname = nickname.Trim();
             var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current != null)
             {
-                if (string.Equals(current.Name, nickname, StringComparison.Ordinal) && current.DiscordDiscriminator == discriminator)
+                if (string.IsNullOrWhiteSpace(nickname))
                 {
-                    if (!current.DateReplaced.HasValue) return false;
-                    current.DateReplaced = null;
-                    _set.Update(current);
-                    return false;
+                    current.DateReplaced = now;
+                    return true;
                 }
+                
+                if (string.Equals(current.Name, nickname, StringComparison.Ordinal) &&
+                    current.DiscordDiscriminator == discriminator && !current.DateReplaced.HasValue) return false;
 
                 if (!current.DateReplaced.HasValue)
                 {
@@ -50,6 +49,16 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 DiscordDiscriminator = discriminator,
                 DateSet = now
             });
+            return true;
+        }
+
+        public bool CloseNickname(ulong guildId, ulong userId)
+        {
+            var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
+            var now = DateTime.UtcNow;
+            if (current == null || current.DateReplaced.HasValue) return false;
+            current.DateReplaced = now;
+            _set.Update(current);
             return true;
         }
     }

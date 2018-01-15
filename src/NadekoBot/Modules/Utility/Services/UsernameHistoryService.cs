@@ -66,15 +66,15 @@ namespace Mitternacht.Modules.Utility.Services
         private Task UserUpdated(SocketUser before, SocketUser after) {
             var _ = Task.Run(async () => {
                 _log.Info(1);
-                if (!(before is SocketGuildUser) || !(after is SocketGuildUser a)) return;
+                if (!(before is SocketGuildUser b) || !(after is SocketGuildUser a)) return;
                 _log.Info(2);
 
                 using (var uow = _db.UnitOfWork) {
-                    if (!string.IsNullOrWhiteSpace(a.Nickname) && IsGuildLoggingUsernames(a.Guild.Id)) {
+                    if (IsGuildLoggingUsernames(a.Guild.Id)) {
                         _log.Info("nick");
                         uow.NicknameHistory.AddUsername(a.Guild.Id, a.Id, a.Nickname, a.DiscriminatorValue);
                     }
-
+                    
                     if (IsGuildLoggingUsernames()) {
                         _log.Info("username");
                         uow.UsernameHistory.AddUsername(a.Id, a.Username, a.DiscriminatorValue);

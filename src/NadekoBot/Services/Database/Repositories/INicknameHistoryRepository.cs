@@ -28,5 +28,13 @@ namespace Mitternacht.Services.Database.Repositories
         /// <param name="discriminator"></param>
         /// <returns></returns>
         bool AddUsername(ulong guildId, ulong userId, string nickname, ushort discriminator);
+        
+        /// <summary>
+        /// Closes the current nickname entry if possible.
+        /// </summary>
+        /// <param name="guildId"></param>
+        /// <param name="userId"></param>
+        /// <returns>True when closed, otherwise false</returns>
+        bool CloseNickname(ulong guildId, ulong userId);
     }
 }
