@@ -28,6 +28,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 if (string.IsNullOrWhiteSpace(nickname))
                 {
                     current.DateReplaced = now;
+                    _set.Update(current);
                     return true;
                 }
                 

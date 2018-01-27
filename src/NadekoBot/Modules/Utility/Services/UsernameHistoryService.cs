@@ -18,9 +18,8 @@ namespace Mitternacht.Modules.Utility.Services
             _db = db;
             _client = client;
             _log = LogManager.GetCurrentClassLogger();
-            _log.Info("Ctor called");
             _client.UserJoined += UserJoined;
-            _client.UserUpdated += UserUpdated;
+            _client.GuildMemberUpdated += UserUpdated;
         }
 
         public async Task<(int Nicks, int Usernames, int Users, TimeSpan Time)> UpdateUsernames() {
@@ -63,11 +62,9 @@ namespace Mitternacht.Modules.Utility.Services
             return Task.CompletedTask;
         }
 
-        private Task UserUpdated(SocketUser before, SocketUser after) {
+        private Task UserUpdated(SocketGuildUser b, SocketGuildUser a) {
             var _ = Task.Run(async () => {
                 _log.Info(1);
-                if (!(before is SocketGuildUser b) || !(after is SocketGuildUser a)) return;
-                _log.Info(2);
 
                 using (var uow = _db.UnitOfWork) {
                     if (IsGuildLoggingUsernames(a.Guild.Id)) {

@@ -93,7 +93,7 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 usernicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet.ToString(CultureInfo.CurrentCulture)}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToString(CultureInfo.CurrentCulture)}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet:dd.MM.yyyy t}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy t}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
