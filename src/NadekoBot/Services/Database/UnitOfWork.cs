@@ -75,6 +75,12 @@ namespace Mitternacht.Services.Database
         private IVerifiedUserRepository _verifiedusers;
         public IVerifiedUserRepository VerifiedUsers => _verifiedusers ?? (_verifiedusers = new VerifiedUserRepository(Context));
 
+        private IUsernameHistoryRepository _usernamehistory;
+        public IUsernameHistoryRepository UsernameHistory => _usernamehistory ?? (_usernamehistory = new UsernameHistoryRepository(Context));
+
+        private INicknameHistoryRepository _nicknamehistory;
+        public INicknameHistoryRepository NicknameHistory => _nicknamehistory ?? (_nicknamehistory = new NicknameHistoryRepository(Context));
+
         public UnitOfWork(NadekoContext context)
         {
             Context = context;

@@ -68,6 +68,8 @@ Nadeko Support Server: https://discord.gg/nadekobot";
         public int PermissionVersion { get; set; }
         public string DefaultPrefix { get; set; } = ".";
         public bool CustomReactionsStartWith { get; set; } = false;
+
+        public bool LogUsernames { get; set; } = true;
     }
 
     public class BlockedCmdOrMdl : DbEntity

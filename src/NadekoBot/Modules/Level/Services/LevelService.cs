@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Level.Services
                 var userroles = user.GetRoles().ToList();
                 var rlb = uow.RoleLevelBinding.GetAll()
                     .Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
-                rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).ToList();
+                rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).OrderBy(r => r.Position).ToList();
             }
 
             if (!rolesToAdd.Any()) return;

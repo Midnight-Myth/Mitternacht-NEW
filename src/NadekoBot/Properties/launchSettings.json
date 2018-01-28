@@ -1,7 +1,8 @@
 {
   "profiles": {
     "MitternachtBot": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "workingDirectory": "D:\\Onedrive\\Programmieren\\VisualStudio\\Projects\\Mitternacht-NEW\\src\\NadekoBot\\bin\\Debug\\netcoreapp2.0"
     }
   }
 }

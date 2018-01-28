@@ -30,6 +30,8 @@ namespace Mitternacht.Services.Database
         IRoleLevelBindingRepository RoleLevelBinding { get; }
         IMessageXpBlacklist MessageXpBlacklist { get; }
         IVerifiedUserRepository VerifiedUsers { get; }
+        IUsernameHistoryRepository UsernameHistory { get; }
+        INicknameHistoryRepository NicknameHistory { get; }
 
         int Complete();
         Task<int> CompleteAsync();
