@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Utility.Services
         private Task UserJoined(SocketGuildUser user) {
             var _ = Task.Run(async () => {
                 using (var uow = _db.UnitOfWork) {
-                    if (!string.IsNullOrWhiteSpace(user.Nickname) && IsGuildLoggingUsernames(user.Guild.Id))
+                    if (IsGuildLoggingUsernames(user.Guild.Id))
                         uow.NicknameHistory.AddUsername(user.Guild.Id, user.Id, user.Nickname, user.DiscriminatorValue);
 
                     if (IsGuildLoggingUsernames())
@@ -64,18 +64,14 @@ namespace Mitternacht.Modules.Utility.Services
 
         private Task UserUpdated(SocketGuildUser b, SocketGuildUser a) {
             var _ = Task.Run(async () => {
-                _log.Info(1);
-
                 using (var uow = _db.UnitOfWork) {
-                    if (IsGuildLoggingUsernames(a.Guild.Id)) {
-                        _log.Info("nick");
+                    //_log.Info($"guild | {IsGuildLoggingUsernames(a.Guild.Id)} | {a.Guild.Id} | {a.Id} | {a.Nickname} | {a.DiscriminatorValue}");
+                    if (IsGuildLoggingUsernames(a.Guild.Id))
                         uow.NicknameHistory.AddUsername(a.Guild.Id, a.Id, a.Nickname, a.DiscriminatorValue);
-                    }
-                    
-                    if (IsGuildLoggingUsernames()) {
-                        _log.Info("username");
+
+                    //_log.Info($"global | {IsGuildLoggingUsernames()} | {a.Id} | {a.Username} | {a.DiscriminatorValue}");
+                    if (IsGuildLoggingUsernames())
                         uow.UsernameHistory.AddUsername(a.Id, a.Username, a.DiscriminatorValue);
-                    }
 
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }

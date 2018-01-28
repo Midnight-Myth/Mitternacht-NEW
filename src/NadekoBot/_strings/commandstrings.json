@@ -3456,5 +3456,19 @@
     "aliases": [],
     "desc": "Updatet alle Nutzernamen und Nicknames manuell.",
     "usage": "`{0}updateusernames`"
+  },
+  {
+    "name": "usernamehistoryglobal",
+    "cmd": "usernamehistoryglobal",
+    "aliases": [ "unhglobal" ],
+    "desc": "Zeigt alle globalen Nutzernamen eines angegebenen Nutzers an.",
+    "usage": "`{0}unhglobal <user> [page]`"
+  },
+  {
+    "name": "usernamehistoryguild",
+    "cmd": "usernamehistoryguild",
+    "aliases": [ "unhguild" ],
+    "desc": "Zeigt alle serverspezifischen Nicknames eines angegebenen Nutzers an.",
+    "usage": "`{0}unhguild <user> [page]`"
   }
 ]

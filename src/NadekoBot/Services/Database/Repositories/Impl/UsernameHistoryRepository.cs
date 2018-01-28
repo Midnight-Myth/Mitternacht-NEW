@@ -14,7 +14,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             if (string.IsNullOrWhiteSpace(username)) return false;
 
             username = username.Trim();
-            var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
+            var current = GetUserNames(userId).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current != null)
             {

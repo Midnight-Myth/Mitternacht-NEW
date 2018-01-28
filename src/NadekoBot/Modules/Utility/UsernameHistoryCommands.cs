@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -93,7 +92,69 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 usernicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet:dd.MM.yyyy t}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy t}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                        return embed;
+                    }, pagecount - 1).ConfigureAwait(false);
+            }
+
+            [NadekoCommand, Description, Usage, Aliases]
+            public async Task UsernameHistoryGlobal(IUser user = null, int page = 1) {
+                user = user ?? Context.User;
+                List<UsernameHistoryModel> usernames;
+                using (var uow = _db.UnitOfWork)
+                {
+                    usernames = uow.UsernameHistory.GetUserNames(user.Id).OrderByDescending(u => u.DateSet).ToList();
+                }
+
+                if (!usernames.Any())
+                {
+                    await ErrorLocalized("unh_no_names", user.ToString()).ConfigureAwait(false);
+                    return;
+                }
+                if (page < 1) page = 1;
+
+                const int elementsPerPage = 10;
+                var pagecount = (int)Math.Ceiling(usernames.Count / (elementsPerPage * 1d));
+                if (page > pagecount) page = pagecount;
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
+                        var embed = new EmbedBuilder()
+                            .WithOkColor()
+                            .WithTitle(GetText("unh_title_global", user.ToString()))
+                            .WithDescription(string.Join("\n",
+                                usernames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                        return embed;
+                    }, pagecount - 1).ConfigureAwait(false);
+            }
+
+            [NadekoCommand, Description, Usage, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task UsernameHistoryGuild(IGuildUser user = null, int page = 1)
+            {
+                user = user ?? (IGuildUser) Context.User;
+                List<NicknameHistoryModel> nicknames;
+                using (var uow = _db.UnitOfWork)
+                {
+                    nicknames = uow.NicknameHistory.GetGuildUserNames(user.GuildId, user.Id).OrderByDescending(u => u.DateSet).ToList();
+                }
+
+                if (!nicknames.Any())
+                {
+                    await ErrorLocalized("unh_no_names", user.ToString()).ConfigureAwait(false);
+                    return;
+                }
+                if (page < 1) page = 1;
+
+                const int elementsPerPage = 10;
+                var pagecount = (int)Math.Ceiling(nicknames.Count / (elementsPerPage * 1d));
+                if (page > pagecount) page = pagecount;
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
+                        var embed = new EmbedBuilder()
+                            .WithOkColor()
+                            .WithTitle(GetText("unh_title_guild", user.ToString()))
+                            .WithDescription(string.Join("\n",
+                                nicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }

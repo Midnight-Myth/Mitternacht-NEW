@@ -860,6 +860,8 @@
   "utility_unh_log_guild": "Loggen der Nutzernamen auf Server `{0}` wurde von **{1}** auf **{2}** gesetzt.",
   "utility_unh_no_names": "Für den Benutzer **`{0}`** existiert kein Nutzername (wie auch immer das möglich ist...)",
   "utility_unh_title": "Nutzernamen von **{0}**",
+  "utility_unh_title_global": "Globale Nutzernamen von **{0}**", 
+  "utility_unh_title_guild": "Nicknames von **{0}**", 
   "utility_unh_update_usernames": "{0} Nicknames und {1} Usernames von {2} Nutzern wurden in {3} geupdatet.",
   "utility_uptime": "Betriebszeit",
   "utility_userid": "{0} von Benutzer {1} ist {2}",
