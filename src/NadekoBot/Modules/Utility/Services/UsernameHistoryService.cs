@@ -20,6 +20,7 @@ namespace Mitternacht.Modules.Utility.Services
             _log = LogManager.GetCurrentClassLogger();
             _client.UserJoined += UserJoined;
             _client.GuildMemberUpdated += UserUpdated;
+            var _ = Task.Run(async () => await UpdateUsernames().ConfigureAwait(false));
         }
 
         public async Task<(int Nicks, int Usernames, int Users, TimeSpan Time)> UpdateUsernames() {
@@ -37,8 +38,8 @@ namespace Mitternacht.Modules.Utility.Services
                 u.First().DiscriminatorValue
             });
             using (var uow = _db.UnitOfWork) {
-                nickupdates += usernicks.Sum(nicks => nicks.Where(a => !string.IsNullOrWhiteSpace(a.Nickname)).Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
-                usernameupdates += usernames.Sum(u => uow.UsernameHistory.AddUsername(u.Id, u.Username, u.DiscriminatorValue) ? 1 : 0);
+                nickupdates += usernicks.Sum(nicks => nicks.Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
+                usernameupdates += usernames.Count(u => uow.UsernameHistory.AddUsername(u.Id, u.Username, u.DiscriminatorValue));
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 

@@ -22,11 +22,12 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         {
             nickname = nickname?.Trim() ?? "";
             var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
+            if (current == null && string.IsNullOrWhiteSpace(nickname)) return false;
             var now = DateTime.UtcNow;
             if (current != null)
             {
-                if (string.IsNullOrWhiteSpace(nickname))
-                {
+                if (string.IsNullOrWhiteSpace(nickname)) {
+                    if (current.DateReplaced.HasValue) return false;
                     current.DateReplaced = now;
                     _set.Update(current);
                     return true;
