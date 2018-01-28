@@ -5,6 +5,7 @@ namespace Mitternacht.Services
 {
     public interface IStatsService : INService
     {
+        (ulong userId, string backupName)[] AuthorIdBackupNames { get; }
         string Author { get; }
         long CommandsRan { get; }
         string Heap { get; }
