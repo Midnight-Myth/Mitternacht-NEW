@@ -7,7 +7,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class CommandCostCommands : NadekoSubmodule
+        public class CommandCostCommands : MitternachtSubmodule
         {
             private static readonly ConcurrentDictionary<string, int> _commandCosts = new ConcurrentDictionary<string, int>();
             public static IReadOnlyDictionary<string, int> CommandCosts => _commandCosts;
@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Permissions
                 //    x => x.Cost));
             }
 
-            //[NadekoCommand, Usage, Description, Aliases]
+            //[MitternachtCommand, Usage, Description, Aliases]
             //public async Task CmdCosts(int page = 1)
             //{
             //    var prices = _commandCosts.ToList();
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Permissions
             //    }, prices.Count / 9).ConfigureAwait(false);
             //}
 
-            //[NadekoCommand, Usage, Description, Aliases]
+            //[MitternachtCommand, Usage, Description, Aliases]
             //public async Task CommandCost(int cost, CommandInfo cmd)
             //{
             //    if (cost < 0)

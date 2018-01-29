@@ -14,10 +14,10 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class JokeCommands : NadekoSubmodule<SearchesService>
+        public class JokeCommands : MitternachtSubmodule<SearchesService>
         {
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Yomama()
             {
                 using (var http = new HttpClient())
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Randjoke()
             {
                 using (var http = new HttpClient())
@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task ChuckNorris()
             {
                 using (var http = new HttpClient())
@@ -56,7 +56,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task WowJoke()
             {
                 if (!Service.WowJokes.Any())
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Searches
                 await Context.Channel.SendConfirmAsync(joke.Question, joke.Answer).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task MagicItem()
             {
                 if (!Service.WowJokes.Any())

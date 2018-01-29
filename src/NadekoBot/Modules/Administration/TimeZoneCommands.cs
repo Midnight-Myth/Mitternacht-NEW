@@ -13,9 +13,9 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class TimeZoneCommands : NadekoSubmodule<GuildTimezoneService>
+        public class TimeZoneCommands : MitternachtSubmodule<GuildTimezoneService>
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Timezones(int page = 1)
             {
@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Administration
                     timezones.Length / timezonesPerPage);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Timezone([Remainder] string id = null)
             {

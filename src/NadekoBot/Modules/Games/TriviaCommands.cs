@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class TriviaCommands : NadekoSubmodule
+        public class TriviaCommands : MitternachtSubmodule
         {
             private readonly CurrencyService _cs;
             private readonly DiscordSocketClient _client;
@@ -28,12 +28,12 @@ namespace Mitternacht.Modules.Games
                 _bc = bc;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public Task Trivia([Remainder] string additionalArgs = "")
                 => InternalTrivia(10, additionalArgs);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public Task Trivia(int winReq = 10, [Remainder] string additionalArgs = "")
                 => InternalTrivia(winReq, additionalArgs);
@@ -66,7 +66,7 @@ namespace Mitternacht.Modules.Games
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Tl()
             {
@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Games
                 await ReplyErrorLocalized("trivia_none").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Tq()
             {

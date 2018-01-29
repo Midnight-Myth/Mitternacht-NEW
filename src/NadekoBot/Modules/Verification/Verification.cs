@@ -14,7 +14,7 @@ using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification
 {
-    public class Verification : NadekoTopLevelModule<VerificationService>
+    public class Verification : MitternachtTopLevelModule<VerificationService>
     {
         private readonly DbService _db;
         private readonly IBotCredentials _creds;
@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Verification
             _fs = fs;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [RequireNoBot]
@@ -80,7 +80,7 @@ namespace Mitternacht.Modules.Verification
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [RequireNoBot]
@@ -107,7 +107,7 @@ namespace Mitternacht.Modules.Verification
             await IdentityValidationDmKey(uinfo.Id).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [RequireNoBot]
@@ -178,7 +178,7 @@ namespace Mitternacht.Modules.Verification
             await ch.SendConfirmAsync(GetText("message_title", 2), GetText("message_forum_discord_key", Context.Guild.Name, _ch.GetPrefix(Context.Guild))).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [RequireNoBot]
@@ -211,7 +211,7 @@ namespace Mitternacht.Modules.Verification
 
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireNoBot]
         public async Task IdentityValidationSubmit([Remainder]string discordkey) {
@@ -250,7 +250,7 @@ namespace Mitternacht.Modules.Verification
             await ch.SendConfirmAsync(GetText("message_title", 3), GetText("verification_completed", Context.Guild.Name, uinfo.Username)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task AddVerification(IGuildUser user, long forumUserId) {
@@ -262,7 +262,7 @@ namespace Mitternacht.Modules.Verification
             await Service.SetVerified(Context.Guild, user, forumUserId);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(2)]
         [OwnerOnly]
@@ -275,7 +275,7 @@ namespace Mitternacht.Modules.Verification
                     .ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [OwnerOnly]
@@ -287,7 +287,7 @@ namespace Mitternacht.Modules.Verification
                     .ConfigureAwait(false)).DeleteAfter(60);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [OwnerOnly]
@@ -309,7 +309,7 @@ namespace Mitternacht.Modules.Verification
                     .ConfigureAwait(false)).DeleteAfter(60);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [OwnerOnly]
@@ -326,7 +326,7 @@ namespace Mitternacht.Modules.Verification
             await msgtask.ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [OwnerOnly]
@@ -341,7 +341,7 @@ namespace Mitternacht.Modules.Verification
         }
         
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [OwnerOnly]
@@ -351,7 +351,7 @@ namespace Mitternacht.Modules.Verification
                 : ConfirmLocalized("verifystring", Service.GetVerifyString(Context.Guild.Id)))
             .ConfigureAwait(false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [OwnerOnly]
@@ -363,7 +363,7 @@ namespace Mitternacht.Modules.Verification
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task VerificationKeys(int page = 1) {
@@ -390,7 +390,7 @@ namespace Mitternacht.Modules.Verification
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task VerifiedUsers(int page = 1) {
             if (page < 1) page = 1;
@@ -415,7 +415,7 @@ namespace Mitternacht.Modules.Verification
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task HowToVerify(bool dm = true, bool delete = true) {
             delete = !_creds.IsOwner(Context.User) || delete;
@@ -429,7 +429,7 @@ namespace Mitternacht.Modules.Verification
             if (delete && !dm) msg.DeleteAfter(120);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task SetVerifyTutorialText([Remainder] string text) {
@@ -437,14 +437,14 @@ namespace Mitternacht.Modules.Verification
             (await ConfirmLocalized("tutorial_now_set").ConfigureAwait(false)).DeleteAfter(60);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task ReinitForum() {
             _fs.InitForumInstance();
             await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task AdditionalVerificationUsers() {
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
@@ -454,7 +454,7 @@ namespace Mitternacht.Modules.Verification
                 await ErrorLocalized("additional_verification_users_not_set").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task SetAdditionalVerificationUsers([Remainder] string names = null) {
             var namesarray = string.IsNullOrWhiteSpace(names) ? new string[0] : names.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -462,7 +462,7 @@ namespace Mitternacht.Modules.Verification
             await (namesarray.Any() ? ConfirmLocalized("additional_verification_users_set") : ConfirmLocalized("additional_verification_users_set_void"));
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task ConversationLink() {
             var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
             if (_fs.LoggedIn)

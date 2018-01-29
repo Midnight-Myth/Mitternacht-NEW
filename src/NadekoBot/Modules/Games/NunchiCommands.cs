@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {
-        public class NunchiCommands : NadekoSubmodule
+        public class NunchiCommands : MitternachtSubmodule
         {
             public static readonly ConcurrentDictionary<ulong, Nunchi> Games = new ConcurrentDictionary<ulong, Common.Nunchi.Nunchi>();
             private readonly DiscordSocketClient _client;
@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Games
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Nunchi()
             {

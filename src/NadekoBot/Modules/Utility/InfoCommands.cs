@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class InfoCommands : NadekoSubmodule
+        public class InfoCommands : MitternachtSubmodule
         {
             private readonly DiscordSocketClient _client;
             private readonly IStatsService _stats;
@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Utility
                 _fs = fs;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ServerInfo(string guildName = null)
             {
@@ -72,7 +72,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ChannelInfo(ITextChannel channel = null)
             {
@@ -89,7 +89,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task UserInfo(IGuildUser user = null)
             {
@@ -121,7 +121,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task UserInfoForum(IGuildUser user = null) {
                 user = user ?? Context.User as IGuildUser;
@@ -149,7 +149,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(0)]
             [RequireContext(ContextType.Guild)]
             public async Task ForumUserInfo(string username = null) {
@@ -168,7 +168,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.EmbedAsync(InternalForumUserInfoBuilder(uinfo)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(1)]
             [RequireContext(ContextType.Guild)]
             public async Task ForumUserInfo(long userId) {
@@ -202,7 +202,7 @@ namespace Mitternacht.Modules.Utility
                 return embed;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ForumInfo() {
                 if (_fs.Forum == null) {
@@ -218,7 +218,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task Activity(int page = 1)

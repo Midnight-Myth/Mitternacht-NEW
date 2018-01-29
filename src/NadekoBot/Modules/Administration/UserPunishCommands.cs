@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class UserPunishCommands : NadekoSubmodule<UserPunishService>
+        public class UserPunishCommands : MitternachtSubmodule<UserPunishService>
         {
             private readonly DbService _db;
 
@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task Warn(IGuildUser user, [Remainder] string reason = null)
@@ -54,13 +54,13 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(0)]
             public async Task Warnlog(int page, [Remainder]IGuildUser user = null)
                 => await (user == null ? InternalWarnlog(Context.User.Id, page - 1) : (Context.User.Id == user.Id || ((IGuildUser)Context.User).GuildPermissions.KickMembers ? InternalWarnlog(user.Id, page - 1) : Task.CompletedTask));
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(1)]
             public async Task Warnlog([Remainder] IGuildUser user = null)
@@ -101,7 +101,7 @@ namespace Mitternacht.Modules.Administration
                 }, allWarnings.Length / warnsPerPage);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task WarnlogAll(int page = 1)
@@ -134,13 +134,13 @@ namespace Mitternacht.Modules.Administration
                 }, warnings.Length / 15);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             public Task Warnclear(IGuildUser user)
                 => Warnclear(user.Id);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             public async Task Warnclear(ulong userId)
@@ -155,7 +155,7 @@ namespace Mitternacht.Modules.Administration
                     Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             public async Task Warnremove(IGuildUser user, string hexid) {
@@ -180,7 +180,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task Warnid(string hexid) {
@@ -215,7 +215,7 @@ namespace Mitternacht.Modules.Administration
                 
             //}
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             public async Task WarnPunish(int number, PunishmentAction punish, int time = 0)
@@ -243,7 +243,7 @@ namespace Mitternacht.Modules.Administration
                     Format.Bold(number.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             public async Task WarnPunish(int number)
@@ -267,7 +267,7 @@ namespace Mitternacht.Modules.Administration
                     Format.Bold(number.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task WarnPunishList()
             {
@@ -284,7 +284,7 @@ namespace Mitternacht.Modules.Administration
                 await Context.Channel.SendConfirmAsync(GetText("warn_punish_list"), list).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             [RequireBotPermission(GuildPermission.BanMembers)]
@@ -315,7 +315,7 @@ namespace Mitternacht.Modules.Administration
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             [RequireBotPermission(GuildPermission.BanMembers)]
@@ -334,7 +334,7 @@ namespace Mitternacht.Modules.Administration
                 await UnbanInternal(bun.User).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.BanMembers)]
             [RequireBotPermission(GuildPermission.BanMembers)]
@@ -360,7 +360,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("unbanned_user", Format.Bold(user.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
@@ -396,7 +396,7 @@ namespace Mitternacht.Modules.Administration
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireBotPermission(GuildPermission.KickMembers)]

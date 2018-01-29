@@ -4,9 +4,9 @@ using Mitternacht.Resources;
 
 namespace Mitternacht.Common.Attributes
 {
-    public class NadekoCommand : CommandAttribute
+    public class MitternachtCommand : CommandAttribute
     {
-        public NadekoCommand([CallerMemberName] string memberName="") 
+        public MitternachtCommand([CallerMemberName] string memberName="") 
             : base(CommandStrings.GetCommandStringModel(memberName.ToLowerInvariant()).Command)
         {
 

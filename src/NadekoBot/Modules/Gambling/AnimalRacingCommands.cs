@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class AnimalRacingCommands : NadekoSubmodule
+        public class AnimalRacingCommands : MitternachtSubmodule
         {
             private readonly IBotConfigProvider _bc;
             private readonly CurrencyService _cs;
@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Gambling
 
             private IUserMessage raceMessage = null;
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public Task Race()
             {
@@ -106,7 +106,7 @@ namespace Mitternacht.Modules.Gambling
                 return ReplyErrorLocalized("animal_race_failed");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task JoinRace(int amount = 0)
             {

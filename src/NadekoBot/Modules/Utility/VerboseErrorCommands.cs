@@ -8,9 +8,9 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class VerboseErrorCommands : NadekoSubmodule<VerboseErrorsService>
+        public class VerboseErrorCommands : MitternachtSubmodule<VerboseErrorsService>
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
             public async Task VerboseError()

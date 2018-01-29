@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class BlacklistCommands : NadekoSubmodule
+        public class BlacklistCommands : MitternachtSubmodule
         {
             private readonly BlacklistService _bs;
             private readonly DbService _db;
@@ -32,27 +32,27 @@ namespace Mitternacht.Modules.Permissions
                 _creds = creds;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public Task UserBlacklist(AddRemove action, ulong id)
                 => Blacklist(action, id, BlacklistType.User);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public Task UserBlacklist(AddRemove action, IUser usr)
                 => Blacklist(action, usr.Id, BlacklistType.User);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public Task ChannelBlacklist(AddRemove action, ulong id)
                 => Blacklist(action, id, BlacklistType.Channel);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public Task ServerBlacklist(AddRemove action, ulong id)
                 => Blacklist(action, id, BlacklistType.Server);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public Task ServerBlacklist(AddRemove action, IGuild guild)
                 => Blacklist(action, guild.Id, BlacklistType.Server);

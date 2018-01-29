@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class SlowModeCommands : NadekoSubmodule<SlowmodeService>
+        public class SlowModeCommands : MitternachtSubmodule<SlowmodeService>
         {
             private readonly DbService _db;
 
@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Slowmode()
@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Slowmode(int msg, int perSec)
@@ -63,7 +63,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [Priority(0)]
@@ -95,7 +95,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("slowmodewl_user_start", Format.Bold(user.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [Priority(1)]

@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class QuoteCommands : NadekoSubmodule
+        public class QuoteCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 
@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Utility
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ListQuotes(int page = 1)
             {
@@ -47,7 +47,7 @@ namespace Mitternacht.Modules.Utility
                     await ReplyErrorLocalized("quotes_page_none").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ShowQuote([Remainder] string keyword)
             {
@@ -80,7 +80,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendMessageAsync($"`#{quote.Id}` 📣 " + rep.Replace(quote.Text)?.SanitizeMentions());
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task QuoteSearch(string keyword, [Remainder] string text)
             {
@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Utility
                                                        keywordquote.Text.SanitizeMentions());
             }
             
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task QuoteId(int id)
             {  
@@ -139,7 +139,7 @@ namespace Mitternacht.Modules.Utility
                 }
             }        
                           
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AddQuote(string keyword, [Remainder] string text)
             {
@@ -163,7 +163,7 @@ namespace Mitternacht.Modules.Utility
                 await ReplyConfirmLocalized("quote_added").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task QuoteDelete(int id)
             {
@@ -193,7 +193,7 @@ namespace Mitternacht.Modules.Utility
                     await Context.Channel.SendErrorAsync(response);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task DelAllQuotes([Remainder] string keyword)

@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Level
 {
     public partial class Level
     {
-        public class LevelGuildDataCommands : NadekoSubmodule
+        public class LevelGuildDataCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 
@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Level
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task LevelGuildData(LevelGuildData data, double value)
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Level
                     round ? (int) value : value).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task LevelGuildData(LevelGuildData data)
@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Level
                 await ConfirmLocalized("levelguilddata", data.ToString(), value).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task LevelGuildDataChoices()

@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Gambling
         }
 
         [Group]
-        public class WaifuClaimCommands : NadekoSubmodule
+        public class WaifuClaimCommands : MitternachtSubmodule
         {
             private static ConcurrentDictionary<ulong, DateTime> DivorceCooldowns { get; } = new ConcurrentDictionary<ulong, DateTime>();
             private static ConcurrentDictionary<ulong, DateTime> AffinityCooldowns { get; } = new ConcurrentDictionary<ulong, DateTime>();
@@ -65,7 +65,7 @@ namespace Mitternacht.Modules.Gambling
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task WaifuClaim(int amount, [Remainder]IUser target)
             {
@@ -198,12 +198,12 @@ namespace Mitternacht.Modules.Gambling
 
 
             private static readonly TimeSpan DivorceLimit = TimeSpan.FromHours(6);
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(0)]
             public Task Divorce([Remainder]IGuildUser target) => Divorce(target.Id);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(1)]
             public async Task Divorce([Remainder]ulong targetId)
@@ -283,7 +283,7 @@ namespace Mitternacht.Modules.Gambling
             private readonly CurrencyService _cs;
             private readonly DbService _db;
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task WaifuClaimerAffinity([Remainder]IGuildUser u = null)
             {
@@ -377,7 +377,7 @@ namespace Mitternacht.Modules.Gambling
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task WaifuLeaderboard(int page = 1)
             {
@@ -413,7 +413,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task WaifuInfo([Remainder]IGuildUser target = null)
             {
@@ -466,7 +466,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(1)]
             public async Task WaifuGift()
@@ -483,7 +483,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(0)]
             public async Task WaifuGift(WaifuItem.ItemName item, [Remainder] IUser waifu)

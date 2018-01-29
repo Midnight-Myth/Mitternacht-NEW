@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {
-        public class Connect4Commands : NadekoSubmodule
+        public class Connect4Commands : MitternachtSubmodule
         {
             public static ConcurrentDictionary<ulong, Connect4Game> Games = new ConcurrentDictionary<ulong, Connect4Game>();
             private readonly DiscordSocketClient _client;
@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Games
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Connect4()
             {

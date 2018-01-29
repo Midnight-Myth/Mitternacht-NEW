@@ -16,9 +16,9 @@ namespace Mitternacht.Modules.Help.Services
     {
         private readonly IBotConfigProvider _bc;
         private readonly CommandHandler _ch;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
 
-        public HelpService(IBotConfigProvider bc, CommandHandler ch, NadekoStrings strings)
+        public HelpService(IBotConfigProvider bc, CommandHandler ch, StringService strings)
         {
             _bc = bc;
             _ch = ch;

@@ -24,14 +24,14 @@ namespace Mitternacht.Modules.Administration.Services
         private readonly DbService _db;
         private readonly Logger _log;
         private readonly ILocalization _localization;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly DiscordSocketClient _client;
         private readonly IBotCredentials _creds;
         private ImmutableArray<AsyncLazy<IDMChannel>> ownerChannels = new ImmutableArray<AsyncLazy<IDMChannel>>();
         private readonly IBotConfigProvider _bc;
 
         public SelfService(DiscordSocketClient client, Mitternacht.MitternachtBot bot, CommandHandler cmdHandler, DbService db,
-            IBotConfigProvider bc, ILocalization localization, NadekoStrings strings, IBotCredentials creds)
+            IBotConfigProvider bc, ILocalization localization, StringService strings, IBotCredentials creds)
         {
             _bot = bot;
             _cmdHandler = cmdHandler;

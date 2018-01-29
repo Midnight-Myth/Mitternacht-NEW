@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {
-        public class WheelOfFortuneCommands : NadekoSubmodule
+        public class WheelOfFortuneCommands : MitternachtSubmodule
         {
             private readonly CurrencyService _cs;
             private readonly IBotConfigProvider _bc;
@@ -21,7 +21,7 @@ namespace Mitternacht.Modules.Gambling
                 _bc = bc;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task WheelOfFortune(int bet)
             {
@@ -55,7 +55,7 @@ Format.Bold($@"{Context.User.ToString()} won: {amount + _bc.BotConfig.CurrencySi
      『{Wof.Multipliers[3]}』   『{Wof.Multipliers[4]}』   『{Wof.Multipliers[5]}』")).ConfigureAwait(false);
             }
 
-            //[NadekoCommand, Usage, Description, Aliases]
+            //[MitternachtCommand, Usage, Description, Aliases]
             //[RequireContext(ContextType.Guild)]
             //public async Task WofTest(int length = 1000)
             //{

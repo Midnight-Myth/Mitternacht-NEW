@@ -10,7 +10,7 @@ using NLog;
 
 namespace Mitternacht.Modules
 {
-    public abstract class NadekoTopLevelModule : ModuleBase
+    public abstract class MitternachtTopLevelModule : ModuleBase
     {
         protected readonly Logger _log;
         protected CultureInfo CultureInfo;
@@ -18,13 +18,13 @@ namespace Mitternacht.Modules
         public readonly string ModuleTypeName;
         public string LowerModuleTypeName => ModuleTypeName?.ToLowerInvariant();
 
-        public NadekoStrings Strings { get; set; }
+        public StringService Strings { get; set; }
         public CommandHandler CmdHandler { get; set; }
         public ILocalization Localization { get; set; }
 
         public string Prefix => CmdHandler.GetPrefix(Context.Guild);
 
-        protected NadekoTopLevelModule(bool isTopLevelModule = true)
+        protected MitternachtTopLevelModule(bool isTopLevelModule = true)
         {
             //if it's top level module
             ModuleTypeName = isTopLevelModule ? GetType().Name : GetType().DeclaringType.Name;
@@ -130,23 +130,23 @@ namespace Mitternacht.Modules
         }
     }
     
-    public abstract class NadekoTopLevelModule<TService> : NadekoTopLevelModule where TService : INService
+    public abstract class MitternachtTopLevelModule<TService> : MitternachtTopLevelModule where TService : INService
     {
         public TService Service { get; set; }
 
-        protected NadekoTopLevelModule(bool isTopLevel = true) : base(isTopLevel)
+        protected MitternachtTopLevelModule(bool isTopLevel = true) : base(isTopLevel)
         {
         }
     }
 
-    public abstract class NadekoSubmodule : NadekoTopLevelModule
+    public abstract class MitternachtSubmodule : MitternachtTopLevelModule
     {
-        protected NadekoSubmodule() : base(false) { }
+        protected MitternachtSubmodule() : base(false) { }
     }
 
-    public abstract class NadekoSubmodule<TService> : NadekoTopLevelModule<TService> where TService : INService
+    public abstract class MitternachtSubmodule<TService> : MitternachtTopLevelModule<TService> where TService : INService
     {
-        protected NadekoSubmodule() : base(false)
+        protected MitternachtSubmodule() : base(false)
         {
         }
     }

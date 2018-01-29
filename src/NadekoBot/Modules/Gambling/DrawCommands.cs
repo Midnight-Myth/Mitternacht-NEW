@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class DrawCommands : NadekoSubmodule
+        public class DrawCommands : MitternachtSubmodule
         {
             private static readonly ConcurrentDictionary<IGuild, Cards> _allDecks = new ConcurrentDictionary<IGuild, Cards>();
             private const string _cardsPath = "data/images/cards";
@@ -60,7 +60,7 @@ namespace Mitternacht.Modules.Gambling
                 return (bitmapStream, toSend);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Draw(int num = 1)
             {
@@ -73,7 +73,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.SendFileAsync(data.ImageStream, num + " cards.jpg", data.ToSend).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task DrawNew(int num = 1)
             {
                 if (num < 1)
@@ -85,7 +85,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.SendFileAsync(data.ImageStream, num + " cards.jpg", data.ToSend).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task DeckShuffle()
             {

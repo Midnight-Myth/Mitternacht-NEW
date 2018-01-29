@@ -15,7 +15,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions
 {
-    public partial class Permissions : NadekoTopLevelModule<PermissionService>
+    public partial class Permissions : MitternachtTopLevelModule<PermissionService>
     {
         private readonly DbService _db;
 
@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Permissions
             _db = db;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Verbose(PermissionAction action)
         {
@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task PermRole([Remainder] IRole role = null)
         {
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Permissions
             await ReplyConfirmLocalized("permrole_changed", Format.Bold(role.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ListPerms(int page = 1)
         {
@@ -94,7 +94,7 @@ namespace Mitternacht.Modules.Permissions
             await Context.Channel.SendMessageAsync(toSend).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task RemovePerm(int index)
         {
@@ -124,7 +124,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task MovePerm(int from, int to)
         {
@@ -175,7 +175,7 @@ namespace Mitternacht.Modules.Permissions
             await ReplyErrorLocalized("perm_out_of_range").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SrvrCmd(CommandOrCrInfo command, PermissionAction action)
         {
@@ -202,7 +202,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SrvrMdl(ModuleOrCrInfo module, PermissionAction action)
         {
@@ -229,7 +229,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task UsrCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] IGuildUser user)
         {
@@ -258,7 +258,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task UsrMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] IGuildUser user)
         {
@@ -287,7 +287,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task RoleCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] IRole role)
         {
@@ -319,7 +319,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task RoleMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] IRole role)
         {
@@ -352,7 +352,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ChnlCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] ITextChannel chnl)
         {
@@ -381,7 +381,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ChnlMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] ITextChannel chnl)
         {
@@ -410,7 +410,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task AllChnlMdls(PermissionAction action, [Remainder] ITextChannel chnl)
         {
@@ -435,7 +435,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task AllRoleMdls(PermissionAction action, [Remainder] IRole role)
         {
@@ -463,7 +463,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task AllUsrMdls(PermissionAction action, [Remainder] IUser user)
         {
@@ -488,7 +488,7 @@ namespace Mitternacht.Modules.Permissions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task AllSrvrMdls(PermissionAction action)
         {

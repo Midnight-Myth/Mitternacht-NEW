@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class LocalizationCommands : NadekoSubmodule
+        public class LocalizationCommands : MitternachtSubmodule
         {
             private static ImmutableDictionary<string, string> supportedLocales { get; } = new Dictionary<string, string>()
             {
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration
                 {"tr-TR", "Türkçe, Türkiye"}
             }.ToImmutableDictionary();
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task LanguageSet()
             {
@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Administration
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task LanguageSet(string name)
@@ -79,14 +79,14 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task LanguageSetDefault()
             {
                 var cul = Localization.DefaultCultureInfo;
                 await ReplyConfirmLocalized("lang_set_bot_show", cul, cul.NativeName).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task LanguageSetDefault(string name)
             {
@@ -111,7 +111,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task LanguagesList()
             {
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()

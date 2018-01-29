@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class CommandMapCommands : NadekoSubmodule<CommandMapService>
+        public class CommandMapCommands : MitternachtSubmodule<CommandMapService>
         {
             private readonly DbService _db;
             private readonly DiscordSocketClient _client;
@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Utility
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireUserPermission(GuildPermission.Administrator)]
             [RequireContext(ContextType.Guild)]
             public async Task Alias(string trigger, [Remainder] string mapping = null)
@@ -101,7 +101,7 @@ namespace Mitternacht.Modules.Utility
             }
 
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AliasList(int page = 1)
             {

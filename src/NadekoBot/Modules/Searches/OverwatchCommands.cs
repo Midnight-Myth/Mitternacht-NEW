@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class OverwatchCommands : NadekoSubmodule
+        public class OverwatchCommands : MitternachtSubmodule
         {
             public enum Region
             {
@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Searches
                 Kr
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Overwatch(Region region, [Remainder] string query = null)
             {
                 if (string.IsNullOrWhiteSpace(query))

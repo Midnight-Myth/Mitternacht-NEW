@@ -19,12 +19,12 @@ namespace Mitternacht.Modules.Games.Common
         private readonly ConcurrentDictionary<ulong, int> _participants = new ConcurrentDictionary<ulong, int>();
         private readonly string _question;
         private readonly DiscordSocketClient _client;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private bool running = false;
 
         public event Action<ulong> OnEnded = delegate { };
 
-        public Poll(DiscordSocketClient client, NadekoStrings strings, IUserMessage umsg, string question, IEnumerable<string> enumerable)
+        public Poll(DiscordSocketClient client, StringService strings, IUserMessage umsg, string question, IEnumerable<string> enumerable)
         {
             _client = client;
             _strings = strings;

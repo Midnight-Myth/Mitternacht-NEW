@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class TicTacToeCommands : NadekoSubmodule
+        public class TicTacToeCommands : MitternachtSubmodule
         {
             //channelId/game
             private static readonly Dictionary<ulong, TicTacToe> _games = new Dictionary<ulong, TicTacToe>();
@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Games
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task TicTacToe()
             {
@@ -85,10 +85,10 @@ namespace Mitternacht.Modules.Games
 
             private IUserMessage _previousMessage;
             private Timer _timeoutTimer;
-            private readonly NadekoStrings _strings;
+            private readonly StringService _strings;
             private readonly DiscordSocketClient _client;
 
-            public TicTacToe(NadekoStrings strings, DiscordSocketClient client, ITextChannel channel, IGuildUser firstUser)
+            public TicTacToe(StringService strings, DiscordSocketClient client, ITextChannel channel, IGuildUser firstUser)
             {
                 _channel = channel;
                 _strings = strings;

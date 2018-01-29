@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class RemindCommands : NadekoSubmodule<RemindService>
+        public class RemindCommands : MitternachtSubmodule<RemindService>
         {
             private readonly DbService _db;
             private readonly GuildTimezoneService _tz;
@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Utility
                 Me,Here
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(1)]
             public async Task Remind(MeOrHere meorhere, string timeStr, [Remainder] string message)
@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Utility
                 await RemindInternal(target, meorhere == MeOrHere.Me, timeStr, message).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [Priority(0)]
@@ -136,7 +136,7 @@ namespace Mitternacht.Modules.Utility
                 await Service.StartReminder(rem);
             }
             
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task RemindTemplate([Remainder] string arg)
             {

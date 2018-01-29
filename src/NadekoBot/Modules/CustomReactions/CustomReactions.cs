@@ -12,7 +12,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.CustomReactions
 {
-    public class CustomReactions : NadekoTopLevelModule<CustomReactionsService>
+    public class CustomReactions : MitternachtTopLevelModule<CustomReactionsService>
     {
         private readonly IBotCredentials _creds;
         private readonly DbService _db;
@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.CustomReactions
             _client = client;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task AddCustReact(string key, [Remainder] string message)
         {
             var channel = Context.Channel as ITextChannel;
@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.CustomReactions
                 ).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Priority(1)]
         public async Task ListCustReact(int page = 1)
         {
@@ -121,7 +121,7 @@ namespace Mitternacht.Modules.CustomReactions
             All
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Priority(0)]
         public async Task ListCustReact(All x)
         {
@@ -149,7 +149,7 @@ namespace Mitternacht.Modules.CustomReactions
                 await ((IGuildUser)Context.User).SendFileAsync(txtStream, "customreactions.txt", GetText("list_all")).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task ListCustReactG(int page = 1)
         {
             if (--page < 0 || page > 9999)
@@ -182,7 +182,7 @@ namespace Mitternacht.Modules.CustomReactions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task ShowCustReact(int id)
         {
             var customReactions = Context.Guild == null
@@ -203,7 +203,7 @@ namespace Mitternacht.Modules.CustomReactions
             ).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task DelCustReact(int id)
         {
             if ((Context.Guild == null && !_creds.IsOwner(Context.User)) || (Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator))
@@ -254,7 +254,7 @@ namespace Mitternacht.Modules.CustomReactions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task CrCa(int id)
         {
             if ((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
@@ -305,7 +305,7 @@ namespace Mitternacht.Modules.CustomReactions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task CrDm(int id)
         {
             if ((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
@@ -356,7 +356,7 @@ namespace Mitternacht.Modules.CustomReactions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task CrAd(int id)
         {
             if ((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
@@ -407,7 +407,7 @@ namespace Mitternacht.Modules.CustomReactions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task CrStatsClear(string trigger = null)
         {
@@ -429,7 +429,7 @@ namespace Mitternacht.Modules.CustomReactions
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task CrStats(int page = 1)
         {
             if (--page < 0)

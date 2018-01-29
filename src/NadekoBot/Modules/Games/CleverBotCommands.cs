@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class ChatterBotCommands : NadekoSubmodule<ChatterBotService>
+        public class ChatterBotCommands : MitternachtSubmodule<ChatterBotService>
         {
             private readonly DbService _db;
 
@@ -21,7 +21,7 @@ namespace Mitternacht.Modules.Games
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Cleverbot()

@@ -13,6 +13,7 @@ using Discord.WebSocket;
 using Mitternacht.Common.ShardCom;
 using Mitternacht.Common.TypeReaders;
 using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Modules.Birthday.Models;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
@@ -151,6 +152,7 @@ namespace Mitternacht
                 CommandService.AddTypeReader<IGuild>(new GuildTypeReader(Client));
                 CommandService.AddTypeReader<GuildDateTime>(new GuildDateTimeTypeReader());
                 CommandService.AddTypeReader<bool?>(new NullableBoolReader());
+                CommandService.AddTypeReader<BirthDate>(new BirthDateTypeReader());
 
             }
         }

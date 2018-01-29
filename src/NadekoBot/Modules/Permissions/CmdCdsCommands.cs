@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class CmdCdsCommands : NadekoSubmodule
+        public class CmdCdsCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
             private readonly CmdCdService _service;
@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Permissions
                 _db = db;
             }
             
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task CmdCooldown(CommandInfo command, int secs)
             {
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AllCmdCooldowns()
             {

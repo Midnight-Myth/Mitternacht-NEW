@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Music.Services
         public const string MusicDataPath = "data/musicdata";
 
         private readonly IGoogleApiService _google;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly ILocalization _localization;
         private readonly DbService _db;
         private readonly Logger _log;
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Music.Services
 
         public ConcurrentDictionary<ulong, MusicPlayer> MusicPlayers { get; } = new ConcurrentDictionary<ulong, MusicPlayer>();
 
-        public MusicService(DiscordSocketClient client, IGoogleApiService google, NadekoStrings strings, ILocalization localization, DbService db, SoundCloudApiService sc, IEnumerable<GuildConfig> gcs)
+        public MusicService(DiscordSocketClient client, IGoogleApiService google, StringService strings, ILocalization localization, DbService db, SoundCloudApiService sc, IEnumerable<GuildConfig> gcs)
         {
             _client = client;
             _google = google;

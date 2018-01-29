@@ -9,7 +9,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class ResetPermissionsCommands : NadekoSubmodule
+        public class ResetPermissionsCommands : MitternachtSubmodule
         {
             private readonly ResetPermissionsService _service;
 
@@ -18,7 +18,7 @@ namespace Mitternacht.Modules.Permissions
                 _service = service;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task ResetPermissions()
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Permissions
                 await ReplyConfirmLocalized("perms_reset").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ResetGlobalPermissions()
             {

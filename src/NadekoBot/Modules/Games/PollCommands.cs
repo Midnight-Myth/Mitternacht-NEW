@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class PollCommands : NadekoSubmodule<PollService>
+        public class PollCommands : MitternachtSubmodule<PollService>
         {
             private readonly DiscordSocketClient _client;
 
@@ -20,13 +20,13 @@ namespace Mitternacht.Modules.Games
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [RequireContext(ContextType.Guild)]
             public Task Poll([Remainder] string arg = null)
                 => InternalStartPoll(arg);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [RequireContext(ContextType.Guild)]
             public async Task PollStats()
@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Games
                     await ReplyErrorLocalized("poll_already_running").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [RequireContext(ContextType.Guild)]
             public async Task Pollend()

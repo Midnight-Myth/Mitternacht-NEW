@@ -9,7 +9,7 @@ using NLog;
 
 namespace Mitternacht.Services.Impl
 {
-    public class NadekoStrings : INService
+    public class StringService : INService
     {
         public const string StringsPath = @"_strings/responsestrings";
 
@@ -21,7 +21,7 @@ namespace Mitternacht.Services.Impl
         private readonly CultureInfo _usCultureInfo = new CultureInfo("en-US");
         private readonly ILocalization _localization;
 
-        public NadekoStrings(ILocalization loc)
+        public StringService(ILocalization loc)
         {
             var log = LogManager.GetCurrentClassLogger();
             _localization = loc;

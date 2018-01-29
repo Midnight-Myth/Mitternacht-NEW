@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class MuteCommands : NadekoSubmodule<MuteService>
+        public class MuteCommands : MitternachtSubmodule<MuteService>
         {
             private readonly DbService _db;
 
@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [Priority(0)]
@@ -42,14 +42,14 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("mute_role_set").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [Priority(1)]
             public Task SetMuteRole([Remainder] IRole role)
                 => SetMuteRole(role.Name);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
@@ -67,7 +67,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
@@ -112,7 +112,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
@@ -128,13 +128,13 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(0)]
             public async Task MuteTime()
                 => await MuteTime(Context.User as IGuildUser);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
@@ -151,7 +151,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task ChatMute(IGuildUser user)
@@ -167,7 +167,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.KickMembers)]
             public async Task ChatUnmute(IGuildUser user)
@@ -183,7 +183,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
             public async Task VoiceMute([Remainder] IGuildUser user)
@@ -199,7 +199,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.MuteMembers)]
             public async Task VoiceUnmute([Remainder] IGuildUser user)

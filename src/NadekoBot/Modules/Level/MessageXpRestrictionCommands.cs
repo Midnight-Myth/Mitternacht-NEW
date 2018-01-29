@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Level
 {
     public partial class Level
     {
-        public class MessageXpRestrictionCommands : NadekoSubmodule
+        public class MessageXpRestrictionCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 
@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Level
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task MsgXpRestrictionAdd(ITextChannel channel)
@@ -35,7 +35,7 @@ namespace Mitternacht.Modules.Level
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task MsgXpRestrictionRemove(ITextChannel channel)
@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Level
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task MsgXpRestrictions()
             {

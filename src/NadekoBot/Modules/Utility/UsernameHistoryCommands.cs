@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class UsernameHistoryCommands : NadekoSubmodule<UsernameHistoryService>
+        public class UsernameHistoryCommands : MitternachtSubmodule<UsernameHistoryService>
         {
             private readonly DbService _db;
 
@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Utility
                 _db = db;
             }
 
-            [NadekoCommand, Description, Usage, Aliases]
+            [MitternachtCommand, Description, Usage, Aliases]
             [OwnerOnly]
             public async Task ToggleUsernameHistory() {
                 bool logging;
@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Utility
                 await ConfirmLocalized("unh_log_global", GetActiveText(logging)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Description, Usage, Aliases]
+            [MitternachtCommand, Description, Usage, Aliases]
             [OwnerOnly]
             public async Task ToggleUsernameHistoryGuild(bool? toggle = null, IGuild guild = null) {
                 guild = guild ?? Context.Guild;
@@ -66,7 +66,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendConfirmAsync(GetText("unh_log_guild", guild.Name, GetActiveText(loggingBefore), GetActiveText(toggle)).Trim() + " " + GetText("unh_log_global_append", GetActiveText(globalLogging)).Trim()).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Description, Usage, Aliases]
+            [MitternachtCommand, Description, Usage, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task UsernameHistory(IGuildUser user = null, int page = 1) {
                 user = user ?? (IGuildUser) Context.User;
@@ -92,12 +92,12 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 usernicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Description, Usage, Aliases]
+            [MitternachtCommand, Description, Usage, Aliases]
             public async Task UsernameHistoryGlobal(IUser user = null, int page = 1) {
                 user = user ?? Context.User;
                 List<UsernameHistoryModel> usernames;
@@ -122,12 +122,12 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title_global", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 usernames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Description, Usage, Aliases]
+            [MitternachtCommand, Description, Usage, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task UsernameHistoryGuild(IGuildUser user = null, int page = 1)
             {
@@ -154,7 +154,7 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title_guild", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 nicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
@@ -162,7 +162,7 @@ namespace Mitternacht.Modules.Utility
             private string GetActiveText(bool? setting)
                 => GetText(setting.HasValue ? setting.Value ? "unh_active" : "unh_inactive" : "unh_global");
 
-            [NadekoCommand, Description, Aliases, Usage]
+            [MitternachtCommand, Description, Aliases, Usage]
             [OwnerOnly]
             public async Task UpdateUsernames() {
                 var (nicks, usernames, users, time) = await Service.UpdateUsernames().ConfigureAwait(false);

@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class OsuCommands : NadekoSubmodule
+        public class OsuCommands : MitternachtSubmodule
         {
             private readonly IGoogleApiService _google;
             private readonly IBotCredentials _creds;
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Searches
                 _creds = creds;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Osu(string usr, [Remainder] string mode = null)
             {
                 if (string.IsNullOrWhiteSpace(usr))
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Osub([Remainder] string map)
             {
                 if (string.IsNullOrWhiteSpace(_creds.OsuApiKey))
@@ -92,7 +92,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Osu5(string user, [Remainder] string mode = null)
             {
                 var channel = (ITextChannel)Context.Channel;

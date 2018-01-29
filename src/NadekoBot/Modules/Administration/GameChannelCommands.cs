@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class GameChannelCommands : NadekoSubmodule<GameVoiceChannelService>
+        public class GameChannelCommands : MitternachtSubmodule<GameVoiceChannelService>
         {
             private readonly DbService _db;
 
@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [RequireBotPermission(GuildPermission.MoveMembers)]

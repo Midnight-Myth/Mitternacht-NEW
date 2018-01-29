@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class PatreonCommands : NadekoSubmodule<PatreonRewardsService>
+        public class PatreonCommands : MitternachtSubmodule<PatreonRewardsService>
         {
             private readonly IBotCredentials _creds;
             private readonly IBotConfigProvider _config;
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Utility
                 _currency = currency;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             [RequireContext(ContextType.DM)]
             public async Task PatreonRewardsReload()
@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendConfirmAsync("👌").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.DM)]
             public async Task ClaimPatreonRewards()
             {

@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class FlipCoinCommands : NadekoSubmodule
+        public class FlipCoinCommands : MitternachtSubmodule
         {
             private readonly IImagesService _images;
             private readonly IBotConfigProvider _bc;
@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Gambling
                 _cs = cs;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Flip(int count = 1)
             {
                 if (count == 1)
@@ -85,7 +85,7 @@ namespace Mitternacht.Modules.Gambling
                 Tails = 2
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Betflip(int amount, BetFlipGuess guess)
             {
                 if (amount < _bc.BotConfig.MinimumBetAmount)

@@ -11,7 +11,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Games
 {
-    public partial class Games : NadekoTopLevelModule<GamesService>
+    public partial class Games : MitternachtTopLevelModule<GamesService>
     {
         private readonly IImagesService _images;
 
@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Games
             _images = images;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Choose([Remainder] string list = null)
         {
             if (string.IsNullOrWhiteSpace(list))
@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Games
             await Context.Channel.SendConfirmAsync("🤔", listArr[rng.Next(0, listArr.Length)]).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task _8Ball([Remainder] string question = null)
         {
             if (string.IsNullOrWhiteSpace(question))
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Games
                                .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(Service.EightBallResponses[new NadekoRandom().Next(0, Service.EightBallResponses.Length)]).WithIsInline(false)));
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Rps(string input)
         {
             string GetRpsPick(int p) {
@@ -94,7 +94,7 @@ namespace Mitternacht.Modules.Games
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task RateGirl(IGuildUser user = null) {
             user = user ?? (IGuildUser) Context.User;
@@ -190,7 +190,7 @@ namespace Mitternacht.Modules.Games
             return new GirlRating(_images, crazy, hot, roll, advice);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Linux(string guhnoo, string loonix)
         {
             await Context.Channel.SendConfirmAsync(

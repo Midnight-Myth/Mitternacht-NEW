@@ -12,9 +12,9 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class UnitConverterCommands : NadekoSubmodule<ConverterService>
+        public class UnitConverterCommands : MitternachtSubmodule<ConverterService>
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task ConvertList()
             {
                 var res = Service.Units.GroupBy(x => x.UnitType)
@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Utility
                                                                                                        .OrderBy(x => x)))));
                 await Context.Channel.EmbedAsync(res);
             }
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Convert(string origin, string target, decimal value)
             {
                 var originUnit = Service.Units.Find(x => x.Triggers.Select(y => y.ToLowerInvariant()).Contains(origin.ToLowerInvariant()));

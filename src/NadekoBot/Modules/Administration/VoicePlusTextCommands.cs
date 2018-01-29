@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class VoicePlusTextCommands : NadekoSubmodule<VplusTService>
+        public class VoicePlusTextCommands : MitternachtSubmodule<VplusTService>
         {
             private readonly DbService _db;
 
@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [RequireUserPermission(GuildPermission.ManageChannels)]
@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Administration
                     await Context.Channel.SendErrorAsync(ex.ToString()).ConfigureAwait(false);
                 }
             }
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageChannels)]
             [RequireBotPermission(GuildPermission.ManageChannels)]

@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Administration
     {
         [Group]
         [NoPublicBot]
-        public class LogCommands : NadekoSubmodule<LogCommandService>
+        public class LogCommands : MitternachtSubmodule<LogCommandService>
         {
             private readonly DbService _db;
 
@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Administration
                 Disable
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [OwnerOnly]
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("log_disabled").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [OwnerOnly]
@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("log_not_ignore", Format.Bold(channel.Mention + "(" + channel.Id + ")")).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [OwnerOnly]
@@ -108,7 +108,7 @@ namespace Mitternacht.Modules.Administration
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [OwnerOnly]

@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class CurrencyEventsCommands : NadekoSubmodule
+        public class CurrencyEventsCommands : MitternachtSubmodule
         {
             public enum CurrencyEvent
             {
@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Gambling
                 _cs = cs;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task StartEvent(CurrencyEvent e, int arg = -1)

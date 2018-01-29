@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Games.Common.Trivia
     {
         private readonly SemaphoreSlim _guessLock = new SemaphoreSlim(1, 1);
         private readonly Logger _log;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly DiscordSocketClient _client;
         private readonly IBotConfigProvider _bc;
         private readonly CurrencyService _cs;
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Games.Common.Trivia
 
         public int WinRequirement { get; }
 
-        public TriviaGame(NadekoStrings strings, DiscordSocketClient client, IBotConfigProvider bc,
+        public TriviaGame(StringService strings, DiscordSocketClient client, IBotConfigProvider bc,
             CurrencyService cs, IGuild guild, ITextChannel channel,
             bool showHints, int winReq, bool isPokemon)
         {

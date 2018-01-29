@@ -12,7 +12,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration
 {
-    public partial class Administration : NadekoTopLevelModule<AdministrationService>
+    public partial class Administration : MitternachtTopLevelModule<AdministrationService>
     {
         private IGuild _nadekoSupportServer;
         private readonly DbService _db;
@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Administration
             _db = db;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.Administrator)]
         [RequireBotPermission(GuildPermission.ManageMessages)]
@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -91,7 +91,7 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -116,7 +116,7 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -138,7 +138,7 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -151,7 +151,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("cr", Format.Bold(r.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -161,7 +161,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("rh", Format.Bold(role.Name), Format.Bold(role.IsHoisted.ToString())).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -198,7 +198,7 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.DeafenMembers)]
         [RequireBotPermission(GuildPermission.DeafenMembers)]
@@ -221,7 +221,7 @@ namespace Mitternacht.Modules.Administration
 
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.DeafenMembers)]
         [RequireBotPermission(GuildPermission.DeafenMembers)]
@@ -244,7 +244,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("undeafen").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageChannels)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -254,7 +254,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("delvoich", Format.Bold(voiceChannel.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageChannels)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -264,7 +264,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("createvoich", Format.Bold(ch.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageChannels)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -274,7 +274,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("deltextchan", Format.Bold(toDelete.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageChannels)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -284,7 +284,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("createtextchan", Format.Bold(txtCh.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageChannels)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -296,7 +296,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("set_topic").ConfigureAwait(false);
 
         }
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageChannels)]
         [RequireBotPermission(GuildPermission.ManageChannels)]
@@ -307,7 +307,7 @@ namespace Mitternacht.Modules.Administration
             await ReplyConfirmLocalized("set_channel_name").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.MentionEveryone)]
         public async Task MentionRole(params IRole[] roles)
@@ -332,7 +332,7 @@ namespace Mitternacht.Modules.Administration
             await Context.Channel.SendMessageAsync(send).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Donators()
         {
             IEnumerable<Donator> donatorsOrdered;
@@ -354,7 +354,7 @@ namespace Mitternacht.Modules.Administration
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task Donadd(IUser donator, int amount)
         {

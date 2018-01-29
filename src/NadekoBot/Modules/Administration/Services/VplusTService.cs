@@ -24,11 +24,11 @@ namespace Mitternacht.Modules.Administration.Services
 
         private readonly ConcurrentDictionary<ulong, SemaphoreSlim> _guildLockObjects = new ConcurrentDictionary<ulong, SemaphoreSlim>();
         private readonly DiscordSocketClient _client;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly DbService _db;
         private readonly Logger _log;
 
-        public VplusTService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, NadekoStrings strings,
+        public VplusTService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, StringService strings,
             DbService db)
         {
             _client = client;

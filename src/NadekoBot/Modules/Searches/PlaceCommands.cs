@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class PlaceCommands : NadekoSubmodule
+        public class PlaceCommands : MitternachtSubmodule
         {
             private static string typesStr { get; } = string.Join(", ", Enum.GetNames(typeof(PlaceType)));
 
@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Searches
                 Xoart, //http://xoart.link
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Placelist()
             {
                 await Context.Channel.SendConfirmAsync(GetText("list_of_place_tags", Prefix), 
@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Searches
                              .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Place(PlaceType placeType, uint width = 0, uint height = 0)
             {
                 var url = "";

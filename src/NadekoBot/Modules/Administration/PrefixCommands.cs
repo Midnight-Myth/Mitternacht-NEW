@@ -8,9 +8,9 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class PrefixCommands : NadekoSubmodule
+        public class PrefixCommands : MitternachtSubmodule
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(1)]
             public new async Task Prefix()
             {
@@ -18,7 +18,7 @@ namespace Mitternacht.Modules.Administration
                 return;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [Priority(0)]
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("prefix_new", Format.Code(oldPrefix), Format.Code(newPrefix)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task DefPrefix([Remainder]string prefix)
             {

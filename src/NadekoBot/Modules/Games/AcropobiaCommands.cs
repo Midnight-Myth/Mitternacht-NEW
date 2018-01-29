@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class AcropobiaCommands : NadekoSubmodule
+        public class AcropobiaCommands : MitternachtSubmodule
         {
             private readonly DiscordSocketClient _client;
 
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Games
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Acro(int submissionTime = 30)
             {

@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class StreamNotificationCommands : NadekoSubmodule<StreamNotificationService>
+        public class StreamNotificationCommands : MitternachtSubmodule<StreamNotificationService>
         {
             private readonly DbService _db;
 
@@ -24,28 +24,28 @@ namespace Mitternacht.Modules.Searches
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Smashcast([Remainder] string username) =>
                 await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Smashcast)
                     .ConfigureAwait(false);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Twitch([Remainder] string username) =>
                 await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Twitch)
                     .ConfigureAwait(false);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task Mixer([Remainder] string username) =>
                 await TrackStream((ITextChannel)Context.Channel, username, FollowedStream.FollowedStreamType.Mixer)
                     .ConfigureAwait(false);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ListStreams()
             {
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Searches
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RemoveStream(FollowedStream.FollowedStreamType type, [Remainder] string username)
@@ -110,7 +110,7 @@ namespace Mitternacht.Modules.Searches
                     type).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task CheckStream(FollowedStream.FollowedStreamType platform, [Remainder] string username)
             {

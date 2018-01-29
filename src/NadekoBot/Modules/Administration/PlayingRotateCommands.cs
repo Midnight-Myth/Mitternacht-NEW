@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class PlayingRotateCommands : NadekoSubmodule<PlayingRotateService>
+        public class PlayingRotateCommands : MitternachtSubmodule<PlayingRotateService>
         {
             private static readonly object _locker = new object();
             private readonly DbService _db;
@@ -21,7 +21,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task RotatePlaying()
             {
@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("ropl_disabled").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task AddPlaying([Remainder] string status)
             {
@@ -54,7 +54,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("ropl_added").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ListPlaying()
             {
@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Administration
 
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task RemovePlaying(int index)
             {

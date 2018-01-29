@@ -13,7 +13,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Help
 {
-    public partial class Help : NadekoTopLevelModule<HelpService>
+    public partial class Help : MitternachtTopLevelModule<HelpService>
     {
         public const string PatreonUrl = "https://patreon.com/plauderkonfi";
         public const string PaypalUrl = "-- Not available --";
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Help
             _perms = perms;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Modules()
         {
             var embed = new EmbedBuilder().WithOkColor()
@@ -47,7 +47,7 @@ namespace Mitternacht.Modules.Help
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Commands([Remainder] string module = null)
         {
             var channel = Context.Channel;
@@ -85,14 +85,14 @@ namespace Mitternacht.Modules.Help
 
             await ConfirmLocalized("commands_instr", Prefix).ConfigureAwait(false);
         }
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Priority(0)]
         public async Task H([Remainder] string fail)
         {
             await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Priority(1)]
         public async Task H([Remainder] CommandInfo com = null)
         {
@@ -115,7 +115,7 @@ namespace Mitternacht.Modules.Help
             await channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task Hgit()
@@ -155,7 +155,7 @@ namespace Mitternacht.Modules.Help
             await ReplyConfirmLocalized("commandlist_regen").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Guide()
         {
             await ConfirmLocalized("guide", 
@@ -163,7 +163,7 @@ namespace Mitternacht.Modules.Help
                 "http://nadekobot.readthedocs.io/en/latest/").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Donate()
         {
             await ReplyConfirmLocalized("donate", PatreonUrl, PaypalUrl).ConfigureAwait(false);

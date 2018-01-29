@@ -13,7 +13,7 @@ using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level
 {
-    public partial class Level : NadekoTopLevelModule<LevelService>
+    public partial class Level : MitternachtTopLevelModule<LevelService>
     {
         private readonly IBotConfigProvider _bc;
         private readonly DbService _db;
@@ -28,12 +28,12 @@ namespace Mitternacht.Modules.Level
             _creds = creds;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Rank([Remainder] IUser user = null)
             => await Rank(user?.Id ?? 0);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Rank(ulong userId = 0)
         {
@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Level
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Ranks(int count, int position)
         {
@@ -118,12 +118,12 @@ namespace Mitternacht.Modules.Level
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Ranks(int count = 20)
             => await Ranks(count, 1);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task AddXp(int xp, [Remainder] IUser user = null)
@@ -138,7 +138,7 @@ namespace Mitternacht.Modules.Level
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [OwnerOnly]
@@ -153,7 +153,7 @@ namespace Mitternacht.Modules.Level
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         [OwnerOnly]
@@ -174,7 +174,7 @@ namespace Mitternacht.Modules.Level
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task TurnToXp(long moneyToSpend, [Remainder] IUser user = null)
         {

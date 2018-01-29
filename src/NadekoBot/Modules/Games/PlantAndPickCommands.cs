@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Games
         /// https://discord.gg/0TYNJfCU4De7YIk8
         /// </summary>
         [Group]
-        public class PlantPickCommands : NadekoSubmodule
+        public class PlantPickCommands : MitternachtSubmodule
         {
             private readonly CurrencyService _cs;
             private readonly IBotConfigProvider _bc;
@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Games
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Pick()
             {
@@ -60,7 +60,7 @@ namespace Mitternacht.Modules.Games
                 msg.DeleteAfter(10);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Plant(int amount = 1)
             {
@@ -102,7 +102,7 @@ namespace Mitternacht.Modules.Games
                 });
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
 #if GLOBAL_NADEKO

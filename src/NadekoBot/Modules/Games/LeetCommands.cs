@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Games
 {
     public partial class Games
     {
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Leet(int level, [Remainder] string text = null)
         {
             text = text.Trim();

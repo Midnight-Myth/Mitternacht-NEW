@@ -13,12 +13,12 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class PokemonSearchCommands : NadekoSubmodule<SearchesService>
+        public class PokemonSearchCommands : MitternachtSubmodule<SearchesService>
         {
             public Dictionary<string, SearchPokemon> Pokemons => Service.Pokemons;
             public Dictionary<string, SearchPokemonAbility> PokemonAbilities => Service.PokemonAbilities;
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Pokemon([Remainder] string pokemon = null)
             {
                 pokemon = pokemon?.Trim().ToUpperInvariant();
@@ -42,7 +42,7 @@ namespace Mitternacht.Modules.Searches
                 await ReplyErrorLocalized("pokemon_none").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task PokemonAbility([Remainder] string ability = null)
             {
                 ability = ability?.Trim().ToUpperInvariant().Replace(" ", "");
