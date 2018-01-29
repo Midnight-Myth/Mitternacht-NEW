@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class InfoCommands : NadekoSubmodule
+        public class InfoCommands : MitternachtSubmodule
         {
             private readonly DiscordSocketClient _client;
             private readonly IStatsService _stats;

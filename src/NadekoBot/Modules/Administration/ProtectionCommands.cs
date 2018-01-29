@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class ProtectionCommands : NadekoSubmodule<ProtectionService>
+        public class ProtectionCommands : MitternachtSubmodule<ProtectionService>
         {
             private readonly MuteService _mute;
             private readonly DbService _db;

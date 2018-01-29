@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class PruneCommands : NadekoSubmodule<PruneService>
+        public class PruneCommands : MitternachtSubmodule<PruneService>
         {
             private readonly TimeSpan twoWeeks = TimeSpan.FromDays(14);
 

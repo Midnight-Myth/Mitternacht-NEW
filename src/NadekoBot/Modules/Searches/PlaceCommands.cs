@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class PlaceCommands : NadekoSubmodule
+        public class PlaceCommands : MitternachtSubmodule
         {
             private static string typesStr { get; } = string.Join(", ", Enum.GetNames(typeof(PlaceType)));
 

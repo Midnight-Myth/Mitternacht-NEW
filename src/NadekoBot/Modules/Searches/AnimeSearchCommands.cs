@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class AnimeSearchCommands : NadekoSubmodule<AnimeSearchService>
+        public class AnimeSearchCommands : MitternachtSubmodule<AnimeSearchService>
         {
             [MitternachtCommand, Usage, Description, Aliases]
             [Priority(0)]

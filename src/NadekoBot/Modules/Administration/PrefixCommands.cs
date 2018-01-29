@@ -8,7 +8,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class PrefixCommands : NadekoSubmodule
+        public class PrefixCommands : MitternachtSubmodule
         {
             [MitternachtCommand, Usage, Description, Aliases]
             [Priority(1)]

@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Games
         /// https://discord.gg/0TYNJfCU4De7YIk8
         /// </summary>
         [Group]
-        public class PlantPickCommands : NadekoSubmodule
+        public class PlantPickCommands : MitternachtSubmodule
         {
             private readonly CurrencyService _cs;
             private readonly IBotConfigProvider _bc;

@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class TicTacToeCommands : NadekoSubmodule
+        public class TicTacToeCommands : MitternachtSubmodule
         {
             //channelId/game
             private static readonly Dictionary<ulong, TicTacToe> _games = new Dictionary<ulong, TicTacToe>();

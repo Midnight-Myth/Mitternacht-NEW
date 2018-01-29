@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Level
 {
     public partial class Level
     {
-        public class RoleLevelBindingsCommands : NadekoSubmodule
+        public class RoleLevelBindingsCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 

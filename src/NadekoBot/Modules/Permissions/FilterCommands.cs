@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class FilterCommands : NadekoSubmodule
+        public class FilterCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
             private readonly FilterService _service;

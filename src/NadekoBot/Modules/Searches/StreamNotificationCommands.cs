@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class StreamNotificationCommands : NadekoSubmodule<StreamNotificationService>
+        public class StreamNotificationCommands : MitternachtSubmodule<StreamNotificationService>
         {
             private readonly DbService _db;
 

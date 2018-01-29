@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class PlayingRotateCommands : NadekoSubmodule<PlayingRotateService>
+        public class PlayingRotateCommands : MitternachtSubmodule<PlayingRotateService>
         {
             private static readonly object _locker = new object();
             private readonly DbService _db;

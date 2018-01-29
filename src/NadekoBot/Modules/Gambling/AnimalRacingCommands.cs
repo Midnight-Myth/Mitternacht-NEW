@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class AnimalRacingCommands : NadekoSubmodule
+        public class AnimalRacingCommands : MitternachtSubmodule
         {
             private readonly IBotConfigProvider _bc;
             private readonly CurrencyService _cs;

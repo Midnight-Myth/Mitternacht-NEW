@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class VoicePlusTextCommands : NadekoSubmodule<VplusTService>
+        public class VoicePlusTextCommands : MitternachtSubmodule<VplusTService>
         {
             private readonly DbService _db;
 

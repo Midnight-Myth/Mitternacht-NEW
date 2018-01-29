@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class ChatterBotCommands : NadekoSubmodule<ChatterBotService>
+        public class ChatterBotCommands : MitternachtSubmodule<ChatterBotService>
         {
             private readonly DbService _db;
 

@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class OverwatchCommands : NadekoSubmodule
+        public class OverwatchCommands : MitternachtSubmodule
         {
             public enum Region
             {

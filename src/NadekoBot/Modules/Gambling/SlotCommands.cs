@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class SlotCommands : NadekoSubmodule
+        public class SlotCommands : MitternachtSubmodule
         {
             private static int _totalBet;
             private static int _totalPaidOut;

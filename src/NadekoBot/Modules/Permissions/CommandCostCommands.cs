@@ -7,7 +7,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class CommandCostCommands : NadekoSubmodule
+        public class CommandCostCommands : MitternachtSubmodule
         {
             private static readonly ConcurrentDictionary<string, int> _commandCosts = new ConcurrentDictionary<string, int>();
             public static IReadOnlyDictionary<string, int> CommandCosts => _commandCosts;

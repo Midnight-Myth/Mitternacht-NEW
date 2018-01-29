@@ -12,7 +12,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Gambling
 {
-    public partial class Gambling : NadekoTopLevelModule
+    public partial class Gambling : MitternachtTopLevelModule
     {
         private readonly IBotConfigProvider _bc;
         private readonly DbService _db;

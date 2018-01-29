@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class PatreonCommands : NadekoSubmodule<PatreonRewardsService>
+        public class PatreonCommands : MitternachtSubmodule<PatreonRewardsService>
         {
             private readonly IBotCredentials _creds;
             private readonly IBotConfigProvider _config;

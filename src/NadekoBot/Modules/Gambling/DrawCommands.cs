@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class DrawCommands : NadekoSubmodule
+        public class DrawCommands : MitternachtSubmodule
         {
             private static readonly ConcurrentDictionary<IGuild, Cards> _allDecks = new ConcurrentDictionary<IGuild, Cards>();
             private const string _cardsPath = "data/images/cards";

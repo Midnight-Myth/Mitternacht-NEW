@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Level
 {
     public partial class Level
     {
-        public class MessageXpRestrictionCommands : NadekoSubmodule
+        public class MessageXpRestrictionCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 

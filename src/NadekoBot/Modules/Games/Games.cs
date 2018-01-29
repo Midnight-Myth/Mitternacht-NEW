@@ -11,7 +11,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Games
 {
-    public partial class Games : NadekoTopLevelModule<GamesService>
+    public partial class Games : MitternachtTopLevelModule<GamesService>
     {
         private readonly IImagesService _images;
 

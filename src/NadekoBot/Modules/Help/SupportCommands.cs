@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Help
     public partial class Help
     {
         [Group]
-        public class SupportCommands : NadekoSubmodule<SupportService>
+        public class SupportCommands : MitternachtSubmodule<SupportService>
         {
             public SupportCommands() {
                 

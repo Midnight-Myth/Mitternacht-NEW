@@ -18,7 +18,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mitternacht.Modules.NSFW
 {
-    public class NSFW : NadekoTopLevelModule<SearchesService>
+    public class NSFW : MitternachtTopLevelModule<SearchesService>
     {
         private static readonly ConcurrentDictionary<ulong, Timer> _autoHentaiTimers = new ConcurrentDictionary<ulong, Timer>();
         private static readonly ConcurrentHashSet<ulong> _hentaiBombBlacklist = new ConcurrentHashSet<ulong>();

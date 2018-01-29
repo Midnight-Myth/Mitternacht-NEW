@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class SlowModeCommands : NadekoSubmodule<SlowmodeService>
+        public class SlowModeCommands : MitternachtSubmodule<SlowmodeService>
         {
             private readonly DbService _db;
 

@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class TriviaCommands : NadekoSubmodule
+        public class TriviaCommands : MitternachtSubmodule
         {
             private readonly CurrencyService _cs;
             private readonly DiscordSocketClient _client;

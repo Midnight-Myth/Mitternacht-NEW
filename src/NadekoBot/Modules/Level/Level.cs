@@ -13,7 +13,7 @@ using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level
 {
-    public partial class Level : NadekoTopLevelModule<LevelService>
+    public partial class Level : MitternachtTopLevelModule<LevelService>
     {
         private readonly IBotConfigProvider _bc;
         private readonly DbService _db;

@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class QuoteCommands : NadekoSubmodule
+        public class QuoteCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 

@@ -15,7 +15,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions
 {
-    public partial class Permissions : NadekoTopLevelModule<PermissionService>
+    public partial class Permissions : MitternachtTopLevelModule<PermissionService>
     {
         private readonly DbService _db;
 

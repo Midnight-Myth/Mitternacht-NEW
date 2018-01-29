@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class CommandMapCommands : NadekoSubmodule<CommandMapService>
+        public class CommandMapCommands : MitternachtSubmodule<CommandMapService>
         {
             private readonly DbService _db;
             private readonly DiscordSocketClient _client;

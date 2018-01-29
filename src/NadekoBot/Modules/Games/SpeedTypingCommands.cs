@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class SpeedTypingCommands : NadekoSubmodule
+        public class SpeedTypingCommands : MitternachtSubmodule
         {
             public static ConcurrentDictionary<ulong, TypingGame> RunningContests = new ConcurrentDictionary<ulong, TypingGame>();
             private readonly GamesService _games;

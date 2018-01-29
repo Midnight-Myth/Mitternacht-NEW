@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class ServerGreetCommands : NadekoSubmodule<GreetSettingsService>
+        public class ServerGreetCommands : MitternachtSubmodule<GreetSettingsService>
         {
             private readonly DbService _db;
 

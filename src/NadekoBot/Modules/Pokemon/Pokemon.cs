@@ -13,7 +13,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Pokemon
 {
-    public class Pokemon : NadekoTopLevelModule<PokemonService>
+    public class Pokemon : MitternachtTopLevelModule<PokemonService>
     {
         private readonly DbService _db;
         private readonly IBotConfigProvider _bc;

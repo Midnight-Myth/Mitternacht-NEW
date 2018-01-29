@@ -14,7 +14,7 @@ using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification
 {
-    public class Verification : NadekoTopLevelModule<VerificationService>
+    public class Verification : MitternachtTopLevelModule<VerificationService>
     {
         private readonly DbService _db;
         private readonly IBotCredentials _creds;

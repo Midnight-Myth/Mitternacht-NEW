@@ -8,7 +8,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class VerboseErrorCommands : NadekoSubmodule<VerboseErrorsService>
+        public class VerboseErrorCommands : MitternachtSubmodule<VerboseErrorsService>
         {
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]

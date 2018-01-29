@@ -18,7 +18,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class DriceRollCommands : NadekoSubmodule
+        public class DriceRollCommands : MitternachtSubmodule
         {
             private readonly Regex dndRegex  = new Regex(@"^(?<n1>\d+)d(?<n2>\d+)(?:\+(?<add>\d+))?(?:\-(?<sub>\d+))?$", RegexOptions.Compiled);
             private readonly Regex fudgeRegex  = new Regex(@"^(?<n1>\d+)d(?:F|f)$", RegexOptions.Compiled);

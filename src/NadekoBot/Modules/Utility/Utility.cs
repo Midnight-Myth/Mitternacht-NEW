@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.Utility
 {
-    public partial class Utility : NadekoTopLevelModule
+    public partial class Utility : MitternachtTopLevelModule
     {
         private readonly DiscordSocketClient _client;
         private readonly IStatsService _stats;

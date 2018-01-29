@@ -12,7 +12,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.CustomReactions
 {
-    public class CustomReactions : NadekoTopLevelModule<CustomReactionsService>
+    public class CustomReactions : MitternachtTopLevelModule<CustomReactionsService>
     {
         private readonly IBotCredentials _creds;
         private readonly DbService _db;

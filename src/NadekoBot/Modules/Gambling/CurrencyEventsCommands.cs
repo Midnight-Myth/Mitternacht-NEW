@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class CurrencyEventsCommands : NadekoSubmodule
+        public class CurrencyEventsCommands : MitternachtSubmodule
         {
             public enum CurrencyEvent
             {

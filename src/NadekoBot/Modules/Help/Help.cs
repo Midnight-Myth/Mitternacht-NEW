@@ -13,7 +13,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Help
 {
-    public partial class Help : NadekoTopLevelModule<HelpService>
+    public partial class Help : MitternachtTopLevelModule<HelpService>
     {
         public const string PatreonUrl = "https://patreon.com/plauderkonfi";
         public const string PaypalUrl = "-- Not available --";

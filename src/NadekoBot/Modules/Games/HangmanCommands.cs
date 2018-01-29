@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class HangmanCommands : NadekoSubmodule
+        public class HangmanCommands : MitternachtSubmodule
         {
             private readonly DiscordSocketClient _client;
 

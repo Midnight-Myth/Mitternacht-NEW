@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
-        public class StreamRoleCommands : NadekoSubmodule<StreamRoleService>
+        public class StreamRoleCommands : MitternachtSubmodule<StreamRoleService>
         {
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageRoles)]

@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Administration
     {
         [Group]
         [NoPublicBot]
-        public class LogCommands : NadekoSubmodule<LogCommandService>
+        public class LogCommands : MitternachtSubmodule<LogCommandService>
         {
             private readonly DbService _db;
 

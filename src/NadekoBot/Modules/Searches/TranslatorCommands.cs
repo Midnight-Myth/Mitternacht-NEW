@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class TranslateCommands : NadekoSubmodule
+        public class TranslateCommands : MitternachtSubmodule
         {
             private readonly SearchesService _searches;
             private readonly IGoogleApiService _google;

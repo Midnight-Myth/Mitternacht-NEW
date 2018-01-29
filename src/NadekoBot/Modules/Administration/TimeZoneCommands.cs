@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class TimeZoneCommands : NadekoSubmodule<GuildTimezoneService>
+        public class TimeZoneCommands : MitternachtSubmodule<GuildTimezoneService>
         {
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]

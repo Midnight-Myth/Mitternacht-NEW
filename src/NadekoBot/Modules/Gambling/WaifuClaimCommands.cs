@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Gambling
         }
 
         [Group]
-        public class WaifuClaimCommands : NadekoSubmodule
+        public class WaifuClaimCommands : MitternachtSubmodule
         {
             private static ConcurrentDictionary<ulong, DateTime> DivorceCooldowns { get; } = new ConcurrentDictionary<ulong, DateTime>();
             private static ConcurrentDictionary<ulong, DateTime> AffinityCooldowns { get; } = new ConcurrentDictionary<ulong, DateTime>();

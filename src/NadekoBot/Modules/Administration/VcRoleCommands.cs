@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class VcRoleCommands : NadekoSubmodule<VcRoleService>
+        public class VcRoleCommands : MitternachtSubmodule<VcRoleService>
         {
             private readonly DbService _db;
 

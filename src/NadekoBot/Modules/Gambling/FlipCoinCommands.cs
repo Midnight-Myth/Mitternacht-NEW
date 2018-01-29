@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class FlipCoinCommands : NadekoSubmodule
+        public class FlipCoinCommands : MitternachtSubmodule
         {
             private readonly IImagesService _images;
             private readonly IBotConfigProvider _bc;

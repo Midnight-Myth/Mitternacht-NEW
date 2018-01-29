@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class CalcCommands : NadekoSubmodule
+        public class CalcCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 

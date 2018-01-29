@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class OsuCommands : NadekoSubmodule
+        public class OsuCommands : MitternachtSubmodule
         {
             private readonly IGoogleApiService _google;
             private readonly IBotCredentials _creds;

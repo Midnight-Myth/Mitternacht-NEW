@@ -9,7 +9,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class ResetPermissionsCommands : NadekoSubmodule
+        public class ResetPermissionsCommands : MitternachtSubmodule
         {
             private readonly ResetPermissionsService _service;
 

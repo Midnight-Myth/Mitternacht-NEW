@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Permissions
     public partial class Permissions
     {
         [Group]
-        public class GlobalPermissionCommands : NadekoSubmodule
+        public class GlobalPermissionCommands : MitternachtSubmodule
         {
             private GlobalPermissionService _service;
             private readonly DbService _db;

@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class RemindCommands : NadekoSubmodule<RemindService>
+        public class RemindCommands : MitternachtSubmodule<RemindService>
         {
             private readonly DbService _db;
             private readonly GuildTimezoneService _tz;

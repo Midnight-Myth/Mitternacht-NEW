@@ -15,7 +15,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class MemegenCommands : NadekoSubmodule
+        public class MemegenCommands : MitternachtSubmodule
         {
             private static readonly ImmutableDictionary<char, string> _map = new Dictionary<char, string>()
             {

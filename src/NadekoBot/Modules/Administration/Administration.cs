@@ -12,7 +12,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration
 {
-    public partial class Administration : NadekoTopLevelModule<AdministrationService>
+    public partial class Administration : MitternachtTopLevelModule<AdministrationService>
     {
         private IGuild _nadekoSupportServer;
         private readonly DbService _db;

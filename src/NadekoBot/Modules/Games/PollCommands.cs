@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Games
     public partial class Games
     {
         [Group]
-        public class PollCommands : NadekoSubmodule<PollService>
+        public class PollCommands : MitternachtSubmodule<PollService>
         {
             private readonly DiscordSocketClient _client;
 

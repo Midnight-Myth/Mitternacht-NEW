@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class UsernameHistoryCommands : NadekoSubmodule<UsernameHistoryService>
+        public class UsernameHistoryCommands : MitternachtSubmodule<UsernameHistoryService>
         {
             private readonly DbService _db;
 

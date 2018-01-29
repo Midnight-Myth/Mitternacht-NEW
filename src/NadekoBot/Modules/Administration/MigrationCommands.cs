@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class MigrationCommands : NadekoSubmodule
+        public class MigrationCommands : MitternachtSubmodule
         {
             private const int CurrentVersion = 1;
             private readonly DbService _db;

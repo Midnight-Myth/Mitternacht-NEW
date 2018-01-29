@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class LocalizationCommands : NadekoSubmodule
+        public class LocalizationCommands : MitternachtSubmodule
         {
             private static ImmutableDictionary<string, string> supportedLocales { get; } = new Dictionary<string, string>()
             {

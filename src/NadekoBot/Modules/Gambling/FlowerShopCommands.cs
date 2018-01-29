@@ -18,7 +18,7 @@ namespace Mitternacht.Modules.Gambling
     public partial class Gambling
     {
         [Group]
-        public class FlowerShopCommands : NadekoSubmodule
+        public class FlowerShopCommands : MitternachtSubmodule
         {
             private readonly IBotConfigProvider _bc;
             private readonly DbService _db;

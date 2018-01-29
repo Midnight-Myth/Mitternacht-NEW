@@ -13,7 +13,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class PokemonSearchCommands : NadekoSubmodule<SearchesService>
+        public class PokemonSearchCommands : MitternachtSubmodule<SearchesService>
         {
             public Dictionary<string, SearchPokemon> Pokemons => Service.Pokemons;
             public Dictionary<string, SearchPokemonAbility> PokemonAbilities => Service.PokemonAbilities;

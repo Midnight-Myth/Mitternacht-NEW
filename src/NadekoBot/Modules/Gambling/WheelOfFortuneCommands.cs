@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Gambling
 {
     public partial class Gambling
     {
-        public class WheelOfFortuneCommands : NadekoSubmodule
+        public class WheelOfFortuneCommands : MitternachtSubmodule
         {
             private readonly CurrencyService _cs;
             private readonly IBotConfigProvider _bc;

@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class XkcdCommands : NadekoSubmodule
+        public class XkcdCommands : MitternachtSubmodule
         {
             private const string _xkcdUrl = "https://xkcd.com";
 

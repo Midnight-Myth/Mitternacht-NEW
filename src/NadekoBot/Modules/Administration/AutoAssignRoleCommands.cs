@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class AutoAssignRoleCommands : NadekoSubmodule<AutoAssignRoleService>
+        public class AutoAssignRoleCommands : MitternachtSubmodule<AutoAssignRoleService>
         {
             private readonly DbService _db;
 

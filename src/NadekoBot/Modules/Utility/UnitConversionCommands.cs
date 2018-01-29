@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class UnitConverterCommands : NadekoSubmodule<ConverterService>
+        public class UnitConverterCommands : MitternachtSubmodule<ConverterService>
         {
             [MitternachtCommand, Usage, Description, Aliases]
             public async Task ConvertList()

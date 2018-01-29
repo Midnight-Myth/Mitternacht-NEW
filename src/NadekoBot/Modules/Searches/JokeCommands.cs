@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Searches
     public partial class Searches
     {
         [Group]
-        public class JokeCommands : NadekoSubmodule<SearchesService>
+        public class JokeCommands : MitternachtSubmodule<SearchesService>
         {
 
             [MitternachtCommand, Usage, Description, Aliases]

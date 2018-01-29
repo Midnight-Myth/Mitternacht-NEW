@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Utility
 {
     public partial class Utility
     {
-        public class BotConfigCommands : NadekoSubmodule
+        public class BotConfigCommands : MitternachtSubmodule
         {
             private readonly IBotConfigProvider _service;
 

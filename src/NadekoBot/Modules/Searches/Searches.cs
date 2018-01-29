@@ -24,7 +24,7 @@ using Configuration = AngleSharp.Configuration;
 
 namespace Mitternacht.Modules.Searches
 {
-    public partial class Searches : NadekoTopLevelModule<SearchesService>
+    public partial class Searches : MitternachtTopLevelModule<SearchesService>
     {
         private readonly IBotCredentials _creds;
         private readonly IGoogleApiService _google;

@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        public class UserPunishCommands : NadekoSubmodule<UserPunishService>
+        public class UserPunishCommands : MitternachtSubmodule<UserPunishService>
         {
             private readonly DbService _db;
 

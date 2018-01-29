@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Utility
     public partial class Utility
     {
         [Group]
-        public class RepeatCommands : NadekoSubmodule<MessageRepeaterService>
+        public class RepeatCommands : MitternachtSubmodule<MessageRepeaterService>
         {
             private readonly DiscordSocketClient _client;
             private readonly DbService _db;

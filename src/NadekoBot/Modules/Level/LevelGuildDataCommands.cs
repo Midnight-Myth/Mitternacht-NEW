@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Level
 {
     public partial class Level
     {
-        public class LevelGuildDataCommands : NadekoSubmodule
+        public class LevelGuildDataCommands : MitternachtSubmodule
         {
             private readonly DbService _db;
 
