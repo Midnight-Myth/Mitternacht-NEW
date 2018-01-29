@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Help
                 
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Support(string text) {
                 var supportChannelId = Service.GetSupportChannelId(Context.Guild.Id);
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Help
                 var msg = await supportChannel.SendMessageAsync("");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task SetSupportChannel([Remainder]ITextChannel channel = null) {

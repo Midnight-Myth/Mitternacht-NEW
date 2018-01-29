@@ -10,7 +10,7 @@ namespace Mitternacht.Modules.Utility
         [Group]
         public class VerboseErrorCommands : NadekoSubmodule<VerboseErrorsService>
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
             public async Task VerboseError()

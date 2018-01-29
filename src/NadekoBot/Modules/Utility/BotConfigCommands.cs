@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Utility
                 _service = service;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task BotConfigEdit()
             {
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Utility
                 await ReplyAsync(string.Join(", ", names)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task BotConfigEdit(BotConfigEditType type, [Remainder]string newValue = null)
             {

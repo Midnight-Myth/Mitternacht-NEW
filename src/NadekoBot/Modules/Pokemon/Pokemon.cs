@@ -73,7 +73,7 @@ namespace Mitternacht.Modules.Pokemon
             return null;
         }
         
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Attack(string move, IGuildUser targetUser = null)
         {
@@ -188,7 +188,7 @@ namespace Mitternacht.Modules.Pokemon
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Movelist()
         {
@@ -202,7 +202,7 @@ namespace Mitternacht.Modules.Pokemon
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Heal(IGuildUser targetUser = null)
         {
@@ -258,7 +258,7 @@ namespace Mitternacht.Modules.Pokemon
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Type(IGuildUser targetUser = null)
         {
@@ -268,7 +268,7 @@ namespace Mitternacht.Modules.Pokemon
 
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Settype([Remainder] string typeTargeted = null)
         {

@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Gambling
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Raffle([Remainder] IRole role = null)
         {
@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Gambling
             await Context.Channel.SendConfirmAsync("🎟 "+ GetText("raffled_user"), $"**{usr.Username}#{usr.Discriminator}**", footer: $"ID: {usr.Id}").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Priority(1)]
         public async Task Cash([Remainder] IUser user = null)
         {
@@ -63,14 +63,14 @@ namespace Mitternacht.Modules.Gambling
                 await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{GetCurrency(user.Id)} {CurrencySign}").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Priority(0)]
         public async Task Cash(ulong userId)
         {
             await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{GetCurrency(userId)} {CurrencySign}").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Give(long amount, [Remainder] IGuildUser receiver)
         {
@@ -92,14 +92,14 @@ namespace Mitternacht.Modules.Gambling
             await ReplyConfirmLocalized("gifted", amount + CurrencySign, Format.Bold(receiver.ToString())).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         [Priority(0)]
         public Task Award(int amount, [Remainder] IGuildUser usr) =>
             Award(amount, usr.Id);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         [Priority(1)]
         public async Task Award(int amount, ulong usrId)
@@ -111,7 +111,7 @@ namespace Mitternacht.Modules.Gambling
             await ReplyConfirmLocalized("awarded", amount + CurrencySign, $"<@{usrId}>").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         [Priority(2)]
@@ -131,7 +131,7 @@ namespace Mitternacht.Modules.Gambling
                 Format.Bold(role.Name)).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task Take(long amount, [Remainder] IGuildUser user)
@@ -146,7 +146,7 @@ namespace Mitternacht.Modules.Gambling
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task Take(long amount, [Remainder] ulong usrId)
         {
@@ -159,7 +159,7 @@ namespace Mitternacht.Modules.Gambling
                 await ReplyErrorLocalized("take_fail", amount + CurrencySign, Format.Code(usrId.ToString()), CurrencyPluralName).ConfigureAwait(false);
         }
 
-        //[NadekoCommand, Usage, Description, Aliases]
+        //[MitternachtCommand, Usage, Description, Aliases]
         //[OwnerOnly]
         //public Task BrTest(int tests = 1000)
         //{
@@ -214,7 +214,7 @@ namespace Mitternacht.Modules.Gambling
         //    return Task.CompletedTask;
         //}
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task BetRoll(long amount)
         {
             if (amount < 1)
@@ -256,7 +256,7 @@ namespace Mitternacht.Modules.Gambling
             await Context.Channel.SendConfirmAsync(str).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Leaderboard(int page = 1)
         {
             if (page < 1) return;

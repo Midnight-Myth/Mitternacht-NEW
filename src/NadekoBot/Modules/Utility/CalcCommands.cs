@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Utility
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Calculate([Remainder] string expression)
             {
                 var expr = new Expression(expression, EvaluateOptions.IgnoreCase);
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Utility
                 if (result != null) args.Result = result;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task CalcOps()
             {
                 var selection = typeof(Math).GetTypeInfo()

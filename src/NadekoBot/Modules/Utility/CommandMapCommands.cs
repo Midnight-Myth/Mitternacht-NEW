@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Utility
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireUserPermission(GuildPermission.Administrator)]
             [RequireContext(ContextType.Guild)]
             public async Task Alias(string trigger, [Remainder] string mapping = null)
@@ -101,7 +101,7 @@ namespace Mitternacht.Modules.Utility
             }
 
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AliasList(int page = 1)
             {

@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Utility
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RepeatInvoke(int index)
@@ -59,7 +59,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendMessageAsync("🔄").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RepeatRemove(int index)
@@ -98,7 +98,7 @@ namespace Mitternacht.Modules.Utility
                         GetText("repeater_stopped", index + 1) + $"\n\n{repeater}").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [Priority(0)]
@@ -147,7 +147,7 @@ namespace Mitternacht.Modules.Utility
                         Format.Bold(rep.Repeater.Interval.Minutes.ToString()))).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             [Priority(1)]
@@ -199,7 +199,7 @@ namespace Mitternacht.Modules.Utility
                         Format.Bold(rep.Repeater.Interval.Minutes.ToString())) + " " + secondPart).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task RepeatList()

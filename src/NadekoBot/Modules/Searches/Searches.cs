@@ -35,7 +35,7 @@ namespace Mitternacht.Modules.Searches
             _google = google;
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Weather([Remainder] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Time([Remainder] string arg)
         {
             if (string.IsNullOrWhiteSpace(arg) || string.IsNullOrWhiteSpace(_creds.GoogleApiKey))
@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Youtube([Remainder] string query = null)
         {
             if (!await ValidateQuery(Context.Channel, query).ConfigureAwait(false)) return;
@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.SendMessageAsync(result).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Imdb([Remainder] string query = null)
         {
             if (!await ValidateQuery(Context.Channel, query).ConfigureAwait(false)) return;
@@ -112,7 +112,7 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.EmbedAsync(movie.GetEmbed()).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task RandomCat()
         {
             using (var http = new HttpClient())
@@ -122,7 +122,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task RandomDog()
         {
             using (var http = new HttpClient())
@@ -131,7 +131,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Image([Remainder] string terms = null)
         {
             terms = terms?.Trim();
@@ -183,7 +183,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task RandomImage([Remainder] string terms = null)
         {
             terms = terms?.Trim();
@@ -235,7 +235,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Lmgtfy([Remainder] string ffs = null)
         {
             if (string.IsNullOrWhiteSpace(ffs))
@@ -244,7 +244,7 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.SendConfirmAsync("<" + await _google.ShortenUrl($"https://lmgtfy.com/?q={ Uri.EscapeUriString(ffs) }") + ">").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Shorten([Remainder] string arg)
         {
             if (string.IsNullOrWhiteSpace(arg))
@@ -269,7 +269,7 @@ namespace Mitternacht.Modules.Searches
         //private readonly Regex googleSearchRegex = new Regex(@"<h3 class=""r""><a href=""(?:\/url?q=)?(?<link>.*?)"".*?>(?<title>.*?)<\/a>.*?class=""st"">(?<text>.*?)<\/span>", RegexOptions.Compiled);
         //private readonly Regex htmlReplace = new Regex(@"(?:<b>(.*?)<\/b>|<em>(.*?)<\/em>)", RegexOptions.Compiled);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Google([Remainder] string terms = null)
         {
             terms = terms?.Trim();
@@ -318,7 +318,7 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.EmbedAsync(embed.WithDescription(string.Concat(desc))).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task MagicTheGathering([Remainder] string name)
         {
             var arg = name;
@@ -360,7 +360,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Hearthstone([Remainder] string name)
         {
             var arg = name;
@@ -413,7 +413,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Yodify([Remainder] string query = null)
         {
             if (string.IsNullOrWhiteSpace(_creds.MashapeKey))
@@ -448,7 +448,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task UrbanDict([Remainder] string query = null)
         {
             if (string.IsNullOrWhiteSpace(_creds.MashapeKey))
@@ -486,7 +486,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Define([Remainder] string word)
         {
             if (string.IsNullOrWhiteSpace(word))
@@ -522,7 +522,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Hashtag([Remainder] string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -563,7 +563,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Catfact()
         {
             using (var http = new HttpClient())
@@ -576,14 +576,14 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Revav([Remainder] IGuildUser user = null) {
             user = user ?? (IGuildUser)Context.User;
             await Context.Channel.SendConfirmAsync($"https://images.google.com/searchbyimage?image_url={user.RealAvatarUrl()}").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Revimg([Remainder] string imageLink = null)
         {
             imageLink = imageLink?.Trim() ?? "";
@@ -593,11 +593,11 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.SendConfirmAsync($"https://images.google.com/searchbyimage?image_url={imageLink}").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Safebooru([Remainder] string tag = null)
             => InternalDapiCommand(Context.Message, tag, DapiSearchType.Safebooru);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Wiki([Remainder] string query = null)
         {
             query = query?.Trim();
@@ -614,7 +614,7 @@ namespace Mitternacht.Modules.Searches
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Ponybooru([Remainder] string tag = null)
         {
             tag = tag?.Trim() ?? "";
@@ -631,7 +631,7 @@ namespace Mitternacht.Modules.Searches
                     .ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Color([Remainder] string color = null)
         {
             color = color?.Trim().Replace("#", "");
@@ -656,7 +656,7 @@ namespace Mitternacht.Modules.Searches
             await Context.Channel.SendFileAsync(img.ToStream(), $"{color}.png").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Avatar([Remainder] IGuildUser usr = null)
         {
@@ -671,7 +671,7 @@ namespace Mitternacht.Modules.Searches
                 .WithThumbnailUrl(avatarUrl), Context.User.Mention).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Wikia(string target, [Remainder] string query)
         {
             if (string.IsNullOrWhiteSpace(target) || string.IsNullOrWhiteSpace(query))

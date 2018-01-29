@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task MigrateData()
             {
@@ -429,7 +429,7 @@ namespace Mitternacht.Modules.Administration
                 try { File.Move(configPath, "./data/DELETE_ME_config.json"); } catch { /*ignored*/ }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ReplaceDefaultLevelModelGuild(ulong guildId) {
                 var counter = 0;
@@ -459,7 +459,7 @@ namespace Mitternacht.Modules.Administration
                 await ConfirmLocalized("replacedefaultlevelmodelguild", counter).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetGuildConfigLevelDefaults(params ulong[] guildIds) {
                 int count;

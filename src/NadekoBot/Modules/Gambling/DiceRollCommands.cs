@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Gambling
             }
 
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Roll()
             {
                 var rng = new NadekoRandom();
@@ -59,7 +59,7 @@ namespace Mitternacht.Modules.Gambling
                 Unordered
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(1)]
             public async Task Roll(int num)
             {
@@ -67,21 +67,21 @@ namespace Mitternacht.Modules.Gambling
             }
 
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(1)]
             public async Task Rolluo(int num = 1)
             {
                 await InternalRoll(num, false).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(0)]
             public async Task Roll(string arg)
             {
                 await InternallDndRoll(arg, true).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(0)]
             public async Task Rolluo(string arg)
             {
@@ -189,7 +189,7 @@ namespace Mitternacht.Modules.Gambling
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task NRoll([Remainder] string range)
             {
                 int rolled;

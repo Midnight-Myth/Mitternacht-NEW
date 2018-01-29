@@ -146,7 +146,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Play([Remainder] string query = null)
         {
@@ -167,7 +167,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Queue([Remainder] string query)
         {
@@ -182,7 +182,7 @@ namespace Mitternacht.Modules.Music
             
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task QueueNext([Remainder] string query)
         {
@@ -195,7 +195,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task QueueSearch([Remainder] string query)
         {
@@ -231,7 +231,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ListQueue(int page = 0)
         {
@@ -305,7 +305,7 @@ namespace Mitternacht.Modules.Music
             await Context.Channel.SendPaginatedConfirmAsync(_client, page, (Func<int, EmbedBuilder>) PrintAction, lastPage, false).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Next(int skipCount = 1)
         {
@@ -317,7 +317,7 @@ namespace Mitternacht.Modules.Music
             mp.Next(skipCount);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Stop()
         {
@@ -325,14 +325,14 @@ namespace Mitternacht.Modules.Music
             mp.Stop();
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Destroy()
         {
             await Service.DestroyPlayer(Context.Guild.Id);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Pause()
         {
@@ -340,7 +340,7 @@ namespace Mitternacht.Modules.Music
             mp.TogglePause();
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Volume(int val)
         {
@@ -354,7 +354,7 @@ namespace Mitternacht.Modules.Music
             await ReplyConfirmLocalized("volume_set", val).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Defvol([Remainder] int val)
         {
@@ -371,7 +371,7 @@ namespace Mitternacht.Modules.Music
             await ReplyConfirmLocalized("defvol_set", val).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         public async Task SongRemove(int index)
@@ -400,7 +400,7 @@ namespace Mitternacht.Modules.Music
         }
 
         public enum All { All }
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(0)]
         public async Task SongRemove(All all)
@@ -412,7 +412,7 @@ namespace Mitternacht.Modules.Music
             await ReplyConfirmLocalized("queue_cleared").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Playlists([Remainder] int num = 1)
         {
@@ -435,7 +435,7 @@ namespace Mitternacht.Modules.Music
 
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task DeletePlaylist([Remainder] int id)
         {
@@ -468,7 +468,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Save([Remainder] string name)
         {
@@ -504,7 +504,7 @@ namespace Mitternacht.Modules.Music
 
         private static readonly ConcurrentHashSet<ulong> PlaylistLoadBlacklist = new ConcurrentHashSet<ulong>();
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Load([Remainder] int id)
         {
@@ -546,7 +546,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Fairplay()
         {
@@ -563,7 +563,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SongAutoDelete()
         {
@@ -580,7 +580,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SoundCloudQueue([Remainder] string query)
         {
@@ -589,7 +589,7 @@ namespace Mitternacht.Modules.Music
             await InternalQueue(mp, song, false).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SoundCloudPl([Remainder] string pl)
         {
@@ -625,7 +625,7 @@ namespace Mitternacht.Modules.Music
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task NowPlaying()
         {
@@ -644,7 +644,7 @@ namespace Mitternacht.Modules.Music
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ShufflePlaylist()
         {
@@ -656,7 +656,7 @@ namespace Mitternacht.Modules.Music
                 await ReplyConfirmLocalized("songs_shuffle_disable").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Playlist([Remainder] string playlist)
         {
@@ -698,7 +698,7 @@ namespace Mitternacht.Modules.Music
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Radio(string radioLink)
         {
@@ -707,7 +707,7 @@ namespace Mitternacht.Modules.Music
             await InternalQueue(mp, song, false).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task Local([Remainder] string path)
@@ -717,7 +717,7 @@ namespace Mitternacht.Modules.Music
             await InternalQueue(mp, song, false).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task LocalPl([Remainder] string dirPath)
@@ -752,7 +752,7 @@ namespace Mitternacht.Modules.Music
             await ReplyConfirmLocalized("dir_queue_complete").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Move()
         {
@@ -769,7 +769,7 @@ namespace Mitternacht.Modules.Music
             await mp.SetVoiceChannel(vch);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task MoveSong([Remainder] string fromto)
         {
@@ -802,7 +802,7 @@ namespace Mitternacht.Modules.Music
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SetMaxQueue(uint size = 0)
         {
@@ -816,7 +816,7 @@ namespace Mitternacht.Modules.Music
                 await ReplyConfirmLocalized("max_queue_x", size).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task SetMaxPlaytime(uint seconds)
         {
@@ -831,7 +831,7 @@ namespace Mitternacht.Modules.Music
                 await ReplyConfirmLocalized("max_playtime_set", seconds).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ReptCurSong()
         {
@@ -851,7 +851,7 @@ namespace Mitternacht.Modules.Music
                 await Context.Channel.SendConfirmAsync("🔂 " + GetText("repeating_track_stopped")).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task RepeatPl()
         {
@@ -863,7 +863,7 @@ namespace Mitternacht.Modules.Music
                 await ReplyConfirmLocalized("rpl_disabled").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Autoplay()
         {
@@ -875,7 +875,7 @@ namespace Mitternacht.Modules.Music
                 await ReplyConfirmLocalized("autoplay_enabled").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task SetMusicChannel()

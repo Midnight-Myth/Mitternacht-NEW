@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Searches
 
             }.ToImmutableDictionary();
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Memelist()
             {
                 var handler = new HttpClientHandler
@@ -49,7 +49,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Memegen(string meme, string topText, string botText)
             {
                 var top = Replace(topText);

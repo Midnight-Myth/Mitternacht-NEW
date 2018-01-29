@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Administration
                 Format.Bold(stats.AntiRaidSettings.Seconds.ToString()),
                 Format.Bold(stats.AntiRaidSettings.Action.ToString()));
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task AntiRaid(int userThreshold = 5, int seconds = 10, PunishmentAction action = PunishmentAction.Mute)
@@ -117,7 +117,7 @@ namespace Mitternacht.Modules.Administration
                         .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [Priority(1)]
@@ -141,7 +141,7 @@ namespace Mitternacht.Modules.Administration
                 await AntiSpam(3).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [Priority(0)]
@@ -193,7 +193,7 @@ namespace Mitternacht.Modules.Administration
                 await Context.Channel.SendConfirmAsync(GetText("prot_enable", "Anti-Spam"), $"{Context.User.Mention} {GetAntiSpamString(stats)}").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task AntispamIgnore()
@@ -239,7 +239,7 @@ namespace Mitternacht.Modules.Administration
 
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AntiList()
             {

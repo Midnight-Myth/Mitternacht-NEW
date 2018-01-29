@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task GreetDel(int timer = 30)
@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("greetdel_off").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task Greet()
@@ -49,7 +49,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("greet_off").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task GreetMsg([Remainder] string text = null)
@@ -72,7 +72,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("greetmsg_enable", $"`{Prefix}greet`").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task GreetDm()
@@ -85,7 +85,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("greetdm_off").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task GreetDmMsg([Remainder] string text = null)
@@ -108,7 +108,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("greetdmmsg_enable", $"`{Prefix}greetdm`").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task Bye()
@@ -121,7 +121,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("bye_off").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task ByeMsg([Remainder] string text = null)
@@ -144,7 +144,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("byemsg_enable", $"`{Prefix}bye`").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageGuild)]
             public async Task ByeDel(int timer = 30)

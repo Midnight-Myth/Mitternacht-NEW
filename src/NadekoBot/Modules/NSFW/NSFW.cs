@@ -52,11 +52,11 @@ namespace Mitternacht.Modules.NSFW
                 .ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Hentai([Remainder] string tag = null) =>
             InternalHentai(Context.Channel, tag, false);
 #if !GLOBAL_NADEKO
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task AutoHentai(int interval = 0, string tags = null)
         {
@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.NSFW
         }
 #endif
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task HentaiBomb([Remainder] string tag = null)
         {
             if (!_hentaiBombBlacklist.Add(Context.Guild?.Id ?? Context.User.Id))
@@ -130,7 +130,7 @@ namespace Mitternacht.Modules.NSFW
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Derpi([Remainder] string tag = null)
         {
             tag = tag?.Trim() ?? "";
@@ -147,31 +147,31 @@ namespace Mitternacht.Modules.NSFW
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Yandere([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.Yandere, false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Konachan([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.Konachan, false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task E621([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.E621, false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Rule34([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.Rule34, false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Danbooru([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.Danbooru, false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public Task Gelbooru([Remainder] string tag = null)
             => InternalDapiCommand(tag, DapiSearchType.Gelbooru, false);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Boobs()
         {
             try
@@ -189,7 +189,7 @@ namespace Mitternacht.Modules.NSFW
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Butts()
         {
             try
@@ -207,7 +207,7 @@ namespace Mitternacht.Modules.NSFW
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task NsfwTagBlacklist([Remainder] string tag = null)
         {

@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Searches
                 Kr
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Overwatch(Region region, [Remainder] string query = null)
             {
                 if (string.IsNullOrWhiteSpace(query))

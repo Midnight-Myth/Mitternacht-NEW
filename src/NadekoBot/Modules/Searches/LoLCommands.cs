@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Searches
             ((IDictionary<string, JToken>)JObject.Parse(File.ReadAllText("data/lolchamps.json")))
                 .ToDictionary(x => (int)x.Value["id"], x => x.Value["name"].ToString()), true);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Lolban()
         {
             //const int showCount = 8;

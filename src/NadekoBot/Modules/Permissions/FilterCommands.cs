@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Permissions
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task SrvrFilterInv()
             {
@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ChnlFilterInv()
             {
@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task SrvrFilterWords()
             {
@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ChnlFilterWords()
             {
@@ -148,7 +148,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task FilterWord([Remainder] string word)
             {
@@ -190,7 +190,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task LstFilterWords(int page = 1)
             {
@@ -212,7 +212,7 @@ namespace Mitternacht.Modules.Permissions
                     .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task SrvrFilterZalgo()
             {
@@ -238,7 +238,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task ChnlFilterZalgo()
             {

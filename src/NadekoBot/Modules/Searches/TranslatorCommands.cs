@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Searches
                 _google = google;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Translate(string langs, [Remainder] string text = null)
             {
                 try
@@ -44,7 +44,7 @@ namespace Mitternacht.Modules.Searches
                 Nodel
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [OwnerOnly]
@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task AutoTransLang([Remainder] string langs = null)
             {
@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Searches
                 await ReplyConfirmLocalized("atl_set", from, to).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Translangs()
             {

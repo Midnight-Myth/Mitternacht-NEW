@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Permissions
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Lgp()
             {
@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Permissions
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Gmod(ModuleOrCrInfo module)
             {
@@ -78,7 +78,7 @@ namespace Mitternacht.Modules.Permissions
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Gcmd(CommandOrCrInfo cmd)
             {

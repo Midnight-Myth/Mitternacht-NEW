@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Utility
             _shardCoord = mitternacht.ShardCoord;
         }        
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task TogetherTube()
         {
             Uri target;
@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Utility
                 .WithDescription(Context.User.Mention + " " + GetText("togtub_room_link") +  "\n" + target));
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task WhosPlaying([Remainder] string game)
         {
@@ -78,7 +78,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendConfirmAsync("```css\n" + string.Join("\n", arr.GroupBy(item => i++ / 2).Select(ig => string.Concat(ig.Select(el => $"• {el,-27}")))) + "\n```").ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task InRole([Remainder] IRole role)
         {
@@ -95,7 +95,7 @@ namespace Mitternacht.Modules.Utility
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task CheckMyPerms()
         {
@@ -109,7 +109,7 @@ namespace Mitternacht.Modules.Utility
             await Context.Channel.SendConfirmAsync(builder.ToString());
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task UserId([Remainder] IGuildUser target = null)
         {
@@ -118,14 +118,14 @@ namespace Mitternacht.Modules.Utility
                 Format.Code(usr.Id.ToString())).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task ChannelId()
         {
             await ReplyConfirmLocalized("channelid", "🆔", Format.Code(Context.Channel.Id.ToString()))
                 .ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ServerId()
         {
@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Utility
                 .ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Roles(IGuildUser target, int page = 1)
         {
@@ -166,12 +166,12 @@ namespace Mitternacht.Modules.Utility
             }
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public Task Roles(int page = 1) 
             => Roles(null, page);
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task ChannelTopic([Remainder]ITextChannel channel = null)
         {
@@ -185,7 +185,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendConfirmAsync(GetText("channel_topic"), topic).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireBotPermission(ChannelPermission.CreateInstantInvite)]
         [RequireUserPermission(ChannelPermission.CreateInstantInvite)]
@@ -196,7 +196,7 @@ namespace Mitternacht.Modules.Utility
             await Context.Channel.SendConfirmAsync($"{Context.User.Mention} https://discord.gg/{invite.Code}");
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [Shard0Precondition]
         public async Task ShardStats(int page = 1)
         {
@@ -237,7 +237,7 @@ namespace Mitternacht.Modules.Utility
             }, allShardStrings.Length / 25);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Stats() {
             await Context.Channel.EmbedAsync(
                 new EmbedBuilder().WithOkColor()
@@ -256,7 +256,7 @@ namespace Mitternacht.Modules.Utility
                         GetText("presence_txt", _stats.GuildCount, _stats.TextChannels, _stats.VoiceChannels)).WithIsInline(true)));
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Showemojis([Remainder] string emojis)
         {
             var tags = Context.Message.Tags.Where(t => t.Type == TagType.Emoji).Select(t => (Emote)t.Value);
@@ -269,7 +269,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendMessageAsync(result).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
         public async Task ListServers(int page = 1)
         {
@@ -293,7 +293,7 @@ namespace Mitternacht.Modules.Utility
         }
 
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
         public async Task SaveChat(int count, IGuildUser user = null) {
@@ -321,7 +321,7 @@ namespace Mitternacht.Modules.Utility
             await Context.User.SendFileAsync(await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
         }
 
-        [NadekoCommand, Usage, Description, Aliases]
+        [MitternachtCommand, Usage, Description, Aliases]
         public async Task Ping()
         {
             var sw = Stopwatch.StartNew();

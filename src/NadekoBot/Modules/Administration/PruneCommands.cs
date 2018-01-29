@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Administration
             private readonly TimeSpan twoWeeks = TimeSpan.FromDays(14);
 
             //delets her own messages, no perm required
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(ChannelPermission.ManageMessages)]
             public async Task Prune()
@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Administration
                 Context.Message.DeleteAfter(3);
             }
             // prune x
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(ChannelPermission.ManageMessages)]
             [RequireBotPermission(GuildPermission.ManageMessages)]
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration
             }
 
             //prune @user [x]
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(ChannelPermission.ManageMessages)]
             [RequireBotPermission(GuildPermission.ManageMessages)]

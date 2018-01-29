@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Gambling
                 _currency = currency;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task DailyMoney()
             {
@@ -76,7 +76,7 @@ namespace Mitternacht.Modules.Gambling
                 else await Context.Channel.SendMessageAsync($"Du hast deinen täglichen Anteil heute bereits abgeholt, {Context.User.Mention}");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task SetRoleMoney(IRole role, long money, int priority)
@@ -90,12 +90,12 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.SendMessageAsync($"Rolle {role.Name} bekommt nun {money} {CurrencySign} mit Priorität {priority}.");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task SetRoleMoney(IRole role, long money) => await SetRoleMoney(role, money, 0);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task ResetDailyMoney([Remainder]IUser user = null)
@@ -110,7 +110,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.SendMessageAsync(wasReset ? $"{user.Username} kann seinen täglichen Anteil nochmal abholen." : $"{user.Username} hat seinen täglichen Anteil noch nicht abgeholt.");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task RemoveRoleMoney(IRole role)
@@ -124,7 +124,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.SendMessageAsync(removed ? $"Rolle \"{role.Name}\" wurde von der Gehaltsliste entfernt." : $"Rolle \"{role.Name}\" steht nicht auf der Gehaltsliste!");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task SetRoleMoneyPriority(IRole role, int priority)
@@ -138,7 +138,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.SendMessageAsync(exists ? $"Die Priorität von Rolle \"{role.Name}\" wurde auf {priority} gesetzt." : $"Die Rolle \"{role.Name}\" bekommt kein DailyMoney!");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Payroll(int count, int position = 1)
             {
@@ -188,7 +188,7 @@ namespace Mitternacht.Modules.Gambling
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Payroll(int count = 20) => await Payroll(count, 1);
         }

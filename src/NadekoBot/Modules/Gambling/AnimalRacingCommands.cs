@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Gambling
 
             private IUserMessage raceMessage = null;
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public Task Race()
             {
@@ -106,7 +106,7 @@ namespace Mitternacht.Modules.Gambling
                 return ReplyErrorLocalized("animal_race_failed");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task JoinRace(int amount = 0)
             {

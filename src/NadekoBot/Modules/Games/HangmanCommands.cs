@@ -25,14 +25,14 @@ namespace Mitternacht.Modules.Games
             //channelId, game
             public static ConcurrentDictionary<ulong, Hangman> HangmanGames { get; } = new ConcurrentDictionary<ulong, Hangman>();
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Hangmanlist()
             {
                 await Context.Channel.SendConfirmAsync(Format.Code(GetText("hangman_types", Prefix)) + "\n" + string.Join(", ", TermPool.Data.Keys));
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Hangman([Remainder]TermType type = TermType.Random)
             {
@@ -122,7 +122,7 @@ namespace Mitternacht.Modules.Games
                                     footer: string.Join(" ", game.PreviousGuesses));
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task HangmanStop()
             {

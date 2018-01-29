@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Level
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task SetRoleLevelBinding(IRole role, int minlevel)
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Level
                 await ConfirmLocalized("rlb_set", role.Name, minlevel);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task RemoveRoleLevelBinding(IRole role)
@@ -59,7 +59,7 @@ namespace Mitternacht.Modules.Level
                 else await ErrorLocalized("rlb_already_independent", role.Name).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task RoleLevelBindings(int page = 1)
             {

@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Gambling
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SlotStats()
             {
@@ -105,7 +105,7 @@ namespace Mitternacht.Modules.Gambling
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SlotTest(int tests = 1000)
             {
@@ -134,7 +134,7 @@ namespace Mitternacht.Modules.Gambling
                     footer: $"Total Bet: {tests * bet} | Payout: {payout * bet} | {payout * 1.0f / tests * 100}%");
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Slot(int amount = 0)
             {
                 if (!RunningUsers.Add(Context.User.Id)) return;

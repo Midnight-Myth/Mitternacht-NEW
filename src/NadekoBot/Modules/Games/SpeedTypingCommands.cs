@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Games
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task TypeStart()
             {
@@ -49,7 +49,7 @@ namespace Mitternacht.Modules.Games
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task TypeStop()
             {
@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Games
             }
 
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task Typeadd([Remainder] string text)
@@ -78,7 +78,7 @@ namespace Mitternacht.Modules.Games
                 await channel.SendConfirmAsync("Added new article for typing game.").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Typelist(int page = 1)
             {
@@ -99,7 +99,7 @@ namespace Mitternacht.Modules.Games
                              .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task Typedel(int index)

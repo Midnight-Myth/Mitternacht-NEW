@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Administration
                 _db = db;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
             public async Task AdSarm()
@@ -42,7 +42,7 @@ namespace Mitternacht.Modules.Administration
                              .ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             public async Task Asar([Remainder] IRole role)
@@ -80,7 +80,7 @@ namespace Mitternacht.Modules.Administration
                     await Context.Channel.SendConfirmAsync(msg).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             public async Task Rsar([Remainder] IRole role)
@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("self_assign_rem", Format.Bold(role.Name)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Lsar(int page = 1)
             {
@@ -156,7 +156,7 @@ namespace Mitternacht.Modules.Administration
                     .WithOkColor(), roles.Count / 10);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             public async Task Tesar()
@@ -175,7 +175,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("self_assign_no_excl").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Iam([Remainder] IRole role)
             {
@@ -238,7 +238,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Iamnot([Remainder] IRole role)
             {

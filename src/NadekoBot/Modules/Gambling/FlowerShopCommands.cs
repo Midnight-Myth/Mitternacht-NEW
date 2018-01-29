@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Gambling
                 _client = client;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Shop(int page = 1)
             {
@@ -76,7 +76,7 @@ namespace Mitternacht.Modules.Gambling
                 }, entries.Count / 9);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Buy(int index, [Remainder]string message = null)
             {
@@ -191,7 +191,7 @@ namespace Mitternacht.Modules.Gambling
             private long GetProfitAmount(int price) =>
                 (int)Math.Ceiling(0.90 * price);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             [RequireBotPermission(GuildPermission.ManageRoles)]
@@ -221,7 +221,7 @@ namespace Mitternacht.Modules.Gambling
                     .WithTitle(GetText("shop_item_add")));
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task ShopAdd(List _, int price, [Remainder]string name)
@@ -249,7 +249,7 @@ namespace Mitternacht.Modules.Gambling
                     .WithTitle(GetText("shop_item_add")));
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task ShopListAdd(int index, [Remainder] string itemText)
@@ -288,7 +288,7 @@ namespace Mitternacht.Modules.Gambling
                     await ReplyConfirmLocalized("shop_list_item_added").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.Administrator)]
             public async Task ShopRemove(int index)

@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Searches
         [Group]
         public class AnimeSearchCommands : NadekoSubmodule<AnimeSearchService>
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [Priority(0)]
             public async Task Mal([Remainder] string name)
             {
@@ -113,12 +113,12 @@ namespace Mitternacht.Modules.Searches
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(1)]
             public Task Mal(IGuildUser usr) => Mal(usr.Username);
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             public async Task Anime([Remainder] string query)
             {
                 if (string.IsNullOrWhiteSpace(query))
@@ -144,7 +144,7 @@ namespace Mitternacht.Modules.Searches
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             public async Task Manga([Remainder] string query)
             {

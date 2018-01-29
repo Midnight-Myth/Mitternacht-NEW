@@ -12,7 +12,7 @@ namespace Mitternacht.Modules.Utility
     {
         public class StreamRoleCommands : NadekoSubmodule<StreamRoleService>
         {
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageRoles)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [RequireContext(ContextType.Guild)]
@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Utility
                 await ReplyConfirmLocalized("stream_role_enabled", Format.Bold(fromRole.ToString()), Format.Bold(addRole.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageRoles)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [RequireContext(ContextType.Guild)]
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Utility
                 await ReplyConfirmLocalized("stream_role_disabled").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageRoles)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [RequireContext(ContextType.Guild)]
@@ -47,7 +47,7 @@ namespace Mitternacht.Modules.Utility
                     await ReplyConfirmLocalized("stream_role_kw_set", Format.Bold(kw)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageRoles)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [RequireContext(ContextType.Guild)]
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Utility
                     await ReplyErrorLocalized("stream_role_bl_rem_fail", Format.Bold(user.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageRoles)]
             [RequireUserPermission(GuildPermission.ManageRoles)]
             [RequireContext(ContextType.Guild)]

@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Administration
                 _bc = bc;
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task StartupCommandAdd([Remainder] string cmdText)
@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Administration
                         .WithValue(cmdText).WithIsInline(false)));
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task StartupCommands(int page = 1)
@@ -112,7 +112,7 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Wait(int ms)
             {
@@ -129,7 +129,7 @@ namespace Mitternacht.Modules.Administration
                 await Task.Delay(ms);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task StartupCommandRemove([Remainder] string cmdText)
@@ -156,7 +156,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("scrm").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
             public async Task StartupCommandsClear()
@@ -173,7 +173,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("startcmds_cleared").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ForwardMessages()
             {
@@ -191,7 +191,7 @@ namespace Mitternacht.Modules.Administration
                     await ReplyConfirmLocalized("fwdm_stop").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ForwardToAll()
             {
@@ -212,7 +212,7 @@ namespace Mitternacht.Modules.Administration
             }
 
             //todo 2 shard commands
-            //[NadekoCommand, Usage, Description, Aliases]
+            //[MitternachtCommand, Usage, Description, Aliases]
             //[Shard0Precondition]
             //[OwnerOnly]
             //public async Task RestartShard(int shardid)
@@ -234,7 +234,7 @@ namespace Mitternacht.Modules.Administration
             //    }
             //}
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Leave([Remainder] string guildStr)
             {
@@ -260,7 +260,7 @@ namespace Mitternacht.Modules.Administration
             }
 
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Die()
             {
@@ -277,7 +277,7 @@ namespace Mitternacht.Modules.Administration
                 Environment.Exit(0);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetName([Remainder] string newName)
             {
@@ -289,7 +289,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("bot_name", Format.Bold(newName)).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireUserPermission(GuildPermission.ManageNicknames)]
             [Priority(0)]
             public async Task SetNick([Remainder] string newNick = null)
@@ -302,7 +302,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("bot_nick", Format.Bold(newNick) ?? "-").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [RequireBotPermission(GuildPermission.ManageNicknames)]
             [RequireUserPermission(GuildPermission.ManageNicknames)]
             [Priority(1)]
@@ -313,7 +313,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("user_nick", Format.Bold(gu.ToString()), Format.Bold(newNick) ?? "-").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetStatus([Remainder] SettableUserStatus status)
             {
@@ -322,7 +322,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("bot_status", Format.Bold(status.ToString())).ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetAvatar([Remainder] string img = null)
             {
@@ -344,7 +344,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("set_avatar").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetGame([Remainder] string game = null)
             {
@@ -353,7 +353,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("set_game").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetStream(string url, [Remainder] string name = null)
             {
@@ -364,7 +364,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("set_stream").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Send(string where, [Remainder] string msg = null)
             {
@@ -408,7 +408,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task Announce([Remainder] string message)
             {
@@ -417,7 +417,7 @@ namespace Mitternacht.Modules.Administration
                 await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
             }
 
-            [NadekoCommand, Usage, Description, Aliases]
+            [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task ReloadImages()
             {
