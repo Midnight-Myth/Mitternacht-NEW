@@ -92,7 +92,7 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 usernicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
@@ -122,7 +122,7 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title_global", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 usernames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
@@ -154,7 +154,7 @@ namespace Mitternacht.Modules.Utility
                             .WithTitle(GetText("unh_title_guild", user.ToString()))
                             .WithDescription(string.Join("\n",
                                 nicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
-                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet:dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value:dd.MM.yyyy HH:mm}" : "")}")));
+                                    $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
                     }, pagecount - 1).ConfigureAwait(false);
             }
