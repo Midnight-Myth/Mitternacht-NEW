@@ -17,9 +17,9 @@ namespace Mitternacht.Modules.Games.Services
         public ConcurrentDictionary<ulong, Poll> ActivePolls = new ConcurrentDictionary<ulong, Poll>();
         private readonly Logger _log;
         private readonly DiscordSocketClient _client;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
 
-        public PollService(DiscordSocketClient client, NadekoStrings strings)
+        public PollService(DiscordSocketClient client, StringService strings)
         {
             _log = LogManager.GetCurrentClassLogger();
             _client = client;

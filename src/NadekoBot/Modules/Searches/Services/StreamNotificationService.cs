@@ -25,9 +25,9 @@ namespace Mitternacht.Modules.Searches.Services
 
         private readonly DbService _db;
         private readonly DiscordSocketClient _client;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
 
-        public StreamNotificationService(DbService db, DiscordSocketClient client, NadekoStrings strings)
+        public StreamNotificationService(DbService db, DiscordSocketClient client, StringService strings)
         {
             _db = db;
             _client = client;

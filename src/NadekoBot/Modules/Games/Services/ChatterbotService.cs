@@ -23,12 +23,12 @@ namespace Mitternacht.Modules.Games.Services
         private readonly Logger _log;
         private readonly PermissionService _perms;
         private readonly CommandHandler _cmd;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly IBotCredentials _creds;
 
         public ConcurrentDictionary<ulong, Lazy<IChatterBotSession>> ChatterBotGuilds { get; }
 
-        public ChatterBotService(DiscordSocketClient client, PermissionService perms, IEnumerable<GuildConfig> gcs, CommandHandler cmd, NadekoStrings strings, IBotCredentials creds)
+        public ChatterBotService(DiscordSocketClient client, PermissionService perms, IEnumerable<GuildConfig> gcs, CommandHandler cmd, StringService strings, IBotCredentials creds)
         {
             _client = client;
             _log = LogManager.GetCurrentClassLogger();

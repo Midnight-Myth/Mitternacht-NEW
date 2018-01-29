@@ -40,11 +40,11 @@ namespace Mitternacht.Modules.Administration.Services
         public ConcurrentDictionary<ulong, LogSetting> GuildLogSettings { get; }
 
         private ConcurrentDictionary<ITextChannel, List<string>> PresenceUpdates { get; } = new ConcurrentDictionary<ITextChannel, List<string>>();
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly DbService _db;
         private readonly GuildTimezoneService _tz;
 
-        public LogCommandService(DiscordSocketClient client, NadekoStrings strings,
+        public LogCommandService(DiscordSocketClient client, StringService strings,
             IEnumerable<GuildConfig> gcs, DbService db, MuteService mute, ProtectionService prot, GuildTimezoneService tz)
         {
             _client = client;

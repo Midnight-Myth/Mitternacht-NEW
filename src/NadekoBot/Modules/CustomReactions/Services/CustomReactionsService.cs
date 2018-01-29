@@ -30,9 +30,9 @@ namespace Mitternacht.Modules.CustomReactions.Services
         private readonly PermissionService _perms;
         private readonly CommandHandler _cmd;
         private readonly IBotConfigProvider _bc;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
 
-        public CustomReactionsService(PermissionService perms, NadekoStrings strings, DiscordSocketClient client, CommandHandler cmd, IBotConfigProvider bc, IUnitOfWork uow)
+        public CustomReactionsService(PermissionService perms, StringService strings, DiscordSocketClient client, CommandHandler cmd, IBotConfigProvider bc, IUnitOfWork uow)
         {
             _log = LogManager.GetCurrentClassLogger();
             _client = client;

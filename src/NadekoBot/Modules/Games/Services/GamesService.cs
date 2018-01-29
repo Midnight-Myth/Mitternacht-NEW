@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Games.Services
         public readonly ConcurrentDictionary<ulong, GirlRating> GirlRatings = new ConcurrentDictionary<ulong, GirlRating>();
         public readonly ImmutableArray<string> EightBallResponses;
 
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
         private readonly IImagesService _images;
 
         public readonly string TypingArticlesPath = "data/typing_articles2.json";
@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Games.Services
         public List<TypingArticle> TypingArticles { get; }
 
         public GamesService(DiscordSocketClient client, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, 
-            NadekoStrings strings, IImagesService images, CommandHandler cmdHandler)
+            StringService strings, IImagesService images, CommandHandler cmdHandler)
         {
             _bc = bc;
             _strings = strings;

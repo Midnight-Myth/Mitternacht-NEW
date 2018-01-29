@@ -19,12 +19,12 @@ namespace Mitternacht.Modules.Permissions.Services
     {
         private readonly DbService _db;
         private readonly CommandHandler _cmd;
-        private readonly NadekoStrings _strings;
+        private readonly StringService _strings;
 
         //guildid, root permission
         public ConcurrentDictionary<ulong, PermissionCache> Cache { get; } = new ConcurrentDictionary<ulong, PermissionCache>();
 
-        public PermissionService(DiscordSocketClient client, DbService db, CommandHandler cmd, NadekoStrings strings)
+        public PermissionService(DiscordSocketClient client, DbService db, CommandHandler cmd, StringService strings)
         {
             _db = db;
             _cmd = cmd;

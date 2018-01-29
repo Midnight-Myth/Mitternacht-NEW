@@ -85,10 +85,10 @@ namespace Mitternacht.Modules.Games
 
             private IUserMessage _previousMessage;
             private Timer _timeoutTimer;
-            private readonly NadekoStrings _strings;
+            private readonly StringService _strings;
             private readonly DiscordSocketClient _client;
 
-            public TicTacToe(NadekoStrings strings, DiscordSocketClient client, ITextChannel channel, IGuildUser firstUser)
+            public TicTacToe(StringService strings, DiscordSocketClient client, ITextChannel channel, IGuildUser firstUser)
             {
                 _channel = channel;
                 _strings = strings;

@@ -18,7 +18,7 @@ namespace Mitternacht.Modules
         public readonly string ModuleTypeName;
         public string LowerModuleTypeName => ModuleTypeName?.ToLowerInvariant();
 
-        public NadekoStrings Strings { get; set; }
+        public StringService Strings { get; set; }
         public CommandHandler CmdHandler { get; set; }
         public ILocalization Localization { get; set; }
 
