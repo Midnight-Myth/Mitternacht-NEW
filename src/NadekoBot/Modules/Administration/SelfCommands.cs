@@ -397,11 +397,11 @@ namespace Mitternacht.Modules.Administration
                     if (CREmbed.TryParse(msg, out var crembed))
                      {
                          rep.Replace(crembed);
-                         await ch.EmbedAsync(crembed.ToEmbed(), "📣" + crembed.PlainText?.SanitizeMentions())
+                         await ch.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions())
                              .ConfigureAwait(false);
                          return;
                      }
-                     await ch.SendMessageAsync($"`#{msg}` 📣 " + rep.Replace(msg)?.SanitizeMentions());
+                     await ch.SendMessageAsync($"`#{msg}` " + rep.Replace(msg)?.SanitizeMentions());
                 }
                 else if (ids[1].ToUpperInvariant().StartsWith("U:"))
                 {
@@ -414,12 +414,12 @@ namespace Mitternacht.Modules.Administration
                      if (CREmbed.TryParse(msg, out var crembed))
                      {
                          rep.Replace(crembed);
-                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbed(), "📣" + crembed.PlainText?.SanitizeMentions())
+                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions())
                              .ConfigureAwait(false);
                          return;
                      }
 
-                     await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` 📣 " + rep.Replace(msg)?.SanitizeMentions());
+                     await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` " + rep.Replace(msg)?.SanitizeMentions());
                 }
                 else
                 {
