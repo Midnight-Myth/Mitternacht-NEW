@@ -378,8 +378,7 @@ namespace Mitternacht.Modules.Administration
              if (string.IsNullOrWhiteSpace(text))
                  return;
              var msgs = new List<IMessage>();
-             msgs = await Context.Channel.GetMessagesAsync().FlattenAsync()
-                 .ConfigureAwait(false);
+             msgs = await Context.Channel.GetMessagesAsync().ConfigureAwait(false);
 
              IUserMessage msg = (IUserMessage)msgs.FirstOrDefault(x => x.Id == messageId
                  && x.Author.Id == Context.Client.CurrentUser.Id
