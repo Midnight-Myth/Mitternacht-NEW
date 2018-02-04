@@ -9,6 +9,8 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Common;
+using Mitternacht.Common.Replacements;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -366,5 +368,45 @@ namespace Mitternacht.Modules.Administration
             }
             await ReplyConfirmLocalized("donadd", don.Amount).ConfigureAwait(false);
         }
+        
+        
+         //[MitternachtCommand, Usage, Description, Aliases]
+         //[RequireContext(ContextType.Guild)]
+         //[RequireUserPermission(GuildPermission.ManageMessages)]
+         //public async Task Edit(ulong messageId, [Remainder] string text)
+         //{
+         //    if (string.IsNullOrWhiteSpace(text))
+         //        return;
+                 
+         //    var msgs = new List<IMessage>();
+         //    msgs = await Context.Channel.GetMessagesAsync();
+
+         //    IUserMessage msg = (IUserMessage)msgs.FirstOrDefault(x => x.Id == messageId
+         //        && x.Author.Id == Context.Client.CurrentUser.Id
+         //        && x is IUserMessage);
+
+         //    if (msg == null)
+         //        return;
+
+         //    var rep = new ReplacementBuilder()
+         //            .WithDefault(Context)
+         //            .Build();
+
+         //    if (CREmbed.TryParse(text, out var crembed))
+         //    {
+         //        rep.Replace(crembed);
+         //        await msg.ModifyAsync(x =>
+         //        {
+         //            x.Embed = crembed.ToEmbed().Build();
+         //            x.Content = crembed.PlainText?.SanitizeMentions() ?? "";
+         //        }).ConfigureAwait(false);
+         //    }
+         //    else
+         //    {
+         //        await msg.ModifyAsync(x => x.Content = text.SanitizeMentions())
+         //            .ConfigureAwait(false);
+         //    }
+
+         //}
     }
 }
