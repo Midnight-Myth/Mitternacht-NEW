@@ -9,8 +9,8 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using NadekoBot.Common;
-using NadekoBot.Common.Replacements;
+using Mitternacht.Common;
+using Mitternacht.Common.Replacements;
 
 namespace Mitternacht.Modules.Administration
 {
