@@ -3477,5 +3477,10 @@
     "aliases": [],
     "desc": "Setzt den eigenen Geburtstag. **Nur einmal verwendbar!**",
     "usage": "`{0}birthdayset dd.MM.yyyy`"
+    },
+   "edit": {
+     "cmd": "edit",
+     "desc": "Edits bot's message, you have to specify message ID and new text. Supports embeds.",
+     "usage": "`{0}edit 7479498384 Hi :^`)"
   }
 ]
