@@ -370,11 +370,11 @@ namespace Mitternacht.Modules.Administration
         }
         
         
-         [MitternachtCommand, Usage, Description, Aliases]
-         [RequireContext(ContextType.Guild)]
-         [RequireUserPermission(GuildPermission.ManageMessages)]
-         public async Task Edit(ulong messageId, [Remainder] string text)
-         {
+         //[MitternachtCommand, Usage, Description, Aliases]
+         //[RequireContext(ContextType.Guild)]
+         //[RequireUserPermission(GuildPermission.ManageMessages)]
+         //public async Task Edit(ulong messageId, [Remainder] string text)
+         //{
          //    if (string.IsNullOrWhiteSpace(text))
          //        return;
                  
@@ -407,6 +407,6 @@ namespace Mitternacht.Modules.Administration
          //            .ConfigureAwait(false);
          //    }
 
-         }
+         //}
     }
 }
