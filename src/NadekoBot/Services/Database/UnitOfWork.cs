@@ -81,6 +81,9 @@ namespace Mitternacht.Services.Database
         private INicknameHistoryRepository _nicknamehistory;
         public INicknameHistoryRepository NicknameHistory => _nicknamehistory ?? (_nicknamehistory = new NicknameHistoryRepository(Context));
 
+        private IBirthDateRepository _birthdates;
+        public IBirthDateRepository BirthDates => _birthdates ?? (_birthdates = new BirthDateRepository(Context));
+
         public UnitOfWork(NadekoContext context)
         {
             Context = context;

@@ -909,5 +909,18 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
+  "birthday_set": "Du hast nun am **{0}** Geburtstag.", 
+  "birthday_set_owner": "Der User `{0}` hat nun am **{1}** Geburtstag.",
+  "birthday_set_before": "Du hast deinen Geburtstag schon registriert. Für Änderungen frage den Botowner.",
+  "birthday_list_title": "Geburtstage am **{0}**",
+  "birthday_none_date": "Für den **{0}** sind keine Geburtstage eingetragen.",
+  "birthday_none": "Es sind keine Geburtstage eingetragen!",
+  "birthday_removed": "Der Geburtstag von `{0}` wurde gelöscht.",
+  "birthday_remove_failed": "Für `{0}` ist kein Geburtstag bekannt, löschen unmöglich.",
+  "birthday_self_none": "Dein Geburtstag ist dem Bot nicht bekannt.",
+  "birthday_self": "Du hast am **{0}** Geburtstag.",
+  "birthday_user_none": "Der Geburtstag von `{0}` ist dem Bot nicht bekannt.",
+  "birthday_user": "`{0}` hat am **{1}** Geburtstag",
+  "birthday_all_title": "Alle Geburtstage" 
 }

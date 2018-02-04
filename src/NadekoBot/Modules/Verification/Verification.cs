@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Verification
             {
                 uinfo = await _fs.Forum.GetUserInfo(forumUserId);
             }
-            catch (UserProfileAccessException)
+            catch (UserProfileAccessException) //todo: ignore this exception
             {
                 (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
                 return;

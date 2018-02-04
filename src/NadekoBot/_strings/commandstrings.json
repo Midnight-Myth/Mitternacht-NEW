@@ -3475,7 +3475,35 @@
     "name": "birthdayset",
     "cmd": "birthdayset",
     "aliases": [],
-    "desc": "Setzt den eigenen Geburtstag. **Nur einmal verwendbar!**",
-    "usage": "`{0}birthdayset dd.MM.yyyy`"
+    "desc": "Setzt den eigenen Geburtstag. Die Angabe des Geburtsjahres ist optional. **Nur einmal verwendbar!**",
+    "usage": "`{0}birthdayset <dd.MM.yyyy oder dd.MM.>`"
+  },
+  {
+    "name": "birthdayget",
+    "cmd": "birthday",
+    "aliases": [],
+    "desc": "Zeigt den Geburtstag eines Users an.",
+    "usage": "`{0}birthday [user]`"
+  },
+  {
+    "name": "birthdayremove",
+    "cmd": "birthdayremove",
+    "aliases": [],
+    "desc": "Entfernt den Geburtstag eines Users.",
+    "usage": "`{0}birthdayremove [user]`"
+  },
+  {
+    "name": "birthdays",
+    "cmd": "birthdays",
+    "aliases": [],
+    "desc": "Zeigt alle Geburtstage am angegebenen Datum (oder heute) an.",
+    "usage": "`{0}birthdays [dd.MM.yyyy]`"
+  },
+  {
+    "name": "birthdaysall",
+    "cmd": "birthdaysall",
+    "aliases": [],
+    "desc": "Zeigt alle Geburtstage an.",
+    "usage": "`{0}birthdaysall`"
   }
 ]
