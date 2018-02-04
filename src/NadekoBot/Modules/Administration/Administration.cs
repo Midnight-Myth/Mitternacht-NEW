@@ -370,7 +370,7 @@ namespace Mitternacht.Modules.Administration
         }
         
         
-         [NadekoCommand, Usage, Description, Aliases]
+         [MitternachtCommand, Usage, Description, Aliases]
          [RequireContext(ContextType.Guild)]
          [RequireUserPermission(GuildPermission.ManageMessages)]
          public async Task Edit(ulong messageId, [Remainder] string text)
