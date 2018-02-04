@@ -15,6 +15,8 @@ using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Modules.Music.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using NadekoBot.Common;
+using NadekoBot.Common.Replacements;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -379,6 +381,10 @@ namespace Mitternacht.Modules.Administration
 
                 if (server == null)
                     return;
+                
+                var rep = new ReplacementBuilder()
+                     .WithDefault(Context)
+                     .Build();
 
                 if (ids[1].ToUpperInvariant().StartsWith("C:"))
                 {
@@ -388,7 +394,14 @@ namespace Mitternacht.Modules.Administration
                     {
                         return;
                     }
-                    await ch.SendMessageAsync(msg).ConfigureAwait(false);
+                    if (CREmbed.TryParse(msg, out var crembed))
+                     {
+                         rep.Replace(crembed);
+                         await ch.EmbedAsync(crembed.ToEmbed(), "📣" + crembed.PlainText?.SanitizeMentions())
+                             .ConfigureAwait(false);
+                         return;
+                     }
+                     await ch.SendMessageAsync($"`#{msg}` 📣 " + rep.Replace()?.SanitizeMentions());
                 }
                 else if (ids[1].ToUpperInvariant().StartsWith("U:"))
                 {
@@ -398,7 +411,15 @@ namespace Mitternacht.Modules.Administration
                     {
                         return;
                     }
-                    await user.SendMessageAsync(msg).ConfigureAwait(false);
+                     if (CREmbed.TryParse(msg, out var crembed))
+                     {
+                         rep.Replace(crembed);
+                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbed(), "📣" + crembed.PlainText?.SanitizeMentions())
+                             .ConfigureAwait(false);
+                         return;
+                     }
+
+                     await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` 📣 " + rep.Replace()?.SanitizeMentions());
                 }
                 else
                 {
