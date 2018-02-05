@@ -99,7 +99,7 @@ namespace Mitternacht.Modules.Level
                         }
 
                         return embed;
-                    }, pagecount - 1).ConfigureAwait(false);
+                    }, pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
             }
         }
     }

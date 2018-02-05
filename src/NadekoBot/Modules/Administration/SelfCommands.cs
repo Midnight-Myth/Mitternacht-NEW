@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Administration
         {
             private readonly DbService _db;
 
-            private static readonly object _locker = new object();
+            private static readonly object Locker = new object();
             private readonly DiscordSocketClient _client;
             private readonly IImagesService _images;
             private readonly MusicService _music;
@@ -48,9 +48,8 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task StartupCommandAdd([Remainder] string cmdText)
             {
-                var guser = ((IGuildUser)Context.User);
-                var cmd = new StartupCommand()
-                {
+                var guser = (IGuildUser)Context.User;
+                var cmd = new StartupCommand {
                     CommandText = cmdText,
                     ChannelId = Context.Channel.Id,
                     ChannelName = Context.Channel.Name,
@@ -70,7 +69,7 @@ namespace Mitternacht.Modules.Administration
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                     .WithTitle(GetText("scadd"))
                     .AddField(efb => efb.WithName(GetText("server"))
-                        .WithValue(cmd.GuildId == null ? $"-" : $"{cmd.GuildName}/{cmd.GuildId}").WithIsInline(true))
+                        .WithValue(cmd.GuildId == null ? "-" : $"{cmd.GuildName}/{cmd.GuildId}").WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("channel"))
                         .WithValue($"{cmd.ChannelName}/{cmd.ChannelId}").WithIsInline(true))
                     .AddField(efb => efb.WithName(GetText("command_text"))
@@ -103,7 +102,7 @@ namespace Mitternacht.Modules.Administration
                 {
                     await Context.Channel.SendConfirmAsync("", string.Join("\n", scmds.Select(x =>
                     {
-                        string str = $"```css\n[{GetText("server") + "]: " + (x.GuildId == null ? "-" : x.GuildName + " #" + x.GuildId)}";
+                        var str = $"```css\n[{GetText("server") + "]: " + (x.GuildId == null ? "-" : x.GuildName + " #" + x.GuildId)}";
 
                         str += $@"
 [{GetText("channel")}]: {x.ChannelName} #{x.ChannelId}
@@ -126,7 +125,7 @@ namespace Mitternacht.Modules.Administration
                     var msg = await Context.Channel.SendConfirmAsync($"⏲ {ms}ms").ConfigureAwait(false);
                     msg.DeleteAfter(ms / 1000);
                 }
-                catch { }
+                catch { /*ignored*/ }
 
                 await Task.Delay(ms);
             }
@@ -200,7 +199,7 @@ namespace Mitternacht.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     var config = uow.BotConfig.GetOrCreate();
-                    lock (_locker)
+                    lock (Locker)
                         config.ForwardToAllOwners = !config.ForwardToAllOwners;
                     uow.Complete();
                 }
@@ -275,7 +274,7 @@ namespace Mitternacht.Modules.Administration
                     // ignored
                 }
                 await Task.Delay(2000).ConfigureAwait(false);
-                try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { }
+                try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { /*ignored*/ }
                 Environment.Exit(0);
             }
 
@@ -397,11 +396,10 @@ namespace Mitternacht.Modules.Administration
                     if (CREmbed.TryParse(msg, out var crembed))
                      {
                          rep.Replace(crembed);
-                         await ch.EmbedAsync(crembed.ToEmbed(), "" + crembed.PlainText?.SanitizeMentions())
-                             .ConfigureAwait(false);
+                         await ch.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
                          return;
                      }
-                     await ch.SendMessageAsync($"`#{msg}` " + rep.Replace(msg)?.SanitizeMentions());
+                     await ch.SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
                 }
                 else if (ids[1].ToUpperInvariant().StartsWith("U:"))
                 {
@@ -414,12 +412,12 @@ namespace Mitternacht.Modules.Administration
                      if (CREmbed.TryParse(msg, out var crembed))
                      {
                          rep.Replace(crembed);
-                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbed(), "" + crembed.PlainText?.SanitizeMentions())
+                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "")
                              .ConfigureAwait(false);
                          return;
                      }
 
-                     await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` " + rep.Replace(msg)?.SanitizeMentions());
+                     await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
                 }
                 else
                 {

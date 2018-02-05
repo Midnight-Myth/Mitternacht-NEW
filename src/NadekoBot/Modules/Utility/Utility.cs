@@ -133,6 +133,7 @@ namespace Mitternacht.Modules.Utility
                 .ConfigureAwait(false);
         }
 
+        //todo: DRY
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task Roles(IGuildUser target, int page = 1)
@@ -150,9 +151,9 @@ namespace Mitternacht.Modules.Utility
                 if (!roles.Skip(page * rolesPerPage).Take(rolesPerPage).Any())
                     await ReplyErrorLocalized("no_roles_on_page").ConfigureAwait(false);
                 else
-                    await channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, p => new EmbedBuilder().WithOkColor()
+                    await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => new EmbedBuilder().WithOkColor()
                         .WithTitle(GetText("roles_page", p + 1, Format.Bold(target.ToString())))
-                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage);
+                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage, reactUsers: new[] { Context.User as IGuildUser });
             }
             else
             {
@@ -160,9 +161,9 @@ namespace Mitternacht.Modules.Utility
                 if (!roles.Skip(page * rolesPerPage).Take(rolesPerPage).Any())
                     await ReplyErrorLocalized("no_roles_on_page").ConfigureAwait(false);
                 else
-                    await channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, p => new EmbedBuilder().WithOkColor()
+                    await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => new EmbedBuilder().WithOkColor()
                         .WithTitle(GetText("roles_all_page", p + 1))
-                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage);
+                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage, reactUsers: new[] { Context.User as IGuildUser });
             }
         }
 
@@ -234,7 +235,7 @@ namespace Mitternacht.Modules.Utility
                     .WithTitle(status)
                     .WithOkColor()
                     .WithDescription(str);
-            }, allShardStrings.Length / 25);
+            }, allShardStrings.Length / 25, reactUsers: new[] { Context.User as IGuildUser });
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

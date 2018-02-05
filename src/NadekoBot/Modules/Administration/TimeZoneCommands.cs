@@ -27,14 +27,14 @@ namespace Mitternacht.Modules.Administration
                 var timezones = TimeZoneInfo.GetSystemTimeZones()
                     .OrderBy(x => x.BaseUtcOffset)
                     .ToArray();
-                var timezonesPerPage = 20;
+                const int timezonesPerPage = 20;
 
-                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, 
-                    (curPage) => new EmbedBuilder()
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, 
+                    curPage => new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle(GetText("timezones_available"))
                         .WithDescription(string.Join("\n", timezones.Skip(curPage * timezonesPerPage).Take(timezonesPerPage).Select(x => $"`{x.Id,-25}` {(x.BaseUtcOffset < TimeSpan.Zero? "-" : "+")}{x.BaseUtcOffset:hhmm}"))),
-                    timezones.Length / timezonesPerPage);
+                    timezones.Length / timezonesPerPage, reactUsers: new[] { Context.User as IGuildUser });
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

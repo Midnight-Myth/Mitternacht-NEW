@@ -399,7 +399,7 @@
     "name": "setmuterole",
     "cmd": "setmuterole",
     "aliases": [],
-    "desc": "Sets a name of the role which will be assigned to people who should be muted. Default is mitternacht-mute.",
+    "desc": "Sets a name of the role which will be assigned to people who should be muted. Default is Muted.",
     "usage": "`{0}setmuterole Silenced`"
   },
   {
@@ -544,7 +544,7 @@
     "name": "greetmsg",
     "cmd": "greetmsg",
     "aliases": [],
-    "desc": "Sets a new join announcement message which will be shown in the server's channel. Type `%user%` if you want to mention the new member. Using it with no message will show the current greet message. You can use embed json from <http://mitternachtbot.me/embedbuilder/> instead of a regular text, if you want the message to be embedded.",
+    "desc": "Sets a new join announcement message which will be shown in the server's channel. Type `%user%` if you want to mention the new member. Using it with no message will show the current greet message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded.",
     "usage": "`{0}greetmsg Welcome, %user%.`"
   },
   {
@@ -1277,7 +1277,7 @@
     "aliases": [
       "acr"
     ],
-    "desc": "Add a custom reaction with a trigger and a response. Running this command in server requires the Administration permission. Running this command in DM is Bot Owner only and adds a new global custom reaction. Guide here: <http://mitternachtbot.readthedocs.io/en/latest/Custom%20Reactions/>",
+    "desc": "Add a custom reaction with a trigger and a response. Running this command in server requires the Administration permission. Running this command in DM is Bot Owner only and adds a new global custom reaction. Guide here: <https://nadekobot.readthedocs.io/en/latest/Custom%20Reactions/>",
     "usage": "`{0}acr \"hello\" Hi there %user%`"
   },
   {
@@ -1366,7 +1366,7 @@
     "aliases": [
       "pr"
     ],
-    "desc": "Sets a role which can change permissions. Supply no parameters to see the current one. Default is 'Mitternacht'.",
+    "desc": "Sets a role which can change permissions. Supply no parameters to see the current one. Default is 'Permissions'.",
     "usage": "`{0}pr role`"
   },
   {
@@ -2907,7 +2907,7 @@
     "name": "byemsg",
     "cmd": "byemsg",
     "aliases": [],
-    "desc": "Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from <http://mitternachtbot.me/embedbuilder/> instead of a regular text, if you want the message to be embedded.",
+    "desc": "Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded.",
     "usage": "`{0}byemsg %user% has left.`"
   },
   {
@@ -2921,7 +2921,7 @@
     "name": "greetdmmsg",
     "cmd": "greetdmmsg",
     "aliases": [],
-    "desc": "Sets a new join announcement message which will be sent to the user who joined. Type `%user%` if you want to mention the new member. Using it with no message will show the current DM greet message. You can use embed json from <http://mitternachtbot.me/embedbuilder/> instead of a regular text, if you want the message to be embedded.",
+    "desc": "Sets a new join announcement message which will be sent to the user who joined. Type `%user%` if you want to mention the new member. Using it with no message will show the current DM greet message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded.",
     "usage": "`{0}greetdmmsg Welcome to the server, %user%`."
   },
   {
@@ -3475,7 +3475,42 @@
     "name": "birthdayset",
     "cmd": "birthdayset",
     "aliases": [],
-    "desc": "Setzt den eigenen Geburtstag. **Nur einmal verwendbar!**",
-    "usage": "`{0}birthdayset dd.MM.yyyy`"
+    "desc": "Setzt den eigenen Geburtstag. Die Angabe des Geburtsjahres ist optional. **Nur einmal verwendbar!**",
+    "usage": "`{0}birthdayset <dd.MM.yyyy oder dd.MM.>`"
+  },
+  {
+    "name": "birthdayget",
+    "cmd": "birthday",
+    "aliases": [],
+    "desc": "Zeigt den Geburtstag eines Users an.",
+    "usage": "`{0}birthday [user]`"
+  },
+  {
+    "name": "birthdayremove",
+    "cmd": "birthdayremove",
+    "aliases": [],
+    "desc": "Entfernt den Geburtstag eines Users.",
+    "usage": "`{0}birthdayremove [user]`"
+  },
+  {
+    "name": "birthdays",
+    "cmd": "birthdays",
+    "aliases": [],
+    "desc": "Zeigt alle Geburtstage am angegebenen Datum (oder heute) an.",
+    "usage": "`{0}birthdays [dd.MM.yyyy]`"
+  },
+  {
+    "name": "birthdaysall",
+    "cmd": "birthdaysall",
+    "aliases": [],
+    "desc": "Zeigt alle Geburtstage an.",
+    "usage": "`{0}birthdaysall`"
+  },
+  {
+    "name": "edit",
+    "cmd": "edit",
+    "aliases": [],
+    "desc": "Modifiziert eine vom Bot gesendete Nachricht.",
+    "usage": "`{0}edit <msgId> <text>`"
   }
 ]

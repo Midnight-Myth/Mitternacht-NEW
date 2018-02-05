@@ -64,6 +64,8 @@ namespace Mitternacht.Services.Database
         public DbSet<UsernameHistoryModel> UsernameHistory { get; set; }
         public DbSet<NicknameHistoryModel> NicknameHistory { get; set; }
 
+        public DbSet<BirthDateModel> BirthDates { get; set; }
+
         public NadekoContext()
         {
 
@@ -319,6 +321,10 @@ namespace Mitternacht.Services.Database
 
             #region Verification
             modelBuilder.Entity<VerifiedUser>().HasIndex(vu => new {vu.GuildId, vu.UserId}).IsUnique();
+            #endregion
+
+            #region BirthDates
+            modelBuilder.Entity<BirthDateModel>().HasIndex(bdm => bdm.UserId).IsUnique();
             #endregion
         }
     }

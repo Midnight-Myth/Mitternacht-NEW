@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Verification
             {
                 uinfo = await _fs.Forum.GetUserInfo(forumUserId);
             }
-            catch (UserProfileAccessException)
+            catch (UserProfileAccessException) //todo: ignore this exception
             {
                 (await ReplyErrorLocalized("forum_user_not_seeable").ConfigureAwait(false)).DeleteAfter(60);
                 return;
@@ -386,7 +386,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope));
                 }
                 return embed;
-            }, pagecount - 1).ConfigureAwait(false);
+            }, pagecount - 1, true, null, gp => gp.Administrator).ConfigureAwait(false);
         }
 
 
@@ -411,7 +411,7 @@ namespace Mitternacht.Modules.Verification
                     embed.AddInlineField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId);
                 }
                 return embed;
-            }, pagecount - 1).ConfigureAwait(false);
+            }, pagecount - 1, true, new []{Context.User as IGuildUser}).ConfigureAwait(false);
         }
 
 

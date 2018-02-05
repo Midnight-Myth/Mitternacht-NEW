@@ -150,10 +150,10 @@ namespace Mitternacht.Modules.Administration
                     await uow.CompleteAsync();
                 }
 
-                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, curPage => new EmbedBuilder()
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, curPage => new EmbedBuilder()
                     .WithTitle(GetText("self_assign_list", roleCnt))
                     .WithDescription(string.Join("\n", roles.Skip(curPage * 10).Take(10)))
-                    .WithOkColor(), roles.Count / 10);
+                    .WithOkColor(), roles.Count / 10, reactUsers: new []{Context.User as IGuildUser});
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

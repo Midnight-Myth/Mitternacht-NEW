@@ -49,11 +49,13 @@ namespace Mitternacht.Extensions
         private static readonly IEmote ArrowLeft = new Emoji("⬅");
         private static readonly IEmote ArrowRight = new Emoji("➡");
 
-        public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? lastPage = null, bool addPaginatedFooter = true) 
-            => channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), lastPage, addPaginatedFooter);
+        public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? lastPage = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) 
+            => channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), lastPage, addPaginatedFooter, reactUsers, hasPerms);
 
-        public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true)
-        {
+        public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) {
+            reactUsers = reactUsers ?? new IGuildUser[0];
+            if (hasPerms == null) hasPerms = gp => !reactUsers.Any();
+
             var embed = await pageFunc(currentPage).ConfigureAwait(false);
 
             if (addPaginatedFooter)
@@ -72,6 +74,8 @@ namespace Mitternacht.Extensions
 
             async void ChangePage(SocketReaction r) {
                 try {
+                    if (!r.User.IsSpecified || r.User.Value is IGuildUser gu && reactUsers.All(u => u.Id != r.UserId) && !hasPerms.Invoke(gu.GuildPermissions) && !gu.GuildPermissions.Administrator) return;
+
                     if (r.Emote.Name == ArrowLeft.Name) {
                         if (currentPage == 0)
                             return;

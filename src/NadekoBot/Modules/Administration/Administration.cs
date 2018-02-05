@@ -4,19 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
+using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using Mitternacht.Common;
-using Mitternacht.Common.Replacements;
 
 namespace Mitternacht.Modules.Administration
 {
     public partial class Administration : MitternachtTopLevelModule<AdministrationService>
     {
-        private IGuild _nadekoSupportServer;
         private readonly DbService _db;
 
         public Administration(DbService db)
@@ -126,7 +125,7 @@ namespace Mitternacht.Modules.Administration
         {
             var guser = (IGuildUser)Context.User;
 
-            var userRoles = user.GetRoles().Except(new[] { guser.Guild.EveryoneRole });
+            var userRoles = user.GetRoles().Except(new[] { guser.Guild.EveryoneRole }).ToList();
             if (user.Id == Context.Guild.OwnerId || (Context.User.Id != Context.Guild.OwnerId && guser.GetRoles().Max(x => x.Position) <= userRoles.Max(x => x.Position)))
                 return;
             try
@@ -314,7 +313,7 @@ namespace Mitternacht.Modules.Administration
         [RequireUserPermission(GuildPermission.MentionEveryone)]
         public async Task MentionRole(params IRole[] roles)
         {
-            string send = "❕" + GetText("menrole", Context.User.Mention);
+            var send = "❕" + GetText("menrole", Context.User.Mention);
             foreach (var role in roles)
             {
                 send += $"\n**{role.Name}**\n";
@@ -344,15 +343,7 @@ namespace Mitternacht.Modules.Administration
                 donatorsOrdered = uow.Donators.GetDonatorsOrdered();
             }
             await Context.Channel.SendConfirmAsync(GetText("donators"), string.Join("⭐", donatorsOrdered.Select(d => d.Name))).ConfigureAwait(false);
-
-            _nadekoSupportServer = _nadekoSupportServer ?? (await Context.Client.GetGuildAsync(117523346618318850));
-
-            var patreonRole = _nadekoSupportServer?.GetRole(236667642088259585);
-            if (patreonRole == null)
-                return;
-
-            var usrs = (await _nadekoSupportServer.GetUsersAsync()).Where(u => u.RoleIds.Contains(236667642088259585u));
-            await Context.Channel.SendConfirmAsync("Patreon supporters", string.Join("⭐", usrs.Select(d => d.Username))).ConfigureAwait(false);
+            //await Context.Channel.SendConfirmAsync("Patreon supporters", string.Join("⭐", usrs.Select(d => d.Username))).ConfigureAwait(false);
         }
 
 
@@ -368,45 +359,38 @@ namespace Mitternacht.Modules.Administration
             }
             await ReplyConfirmLocalized("donadd", don.Amount).ConfigureAwait(false);
         }
-        
-        
-         //[MitternachtCommand, Usage, Description, Aliases]
-         //[RequireContext(ContextType.Guild)]
-         //[RequireUserPermission(GuildPermission.ManageMessages)]
-         //public async Task Edit(ulong messageId, [Remainder] string text)
-         //{
-         //    if (string.IsNullOrWhiteSpace(text))
-         //        return;
-                 
-         //    var msgs = new List<IMessage>();
-         //    msgs = await Context.Channel.GetMessagesAsync();
 
-         //    IUserMessage msg = (IUserMessage)msgs.FirstOrDefault(x => x.Id == messageId
-         //        && x.Author.Id == Context.Client.CurrentUser.Id
-         //        && x is IUserMessage);
 
-         //    if (msg == null)
-         //        return;
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
+        public async Task Edit(ulong messageId, [Remainder] string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return;
 
-         //    var rep = new ReplacementBuilder()
-         //            .WithDefault(Context)
-         //            .Build();
+            var imsg = await Context.Channel.GetMessageAsync(messageId);
+            if (!(imsg is IUserMessage msg) || imsg.Author.Id != Context.Client.CurrentUser.Id)
+                return;
 
-         //    if (CREmbed.TryParse(text, out var crembed))
-         //    {
-         //        rep.Replace(crembed);
-         //        await msg.ModifyAsync(x =>
-         //        {
-         //            x.Embed = crembed.ToEmbed().Build();
-         //            x.Content = crembed.PlainText?.SanitizeMentions() ?? "";
-         //        }).ConfigureAwait(false);
-         //    }
-         //    else
-         //    {
-         //        await msg.ModifyAsync(x => x.Content = text.SanitizeMentions())
-         //            .ConfigureAwait(false);
-         //    }
+            var rep = new ReplacementBuilder()
+                    .WithDefault(Context)
+                    .Build();
 
-         //}
+            if (CREmbed.TryParse(text, out var crembed))
+            {
+                rep.Replace(crembed);
+                await msg.ModifyAsync(x =>
+                {
+                    x.Embed = crembed.ToEmbed().Build();
+                    x.Content = crembed.PlainText?.SanitizeMentions() ?? "";
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                await msg.ModifyAsync(x => x.Content = text.SanitizeMentions())
+                    .ConfigureAwait(false);
+            }
+        }
     }
 }

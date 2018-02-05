@@ -302,7 +302,7 @@ namespace Mitternacht.Modules.Music
                 return embed;
             }
 
-            await Context.Channel.SendPaginatedConfirmAsync(_client, page, (Func<int, EmbedBuilder>) PrintAction, lastPage, false).ConfigureAwait(false);
+            await Context.Channel.SendPaginatedConfirmAsync(_client, page, (Func<int, EmbedBuilder>) PrintAction, lastPage, false, new[] { Context.User as IGuildUser }).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

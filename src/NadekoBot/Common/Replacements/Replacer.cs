@@ -20,13 +20,9 @@ namespace Mitternacht.Common.Replacements
         {
             if (string.IsNullOrWhiteSpace(input))
                 return input;
-
-            foreach (var item in _replacements)
-            {
-                if (input.Contains(item.Key))
-                    input = input.Replace(item.Key, item.Text());
-            }
-
+            foreach (var (key, text) in _replacements)
+                if (input.Contains(key))
+                    input = input.Replace(key, text());
             return _regex.Aggregate(input, (current, item) => item.Regex.Replace(current, m => item.Replacement(m)));
         }
 

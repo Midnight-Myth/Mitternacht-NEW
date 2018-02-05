@@ -238,7 +238,7 @@ namespace Mitternacht.Modules.Utility
                         .WithTitle(GetText("activity_page"))
                         .WithFooter(efb => efb.WithText(GetText("activity_users_total", CmdHandler.UserMessagesSent.Count)))
                         .WithDescription(new StringBuilder().AppendJoin('\n', strng).ToString());
-                }, CmdHandler.UserMessagesSent.Count / activityPerPage);
+                }, CmdHandler.UserMessagesSent.Count / activityPerPage, hasPerms: gp => gp.Administrator);
             }
         }
     }

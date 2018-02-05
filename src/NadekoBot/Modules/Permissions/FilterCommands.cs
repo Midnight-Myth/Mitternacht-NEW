@@ -204,11 +204,11 @@ namespace Mitternacht.Modules.Permissions
                 if (fwHash is null) return;
                 var fws = fwHash.ToArray();
 
-                await channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client,
+                await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient,
                         page,
                         curPage => new EmbedBuilder()
                             .WithTitle(GetText("filter_word_list"))
-                            .WithDescription(string.Join("\n", fws.Skip(curPage * 10).Take(10))), fws.Length / 10)
+                            .WithDescription(string.Join("\n", fws.Skip(curPage * 10).Take(10))), fws.Length / 10, hasPerms: gp => true)
                     .ConfigureAwait(false);
             }
 

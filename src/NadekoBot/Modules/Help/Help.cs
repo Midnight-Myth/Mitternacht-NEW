@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,6 @@ namespace Mitternacht.Modules.Help
     public partial class Help : MitternachtTopLevelModule<HelpService>
     {
         public const string PatreonUrl = "https://patreon.com/plauderkonfi";
-        public const string PaypalUrl = "-- Not available --";
         private readonly IBotCredentials _creds;
         private readonly IBotConfigProvider _config;
         private readonly CommandService _cmds;
@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Help
         public async Task Modules()
         {
             var embed = new EmbedBuilder().WithOkColor()
-                .WithFooter(efb => efb.WithText("ℹ️" + GetText("modules_footer", Prefix)))
+                .WithFooter(efb => efb.WithText(GetText("modules_footer", Prefix)))
                 .WithTitle(GetText("list_of_modules"))
                 .WithDescription(string.Join("\n",
                                      _cmds.Modules.GroupBy(m => m.GetTopLevelModule())
@@ -105,12 +105,6 @@ namespace Mitternacht.Modules.Help
                 return;
             }
 
-            //if (com == null)
-            //{
-            //    await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
-            //    return;
-            //}
-
             var embed = Service.GetCommandHelp(com, Context.Guild);
             await channel.EmbedAsync(embed).ConfigureAwait(false);
         }
@@ -121,9 +115,8 @@ namespace Mitternacht.Modules.Help
         public async Task Hgit()
         {
             var helpstr = new StringBuilder();
-            helpstr.AppendLine(GetText("cmdlist_donate", PatreonUrl, PaypalUrl) + "\n");
-            helpstr.AppendLine("##"+ GetText("table_of_contents"));
-            helpstr.AppendLine(string.Join("\n", _cmds.Modules.Where(m => m.GetTopLevelModule().Name.ToLowerInvariant() != "help")
+            helpstr.AppendLine($"## {GetText("table_of_contents")}");
+            helpstr.AppendLine(string.Join("\n", _cmds.Modules.Where(m => !string.Equals(m.GetTopLevelModule().Name, "help", StringComparison.OrdinalIgnoreCase))
                 .Select(m => m.GetTopLevelModule().Name)
                 .Distinct()
                 .OrderBy(m => m)
@@ -151,22 +144,22 @@ namespace Mitternacht.Modules.Help
                                    $" {string.Format(com.Summary, Prefix)} {Service.GetCommandRequirements(com, Context.Guild)} |" +
                                    $" {string.Format(com.Remarks, Prefix)}");
             }
-            File.WriteAllText("../../docs/Commands List.md", helpstr.ToString());
+
+            Directory.CreateDirectory("./docs/");
+            File.WriteAllText("./docs/CommandsList.md", helpstr.ToString());
             await ReplyConfirmLocalized("commandlist_regen").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task Guide()
         {
-            await ConfirmLocalized("guide", 
-                "http://nadekobot.readthedocs.io/en/latest/Commands%20List/",
-                "http://nadekobot.readthedocs.io/en/latest/").ConfigureAwait(false);
+            await ConfirmLocalized("guide", "https://github.com/Midnight-Myth/Mitternacht-NEW/blob/master/docs/CommandsList.md").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task Donate()
         {
-            await ReplyConfirmLocalized("donate", PatreonUrl, PaypalUrl).ConfigureAwait(false);
+            await ReplyConfirmLocalized("donate", PatreonUrl).ConfigureAwait(false);
         }
     }
 

@@ -36,10 +36,10 @@ namespace Mitternacht.Modules.Utility.Services
                 u.First().Id,
                 u.First().Username,
                 u.First().DiscriminatorValue
-            });
+            }).ToList();
             using (var uow = _db.UnitOfWork) {
-                nickupdates += usernicks.Sum(nicks => nicks.Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
                 usernameupdates += usernames.Count(u => uow.UsernameHistory.AddUsername(u.Id, u.Username, u.DiscriminatorValue));
+                nickupdates += usernicks.Sum(nicks => nicks.Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
@@ -65,6 +65,7 @@ namespace Mitternacht.Modules.Utility.Services
 
         private Task UserUpdated(SocketGuildUser b, SocketGuildUser a) {
             var _ = Task.Run(async () => {
+                if (b.Id != a.Id) return;
                 using (var uow = _db.UnitOfWork) {
                     //_log.Info($"guild | {IsGuildLoggingUsernames(a.Guild.Id)} | {a.Guild.Id} | {a.Id} | {a.Nickname} | {a.DiscriminatorValue}");
                     if (IsGuildLoggingUsernames(a.Guild.Id))
