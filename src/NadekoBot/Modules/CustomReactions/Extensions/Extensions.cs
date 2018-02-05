@@ -17,13 +17,13 @@ namespace Mitternacht.Modules.CustomReactions.Extensions
 {
     public static class Extensions
     {
-        private static readonly Regex imgRegex = new Regex("%(img|image):(?<tag>.*?)%", RegexOptions.Compiled);
+        private static readonly Regex ImgRegex = new Regex("%(img|image):(?<tag>.*?)%", RegexOptions.Compiled);
 
-        private static readonly NadekoRandom rng = new NadekoRandom();
+        private static readonly NadekoRandom Rng = new NadekoRandom();
 
-        public static Dictionary<Regex, Func<Match, Task<string>>> regexPlaceholders = new Dictionary<Regex, Func<Match, Task<string>>>()
+        public static Dictionary<Regex, Func<Match, Task<string>>> RegexPlaceholders = new Dictionary<Regex, Func<Match, Task<string>>>()
         {
-            { imgRegex, async (match) => {
+            { ImgRegex, async match => {
                 var tag = match.Groups["tag"].ToString();
                 if(string.IsNullOrWhiteSpace(tag))
                     return "";
@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.CustomReactions.Extensions
                 if (!elems.Any())
                     return "";
 
-                var img = (elems.ElementAtOrDefault(new NadekoRandom().Next(0, elems.Length))?.Children?.FirstOrDefault() as IHtmlImageElement);
+                var img = elems.ElementAtOrDefault(Rng.Next(0, elems.Length))?.Children?.FirstOrDefault() as IHtmlImageElement;
 
                 if (img?.Source == null)
                     return "";
@@ -69,7 +69,7 @@ namespace Mitternacht.Modules.CustomReactions.Extensions
                 else if (pos == WordPosition.End)
                     substringIndex = ctx.Content.Length;
                 else if (pos == WordPosition.Middle)
-                    substringIndex += ctx.Content.IndexOf(resolvedTrigger);
+                    substringIndex += ctx.Content.IndexOf(resolvedTrigger, StringComparison.Ordinal);
             }
 
             var rep = new ReplacementBuilder()
@@ -79,7 +79,7 @@ namespace Mitternacht.Modules.CustomReactions.Extensions
 
             str = rep.Replace(str);
 
-            foreach (var ph in regexPlaceholders)
+            foreach (var ph in RegexPlaceholders)
             {
                 str = await ph.Key.ReplaceAsync(str, ph.Value);
             }
@@ -98,43 +98,37 @@ namespace Mitternacht.Modules.CustomReactions.Extensions
 
             crs.ReactionStats.AddOrUpdate(cr.Trigger, 1, (k, old) => ++old);
 
-            if (CREmbed.TryParse(cr.Response, out CREmbed crembed))
-            {
-                var trigger = cr.Trigger.ResolveTriggerString(ctx, client);
-                var substringIndex = trigger.Length;
-                if (cr.ContainsAnywhere)
-                {
-                    var pos = ctx.Content.GetWordPosition(trigger);
-                    if (pos == WordPosition.Start)
-                        substringIndex += 1;
-                    else if (pos == WordPosition.End)
-                        substringIndex = ctx.Content.Length;
-                    else if (pos == WordPosition.Middle)
-                        substringIndex += ctx.Content.IndexOf(trigger);
+            if (!CREmbed.TryParse(cr.Response, out var crembed)) return await channel.SendMessageAsync((await cr.ResponseWithContextAsync(ctx, client, cr.ContainsAnywhere)).SanitizeMentions());
+            var trigger = cr.Trigger.ResolveTriggerString(ctx, client);
+            var substringIndex = trigger.Length;
+            if (cr.ContainsAnywhere) {
+                var pos = ctx.Content.GetWordPosition(trigger);
+                if (pos == WordPosition.Start)
+                    substringIndex += 1;
+                else if (pos == WordPosition.End) {
+                    substringIndex = ctx.Content.Length;
                 }
-
-                var rep = new ReplacementBuilder()
-                    .WithDefault(ctx.Author, ctx.Channel, (ctx.Channel as ITextChannel)?.Guild, client)
-                    .WithOverride("%target%", () => ctx.Content.Substring(substringIndex).Trim())
-                    .Build();
-
-                rep.Replace(crembed);
-
-                return await channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "");
+                else if (pos == WordPosition.Middle) {
+                    substringIndex += ctx.Content.IndexOf(trigger, StringComparison.Ordinal);
+                }
             }
-            return await channel.SendMessageAsync((await cr.ResponseWithContextAsync(ctx, client, cr.ContainsAnywhere)).SanitizeMentions());
+
+            var rep = new ReplacementBuilder()
+                .WithDefault(ctx.Author, ctx.Channel, (ctx.Channel as ITextChannel)?.Guild, client)
+                .WithOverride("%target%", () => ctx.Content.Substring(substringIndex).Trim())
+                .Build();
+
+            rep.Replace(crembed);
+
+            return await channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "");
         }
 
-        public static WordPosition GetWordPosition(this string str, string word)
-        {
+        public static WordPosition GetWordPosition(this string str, string word) {
             if (str.StartsWith(word + " "))
                 return WordPosition.Start;
-            else if (str.EndsWith(" " + word))
+            if (str.EndsWith(" " + word))
                 return WordPosition.End;
-            else if (str.Contains(" " + word + " "))
-                return WordPosition.Middle;
-            else
-                return WordPosition.None;
+            return str.Contains(" " + word + " ") ? WordPosition.Middle : WordPosition.None;
         }
     }
 
@@ -143,6 +137,6 @@ namespace Mitternacht.Modules.CustomReactions.Extensions
         None,
         Start,
         Middle,
-        End,
+        End
     }
 }

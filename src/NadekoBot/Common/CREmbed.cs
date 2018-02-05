@@ -2,13 +2,11 @@
 using Discord;
 using Mitternacht.Extensions;
 using Newtonsoft.Json;
-using NLog;
 
 namespace Mitternacht.Common
 {
     public class CREmbed
     {
-        private static readonly Logger _log;
         public string PlainText { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -18,31 +16,24 @@ namespace Mitternacht.Common
         public CREmbedField[] Fields { get; set; }
         public uint Color { get; set; } = 7458112;
 
-        static CREmbed()
-        {
-            _log = LogManager.GetCurrentClassLogger();
-        }
-
         public bool IsValid =>
             !string.IsNullOrWhiteSpace(Title) ||
             !string.IsNullOrWhiteSpace(Description) ||
             !string.IsNullOrWhiteSpace(Thumbnail) ||
             !string.IsNullOrWhiteSpace(Image) ||
-            (Footer != null && (!string.IsNullOrWhiteSpace(Footer.Text) || !string.IsNullOrWhiteSpace(Footer.IconUrl))) ||
-            (Fields != null && Fields.Length > 0);
+            Footer != null && (!string.IsNullOrWhiteSpace(Footer.Text) || !string.IsNullOrWhiteSpace(Footer.IconUrl)) ||
+            Fields != null && Fields.Length > 0;
 
-        public EmbedBuilder ToEmbed()
-        {
+        public EmbedBuilder ToEmbed() {
             var embed = new EmbedBuilder();
 
             if (!string.IsNullOrWhiteSpace(Title))
                 embed.WithTitle(Title);
             if (!string.IsNullOrWhiteSpace(Description))
                 embed.WithDescription(Description);
-            embed.WithColor(new Discord.Color(Color));
+            embed.WithColor(new Color(Color));
             if (Footer != null)
-                embed.WithFooter(efb =>
-                {
+                embed.WithFooter(efb => {
                     efb.WithText(Footer.Text);
                     if (Uri.IsWellFormedUriString(Footer.IconUrl, UriKind.Absolute))
                         efb.WithIconUrl(Footer.IconUrl);
@@ -50,16 +41,14 @@ namespace Mitternacht.Common
 
             if (Thumbnail != null && Uri.IsWellFormedUriString(Thumbnail, UriKind.Absolute))
                 embed.WithThumbnailUrl(Thumbnail);
-            if(Image != null && Uri.IsWellFormedUriString(Image, UriKind.Absolute))
+            if (Image != null && Uri.IsWellFormedUriString(Image, UriKind.Absolute))
                 embed.WithImageUrl(Image);
 
-            if (Fields != null)
-                foreach (var f in Fields)
-                {
-                    if(!string.IsNullOrWhiteSpace(f.Name) && !string.IsNullOrWhiteSpace(f.Value))
-                        embed.AddField(efb => efb.WithName(f.Name).WithValue(f.Value).WithIsInline(f.Inline));
-                }
-
+            if (Fields == null) return embed;
+            Fields.ForEach(f => {
+                if (!string.IsNullOrWhiteSpace(f.Name) && !string.IsNullOrWhiteSpace(f.Value))
+                    embed.AddField(efb => efb.WithName(f.Name).WithValue(f.Value).WithIsInline(f.Inline));
+            });
             return embed;
         }
 

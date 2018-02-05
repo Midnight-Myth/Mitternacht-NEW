@@ -3505,5 +3505,12 @@
     "aliases": [],
     "desc": "Zeigt alle Geburtstage an.",
     "usage": "`{0}birthdaysall`"
+  },
+  {
+    "name": "edit",
+    "cmd": "edit",
+    "aliases": [],
+    "desc": "Modifiziert eine vom Bot gesendete Nachricht.",
+    "usage": "`{0}edit <msgId> <text>`"
   }
 ]
