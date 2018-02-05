@@ -117,7 +117,7 @@ namespace Mitternacht.Modules.Help
         {
             var helpstr = new StringBuilder();
             helpstr.AppendLine($"## {GetText("table_of_contents")}");
-            helpstr.AppendLine(string.Join("\n", _cmds.Modules.Where(m => string.Equals(m.GetTopLevelModule().Name, "help", StringComparison.OrdinalIgnoreCase))
+            helpstr.AppendLine(string.Join("\n", _cmds.Modules.Where(m => !string.Equals(m.GetTopLevelModule().Name, "help", StringComparison.OrdinalIgnoreCase))
                 .Select(m => m.GetTopLevelModule().Name)
                 .Distinct()
                 .OrderBy(m => m)
