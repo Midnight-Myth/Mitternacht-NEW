@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Birthday
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
-            if (user != Context.User)
+            if (user == Context.User)
                 await ConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
             else
                 await ConfirmLocalized("set_owner", user.ToString(), bd.ToString()).ConfigureAwait(false);
