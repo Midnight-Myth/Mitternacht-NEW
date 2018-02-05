@@ -47,7 +47,7 @@ namespace Mitternacht.Services.Database.Models
         public Permission RootPermission { get; set; } = null;
         public List<Permissionv2> Permissions { get; set; }
         public bool VerbosePermissions { get; set; } = true;
-        public string PermissionRole { get; set; } = "Nadeko";
+        public string PermissionRole { get; set; } = "Permissions";
 
         public HashSet<CommandCooldown> CommandCooldowns { get; set; } = new HashSet<CommandCooldown>();
 
