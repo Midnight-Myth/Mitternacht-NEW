@@ -17,7 +17,6 @@ namespace Mitternacht.Modules.Help
     public partial class Help : MitternachtTopLevelModule<HelpService>
     {
         public const string PatreonUrl = "https://patreon.com/plauderkonfi";
-        public const string PaypalUrl = "-- Not available --";
         private readonly IBotCredentials _creds;
         private readonly IBotConfigProvider _config;
         private readonly CommandService _cmds;
@@ -154,15 +153,13 @@ namespace Mitternacht.Modules.Help
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task Guide()
         {
-            await ConfirmLocalized("guide", 
-                "http://nadekobot.readthedocs.io/en/latest/Commands%20List/",
-                "http://nadekobot.readthedocs.io/en/latest/").ConfigureAwait(false);
+            await ConfirmLocalized("guide", "https://github.com/Midnight-Myth/Mitternacht-NEW/blob/master/docs/CommandsList.md").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task Donate()
         {
-            await ReplyConfirmLocalized("donate", PatreonUrl, PaypalUrl).ConfigureAwait(false);
+            await ReplyConfirmLocalized("donate", PatreonUrl).ConfigureAwait(false);
         }
     }
 
