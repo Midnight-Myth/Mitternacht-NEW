@@ -130,7 +130,7 @@ namespace Mitternacht.Modules.Birthday
                     .WithOkColor()
                     .WithTitle(GetText("all_title"))
                     .WithDescription(string.Join("\n", from bdm in birthdates.Skip(itemcount * p).Take(itemcount)
-                        select $"- {Context.Client.GetUserAsync(bdm.UserId) .GetAwaiter() .GetResult() ?.ToString() ?? bdm.UserId.ToString()} - **{bdm.ToString()}**")), pagecount - 1)
+                        select $"- {Context.Client.GetUserAsync(bdm.UserId) .GetAwaiter() .GetResult() ?.ToString() ?? bdm.UserId.ToString()} - **{bdm.ToString()}**")), pagecount - 1, reactUsers: new []{Context.User as IGuildUser})
                 .ConfigureAwait(false);
         }
     }

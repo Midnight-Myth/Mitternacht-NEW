@@ -119,14 +119,14 @@ namespace Mitternacht.Modules.Utility
 
                 var arr = maps.ToArray();
 
-                await Context.Channel.SendPaginatedConfirmAsync(_client, page, (curPage) =>
+                await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage =>
                 {
                     return new EmbedBuilder().WithOkColor()
                     .WithTitle(GetText("alias_list"))
                     .WithDescription(string.Join("\n",
                         arr.Skip(curPage * 10).Take(10).Select(x => $"`{x.Key}` => `{x.Value}`")));
 
-                }, arr.Length / 10).ConfigureAwait(false);
+                }, arr.Length / 10, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
             }
         }
     }

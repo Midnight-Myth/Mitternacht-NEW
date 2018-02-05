@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using GommeHDnetForumAPI.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
@@ -78,7 +79,7 @@ namespace Mitternacht.Modules.Administration
                     allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
                 }
 
-                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, p => {
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => {
                     var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
                     var embed = new EmbedBuilder().WithOkColor()
                         .WithTitle(GetText("warnlog_for", (Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString()));
@@ -98,7 +99,7 @@ namespace Mitternacht.Modules.Administration
                         }
 
                     return embed;
-                }, allWarnings.Length / warnsPerPage);
+                }, allWarnings.Length / warnsPerPage, reactUsers: new []{Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -114,7 +115,7 @@ namespace Mitternacht.Modules.Administration
                     warnings = uow.Warnings.GetForGuild(Context.Guild.Id).GroupBy(x => x.UserId).ToArray();
                 }
 
-                await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, async curPage =>
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async curPage =>
                 {
                     var ws = await Task.WhenAll(warnings.Skip(curPage * 15)
                         .Take(15)
@@ -124,14 +125,14 @@ namespace Mitternacht.Modules.Administration
                             var all = x.Count();
                             var forgiven = x.Count(y => y.Forgiven);
                             var total = all - forgiven;
-                            return $"{(await Context.Guild.GetUserAsync(x.Key))?.ToString() ?? x.Key.ToString()} | {total} ({all} - {forgiven})";
+                            return $"{(await Context.Guild.GetUserAsync(x.Key).ConfigureAwait(false))?.ToString() ?? x.Key.ToString()} | {total} ({all} - {forgiven})";
                         }));
 
                     return new EmbedBuilder()
                         .WithTitle(GetText("warnings_list"))
                         .WithDescription(string.Join("\n", ws));
 
-                }, warnings.Length / 15);
+                }, warnings.Length / 15, reactUsers: new []{Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

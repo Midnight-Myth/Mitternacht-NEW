@@ -73,7 +73,7 @@ namespace Mitternacht.Modules.Gambling
                         embed.AddField(efb => efb.WithName($"#{curPage * 9 + i + 1} - {entry.Price}{_bc.BotConfig.CurrencySign}").WithValue(EntryToString(entry)).WithIsInline(true));
                     }
                     return embed;
-                }, entries.Count / 9);
+                }, entries.Count / 9, reactUsers: new[] { Context.User as IGuildUser });
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

@@ -94,7 +94,7 @@ namespace Mitternacht.Modules.Utility
                                 usernicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
                                     $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
-                    }, pagecount - 1).ConfigureAwait(false);
+                    }, pagecount - 1, reactUsers: new []{Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Description, Usage, Aliases]
@@ -124,7 +124,7 @@ namespace Mitternacht.Modules.Utility
                                 usernames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
                                     $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
-                    }, pagecount - 1).ConfigureAwait(false);
+                    }, pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Description, Usage, Aliases]
@@ -156,7 +156,7 @@ namespace Mitternacht.Modules.Utility
                                 nicknames.Skip(p * elementsPerPage).Take(elementsPerPage).Select(uhm =>
                                     $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
                         return embed;
-                    }, pagecount - 1).ConfigureAwait(false);
+                    }, pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
             }
 
             private string GetActiveText(bool? setting)

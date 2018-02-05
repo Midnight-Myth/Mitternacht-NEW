@@ -284,7 +284,7 @@ namespace Mitternacht.Modules.Gambling
                     }
                 }
                 return embed;
-            },currcount/elpp);
+            },currcount/elpp, reactUsers: new[] { Context.User as IGuildUser });
         }
     }
 }
