@@ -73,15 +73,16 @@ namespace Mitternacht.Modules.Birthday
             user = user ?? Context.User;
             using (var uow = _db.UnitOfWork) {
                 var bdm = uow.BirthDates.GetUserBirthDate(user.Id);
+                var age = bdm?.Year != null ? (int) Math.Floor((DateTime.Now - new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)).TotalDays / 365.25) : 0;
                 if (user == Context.User)
                     if (bdm == null)
                         await ReplyErrorLocalized("self_none").ConfigureAwait(false);
                     else
-                        await ReplyConfirmLocalized("self", bdm.ToString()).ConfigureAwait(false);
+                        await ReplyConfirmLocalized("self", bdm.ToString(), age).ConfigureAwait(false);
                 else if (bdm == null)
                     await ReplyErrorLocalized("user_none", user.ToString()).ConfigureAwait(false);
                 else
-                    await ReplyConfirmLocalized("user", user.ToString(), bdm.ToString()).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("user", user.ToString(), bdm.ToString(), age).ConfigureAwait(false);
             }
         }
 
