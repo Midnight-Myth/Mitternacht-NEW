@@ -308,7 +308,7 @@ namespace Mitternacht.Modules.Administration
                     }
                 }
 
-                await Context.Guild.AddBanAsync(user, 7).ConfigureAwait(false);
+                await Context.Guild.AddBanAsync(user, 7, msg).ConfigureAwait(false);
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                         .WithTitle("⛔️ " + GetText("banned_user"))
                         .AddField(efb => efb.WithName(GetText("username")).WithValue(user.ToString()).WithIsInline(true))

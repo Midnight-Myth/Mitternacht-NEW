@@ -68,11 +68,11 @@ namespace Mitternacht.Modules.Utility
 
             [MitternachtCommand, Description, Usage, Aliases]
             [RequireContext(ContextType.Guild)]
-            public async Task UsernameHistory(IGuildUser user = null, int page = 1) {
-                user = user ?? (IGuildUser) Context.User;
+            public async Task UsernameHistory(IUser user = null, int page = 1) {
+                user = user ?? Context.User;
                 List<UsernameHistoryModel> usernicknames;
                 using (var uow = _db.UnitOfWork) {
-                    var nicknames = uow.NicknameHistory.GetGuildUserNames(user.GuildId, user.Id);
+                    var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, user.Id);
                     var usernames = uow.UsernameHistory.GetUserNames(user.Id);
                     usernicknames = usernames.Concat(nicknames).OrderByDescending(u => u.DateSet).ToList();
                 }
@@ -129,13 +129,13 @@ namespace Mitternacht.Modules.Utility
 
             [MitternachtCommand, Description, Usage, Aliases]
             [RequireContext(ContextType.Guild)]
-            public async Task UsernameHistoryGuild(IGuildUser user = null, int page = 1)
+            public async Task UsernameHistoryGuild(IUser user = null, int page = 1)
             {
-                user = user ?? (IGuildUser) Context.User;
+                user = user ?? Context.User;
                 List<NicknameHistoryModel> nicknames;
                 using (var uow = _db.UnitOfWork)
                 {
-                    nicknames = uow.NicknameHistory.GetGuildUserNames(user.GuildId, user.Id).OrderByDescending(u => u.DateSet).ToList();
+                    nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, user.Id).OrderByDescending(u => u.DateSet).ToList();
                 }
 
                 if (!nicknames.Any())
