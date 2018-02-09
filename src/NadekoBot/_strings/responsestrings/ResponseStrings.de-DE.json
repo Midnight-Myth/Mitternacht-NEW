@@ -919,8 +919,10 @@
   "birthday_removed": "Der Geburtstag von `{0}` wurde gelöscht.",
   "birthday_remove_failed": "Für `{0}` ist kein Geburtstag bekannt, löschen unmöglich.",
   "birthday_self_none": "Dein Geburtstag ist dem Bot nicht bekannt.",
-  "birthday_self": "Du hast am **{0}** Geburtstag und bist {1} Jahre alt.",
+  "birthday_self_age": "Du hast am **{0}** Geburtstag und bist {1} Jahre alt.",
+  "birthday_self": "Du hast am **{0}** Geburtstag.",
   "birthday_user_none": "Der Geburtstag von `{0}` ist dem Bot nicht bekannt.",
-  "birthday_user": "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt.",
+  "birthday_user_age": "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt.",
+  "birthday_user": "`{0}` hat am **{1}** Geburtstag.",
   "birthday_all_title": "Alle Geburtstage" 
 }

@@ -28,10 +28,12 @@ namespace Mitternacht.Modules.Birthday
         [RequireContext(ContextType.Guild)]
         public async Task BirthdaySet(IBirthDate bd) {
             using (var uow = _db.UnitOfWork) {
-                if (!_bc.IsOwner(Context.User) && uow.BirthDates.HasBirthDate(Context.User.Id)) {
+                var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
+                if (!_bc.IsOwner(Context.User) && bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month)) {
                     await ReplyErrorLocalized("set_before").ConfigureAwait(false);
                     return;
                 }
+
                 uow.BirthDates.SetBirthDate(Context.User.Id, bd);
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
@@ -77,12 +79,16 @@ namespace Mitternacht.Modules.Birthday
                 if (user == Context.User)
                     if (bdm == null)
                         await ReplyErrorLocalized("self_none").ConfigureAwait(false);
+                    else if (bdm.Year == null)
+                        await ReplyConfirmLocalized("self", bdm.ToString()).ConfigureAwait(false);
                     else
-                        await ReplyConfirmLocalized("self", bdm.ToString(), age).ConfigureAwait(false);
+                        await ReplyConfirmLocalized("self_age", bdm.ToString(), age).ConfigureAwait(false);
                 else if (bdm == null)
                     await ReplyErrorLocalized("user_none", user.ToString()).ConfigureAwait(false);
+                else if(bdm.Year == null)
+                    await ReplyConfirmLocalized("user", user.ToString(), bdm.ToString()).ConfigureAwait(false);
                 else
-                    await ReplyConfirmLocalized("user", user.ToString(), bdm.ToString(), age).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("user_age", user.ToString(), bdm.ToString(), age).ConfigureAwait(false);
             }
         }
 
