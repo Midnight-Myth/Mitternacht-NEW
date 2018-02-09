@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using GommeHDnetForumAPI.DataModels.Entities;
+using GommeHDnetForumAPI.DataModels.Exceptions;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
@@ -173,11 +174,15 @@ namespace Mitternacht.Modules.Utility
             [RequireContext(ContextType.Guild)]
             public async Task ForumUserInfo(long userId) {
                 UserInfo uinfo = null;
-                try
-                {
+                try {
                     uinfo = await _fs.Forum.GetUserInfo(userId).ConfigureAwait(false);
                 }
-                catch (Exception) { /*ignored*/ }
+                catch (UserNotFoundException) {
+
+                }
+                catch (UserProfileAccessException) {
+
+                }
                 if (uinfo == null)
                 {
                     (await ReplyErrorLocalized("forum_user_not_accessible", userId).ConfigureAwait(false)).DeleteAfter(60);
