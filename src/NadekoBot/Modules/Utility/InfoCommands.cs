@@ -135,7 +135,17 @@ namespace Mitternacht.Modules.Utility
                         try {
                             uinfo = await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false);
                         }
-                        catch (Exception) { /*ignored*/ }
+                        catch (UserNotFoundException)
+                        {
+                            (await ReplyErrorLocalized("forum_user_not_existing", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
+                            return;
+                        }
+                        catch (UserProfileAccessException)
+                        {
+                            (await ReplyErrorLocalized("forum_user_not_seeable", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
+                            return;
+                        }
+                        catch (Exception) { /*ignore other exceptions*/ }
                     }
                 }
 
@@ -160,7 +170,18 @@ namespace Mitternacht.Modules.Utility
                 {
                     uinfo = await _fs.Forum.GetUserInfo(username).ConfigureAwait(false);
                 }
-                catch (Exception) { /*ignored*/ }
+                catch (UserNotFoundException)
+                {
+                    (await ReplyErrorLocalized("forum_user_not_existing", username).ConfigureAwait(false)).DeleteAfter(60);
+                    return;
+                }
+                catch (UserProfileAccessException)
+                {
+                    (await ReplyErrorLocalized("forum_user_not_seeable", username).ConfigureAwait(false)).DeleteAfter(60);
+                    return;
+                }
+                catch (Exception) { /*ignore other exceptions*/ }
+
                 if (uinfo == null)
                 {
                     (await ReplyErrorLocalized("forum_user_not_accessible", username).ConfigureAwait(false)).DeleteAfter(60);
@@ -178,11 +199,15 @@ namespace Mitternacht.Modules.Utility
                     uinfo = await _fs.Forum.GetUserInfo(userId).ConfigureAwait(false);
                 }
                 catch (UserNotFoundException) {
-
+                    (await ReplyErrorLocalized("forum_user_not_existing", userId).ConfigureAwait(false)).DeleteAfter(60);
+                    return;
                 }
                 catch (UserProfileAccessException) {
-
+                    (await ReplyErrorLocalized("forum_user_not_seeable", userId).ConfigureAwait(false)).DeleteAfter(60);
+                    return;
                 }
+                catch (Exception) { /*ignore other exceptions*/ }
+
                 if (uinfo == null)
                 {
                     (await ReplyErrorLocalized("forum_user_not_accessible", userId).ConfigureAwait(false)).DeleteAfter(60);
@@ -208,7 +233,6 @@ namespace Mitternacht.Modules.Utility
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
-            [OwnerOnly]
             public async Task ForumInfo() {
                 if (_fs.Forum == null) {
                     await Context.Channel.SendErrorAsync("Forum not instantiated!").ConfigureAwait(false);

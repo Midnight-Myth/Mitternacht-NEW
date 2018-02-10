@@ -780,7 +780,9 @@
   "utility_features": "Funktionalitäten",
   "utility_forum_id": "ForumId",
   "utility_forum_name": "Forumname",
-  "utility_forum_user_not_accessible": "Zu **`{0}`** kann kein Forumaccount angezeigt werden.",
+  "utility_forum_user_not_accessible": "Zu **`{0}`** kann kein Forumaccount angezeigt werden!",
+  "utility_forum_user_not_existing": "Zu **`{0}`** existiert kein Forumaccount!", 
+  "utility_forum_user_not_seeable": "Die Einsicht des Profils von **`{0}`** wurde eingeschränkt!",
   "utility_gender": "Geschlecht",
   "utility_id": "ID",
   "utility_index_out_of_range": "Index außer Reichweite.",
@@ -860,8 +862,8 @@
   "utility_unh_log_guild": "Loggen der Nutzernamen auf Server `{0}` wurde von **{1}** auf **{2}** gesetzt.",
   "utility_unh_no_names": "Für den Benutzer **`{0}`** existiert kein Nutzername (wie auch immer das möglich ist...)",
   "utility_unh_title": "Nutzernamen von **{0}**",
-  "utility_unh_title_global": "Globale Nutzernamen von **{0}**", 
-  "utility_unh_title_guild": "Nicknames von **{0}**", 
+  "utility_unh_title_global": "Globale Nutzernamen von **{0}**",
+  "utility_unh_title_guild": "Nicknames von **{0}**",
   "utility_unh_update_usernames": "{0} Nicknames und {1} Usernames von {2} Nutzern wurden in {3} geupdatet.",
   "utility_uptime": "Betriebszeit",
   "utility_userid": "{0} von Benutzer {1} ist {2}",
@@ -910,7 +912,7 @@
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
   "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
-  "birthday_set": "Du hast nun am **{0}** Geburtstag.", 
+  "birthday_set": "Du hast nun am **{0}** Geburtstag.",
   "birthday_set_owner": "Der User `{0}` hat nun am **{1}** Geburtstag.",
   "birthday_set_before": "Du hast deinen Geburtstag schon registriert. Für Änderungen frage den Botowner.",
   "birthday_list_title": "Geburtstage am **{0}**",
@@ -924,5 +926,5 @@
   "birthday_user_none": "Der Geburtstag von `{0}` ist dem Bot nicht bekannt.",
   "birthday_user_age": "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt.",
   "birthday_user": "`{0}` hat am **{1}** Geburtstag.",
-  "birthday_all_title": "Alle Geburtstage" 
+  "birthday_all_title": "Alle Geburtstage"
 }
