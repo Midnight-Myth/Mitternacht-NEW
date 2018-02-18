@@ -68,7 +68,9 @@ namespace Mitternacht.Modules.Utility
                 if (Uri.IsWellFormedUriString(guild.IconUrl, UriKind.Absolute)) embed.WithImageUrl(guild.IconUrl);
                 if (guild.Emotes.Any())
                 {
-                    embed.AddField(fb => fb.WithName(GetText("custom_emojis") + $"({guild.Emotes.Count})").WithValue(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} <:{e.Name}:{e.Id}>"))));
+                    embed.AddField(fb => 
+                        fb.WithName($"{GetText("custom_emojis")}({guild.Emotes.Count})")
+                            .WithValue(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e.ToString()}"))));
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
