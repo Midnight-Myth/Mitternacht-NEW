@@ -90,8 +90,9 @@ namespace Mitternacht.Services.Database.Models
         public StreamRoleSettings StreamRole { get; set; }
 
         //public List<ProtectionIgnoredChannel> ProtectionIgnoredChannels { get; set; } = new List<ProtectionIgnoredChannel>();
-
+        [Obsolete]
         public ulong? SupportChannelId { get; set; }
+
         public ulong? VerifiedRoleId { get; set; } = null;
         public string VerifyString { get; set; } = null;
         public string VerificationTutorialText { get; set; } = null;
