@@ -20,15 +20,15 @@ namespace Mitternacht.Modules.Utility.Services
     public class StreamRoleService : INService
     {
         private readonly DbService _db;
-        private readonly ConcurrentDictionary<ulong, StreamRoleSettings> guildSettings;
+        private readonly ConcurrentDictionary<ulong, StreamRoleSettings> _guildSettings;
         private readonly Logger _log;
 
         public StreamRoleService(DiscordSocketClient client, DbService db, IEnumerable<GuildConfig> gcs)
         {
-            this._db = db;
-            this._log = LogManager.GetCurrentClassLogger();
+            _db = db;
+            _log = LogManager.GetCurrentClassLogger();
 
-            guildSettings = gcs.ToDictionary(x => x.GuildId, x => x.StreamRole)
+            _guildSettings = gcs.ToDictionary(x => x.GuildId, x => x.StreamRole)
                 .Where(x => x.Value != null && x.Value.Enabled)
                 .ToConcurrent();
 
@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Utility.Services
             {
                 try
                 {
-                    await Task.WhenAll(client.Guilds.Select(g => RescanUsers(g))).ConfigureAwait(false);
+                    await Task.WhenAll(client.Guilds.Select(RescanUsers)).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Utility.Services
             var _ = Task.Run(async () =>
             {
                 //if user wasn't streaming or didn't have a game status at all
-                if (guildSettings.TryGetValue(after.Guild.Id, out var setting))
+                if (_guildSettings.TryGetValue(after.Guild.Id, out var setting))
                 {
                     await RescanUser(after, setting).ConfigureAwait(false);
                 }
@@ -60,9 +60,11 @@ namespace Mitternacht.Modules.Utility.Services
 
             return Task.CompletedTask;
         }
+
         /// <summary>
         /// Adds or removes a user from a blacklist or a whitelist in the specified guild.
         /// </summary>
+        /// <param name="listType"></param>
         /// <param name="guild">Guild</param>
         /// <param name="action">Add or rem action</param>
         /// <param name="userId">User's Id</param>
@@ -77,31 +79,21 @@ namespace Mitternacht.Modules.Utility.Services
             {
                 var streamRoleSettings = uow.GuildConfigs.GetStreamRoleSettings(guild.Id);
 
-                if (listType == StreamRoleListType.Whitelist)
-                {
-                    var userObj = new StreamRoleWhitelistedUser()
-                    {
+                if (listType == StreamRoleListType.Whitelist) {
+                    var userObj = new StreamRoleWhitelistedUser {
                         UserId = userId,
                         Username = userName,
                     };
 
-                    if (action == AddRemove.Rem)
-                        success = streamRoleSettings.Whitelist.Remove(userObj);
-                    else
-                        success = streamRoleSettings.Whitelist.Add(userObj);
+                    success = action == AddRemove.Rem ? streamRoleSettings.Whitelist.Remove(userObj) : streamRoleSettings.Whitelist.Add(userObj);
                 }
-                else
-                {
-                    var userObj = new StreamRoleBlacklistedUser()
-                    {
+                else {
+                    var userObj = new StreamRoleBlacklistedUser {
                         UserId = userId,
                         Username = userName,
                     };
 
-                    if (action == AddRemove.Rem)
-                        success = streamRoleSettings.Blacklist.Remove(userObj);
-                    else
-                        success = streamRoleSettings.Blacklist.Add(userObj);
+                    success = action == AddRemove.Rem ? streamRoleSettings.Blacklist.Remove(userObj) : streamRoleSettings.Blacklist.Add(userObj);
                 }
 
                 await uow.CompleteAsync().ConfigureAwait(false);
@@ -144,7 +136,7 @@ namespace Mitternacht.Modules.Utility.Services
         /// <returns>The keyword set</returns>
         public string GetKeyword(ulong guildId)
         {
-            if (guildSettings.TryGetValue(guildId, out var outSetting))
+            if (_guildSettings.TryGetValue(guildId, out var outSetting))
                 return outSetting.Keyword;
 
             StreamRoleSettings setting;
@@ -194,7 +186,8 @@ namespace Mitternacht.Modules.Utility.Services
         /// <summary>
         /// Stops the stream role feature on the specified guild.
         /// </summary>
-        /// <param name="guildId">Guild's Id</param>
+        /// <param name="guild">Guild</param>
+        /// <param name="cleanup"></param>
         public async Task StopStreamRole(IGuild guild, bool cleanup = false)
         {
             using (var uow = _db.UnitOfWork)
@@ -204,19 +197,19 @@ namespace Mitternacht.Modules.Utility.Services
                 await uow.CompleteAsync().ConfigureAwait(false);
             }
 
-            if (guildSettings.TryRemove(guild.Id, out var setting) && cleanup)
+            if (_guildSettings.TryRemove(guild.Id, out var _) && cleanup)
                 await RescanUsers(guild).ConfigureAwait(false);
         }
         //todo multiple rescans at the same time?
         private async Task RescanUser(IGuildUser user, StreamRoleSettings setting, IRole addRole = null)
         {
-            if (user.Game.HasValue &&
-                    user.Game.Value.StreamType != StreamType.NotStreaming
+            if (user.Activity != null &&
+                    user.Activity.Type == ActivityType.Streaming
                     && setting.Enabled
-                    && !setting.Blacklist.Any(x => x.UserId == user.Id)
+                    && setting.Blacklist.All(x => x.UserId != user.Id)
                     && user.RoleIds.Contains(setting.FromRoleId)
                     && (string.IsNullOrWhiteSpace(setting.Keyword)
-                        || user.Game.Value.Name.ToLowerInvariant().Contains(setting.Keyword.ToLowerInvariant())
+                        || user.Activity.Name.ToLowerInvariant().Contains(setting.Keyword.ToLowerInvariant())
                         || setting.Whitelist.Any(x => x.UserId == user.Id)))
             {
                 try
@@ -228,7 +221,7 @@ namespace Mitternacht.Modules.Utility.Services
                     //check if he doesn't have addrole already, to avoid errors
                     if (!user.RoleIds.Contains(setting.AddRoleId))
                         await user.AddRoleAsync(addRole).ConfigureAwait(false);
-                    _log.Info("Added stream role to user {0} in {1} server", user.ToString(), user.Guild.ToString());
+                    _log.Info("Added stream role to user {0} in {1} server", user, user.Guild);
                 }
                 catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.Forbidden)
                 {
@@ -255,7 +248,7 @@ namespace Mitternacht.Modules.Utility.Services
                             throw new StreamRoleNotFoundException();
 
                         await user.RemoveRoleAsync(addRole).ConfigureAwait(false);
-                        _log.Info("Removed stream role from a user {0} in {1} server", user.ToString(), user.Guild.ToString());
+                        _log.Info("Removed stream role from a user {0} in {1} server", user, user.Guild);
                     }
                     catch (HttpException ex) when (ex.HttpCode == System.Net.HttpStatusCode.Forbidden)
                     {
@@ -264,14 +257,14 @@ namespace Mitternacht.Modules.Utility.Services
                         _log.Error(ex);
                         throw new StreamRolePermissionException();
                     }
-                    _log.Info("Removed stream role from the user {0} in {1} server", user.ToString(), user.Guild.ToString());
+                    _log.Info("Removed stream role from the user {0} in {1} server", user, user.Guild);
                 }
             }
         }
 
         private async Task RescanUsers(IGuild guild)
         {
-            if (!guildSettings.TryGetValue(guild.Id, out var setting))
+            if (!_guildSettings.TryGetValue(guild.Id, out var setting))
                 return;
 
             var addRole = guild.GetRole(setting.AddRoleId);
@@ -291,7 +284,7 @@ namespace Mitternacht.Modules.Utility.Services
 
         private void UpdateCache(ulong guildId, StreamRoleSettings setting)
         {
-            guildSettings.AddOrUpdate(guildId, (key) => setting, (key, old) => setting);
+            _guildSettings.AddOrUpdate(guildId, (key) => setting, (key, old) => setting);
         }
     }
 }

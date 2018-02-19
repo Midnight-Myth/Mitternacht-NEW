@@ -413,9 +413,9 @@ namespace Mitternacht.Modules.Administration.Services
                             PresenceUpdates.AddOrUpdate(logChannel,
                                 new List<string> { str }, (id, list) => { list.Add(str); return list; });
                         }
-                        else if (before.Game?.Name != after.Game?.Name)
+                        else if (before.Activity?.Name != after.Activity?.Name)
                         {
-                            var str = $"👾`{PrettyCurrentTime(after.Guild)}`👤__**{after.Username}**__ is now playing **{after.Game?.Name ?? "-"}**.";
+                            var str = $"👾`{PrettyCurrentTime(after.Guild)}`👤__**{after.Username}**__ is now playing **{after.Activity?.Name ?? "-"}**.";
                             PresenceUpdates.AddOrUpdate(logChannel,
                                 new List<string> { str }, (id, list) => { list.Add(str); return list; });
                         }
@@ -496,13 +496,7 @@ namespace Mitternacht.Modules.Administration.Services
                     ITextChannel logChannel;
                     if ((logChannel = await TryGetLogChannel(ch.Guild, logSetting, LogType.ChannelDestroyed)) == null)
                         return;
-                    string title;
-                    if (ch is IVoiceChannel)
-                    {
-                        title = GetText(logChannel.Guild, "voice_chan_destroyed");
-                    }
-                    else
-                        title = GetText(logChannel.Guild, "text_chan_destroyed");
+                    var title = GetText(logChannel.Guild, ch is IVoiceChannel ? "voice_chan_destroyed" : "text_chan_destroyed");
                     await logChannel.EmbedAsync(new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle("🆕 " + title)
@@ -533,13 +527,7 @@ namespace Mitternacht.Modules.Administration.Services
                     ITextChannel logChannel;
                     if ((logChannel = await TryGetLogChannel(ch.Guild, logSetting, LogType.ChannelCreated)) == null)
                         return;
-                    string title;
-                    if (ch is IVoiceChannel)
-                    {
-                        title = GetText(logChannel.Guild, "voice_chan_created");
-                    }
-                    else
-                        title = GetText(logChannel.Guild, "text_chan_created");
+                    var title = GetText(logChannel.Guild, ch is IVoiceChannel ? "voice_chan_created" : "text_chan_created");
                     await logChannel.EmbedAsync(new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle("🆕 " + title)
@@ -699,8 +687,8 @@ namespace Mitternacht.Modules.Administration.Services
                         .WithTitle("✅ " + GetText(logChannel.Guild, "user_joined"))
                         .WithDescription($"{usr.Mention} `{usr}`")
                         .AddField(efb => efb.WithName("Id").WithValue(usr.Id.ToString()))
-                        .AddInlineField(GetText(logChannel.Guild, "joined_server"), $"{usr.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}")
-                        .AddInlineField(GetText(logChannel.Guild, "joined_discord"), $"{usr.CreatedAt:dd.MM.yyyy HH:mm}")
+                        .AddField(GetText(logChannel.Guild, "joined_server"), $"{usr.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}", true)
+                        .AddField(GetText(logChannel.Guild, "joined_discord"), $"{usr.CreatedAt:dd.MM.yyyy HH:mm}", true)
                         .WithFooter(efb => efb.WithText(CurrentTime(usr.Guild)));
 
                     if (Uri.IsWellFormedUriString(usr.GetAvatarUrl(), UriKind.Absolute))

@@ -15,7 +15,6 @@ namespace Mitternacht.Modules.Administration
             public new async Task Prefix()
             {
                 await ReplyConfirmLocalized("prefix_current", Format.Code(CmdHandler.GetPrefix(Context.Guild))).ConfigureAwait(false);
-                return;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

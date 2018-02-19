@@ -7,13 +7,13 @@ namespace Mitternacht.Common.TypeReaders
 {
     public class GuildDateTimeTypeReader : TypeReader
     {
-        public override Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider services)
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            var _gts = (GuildTimezoneService)services.GetService(typeof(GuildTimezoneService));
+            var gts = (GuildTimezoneService)services.GetService(typeof(GuildTimezoneService));
             if (!DateTime.TryParse(input, out var dt))
                 return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "Input string is in an incorrect format."));
 
-            var tz = _gts.GetTimeZoneOrUtc(context.Guild.Id);
+            var tz = gts.GetTimeZoneOrUtc(context.Guild.Id);
 
             return Task.FromResult(TypeReaderResult.FromSuccess(new GuildDateTime(tz, dt)));
         }

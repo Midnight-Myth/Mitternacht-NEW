@@ -151,7 +151,6 @@ namespace Mitternacht
                 CommandService.AddTypeReader<ModuleOrCrInfo>(new ModuleOrCrTypeReader(CommandService));
                 CommandService.AddTypeReader<IGuild>(new GuildTypeReader(Client));
                 CommandService.AddTypeReader<GuildDateTime>(new GuildDateTimeTypeReader());
-                CommandService.AddTypeReader<bool?>(new NullableBoolReader());
                 CommandService.AddTypeReader<IBirthDate>(new BirthDateTypeReader());
 
             }

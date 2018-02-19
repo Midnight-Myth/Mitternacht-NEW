@@ -71,6 +71,7 @@ namespace Mitternacht.Modules.Utility
                     embed.AddField(fb => 
                         fb.WithName($"{GetText("custom_emojis")}({guild.Emotes.Count})")
                             .WithValue(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e.ToString()}"))));
+                    _log.Info(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e.ToString()}")));
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
@@ -81,7 +82,7 @@ namespace Mitternacht.Modules.Utility
             {
                 var ch = channel ?? Context.Channel as ITextChannel;
                 if (ch == null) return;
-                var usercount = (await ch.GetUsersAsync().Flatten()).Count();
+                var usercount = (await ch.GetUsersAsync().FlattenAsync().ConfigureAwait(false)).Count();
                 var embed = new EmbedBuilder()
                     .WithTitle(ch.Name)
                     .WithDescription(ch.Topic?.SanitizeMentions())
@@ -101,13 +102,13 @@ namespace Mitternacht.Modules.Utility
 
                 var embed = new EmbedBuilder()
                     .WithOkColor()
-                    .AddInlineField(GetText("name"), $"**{user.Username}**#{user.Discriminator}");
+                    .AddField(GetText("name"), $"**{user.Username}**#{user.Discriminator}", true);
                 if (!string.IsNullOrWhiteSpace(user.Nickname))
-                    embed.AddInlineField(GetText("nickname"), user.Nickname);
-                embed.AddInlineField(GetText("id"), user.Id.ToString())
-                    .AddInlineField(GetText("joined_server"), $"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}")
-                    .AddInlineField(GetText("joined_discord"), $"{user.CreatedAt:dd.MM.yyyy HH:mm}")
-                    .AddInlineField(GetText("roles_count", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions());
+                    embed.AddField(GetText("nickname"), user.Nickname, true);
+                embed.AddField(GetText("id"), user.Id.ToString(), true)
+                    .AddField(GetText("joined_server"), $"{user.JoinedAt?.ToString("dd.MM.yyyy HH:mm") ?? "?"}", true)
+                    .AddField(GetText("joined_discord"), $"{user.CreatedAt:dd.MM.yyyy HH:mm}", true)
+                    .AddField(GetText("roles_count", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions(), true);
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
@@ -118,7 +119,7 @@ namespace Mitternacht.Modules.Utility
                             username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
                         }
                         catch (Exception) { /*ignored*/ }
-                        embed.AddInlineField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})");
+                        embed.AddField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})", true);
                     }
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -223,14 +224,14 @@ namespace Mitternacht.Modules.Utility
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithThumbnailUrl(uinfo.AvatarUrl)
-                    .AddInlineField(GetText("name"), $"[{uinfo.Username}]({uinfo.UrlPath})")
-                    .AddInlineField(GetText("id"), uinfo.Id)
-                    .AddInlineField(GetText("gender"), uinfo.Gender.ToString());
-                if (!string.IsNullOrWhiteSpace(uinfo.Status)) embed.AddInlineField(GetText("status"), uinfo.Status);
-                if (uinfo.PostCount != null) embed.AddInlineField(GetText("posts"), uinfo.PostCount.Value);
-                if (uinfo.LikeCount != null) embed.AddInlineField(GetText("likes"), uinfo.LikeCount.Value);
-                if (uinfo.Trophies != null) embed.AddInlineField(GetText("trophies"), uinfo.Trophies.Value);
-                if (!string.IsNullOrWhiteSpace(uinfo.Location)) embed.AddInlineField(GetText("location"), uinfo.Location);
+                    .AddField(GetText("name"), $"[{uinfo.Username}]({uinfo.UrlPath})", true)
+                    .AddField(GetText("id"), uinfo.Id, true)
+                    .AddField(GetText("gender"), uinfo.Gender.ToString(), true);
+                if (!string.IsNullOrWhiteSpace(uinfo.Status)) embed.AddField(GetText("status"), uinfo.Status, true);
+                if (uinfo.PostCount != null) embed.AddField(GetText("posts"), uinfo.PostCount.Value, true);
+                if (uinfo.LikeCount != null) embed.AddField(GetText("likes"), uinfo.LikeCount.Value, true);
+                if (uinfo.Trophies != null) embed.AddField(GetText("trophies"), uinfo.Trophies.Value, true);
+                if (!string.IsNullOrWhiteSpace(uinfo.Location)) embed.AddField(GetText("location"), uinfo.Location, true);
                 return embed;
             }
 
@@ -244,8 +245,8 @@ namespace Mitternacht.Modules.Utility
                     .WithOkColor()
                     .WithTitle("ForumInfo")
                     .WithImageUrl(_fs.Forum.SelfUser.AvatarUrl)
-                    .AddInlineField("Logged In", _fs.LoggedIn)
-                    .AddInlineField("Selfuser", $"[{_fs.Forum.SelfUser.Username}]({_fs.Forum.SelfUser.UrlPath})");
+                    .AddField("Logged In", _fs.LoggedIn, true)
+                    .AddField("Selfuser", $"[{_fs.Forum.SelfUser.Username}]({_fs.Forum.SelfUser.UrlPath})", true);
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 

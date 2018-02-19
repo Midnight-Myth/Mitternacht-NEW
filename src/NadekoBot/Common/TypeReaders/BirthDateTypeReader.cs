@@ -8,7 +8,7 @@ namespace Mitternacht.Common.TypeReaders
 {
     public class BirthDateTypeReader : TypeReader
     {
-        public override Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider services) {
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services) {
             input = input.Trim();
             var match = new Regex(@"(?:([0-9]+)\.([0-9]+)\.){1}([0-9]+)?").Match(input);
             try {

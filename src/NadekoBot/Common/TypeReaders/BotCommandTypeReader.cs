@@ -9,7 +9,7 @@ namespace Mitternacht.Common.TypeReaders
 {
     public class CommandTypeReader : TypeReader
     {
-        public override Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider services)
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             var cmds = ((INServiceProvider)services).GetService<CommandService>();
             var cmdHandler = ((INServiceProvider)services).GetService<CommandHandler>();
@@ -28,7 +28,7 @@ namespace Mitternacht.Common.TypeReaders
 
     public class CommandOrCrTypeReader : CommandTypeReader
     {
-        public override async Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider services)
+        public override async Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             input = input.ToUpperInvariant();
 
@@ -50,7 +50,7 @@ namespace Mitternacht.Common.TypeReaders
                 }
             }
 
-            var cmd = await base.Read(context, input, services);
+            var cmd = await base.ReadAsync(context, input, services);
             return cmd.IsSuccess ? TypeReaderResult.FromSuccess(new CommandOrCrInfo(((CommandInfo)cmd.Values.First().Value).Name)) : TypeReaderResult.FromError(CommandError.ParseFailed, "No such command or cr found.");
         }
     }
