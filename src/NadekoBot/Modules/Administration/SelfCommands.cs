@@ -359,8 +359,8 @@ namespace Mitternacht.Modules.Administration
             public async Task SetStream(string url, [Remainder] string name = null)
             {
                 name = name ?? "";
-
-                await _client.SetGameAsync(name, url, StreamType.Twitch).ConfigureAwait(false);
+                
+                await _client.SetGameAsync(name, url, ActivityType.Streaming).ConfigureAwait(false);
 
                 await ReplyConfirmLocalized("set_stream").ConfigureAwait(false);
             }

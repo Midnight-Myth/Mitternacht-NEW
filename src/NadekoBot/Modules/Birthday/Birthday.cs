@@ -134,10 +134,10 @@ namespace Mitternacht.Modules.Birthday
             if (page > pagecount) page = pagecount;
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => new EmbedBuilder()
-                    .WithOkColor()
-                    .WithTitle(GetText("all_title"))
-                    .WithDescription(string.Join("\n", from bdm in birthdates.Skip(itemcount * p).Take(itemcount)
-                        select $"- {Context.Client.GetUserAsync(bdm.UserId) .GetAwaiter() .GetResult() ?.ToString() ?? bdm.UserId.ToString()} - **{bdm.ToString()}**")), pagecount - 1, reactUsers: new []{Context.User as IGuildUser})
+                        .WithOkColor()
+                        .WithTitle(GetText("all_title"))
+                        .WithDescription(string.Join("\n", from bdm in birthdates.Skip(itemcount * p).Take(itemcount)
+                            select $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()} - **{bdm.ToString()}**")), pagecount - 1, reactUsers: new[] {Context.User as IGuildUser})
                 .ConfigureAwait(false);
         }
     }

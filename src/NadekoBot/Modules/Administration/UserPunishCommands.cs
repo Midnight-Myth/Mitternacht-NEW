@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
@@ -20,10 +19,12 @@ namespace Mitternacht.Modules.Administration
         public class UserPunishCommands : MitternachtSubmodule<UserPunishService>
         {
             private readonly DbService _db;
+            private readonly IBotCredentials _bc;
 
-            public UserPunishCommands(DbService db)
+            public UserPunishCommands(DbService db, IBotCredentials bc)
             {
                 _db = db;
+                _bc = bc;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -162,13 +163,13 @@ namespace Mitternacht.Modules.Administration
             public async Task Warnremove(IGuildUser user, string hexid) {
                 var id = hexid.FromHexToInt();
                 if (id == null) {
-                    await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                    await ReplyErrorLocalized("warn_hexid_parsefail", hexid).ConfigureAwait(false);
                     return;
                 }
                 using (var uow = _db.UnitOfWork) {
                     var warning = uow.Warnings.Get(id.Value);
                     if (warning == null) {
-                        await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                        await ReplyErrorLocalized("warn_hexid_no_entry", hexid).ConfigureAwait(false);
                         return;
                     }
                     if (warning.UserId != user.Id) {
@@ -187,13 +188,13 @@ namespace Mitternacht.Modules.Administration
             public async Task Warnid(string hexid) {
                 var id = hexid.FromHexToInt();
                 if (id == null) {
-                    await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                    await ReplyErrorLocalized("warn_hexid_parsefail", hexid).ConfigureAwait(false);
                     return;
                 }
                 using (var uow = _db.UnitOfWork) {
                     var w = uow.Warnings.Get(id.Value);
                     if (w == null) {
-                        await ReplyErrorLocalized("hexid_wrong", Format.Bold(hexid)).ConfigureAwait(false);
+                        await ReplyErrorLocalized("warn_hexid_no_entry", hexid).ConfigureAwait(false);
                         return;
                     }
                     var title = GetText("warned_by", w.Moderator);
@@ -212,9 +213,40 @@ namespace Mitternacht.Modules.Administration
                 }
             }
 
-            //public async Task Warns() {
-                
-            //}
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.BanMembers)]
+            [Priority(0)]
+            public async Task WarnEdit(string hexid, [Remainder] string reason = null) {
+                var id = hexid.FromHexToInt();
+                if (id == null) {
+                    await ReplyErrorLocalized("warn_hexid_parsefail", hexid).ConfigureAwait(false);
+                    return;
+                }
+
+                using (var uow = _db.UnitOfWork) {
+                    var w = uow.Warnings.Get(id.Value);
+                    var user = Context.User as IGuildUser;
+                    if (!_bc.IsOwner(Context.User)) {
+                        if (user == null) return;
+                        if (user.GuildPermissions.Administrator && w.GuildId != user.GuildId) {
+                            await ReplyErrorLocalized("warn_edit_perms", hexid).ConfigureAwait(false);
+                            return;
+                        }
+                    }
+
+                    if (w == null) {
+                        await ReplyErrorLocalized("warn_hexid_no_entry", hexid).ConfigureAwait(false);
+                        return;
+                    }
+
+                    var oldreason = w.Reason;
+                    w.Reason = reason;
+                    uow.Warnings.Update(w);
+                    await uow.CompleteAsync();
+                    await ReplyConfirmLocalized("warn_edit", hexid, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
+                }
+            }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]

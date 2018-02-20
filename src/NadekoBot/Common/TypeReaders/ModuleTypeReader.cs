@@ -15,14 +15,11 @@ namespace Mitternacht.Common.TypeReaders
             _cmds = cmds;
         }
 
-        public override Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider _)
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider _)
         {
             input = input.ToUpperInvariant();
             var module = _cmds.Modules.GroupBy(m => m.GetTopLevelModule()).FirstOrDefault(m => m.Key.Name.ToUpperInvariant() == input)?.Key;
-            if (module == null)
-                return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "No such module found."));
-
-            return Task.FromResult(TypeReaderResult.FromSuccess(module));
+            return Task.FromResult(module == null ? TypeReaderResult.FromError(CommandError.ParseFailed, "No such module found.") : TypeReaderResult.FromSuccess(module));
         }
     }
 
@@ -35,7 +32,7 @@ namespace Mitternacht.Common.TypeReaders
             _cmds = cmds;
         }
 
-        public override Task<TypeReaderResult> Read(ICommandContext context, string input, IServiceProvider _)
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider _)
         {
             input = input.ToLowerInvariant();
             var module = _cmds.Modules.GroupBy(m => m.GetTopLevelModule()).FirstOrDefault(m => m.Key.Name.ToLowerInvariant() == input)?.Key;

@@ -131,14 +131,8 @@ namespace Mitternacht.Extensions
             return Convert.ToBase64String(plainTextBytes);
         }
 
-        public static int? FromHexToInt(this string hex) {
-            try {
-                return int.Parse(hex, NumberStyles.HexNumber);
-            }
-            catch (Exception) {
-                return null;
-            }
-        }
+        public static int? FromHexToInt(this string hex) 
+            => int.TryParse(hex, NumberStyles.HexNumber, new NumberFormatInfo(), out var id) ? (int?)id : null;
 
         public static string GetInitials(this string txt, string glue = "") =>
             string.Join(glue, txt.Split(' ').Select(x => x.FirstOrDefault()));

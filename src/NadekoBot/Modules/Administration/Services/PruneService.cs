@@ -12,8 +12,8 @@ namespace Mitternacht.Modules.Administration.Services
     public class PruneService : INService
     {
         //channelids where prunes are currently occuring
-        private ConcurrentHashSet<ulong> _pruningGuilds = new ConcurrentHashSet<ulong>();
-        private readonly TimeSpan twoWeeks = TimeSpan.FromDays(14);
+        private readonly ConcurrentHashSet<ulong> _pruningGuilds = new ConcurrentHashSet<ulong>();
+        private readonly TimeSpan _twoWeeks = TimeSpan.FromDays(14);
 
         public async Task PruneWhere(ITextChannel channel, int amount, Func<IMessage, bool> predicate)
         {
@@ -24,20 +24,17 @@ namespace Mitternacht.Modules.Administration.Services
             if (!_pruningGuilds.Add(channel.GuildId))
                 return;
 
-            try
-            {
-                IMessage[] msgs;
-                IMessage lastMessage = null;
-                msgs = (await channel.GetMessagesAsync(50).Flatten()).Where(predicate).Take(amount).ToArray();
+            try {
+                var msgs = (await channel.GetMessagesAsync(50).FlattenAsync()).Where(predicate).Take(amount).ToArray();
                 while (amount > 0 && msgs.Any())
                 {
-                    lastMessage = msgs[msgs.Length - 1];
+                    var lastMessage = msgs[msgs.Length - 1];
 
                     var bulkDeletable = new List<IMessage>();
                     var singleDeletable = new List<IMessage>();
                     foreach (var x in msgs)
                     {
-                        if (DateTime.UtcNow - x.CreatedAt < twoWeeks)
+                        if (DateTime.UtcNow - x.CreatedAt < _twoWeeks)
                             bulkDeletable.Add(x);
                         else
                             singleDeletable.Add(x);
@@ -54,7 +51,7 @@ namespace Mitternacht.Modules.Administration.Services
                     //100 messages, Maybe this needs to be reduced by msgs.Length instead of 100
                     amount -= 50;
                     if(amount > 0)
-                        msgs = (await channel.GetMessagesAsync(lastMessage, Direction.Before, 50).Flatten()).Where(predicate).Take(amount).ToArray();
+                        msgs = (await channel.GetMessagesAsync(lastMessage, Direction.Before, 50).FlattenAsync()).Where(predicate).Take(amount).ToArray();
                 }
             }
             catch

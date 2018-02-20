@@ -13,23 +13,19 @@ namespace Mitternacht.Modules.Administration.Services
 {
     public class GameVoiceChannelService : INService
     {
-        public readonly ConcurrentHashSet<ulong> GameVoiceChannels = new ConcurrentHashSet<ulong>();
+        public readonly ConcurrentHashSet<ulong> GameVoiceChannels;
 
         private readonly Logger _log;
-        private readonly DbService _db;
-        private readonly DiscordSocketClient _client;
 
-        public GameVoiceChannelService(DiscordSocketClient client, DbService db, IEnumerable<GuildConfig> gcs)
+        public GameVoiceChannelService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs)
         {
             _log = LogManager.GetCurrentClassLogger();
-            _db = db;
-            _client = client;
 
             GameVoiceChannels = new ConcurrentHashSet<ulong>(
                 gcs.Where(gc => gc.GameVoiceChannel != null)
                                          .Select(gc => gc.GameVoiceChannel.Value));
 
-            _client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
+            client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
 
         }
 
@@ -39,11 +35,10 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    var gUser = usr as SocketGuildUser;
-                    if (gUser == null)
+                    if (!(usr is SocketGuildUser gUser))
                         return;
 
-                    var game = gUser.Game?.Name?.TrimTo(50).ToLowerInvariant();
+                    var game = gUser.Activity?.Name?.TrimTo(50).ToLowerInvariant();
 
                     if (oldState.VoiceChannel == newState.VoiceChannel ||
                         newState.VoiceChannel == null)

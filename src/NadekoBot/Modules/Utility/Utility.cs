@@ -65,7 +65,7 @@ namespace Mitternacht.Modules.Utility
             }
             var rng = new NadekoRandom();
             var arr = await Task.Run(() => socketGuild.Users
-                    .Where(u => u.Game?.Name?.ToUpperInvariant() == game)
+                    .Where(u => u.Activity?.Name?.ToUpperInvariant() == game)
                     .Select(u => u.Username)
                     .OrderBy(x => rng.Next())
                     .Take(60)
@@ -304,7 +304,7 @@ namespace Mitternacht.Modules.Utility
             else {
                 IMessage last = null;
                 while (msgs.Count < count) {
-                    var tmpMsgs = (last is null ? await Context.Channel.GetMessagesAsync(count).Flatten().ConfigureAwait(false) : await Context.Channel.GetMessagesAsync(last, Direction.Before, count).Flatten().ConfigureAwait(false)).ToList();
+                    var tmpMsgs = (last is null ? await Context.Channel.GetMessagesAsync(count).FlattenAsync().ConfigureAwait(false) : await Context.Channel.GetMessagesAsync(last, Direction.Before, count).FlattenAsync().ConfigureAwait(false)).ToList();
                     msgs.AddRange(tmpMsgs.Where(m => m.Author.Id == user.Id));
                     var beforeLast = last;
                     last = tmpMsgs.OrderBy(m => m.Timestamp).FirstOrDefault();

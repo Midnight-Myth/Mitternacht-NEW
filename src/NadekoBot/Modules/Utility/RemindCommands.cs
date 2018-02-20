@@ -34,10 +34,8 @@ namespace Mitternacht.Modules.Utility
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [Priority(1)]
-            public async Task Remind(MeOrHere meorhere, string timeStr, [Remainder] string message)
-            {
-                ulong target;
-                target = meorhere == MeOrHere.Me ? Context.User.Id : Context.Channel.Id;
+            public async Task Remind(MeOrHere meorhere, string timeStr, [Remainder] string message) {
+                var target = meorhere == MeOrHere.Me ? Context.User.Id : Context.Channel.Id;
                 await RemindInternal(target, meorhere == MeOrHere.Me, timeStr, message).ConfigureAwait(false);
             }
 
@@ -47,16 +45,14 @@ namespace Mitternacht.Modules.Utility
             [Priority(0)]
             public async Task Remind(ITextChannel channel, string timeStr, [Remainder] string message)
             {
-                var perms = ((IGuildUser)Context.User).GetPermissions((ITextChannel)channel);
-                if (!perms.SendMessages || !perms.ReadMessages)
+                var perms = ((IGuildUser)Context.User).GetPermissions(channel);
+                if (!perms.SendMessages || !perms.ViewChannel)
                 {
                     await ReplyErrorLocalized("cant_read_or_send").ConfigureAwait(false);
                     return;
                 }
-                else
-                {
-                    var _ = RemindInternal(channel.Id, false, timeStr, message).ConfigureAwait(false);
-                }
+
+                var _ = RemindInternal(channel.Id, false, timeStr, message).ConfigureAwait(false);
             }
 
             public async Task RemindInternal(ulong targetId, bool isPrivate, string timeStr, [Remainder] string message)
@@ -69,14 +65,13 @@ namespace Mitternacht.Modules.Utility
                     return;
                 }
 
-                string output = "";
+                var output = "";
                 var namesAndValues = new Dictionary<string, int>();
 
                 foreach (var groupName in Service.Regex.GetGroupNames())
                 {
                     if (groupName == "0") continue;
-                    int value;
-                    int.TryParse(m.Groups[groupName].Value, out value);
+                    int.TryParse(m.Groups[groupName].Value, out var value);
 
                     if (string.IsNullOrEmpty(m.Groups[groupName].Value))
                     {

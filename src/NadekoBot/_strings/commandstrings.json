@@ -3511,6 +3511,13 @@
     "cmd": "edit",
     "aliases": [],
     "desc": "Modifiziert eine vom Bot gesendete Nachricht.",
-    "usage": "`{0}edit <msgId> <text>`"
+    "usage": "`{0}edit <channel> <msgId> <text>` oder `{0}edit <msgId> <text>`"
+  },
+  {
+    "name": "warnedit",
+    "cmd": "warnedit",
+    "aliases": [],
+    "desc": "Ändert den Verwarngrund der Verwarnung mit der angegebenen HexId",
+    "usage": "`{0}warnedit <hexid> [grund]`"
   }
 ]

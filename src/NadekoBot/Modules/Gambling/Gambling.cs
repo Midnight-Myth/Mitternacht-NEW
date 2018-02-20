@@ -280,7 +280,7 @@ namespace Mitternacht.Modules.Gambling
                     foreach (var c in richest) {
                         var user = Context.Guild.GetUserAsync(c.UserId).GetAwaiter().GetResult();
                         var username = user?.Username.TrimTo(20, true) ?? c.UserId.ToString();
-                        embed.AddInlineField($"#{elpp * p + richest.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}");
+                        embed.AddField($"#{elpp * p + richest.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}", true);
                     }
                 }
                 return embed;

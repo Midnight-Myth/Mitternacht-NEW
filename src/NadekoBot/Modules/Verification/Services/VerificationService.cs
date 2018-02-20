@@ -19,6 +19,8 @@ namespace Mitternacht.Modules.Verification.Services
         //public event Func<SocketGuildUser, UserInfo, EventTrigger> UserVerified;
         //public event Func<SocketGuildUser, UserInfo, EventTrigger> UserUnverified;
 
+        private const int VerificationKeyValidationTime = 3600000;
+
         public VerificationService(DbService db) {
             _db = db;
         }
@@ -33,7 +35,7 @@ namespace Mitternacht.Modules.Verification.Services
             ValidationKey key;
             while (ValidationKeys.Contains(key = new ValidationKey(InternalGenerateKey(), keyscope, forumuserid, userid, guildid))) { }
             Task.Run(async () => {
-                await Task.Delay(600000);
+                await Task.Delay(VerificationKeyValidationTime);
                 ValidationKeys.TryRemove(key);
             });
             ValidationKeys.Add(key);

@@ -383,7 +383,7 @@ namespace Mitternacht.Modules.Verification
                 foreach (var key in keys) {
                     var user = await Context.Guild.GetUserAsync(key.DiscordUserId).ConfigureAwait(false);
                     var discordname = string.IsNullOrWhiteSpace(user.Nickname) ? string.IsNullOrWhiteSpace(user.Username) ? user.Id.ToString() : user.Username : user.Nickname;
-                    embed.AddInlineField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope));
+                    embed.AddField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope), true);
                 }
                 return embed;
             }, pagecount - 1, true, null, gp => gp.Administrator).ConfigureAwait(false);
@@ -408,7 +408,7 @@ namespace Mitternacht.Modules.Verification
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verified_users", Service.GetVerifiedUserCount(Context.Guild.Id)));
                 foreach (var vu in vus) {
                     var user = await Context.Guild.GetUserAsync(vu.UserId).ConfigureAwait(false);
-                    embed.AddInlineField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId);
+                    embed.AddField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId, true);
                 }
                 return embed;
             }, pagecount - 1, true, new []{Context.User as IGuildUser}).ConfigureAwait(false);

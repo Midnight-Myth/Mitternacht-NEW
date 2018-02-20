@@ -94,8 +94,8 @@ namespace Mitternacht.Modules.Level
                         foreach (var rlb in rlbs)
                         {
                             var rolename = Context.Guild.GetRole(rlb.RoleId)?.Name ?? rlb.RoleId.ToString();
-                            embed.AddInlineField($"#{elementsPerPage * p + rlbs.IndexOf(rlb) + 1} - {rolename}",
-                                rlb.MinimumLevel);
+                            embed.AddField($"#{elementsPerPage * p + rlbs.IndexOf(rlb) + 1} - {rolename}",
+                                rlb.MinimumLevel, true);
                         }
 
                         return embed;
