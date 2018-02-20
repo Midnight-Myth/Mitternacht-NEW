@@ -397,7 +397,7 @@ namespace Mitternacht.Modules.Administration
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        [Priority(0)]
+        [Priority(1)]
         public async Task Edit(ulong messageId, [Remainder] string text)
             => await Edit(Context.Channel, messageId, text).ConfigureAwait(false);
     }
