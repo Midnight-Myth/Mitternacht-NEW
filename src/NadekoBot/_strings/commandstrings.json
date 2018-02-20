@@ -3511,7 +3511,7 @@
     "cmd": "edit",
     "aliases": [],
     "desc": "Modifiziert eine vom Bot gesendete Nachricht.",
-    "usage": "`{0}edit <msgId> <text>`"
+    "usage": "`{0}edit <channel> <msgId> <text>` oder `{0}edit <msgId> <text>`"
   },
   {
     "name": "warnedit",

@@ -363,13 +363,14 @@ namespace Mitternacht.Modules.Administration
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
-        public async Task Edit(ulong messageId, [Remainder] string text)
+        [OwnerOnly]
+        [Priority(0)]
+        public async Task Edit(IMessageChannel channel, ulong messageId, [Remainder] string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text) || channel == null)
                 return;
-
-            var imsg = await Context.Channel.GetMessageAsync(messageId);
+            
+            var imsg = await channel.GetMessageAsync(messageId).ConfigureAwait(false);
             if (!(imsg is IUserMessage msg) || imsg.Author.Id != Context.Client.CurrentUser.Id)
                 return;
 
@@ -392,5 +393,12 @@ namespace Mitternacht.Modules.Administration
                     .ConfigureAwait(false);
             }
         }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        [Priority(0)]
+        public async Task Edit(ulong messageId, [Remainder] string text)
+            => await Edit(Context.Channel, messageId, text).ConfigureAwait(false);
     }
 }
