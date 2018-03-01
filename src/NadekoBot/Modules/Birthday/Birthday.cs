@@ -120,8 +120,7 @@ namespace Mitternacht.Modules.Birthday
             var eb = new EmbedBuilder()
                 .WithOkColor()
                 .WithTitle(GetText("list_title", bd.ToString()))
-                .WithDescription(string.Join("\n", from bdm in birthdates
-                                                   select $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}"));
+                .WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
             await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
         }
 
