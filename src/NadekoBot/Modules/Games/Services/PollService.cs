@@ -16,13 +16,11 @@ namespace Mitternacht.Modules.Games.Services
     {
         public ConcurrentDictionary<ulong, Poll> ActivePolls = new ConcurrentDictionary<ulong, Poll>();
         private readonly Logger _log;
-        private readonly DiscordSocketClient _client;
         private readonly StringService _strings;
 
-        public PollService(DiscordSocketClient client, StringService strings)
+        public PollService(StringService strings)
         {
             _log = LogManager.GetCurrentClassLogger();
-            _client = client;
             _strings = strings;
         }
 
@@ -32,7 +30,7 @@ namespace Mitternacht.Modules.Games.Services
             var data = (from choice in arg.Split(';') where !string.IsNullOrWhiteSpace(choice) select choice).ToArray();
             if (data.Length < 3) return null;
 
-            var poll = new Poll(_client, _strings, msg, data[0], data.Skip(1));
+            var poll = new Poll(_strings, msg, data[0], data.Skip(1));
             if (!ActivePolls.TryAdd(channel.Guild.Id, poll)) return false;
             poll.OnEnded += gid =>
             {
