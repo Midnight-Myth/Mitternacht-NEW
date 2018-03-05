@@ -11,7 +11,7 @@ namespace Mitternacht.Services.Database.Repositories
         GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null);
         GuildConfig LogSettingsFor(ulong guildId);
         IEnumerable<GuildConfig> OldPermissionsForAll();
-        IEnumerable<GuildConfig> GetAllGuildConfigs(List<long> availableGuilds);
+        IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds);
         IEnumerable<FollowedStream> GetAllFollowedStreams(List<long> included);
         void SetCleverbotEnabled(ulong id, bool cleverbotEnabled);
         IEnumerable<GuildConfig> Permissionsv2ForAll(List<long> include);

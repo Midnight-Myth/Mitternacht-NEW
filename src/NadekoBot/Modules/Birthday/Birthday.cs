@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Birthday
             using (var uow = _db.UnitOfWork)
             {
                 var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
-                if (!_bc.IsOwner(Context.User) && bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month))
+                if (!_bc.IsOwner(Context.User) && (bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month)))
                 {
                     await ReplyErrorLocalized("set_before").ConfigureAwait(false);
                     return;
@@ -150,6 +150,36 @@ namespace Mitternacht.Modules.Birthday
                 p => new EmbedBuilder().WithOkColor().WithTitle(GetText("all_title")).WithDescription(string.Join("\n",
                     birthdates.Skip(itemcount * p).Take(itemcount).Select(BdmToString))),
                 pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task BirthdayRole() {
+            using (var uow = _db.UnitOfWork) {
+                var bdayroleid = uow.GuildConfigs.For(Context.Guild.Id).BirthdayRoleId;
+                var bdayrole = bdayroleid.HasValue ? Context.Guild.GetRole(bdayroleid.Value) : null;
+                if (!bdayroleid.HasValue)
+                    await ErrorLocalized("role", GetText("role_not_set")).ConfigureAwait(false);
+                else if (bdayrole == null)
+                    await ErrorLocalized("role", GetText("role_not_existing")).ConfigureAwait(false);
+                else
+                    await ConfirmLocalized("role", bdayrole.Name).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayRole(IRole role) {
+            using (var uow = _db.UnitOfWork) {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldroleid = gc.BirthdayRoleId;
+                var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
+                gc.BirthdayRoleId = role?.Id;
+                uow.GuildConfigs.Update(gc);
+                await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), role?.Name ?? Format.Italics("null")).ConfigureAwait(false);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
         }
 
         private string BdmToString(BirthDateModel bdm)

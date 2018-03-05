@@ -3519,5 +3519,12 @@
     "aliases": [],
     "desc": "Ändert den Verwarngrund der Verwarnung mit der angegebenen HexId",
     "usage": "`{0}warnedit <hexid> [grund]`"
+  },
+  {
+    "name": "birthdayrole",
+    "cmd": "birthdayrole",
+    "aliases": [],
+    "desc": "Zeigt die aktuelle Geburtstagsrolle an oder setzt sie.",
+    "usage": "`{0}birthdayrole [rolle]`"
   }
 ]

@@ -102,6 +102,8 @@ namespace Mitternacht.Services.Database.Models
         public int MessageXpCharCountMin { get; set; } = 10;
         public int MessageXpCharCountMax { get; set; } = 25;
         public bool? LogUsernameHistory { get; set; } = null;
+
+        public ulong? BirthdayRoleId { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity

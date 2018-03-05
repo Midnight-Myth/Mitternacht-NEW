@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Mitternacht.Services.Database.Models
 {
@@ -70,6 +71,8 @@ Nadeko Support Server: https://discord.gg/nadekobot";
         public bool CustomReactionsStartWith { get; set; } = false;
 
         public bool LogUsernames { get; set; } = true;
+
+        public DateTime LastTimeBirthdaysChecked { get; set; } = DateTime.MinValue;
     }
 
     public class BlockedCmdOrMdl : DbEntity
