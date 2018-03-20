@@ -104,6 +104,12 @@ namespace Mitternacht.Services.Database.Models
         public bool? LogUsernameHistory { get; set; } = null;
 
         public ulong? BirthdayRoleId { get; set; } = null;
+        /// <summary>
+        /// Use {0} for the user or an enumeration of users (like "user1, user2, ...") having birthday.
+        /// </summary>
+        public string BirthdayMessage { get; set; } = "Happy Birthday {0}!";
+        public ulong? BirthdayMessageChannelId { get; set; } = null;
+        public bool BirthdaysEnabled { get; set; } = true;
     }
 
     public class NsfwBlacklitedTag : DbEntity
