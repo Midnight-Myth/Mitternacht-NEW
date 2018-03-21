@@ -284,7 +284,7 @@ namespace Mitternacht.Modules.Birthday
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task BirthdaysEnable(bool enable)
+        public async Task BirthdayReactions(bool enable)
         {
             using (var uow = _db.UnitOfWork)
             {
@@ -298,7 +298,7 @@ namespace Mitternacht.Modules.Birthday
                 gc.BirthdaysEnabled = enable;
                 uow.GuildConfigs.Update(gc);
                 await uow.CompleteAsync().ConfigureAwait(false);
-                await ConfirmLocalized("enable", GetEnabledText(!enable), GetEnabledText(enable)).ConfigureAwait(false);
+                await ConfirmLocalized("enable", GetEnabledText(enable)).ConfigureAwait(false);
             }
         }
 

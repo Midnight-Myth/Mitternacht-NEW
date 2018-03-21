@@ -248,7 +248,7 @@
   "administration_xmuted_voice": "Benutzer {0} vom Sprachchat",
   "birthday_all_title": "Alle Geburtstage",
   "birthday_disabled": "deaktiviert",
-  "birthday_enable": "Geburtstagsaktionen wurden von **{0}** auf **{1}** gesetzt.",
+  "birthday_enable": "Geburtstagsaktionen wurden von **{1}**.",
   "birthday_enable_same": "Geburtstagsaktionen sind schon **{0}**.",
   "birthday_enabled": "aktiviert",
   "birthday_list_title": "Geburtstage am **{0}**",

@@ -3556,10 +3556,10 @@
     "usage": "`{0}birthdaymessage [msg]`"
   },
   {
-    "name": "birthdaysenable",
-    "cmd": "birthdaysenable",
+    "name": "birthdayreactions",
+    "cmd": "birthdayreactions",
     "aliases": [],
     "desc": "Aktiviert oder deaktiviert das Reagieren des Bots auf aktuelle Geburtstage.",
-    "usage": "`{0}birthdaysenable <true|false>`"
+    "usage": "`{0}birthdayreactions <true|false>`"
   }
 ]

@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Birthday.Services
 
         private void TimerHandler(object sender, ElapsedEventArgs e) {
             using (var uow = _db.UnitOfWork) {
-                var time = e.SignalTime;
+                var time = DateTime.Now;
                 //var time = GetCustomTimeForTesting();
                 var bc = uow.BotConfig.GetOrCreate();
                 var lasttime = bc.LastTimeBirthdaysChecked;
