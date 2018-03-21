@@ -1871,7 +1871,7 @@
     "cmd": "iamnot",
     "aliases": [
       "iamn",
-      "ibimsni"
+      "ibimsk1"
     ],
     "desc": "Removes a specified role from you. Role must be on a list of self-assignable roles.",
     "usage": "`{0}iamn Gamer`"
@@ -3467,7 +3467,7 @@
   {
     "name": "usernamehistoryguild",
     "cmd": "usernamehistoryguild",
-    "aliases": [ "unhguild" ],
+    "aliases": [ "unhguild", "nicks" ],
     "desc": "Zeigt alle serverspezifischen Nicknames eines angegebenen Nutzers an.",
     "usage": "`{0}unhguild <user> [page]`"
   },
@@ -3501,10 +3501,10 @@
   },
   {
     "name": "birthdaysall",
-    "cmd": "birthdaysall",
-    "aliases": [],
-    "desc": "Zeigt alle Geburtstage an.",
-    "usage": "`{0}birthdaysall`"
+    "cmd": "birthdayslist",
+    "aliases": [ "birthdaysall" ],
+    "desc": "Zeigt alle Geburtstage nach Tag im Jahr aufsteigend sortiert an.",
+    "usage": "`{0}birthdayslist`"
   },
   {
     "name": "edit",
@@ -3519,5 +3519,47 @@
     "aliases": [],
     "desc": "Ändert den Verwarngrund der Verwarnung mit der angegebenen HexId",
     "usage": "`{0}warnedit <hexid> [grund]`"
+  },
+  {
+    "name": "birthdayrole",
+    "cmd": "birthdayrole",
+    "aliases": [],
+    "desc": "Zeigt die aktuelle Geburtstagsrolle an oder setzt sie.",
+    "usage": "`{0}birthdayrole [rolle]`"
+  },
+  {
+    "name": "birthdayroleremove",
+    "cmd": "birthdayroleremove",
+    "aliases": [],
+    "desc": "Entfernt die aktuelle Geburtstagsrolle.",
+    "usage": "`{0}birthdayroleremove`"
+  },
+  {
+    "name": "birthdaymessagechannel",
+    "cmd": "birthdaymessagechannel",
+    "aliases": [ "birthdaymsgch" ],
+    "desc": "Zeigt den aktuellen Kanal für die Geburtstagsnachrichten an oder setzt ihn.",
+    "usage": "`{0}birthdaymessagechannel [channel]`"
+  },
+  {
+    "name": "birthdaymessagechannelremove",
+    "cmd": "birthdaymessagechannelremove",
+    "aliases": [ "birthdaymsgchremove" ],
+    "desc": "Entfernt den aktuellen Kanal für Geburtstagsnachrichten. Diese werden damit deaktiviert.",
+    "usage": "`{0}birthdayrole [rolle]`"
+  },
+  {
+    "name": "birthdaymessage",
+    "cmd": "birthdaymessage",
+    "aliases": [ "birthdaymsg" ],
+    "desc": "Setzt die Geburtstagsnachricht. {0} wird mit den Usern ersetzt, die Geburtstag haben.",
+    "usage": "`{0}birthdaymessage [msg]`"
+  },
+  {
+    "name": "birthdayreactions",
+    "cmd": "birthdayreactions",
+    "aliases": [],
+    "desc": "Aktiviert oder deaktiviert das Reagieren des Bots auf aktuelle Geburtstage.",
+    "usage": "`{0}birthdayreactions <true|false>`"
   }
 ]

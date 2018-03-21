@@ -24,8 +24,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 }
             };
 
-        public IEnumerable<GuildConfig> GetAllGuildConfigs(List<long> availableGuilds) =>
-            _set.Where(gc => availableGuilds.Contains((long)gc.GuildId))
+        public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds) =>
+            _set.Where(gc => availableGuilds.Contains(gc.GuildId))
                 .Include(gc => gc.LogSetting)
                 .ThenInclude(ls => ls.IgnoredChannels)
                 .Include(gc => gc.MutedUsers)
@@ -67,7 +67,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                     .Include(gc => gc.FilterInvitesChannelIds)
                     .Include(gc => gc.FilterWordsChannelIds)
                     .Include(gc => gc.FilteredWords)
-                    .Include(gc => gc.FilterZalgo)
                     .Include(gc => gc.FilterZalgoChannelIds)
                     .Include(gc => gc.GenerateCurrencyChannelIds)
                     .Include(gc => gc.CommandCooldowns)

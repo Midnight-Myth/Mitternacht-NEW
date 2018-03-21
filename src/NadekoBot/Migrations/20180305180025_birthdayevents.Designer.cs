@@ -13,9 +13,10 @@ using System;
 namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20180305180025_birthdayevents")]
+    partial class birthdayevents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -597,13 +598,7 @@ namespace Mitternacht.Migrations
 
                     b.Property<bool>("AutoDeleteSelfAssignedRoleMessages");
 
-                    b.Property<string>("BirthdayMessage");
-
-                    b.Property<ulong?>("BirthdayMessageChannelId");
-
                     b.Property<ulong?>("BirthdayRoleId");
-
-                    b.Property<bool>("BirthdaysEnabled");
 
                     b.Property<ulong>("ByeMessageChannelId");
 

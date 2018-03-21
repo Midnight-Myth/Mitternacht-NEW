@@ -19,17 +19,21 @@ namespace Mitternacht.Modules.Birthday
         private readonly DbService _db;
         private readonly IBotCredentials _bc;
 
-        public Birthday(DbService db, IBotCredentials bc) {
+        public Birthday(DbService db, IBotCredentials bc)
+        {
             _db = db;
             _bc = bc;
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task BirthdaySet(IBirthDate bd) {
-            using (var uow = _db.UnitOfWork) {
+        public async Task BirthdaySet(IBirthDate bd)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
                 var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
-                if (!_bc.IsOwner(Context.User) && bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month)) {
+                if (!_bc.IsOwner(Context.User) && (bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month)))
+                {
                     await ReplyErrorLocalized("set_before").ConfigureAwait(false);
                     return;
                 }
@@ -58,8 +62,10 @@ namespace Mitternacht.Modules.Birthday
 
         [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
-        public async Task BirthdayRemove(IUser user) {
-            using (var uow = _db.UnitOfWork) {
+        public async Task BirthdayRemove(IUser user)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
                 var success = uow.BirthDates.DeleteBirthDate(user.Id);
                 if (success)
                     await ConfirmLocalized("removed", user.ToString()).ConfigureAwait(false);
@@ -71,11 +77,13 @@ namespace Mitternacht.Modules.Birthday
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task BirthdayGet(IUser user = null) {
+        public async Task BirthdayGet(IUser user = null)
+        {
             user = user ?? Context.User;
-            using (var uow = _db.UnitOfWork) {
+            using (var uow = _db.UnitOfWork)
+            {
                 var bdm = uow.BirthDates.GetUserBirthDate(user.Id);
-                var age = bdm?.Year != null ? (int) Math.Floor((DateTime.Now - new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)).TotalDays / 365.25) : 0;
+                var age = bdm?.Year != null ? (int)Math.Floor((DateTime.Now - new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)).TotalDays / 365.25) : 0;
                 if (user == Context.User)
                     if (bdm == null)
                         await ReplyErrorLocalized("self_none").ConfigureAwait(false);
@@ -85,7 +93,7 @@ namespace Mitternacht.Modules.Birthday
                         await ReplyConfirmLocalized("self_age", bdm.ToString(), age).ConfigureAwait(false);
                 else if (bdm == null)
                     await ReplyErrorLocalized("user_none", user.ToString()).ConfigureAwait(false);
-                else if(bdm.Year == null)
+                else if (bdm.Year == null)
                     await ReplyConfirmLocalized("user", user.ToString(), bdm.ToString()).ConfigureAwait(false);
                 else
                     await ReplyConfirmLocalized("user_age", user.ToString(), bdm.ToString(), age).ConfigureAwait(false);
@@ -94,14 +102,17 @@ namespace Mitternacht.Modules.Birthday
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task Birthdays(IBirthDate bd = null) {
+        public async Task Birthdays(IBirthDate bd = null)
+        {
             bd = bd ?? BirthDate.Today;
             List<BirthDateModel> birthdates;
-            using (var uow = _db.UnitOfWork) {
+            using (var uow = _db.UnitOfWork)
+            {
                 birthdates = uow.BirthDates.GetBirthdays(bd, true).ToList();
             }
 
-            if (!birthdates.Any()) {
+            if (!birthdates.Any())
+            {
                 await ConfirmLocalized("none_date", bd.ToString()).ConfigureAwait(false);
                 return;
             }
@@ -109,22 +120,24 @@ namespace Mitternacht.Modules.Birthday
             var eb = new EmbedBuilder()
                 .WithOkColor()
                 .WithTitle(GetText("list_title", bd.ToString()))
-                .WithDescription(string.Join("\n", from bdm in birthdates
-                                 select $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}"));
+                .WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
             await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task BirthdaysAll(int page = 1) {
+        public async Task BirthdaysAll(int page = 1)
+        {
             if (page < 1) page = 1;
 
             List<BirthDateModel> birthdates;
-            using (var uow = _db.UnitOfWork) {
+            using (var uow = _db.UnitOfWork)
+            {
                 birthdates = uow.BirthDates.GetAll().OrderBy(bdm => bdm.Month).ThenBy(bdm => bdm.Day).ToList();
             }
 
-            if (!birthdates.Any()) {
+            if (!birthdates.Any())
+            {
                 await ErrorLocalized("none").ConfigureAwait(false);
                 return;
             }
@@ -133,12 +146,166 @@ namespace Mitternacht.Modules.Birthday
             var pagecount = (int)Math.Ceiling(birthdates.Count / (itemcount * 1d));
             if (page > pagecount) page = pagecount;
 
-            await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => new EmbedBuilder()
-                        .WithOkColor()
-                        .WithTitle(GetText("all_title"))
-                        .WithDescription(string.Join("\n", from bdm in birthdates.Skip(itemcount * p).Take(itemcount)
-                            select $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()} - **{bdm.ToString()}**")), pagecount - 1, reactUsers: new[] {Context.User as IGuildUser})
-                .ConfigureAwait(false);
+            await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1,
+                p => new EmbedBuilder().WithOkColor().WithTitle(GetText("all_title")).WithDescription(string.Join("\n",
+                    birthdates.Skip(itemcount * p).Take(itemcount).Select(BdmToString))),
+                pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
         }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task BirthdayRole() {
+            using (var uow = _db.UnitOfWork) {
+                var bdayroleid = uow.GuildConfigs.For(Context.Guild.Id).BirthdayRoleId;
+                var bdayrole = bdayroleid.HasValue ? Context.Guild.GetRole(bdayroleid.Value) : null;
+                if (!bdayroleid.HasValue)
+                    await ErrorLocalized("role", GetText("role_not_set")).ConfigureAwait(false);
+                else if (bdayrole == null)
+                    await ErrorLocalized("role", GetText("role_not_existing")).ConfigureAwait(false);
+                else
+                    await ConfirmLocalized("role", bdayrole.Name).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayRole(IRole role) {
+            using (var uow = _db.UnitOfWork) {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldroleid = gc.BirthdayRoleId;
+                var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
+                gc.BirthdayRoleId = role.Id;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), role.Name).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayRoleRemove()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldroleid = gc.BirthdayRoleId;
+                var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
+                gc.BirthdayRoleId = null;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
+            }
+        }
+
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task BirthdayMessageChannel()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var bdayMsgChId = uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessageChannelId;
+                var bdayMsgCh = bdayMsgChId.HasValue ? await Context.Guild.GetTextChannelAsync(bdayMsgChId.Value).ConfigureAwait(false) : null;
+                if (!bdayMsgChId.HasValue)
+                    await ErrorLocalized("msgch", GetText("msgch_not_set")).ConfigureAwait(false);
+                else if (bdayMsgCh == null)
+                    await ErrorLocalized("msgch", GetText("msgch_not_existing")).ConfigureAwait(false);
+                else
+                    await ConfirmLocalized("msgch", bdayMsgCh.Name).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayMessageChannel(ITextChannel channel)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldChId = gc.BirthdayMessageChannelId;
+                var oldch = oldChId.HasValue ? await Context.Guild.GetTextChannelAsync(oldChId.Value).ConfigureAwait(false) : null;
+                gc.BirthdayMessageChannelId = channel.Id;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ConfirmLocalized("msgch_set", oldch?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), channel.Name).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayMessageChannelRemove()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldChId = gc.BirthdayMessageChannelId;
+                var oldCh = oldChId.HasValue ? await Context.Guild.GetTextChannelAsync(oldChId.Value).ConfigureAwait(false) : null;
+                gc.BirthdayMessageChannelId = null;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ConfirmLocalized("msgch_set", oldCh?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        [Priority(1)]
+        public async Task BirthdayMessage()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                await ConfirmLocalized("msg", uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessage).ConfigureAwait(false);
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        [Priority(0)]
+        public async Task BirthdayMessage([Remainder] string msg)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldmsg = gc.BirthdayMessage;
+                gc.BirthdayMessage = msg;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ConfirmLocalized("msg_changed", oldmsg ?? "null", msg);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayReactions(bool enable)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                if (gc.BirthdaysEnabled == enable)
+                {
+                    await ErrorLocalized("enable_same", GetEnabledText(enable)).ConfigureAwait(false);
+                    return;
+                }
+
+                gc.BirthdaysEnabled = enable;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ConfirmLocalized("enable", GetEnabledText(enable)).ConfigureAwait(false);
+            }
+        }
+
+        private string BdmToString(BirthDateModel bdm)
+            => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()} - **{bdm}**";
+
+        private string GetEnabledText(bool enabled)
+            => GetText(enabled ? "enabled" : "disabled");
     }
 }
