@@ -8,6 +8,7 @@ using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Common.TypeReaders;
 using Mitternacht.Common.TypeReaders.Models;
+using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Common;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
@@ -72,26 +73,23 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task ListPerms(int page = 1)
         {
-            if (page < 1)
-                return;
+            const int PermsPerPage = 20;
 
             IList<Permissionv2> perms = Service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
+            var maxPage = (int)Math.Ceiling(perms.Count * 1d / PermsPerPage) - 1;
+            page--;
+            if (page < 0) page = 0;
+            if (page > maxPage) page = maxPage;
 
-            var startPos = 20 * (page - 1);
-            var toSend = Format.Bold(GetText("page", page)) + "\n\n" + string.Join("\n",
-                             perms.Reverse()
-                                 .Skip(startPos)
-                                 .Take(20)
-                                 .Select(p =>
-                                 {
-                                     var str =
-                                         $"`{p.Index + 1}.` {Format.Bold(p.GetCommand(Prefix, (SocketGuild) Context.Guild))}";
-                                     if (p.Index == 0)
-                                         str += $" [{GetText("uneditable")}]";
-                                     return str;
-                                 }));
-
-            await Context.Channel.SendMessageAsync(toSend).ConfigureAwait(false);
+            await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, i =>
+                    new EmbedBuilder()
+                        .WithTitle(GetText("page"))
+                        .WithDescription(string.Join("\n", perms.Reverse()
+                            .Skip(PermsPerPage * i)
+                            .Take(PermsPerPage)
+                            .Select(p =>
+                                $"`{p.Index + 1}.` {Format.Bold(p.GetCommand(Prefix, (SocketGuild) Context.Guild))}{(p.Index == 0 ? $" [{GetText("uneditable")}]" : "")}"))),
+                maxPage, reactUsers: new[] {(IGuildUser) Context.User}).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

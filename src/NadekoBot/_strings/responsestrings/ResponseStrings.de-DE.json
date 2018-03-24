@@ -629,7 +629,7 @@
   "permissions_not_found": "Konnte Berechting an Index #{0} nicht finden",
   "permissions_of_command": "Befehl",
   "permissions_of_module": "Modul",
-  "permissions_page": "Berechtigungen Seite {0}",
+  "permissions_page": "Berechtigungen",
   "permissions_perm_out_of_range": "Keine Berechtigung für diesen Index gefunden.",
   "permissions_permrole": "Aktuelle Berechtigungsrolle ist {0}.",
   "permissions_permrole_changed": "Benutzer brauchen nun Rolle {0} um die Berechtigungen zu editieren.",
