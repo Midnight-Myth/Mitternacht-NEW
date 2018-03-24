@@ -14,6 +14,8 @@ namespace Mitternacht.Modules.Utility.Services
         private readonly DiscordSocketClient _client;
         private readonly Logger _log;
 
+        public Func<SocketGuildUser, SocketGuildUser, Task> NameUpdated;
+
         public UsernameHistoryService(DiscordSocketClient client, DbService db) {
             _db = db;
             _client = client;
@@ -52,10 +54,12 @@ namespace Mitternacht.Modules.Utility.Services
             var _ = Task.Run(async () => {
                 using (var uow = _db.UnitOfWork) {
                     if (IsGuildLoggingUsernames(user.Guild.Id))
-                        uow.NicknameHistory.AddUsername(user.Guild.Id, user.Id, user.Nickname, user.DiscriminatorValue);
+                        if (uow.NicknameHistory.AddUsername(user.Guild.Id, user.Id, user.Nickname, user.DiscriminatorValue))
+                            await NameUpdated?.Invoke(null, user);
 
                     if (IsGuildLoggingUsernames())
-                        uow.UsernameHistory.AddUsername(user.Id, user.Username, user.DiscriminatorValue);
+                        if (uow.UsernameHistory.AddUsername(user.Id, user.Username, user.DiscriminatorValue))
+                            await NameUpdated?.Invoke(null, user);
 
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
@@ -69,11 +73,13 @@ namespace Mitternacht.Modules.Utility.Services
                 using (var uow = _db.UnitOfWork) {
                     //_log.Info($"guild | {IsGuildLoggingUsernames(a.Guild.Id)} | {a.Guild.Id} | {a.Id} | {a.Nickname} | {a.DiscriminatorValue}");
                     if (IsGuildLoggingUsernames(a.Guild.Id))
-                        uow.NicknameHistory.AddUsername(a.Guild.Id, a.Id, a.Nickname, a.DiscriminatorValue);
+                        if (uow.NicknameHistory.AddUsername(a.Guild.Id, a.Id, a.Nickname, a.DiscriminatorValue))
+                            await NameUpdated?.Invoke(b, a);
 
                     //_log.Info($"global | {IsGuildLoggingUsernames()} | {a.Id} | {a.Username} | {a.DiscriminatorValue}");
                     if (IsGuildLoggingUsernames())
-                        uow.UsernameHistory.AddUsername(a.Id, a.Username, a.DiscriminatorValue);
+                        if (uow.UsernameHistory.AddUsername(a.Id, a.Username, a.DiscriminatorValue))
+                            await NameUpdated?.Invoke(b, a);
 
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
