@@ -66,6 +66,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public long? GetVerifiedUserForumId(ulong guildId, ulong userId) 
             => _set.FirstOrDefault(vu => vu.GuildId == guildId && vu.UserId == userId)?.ForumUserId;
 
+        public ulong? GetVerifiedUserId(ulong guildId, long forumUserId)
+            => _set.FirstOrDefault(vu => vu.GuildId == guildId && vu.ForumUserId == forumUserId)?.UserId;
+
         public int GetCount(ulong guildId) {
             return _set.Count(v => v.GuildId == guildId);
         }

@@ -14,6 +14,7 @@ namespace Mitternacht.Services.Database.Repositories
         bool RemoveVerification(ulong guildId, long forumUserId);
         IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId);
         long? GetVerifiedUserForumId(ulong guildId, ulong userId);
+        ulong? GetVerifiedUserId(ulong guildId, long forumUserId);
         int GetCount(ulong guildId);
     }
 }
