@@ -21,7 +21,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public bool AddUsername(ulong guildId, ulong userId, string nickname, ushort discriminator)
         {
             nickname = nickname?.Trim() ?? "";
-            var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
+            var current = _set.Where(u => u.GuildId == guildId && u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
             if (current == null && string.IsNullOrWhiteSpace(nickname)) return false;
             var now = DateTime.UtcNow;
             if (current != null)
