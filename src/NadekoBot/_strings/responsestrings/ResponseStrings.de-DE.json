@@ -912,7 +912,7 @@
   "verification_already_verified": "Dieser Forumaccount ist schon verifiziert!",
   "verification_conversation_failed": "Bitte prüfe, ob dieser Bot dir Privatnachrichten senden kann, erlaube ihm das, falls nötig, und führe den Befehl danach erneut aus!",
   "verification_conversation_start_link": "Konversationslink: {0}",
-  "verification_disabled": "Dieser Teil des Verifizierungsmoduls ist deaktiviert!",
+  "verification_disabled": "Dieser Teil des Verifizierungsmoduls ist aktuell deaktiviert!",
   "verification_forum_acc_not_connected": "Verifizierung nicht möglich, der Forumaccount ist mit keinem Minecraftaccount verbunden!",
   "verification_forum_conversation_reply_failure": "Das Antworten auf die Konversation schlug fehl. Bitte kontaktiere die Botowner oder -entwickler oder versuche es später nochmal!",
   "verification_forum_user_not_existing": "Der angegebene Forumnutzer existiert nicht!",
