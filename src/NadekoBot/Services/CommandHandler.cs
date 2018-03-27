@@ -52,6 +52,8 @@ namespace Mitternacht.Services
         public ConcurrentHashSet<ulong> UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
 
         private readonly Timer _clearUsersOnShortCooldown;
+
+        private readonly Random _random = new Random();
         
         public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc,
             IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot)
@@ -202,13 +204,24 @@ namespace Mitternacht.Services
 
                 if (!(msg is SocketUserMessage usrMsg))
                     return;
-#if !GLOBAL_NADEKO
+
                 // track how many messagges each user is sending
                 UserMessagesSent.AddOrUpdate(usrMsg.Author.Id, 1, (key, old) => ++old);
-#endif
 
                 var channel = msg.Channel;
                 var guild = (msg.Channel as SocketTextChannel)?.Guild;
+
+                //send random @here at first of april
+                if (!DateTime.Now.IsOtherDate(new DateTime(2018, 04, 01), ignoreYear: true))
+                {
+                    using (var uow = _db.UnitOfWork)
+                    {
+                        var bc = uow.BotConfig.GetOrCreate();
+                        if (0 < bc.FirstAprilHereChance && _random.NextDouble() > bc.FirstAprilHereChance)
+                            await channel.SendMessageAsync($"April April @here! Ich habe auf die Nachricht von {usrMsg.Author.Mention} reagiert.").ConfigureAwait(false);
+                    }
+                }
+                
 
                 await TryRunCommand(guild, channel, usrMsg);
             }

@@ -243,7 +243,7 @@ namespace Mitternacht.Extensions
             return user;
         }
 
-        public static bool IsOtherDate(this DateTime date, DateTime other) 
-            => date.Year != other.Year || date.Month != other.Month || date.Day != other.Day;
+        public static bool IsOtherDate(this DateTime date, DateTime other, bool ignoreYear = false) 
+            => (ignoreYear || date.Year != other.Year) || date.Month != other.Month || date.Day != other.Day;
     }
 }

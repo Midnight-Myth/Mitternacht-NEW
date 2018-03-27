@@ -120,6 +120,11 @@ namespace Mitternacht.Services.Impl
                         else
                             return false;
                         break;
+                    case BotConfigEditType.HereChance:
+                        if(double.TryParse(newValue, out var evchance) && evchance > 0)
+                            bc.FirstAprilHereChance = evchance;
+                        else return false;
+                        break;
                     default:
                         return false;
                 }
