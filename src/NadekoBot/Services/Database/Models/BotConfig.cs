@@ -73,6 +73,7 @@ Nadeko Support Server: https://discord.gg/nadekobot";
         public bool LogUsernames { get; set; } = true;
 
         public DateTime LastTimeBirthdaysChecked { get; set; } = DateTime.MinValue;
+        public double FirstAprilHereChance { get; set; } = 0.005;
     }
 
     public class BlockedCmdOrMdl : DbEntity
