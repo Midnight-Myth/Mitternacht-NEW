@@ -32,6 +32,7 @@ namespace Mitternacht.Modules.Verification.Services
             _fs = fs;
             _client = client;
 
+            Task.Run(async () => await CheckGommeTeamMembers().ConfigureAwait(false));
             var timer = new Timer(5 * 60 * 1000);
             timer.Elapsed += (s, args) => Task.Run(async () => await CheckGommeTeamMembers().ConfigureAwait(false));
             timer.Start();
