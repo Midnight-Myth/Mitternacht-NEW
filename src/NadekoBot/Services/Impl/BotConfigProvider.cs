@@ -1,5 +1,6 @@
 ﻿using Mitternacht.Common;
 using Mitternacht.Services.Database.Models;
+using System.Globalization;
 
 namespace Mitternacht.Services.Impl
 {
@@ -121,7 +122,7 @@ namespace Mitternacht.Services.Impl
                             return false;
                         break;
                     case BotConfigEditType.HereChance:
-                        if(double.TryParse(newValue, out var evchance) && evchance > 0)
+                        if(double.TryParse(newValue, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var evchance) && evchance > 0)
                             bc.FirstAprilHereChance = evchance;
                         else return false;
                         break;

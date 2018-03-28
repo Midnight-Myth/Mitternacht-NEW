@@ -244,6 +244,6 @@ namespace Mitternacht.Extensions
         }
 
         public static bool IsOtherDate(this DateTime date, DateTime other, bool ignoreYear = false) 
-            => (ignoreYear || date.Year != other.Year) || date.Month != other.Month || date.Day != other.Day;
+            => (!ignoreYear && date.Year != other.Year) || date.Month != other.Month || date.Day != other.Day;
     }
 }

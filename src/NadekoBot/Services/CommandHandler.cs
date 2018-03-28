@@ -212,12 +212,13 @@ namespace Mitternacht.Services
                 var guild = (msg.Channel as SocketTextChannel)?.Guild;
 
                 //send random @here at first of april
-                if (!DateTime.Now.IsOtherDate(new DateTime(2018, 04, 01), ignoreYear: true))
+                var isFirstApril = !DateTime.Now.IsOtherDate(new DateTime(2018, 04, 01), ignoreYear: true);
+                if (isFirstApril)
                 {
                     using (var uow = _db.UnitOfWork)
                     {
                         var bc = uow.BotConfig.GetOrCreate();
-                        if (0 < bc.FirstAprilHereChance && _random.NextDouble() > bc.FirstAprilHereChance)
+                        if (_random.NextDouble() < bc.FirstAprilHereChance)
                             await channel.SendMessageAsync($"April April @here! Ich habe auf die Nachricht von {usrMsg.Author.Mention} reagiert.").ConfigureAwait(false);
                     }
                 }
