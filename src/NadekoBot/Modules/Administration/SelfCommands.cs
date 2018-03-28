@@ -347,11 +347,11 @@ namespace Mitternacht.Modules.Administration
 
             [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
-            public async Task SetGame([Remainder] string game = null)
+            public async Task SetActivity(ActivityType type, [Remainder] string game = null)
             {
-                await _client.SetGameAsync(game).ConfigureAwait(false);
+                await _client.SetGameAsync(game, type: type).ConfigureAwait(false);
 
-                await ReplyConfirmLocalized("set_game").ConfigureAwait(false);
+                await ReplyConfirmLocalized("set_activity").ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

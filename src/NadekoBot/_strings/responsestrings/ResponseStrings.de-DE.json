@@ -161,7 +161,7 @@
   "administration_server": "Server",
   "administration_set_avatar": "Neuer Avatar gesetzt!",
   "administration_set_channel_name": "Neuer Kanalname gesetzt.",
-  "administration_set_game": "Neues Spiel gesetzt!",
+  "administration_set_activity": "Neue Aktivität gesetzt!",
   "administration_set_stream": "Neuer Stream gesetzt!",
   "administration_set_topic": "Neues Kanalthema gesetzt.",
   "administration_setguildconfigleveldefaults": "Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt.",
