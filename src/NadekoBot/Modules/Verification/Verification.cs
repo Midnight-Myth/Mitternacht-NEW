@@ -159,7 +159,7 @@ namespace Mitternacht.Modules.Verification
             }
 
             await con.DownloadMessagesAsync().ConfigureAwait(false);
-            var messageparts = con.Messages[0].Content.Split('\n');
+            var messageparts = con.Messages.First().Content.Split('\n');
             if (!(messageparts.Any(mp => mp.Trim().Contains(Context.User.Id.ToString())) 
                     || messageparts.Any(mp => mp.Trim().Contains(Context.User.ToString()))) 
                   || !messageparts.Any(mp => mp.Trim().Contains(forumkey.Key))) {
@@ -470,6 +470,37 @@ namespace Mitternacht.Modules.Verification
             else {
                 var msg = await ErrorLocalized("disabled").ConfigureAwait(false);
                 msg.DeleteAfter(60);
+            }
+        }
+
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task GommeTeamRole()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var gtmr = gc.GommeTeamMemberRoleId;
+                var role = gtmr == null ? null : Context.Guild.GetRole(gtmr.Value);
+                await ReplyConfirmLocalized("gtr", Format.Bold(role?.Name ?? gtmr?.ToString() ?? GetText("gtr_not_set"))).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task GommeTeamRoleSet(IRole role = null)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var oldRoleId = gc.GommeTeamMemberRoleId;
+                var oldRole = oldRoleId == null ? null : Context.Guild.GetRole(oldRoleId.Value);
+                gc.GommeTeamMemberRoleId = role?.Id;
+                uow.GuildConfigs.Update(gc);
+                await uow.CompleteAsync().ConfigureAwait(false);
+                await ReplyConfirmLocalized("gtr_set", Format.Bold(oldRole?.Name ?? oldRoleId?.ToString() ?? GetText("gtr_not_set")), Format.Bold(role?.Name ?? GetText("gtr_not_set"))).ConfigureAwait(false);
             }
         }
     }
