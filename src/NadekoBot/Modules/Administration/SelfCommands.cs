@@ -265,16 +265,13 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task Die()
             {
-                try
-                {
-                    await ReplyConfirmLocalized("shutting_down").ConfigureAwait(false);
-                }
-                catch
-                {
-                    // ignored
-                }
-                await Task.Delay(2000).ConfigureAwait(false);
+                try { await ReplyConfirmLocalized("shutting_down").ConfigureAwait(false); } catch { /*ignored*/ }
+
+                await Task.Delay(500).ConfigureAwait(false);
                 try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { /*ignored*/ }
+
+                await _client.StopAsync();
+                await _client.LogoutAsync();
                 Environment.Exit(0);
             }
 
