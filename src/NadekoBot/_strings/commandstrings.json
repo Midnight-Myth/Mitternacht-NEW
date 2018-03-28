@@ -2346,15 +2346,15 @@
       "turntoexp",
       "ttxp"
     ],
-    "desc": "Tauscht Geld in XP um. Umtauschrate 1 zu 5.",
+    "desc": "Tauscht Geld in XP um.",
     "usage": "`{0}turntoxp <geld>`"
   },
   {
-    "name": "setgame",
-    "cmd": "setgame",
+    "name": "setactivity",
+    "cmd": "setactivity",
     "aliases": [],
-    "desc": "Sets the bots game.",
-    "usage": "`{0}setgame with snakes`"
+    "desc": "Sets the bots activity.",
+    "usage": "`{0}setactivity <playing|listening|streaming|watching> [string]`"
   },
   {
     "name": "autoplay",
@@ -3561,5 +3561,19 @@
     "aliases": [],
     "desc": "Aktiviert oder deaktiviert das Reagieren des Bots auf aktuelle Geburtstage.",
     "usage": "`{0}birthdayreactions <true|false>`"
+  },
+  {
+    "name": "gommeteamrole",
+    "cmd": "gommeteamrole",
+    "aliases": [ "gtr" ],
+    "desc": "Zeigt die aktuelle GommeHDnet-Teammitgliedsrolle an.",
+    "usage": "`{0}gommeteamrole`"
+  },
+  {
+    "name": "gommeteamroleset",
+    "cmd": "gommeteamroleset",
+    "aliases": [ "gtrs" ],
+    "desc": "Setzt die GommeHDnet-Teammitgliedsrolle.",
+    "usage": "`{0}gommeteamroleset [rolle]`"
   }
 ]

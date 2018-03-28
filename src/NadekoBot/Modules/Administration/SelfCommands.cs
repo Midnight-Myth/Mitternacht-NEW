@@ -265,16 +265,13 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task Die()
             {
-                try
-                {
-                    await ReplyConfirmLocalized("shutting_down").ConfigureAwait(false);
-                }
-                catch
-                {
-                    // ignored
-                }
-                await Task.Delay(2000).ConfigureAwait(false);
+                try { await ReplyConfirmLocalized("shutting_down").ConfigureAwait(false); } catch { /*ignored*/ }
+
+                await Task.Delay(500).ConfigureAwait(false);
                 try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { /*ignored*/ }
+
+                await _client.StopAsync();
+                await _client.LogoutAsync();
                 Environment.Exit(0);
             }
 
@@ -347,11 +344,11 @@ namespace Mitternacht.Modules.Administration
 
             [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
-            public async Task SetGame([Remainder] string game = null)
+            public async Task SetActivity(ActivityType type, [Remainder] string game = null)
             {
-                await _client.SetGameAsync(game).ConfigureAwait(false);
+                await _client.SetGameAsync(game, type: type).ConfigureAwait(false);
 
-                await ReplyConfirmLocalized("set_game").ConfigureAwait(false);
+                await ReplyConfirmLocalized("set_activity").ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

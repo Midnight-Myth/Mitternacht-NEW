@@ -110,6 +110,8 @@ namespace Mitternacht.Services.Database.Models
         public string BirthdayMessage { get; set; } = "Happy Birthday {0}!";
         public ulong? BirthdayMessageChannelId { get; set; } = null;
         public bool BirthdaysEnabled { get; set; } = true;
+
+        public ulong? GommeTeamMemberRoleId { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity

@@ -161,7 +161,7 @@
   "administration_server": "Server",
   "administration_set_avatar": "Neuer Avatar gesetzt!",
   "administration_set_channel_name": "Neuer Kanalname gesetzt.",
-  "administration_set_game": "Neues Spiel gesetzt!",
+  "administration_set_activity": "Neue Aktivität gesetzt!",
   "administration_set_stream": "Neuer Stream gesetzt!",
   "administration_set_topic": "Neues Kanalthema gesetzt.",
   "administration_setguildconfigleveldefaults": "Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt.",
@@ -855,6 +855,7 @@
   "utility_quotes_page": "Seite {0} der Zitate",
   "utility_quotes_page_none": "Keine Zitate auf dieser Seite.",
   "utility_quotes_remove_none": "Kein Zitat das Sie entfernen können gefunden.",
+  "utility_rank": "Rang",
   "utility_region": "Region",
   "utility_registered_on": "Registriert an",
   "utility_remind": "Ich werde {0} erinnern {1} in {2} `({3:d.M.yyyy.} um {4:HH:mm})` zu tun.",
@@ -946,5 +947,8 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
+  "verification_gtr": "Die GommeHDnet-Teammitgliedsrolle ist {0}.",
+  "verification_gtr_not_set": "nicht gesetzt",
+  "verification_gtr_set": "Die GommeHDnet-Teammitgliedsrolle wurde von {0} zu {1} geändert." 
 }

@@ -13,9 +13,10 @@ using System;
 namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20180328202051_GuildConfigGhdNetTeam")]
+    partial class GuildConfigGhdNetTeam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
