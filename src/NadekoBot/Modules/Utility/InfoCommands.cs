@@ -183,7 +183,7 @@ namespace Mitternacht.Modules.Utility
                     return;
                 }
 
-                var userText = userId == null ? userId.Value.ToString() : username;
+                var userText = userId != null ? userId.Value.ToString() : username;
                 UserInfo uinfo = null;
                 try
                 {
@@ -235,6 +235,7 @@ namespace Mitternacht.Modules.Utility
                 if (uinfo.LikeCount != null) embed.AddField(GetText("likes"), uinfo.LikeCount.Value, true);
                 if (uinfo.Trophies != null) embed.AddField(GetText("trophies"), uinfo.Trophies.Value, true);
                 if (!string.IsNullOrWhiteSpace(uinfo.Location)) embed.AddField(GetText("location"), uinfo.Location, true);
+                if (!string.IsNullOrWhiteSpace(uinfo.UserTitle)) embed.AddField(GetText("rank"), uinfo.UserTitle, true);
                 return embed;
             }
 

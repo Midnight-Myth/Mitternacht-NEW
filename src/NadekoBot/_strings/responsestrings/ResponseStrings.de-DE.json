@@ -855,6 +855,7 @@
   "utility_quotes_page": "Seite {0} der Zitate",
   "utility_quotes_page_none": "Keine Zitate auf dieser Seite.",
   "utility_quotes_remove_none": "Kein Zitat das Sie entfernen können gefunden.",
+  "utility_rank": "Rang",
   "utility_region": "Region",
   "utility_registered_on": "Registriert an",
   "utility_remind": "Ich werde {0} erinnern {1} in {2} `({3:d.M.yyyy.} um {4:HH:mm})` zu tun.",
