@@ -2,3 +2,6 @@
 	path = GommeHDnetForumAPI
 	url = https://github.com/expeehaa/GommeHDnetForumAPI
 	branch = master
+[submodule "MinecraftQuery"]
+	path = MinecraftQuery
+	url = https://github.com/expeehaa/MinecraftQuery-CSharp
