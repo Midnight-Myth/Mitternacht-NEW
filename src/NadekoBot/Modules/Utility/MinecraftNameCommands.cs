@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Utility
                     var accountnames = await _mapi.GetAllAccountNamesAsync(accountinfo.Uuid).ConfigureAwait(false);
 
                     var names = accountnames.Select(kv =>
-                        kv.Key == DateTime.MinValue ? $"- {kv.Value}" : $"- {kv.Value} (> {kv.Key:dd.MM.yyyy})").ToList();
+                        kv.Key == DateTime.MinValue ? $"- {kv.Value}" : $"- {kv.Value} (> {kv.Key:dd.MM.yyyy})").Reverse().ToList();
 
                     const int namesPerPage = 20;
 
