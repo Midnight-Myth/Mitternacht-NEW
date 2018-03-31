@@ -551,8 +551,8 @@ namespace Mitternacht.Modules.Verification
         public async Task GommeTeamRanks()
         {
             var memberslist = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
-            var ranks = memberslist.GroupBy(ui => ui.UserTitle).Select(g => $"- {g.Key}").ToList();
-            var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("ranks_title")).WithDescription(string.Join("\n", ranks));
+            var ranks = memberslist.GroupBy(ui => ui.UserTitle).Select(g => $"- {g.Key} ({g.Count()})").ToList();
+            var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("ranks_title", ranks.Count)).WithDescription(string.Join("\n", ranks));
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
     }
