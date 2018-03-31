@@ -73,20 +73,21 @@ namespace Mitternacht.Modules.Permissions
         [RequireContext(ContextType.Guild)]
         public async Task ListPerms(int page = 1)
         {
-            const int PermsPerPage = 20;
+            const int permsPerPage = 20;
 
             IList<Permissionv2> perms = Service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
-            var maxPage = (int)Math.Ceiling(perms.Count * 1d / PermsPerPage) - 1;
+            var maxPage = (int)Math.Ceiling(perms.Count * 1d / permsPerPage) - 1;
             page--;
             if (page < 0) page = 0;
             if (page > maxPage) page = maxPage;
 
             await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, page, i =>
                     new EmbedBuilder()
+                        .WithOkColor()
                         .WithTitle(GetText("page"))
                         .WithDescription(string.Join("\n", perms.Reverse()
-                            .Skip(PermsPerPage * i)
-                            .Take(PermsPerPage)
+                            .Skip(permsPerPage * i)
+                            .Take(permsPerPage)
                             .Select(p =>
                                 $"`{p.Index + 1}.` {Format.Bold(p.GetCommand(Prefix, (SocketGuild) Context.Guild))}{(p.Index == 0 ? $" [{GetText("uneditable")}]" : "")}"))),
                 maxPage, reactUsers: new[] {(IGuildUser) Context.User}).ConfigureAwait(false);
