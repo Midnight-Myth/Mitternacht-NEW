@@ -954,5 +954,5 @@
   "verification_gtr": "Die GommeHDnet-Teammitgliedsrolle ist {0}.",
   "verification_gtr_not_set": "nicht gesetzt",
   "verification_gtr_set": "Die GommeHDnet-Teammitgliedsrolle wurde von {0} zu {1} geändert.",
-  "verification_ranks_title": "GommeHDnet-Teammitgliederränge"
+  "verification_ranks_title": "GommeHDnet-Teammitgliederränge ({0})"
 }
