@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
+    <ProjectReference Include="..\..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="_strings\commandstrings.json">

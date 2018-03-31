@@ -32,9 +32,7 @@ namespace Mitternacht
 
         private readonly DbService _db;
         public ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
-
-        private readonly ForumService _fs;
-
+        
         /* I don't know how to make this not be static
          * and keep the convenience of .WithOkColor
          * and .WithErrorColor extensions methods.
@@ -65,7 +63,6 @@ namespace Mitternacht
 
             Credentials = new BotCredentials();
             _db = new DbService(Credentials);
-            _fs = new ForumService(Credentials);
             Client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 MessageCacheSize = 10,
@@ -136,7 +133,6 @@ namespace Mitternacht
                     .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
                     .AddManual(this)
                     .AddManual(uow)
-                    .AddManual(_fs)
                     .LoadFrom(Assembly.GetEntryAssembly())
                     .Build();
 
