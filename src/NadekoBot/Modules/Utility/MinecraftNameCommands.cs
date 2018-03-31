@@ -39,10 +39,33 @@ namespace Mitternacht.Modules.Utility
                     var pages = (int)Math.Ceiling(names.Count * 1d / namesPerPage);
 
                     await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient) Context.Client, 0, p =>
-                            new EmbedBuilder().WithOkColor().WithTitle(GetText("mc_title", accountinfo.Name, names.Count))
+                            new EmbedBuilder().WithOkColor().WithTitle(GetText("mc_usernames_title", accountinfo.Name, names.Count))
                                 .WithDescription(string.Join("\n", names.Skip(p * namesPerPage).Take(namesPerPage))),
                         pages-1,
                         reactUsers: new[] {Context.User as IGuildUser});
+                }
+                catch (Exception e)
+                {
+                    await ReplyErrorLocalized("mc_error", e.Message).ConfigureAwait(false);
+                }
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task MinecraftPlayerInfo(string username, DateTime? date = null)
+            {
+                try
+                {
+                    var accountinfo = await _mapi.GetAccountInfoAsync(username, date).ConfigureAwait(false);
+                    var embed = new EmbedBuilder()
+                        .WithOkColor()
+                        .WithTitle(GetText("mc_pinfo_title", username))
+                        .AddField("UUID", accountinfo.Uuid, true)
+                        .AddField("Name", accountinfo.Name, true)
+                        .AddField("Legacy", accountinfo.Legacy, true)
+                        .AddField("Demo", accountinfo.Demo, true)
+                        .WithTimestamp(date ?? DateTime.Now);
+                    await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
