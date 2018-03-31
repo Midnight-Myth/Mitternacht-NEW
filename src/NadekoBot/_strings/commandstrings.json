@@ -3575,7 +3575,7 @@
     "aliases": [ "gtrs" ],
     "desc": "Setzt die GommeHDnet-Teammitgliedsrolle.",
     "usage": "`{0}gommeteamroleset [rolle]`"
-  }, 
+  },
   {
     "name": "minecraftusernames",
     "cmd": "minecraftusernames",
@@ -3589,5 +3589,12 @@
     "aliases": [ "mcpinfo" ],
     "desc": "Zeigt Informationen zu dem Minecraftaccount an, der bei gegebenem Datum (oder heute) einen bestimmten Namen besaß.",
     "usage": "`{0}minecraftusernames <username> [datum]`"
+  },
+  {
+    "name": "gommeteamranks",
+    "cmd": "gommeteamranks",
+    "aliases": [ "gtranks" ],
+    "desc": "Zeigt die aktuellen GommeHDnet-Teamränge an.",
+    "usage": "`{0}gommeteamranks`"
   }
 ]
