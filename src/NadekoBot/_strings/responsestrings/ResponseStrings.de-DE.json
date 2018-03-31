@@ -832,6 +832,8 @@
   "utility_listservers": "ID: {0}\nMitglieder: {1}\nID des Besitzers: {2}",
   "utility_listservers_none": "Keine Server auf dieser Seite gefunden.",
   "utility_location": "Ort",
+  "utility_mc_error": "Beim Abrufen der Namen ist ein Fehler aufgetreten: {0}",
+  "utility_mc_title": "MC-Namen von {0} ({1})",
   "utility_members": "Mitglieder",
   "utility_memory": "Speicher",
   "utility_message_repeater": "Nachrichten Wiederholer",

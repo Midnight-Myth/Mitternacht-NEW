@@ -3575,5 +3575,12 @@
     "aliases": [ "gtrs" ],
     "desc": "Setzt die GommeHDnet-Teammitgliedsrolle.",
     "usage": "`{0}gommeteamroleset [rolle]`"
+  }, 
+  {
+    "name": "minecraftusernames",
+    "cmd": "minecraftusernames",
+    "aliases": [ "mcusernames" ],
+    "desc": "Zeigt alle Nutzernamen eines gegebenen Minecraftaccounts an.",
+    "usage": "`{0}minecraftusernames <username>`"
   }
 ]
