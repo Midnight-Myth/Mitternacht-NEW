@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using NLog;
+
 
 namespace Mitternacht.Modules.Birthday.Services
 {
@@ -26,12 +29,21 @@ namespace Mitternacht.Modules.Birthday.Services
 
             _timerTask = Task.Run(async () =>
             {
+                var log = LogManager.GetCurrentClassLogger();
                 while (true)
                 {
                     await Task.Delay(BirthdayCheckRepeatDelay);
-                    await TimerHandler();
+                    try
+                    {
+                        await TimerHandler();
+                    }
+                    catch (Exception e)
+                    {
+                        log.Warn(e, CultureInfo.CurrentCulture, "Birthday Timer failed.");
+                    }
                 }
             });
+
             UsersBirthday += OnUsersBirthday;
         }
 
@@ -83,8 +95,6 @@ namespace Mitternacht.Modules.Birthday.Services
                         }
                     }
                 }
-
-                await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
@@ -97,10 +107,11 @@ namespace Mitternacht.Modules.Birthday.Services
                 var birthdays = uow.BirthDates.GetBirthdays(time).ToList();
                 var bc = uow.BotConfig.GetOrCreate();
                 var newDay = bc.LastTimeBirthdaysChecked.IsOtherDate(time);
-                await UsersBirthday.Invoke(birthdays, newDay).ConfigureAwait(false);
                 bc.LastTimeBirthdaysChecked = time;
                 uow.BotConfig.Update(bc);
                 await uow.CompleteAsync().ConfigureAwait(false);
+
+                await UsersBirthday.Invoke(birthdays, newDay).ConfigureAwait(false);
             }
         }
 
