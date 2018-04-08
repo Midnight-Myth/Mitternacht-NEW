@@ -69,7 +69,7 @@ namespace Mitternacht.Modules.Verification.Services
                     if (EnableLogging) _log.Info($"gtr: {gommeTeamRole?.Name}");
 
                     if (gommeTeamRole == null) continue;
-                    var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId).Select(vu => (ForumUserId: vu.ForumUserId, User: guild.GetUser(vu.UserId))).ToList();
+                    var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId).Select(vu => (ForumUserId: vu.ForumUserId, User: guild.GetUser(vu.UserId))).Where(a => a.User != null).ToList();
                     foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.Any(r => r.Id == gommeTeamRole.Id) && !staffIds.Contains(a.ForumUserId)))
                     {
                         await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
