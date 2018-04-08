@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Verification.Services
         private readonly Logger _log;
 
         private Task _timerTask;
-        private const int GommeTeamMemberCheckRepeatDelay = 60 * 1000;
+        private const int GommeTeamMemberCheckRepeatDelay = 30 * 1000;
         public bool EnableLogging = false;
 
         public GommeTeamSyncService(DbService db, ForumService fs, DiscordSocketClient client)
@@ -30,8 +30,10 @@ namespace Mitternacht.Modules.Verification.Services
             {
                 while (true)
                 {
+                    if (EnableLogging) _log.Info($"Waiting {GommeTeamMemberCheckRepeatDelay}s...");
                     await Task.Delay(GommeTeamMemberCheckRepeatDelay);
-                    await CheckGommeTeamMembers().ConfigureAwait(false);
+                    if (EnableLogging) _log.Info("Executing CheckGommeTeamMembers");
+                    await CheckGommeTeamMembers();
                 }
             });
         }
