@@ -42,15 +42,12 @@ namespace Mitternacht.Modules.Help.Services
         {
             var prefix = _ch.GetPrefix(guild);
 
-            var str = string.Format("**`{0}`**", prefix + com.Aliases.First());
-            var alias = com.Aliases.Skip(1).FirstOrDefault();
-            if (alias != null)
-                str += string.Format(" **/ `{0}`**", prefix + alias);
+            var str = Format.Bold(string.Join("/", com.Aliases.Select(alias => $" `{prefix}{alias}` ").ToArray()).Trim());
             return new EmbedBuilder()
-                .AddField(fb => fb.WithName(str).WithValue($"{com.RealSummary(prefix)} {GetCommandRequirements(com, guild)}").WithIsInline(true))
-                .AddField(fb => fb.WithName(GetText("usage", guild)).WithValue(com.RealRemarks(prefix)).WithIsInline(false))
-                .WithFooter(efb => efb.WithText(GetText("module", guild, com.Module.GetTopLevelModule().Name)))
-                .WithColor(MitternachtBot.OkColor);
+                .AddField(str, $"{com.RealSummary(prefix)} {GetCommandRequirements(com, guild)}", true)
+                .AddField(GetText("usage", guild), com.RealRemarks(prefix), true)
+                .WithFooter(GetText("module", guild, $"{com.Module.GetTopLevelModule().Name}{(com.Module == com.Module.GetTopLevelModule() ? "" : $" ({com.Module.Name})")}"))
+                .WithOkColor();
         }
 
         public string GetCommandRequirements(CommandInfo cmd, IGuild guild) =>
@@ -69,6 +66,6 @@ namespace Mitternacht.Modules.Help.Services
                   }));
 
         private string GetText(string text, IGuild guild, params object[] replacements) =>
-            _strings.GetText(text, guild?.Id, "Help".ToLowerInvariant(), replacements);
+            _strings.GetText(text, guild?.Id, "help", replacements);
     }
 }
