@@ -65,6 +65,14 @@ namespace Mitternacht.Modules.Verification
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [OwnerOnly]
+            public Task GtrLogging(bool enable)
+            {
+                Service.EnableLogging = enable;
+                return Task.CompletedTask;
+            }
         }
     }
 }
