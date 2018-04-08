@@ -962,5 +962,6 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
+  "verification_too_few_args": "Du hast nötige Argumente vergessen. Bitte prüfe, ob du den Befehl richtig benutzt!"
 }

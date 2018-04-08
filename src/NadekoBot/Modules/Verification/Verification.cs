@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels;
 using GommeHDnetForumAPI.DataModels.Entities;
 using GommeHDnetForumAPI.DataModels.Exceptions;
 using Mitternacht.Common.Attributes;
@@ -32,8 +31,7 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(1)]
-        [RequireNoBot]
+        [Priority(2)]
         public async Task Verify1(long forumUserId)
         {
             if (!_fs.LoggedIn)
@@ -90,8 +88,7 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(0)]
-        [RequireNoBot]
+        [Priority(1)]
         public async Task Verify1(string forumUsername)
         {
             if (!_fs.LoggedIn)
@@ -121,8 +118,7 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(1)]
-        [RequireNoBot]
+        [Priority(2)]
         public async Task Verify2(long forumUserId)
         {
             if (!_fs.LoggedIn)
@@ -198,8 +194,7 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(0)]
-        [RequireNoBot]
+        [Priority(1)]
         public async Task Verify2(string forumUsername)
         {
             if (!_fs.LoggedIn)
@@ -232,7 +227,7 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [RequireNoBot]
+        [Priority(1)]
         public async Task Verify3([Remainder]string discordkey)
         {
             if (!_fs.LoggedIn)
@@ -269,6 +264,31 @@ namespace Mitternacht.Modules.Verification
 
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             await ch.SendConfirmAsync(GetText("message_title", 3), GetText("verification_completed", Context.Guild.Name, uinfo.Username)).ConfigureAwait(false);
+        }
+
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        public async Task Verify1()
+        {
+            await ReplyErrorLocalized("too_few_args").ConfigureAwait(false);
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        public async Task Verify2()
+        {
+            await ReplyErrorLocalized("too_few_args").ConfigureAwait(false);
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        public async Task Verify3()
+        {
+            await ReplyErrorLocalized("too_few_args").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
