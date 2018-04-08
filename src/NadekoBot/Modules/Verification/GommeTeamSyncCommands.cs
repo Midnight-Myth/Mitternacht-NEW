@@ -64,7 +64,6 @@ namespace Mitternacht.Modules.Verification
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("ranks_title", ranks.Count)).WithDescription(string.Join("\n", ranks));
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
-
         }
     }
 }

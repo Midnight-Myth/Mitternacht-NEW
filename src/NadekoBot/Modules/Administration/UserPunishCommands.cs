@@ -215,7 +215,6 @@ namespace Mitternacht.Modules.Administration
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.BanMembers)]
             [Priority(0)]
             public async Task WarnEdit(string hexid, [Remainder] string reason = null) {
                 var id = hexid.FromHexToInt();
@@ -233,6 +232,8 @@ namespace Mitternacht.Modules.Administration
                             await ReplyErrorLocalized("warn_edit_perms", hexid).ConfigureAwait(false);
                             return;
                         }
+
+                        if (!user.GuildPermissions.Administrator) return;
                     }
 
                     if (w == null) {
