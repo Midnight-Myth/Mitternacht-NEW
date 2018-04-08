@@ -186,9 +186,9 @@
     "usage": "`{0}prune` or `{0}prune 5` or `{0}prune @Someone` or `{0}prune @Someone X`"
   },
   {
-    "name": "identityvalidationdmkey",
+    "name": "verify1",
     "cmd": "verify1",
-    "aliases": [ "identityvalidationdmkey" ],
+    "aliases": [],
     "desc": "Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.",
     "usage": "`{0}verify1 <forumuserid>`"
   },
@@ -1124,9 +1124,9 @@
     "usage": "`{0}smp 0` or `{0}smp 270`"
   },
   {
-    "name": "identityvalidationsubmitkey",
+    "name": "verify2",
     "cmd": "verify2",
-    "aliases": [ "identityvalidationsubmitkey" ],
+    "aliases": [],
     "desc": "Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.",
     "usage": "`{0}verify2 <forumuserid>`"
   },
@@ -1290,9 +1290,9 @@
     "usage": "`{0}ym`"
   },
   {
-    "name": "identityvalidationsubmit",
+    "name": "verify3",
     "cmd": "verify3",
-    "aliases": [ "identityvalidationsubmit" ],
+    "aliases": [],
     "desc": "Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.",
     "usage": "`{0}verify3 <key>`"
   },
