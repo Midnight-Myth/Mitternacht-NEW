@@ -15,7 +15,7 @@ namespace Mitternacht.Services.Impl
         private readonly IBotCredentials _creds;
         private readonly DateTime _started;
 
-        public const string BotVersion = "1.8.1";
+        public const string BotVersion = "1.9";
 
         public (ulong userId, string backupName)[] AuthorIdBackupNames => new (ulong userId, string backupName)[] {
             (119521688768610304, "Midnight Myth"),
@@ -23,7 +23,7 @@ namespace Mitternacht.Services.Impl
         };
 
         public string Author => string.Join(", ", AuthorIdBackupNames.Select(t => _client.GetUser(t.userId)?.ToString() ?? t.backupName));
-        public string Library => "Discord.Net, GommeHDnetForumAPI";
+        public string Library => "Discord.Net, GommeHDnetForumAPI, MinecraftQuery";
         public string Heap => Math.Round((double)GC.GetTotalMemory(false) / 1.MiB(), 2).ToString(CultureInfo.InvariantCulture);
         public double MessagesPerSecond => MessageCounter / GetUptime().TotalSeconds;
 

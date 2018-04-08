@@ -56,35 +56,37 @@ namespace Mitternacht.Modules.Help
             if (string.IsNullOrWhiteSpace(module)) return;
             var cmds = _cmds.Commands
                 .Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
-                .Where(c => !_perms.BlockedCommands.Contains(c.Aliases.First().ToLowerInvariant()))
-                .OrderBy(c => c.Aliases.First())
+                .Where(c => !_perms.BlockedCommands.Any(bc => bc.Equals(c.Aliases.First(), StringComparison.OrdinalIgnoreCase)))
                 .Distinct(new CommandTextEqualityComparer())
-                .AsEnumerable();
+                .GroupBy(c => c.Module)
+                .OrderBy(g => g.Key.IsSubmodule ? g.Key.Name : "0", new ModuleOrderComparer())
+                .ToArray();
 
-            var cmdsArray = cmds as CommandInfo[] ?? cmds.ToArray();
-            if (!cmdsArray.Any())
+            if (!cmds.Any())
             {
                 await ReplyErrorLocalized("module_not_found").ConfigureAwait(false);
                 return;
             }
             var j = 0;
-            var groups = cmdsArray.GroupBy(x => j++ / 48).ToArray();
+            var groups = cmds.GroupBy(x => (j+=x.Count()) / 48).ToArray();
 
             for (var i = 0; i < groups.Length; i++)
             {
-                //var embed = new EmbedBuilder()
-                //    .WithOkColor()
-                //    .WithTitle($"📃 {GetText("list_of_commands")}")
-                //    .WithFooter($"{i+1}/{groups.Length}");
-                //foreach (var cmdInfo in groups.ElementAt(i)) {
-                //    embed.AddInlineField(Prefix + cmdInfo.Aliases.First(), cmdInfo.Aliases.Skip(1).Aggregate("", (s, a) => $"{s}{Prefix}{a}\n", s => s.Length > 0 ? s.Substring(0, s.Length - 1) : "-"));
-                //}
-                //await channel.SendMessageAsync("", embed: embed.Build());
-                await channel.SendTableAsync(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "", groups.ElementAt(i), el => $"{Prefix + el.Aliases.First(),-15} {"[" + el.Aliases.Skip(1).FirstOrDefault() + "]",-8}").ConfigureAwait(false);
+                var text = $"{(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "")}```css\n";
+                text += string.Join("\n", groups[i].Select(sm =>
+                {
+                    var o = 0;
+                    return $"{sm.Key.Name}\n{string.Join("\n", sm.GroupBy(c => o++ / 3).Select(col => string.Concat(col.Select(c => $"{Prefix + c.Aliases.First(),-16} {$"[{c.Aliases.Skip(1).FirstOrDefault()}]",-9}"))))}";
+                }));
+
+                text += "```";
+                await channel.SendMessageAsync(text).ConfigureAwait(false);
             }
 
             await ConfirmLocalized("commands_instr", Prefix).ConfigureAwait(false);
         }
+
+
         [MitternachtCommand, Usage, Description, Aliases]
         [Priority(0)]
         public async Task H([Remainder] string fail)
@@ -168,6 +170,13 @@ namespace Mitternacht.Modules.Help
         public bool Equals(CommandInfo x, CommandInfo y) => x.Aliases.First() == y.Aliases.First();
 
         public int GetHashCode(CommandInfo obj) => obj.Aliases.First().GetHashCode();
+    }
 
+    public class ModuleOrderComparer : IComparer<string>
+    {
+        private readonly StringComparer _sc = StringComparer.OrdinalIgnoreCase;
+        
+        public int Compare(string x, string y) 
+            => x == "0" ? -1 : (y == "0" ? 1 : _sc.Compare(x, y));
     }
 }

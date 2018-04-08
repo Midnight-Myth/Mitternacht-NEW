@@ -4,18 +4,17 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels;
 using GommeHDnetForumAPI.DataModels.Entities;
 using GommeHDnetForumAPI.DataModels.Exceptions;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
+using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification
 {
-    public class Verification : MitternachtTopLevelModule<VerificationService>
+    public partial class Verification : MitternachtTopLevelModule<VerificationService>
     {
         private readonly DbService _db;
         private readonly IBotCredentials _creds;
@@ -32,9 +31,8 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(1)]
-        [RequireNoBot]
-        public async Task IdentityValidationDmKey(long forumUserId)
+        [Priority(2)]
+        public async Task Verify1(long forumUserId)
         {
             if (!_fs.LoggedIn)
             {
@@ -90,9 +88,8 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(0)]
-        [RequireNoBot]
-        public async Task IdentityValidationDmKey(string forumUsername)
+        [Priority(1)]
+        public async Task Verify1(string forumUsername)
         {
             if (!_fs.LoggedIn)
             {
@@ -116,14 +113,13 @@ namespace Mitternacht.Modules.Verification
                 (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
-            await IdentityValidationDmKey(uinfo.Id).ConfigureAwait(false);
+            await Verify1(uinfo.Id).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(1)]
-        [RequireNoBot]
-        public async Task IdentityValidationSubmitkey(long forumUserId)
+        [Priority(2)]
+        public async Task Verify2(long forumUserId)
         {
             if (!_fs.LoggedIn)
             {
@@ -198,9 +194,8 @@ namespace Mitternacht.Modules.Verification
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [Priority(0)]
-        [RequireNoBot]
-        public async Task IdentityValidationSubmitkey(string forumUsername)
+        [Priority(1)]
+        public async Task Verify2(string forumUsername)
         {
             if (!_fs.LoggedIn)
             {
@@ -225,15 +220,15 @@ namespace Mitternacht.Modules.Verification
                 (await ReplyErrorLocalized("forum_user_not_existing").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
-            await IdentityValidationSubmitkey(uinfo.Id).ConfigureAwait(false);
+            await Verify2(uinfo.Id).ConfigureAwait(false);
         }
 
 
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        [RequireNoBot]
-        public async Task IdentityValidationSubmit([Remainder]string discordkey)
+        [Priority(1)]
+        public async Task Verify3([Remainder]string discordkey)
         {
             if (!_fs.LoggedIn)
             {
@@ -269,6 +264,31 @@ namespace Mitternacht.Modules.Verification
 
             var ch = await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
             await ch.SendConfirmAsync(GetText("message_title", 3), GetText("verification_completed", Context.Guild.Name, uinfo.Username)).ConfigureAwait(false);
+        }
+
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        public async Task Verify1()
+        {
+            await ReplyErrorLocalized("too_few_args").ConfigureAwait(false);
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        public async Task Verify2()
+        {
+            await ReplyErrorLocalized("too_few_args").ConfigureAwait(false);
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [Priority(0)]
+        public async Task Verify3()
+        {
+            await ReplyErrorLocalized("too_few_args").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -474,13 +494,7 @@ namespace Mitternacht.Modules.Verification
             (await ConfirmLocalized("tutorial_now_set").ConfigureAwait(false)).DeleteAfter(60);
         }
 
-        [MitternachtCommand, Usage, Description, Aliases]
-        [OwnerOnly]
-        public async Task ReinitForum()
-        {
-            _fs.InitForumInstance();
-            await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
-        }
+        
 
         [MitternachtCommand, Usage, Description, Aliases]
         [OwnerOnly]
@@ -513,47 +527,6 @@ namespace Mitternacht.Modules.Verification
                 var msg = await ErrorLocalized("disabled").ConfigureAwait(false);
                 msg.DeleteAfter(60);
             }
-        }
-
-
-        [MitternachtCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        public async Task GommeTeamRole()
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                var gc = uow.GuildConfigs.For(Context.Guild.Id);
-                var gtmr = gc.GommeTeamMemberRoleId;
-                var role = gtmr == null ? null : Context.Guild.GetRole(gtmr.Value);
-                await ReplyConfirmLocalized("gtr", Format.Bold(role?.Name ?? gtmr?.ToString() ?? GetText("gtr_not_set"))).ConfigureAwait(false);
-            }
-        }
-
-        [MitternachtCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        [OwnerOnly]
-        public async Task GommeTeamRoleSet(IRole role = null)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                var gc = uow.GuildConfigs.For(Context.Guild.Id);
-                var oldRoleId = gc.GommeTeamMemberRoleId;
-                var oldRole = oldRoleId == null ? null : Context.Guild.GetRole(oldRoleId.Value);
-                gc.GommeTeamMemberRoleId = role?.Id;
-                uow.GuildConfigs.Update(gc);
-                await uow.CompleteAsync().ConfigureAwait(false);
-                await ReplyConfirmLocalized("gtr_set", Format.Bold(oldRole?.Name ?? oldRoleId?.ToString() ?? GetText("gtr_not_set")), Format.Bold(role?.Name ?? GetText("gtr_not_set"))).ConfigureAwait(false);
-            }
-        }
-
-        [MitternachtCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        public async Task GommeTeamRanks()
-        {
-            var memberslist = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
-            var ranks = memberslist.GroupBy(ui => ui.UserTitle).Select(g => $"- {g.Key} ({g.Count()})").ToList();
-            var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("ranks_title", ranks.Count)).WithDescription(string.Join("\n", ranks));
-            await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
     }
 }

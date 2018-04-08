@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Timers;
 using Discord.WebSocket;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using NLog;
 
 namespace Mitternacht.Modules.Birthday.Services
 {
@@ -15,26 +13,32 @@ namespace Mitternacht.Modules.Birthday.Services
     {
         private readonly DbService _db;
         private readonly DiscordSocketClient _client;
-        private readonly Logger _log;
-        private readonly Timer _timer;
+        private readonly Task _timerTask;
 
-        public event Func<IEnumerable<BirthDateModel>, Task> UsersBirthday;
+        private const int BirthdayCheckRepeatDelay = 60 * 1000;
 
-        //private int _customTimeAccessCount = 0;
+        public event Func<List<BirthDateModel>, bool, Task> UsersBirthday = (b, d) => Task.CompletedTask;
 
-        public BirthdayService(DbService db, DiscordSocketClient client) {
-            _log = LogManager.GetCurrentClassLogger();
+        public BirthdayService(DbService db, DiscordSocketClient client)
+        {
             _db = db;
             _client = client;
-            
-            _timer = new Timer(60 * 1000); // 10*60*1000 ms = 10min
-            _timer.Elapsed += TimerHandler;
-            _timer.Start();
+
+            _timerTask = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(BirthdayCheckRepeatDelay);
+                    await TimerHandler();
+                }
+            });
             UsersBirthday += OnUsersBirthday;
         }
 
-        private async Task OnUsersBirthday(IEnumerable<BirthDateModel> birthdays) {
-            using (var uow = _db.UnitOfWork) {
+        private async Task OnUsersBirthday(List<BirthDateModel> birthdays, bool newDay)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
                 //_log.Info($"{birthdays.Count()} birthdays today");
 
                 var guildBirthdayRoles = uow.GuildConfigs
@@ -43,9 +47,11 @@ namespace Mitternacht.Modules.Birthday.Services
                     .Select(gc => (Guild: _client.GetGuild(gc.GuildId), BirthdayRoleId: gc.BirthdayRoleId, MessageChannelId: gc.BirthdayMessageChannelId, Message: gc.BirthdayMessage))
                     .ToList();
 
-                foreach (var (guild, birthdayRoleId, msgChannelId, msg) in guildBirthdayRoles) {
+                //maybe running in parallel?
+                foreach (var (guild, birthdayRoleId, msgChannelId, msg) in guildBirthdayRoles)
+                {
                     var birthdayusers = birthdays.Select(b => guild.GetUser(b.UserId)).Where(u => u != null).ToList();
-                    
+
                     //birthday role handling
                     if (birthdayRoleId.HasValue)
                     {
@@ -68,7 +74,7 @@ namespace Mitternacht.Modules.Birthday.Services
                     }
 
                     //birthday message handling
-                    if (msgChannelId.HasValue)
+                    if (newDay && msgChannelId.HasValue)
                     {
                         var ch = guild.GetTextChannel(msgChannelId.Value);
                         if (birthdayusers.Any() && ch != null)
@@ -82,34 +88,37 @@ namespace Mitternacht.Modules.Birthday.Services
             }
         }
 
-        private void TimerHandler(object sender, ElapsedEventArgs e) {
-            using (var uow = _db.UnitOfWork) {
+        private async Task TimerHandler()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
                 var time = DateTime.Now;
-                //var time = GetCustomTimeForTesting();
+                //var time = CustomTimeForTesting;
+                var birthdays = uow.BirthDates.GetBirthdays(time).ToList();
                 var bc = uow.BotConfig.GetOrCreate();
-                var lasttime = bc.LastTimeBirthdaysChecked;
-                if (lasttime.IsOtherDate(time) && lasttime < time) {
-                    var birthdays = uow.BirthDates.GetBirthdays(time).ToList();
-                    UsersBirthday?.Invoke(birthdays);
-                }
+                var newDay = bc.LastTimeBirthdaysChecked.IsOtherDate(time);
+                await UsersBirthday.Invoke(birthdays, newDay).ConfigureAwait(false);
                 bc.LastTimeBirthdaysChecked = time;
                 uow.BotConfig.Update(bc);
-                uow.Complete();
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
 
-        //private DateTime GetCustomTimeForTesting()
+        //private int _customTimeAccessCount = 0;
+        //private DateTime CustomTimeForTesting
         //{
-        //    using (var uow = _db.UnitOfWork)
+        //    get
         //    {
-        //        var bc = uow.BotConfig.GetOrCreate();
-        //        DateTime time;
-        //        bc.LastTimeBirthdaysChecked = _customTimeAccessCount % 2 == 0 ? new DateTime(2018, 3, 18) : DateTime.MinValue;
-        //        time = _customTimeAccessCount % 2 == 0 ? new DateTime(2018, 3, 20) : new DateTime(2018, 3, 18);
-        //        uow.BotConfig.Update(bc);
-        //        uow.Complete();
-        //        _customTimeAccessCount++;
-        //        return time;
+        //        using (var uow = _db.UnitOfWork)
+        //        {
+        //            var bc = uow.BotConfig.GetOrCreate();
+        //            bc.LastTimeBirthdaysChecked = _customTimeAccessCount % 2 == 0 ? DateTime.Today : DateTime.MinValue;
+        //            var time = _customTimeAccessCount % 2 == 0 ? DateTime.Today.AddDays(2) : DateTime.Today;
+        //            uow.BotConfig.Update(bc);
+        //            uow.Complete();
+        //            _customTimeAccessCount++;
+        //            return time;
+        //        }
         //    }
         //}
     }
