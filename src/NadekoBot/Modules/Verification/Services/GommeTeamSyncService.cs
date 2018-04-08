@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using GommeHDnetForumAPI.DataModels;
@@ -33,7 +34,14 @@ namespace Mitternacht.Modules.Verification.Services
                     if (EnableLogging) _log.Info($"Waiting {GommeTeamMemberCheckRepeatDelay}s...");
                     await Task.Delay(GommeTeamMemberCheckRepeatDelay);
                     if (EnableLogging) _log.Info("Executing CheckGommeTeamMembers");
-                    await CheckGommeTeamMembers();
+                    try
+                    {
+                        await CheckGommeTeamMembers();
+                    }
+                    catch (Exception e)
+                    {
+                        _log.Error(e, "CheckGommeTeamMembers");
+                    }
                 }
             });
         }
