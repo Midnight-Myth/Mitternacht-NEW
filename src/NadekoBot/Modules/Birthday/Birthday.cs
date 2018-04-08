@@ -40,8 +40,35 @@ namespace Mitternacht.Modules.Birthday
 
                 uow.BirthDates.SetBirthDate(Context.User.Id, bd);
                 await uow.CompleteAsync().ConfigureAwait(false);
+
+                await ReplyConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
+
+                if (bd.IsBirthday(DateTime.Now) && (bdm == null || !bdm.IsBirthday(DateTime.Now)))
+                {
+                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                    if (!gc.BirthdaysEnabled) return;
+                    var bdmChId = gc.BirthdayMessageChannelId;
+                    if (bdmChId != null)
+                    {
+                        var bdmCh = await Context.Guild.GetTextChannelAsync(bdmChId.Value).ConfigureAwait(false);
+                        if (bdmCh != null)
+                            await bdmCh.SendMessageAsync(string.Format(gc.BirthdayMessage, Context.User.Mention)).ConfigureAwait(false);
+                    }
+
+                    var roleId = gc.BirthdayRoleId;
+                    if (roleId != null)
+                    {
+                        var role = Context.Guild.GetRole(roleId.Value);
+                        if (role != null)
+                        {
+                            await ((SocketGuildUser)Context.User).AddRoleAsync(role).ConfigureAwait(false);
+                        }
+                    }
+                }
+
             }
-            await ReplyConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
+
+
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -154,8 +181,10 @@ namespace Mitternacht.Modules.Birthday
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task BirthdayRole() {
-            using (var uow = _db.UnitOfWork) {
+        public async Task BirthdayRole()
+        {
+            using (var uow = _db.UnitOfWork)
+            {
                 var bdayroleid = uow.GuildConfigs.For(Context.Guild.Id).BirthdayRoleId;
                 var bdayrole = bdayroleid.HasValue ? Context.Guild.GetRole(bdayroleid.Value) : null;
                 if (!bdayroleid.HasValue)
@@ -170,8 +199,10 @@ namespace Mitternacht.Modules.Birthday
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [OwnerOnly]
-        public async Task BirthdayRole(IRole role) {
-            using (var uow = _db.UnitOfWork) {
+        public async Task BirthdayRole(IRole role)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
                 var gc = uow.GuildConfigs.For(Context.Guild.Id);
                 var oldroleid = gc.BirthdayRoleId;
                 var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
