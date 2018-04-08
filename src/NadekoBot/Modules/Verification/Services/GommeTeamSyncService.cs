@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Verification.Services
                     }
                     catch (Exception e)
                     {
-                        _log.Error(e, "CheckGommeTeamMembers");
+                        _log.Info($"CheckGommeTeamMembers failed: {e.Message}\n{e.StackTrace}");
                     }
                 }
             });
@@ -70,12 +70,12 @@ namespace Mitternacht.Modules.Verification.Services
 
                     if (gommeTeamRole == null) continue;
                     var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId).Select(vu => (ForumUserId: vu.ForumUserId, User: guild.GetUser(vu.UserId))).ToList();
-                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.Any(r => r.Id == gc.GommeTeamMemberRoleId) && !staffIds.Contains(a.ForumUserId)).AsEnumerable())
+                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.Any(r => r.Id == gommeTeamRole.Id) && !staffIds.Contains(a.ForumUserId)))
                     {
                         await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
                     }
 
-                    foreach (var (_, user) in verifiedUsers.Where(a => staffIds.Contains(a.ForumUserId)).AsEnumerable())
+                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.All(r => r.Id != gommeTeamRole.Id) && staffIds.Contains(a.ForumUserId)))
                     {
                         await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
                     }
