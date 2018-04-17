@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using GommeHDnetForumAPI.DataModels.Collections;
 using GommeHDnetForumAPI.DataModels.Entities;
 using GommeHDnetForumAPI.DataModels.Exceptions;
 using Mitternacht.Common.Attributes;
@@ -151,14 +152,31 @@ namespace Mitternacht.Modules.Verification
                 return;
             }
 
-            var forumkey = Service.ValidationKeys.FirstOrDefault(vk => vk.KeyScope == VerificationService.KeyScope.Forum && vk.ForumUserId == forumUserId && vk.DiscordUserId == Context.User.Id && vk.GuildId == Context.Guild.Id);
+            var forumkey = Service.ValidationKeys.FirstOrDefault(vk =>
+                vk.KeyScope == VerificationService.KeyScope.Forum && vk.ForumUserId == forumUserId &&
+                vk.DiscordUserId == Context.User.Id && vk.GuildId == Context.Guild.Id);
             if (forumkey == null)
             {
                 (await ReplyErrorLocalized("no_valid_key").ConfigureAwait(false)).DeleteAfter(60);
                 return;
             }
-            var conversations = await _fs.Forum.GetConversations().ConfigureAwait(false);
-            var con = conversations.FirstOrDefault(ci => (string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)) || ci.Title.Trim().Equals(Service.GetVerifyString(Context.Guild.Id))) && ci.Author.Id == forumUserId);
+
+            ThreadCollection<ConversationInfo> conversations;
+            try
+            {
+                conversations = await _fs.Forum.GetConversations().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                _log.Debug(e);
+                (await ReplyErrorLocalized("forum_conversation_view_failure").ConfigureAwait(false)).DeleteAfter(60);
+                return;
+            }
+
+            var con = conversations.FirstOrDefault(ci =>
+                (string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)) ||
+                 ci.Title.Trim().Equals(Service.GetVerifyString(Context.Guild.Id))) && ci.Author.Id == forumUserId);
+
             if (con == null)
             {
                 (await ReplyErrorLocalized("no_valid_conversation").ConfigureAwait(false)).DeleteAfter(60);
