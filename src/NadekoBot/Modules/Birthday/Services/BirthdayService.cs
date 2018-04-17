@@ -20,8 +20,6 @@ namespace Mitternacht.Modules.Birthday.Services
 
         private const int BirthdayCheckRepeatDelay = 60 * 1000;
 
-        public event Func<List<BirthDateModel>, bool, Task> UsersBirthday = (b, d) => Task.CompletedTask;
-
         public BirthdayService(DbService db, DiscordSocketClient client)
         {
             _db = db;
@@ -43,11 +41,9 @@ namespace Mitternacht.Modules.Birthday.Services
                     }
                 }
             });
-
-            UsersBirthday += OnUsersBirthday;
         }
 
-        private async Task OnUsersBirthday(List<BirthDateModel> birthdays, bool newDay)
+        private async Task OnUsersBirthday(IReadOnlyCollection<BirthDateModel> birthdays, bool newDay)
         {
             using (var uow = _db.UnitOfWork)
             {
@@ -111,7 +107,7 @@ namespace Mitternacht.Modules.Birthday.Services
                 uow.BotConfig.Update(bc);
                 await uow.CompleteAsync().ConfigureAwait(false);
 
-                await UsersBirthday.Invoke(birthdays, newDay).ConfigureAwait(false);
+                await OnUsersBirthday(birthdays, newDay).ConfigureAwait(false);
             }
         }
 
