@@ -176,7 +176,7 @@ namespace Mitternacht.Modules.Administration
             }
 
             var gu = (IGuildUser) Context.User;
-            if (!gu.GuildPermissions.Administrator && (!gu.RoleIds.Any() || gu.GetRoles().Max(r => r.Position) >= role.Position))
+            if (!gu.GuildPermissions.Administrator && (!gu.RoleIds.Any() || gu.GetRoles().Max(r => r.Position) < role.Position))
             {
                 await ReplyErrorLocalized("rc_perms_pos").ConfigureAwait(false);
                 return;
