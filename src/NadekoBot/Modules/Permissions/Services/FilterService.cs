@@ -126,14 +126,10 @@ namespace Mitternacht.Modules.Permissions.Services
         }
 
         public async Task<bool> FilterZalgo(IGuild guild, IUserMessage usrMsg, bool realExecution = true) {
-            _log.Info("Zalgo1");
             if (guild is null || usrMsg is null) return false;
 
-            _log.Info("Zalgo2");
             if (!ZalgoFilteringServers.Contains(guild.Id) && !ZalgoFilteringChannels.Contains(usrMsg.Channel.Id) || !IsZalgo(usrMsg.Content)) return false;
-            _log.Info("Zalgo3");
             if (!realExecution) return true;
-            _log.Info("Zalgo4");
             try {
                 await usrMsg.DeleteAsync().ConfigureAwait(false);
                 return true;
@@ -156,7 +152,6 @@ namespace Mitternacht.Modules.Permissions.Services
             var ceiling = (int) Math.Ceiling(k);
             if (floor == ceiling) percentile = scores[floor];
             else percentile = scores[floor] * (ceiling - k) + scores[ceiling] * (k - floor);
-            _log.Info($"{percentile} score for \"{s}\"");
             return percentile > 0.5;
         }
     }

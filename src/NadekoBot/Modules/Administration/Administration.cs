@@ -161,43 +161,45 @@ namespace Mitternacht.Modules.Administration
             await role.ModifyAsync(r => r.Hoist = !role.IsHoisted).ConfigureAwait(false);
             await ReplyConfirmLocalized("rh", Format.Bold(role.Name), Format.Bold(role.IsHoisted.ToString())).ConfigureAwait(false);
         }
+        
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
-        public async Task RoleColor(params string[] args)
+        public async Task RoleColor(IRole role, HexColor hc)
         {
-            if (args.Length != 2 && args.Length != 4)
-            {
-                await ReplyErrorLocalized("rc_params").ConfigureAwait(false);
-                return;
-            }
-            var roleName = args[0].ToUpperInvariant();
-            var role = Context.Guild.Roles.FirstOrDefault(r => r.Name.ToUpperInvariant() == roleName);
-
             if (role == null)
             {
                 await ReplyErrorLocalized("rc_not_exist").ConfigureAwait(false);
                 return;
             }
+
+            var gu = (IGuildUser) Context.User;
+            if (!gu.GuildPermissions.Administrator && (!gu.RoleIds.Any() || gu.GetRoles().Max(r => r.Position) < role.Position))
+            {
+                await ReplyErrorLocalized("rc_perms_pos").ConfigureAwait(false);
+                return;
+            }
+
             try
             {
-                var rgb = args.Length == 4;
-                var arg1 = args[1].Replace("#", "");
-
-                var red = Convert.ToByte(rgb ? int.Parse(arg1) : Convert.ToInt32(arg1.Substring(0, 2), 16));
-                var green = Convert.ToByte(rgb ? int.Parse(args[2]) : Convert.ToInt32(arg1.Substring(2, 2), 16));
-                var blue = Convert.ToByte(rgb ? int.Parse(args[3]) : Convert.ToInt32(arg1.Substring(4, 2), 16));
-
-                await role.ModifyAsync(r => r.Color = new Color(red, green, blue)).ConfigureAwait(false);
-                await ReplyConfirmLocalized("rc", Format.Bold(role.Name)).ConfigureAwait(false);
+                await role.ModifyAsync(r => r.Color = hc).ConfigureAwait(false);
+                await ReplyConfirmLocalized("rc", Format.Bold(role.Name), Format.Bold(hc.ToString())).ConfigureAwait(false);
             }
             catch (Exception)
             {
                 await ReplyErrorLocalized("rc_perms").ConfigureAwait(false);
             }
         }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [RequireUserPermission(GuildPermission.ManageRoles)]
+        [RequireBotPermission(GuildPermission.ManageRoles)]
+        public async Task RoleColor(IRole role, byte red, byte green, byte blue)
+            => await RoleColor(role, new HexColor(red, green, blue)).ConfigureAwait(false);
+
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
