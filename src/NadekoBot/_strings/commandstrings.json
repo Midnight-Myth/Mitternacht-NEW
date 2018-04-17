@@ -86,8 +86,8 @@
     "aliases": [
       "roleclr"
     ],
-    "desc": "Set a role's color to the hex or 0-255 rgb color value provided.",
-    "usage": "`{0}roleclr Admin 255 200 100` or `{0}roleclr Admin ffba55`"
+    "desc": "Setzt die Farbe einer Rolle auf den angegebenen Wert.",
+    "usage": "`{0}roleclr <Rolle> <rot> <grün> <blau>` or `{0}roleclr <Rolle> <#RRGGBB>`"
   },
   {
     "name": "removerolelevelbinding",
@@ -96,7 +96,7 @@
       "rrlb"
     ],
     "desc": "Entfernt die levelbezogene automatische Vergabe einer Rolle.",
-    "usage": "`{0}removerolelevelbinding <role>`"
+    "usage": "`{0}removerolelevelbinding <Rolle>`"
   },
   {
     "name": "typedel",
@@ -124,7 +124,7 @@
   {
     "name": "give",
     "cmd": "give",
-    "aliases": [],
+    "aliases": ["pay"],
     "desc": "Give someone a certain amount of currency.",
     "usage": "`{0}give 1 @SomeGuy`"
   },
@@ -249,7 +249,7 @@
     "name": "removerolemoney",
     "cmd": "removerolemoney",
     "aliases": [
-      "deleterolemoney"
+      "rmrm"
     ],
     "desc": "Entferne eine Rolle von der Gehaltsliste",
     "usage": "`{0}removerolemoney <role>`"
@@ -288,13 +288,12 @@
   },
   {
     "name": "cash",
-    "cmd": "$",
+    "cmd": "cash",
     "aliases": [
       "currency",
-      "$$",
-      "$$$",
-      "cash",
-      "cur"
+      "money",
+      "balance",
+      "$"
     ],
     "desc": "Check how much currency a person has. (Defaults to yourself)",
     "usage": "`{0}$` or `{0}$ @SomeGuy`"
