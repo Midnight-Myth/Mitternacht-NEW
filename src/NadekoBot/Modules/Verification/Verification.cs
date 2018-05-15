@@ -164,7 +164,7 @@ namespace Mitternacht.Modules.Verification
             ThreadCollection<ConversationInfo> conversations;
             try
             {
-                conversations = await _fs.Forum.GetConversations().ConfigureAwait(false);
+                conversations = await _fs.Forum.GetConversations(1, 1).ConfigureAwait(false);
             }
             catch (Exception e)
             {
