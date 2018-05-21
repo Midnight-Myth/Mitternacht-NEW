@@ -13,6 +13,7 @@ using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level
 {
+	[Group]
     public partial class Level : MitternachtTopLevelModule<LevelService>
     {
         private readonly IBotConfigProvider _bc;

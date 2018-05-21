@@ -181,6 +181,7 @@
   "administration_spam_ignore": "{0} wird diesen Kanal ignorieren.",
   "administration_spam_not_ignore": "{0} wird diesen Kanal nicht mehr ignorieren.",
   "administration_spam_stats": "Wenn ein Benutzer {0} gleiche Nachrichten sendet werde ich ihn {1}.\n__ignoredChannels__: {2}",
+  "administration_sql_confirm": "Bestätige Ausführung",
   "administration_startcmdlist_none": "Keine Startbefehle auf dieser Seite",
   "administration_startcmds_cleared": "Alle Startbefehle wurden entfernt.",
   "administration_text_chan_created": "Textkanal erstellt",
@@ -954,6 +955,7 @@
   "verification_role_not_found": "Die Rolle mit der Id {0} konnte nicht gefunden werden.",
   "verification_role_set_not_null": "Die Rolle '{0}' wird nun bei jeder Verifizierung vergeben.",
   "verification_role_set_null": "Nach der Verifizierung wird keine Rolle vergeben.",
+  "verification_too_few_args": "Du hast nötige Argumente vergessen. Bitte prüfe, ob du den Befehl richtig benutzt!",
   "verification_tutorial": "Verifizierungsanleitung",
   "verification_tutorial_not_set": "Keine Verifizierungsanleitung verfügbar",
   "verification_tutorial_now_set": "Der Verifizierungstutorialtext wurde gesetzt!",
@@ -963,6 +965,5 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
-  "verification_too_few_args": "Du hast nötige Argumente vergessen. Bitte prüfe, ob du den Befehl richtig benutzt!"
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
 }
