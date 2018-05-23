@@ -13,6 +13,7 @@ namespace Mitternacht.Modules.Verification
 {
     public partial class Verification
     {
+		[Group]
         public class GommeTeamSyncCommands : MitternachtSubmodule<GommeTeamSyncService>
         {
             private readonly DbService _db;
