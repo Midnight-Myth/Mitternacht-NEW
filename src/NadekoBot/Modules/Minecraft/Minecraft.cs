@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Minecraft
                     .WithOkColor()
                     .WithTitle(GetText("apistatus_title"))
                     .WithCurrentTimestamp()
-                    .WithDescription(string.Join("\n", status.Select(p => $"{GetEmojiStringFromServiceStatus(p.Value)} {p.Key.Name}").ToArray()));
+                    .WithDescription(string.Join("\n", status.Where(p => p.Key.Id != null).Select(p => $"{GetEmojiStringFromServiceStatus(p.Value)} {p.Key.Name}").ToArray()));
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
             catch (Exception e)
