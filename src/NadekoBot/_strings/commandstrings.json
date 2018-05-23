@@ -3602,5 +3602,12 @@
     "aliases": [],
     "desc": "Führt einen SQL Query nach Bestätigung aus.",
     "usage": "`{0}execsql <query>`"
+  },
+  {
+    "name": "mojangapistatus",
+    "cmd": "mojangapistatus",
+    "aliases": [ "mapistatus", "apis" ],
+    "desc": "Zeigt die Status der Mojang APIs an.",
+    "usage": "`{0}apis`"
   }
 ]
