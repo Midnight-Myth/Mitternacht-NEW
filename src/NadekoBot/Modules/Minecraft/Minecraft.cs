@@ -99,7 +99,7 @@ namespace Mitternacht.Modules.Minecraft
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task MinecraftServerStatus(string address)
+        public async Task MinecraftServerStatus(string address = "gommehd.net:25565")
         {
             var split = address.Split(':');
             var host = split[0];
