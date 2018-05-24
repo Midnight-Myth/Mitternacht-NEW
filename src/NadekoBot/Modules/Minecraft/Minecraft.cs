@@ -96,5 +96,39 @@ namespace Mitternacht.Modules.Minecraft
         private string GetEmojiStringFromServiceStatus(ServiceStatus status)
             => status == ServiceStatus.Green ? ":white_check_mark:" :
                 status == ServiceStatus.Yellow ? ":warning:" : ":x:";
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task MinecraftServerStatus(string address)
+        {
+            var split = address.Split(':');
+            var host = split[0];
+            ushort port = 25565;
+            if (split.Length > 1) ushort.TryParse(split[1], out port);
+            try
+            {
+                var sp = new ServerPinger(host, port);
+                var embed = new EmbedBuilder()
+                    .WithCurrentTimestamp()
+                    .WithTitle(GetText("server_title", sp.HostAddress))
+                    .AddField(GetText("server_status"), sp.ServerAvailable ? "Online" : "Offline", true)
+                    .AddField(GetText("server_port"), sp.HostPort, true);
+
+                if (sp.ServerAvailable)
+                    embed.WithOkColor()
+                        .AddField(GetText("server_ping"), $"{sp.Ping}ms", true)
+                        .AddField(GetText("server_version"), sp.Version, true)
+                        .AddField(GetText("server_motd"), sp.MotD, true)
+                        .AddField(GetText("server_players"), $"{sp.CurrentPlayers} / {sp.MaxPlayers}", true);
+                else
+                    embed.WithErrorColor();
+
+                await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                await ReplyErrorLocalized("error_server", e.Message).ConfigureAwait(false);
+            }
+        }
     }
 }
