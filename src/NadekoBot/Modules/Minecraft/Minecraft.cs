@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using MinecraftQuery;
-using MinecraftQuery.Models;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services.Impl;
@@ -79,7 +79,7 @@ namespace Mitternacht.Modules.Minecraft
         {
             try
             {
-                var status = await _mapi.GetServiceStatus().ConfigureAwait(false);
+                var status = await _mapi.GetServiceStatusAsync().ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithTitle(GetText("apistatus_title"))
@@ -93,7 +93,7 @@ namespace Mitternacht.Modules.Minecraft
             }
         }
 
-        private string GetEmojiStringFromServiceStatus(ServiceStatus status)
+        private static string GetEmojiStringFromServiceStatus(ServiceStatus status)
             => status == ServiceStatus.Green ? ":white_check_mark:" :
                 status == ServiceStatus.Yellow ? ":warning:" : ":x:";
 
@@ -107,27 +107,69 @@ namespace Mitternacht.Modules.Minecraft
             if (split.Length > 1) ushort.TryParse(split[1], out port);
             try
             {
-                var sp = new ServerPinger(host, port);
+                var sr = await ServerInfo.GetServerStatusAsync(host, port).ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithCurrentTimestamp()
-                    .WithTitle(GetText("server_title", sp.HostAddress))
-                    .AddField(GetText("server_status"), sp.ServerAvailable ? "Online" : "Offline", true)
-                    .AddField(GetText("server_port"), sp.HostPort, true);
+                    .WithTitle(GetText("server_title", sr.HostAddress))
+                    .AddField(GetText("server_status"), sr.ServerAvailable ? "Online" : "Offline", true)
+                    .AddField(GetText("server_port"), sr.HostPort, true);
 
-                if (sp.ServerAvailable)
+                if (sr.ServerAvailable)
                     embed.WithOkColor()
-                        .AddField(GetText("server_ping"), $"{sp.Ping}ms", true)
-                        .AddField(GetText("server_version"), sp.Version, true)
-                        .AddField(GetText("server_motd"), sp.MotD, true)
-                        .AddField(GetText("server_players"), $"{sp.CurrentPlayers} / {sp.MaxPlayers}", true);
+                        .AddField(GetText("server_ping"), $"{sr.Ping}ms", true)
+                        .AddField(GetText("server_version"), sr.Version, true)
+                        .AddField(GetText("server_motd"), sr.MotD, true)
+                        .AddField(GetText("server_players"), $"{sr.CurrentPlayers} / {sr.MaxPlayers}", true);
                 else
                     embed.WithErrorColor();
 
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                await ReplyErrorLocalized("error_server", e.Message).ConfigureAwait(false);
+                await ReplyErrorLocalized("error_server").ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task MinecraftServerPing(string address = "gommehd.net:25565", uint count = 1)
+        {
+            if (count > 0x10) count = 0x10;
+            if (count < 1) count = 1;
+
+            var split = address.Split(':');
+            var host = split[0];
+            ushort port = 25565;
+            if (split.Length > 1) ushort.TryParse(split[1], out port);
+            try
+            {
+                var pr = await ServerInfo.PingServerAsync(host, port).ConfigureAwait(false);
+                if (!pr.ServerAvailable)
+                {
+                    await ReplyErrorLocalized("ping_fail", pr.HostAddress, pr.HostPort).ConfigureAwait(false);
+                    return;
+                }
+
+                if (count == 1)
+                {
+                    await ReplyConfirmLocalized("ping_success", $"{pr.HostAddress}:{pr.HostPort}", $"{pr.Ping}").ConfigureAwait(false);
+                    return;
+                }
+
+                var pings = new List<long> {pr.Ping};
+                for (var i = 1; i < count; i++)
+                {
+                    var prBuf = await ServerInfo.PingServerAsync(host, port, 1000).ConfigureAwait(false);
+                    if(prBuf.ServerAvailable) pings.Add(pr.Ping);
+                }
+
+                var ping = pings.Average();
+                await ReplyConfirmLocalized("ping_success_mult", $"{pr.HostAddress}:{pr.HostPort}", pings.Count, count, $"{ping:N2}");
+            }
+            catch (Exception)
+            {
+                await ReplyErrorLocalized("error_server").ConfigureAwait(false);
             }
         }
     }
