@@ -3606,15 +3606,22 @@
   {
     "name": "mojangapistatus",
     "cmd": "mojangapistatus",
-    "aliases": [ "mapistatus", "apis" ],
+    "aliases": [ "mapis" ],
     "desc": "Zeigt die Status der Mojang APIs an.",
-    "usage": "`{0}apis`"
+    "usage": "`{0}mapis`"
   },
   {
     "name": "minecraftserverstatus",
     "cmd": "mcserverstatus",
     "aliases": [ "mcss" ],
     "desc": "Zeigt Informationen zu einem Minecraftserver an.",
-    "usage": "`{0}serverstatus <hostname[:port]>`"
+    "usage": "`{0}mcserverstatus [hostname[:port]]`"
+  },
+  {
+    "name": "minecraftserverping",
+    "cmd": "mcping",
+    "aliases": [ "mcp" ],
+    "desc": "Zeigt die Laufzeit eines Pings zu einem Minecraftserver an.",
+    "usage": "`{0}mcping [hostname[:port]]`"
   }
 ]
