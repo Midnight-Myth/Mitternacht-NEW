@@ -554,6 +554,7 @@
   "minecraft_error_apistatus": "Beim Abrufen der Status ist ein Fehler aufgetreten: {0}",
   "minecraft_error_server": "Die Anfrage an den Server schlug fehl!",
   "minecraft_ping_success": "Ich habe zum Server `{0}` einen Ping von {1}ms",
+  "minecraft_ping_success_mult": "Ich habe zum Server `{0}` über {1}/{2} Versuche gemittelt einen Ping von {3}ms",
   "minecraft_ping_fail": "Ich konnte den Server `{0}:{1}` nicht erreichen!",
   "minecraft_server_title": "Informationen zu `{0}`",
   "minecraft_server_status": "Serverstatus",

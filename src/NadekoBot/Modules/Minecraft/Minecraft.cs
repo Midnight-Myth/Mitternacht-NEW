@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -132,8 +133,11 @@ namespace Mitternacht.Modules.Minecraft
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task MinecraftServerPing(string address = "gommehd.net:25565")
+        public async Task MinecraftServerPing(string address = "gommehd.net:25565", uint count = 1)
         {
+            if (count > 0x10) count = 0x10;
+            if (count < 1) count = 1;
+
             var split = address.Split(':');
             var host = split[0];
             ushort port = 25565;
@@ -141,10 +145,27 @@ namespace Mitternacht.Modules.Minecraft
             try
             {
                 var pr = await ServerInfo.PingServerAsync(host, port).ConfigureAwait(false);
-                if (pr.ServerAvailable)
-                    await ReplyConfirmLocalized("ping_success", $"{pr.HostAddress}:{pr.HostPort}", pr.Ping).ConfigureAwait(false);
-                else
+                if (!pr.ServerAvailable)
+                {
                     await ReplyErrorLocalized("ping_fail", pr.HostAddress, pr.HostPort).ConfigureAwait(false);
+                    return;
+                }
+
+                if (count == 1)
+                {
+                    await ReplyConfirmLocalized("ping_success", $"{pr.HostAddress}:{pr.HostPort}", $"{pr.Ping}").ConfigureAwait(false);
+                    return;
+                }
+
+                var pings = new List<long> {pr.Ping};
+                for (var i = 1; i < count; i++)
+                {
+                    var prBuf = await ServerInfo.PingServerAsync(host, port, 1000).ConfigureAwait(false);
+                    if(prBuf.ServerAvailable) pings.Add(pr.Ping);
+                }
+
+                var ping = pings.Average();
+                await ReplyConfirmLocalized("ping_success_mult", $"{pr.HostAddress}:{pr.HostPort}", pings.Count, count, $"{ping:N2}");
             }
             catch (Exception)
             {

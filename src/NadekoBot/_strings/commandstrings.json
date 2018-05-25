@@ -3622,6 +3622,6 @@
     "cmd": "mcping",
     "aliases": [ "mcp" ],
     "desc": "Zeigt die Laufzeit eines Pings zu einem Minecraftserver an.",
-    "usage": "`{0}mcping [hostname[:port]]`"
+    "usage": "`{0}mcping [hostname[:port]] [anzahl pings]`"
   }
 ]
