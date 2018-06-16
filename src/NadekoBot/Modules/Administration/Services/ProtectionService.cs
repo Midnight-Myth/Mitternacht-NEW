@@ -14,22 +14,18 @@ namespace Mitternacht.Modules.Administration.Services
 {
     public class ProtectionService : INService
     {
-        public readonly ConcurrentDictionary<ulong, AntiRaidStats> AntiRaidGuilds =
-                new ConcurrentDictionary<ulong, AntiRaidStats>();
+        public readonly ConcurrentDictionary<ulong, AntiRaidStats> AntiRaidGuilds = new ConcurrentDictionary<ulong, AntiRaidStats>();
         // guildId | (userId|messages)
-        public readonly ConcurrentDictionary<ulong, AntiSpamStats> AntiSpamGuilds =
-                new ConcurrentDictionary<ulong, AntiSpamStats>();
+        public readonly ConcurrentDictionary<ulong, AntiSpamStats> AntiSpamGuilds = new ConcurrentDictionary<ulong, AntiSpamStats>();
 
         public event Func<PunishmentAction, ProtectionType, IGuildUser[], Task> OnAntiProtectionTriggered = delegate { return Task.CompletedTask; };
 
         private readonly Logger _log;
-        private readonly DiscordSocketClient _client;
         private readonly MuteService _mute;
 
         public ProtectionService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, MuteService mute)
         {
             _log = LogManager.GetCurrentClassLogger();
-            _client = client;
             _mute = mute;
 
             foreach (var gc in gcs)
@@ -39,29 +35,27 @@ namespace Mitternacht.Modules.Administration.Services
 
                 if (raid != null)
                 {
-                    var raidStats = new AntiRaidStats() { AntiRaidSettings = raid };
+                    var raidStats = new AntiRaidStats { AntiRaidSettings = raid };
                     AntiRaidGuilds.TryAdd(gc.GuildId, raidStats);
                 }
 
                 if (spam != null)
-                    AntiSpamGuilds.TryAdd(gc.GuildId, new AntiSpamStats() { AntiSpamSettings = spam });
+                    AntiSpamGuilds.TryAdd(gc.GuildId, new AntiSpamStats { AntiSpamSettings = spam });
             }
 
-            _client.MessageReceived += (imsg) =>
+            client.MessageReceived += imsg =>
             {
-                var msg = imsg as IUserMessage;
-                if (msg == null || msg.Author.IsBot)
+                if (!(imsg is IUserMessage msg) || msg.Author.IsBot)
                     return Task.CompletedTask;
 
-                var channel = msg.Channel as ITextChannel;
-                if (channel == null)
+                if (!(msg.Channel is ITextChannel channel))
                     return Task.CompletedTask;
                 var _ = Task.Run(async () =>
                 {
                     try
                     {
                         if (!AntiSpamGuilds.TryGetValue(channel.Guild.Id, out var spamSettings) ||
-                            spamSettings.AntiSpamSettings.IgnoredChannels.Contains(new AntiSpamIgnore()
+                            spamSettings.AntiSpamSettings.IgnoredChannels.Contains(new AntiSpamIgnore
                             {
                                 ChannelId = channel.Id
                             }))
@@ -91,7 +85,7 @@ namespace Mitternacht.Modules.Administration.Services
                 return Task.CompletedTask;
             };
 
-            _client.UserJoined += (usr) =>
+            client.UserJoined += usr =>
             {
                 if (usr.IsBot)
                     return Task.CompletedTask;

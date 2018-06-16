@@ -14,7 +14,7 @@ namespace Mitternacht.Modules.Searches
         [Group]
         public class XkcdCommands : MitternachtSubmodule
         {
-            private const string _xkcdUrl = "https://xkcd.com";
+            private const string XkcdUrl = "https://xkcd.com";
 
             [MitternachtCommand, Usage, Description, Aliases]
             [Priority(0)]
@@ -24,15 +24,14 @@ namespace Mitternacht.Modules.Searches
                 {
                     using (var http = new HttpClient())
                     {
-                        var res = await http.GetStringAsync($"{_xkcdUrl}/info.0.json").ConfigureAwait(false);
+                        var res = await http.GetStringAsync($"{XkcdUrl}/info.0.json").ConfigureAwait(false);
                         var comic = JsonConvert.DeserializeObject<XkcdComic>(res);
-                        var embed = new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
+                        var embed = new EmbedBuilder().WithColor(MitternachtBot.OkColor)
                                                   .WithImageUrl(comic.ImageLink)
-                                                  .WithAuthor(eab => eab.WithName(comic.Title).WithUrl($"{_xkcdUrl}/{comic.Num}").WithIconUrl("http://xkcd.com/s/919f27.ico"))
+                                                  .WithAuthor(eab => eab.WithName(comic.Title).WithUrl($"{XkcdUrl}/{comic.Num}").WithIconUrl("http://xkcd.com/s/919f27.ico"))
                                                   .AddField(efb => efb.WithName(GetText("comic_number")).WithValue(comic.Num.ToString()).WithIsInline(true))
                                                   .AddField(efb => efb.WithName(GetText("date")).WithValue($"{comic.Month}/{comic.Year}").WithIsInline(true));
-                        var sent = await Context.Channel.EmbedAsync(embed)
-                                     .ConfigureAwait(false);
+                        var sent = await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 
                         await Task.Delay(10000).ConfigureAwait(false);
 
@@ -52,12 +51,12 @@ namespace Mitternacht.Modules.Searches
 
                 using (var http = new HttpClient())
                 {
-                    var res = await http.GetStringAsync($"{_xkcdUrl}/{num}/info.0.json").ConfigureAwait(false);
+                    var res = await http.GetStringAsync($"{XkcdUrl}/{num}/info.0.json").ConfigureAwait(false);
 
                     var comic = JsonConvert.DeserializeObject<XkcdComic>(res);
-                    var embed = new EmbedBuilder().WithColor(Mitternacht.MitternachtBot.OkColor)
+                    var embed = new EmbedBuilder().WithColor(MitternachtBot.OkColor)
                                                   .WithImageUrl(comic.ImageLink)
-                                                  .WithAuthor(eab => eab.WithName(comic.Title).WithUrl($"{_xkcdUrl}/{num}").WithIconUrl("http://xkcd.com/s/919f27.ico"))
+                                                  .WithAuthor(eab => eab.WithName(comic.Title).WithUrl($"{XkcdUrl}/{num}").WithIconUrl("http://xkcd.com/s/919f27.ico"))
                                                   .AddField(efb => efb.WithName(GetText("comic_number")).WithValue(comic.Num.ToString()).WithIsInline(true))
                                                   .AddField(efb => efb.WithName(GetText("date")).WithValue($"{comic.Month}/{comic.Year}").WithIsInline(true));
                     var sent = await Context.Channel.EmbedAsync(embed)

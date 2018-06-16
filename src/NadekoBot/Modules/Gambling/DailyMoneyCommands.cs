@@ -10,6 +10,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.Gambling
 {
@@ -23,7 +24,7 @@ namespace Mitternacht.Modules.Gambling
             private readonly CurrencyService _currency;
 
             private string CurrencyName => _bc.BotConfig.CurrencyName;
-            private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
+            //private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
             private string CurrencySign => _bc.BotConfig.CurrencySign;
 
             public DailyMoneyCommands(IBotConfigProvider bc, DbService db, CurrencyService currency)
@@ -39,41 +40,37 @@ namespace Mitternacht.Modules.Gambling
             {
                 var user = (IGuildUser)Context.User;
 
-                bool canReceiveDailyMoney;
                 using (var uow = _db.UnitOfWork)
                 {
-                    canReceiveDailyMoney = uow.DailyMoney.TryUpdateState(user.Id);
-                    await uow.CompleteAsync().ConfigureAwait(false);
-                }
-                if (canReceiveDailyMoney)
-                {
-                    IEnumerable<IRole> userRolesAll = user.GetRoles().OrderBy(r => -r.Position);
-                    IEnumerable<RoleMoney> roleMoneysAll;
-                    using (var uow = _db.UnitOfWork)
+                    var canReceiveDailyMoney = uow.DailyMoney.CanReceive(user.Id);
+
+                    if (canReceiveDailyMoney)
                     {
-                        roleMoneysAll = uow.RoleMoney.GetAll();
-                        await uow.CompleteAsync().ConfigureAwait(false);
-                    }
-                    var userRoles = userRolesAll.Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
-                    var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderByDescending(m => m.Priority);
-                    if (!roleMoneys.Any())
-                    {
-                        await Context.Channel.SendMessageAsync($"Deine Rollen erlauben kein DailyMoney, also bekommst du nichts, {Context.User.Mention}!");
-                        using (var uow = _db.UnitOfWork)
+                        var userRolesAll = user.GetRoles().OrderBy(r => -r.Position).ToList();
+                        var roleMoneysAll = uow.RoleMoney.GetAll();
+                        var userRoles = userRolesAll.Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
+                        var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderByDescending(m => m.Priority).ToList();
+
+                        if (!roleMoneys.Any())
+                            await Context.Channel.SendMessageAsync(GetText("dm_no_role", Context.User.Mention)).ConfigureAwait(false);
+                        else
                         {
-                            uow.DailyMoney.TryResetReceived(user.Id);
-                            await uow.CompleteAsync().ConfigureAwait(false);
+                            var rm = roleMoneys
+                                .Where(m => m.Priority == roleMoneys.First().Priority)
+                                .OrderBy(m => -userRoles.First(r => r.Id == m.RoleId).Position)
+                                .First();
+                            var role = userRoles.First(r => r.Id == rm.RoleId);
+                            uow.DailyMoney.TryUpdateState(user.Id);
+                            await _currency.AddAsync(user, $"Daily Reward ({role.Name})", rm.Money, false).ConfigureAwait(false);
+                            uow.DailyMoneyStats.Add(user.Id, uow.DailyMoney.GetUserDate(user.Id), rm.Money);
+
+                            await Context.Channel.SendMessageAsync(GetText("dm_received", Context.User.Mention, role.Name, rm.Money, CurrencySign)).ConfigureAwait(false);
                         }
                     }
-                    else
-                    {
-                        var rm = roleMoneys.Where(m => m.Priority == roleMoneys.First().Priority).OrderBy(m => -userRoles.First(r => r.Id == m.RoleId).Position).First();
-                        var role = userRoles.First(r => r.Id == rm.RoleId);
-                        await _currency.AddAsync(user, $"Daily Reward ({role.Name})", rm.Money, false).ConfigureAwait(false);
-                        await Context.Channel.SendMessageAsync($"{Context.User.Mention} hat sich seinen täglichen \"{role.Name}\"-Anteil von {rm.Money} {CurrencySign} abgeholt.");
-                    }
+                    else await Context.Channel.SendMessageAsync(GetText("dm_already_received", Context.User.Mention)).ConfigureAwait(false);
+
+                    await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                else await Context.Channel.SendMessageAsync($"Du hast deinen täglichen Anteil heute bereits abgeholt, {Context.User.Mention}");
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -87,27 +84,27 @@ namespace Mitternacht.Modules.Gambling
                     uow.RoleMoney.SetPriority(role.Id, priority);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync($"Rolle {role.Name} bekommt nun {money} {CurrencySign} mit Priorität {priority}.");
+                await Context.Channel.SendMessageAsync(GetText("dm_role_set", role.Name, money, CurrencySign, priority)).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
-            public async Task SetRoleMoney(IRole role, long money) => await SetRoleMoney(role, money, 0);
+            public async Task SetRoleMoney(IRole role, long money) => await SetRoleMoney(role, money, 0).ConfigureAwait(false);
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
-            public async Task ResetDailyMoney([Remainder]IUser user = null)
+            public async Task ResetDailyMoney([Remainder]IGuildUser user = null)
             {
-                user = user ?? Context.User;
+                user = user ?? (IGuildUser)Context.User;
                 bool wasReset;
                 using (var uow = _db.UnitOfWork)
                 {
                     wasReset = uow.DailyMoney.TryResetReceived(user.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(wasReset ? $"{user.Username} kann seinen täglichen Anteil nochmal abholen." : $"{user.Username} hat seinen täglichen Anteil noch nicht abgeholt.");
+                await Context.Channel.SendMessageAsync(GetText(wasReset ? "dm_again" : "dm_not_received", user.Username)).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -121,7 +118,7 @@ namespace Mitternacht.Modules.Gambling
                     removed = uow.RoleMoney.Remove(role.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(removed ? $"Rolle \"{role.Name}\" wurde von der Gehaltsliste entfernt." : $"Rolle \"{role.Name}\" steht nicht auf der Gehaltsliste!");
+                await Context.Channel.SendMessageAsync(GetText(removed ? "dm_role_removed" : "dm_role_not_set", role.Name)).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -132,65 +129,101 @@ namespace Mitternacht.Modules.Gambling
                 bool exists;
                 using (var uow = _db.UnitOfWork)
                 {
-                    if(exists = uow.RoleMoney.Exists(role.Id)) uow.RoleMoney.SetPriority(role.Id, priority);
+                    exists = uow.RoleMoney.Exists(role.Id);
+                    if (exists) uow.RoleMoney.SetPriority(role.Id, priority);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(exists ? $"Die Priorität von Rolle \"{role.Name}\" wurde auf {priority} gesetzt." : $"Die Rolle \"{role.Name}\" bekommt kein DailyMoney!");
+                await Context.Channel.SendMessageAsync(GetText(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority)).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            public async Task Payroll(int count, int position = 1)
+            public async Task Payroll(int count = 20, int position = 1)
             {
                 const int elementsPerList = 20;
 
-                IOrderedEnumerable<RoleMoney> roleMoneys;
+                List<RoleMoney> roleMoneys;
                 using (var uow = _db.UnitOfWork)
                 {
-                    roleMoneys = uow.RoleMoney.GetAll().OrderByDescending(rm => ((long)rm.Priority << 32) + Context.Guild.GetRole(rm.RoleId).Position);
+                    roleMoneys = uow.RoleMoney
+                        .GetAll()
+                        .OrderByDescending(rm => ((long) rm.Priority << 32) + Context.Guild.GetRole(rm.RoleId).Position)
+                        .Skip(position - 1 <= 0 ? 0 : position - 1)
+                        .Take(count)
+                        .ToList();
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
                 if (!roleMoneys.Any()) return;
-                position--;
-                if (position < 0 || position > roleMoneys.Count()) position = 0;
-                if (count <= 0 || count > roleMoneys.Count() - position) count = roleMoneys.Count() - position;
 
-                var rankstrings = new List<string>();
+                var groupedRms = roleMoneys
+                    .GroupBy(rm => (int) Math.Floor(roleMoneys.IndexOf(rm) * 1d / elementsPerList))
+                    .ToList();
+
+                var listStrings = new List<string>();
                 var sb = new StringBuilder();
-                sb.AppendLine("__**Gehaltsliste**__");
-                for (var i = position; i < count + position; i++)
-                {
-                    var rm = roleMoneys.ElementAt(i);
-                    var role = Context.Guild.GetRole(rm.RoleId);
+                var listheader = GetText("payroll_list_header", CurrencyName);
+                var headerdivider = string.Join("|", listheader.Split("|").Select(s => string.Join("", Enumerable.Repeat("-", s.Length))));
+                sb.AppendLine(GetText("payroll_header"));
 
-                    if ((i - position) % elementsPerList == 0) sb.AppendLine($"```Liste {Math.Floor((i - position) / 20f) + 1}");
-                    sb.AppendLine($"{i+1,3}. | {role.Name, -20} | {rm.Money,-3} {CurrencyName} | Priorität {rm.Priority}");
-                    if ((i - position) % elementsPerList != elementsPerList - 1) continue;
+                foreach (var grm in groupedRms)
+                {
+                    if (!grm.Any()) continue;
+                    var listNumber = grm.Key + 1;
+                    sb.Append($"```{GetText("payroll_list_number", listNumber)}\n{listheader}\n{headerdivider}");
+                    foreach (var rm in grm)
+                    {
+                        var role = Context.Guild.GetRole(rm.RoleId);
+                        sb.Append($"\n{position + roleMoneys.IndexOf(rm),3}. | {role?.Name ?? rm.RoleId.ToString(),-20} | {rm.Money,-4}{string.Join("", Enumerable.Repeat(" ", CurrencyName.Length - 4))} | {rm.Priority}");
+                    }
+
                     sb.Append("```");
-                    rankstrings.Add(sb.ToString());
+                    listStrings.Add(sb.ToString());
                     sb.Clear();
                 }
 
-                if (sb.Length > 0)
-                {
-                    sb.Append("```");
-                    rankstrings.Add(sb.ToString());
-                    sb.Clear();
-                }
+                var channel = count <= 20
+                    ? Context.Channel
+                    : await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
 
-                var channel = count <= 20 ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync();
-
-                foreach (var s in rankstrings)
+                foreach (var s in listStrings)
                 {
-                    await channel.SendMessageAsync(s);
+                    await channel.SendMessageAsync(s).ConfigureAwait(false);
                     Thread.Sleep(250);
                 }
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            public async Task Payroll(int count = 20) => await Payroll(count, 1);
+            [OwnerOrGuildPermission(GuildPermission.Administrator)]
+            public async Task DailyMoneyStats(params IGuildUser[] users)
+            {
+                users = users.Length == 0 ? new []{(IGuildUser)Context.User} : users;
+
+                using (var uow = _db.UnitOfWork)
+                {
+                    var stats = uow.DailyMoneyStats
+                        .GetAllUser(users.Select(gu => gu.Id).ToArray())
+                        .GroupBy(dms => dms.UserId)
+                        .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.UnixTimestamp(), money = dms.MoneyReceived}).ToArray());
+                    await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm}_dailymoney-stats.json").ConfigureAwait(false);
+                }
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [OwnerOrGuildPermission(GuildPermission.Administrator)]
+            public async Task DailyMoneyStatsAll()
+            {
+                using (var uow = _db.UnitOfWork)
+                {
+                    var stats = uow.DailyMoneyStats
+                        .GetAll()
+                        .GroupBy(dms => dms.UserId)
+                        .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.UnixTimestamp(), money = dms.MoneyReceived}).ToArray());
+                    await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm}_dailymoney-stats.json").ConfigureAwait(false);
+                }
+            }
         }
     }
 }

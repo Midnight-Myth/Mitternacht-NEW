@@ -84,6 +84,10 @@ namespace Mitternacht.Services.Database
         private IBirthDateRepository _birthdates;
         public IBirthDateRepository BirthDates => _birthdates ?? (_birthdates = new BirthDateRepository(Context));
 
+        private IDailyMoneyStatsRepository _dailyMoneyStats;
+
+        public IDailyMoneyStatsRepository DailyMoneyStats => _dailyMoneyStats ?? (_dailyMoneyStats = new DailyMoneyStatsRepository(Context));
+
         public UnitOfWork(NadekoContext context)
         {
             Context = context;

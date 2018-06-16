@@ -65,6 +65,7 @@ namespace Mitternacht.Services.Database
         public DbSet<NicknameHistoryModel> NicknameHistory { get; set; }
 
         public DbSet<BirthDateModel> BirthDates { get; set; }
+        public DbSet<DailyMoneyStats> DailyMoneyStats { get; set; }
 
         public NadekoContext()
         {
@@ -164,7 +165,7 @@ namespace Mitternacht.Services.Database
 
             modelBuilder.Entity<DailyMoney>().HasIndex(c => c.UserId).IsUnique();
             modelBuilder.Entity<RoleMoney>().HasIndex(c => c.RoleId).IsUnique();
-
+            
             #endregion
 
             #region LevelModule

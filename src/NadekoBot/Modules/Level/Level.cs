@@ -73,13 +73,18 @@ namespace Mitternacht.Modules.Level
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
-        public async Task Ranks(int count, int position)
+        public async Task Ranks(int count = 20, int position = 1)
         {
             const int elementsPerList = 20;
             using (var uow = _db.UnitOfWork)
             {
-                var levelModels = uow.LevelModel.GetAll().Where(p => p.TotalXP != 0 && p.GuildId == Context.Guild.Id)
-                    .OrderByDescending(p => p.TotalXP).Skip(position - 1 <= 0 ? 0 : position - 1).Take(count).ToList();
+                var levelModels = uow.LevelModel
+                    .GetAll()
+                    .Where(p => p.TotalXP != 0 && p.GuildId == Context.Guild.Id)
+                    .OrderByDescending(p => p.TotalXP)
+                    .Skip(position - 1 <= 0 ? 0 : position - 1)
+                    .Take(count)
+                    .ToList();
 
                 if (!levelModels.Any()) return;
 
@@ -90,8 +95,8 @@ namespace Mitternacht.Modules.Level
                 sb.AppendLine(GetText("ranks_header"));
                 foreach (var glm in groupedLevelModels)
                 {
-                    var listNumber = glm.Key + 1;
                     if (!glm.Any()) continue;
+                    var listNumber = glm.Key + 1;
                     sb.Append($"```{GetText("ranks_list_header", listNumber)}");
                     foreach (var lm in glm)
                     {
@@ -118,11 +123,6 @@ namespace Mitternacht.Modules.Level
                 }
             }
         }
-
-        [MitternachtCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        public async Task Ranks(int count = 20)
-            => await Ranks(count, 1);
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
