@@ -93,9 +93,9 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
 
-                var stats = new AntiRaidStats()
+                var stats = new AntiRaidStats
                 {
-                    AntiRaidSettings = new AntiRaidSetting()
+                    AntiRaidSettings = new AntiRaidSetting
                     {
                         Action = action,
                         Seconds = seconds,
@@ -166,7 +166,7 @@ namespace Mitternacht.Modules.Administration
 
                 var stats = new AntiSpamStats
                 {
-                    AntiSpamSettings = new AntiSpamSetting()
+                    AntiSpamSettings = new AntiSpamSetting
                     {
                         Action = action,
                         MessageThreshold = messageCount,
@@ -216,16 +216,14 @@ namespace Mitternacht.Modules.Administration
 
                     if (spam.IgnoredChannels.Add(obj))
                     {
-                        AntiSpamStats temp;
-                        if (Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out temp))
+                        if (Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out var temp))
                             temp.AntiSpamSettings.IgnoredChannels.Add(obj);
                         added = true;
                     }
                     else
                     {
                         spam.IgnoredChannels.Remove(obj);
-                        AntiSpamStats temp;
-                        if (Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out temp))
+                        if (Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out var temp))
                             temp.AntiSpamSettings.IgnoredChannels.Remove(obj);
                         added = false;
                     }
@@ -243,11 +241,8 @@ namespace Mitternacht.Modules.Administration
             [RequireContext(ContextType.Guild)]
             public async Task AntiList()
             {
-                AntiSpamStats spam;
-                Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out spam);
-
-                AntiRaidStats raid;
-                Service.AntiRaidGuilds.TryGetValue(Context.Guild.Id, out raid);
+                Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out var spam);
+                Service.AntiRaidGuilds.TryGetValue(Context.Guild.Id, out var raid);
 
                 if (spam == null && raid == null)
                 {

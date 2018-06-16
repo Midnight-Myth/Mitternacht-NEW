@@ -33,6 +33,7 @@ namespace Mitternacht.Services.Database
         IUsernameHistoryRepository UsernameHistory { get; }
         INicknameHistoryRepository NicknameHistory { get; }
         IBirthDateRepository BirthDates { get; }
+        IDailyMoneyStatsRepository DailyMoneyStats { get; }
 
         int Complete();
         Task<int> CompleteAsync();

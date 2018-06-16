@@ -61,8 +61,9 @@ namespace Mitternacht.Modules.Administration
                     await Service.MuteUser(user).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_muted", Format.Bold(user.ToString())).ConfigureAwait(false);
                 }
-                catch
+                catch(Exception e)
                 {
+                    _log.Warn(e);
                     await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
                 }
             }
@@ -75,7 +76,6 @@ namespace Mitternacht.Modules.Administration
             public async Task Mute(string time, IGuildUser user)
             {
                 var argTime = time;
-                int days, hours, minutes;
                 string sdays = "0", shours = "0", sminutes = "0";
 
 
@@ -95,9 +95,9 @@ namespace Mitternacht.Modules.Administration
                     sminutes = argTime.Split('m')[0];
                 }
 
-                days = Convert.ToInt32(sdays);
-                hours = Convert.ToInt32(shours);
-                minutes = Convert.ToInt32(sminutes);
+                var days = Convert.ToInt32(sdays);
+                var hours = Convert.ToInt32(shours);
+                var minutes = Convert.ToInt32(sminutes);
 
                 var muteTime = days * 24 * 60 + hours * 60 + minutes;
                 try
@@ -105,9 +105,9 @@ namespace Mitternacht.Modules.Administration
                     await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    _log.Warn(ex);
+                    _log.Warn(e);
                     await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
                 }
             }
@@ -145,8 +145,9 @@ namespace Mitternacht.Modules.Administration
                     await Service.UnmuteUser(user).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_unmuted", Format.Bold(user.ToString())).ConfigureAwait(false);
                 }
-                catch
+                catch (Exception e)
                 {
+                    _log.Warn(e);
                     await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
                 }
             }
