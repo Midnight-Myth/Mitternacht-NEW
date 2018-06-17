@@ -147,7 +147,8 @@ namespace Mitternacht.Modules.Gambling
                 {
                     roleMoneys = uow.RoleMoney
                         .GetAll()
-                        .OrderByDescending(rm => ((long) rm.Priority << 32) + Context.Guild.GetRole(rm.RoleId).Position)
+                        .OrderByDescending(rm => rm.Priority)
+                        .ThenByDescending(rm => Context.Guild.GetRole(rm.RoleId)?.Position ?? 0)
                         .Skip(position - 1 <= 0 ? 0 : position - 1)
                         .Take(count)
                         .ToList();
