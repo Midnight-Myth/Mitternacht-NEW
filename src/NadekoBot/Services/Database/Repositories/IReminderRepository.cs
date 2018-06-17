@@ -5,6 +5,6 @@ namespace Mitternacht.Services.Database.Repositories
 {
     public interface IReminderRepository : IRepository<Reminder>
     {
-        IEnumerable<Reminder> GetIncludedReminders(IEnumerable<long> guildIds);
+        IEnumerable<Reminder> GetIncludedReminders(IEnumerable<ulong> guildIds);
     }
 }

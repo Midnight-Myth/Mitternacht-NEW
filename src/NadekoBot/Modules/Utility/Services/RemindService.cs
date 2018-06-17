@@ -23,25 +23,22 @@ namespace Mitternacht.Modules.Utility.Services
         public string RemindMessageFormat { get; }
 
         private readonly Logger _log;
-        private readonly CancellationTokenSource cancelSource;
-        private readonly CancellationToken cancelAllToken;
-        private readonly IBotConfigProvider _config;
+        private readonly CancellationToken _cancelAllToken;
         private readonly DiscordSocketClient _client;
         private readonly DbService _db;
 
         public RemindService(DiscordSocketClient client, IBotConfigProvider config, DbService db,
              StartingGuildsService guilds, IUnitOfWork uow)
         {
-            _config = config;
             _client = client;
             _log = LogManager.GetCurrentClassLogger();
             _db = db;
 
-            cancelSource = new CancellationTokenSource();
-            cancelAllToken = cancelSource.Token;
+            var cancelSource = new CancellationTokenSource();
+            _cancelAllToken = cancelSource.Token;
             
             var reminders = uow.Reminders.GetIncludedReminders(guilds).ToList();
-            RemindMessageFormat = _config.BotConfig.RemindMessageFormat;
+            RemindMessageFormat = config.BotConfig.RemindMessageFormat;
 
             foreach (var r in reminders)
             {
@@ -51,7 +48,7 @@ namespace Mitternacht.Modules.Utility.Services
 
         public async Task StartReminder(Reminder r)
         {
-            var t = cancelAllToken;
+            var t = _cancelAllToken;
             var now = DateTime.UtcNow;
 
             var time = r.When - now;

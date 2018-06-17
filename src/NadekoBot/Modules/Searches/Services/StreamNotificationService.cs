@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Searches.Services
                 IEnumerable<FollowedStream> streams;
                 using (var uow = _db.UnitOfWork)
                 {
-                    streams = uow.GuildConfigs.GetAllFollowedStreams(client.Guilds.Select(x => (long)x.Id).ToList());
+                    streams = uow.GuildConfigs.GetAllFollowedStreams(client.Guilds.Select(x => x.Id).ToList());
                 }
 
                 await Task.WhenAll(streams.Select(async fs =>

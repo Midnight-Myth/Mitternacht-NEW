@@ -12,13 +12,16 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         {
         }
 
-        private List<WarningPunishment> DefaultWarnPunishments =>
-            new List<WarningPunishment>() {
-                new WarningPunishment() {
+        private static List<WarningPunishment> DefaultWarnPunishments =>
+            new List<WarningPunishment>
+            {
+                new WarningPunishment
+                {
                     Count = 3,
                     Punishment = PunishmentAction.Kick
                 },
-                new WarningPunishment() {
+                new WarningPunishment
+                {
                     Count = 5,
                     Punishment = PunishmentAction.Ban
                 }
@@ -135,10 +138,10 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             return query.ToList();
         }
 
-        public IEnumerable<GuildConfig> Permissionsv2ForAll(List<long> include)
+        public IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include)
         {
             var query = _set
-                .Where(x => include.Contains((long)x.GuildId))
+                .Where(x => include.Contains(x.GuildId))
                 .Include(gc => gc.Permissions);
 
             return query.ToList();
@@ -169,9 +172,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             return config;
         }
 
-        public IEnumerable<FollowedStream> GetAllFollowedStreams(List<long> included) =>
+        public IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included) =>
             _set
-                .Where(gc => included.Contains((long)gc.GuildId))
+                .Where(gc => included.Contains(gc.GuildId))
                 .Include(gc => gc.FollowedStreams)
                 .SelectMany(gc => gc.FollowedStreams)
                 .ToList();
