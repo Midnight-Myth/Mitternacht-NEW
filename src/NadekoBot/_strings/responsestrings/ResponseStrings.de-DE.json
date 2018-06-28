@@ -893,11 +893,16 @@
   "utility_presence_txt": "{0} Server\n{1} Text Kanäle\n{2} Sprach Kanäle",
   "utility_quote_added": "Zitat hinzugefügt",
   "utility_quote_deleted": "Zitat #{0} wurde gelöscht.",
+  "utility_quote_not_found": "Kein Zitat mit Schlüsselwort `{0}` gefunden!",
+  "utility_quote_text_not_found": "Kein Zitat mit Schlüsselwort `{0}` und Text `{1}` gefunden!",
   "utility_quotes_deleted": "Alle Zitate mit dem Stichwort {0} wurden gelöscht.",
-  "utility_quotes_notfound": "Keine Zitat mit der übergebenen ID gefunden.",
+  "utility_quotes_notfound": "Kein Zitat mit der ID #{0} gefunden.",
   "utility_quotes_page": "Seite {0} der Zitate",
-  "utility_quotes_page_none": "Keine Zitate auf dieser Seite.",
-  "utility_quotes_remove_none": "Kein Zitat das Sie entfernen können gefunden.",
+  "utility_quotes_user_page": "Seite {0} der Zitate von {1}",
+  "utility_quotes_page_none": "Keine Zitate gefunden!",
+  "utility_quotes_remove_none": "Es wurden kein Zitat gefunden, das entfernt werden kann!",
+  "utility_quotes_list_item": "`#{0}` {1,-20}",
+  "utility_quotes_list_item_author": "`#{0}` {1,-20} von {0}",
   "utility_region": "Region",
   "utility_registered_on": "Registriert an",
   "utility_remind": "Ich werde {0} erinnern {1} in {2} `({3:d.M.yyyy.} um {4:HH:mm})` zu tun.",
@@ -991,5 +996,7 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
+  "precattr_perms_missing": "Du darfst diesen Befehl erst mit der Berechtigung `{0}` ausführen!",
+  "precattr_owner_only": "Diesen Befehl dürfen nur Botowner ausführen!"
 }

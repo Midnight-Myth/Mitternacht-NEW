@@ -171,7 +171,7 @@ namespace Mitternacht.Modules.Birthday
 
             const int itemcount = 10;
             var pagecount = (int)Math.Ceiling(birthdates.Count / (itemcount * 1d));
-            if (page > pagecount) page = pagecount;
+            page = page > pagecount ? pagecount : page;
 
             await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1,
                 p => new EmbedBuilder().WithOkColor().WithTitle(GetText("all_title")).WithDescription(string.Join("\n",

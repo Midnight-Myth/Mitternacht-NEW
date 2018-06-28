@@ -1571,14 +1571,14 @@
     "aliases": [
       "liqu"
     ],
-    "desc": "Lists all quotes on the server ordered alphabetically. 15 Per page.",
-    "usage": "`{0}liqu` or `{0}liqu 3`"
+    "desc": "Zeigt alle Zitate dieser Gilde oder eines angegebenen Nutzers an.",
+    "usage": "`{0}liqu [seite]` oder `{0}liqu <nutzer> [seite]`"
   },
   {
     "name": "lsar",
     "cmd": "lsar",
     "aliases": [],
-    "desc": "Lists all self-assignable roles.",
+    "desc": "Zeigt alle Rollen an, die selbst zugewiesen werden können.",
     "usage": "`{0}lsar`"
   },
   {
@@ -3185,7 +3185,7 @@
     "name": "showquote",
     "cmd": "..",
     "aliases": [],
-    "desc": "Shows a random quote with a specified name.",
+    "desc": "Zeigt ein zufälliges Zitat mit einem bestimmten Schlüsselwort an.",
     "usage": "`{0}.. abc`"
   },
   {

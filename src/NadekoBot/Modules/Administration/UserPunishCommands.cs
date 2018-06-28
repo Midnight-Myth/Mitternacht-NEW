@@ -215,6 +215,7 @@ namespace Mitternacht.Modules.Administration
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
+            [OwnerOrGuildPermission(GuildPermission.Administrator)]
             [Priority(0)]
             public async Task WarnEdit(string hexid, [Remainder] string reason = null) {
                 var id = hexid.FromHexToInt();
@@ -228,12 +229,10 @@ namespace Mitternacht.Modules.Administration
                     var user = Context.User as IGuildUser;
                     if (!_bc.IsOwner(Context.User)) {
                         if (user == null) return;
-                        if (user.GuildPermissions.Administrator && w.GuildId != user.GuildId) {
+                        if (w.GuildId != user.GuildId) {
                             await ReplyErrorLocalized("warn_edit_perms", hexid).ConfigureAwait(false);
                             return;
                         }
-
-                        if (!user.GuildPermissions.Administrator) return;
                     }
 
                     if (w == null) {
