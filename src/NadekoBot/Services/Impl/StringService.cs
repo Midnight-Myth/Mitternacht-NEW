@@ -102,8 +102,7 @@ namespace Mitternacht.Services.Impl
             return text;
         }
 
-        public string GetText(string key, CultureInfo cultureInfo, string lowerModuleTypeName,
-            params object[] replacements)
+        public string GetText(string key, CultureInfo cultureInfo, string lowerModuleTypeName, params object[] replacements)
         {
             try
             {
