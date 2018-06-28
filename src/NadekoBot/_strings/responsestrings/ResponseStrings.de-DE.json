@@ -902,7 +902,7 @@
   "utility_quotes_page_none": "Keine Zitate gefunden!",
   "utility_quotes_remove_none": "Es wurden kein Zitat gefunden, das entfernt werden kann!",
   "utility_quotes_list_item": "`#{0}` {1,-20}",
-  "utility_quotes_list_item_author": "`#{0}` {1,-20} von {0}",
+  "utility_quotes_list_item_author": "`#{0}` {1,-20} von {2}",
   "utility_region": "Region",
   "utility_registered_on": "Registriert an",
   "utility_remind": "Ich werde {0} erinnern {1} in {2} `({3:d.M.yyyy.} um {4:HH:mm})` zu tun.",

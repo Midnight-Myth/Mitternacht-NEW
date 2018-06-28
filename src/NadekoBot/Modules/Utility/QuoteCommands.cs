@@ -67,11 +67,12 @@ namespace Mitternacht.Modules.Utility
 
                 await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p =>
                         new EmbedBuilder()
+                            .WithOkColor()
                             .WithTitle(title.Replace("{page}", $"{p+1}"))
                             .WithDescription(string.Join("\n",
                                 quotes.Skip(p * elementsPerPage).Take(elementsPerPage).Select(q => isUserNull
-                                    ? GetText("quotes_list_item", q.Id, Format.Bold(q.Keyword.SanitizeMentions()))
-                                    : GetText("quotes_list_item_author", q.Id, Format.Bold(q.Keyword.SanitizeMentions()), q.AuthorName.SanitizeMentions())))),
+                                    ? GetText("quotes_list_item_author", q.Id, Format.Bold(q.Keyword.SanitizeMentions()), q.AuthorName.SanitizeMentions())
+                                    : GetText("quotes_list_item", q.Id, Format.Bold(q.Keyword.SanitizeMentions()))))),
                     pagecount - 1, true, new[] { Context.User as IGuildUser });
             }
 
