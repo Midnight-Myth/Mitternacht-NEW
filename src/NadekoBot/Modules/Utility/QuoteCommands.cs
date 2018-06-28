@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -40,7 +41,7 @@ namespace Mitternacht.Modules.Utility
                 var isUserNull = user == null;
                 const int elementsPerPage = 16;
 
-                List<Quote> quotes;
+                ImmutableList<Quote> quotes;
                 using (var uow = _db.UnitOfWork)
                 {
                     var qs = uow.Quotes.GetAllForGuild(Context.Guild.Id);
@@ -49,7 +50,7 @@ namespace Mitternacht.Modules.Utility
                         var uid = user.Id;
                         qs = qs.Where(q => q.AuthorId == uid);
                     }
-                    quotes = qs.OrderBy(q => q.Id).ToList();
+                    quotes = qs.OrderBy(q => q.Id).ToImmutableList();
                 }
 
                 if (!quotes.Any())
