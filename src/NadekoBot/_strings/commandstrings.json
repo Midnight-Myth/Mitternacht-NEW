@@ -667,6 +667,13 @@
     "usage": "`{0}modules`"
   },
   {
+    "name": "submodules",
+    "cmd": "submodules",
+    "aliases": [],
+    "desc": "Lists all bot (sub-)modules.",
+    "usage": "`{0}submodules`"
+  },
+  {
     "name": "srvrfilterinv",
     "cmd": "srvrfilterinv",
     "aliases": [

@@ -8,11 +8,11 @@ using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Common.Attributes
 {
-    public class OwnerOrGuildPermission : PreconditionAttribute
+    public class OwnerOrGuildPermissionAttribute : PreconditionAttribute
     {
         private readonly GuildPermission _permLevel;
 
-        public OwnerOrGuildPermission(GuildPermission perm)
+        public OwnerOrGuildPermissionAttribute(GuildPermission perm)
         {
             _permLevel = perm;
         }

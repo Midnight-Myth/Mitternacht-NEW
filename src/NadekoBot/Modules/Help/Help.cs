@@ -42,8 +42,29 @@ namespace Mitternacht.Modules.Help
                 .WithDescription(string.Join("\n",
                                      _cmds.Modules.GroupBy(m => m.GetTopLevelModule())
                                          .Where(m => !_perms.BlockedModules.Contains(m.Key.Name.ToLowerInvariant()))
-                                         .Select(m => "• " + m.Key.Name)
+                                         .Select(m => $"• {m.Key.Name}")
                                          .OrderBy(s => s)));
+            await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        public async Task Submodules()
+        {
+            var embed = new EmbedBuilder()
+                .WithOkColor()
+                .WithFooter(GetText("modules_footer", Prefix))
+                .WithTitle(GetText("list_of_submodules"))
+                .WithDescription(string.Join("\n", _cmds.Modules.GroupBy(m => m.GetTopLevelModule())
+                    .Where(m => !_perms.BlockedModules.Any(bm => bm.Equals(m.Key.Name, StringComparison.OrdinalIgnoreCase)))
+                    .OrderBy(m => m.Key.Name)
+                    .Select(m =>
+                    {
+                        var s = $"• {m.Key.Name}";
+                        var sms = m.Where(sm => sm.IsSubmodule).ToList();
+                        if(sms.Any())
+                            s += "\n" + string.Join("\n", sms.Select(sm => $"   • {sm.Name}"));
+                        return s;
+                    })));
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
 
@@ -52,10 +73,10 @@ namespace Mitternacht.Modules.Help
         {
             var channel = Context.Channel;
 
-            module = module?.Trim().ToUpperInvariant();
+            module = module?.Trim();
             if (string.IsNullOrWhiteSpace(module)) return;
             var cmds = _cmds.Commands
-                .Where(c => c.Module.GetTopLevelModule().Name.ToUpperInvariant().StartsWith(module))
+                .Where(c => c.Module.Name.StartsWith(module, StringComparison.OrdinalIgnoreCase))
                 .Where(c => !_perms.BlockedCommands.Any(bc => bc.Equals(c.Aliases.First(), StringComparison.OrdinalIgnoreCase)))
                 .Distinct(new CommandTextEqualityComparer())
                 .GroupBy(c => c.Module)

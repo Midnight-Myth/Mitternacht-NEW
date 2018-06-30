@@ -50,9 +50,10 @@ namespace Mitternacht.Modules.Help.Services
                 .WithOkColor();
         }
 
+        //todo: add OwnerOrGuildPermissionAttribute
         public string GetCommandRequirements(CommandInfo cmd, IGuild guild) =>
             string.Join(" ", cmd.Preconditions
-                  .Where(ca => ca is OwnerOnlyAttribute || ca is RequireUserPermissionAttribute)
+                  .Where(ca => ca is OwnerOnlyAttribute || ca is RequireUserPermissionAttribute /*|| ca is OwnerOrGuildPermissionAttribute*/)
                   .Select(ca =>
                   {
                       if (ca is OwnerOnlyAttribute)
