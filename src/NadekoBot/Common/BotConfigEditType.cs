@@ -17,7 +17,8 @@
         CurrencyDropAmountMax,
         MinimumBetAmount,
         TriviaCurrencyReward,
-        HereChance
+        HereChance,
+        DmCommandsOwnerOnly
 
         //ErrorColor, //after i fix the nadekobot.cs static variables
         //OkColor

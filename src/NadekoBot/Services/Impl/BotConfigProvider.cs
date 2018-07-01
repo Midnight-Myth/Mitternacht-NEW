@@ -122,8 +122,13 @@ namespace Mitternacht.Services.Impl
                             return false;
                         break;
                     case BotConfigEditType.HereChance:
-                        if(double.TryParse(newValue, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var evchance) && evchance > 0)
+                        if (double.TryParse(newValue, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var evchance) && evchance > 0)
                             bc.FirstAprilHereChance = evchance;
+                        else return false;
+                        break;
+                    case BotConfigEditType.DmCommandsOwnerOnly:
+                        if (bool.TryParse(newValue, out var owneronly))
+                            bc.DmCommandsOwnerOnly = owneronly;
                         else return false;
                         break;
                     default:
