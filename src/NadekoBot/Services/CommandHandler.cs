@@ -33,6 +33,8 @@ namespace Mitternacht.Services
         private readonly CommandService _commandService;
         private readonly Logger _log;
         private readonly MitternachtBot _bot;
+        private readonly IBotConfigProvider _bcp;
+        private readonly IBotCredentials _bc;
         private INServiceProvider _services;
         public string DefaultPrefix { get; private set; }
         private ConcurrentDictionary<ulong, string> Prefixes { get; }
@@ -55,20 +57,22 @@ namespace Mitternacht.Services
 
         private readonly Random _random = new Random();
         
-        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bc,
-            IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot)
+        public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bcp,
+            IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot, IBotCredentials bc)
         {
             _client = client;
             _commandService = commandService;
             _bot = bot;
             _db = db;
+            _bcp = bcp;
+            _bc = bc;
 
             _log = LogManager.GetCurrentClassLogger();
 
             _clearUsersOnShortCooldown = new Timer(_ => { UsersOnShortCooldown.Clear(); }, null, GlobalCommandsCooldown,
                 GlobalCommandsCooldown);
 
-            DefaultPrefix = bc.BotConfig.DefaultPrefix;
+            DefaultPrefix = bcp.BotConfig.DefaultPrefix;
             Prefixes = gcs
                 .Where(x => x.Prefix != null)
                 .ToDictionary(x => x.GuildId, x => x.Prefix)
@@ -210,6 +214,9 @@ namespace Mitternacht.Services
 
                 var channel = msg.Channel;
                 var guild = (msg.Channel as SocketTextChannel)?.Guild;
+
+                if (_bcp.BotConfig.DmCommandsOwnerOnly && !_bc.IsOwner(msg.Author) && guild == null)
+                    return;
 
                 //send random @here at first of april
                 var isFirstApril = !DateTime.Now.IsOtherDate(new DateTime(2018, 04, 01), ignoreYear: true);
