@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Help
                         var s = $"• {m.Key.Name}";
                         var sms = m.Where(sm => sm.IsSubmodule).ToList();
                         if(sms.Any())
-                            s += "\n" + string.Join("\n", sms.Select(sm => $"   • {sm.Name}"));
+                            s += "\n" + string.Join("\n", sms.Select(sm => $"   • {sm.GetModuleName()}"));
                         return s;
                     })));
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
@@ -76,7 +76,8 @@ namespace Mitternacht.Modules.Help
             module = module?.Trim();
             if (string.IsNullOrWhiteSpace(module)) return;
             var cmds = _cmds.Commands
-                .Where(c => c.Module.Name.StartsWith(module, StringComparison.OrdinalIgnoreCase))
+                .Where(c => c.Module.GetModuleName().StartsWith(module, StringComparison.OrdinalIgnoreCase) 
+                            || c.Module.GetTopLevelModule().GetModuleName().StartsWith(module, StringComparison.OrdinalIgnoreCase))
                 .Where(c => !_perms.BlockedCommands.Any(bc => bc.Equals(c.Aliases.First(), StringComparison.OrdinalIgnoreCase)))
                 .Distinct(new CommandTextEqualityComparer())
                 .GroupBy(c => c.Module)
@@ -97,7 +98,7 @@ namespace Mitternacht.Modules.Help
                 text += string.Join("\n", groups[i].Select(sm =>
                 {
                     var o = 0;
-                    return $"{sm.Key.Name}\n{string.Join("\n", sm.GroupBy(c => o++ / 3).Select(col => string.Concat(col.Select(c => $"{Prefix + c.Aliases.First(),-16} {$"[{c.Aliases.Skip(1).FirstOrDefault()}]",-9}"))))}";
+                    return $"{sm.Key.GetModuleName()}\n{string.Join("\n", sm.GroupBy(c => o++ / 3).Select(col => string.Concat(col.Select(c => $"{Prefix + c.Aliases.First(),-16} {$"[{c.Aliases.Skip(1).FirstOrDefault()}]",-9}"))))}";
                 }));
 
                 text += "```";

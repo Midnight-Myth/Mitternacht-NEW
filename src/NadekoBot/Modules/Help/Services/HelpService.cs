@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Help.Services
             return new EmbedBuilder()
                 .AddField(str, $"{com.RealSummary(prefix)} {GetCommandRequirements(com, guild)}", true)
                 .AddField(GetText("usage", guild), com.RealRemarks(prefix), true)
-                .WithFooter(GetText("module", guild, $"{com.Module.GetTopLevelModule().Name}{(com.Module == com.Module.GetTopLevelModule() ? "" : $" ({com.Module.Name})")}"))
+                .WithFooter(GetText("module", guild, $"{com.Module.GetTopLevelModule().GetModuleName()}{(com.Module == com.Module.GetTopLevelModule() ? "" : $" ({com.Module.GetModuleName()})")}"))
                 .WithOkColor();
         }
 

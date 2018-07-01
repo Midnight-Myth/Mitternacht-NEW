@@ -245,5 +245,17 @@ namespace Mitternacht.Extensions
 
         public static bool IsOtherDate(this DateTime date, DateTime other, bool ignoreYear = false) 
             => (!ignoreYear && date.Year != other.Year) || date.Month != other.Month || date.Day != other.Day;
+
+        /// <summary>
+        /// Returns the name of a Module and cuts the end 'Commands' of, if any.
+        /// </summary>
+        /// <param name="mi">ModuleInfo of Module</param>
+        /// <returns>Module name</returns>
+        public static string GetModuleName(this ModuleInfo mi)
+            => !mi.IsSubmodule
+            ? mi.Name
+            : (mi.Name.EndsWith("commands", StringComparison.OrdinalIgnoreCase) && mi.Name.Length > 8
+                ? mi.Name.Substring(0, mi.Name.Length - 8)
+                : mi.Name);
     }
 }
