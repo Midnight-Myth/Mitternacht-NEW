@@ -663,14 +663,14 @@
     "aliases": [
       "mdls"
     ],
-    "desc": "Lists all bot modules.",
+    "desc": "Zeigt alle Module des Bots an.",
     "usage": "`{0}modules`"
   },
   {
     "name": "submodules",
     "cmd": "submodules",
-    "aliases": [],
-    "desc": "Lists all bot (sub-)modules.",
+    "aliases": [ "smdls" ],
+    "desc": "Zeigt alle Submodule des Bots an.",
     "usage": "`{0}submodules`"
   },
   {
