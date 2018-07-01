@@ -3,9 +3,11 @@
 - [Administration](#administration)
 - [Birthday](#birthday)
 - [CustomReactions](#customreactions)
+- [Forum](#forum)
 - [Gambling](#gambling)
 - [Games](#games)
 - [Level](#level)
+- [Minecraft](#minecraft)
 - [Music](#music)
 - [NSFW](#nsfw)
 - [Permissions](#permissions)
@@ -25,7 +27,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.removeallroles` `.rar` | Removes all roles from a mentioned user. **Benötigt Serverrecht ManageRoles.** | `.rar @User`
 `.createrole` `.cr` | Creates a role with a given name. **Benötigt Serverrecht ManageRoles.** | `.cr Awesome Role`
 `.rolehoist` `.rh` | Toggles whether this role is displayed in the sidebar or not. **Benötigt Serverrecht ManageRoles.** | `.rh Guests` or `.rh "Space Wizards"`
-`.rolecolor` `.roleclr` | Set a role's color to the hex or 0-255 rgb color value provided. **Benötigt Serverrecht ManageRoles.** | `.roleclr Admin 255 200 100` or `.roleclr Admin ffba55`
+`.rolecolor` `.roleclr` | Setzt die Farbe einer Rolle auf den angegebenen Wert. **Benötigt Serverrecht ManageRoles.** | `.roleclr <Rolle> <rot> <grün> <blau>` or `.roleclr <Rolle> <#RRGGBB>`
 `.deafen` `.deaf` | Deafens mentioned user or users. **Benötigt Serverrecht DeafenMembers.** | `.deaf "@Someguy"` or `.deaf "@Someguy" "@Someguy"`
 `.undeafen` `.undef` | Undeafens mentioned user or users. **Benötigt Serverrecht DeafenMembers.** | `.undef "@Someguy"` or `.undef "@Someguy" "@Someguy"`
 `.delvoichanl` `.dvch` | Deletes a voice channel with a given name. **Benötigt Serverrecht ManageChannels.** | `.dvch VoiceChannelName`
@@ -37,7 +39,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.mentionrole` `.menro` | Mentions every person from the provided role or roles (separated by a ',') on this server. **Benötigt Serverrecht MentionEveryone.** | `.menro RoleName`
 `.donators` | List of the lovely people who donated to keep this project alive.  | `.donators`
 `.donadd` | Add a donator to the database. **Nur Bot-Besitzer** | `.donadd Donate Amount`
-`.edit` | Modifiziert eine vom Bot gesendete Nachricht. **Benötigt Serverrecht ManageMessages.** | `.edit <msgId> <text>`
+`.edit` | Modifiziert eine vom Bot gesendete Nachricht. **Nur Bot-Besitzer** | `.edit <channel> <msgId> <text>` oder `.edit <msgId> <text>`
 `.autoassignrole` `.aar` | Automaticaly assigns a specified role to every user who joins the server. **Benötigt Serverrecht ManageRoles.** | `.aar` to disable, `.aar Role Name` to enable
 `.gvc` | Toggles game voice channel feature in the voice channel you're currently in. Users who join the game voice channel will get automatically redirected to the voice channel with the name of their current game, if it exists. Can't move users to channels that the bot has no connect permission for. One per server. **Benötigt Serverrecht Administrator.** | `.gvc`
 `.languageset` `.langset` | Sets this server's response language. If bot's response strings have been translated to that language, bot will use that language in this server. Reset by using `default` as the locale name. Provide no arguments to see currently set language.  | `.langset de-DE ` or `.langset default`
@@ -74,10 +76,10 @@ Befehle und Alias | Beschreibung | Verwendung
 `.adsarm` | Toggles the automatic deletion of confirmations for `.iam` and `.iamn` commands. **Benötigt Serverrecht ManageMessages.** | `.adsarm`
 `.asar` | Adds a role to the list of self-assignable roles. **Benötigt Serverrecht ManageRoles.** | `.asar Gamer`
 `.rsar` | Removes a specified role from the list of self-assignable roles. **Benötigt Serverrecht ManageRoles.** | `.rsar`
-`.lsar` | Lists all self-assignable roles.  | `.lsar`
+`.lsar` | Zeigt alle Rollen an, die selbst zugewiesen werden können.  | `.lsar`
 `.togglexclsar` `.tesar` | Toggles whether the self-assigned roles are exclusive. (So that any person can have only one of the self assignable roles) **Benötigt Serverrecht ManageRoles.** | `.tesar`
 `.iam` `.ibims` | Adds a role to you that you choose. Role must be on a list of self-assignable roles.  | `.iam Gamer`
-`.iamnot` `.iamn` `.ibimsni` | Removes a specified role from you. Role must be on a list of self-assignable roles.  | `.iamn Gamer`
+`.iamnot` `.iamn` `.ibimsk1` | Removes a specified role from you. Role must be on a list of self-assignable roles.  | `.iamn Gamer`
 `.scadd` | Adds a command to the list of commands which will be executed automatically in the current channel, in the order they were added in, by the bot when it startups up. **Nur Bot-Besitzer** | `.scadd .stats`
 `.sclist` | Lists all startup commands in the order they will be executed in. **Nur Bot-Besitzer** | `.sclist`
 `.wait` | Used only as a startup command. Waits a certain number of miliseconds before continuing the execution of the following startup commands. **Nur Bot-Besitzer** | `.wait 3000`
@@ -91,7 +93,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.setnick` | Changes the nickname of the bot on this server. You can also target other users to change their nickname. **Benötigt Serverrecht ManageNicknames.** | `.setnick BotNickname` or `.setnick @SomeUser New Nickname`
 `.setstatus` | Sets the bot's status. (Online/Idle/Dnd/Invisible) **Nur Bot-Besitzer** | `.setstatus Idle`
 `.setavatar` `.setav` | Sets a new avatar image for the MitternachtBot. Argument is a direct link to an image. **Nur Bot-Besitzer** | `.setav http://i.imgur.com/xTG3a1I.jpg`
-`.setgame` | Sets the bots game. **Nur Bot-Besitzer** | `.setgame with snakes`
+`.setactivity` | Sets the bots activity. **Nur Bot-Besitzer** | `.setactivity <playing|listening|streaming|watching> [string]`
 `.setstream` | Sets the bots stream. First argument is the twitch link, second argument is stream name. **Nur Bot-Besitzer** | `.setstream TWITCHLINK Hello`
 `.send` | Sends a message to someone on a different server through the bot.  Separate server and channel/user ids with `|` and prefix the channel id with `c:` and the user id with `u:`. **Nur Bot-Besitzer** | `.send serverid|c:channelid message` or `.send serverid|u:userid message`
 `.announce` | Sends a message to all servers' default channel that bot is connected to. **Nur Bot-Besitzer** | `.announce Useless spam`
@@ -104,6 +106,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.bye` | Toggles anouncements on the current channel when someone leaves the server. **Benötigt Serverrecht ManageServer.** | `.bye`
 `.byemsg` | Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded. **Benötigt Serverrecht ManageServer.** | `.byemsg %user% has left.`
 `.byedel` | Sets the time it takes (in seconds) for bye messages to be auto-deleted. Set it to `0` to disable automatic deletion. **Benötigt Serverrecht ManageServer.** | `.byedel 0` or `.byedel 30`
+`.execsql` | Führt einen SQL Query nach Bestätigung aus. **Nur Bot-Besitzer** | `.execsql <query>`
 `.timezones` | Lists all timezones available on the system to be used with `.timezone`.  | `.timezones`
 `.timezone` | Sets this guilds timezone. This affects bot's time output in this server (logs, etc..)  | `.timezone` or `.timezone GMT Standard Time`
 `.warn` | Warns a user. **Benötigt Serverrecht KickMembers.** | `.warn @b1nzy Very rude person`
@@ -112,6 +115,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.warnclear` `.warnc` | Clears all warnings from a certain user. **Benötigt Serverrecht BanMembers.** | `.warnclear @PoorDude`
 `.warnremove` | Entfernt eine Verwarnung mit der gegebenen HexId aus der Datenbank. **Benötigt Serverrecht BanMembers.** | `.warnremove <user> <hexid>`
 `.warnid` | Zeigt die Verwarnung mit der angegebenen HexId an. **Benötigt Serverrecht KickMembers.** | `.warnid <hexid>`
+`.warnedit` | Ändert den Verwarngrund der Verwarnung mit der angegebenen HexId  | `.warnedit <hexid> [grund]`
 `.warnpunish` `.warnp` | Sets a punishment for a certain number of warnings. Provide no punishment to remove. **Benötigt Serverrecht BanMembers.** | `.warnpunish 5 Ban` or `.warnpunish 3`
 `.warnpunishlist` `.warnpl` | Lists punishments for warnings.  | `.warnpunishlist`
 `.ban` `.b` | Bans a user by ID or name with an optional message. **Benötigt Serverrecht BanMembers.** | `.b "@some Guy" Your behaviour is toxic.`
@@ -132,7 +136,13 @@ Befehle und Alias | Beschreibung | Verwendung
 `.birthdayremove` | Entfernt den Geburtstag eines Users. **Nur Bot-Besitzer** | `.birthdayremove [user]`
 `.birthday` | Zeigt den Geburtstag eines Users an.  | `.birthday [user]`
 `.birthdays` | Zeigt alle Geburtstage am angegebenen Datum (oder heute) an.  | `.birthdays [dd.MM.yyyy]`
-`.birthdaysall` | Zeigt alle Geburtstage an.  | `.birthdaysall`
+`.birthdayslist` `.birthdaysall` | Zeigt alle Geburtstage nach Tag im Jahr aufsteigend sortiert an.  | `.birthdayslist`
+`.birthdayrole` | Zeigt die aktuelle Geburtstagsrolle an oder setzt sie.  | `.birthdayrole [rolle]`
+`.birthdayroleremove` | Entfernt die aktuelle Geburtstagsrolle. **Nur Bot-Besitzer** | `.birthdayroleremove`
+`.birthdaymessagechannel` `.birthdaymsgch` | Zeigt den aktuellen Kanal für die Geburtstagsnachrichten an oder setzt ihn.  | `.birthdaymessagechannel [channel]`
+`.birthdaymessagechannelremove` `.birthdaymsgchremove` | Entfernt den aktuellen Kanal für Geburtstagsnachrichten. Diese werden damit deaktiviert. **Nur Bot-Besitzer** | `.birthdayrole [rolle]`
+`.birthdaymessage` `.birthdaymsg` | Setzt die Geburtstagsnachricht. . wird mit den Usern ersetzt, die Geburtstag haben. **Nur Bot-Besitzer** | `.birthdaymessage [msg]`
+`.birthdayreactions` | Aktiviert oder deaktiviert das Reagieren des Bots auf aktuelle Geburtstage. **Nur Bot-Besitzer** | `.birthdayreactions <true|false>`
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
@@ -152,12 +162,22 @@ Befehle und Alias | Beschreibung | Verwendung
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
+### Forum  
+Befehle und Alias | Beschreibung | Verwendung
+----------------|--------------|-------
+`.reinitforum` | Starte die Reinitialisierung der Foruminstanz. **Nur Bot-Besitzer** | `.reinitforum`
+`.userinfoforum` `.uinfof` | Zeigt Informationen zum Forumaccount des angegebenen Discordnutzers an  | `.userinfoforum <user>`
+`.forumuserinfo` `.fuinfo` | Zeigt Informationen zum angegebenen Forumaccount an  | `.forumuserinfo <forumUsername>` oder `.forumuserinfo <forumUserId>`
+`.foruminfo` `.finfo` | Zeigt Informationen zur aktuellen Forum-Instanz an.  | `.foruminfo`
+
+###### [Zurück zu ToC](#inhaltsverzeichnis)
+
 ### Gambling  
 Befehle und Alias | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.raffle` | Prints a name and ID of a random user from the online list from the (optional) role.  | `.raffle` or `.raffle RoleName`
-`.$` `.currency` `.$$` `.$$$` `.cash` `.cur` | Check how much currency a person has. (Defaults to yourself)  | `.$` or `.$ @SomeGuy`
-`.give` | Give someone a certain amount of currency.  | `.give 1 @SomeGuy`
+`.cash` `.currency` `.money` `.balance` `.$` | Check how much currency a person has. (Defaults to yourself)  | `.$` or `.$ @SomeGuy`
+`.give` `.pay` | Give someone a certain amount of currency.  | `.give 1 @SomeGuy`
 `.award` | Awards someone a certain amount of currency.  You can also specify a role name to award currency to all users in a role. **Nur Bot-Besitzer** | `.award 100 @person` or `.award 5 Role Of Gamblers`
 `.take` | Takes a certain amount of currency from someone. **Nur Bot-Besitzer** | `.take 1 @SomeGuy`
 `.betroll` `.br` | Bets a certain amount of currency and rolls a dice. Rolling over 66 yields x2 of your currency, over 90 - x4 and 100 x10.  | `.br 5`
@@ -168,9 +188,11 @@ Befehle und Alias | Beschreibung | Verwendung
 `.dailymoney` `.dm` | Tägliches Geld (20 Euro, wird um 0 Uhr zurückgesetzt)  | `.dm`
 `.setrolemoney` | Weise einer Rolle einen anderen Betrag an täglichem Geld zu. **Nur Bot-Besitzer** | `.setrolemoney <role> <money> [priority]`
 `.resetdailymoney` | Erlaube einem User, sein tägliches Geld nochmal zu holen. **Nur Bot-Besitzer** | `.resetdailymoney [user]`
-`.removerolemoney` `.deleterolemoney` | Entferne eine Rolle von der Gehaltsliste **Nur Bot-Besitzer** | `.removerolemoney <role>`
+`.removerolemoney` `.rmrm` | Entferne eine Rolle von der Gehaltsliste **Nur Bot-Besitzer** | `.removerolemoney <role>`
 `.setrolemoneypriority` | Weise einer DailyMoney-Rolle eine bestimmte Priorität zu. **Nur Bot-Besitzer** | `.setrolemoneypriority <role> <priority>`
 `.payroll` | Gibt die Gehaltsliste der verschiedenen Rollen nach Priorität und Rangordnung aus.  | `.payroll [count] [position]`
+`.dmstats` | Schickt dem Ausführenden eine JSON-Datei mit Abrufstatistiken des DailyMoney-Befehls von angegebenen Nutzern.  | `.dmstats [nutzer1] [nutzer2] [nutzer3] ...`
+`.dmstatsall` | Schickt dem Ausführenden eine JSON-Datei mit allen Abrufstatistiken des DailyMoney-Befehls.  | `.dmstatsall`
 `.roll` | Rolls 0-100. If you supply a number `X` it rolls up to 30 normal dice. If you split 2 numbers with letter `d` (`xdy`) it will roll `X` dice from 1 to `y`. `Y` can be a letter 'F' if you want to roll fate dice instead of dnd.  | `.roll` or `.roll 7` or `.roll 3d5` or `.roll 5dF`
 `.rolluo` | Rolls `X` normal dice (up to 30) unordered. If you split 2 numbers with letter `d` (`xdy`) it will roll `X` dice from 1 to `y`.  | `.rolluo` or `.rolluo 7` or `.rolluo 3d5`
 `.nroll` | Rolls in a given range.  | `.nroll 5` (rolls 0-5) or `.nroll 5-15`
@@ -235,13 +257,12 @@ Befehle und Alias | Beschreibung | Verwendung
 Befehle und Alias | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.modules` `.mdls` | Lists all bot modules.  | `.modules`
+`.submodules` | Lists all bot (sub-)modules.  | `.submodules`
 `.commands` `.cmds` | List all of the bot's commands from a certain module. You can either specify the full name or only the first few letters of the module name.  | `.commands Administration` or `.cmds Admin`
 `.help` `.h` | Either shows a help for a single command, or DMs you help link if no arguments are specified.  | `.h .cmds` or `.h`
 `.hgit` | Generates the commandlist.md file. **Nur Bot-Besitzer** | `.hgit`
 `.readme` `.guide` | Sends a readme and a guide links to the channel.  | `.readme` or `.guide`
 `.donate` | Instructions for helping the project financially.  | `.donate`
-`.support_cmd` |   | 
-`.setsupportchannel_cmd` |  **Nur Bot-Besitzer** | 
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
@@ -252,15 +273,26 @@ Befehle und Alias | Beschreibung | Verwendung
 `.ranks` `.ranklist` | Gibt eine geordnete Rangliste mit Nutzern und ihren Rängen zurück.  | `.ranks [anzahl] [startposition]`
 `.addxp` | Gibt einem Spieler XP aus der unendlich Bot-XP-Quelle **Nur Bot-Besitzer** | `.addxp <xp> <users>`
 `.setxp` | Set the XP of a specified user. **Nur Bot-Besitzer** | `.setxp <xp> [user]`
-`.turntoxp` `.turntoexp` `.ttxp` | Tauscht Geld in XP um. Umtauschrate 1 zu 5.  | `.turntoxp <geld>`
+`.turntoxp` `.turntoexp` `.ttxp` | Tauscht Geld in XP um.  | `.turntoxp <geld>`
 `.levelguilddata` | Ersetzt eine der angegebenen Gildenkonfigurationen aus `levelguilddatachoices` mit dem angegebenen Wert oder zeigt diesen an. **Nur Bot-Besitzer** | `.levelguilddata <levelGuildDataChoice> [value]`
 `.levelguilddatachoices` | Zeigt die möglichen levelmodulrelevanten Gildenkonfigurationen an. **Nur Bot-Besitzer** | `.levelguilddatachoices`
 `.msgxprestrictionadd` `.msgxpradd` | Fügt einen Textkanal zur MessageXP Blacklist hinzu **Nur Bot-Besitzer** | `.msgxprestrictionadd <textchannel>`
 `.msgxprestrictionremove` `.msgxprremove` | Entfernt einen Textkanal von der MessageXP Blacklist **Nur Bot-Besitzer** | `.msgxprestrictionremove <textchannel>`
 `.msgxprestrictions` `.msgxpr` | Zeigt alle Textkanäle, die auf der MessageXP Blacklist stehen  | `.msgxprestrictions`
 `.setrolelevelbinding` `.srlb` | Setzt das benötigte Level für eine Rolle. **Nur Bot-Besitzer** | `.setrolelevelbinding <role> <minlevel>`
-`.removerolelevelbinding` `.rrlb` | Entfernt die levelbezogene automatische Vergabe einer Rolle. **Nur Bot-Besitzer** | `.removerolelevelbinding <role>`
+`.removerolelevelbinding` `.rrlb` | Entfernt die levelbezogene automatische Vergabe einer Rolle. **Nur Bot-Besitzer** | `.removerolelevelbinding <Rolle>`
 `.rolelevelbindings` `.rlb` | Zeigt eine Liste von Rollen und dem für sie benötigten Level.  | `.rolelevelbindings [count] [position]`
+
+###### [Zurück zu ToC](#inhaltsverzeichnis)
+
+### Minecraft  
+Befehle und Alias | Beschreibung | Verwendung
+----------------|--------------|-------
+`.minecraftusernames` `.mcusernames` | Zeigt alle Nutzernamen eines gegebenen Minecraftaccounts an.  | `.minecraftusernames <username>`
+`.minecraftplayerinfo` `.mcpinfo` | Zeigt Informationen zu dem Minecraftaccount an, der bei gegebenem Datum (oder heute) einen bestimmten Namen besaß.  | `.minecraftusernames <username> [datum]`
+`.mojangapistatus` `.mapis` | Zeigt die Status der Mojang APIs an.  | `.mapis`
+`.mcserverstatus` `.mcss` | Zeigt Informationen zu einem Minecraftserver an.  | `.mcserverstatus [hostname[:port]]`
+`.mcping` `.mcp` | Zeigt die Laufzeit eines Pings zu einem Minecraftserver an.  | `.mcping [hostname[:port]] [anzahl pings]`
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
@@ -464,14 +496,11 @@ Befehle und Alias | Beschreibung | Verwendung
 `.serverinfo` `.sinfo` | Shows info about the server the bot is on. If no server is supplied, it defaults to current one.  | `.sinfo Some Server`
 `.channelinfo` `.cinfo` | Shows info about the channel. If no channel is supplied, it defaults to current one.  | `.cinfo #some-channel`
 `.userinfo` `.uinfo` | Shows info about the user. If no user is supplied, it defaults a user running the command.  | `.uinfo @SomeUser`
-`.userinfoforum` `.uinfof` | Zeigt Informationen zum Forumaccount des angegebenen Discordnutzers an  | `.userinfoforum <user>`
-`.forumuserinfo` `.fuinfo` | Zeigt Informationen zum angegebenen Forumaccount an  | `.forumuserinfo <forumUsername>` oder `.forumuserinfo <forumUserId>`
-`.foruminfo` `.finfo` | Zeigt Informationen zur aktuellen Forum-Instanz an. **Nur Bot-Besitzer** | `.foruminfo`
 `.activity` | Checks for spammers. **Nur Bot-Besitzer** | `.activity`
 `.parewrel` | Forces the update of the list of patrons who are eligible for the reward. **Nur Bot-Besitzer** | `.parewrel`
 `.clparew` | Claim patreon rewards. If you're subscribed to bot owner's patreon you can use this command to claim your rewards - assuming bot owner did setup has their patreon key.  | `.clparew`
-`.listquotes` `.liqu` | Lists all quotes on the server ordered alphabetically. 15 Per page.  | `.liqu` or `.liqu 3`
-`...` | Shows a random quote with a specified name.  | `... abc`
+`.listquotes` `.liqu` | Zeigt alle Zitate dieser Gilde oder eines angegebenen Nutzers an.  | `.liqu [seite]` oder `.liqu <nutzer> [seite]`
+`...` | Zeigt ein zufälliges Zitat mit einem bestimmten Schlüsselwort an.  | `... abc`
 `.qsearch` | Shows a random quote for a keyword that contains any text specified in the search.  | `.qsearch keyword text`
 `.quoteid` `.qid` | Displays the quote with the specified ID number. Quote ID numbers can be found by typing `.liqu [num]` where `[num]` is a number of a page which contains 15 quotes.  | `.qid 123456`
 `..` | Adds a new quote with the specified name and message.  | `.. sayhi Hi`
@@ -493,7 +522,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.toggleusernamehistoryguild` `.toggleunhg` | Aktiviert, deaktiviert oder ignoriert das Loggen von Nutzernamensänderungen auf dem gegebenen Server. Beim Ignorieren wird die globale Einstellung verwendet. **Nur Bot-Besitzer** | `.toggleusernamehistoryguild <guild> <true|false|null>`
 `.usernamehistory` `.unh` | Zeigt alle globalen und serverspezifischen User-/Nicknames eines angegebenen Nutzers an. Globale sind hinten mit einem `(G)` gekennzeichnet.  | `.usernamehistory <user> [page]`
 `.usernamehistoryglobal` `.unhglobal` | Zeigt alle globalen Nutzernamen eines angegebenen Nutzers an.  | `.unhglobal <user> [page]`
-`.usernamehistoryguild` `.unhguild` | Zeigt alle serverspezifischen Nicknames eines angegebenen Nutzers an.  | `.unhguild <user> [page]`
+`.usernamehistoryguild` `.unhguild` `.nicks` | Zeigt alle serverspezifischen Nicknames eines angegebenen Nutzers an.  | `.unhguild <user> [page]`
 `.updateusernames` | Updatet alle Nutzernamen und Nicknames manuell. **Nur Bot-Besitzer** | `.updateusernames`
 `.verboseerror` `.ve` | Toggles whether the bot should print command errors when a command is incorrectly used. **Benötigt Serverrecht ManageMessages.** | `.ve`
 
@@ -502,9 +531,9 @@ Befehle und Alias | Beschreibung | Verwendung
 ### Verification  
 Befehle und Alias | Beschreibung | Verwendung
 ----------------|--------------|-------
-`.verify1` `.identityvalidationdmkey` | Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.  | `.verify1 <forumuserid>`
-`.verify2` `.identityvalidationsubmitkey` | Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.  | `.verify2 <forumuserid>`
-`.verify3` `.identityvalidationsubmit` | Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.  | `.verify3 <key>`
+`.verify1` | Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.  | `.verify1 <forumuserid>`
+`.verify2` | Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.  | `.verify2 <forumuserid>`
+`.verify3` | Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.  | `.verify3 <key>`
 `.addverification` | Verifiziere einen Nutzer manuell. **Nur Bot-Besitzer** | `.addverification <user> <forumid>`
 `.removeverification` | Entfernt die Verifizierung des gegebenen Forumaccounts oder Discordusers. **Nur Bot-Besitzer** | `.removeverification <user/forumid>`
 `.verifiedrole` | Zeigt oder setzt die Rolle, die bei erfolgreicher Verifizierung vergeben wird. **Nur Bot-Besitzer** | `.verifiedrole [role]`
@@ -513,7 +542,9 @@ Befehle und Alias | Beschreibung | Verwendung
 `.verifiedusers` `.vu` | Zeigt alle verifizierten Nutzer an.  | `.verifiedusers [page]`
 `.howtoverify` | Zeigt eine Anleitung zur Verifizierung  | `.howtoverify`
 `.setverifytutorialtext` | Setzt den Text, der mit `howtoverify` angezeigt wird. **Nur Bot-Besitzer** | `.setverifytutorialtext <text>`
-`.reinitforum` | Starte die Reinitialisierung der Foruminstanz. **Nur Bot-Besitzer** | `.reinitforum`
 `.additionalverificationusers` `.adverius` | Zeigt alle zusätzlichen Verifizierungsnachrichtenempfänger an. **Nur Bot-Besitzer** | `.additionalverificationusers`
 `.setadditionalverificationusers` `.setadverius` | Setzt die zusätzlichen Verifizierungsnachrichtenempfänger. **Nur Bot-Besitzer** | `.setadditionalverificationusers [user1] [user2] ... [userN]`
 `.conversationlink` | Zeigt den Konversationslink mit aktuellen Einstellungen an.  | `.conversationlink`
+`.gommeteamrole` `.gtr` | Zeigt die aktuelle GommeHDnet-Teammitgliedsrolle an.  | `.gommeteamrole`
+`.gommeteamroleset` `.gtrs` | Setzt die GommeHDnet-Teammitgliedsrolle. **Nur Bot-Besitzer** | `.gommeteamroleset [rolle]`
+`.gommeteamranks` `.gtranks` | Zeigt die aktuellen GommeHDnet-Teamränge an.  | `.gommeteamranks`
