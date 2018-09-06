@@ -895,6 +895,7 @@
   "utility_repeaters_list": "Liste der Wiederholungen",
   "utility_repeaters_none": "Auf diesem Server laufen keine Wiederholer.",
   "utility_result": "Resultat",
+  "utility_rng": "Zufällige Zahl zwischen {0} und {1}: `{2}`",
   "utility_roles": "Rollen",
   "utility_roles_all_page": "Seite #{0} aller Rollen für diesen Server:",
   "utility_roles_count": "Rollen - {0}",
