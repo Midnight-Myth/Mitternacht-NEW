@@ -3637,12 +3637,19 @@
     "aliases": [],
     "desc": "Schickt dem Ausführenden eine JSON-Datei mit Abrufstatistiken des DailyMoney-Befehls von angegebenen Nutzern.",
     "usage": "`{0}dmstats [nutzer1] [nutzer2] [nutzer3] ...`"
-  }, 
+  },
   {
     "name": "dailymoneystatsall",
     "cmd": "dmstatsall",
     "aliases": [],
     "desc": "Schickt dem Ausführenden eine JSON-Datei mit allen Abrufstatistiken des DailyMoney-Befehls.",
     "usage": "`{0}dmstatsall`"
+  },
+  {
+    "name": "rng",
+    "cmd": "rng",
+    "aliases": [],
+    "desc": "Generiert eine zufällige Zahl im angegebenen Intervall.",
+    "usage": "`{0}rng [minimum=0] [maximum = 1]`"
   }
 ]

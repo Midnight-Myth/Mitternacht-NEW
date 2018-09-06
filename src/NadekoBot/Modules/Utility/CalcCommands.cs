@@ -20,9 +20,12 @@ namespace Mitternacht.Modules.Utility
         {
             private readonly DbService _db;
 
+            private readonly Random _rnd;
+
             public CalcCommands(DbService db)
             {
                 _db = db;
+                _rnd = new Random();
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -94,6 +97,19 @@ namespace Mitternacht.Modules.Utility
                 if (selection.Any()) eb.AddField("Math", string.Join(", ", selection));
                 if (functions.Any()) eb.AddField("Custom", string.Join(", ", functions));
                 await Context.Channel.EmbedAsync(eb);
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            public async Task Rng(int upper = 1)
+                => await Rng(0, upper).ConfigureAwait(false);
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            public async Task Rng(int lower, int upper)
+            {
+                if(lower > upper)
+                    (lower, upper) = (upper, lower);
+
+                await ConfirmLocalized("rng", lower, upper, _rnd.Next(lower, upper+1)).ConfigureAwait(false);
             }
         }
 

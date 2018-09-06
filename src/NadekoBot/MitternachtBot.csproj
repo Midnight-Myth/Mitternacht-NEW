@@ -61,7 +61,7 @@
     <PackageReference Include="AngleSharp" Version="0.9.10" />
     <PackageReference Include="Discord.Net" Version="2.0.0-beta" />
     <PackageReference Include="libvideo" Version="1.0.1" />
-    <PackageReference Include="CoreCLR-NCalc" Version="2.2.34" />
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.40" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.35.1.138" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.35.1.1226" />
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.35.1.1322" />
