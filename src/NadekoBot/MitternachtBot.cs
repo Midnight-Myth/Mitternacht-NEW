@@ -224,7 +224,7 @@ namespace Mitternacht
             // start handling messages received in commandhandler
             await commandHandler.StartHandling().ConfigureAwait(false);
 
-            var _ = await commandService.AddModulesAsync(GetType().GetTypeInfo().Assembly);
+            var _ = await commandService.AddModulesAsync(GetType().GetTypeInfo().Assembly, Services);
 
             Ready.TrySetResult(true);
             _log.Info($"Shard {Client.ShardId} ready.");
