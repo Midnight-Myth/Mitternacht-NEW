@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,36 @@ namespace Mitternacht.Modules.Administration
             public SlowModeCommands(DbService db)
             {
                 _db = db;
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.ManageMessages)]
+            public async Task SlowmodeNative()
+            {
+                if (Context.Channel is ITextChannel tch) {
+                    await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = 0).ConfigureAwait(false);
+                    await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
+                }
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [RequireUserPermission(GuildPermission.ManageMessages)]
+            public async Task SlowmodeNative(int msgPerSec)
+            {
+                if(Context.Channel is ITextChannel tch)
+                {
+                    try
+                    {
+                        await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = msgPerSec).ConfigureAwait(false);
+                        await ReplyConfirmLocalized("slowmode_enabled").ConfigureAwait(false);
+                    }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        await Context.Channel.SendConfirmAsync(e.Message, GetText("invalid_params")).ConfigureAwait(false);
+                    }
+                }
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -57,7 +88,7 @@ namespace Mitternacht.Modules.Administration
                 };
                 if (Service.RatelimitingChannels.TryAdd(Context.Channel.Id, toAdd))
                 {
-                    await Context.Channel.SendConfirmAsync(GetText("slowmode_init"),
+                    await Context.Channel.SendConfirmAsync(GetText("slowmode_enabled"),
                             GetText("slowmode_desc", Format.Bold(toAdd.MaxMessages.ToString()), Format.Bold(toAdd.PerSeconds.ToString())))
                                                 .ConfigureAwait(false);
                 }
