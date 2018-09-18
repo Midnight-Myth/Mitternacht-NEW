@@ -3630,7 +3630,7 @@
     "aliases": [ "mcp" ],
     "desc": "Zeigt die Laufzeit eines Pings zu einem Minecraftserver an.",
     "usage": "`{0}mcping [hostname[:port]] [anzahl pings]`"
-  }, 
+  },
   {
     "name": "dailymoneystats",
     "cmd": "dmstats",
@@ -3651,5 +3651,12 @@
     "aliases": [],
     "desc": "Generiert eine zufällige Zahl im angegebenen Intervall.",
     "usage": "`{0}rng [minimum=0] [maximum = 1]`"
+  },
+  {
+    "name": "slowmodenative",
+    "cmd": "slowmodenative",
+    "aliases": ["slowmoden"],
+    "desc": "**Native-Slowmode-Beta** Aktiviert den Slowmode mit 1 Nachricht pro Intervallzeit (in Sekunden). Deaktiviert den Slowmode mit Intervall 0 (default).",
+    "usage": "`{0}slowmodenative [interval = 0]`"
   }
 ]

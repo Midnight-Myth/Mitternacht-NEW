@@ -118,12 +118,12 @@ namespace Mitternacht.Modules.Administration.Services
                                 try { await guild.CurrentUser.AddRoleAsync(roleToAdd).ConfigureAwait(false); } catch {/*ignored*/}
                                 await Task.Delay(50).ConfigureAwait(false);
                                 await created.AddPermissionOverwriteAsync(roleToAdd, new OverwritePermissions(
-                                    readMessages: PermValue.Allow,
+                                    viewChannel: PermValue.Allow,
                                     sendMessages: PermValue.Allow))
                                         .ConfigureAwait(false);
                                 await Task.Delay(50).ConfigureAwait(false);
                                 await created.AddPermissionOverwriteAsync(guild.EveryoneRole, new OverwritePermissions(
-                                    readMessages: PermValue.Deny,
+                                    viewChannel: PermValue.Deny,
                                     sendMessages: PermValue.Deny))
                                         .ConfigureAwait(false);
                                 await Task.Delay(50).ConfigureAwait(false);

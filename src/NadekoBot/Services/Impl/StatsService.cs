@@ -15,7 +15,7 @@ namespace Mitternacht.Services.Impl
         private readonly IBotCredentials _creds;
         private readonly DateTime _started;
 
-        public const string BotVersion = "1.9";
+        public const string BotVersion = "1.9.1";
 
         public (ulong userId, string backupName)[] AuthorIdBackupNames => new (ulong userId, string backupName)[] {
             (119521688768610304, "Midnight Myth"),
