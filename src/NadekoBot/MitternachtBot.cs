@@ -33,7 +33,7 @@ namespace Mitternacht
 
         private readonly DbService _db;
         public ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
-        
+
         /* I don't know how to make this not be static
          * and keep the convenience of .WithOkColor
          * and .WithErrorColor extensions methods.
@@ -89,7 +89,7 @@ namespace Mitternacht
             }
 
             SetupShard(parentProcessId, port.Value);
-            
+
             Client.Log += Client_Log;
         }
 
@@ -106,6 +106,27 @@ namespace Mitternacht
                         Time = DateTime.UtcNow
                     });
                     await Task.Delay(5000);
+                }
+            });
+        }
+
+        private void StayConnected()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (Client.ConnectionState == ConnectionState.Disconnected)
+                    {
+                        _log.Info($"Shard {Client.ShardId} is not connected, trying to reconnect!");
+                        try
+                        {
+                            await Client.StopAsync();
+                            await Client.StartAsync();
+                        }
+                        catch { /* ignore exception */ }
+                    }
+                    await Task.Delay(10000);
                 }
             });
         }
@@ -242,6 +263,7 @@ namespace Mitternacht
         {
             await RunAsync(args).ConfigureAwait(false);
             StartSendingData();
+            StayConnected();
             if (ShardCoord != null)
                 await ShardCoord.RunAndBlockAsync();
             else
