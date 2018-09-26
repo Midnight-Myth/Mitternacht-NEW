@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility.Common
         /// <summary>
         /// Stores every UserID which shall be from tracking after the current interval was finished.
         /// </summary>
-        public List<ulong> EndUserTrackingAfterInterval;
+        public HashSet<ulong> EndUserTrackingAfterInterval;
         
         /// <summary>
         /// Constructor
@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Utility.Common
         public VoiceStateTimeHelper()
         {
             _userTimeSteps = new ConcurrentDictionary<ulong, (DateTime?, List<double>)>();
-            EndUserTrackingAfterInterval = new List<ulong>();
+            EndUserTrackingAfterInterval = new HashSet<ulong>();
         }
 
         /// <summary>
@@ -69,14 +69,19 @@ namespace Mitternacht.Modules.Utility.Common
         /// <returns>True, if tracking could be enabled, otherwise false.</returns>
         public bool StartTracking(ulong userId)
         {
+            bool success = false;
+
             if (_userTimeSteps.TryGetValue(userId, out var value) && !value.Start.HasValue)
             {
                 var valuen = value;
                 valuen.Start = DateTime.Now;
                 _userTimeSteps.TryUpdate(userId, valuen, value);
+                success = true;
             }
+            else success = _userTimeSteps.TryAdd(userId, (DateTime.Now, new List<double>()));
 
-            return _userTimeSteps.TryAdd(userId, (DateTime.Now, new List<double>()));
+            if (success) EndUserTrackingAfterInterval.Remove(userId);
+            return success;
         }
 
         /// <summary>
