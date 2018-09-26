@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Utility.Services
 
             _timeHelper = new VoiceStateTimeHelper();
 
-            _client.UserVoiceStateUpdated += userVoiceStateUpdated;
+            _client.UserVoiceStateUpdated += UserVoiceStateUpdated;
 
             _writeStats = Task.Run(async () =>
             {
@@ -28,16 +28,24 @@ namespace Mitternacht.Modules.Utility.Services
                     var usertimes = _timeHelper.GetUserTimes();
                     using(var uow = _db.UnitOfWork)
                     {
-
+                        foreach (var ut in usertimes)
+                        {
+                            uow.VoiceChannelStats.AddTime(ut.Key, ut.Value);
+                        }
+                        await uow.CompleteAsync().ConfigureAwait(false);
                     }
                     await Task.Delay(5000);
                 }
             });
         }
 
-        private async Task userVoiceStateUpdated(SocketUser user, SocketVoiceState stateo, SocketVoiceState staten)
+        private Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState stateo, SocketVoiceState staten)
         {
-            
+            if (stateo.VoiceChannel == null && staten.VoiceChannel != null) _timeHelper.StartTracking(user.Id);
+            if (stateo.VoiceChannel != null && staten.VoiceChannel == null && !_timeHelper.StopTracking(user.Id))
+                    _timeHelper.EndUserTrackingAfterInterval.Add(user.Id);
+
+            return Task.CompletedTask;
         }
     }
 }
