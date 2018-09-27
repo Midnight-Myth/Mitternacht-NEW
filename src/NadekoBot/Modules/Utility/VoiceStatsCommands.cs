@@ -33,6 +33,20 @@ namespace Mitternacht.Modules.Utility
                         await ConfirmLocalized("voicestats_untracked", user.ToString()).ConfigureAwait(false);
                 }
             }
+
+            [MitternachtCommand, Description, Usage, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [OwnerOrGuildPermission(GuildPermission.Administrator)]
+            public async Task VoiceStatsReset(IGuildUser user)
+            {
+                if (user == null) return;
+                using(var uow = _db.UnitOfWork)
+                {
+                    uow.VoiceChannelStats.Reset(user.Id, user.GuildId);
+                    await ConfirmLocalized("voicestats_reset", user.ToString()).ConfigureAwait(false);
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                }
+            }
         }
     }
 }

@@ -3665,5 +3665,12 @@
     "aliases": [ "vs" ],
     "desc": "Zeigt die Zeit an, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
     "usage": "`{0}voicestats [Nutzer]`"
+  },
+  {
+    "name": "voicestatsreset",
+    "cmd": "voicestatsreset",
+    "aliases": [ "vsr" ],
+    "desc": "Setzt die Zeit zurück, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
+    "usage": "`{0}voicestatsreset <Nutzer>`"
   }
 ]
