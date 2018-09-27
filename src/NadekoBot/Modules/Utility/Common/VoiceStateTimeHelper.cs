@@ -34,32 +34,38 @@ namespace Mitternacht.Modules.Utility.Common
         /// <returns>A Dictionary </returns>
         public IDictionary<(ulong UserId, ulong GuildId), double> GetUserTimes(bool reset = true)
         {
+            var timenow = DateTime.Now;
             var result = _userTimeSteps
                 .Where(kv => kv.Value.Start.HasValue ? kv.Value.Start >= _currentIntervalStartTime : true)
                 .ToDictionary(kv => kv.Key, kv => 
                     //add positive StopTimes if there are any.
                     (kv.Value.StopTimes.Where(t => t >= 0).Sum() > 0 ? kv.Value.StopTimes.Where(t => t >= 0).Sum() : 0) + 
                     //add open time if kv.Value.Start is not null
-                    (kv.Value.Start.HasValue ? (kv.Value.Start.Value - _currentIntervalStartTime).TotalSeconds : 0));
+                    (kv.Value.Start.HasValue ? (timenow - kv.Value.Start.Value).TotalSeconds : 0));
 
-            if (reset) Reset();
+            if (reset) Reset(timenow);
 
             return result;
         }
 
         /// <summary>
-        /// Resets the _userTimeSteps dictionary.
+        /// Resets the tracker interval.
         /// </summary>
         public void Reset()
+            => Reset(DateTime.Now);
+
+        /// <summary>
+        /// Resets the _userTimeSteps dictionary.
+        /// </summary>
+        private void Reset(DateTime newStart)
         {
-            var currentIntervalStartNew = DateTime.Now;
             var usertimesteps = _userTimeSteps.Where(kv => kv.Value.Start.HasValue && kv.Value.Start.Value >= _currentIntervalStartTime && !EndUserTrackingAfterInterval.Contains(kv.Key)).ToList();
             _userTimeSteps.Clear();
             foreach (var uts in usertimesteps)
             {
-                _userTimeSteps.TryAdd(uts.Key, (currentIntervalStartNew, new List<double>()));
+                _userTimeSteps.TryAdd(uts.Key, (newStart, new List<double>()));
             }
-            _currentIntervalStartTime = currentIntervalStartNew;
+            _currentIntervalStartTime = newStart;
         }
 
         /// <summary>

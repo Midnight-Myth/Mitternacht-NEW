@@ -1,6 +1,7 @@
 ﻿using Discord.WebSocket;
 using Mitternacht.Modules.Utility.Common;
 using Mitternacht.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Utility.Services
@@ -18,6 +19,13 @@ namespace Mitternacht.Modules.Utility.Services
             _db = db;
 
             _timeHelper = new VoiceStateTimeHelper();
+            _timeHelper.Reset();
+
+            var guildusers = client.Guilds.SelectMany(g => g.VoiceChannels.SelectMany(svc => svc.Users).Select(sgu => (UserId: sgu.Id, GuildId: g.Id))).ToList();
+            foreach ((ulong UserId, ulong GuildId) in guildusers)
+            {
+                _timeHelper.StartTracking(UserId, GuildId);
+            }
 
             _client.UserVoiceStateUpdated += UserVoiceStateUpdated;
 
@@ -25,15 +33,20 @@ namespace Mitternacht.Modules.Utility.Services
             {
                 while (true)
                 {
-                    var usertimes = _timeHelper.GetUserTimes();
-                    using(var uow = _db.UnitOfWork)
+                    try
                     {
-                        foreach (var ut in usertimes)
+                        var usertimes = _timeHelper.GetUserTimes();
+                        using (var uow = _db.UnitOfWork)
                         {
-                            uow.VoiceChannelStats.AddTime(ut.Key.UserId, ut.Key.GuildId, ut.Value);
+                            foreach (var ut in usertimes)
+                            {
+                                uow.VoiceChannelStats.AddTime(ut.Key.UserId, ut.Key.GuildId, ut.Value);
+                            }
+                            await uow.CompleteAsync().ConfigureAwait(false);
                         }
-                        await uow.CompleteAsync().ConfigureAwait(false);
                     }
+                    catch { /* ignored */ }
+                    
                     await Task.Delay(5000);
                 }
             });
@@ -41,7 +54,7 @@ namespace Mitternacht.Modules.Utility.Services
 
         private Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState stateo, SocketVoiceState staten)
         {
-            if (stateo.VoiceChannel == null && staten.VoiceChannel != null) _timeHelper.StartTracking(user.Id, stateo.VoiceChannel.Guild.Id);
+            if (stateo.VoiceChannel == null && staten.VoiceChannel != null) _timeHelper.StartTracking(user.Id, staten.VoiceChannel.Guild.Id);
             if (stateo.VoiceChannel != null && staten.VoiceChannel == null && !_timeHelper.StopTracking(user.Id, stateo.VoiceChannel.Guild.Id))
                     _timeHelper.EndUserTrackingAfterInterval.Add((user.Id, stateo.VoiceChannel.Guild.Id));
 
