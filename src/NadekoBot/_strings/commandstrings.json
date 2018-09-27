@@ -3655,8 +3655,15 @@
   {
     "name": "slowmodenative",
     "cmd": "slowmodenative",
-    "aliases": ["slowmoden"],
+    "aliases": [ "slowmoden" ],
     "desc": "**Native-Slowmode-Beta** Aktiviert den Slowmode mit 1 Nachricht pro Intervallzeit (in Sekunden). Deaktiviert den Slowmode mit Intervall 0 (default).",
     "usage": "`{0}slowmodenative [interval = 0]`"
+  },
+  {
+    "name": "voicestats",
+    "cmd": "voicestats",
+    "aliases": [ "vs" ],
+    "desc": "Zeigt die Zeit an, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
+    "usage": "`{0}voicestats [Nutzer]`"
   }
 ]

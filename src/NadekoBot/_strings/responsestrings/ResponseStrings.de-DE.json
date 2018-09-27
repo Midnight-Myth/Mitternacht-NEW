@@ -933,6 +933,8 @@
   "utility_verbose_errors_enabled": "",
   "utility_verified_members": "Verifizierungen",
   "utility_voice_channels": "Sprach-Kanäle",
+  "utility_voicestats_time": "Der Nutzer {0} hat bisher {1} in Sprachkanälen verbracht.",
+  "utility_voicestats_untracked": "Ich habe keine Aufzeichnungen über den Aufenthalt von {0} in Sprachkanälen!",
   "verification_additional_verification_users_not_set": "Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.",
   "verification_additional_verification_users_set": "Zusätzliche Verifizierungsnachrichtenempfänger wurden gesetzt.",
   "verification_additional_verification_users_set_void": "Zusätzliche Verifizierungsnachrichtenempfänger gelöscht.",
