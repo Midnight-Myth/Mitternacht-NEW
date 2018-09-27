@@ -330,7 +330,7 @@ namespace Mitternacht.Services.Database
             #endregion
 
             #region VoiceChannelStats
-            modelBuilder.Entity<VoiceChannelStats>().HasIndex(vcs => vcs.UserId).IsUnique();
+            modelBuilder.Entity<VoiceChannelStats>().HasIndex(vcs => new { vcs.UserId, vcs.GuildId }).IsUnique();
             #endregion
         }
     }

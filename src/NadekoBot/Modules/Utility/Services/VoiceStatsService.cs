@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Utility.Services
                     {
                         foreach (var ut in usertimes)
                         {
-                            uow.VoiceChannelStats.AddTime(ut.Key, ut.Value);
+                            uow.VoiceChannelStats.AddTime(ut.Key.UserId, ut.Key.GuildId, ut.Value);
                         }
                         await uow.CompleteAsync().ConfigureAwait(false);
                     }
@@ -41,9 +41,9 @@ namespace Mitternacht.Modules.Utility.Services
 
         private Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState stateo, SocketVoiceState staten)
         {
-            if (stateo.VoiceChannel == null && staten.VoiceChannel != null) _timeHelper.StartTracking(user.Id);
-            if (stateo.VoiceChannel != null && staten.VoiceChannel == null && !_timeHelper.StopTracking(user.Id))
-                    _timeHelper.EndUserTrackingAfterInterval.Add(user.Id);
+            if (stateo.VoiceChannel == null && staten.VoiceChannel != null) _timeHelper.StartTracking(user.Id, stateo.VoiceChannel.Guild.Id);
+            if (stateo.VoiceChannel != null && staten.VoiceChannel == null && !_timeHelper.StopTracking(user.Id, stateo.VoiceChannel.Guild.Id))
+                    _timeHelper.EndUserTrackingAfterInterval.Add((user.Id, stateo.VoiceChannel.Guild.Id));
 
             return Task.CompletedTask;
         }

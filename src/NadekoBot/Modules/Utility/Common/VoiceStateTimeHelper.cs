@@ -11,20 +11,20 @@ namespace Mitternacht.Modules.Utility.Common
     public class VoiceStateTimeHelper
     {
         private DateTime _currentIntervalStartTime;
-        private ConcurrentDictionary<ulong, (DateTime? Start, List<double> StopTimes)> _userTimeSteps;
+        private ConcurrentDictionary<(ulong UserId, ulong GuildId), (DateTime? Start, List<double> StopTimes)> _userTimeSteps;
 
         /// <summary>
         /// Stores every UserID which shall be from tracking after the current interval was finished.
         /// </summary>
-        public HashSet<ulong> EndUserTrackingAfterInterval;
+        public HashSet<(ulong UserId, ulong GuildId)> EndUserTrackingAfterInterval;
         
         /// <summary>
         /// Constructor
         /// </summary>
         public VoiceStateTimeHelper()
         {
-            _userTimeSteps = new ConcurrentDictionary<ulong, (DateTime?, List<double>)>();
-            EndUserTrackingAfterInterval = new HashSet<ulong>();
+            _userTimeSteps = new ConcurrentDictionary<(ulong, ulong), (DateTime?, List<double>)>();
+            EndUserTrackingAfterInterval = new HashSet<(ulong, ulong)>();
         }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace Mitternacht.Modules.Utility.Common
         /// </summary>
         /// <param name="reset">Whether to reset the counter or not.</param>
         /// <returns>A Dictionary </returns>
-        public IDictionary<ulong, double> GetUserTimes(bool reset = true)
+        public IDictionary<(ulong UserId, ulong GuildId), double> GetUserTimes(bool reset = true)
         {
             var result = _userTimeSteps
-                .Where(kv => kv.Value.Start >= _currentIntervalStartTime)
+                .Where(kv => kv.Value.Start.HasValue ? kv.Value.Start >= _currentIntervalStartTime : true)
                 .ToDictionary(kv => kv.Key, kv => 
                     //add positive StopTimes if there are any.
                     (kv.Value.StopTimes.Where(t => t >= 0).Sum() > 0 ? kv.Value.StopTimes.Where(t => t >= 0).Sum() : 0) + 
@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Utility.Common
         public void Reset()
         {
             var currentIntervalStartNew = DateTime.Now;
-            var usertimesteps = _userTimeSteps.Where(kv => kv.Value.Start >= _currentIntervalStartTime && !EndUserTrackingAfterInterval.Contains(kv.Key)).ToList();
+            var usertimesteps = _userTimeSteps.Where(kv => kv.Value.Start.HasValue && kv.Value.Start.Value >= _currentIntervalStartTime && !EndUserTrackingAfterInterval.Contains(kv.Key)).ToList();
             _userTimeSteps.Clear();
             foreach (var uts in usertimesteps)
             {
@@ -67,20 +67,20 @@ namespace Mitternacht.Modules.Utility.Common
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>True, if tracking could be enabled, otherwise false.</returns>
-        public bool StartTracking(ulong userId)
+        public bool StartTracking(ulong userId, ulong guildId)
         {
             bool success = false;
 
-            if (_userTimeSteps.TryGetValue(userId, out var value) && !value.Start.HasValue)
+            if (_userTimeSteps.TryGetValue((userId, guildId), out var value) && !value.Start.HasValue)
             {
                 var valuen = value;
                 valuen.Start = DateTime.Now;
-                _userTimeSteps.TryUpdate(userId, valuen, value);
+                _userTimeSteps.TryUpdate((userId, guildId), valuen, value);
                 success = true;
             }
-            else success = _userTimeSteps.TryAdd(userId, (DateTime.Now, new List<double>()));
+            else success = _userTimeSteps.TryAdd((userId, guildId), (DateTime.Now, new List<double>()));
 
-            if (success) EndUserTrackingAfterInterval.Remove(userId);
+            if (success) EndUserTrackingAfterInterval.Remove((userId, guildId));
             return success;
         }
 
@@ -89,13 +89,13 @@ namespace Mitternacht.Modules.Utility.Common
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>True, if User was tracked, otherwise false.</returns>
-        public bool StopTracking(ulong userId)
+        public bool StopTracking(ulong userId, ulong guildId)
         {
-            if (!_userTimeSteps.TryGetValue(userId, out var value) || !value.Start.HasValue) return false;
+            if (!_userTimeSteps.TryGetValue((userId, guildId), out var value) || !value.Start.HasValue) return false;
             var valuen = value;
             valuen.StopTimes.Add((DateTime.Now - valuen.Start.Value).TotalSeconds);
             valuen.Start = null;
-            return _userTimeSteps.TryUpdate(userId, valuen, value);
+            return _userTimeSteps.TryUpdate((userId, guildId), valuen, value);
         }
     }
 }
