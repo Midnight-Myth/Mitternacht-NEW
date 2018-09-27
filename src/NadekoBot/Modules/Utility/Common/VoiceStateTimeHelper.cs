@@ -103,5 +103,19 @@ namespace Mitternacht.Modules.Utility.Common
             valuen.Start = null;
             return _userTimeSteps.TryUpdate((userId, guildId), valuen, value);
         }
+
+        /// <summary>
+        /// Removes all current tracked users of a specified guild.
+        /// </summary>
+        /// <param name="guildId"></param>
+        public void StopGuildTracking(ulong guildId)
+        {
+            var gus = _userTimeSteps.Where(kv => kv.Key.GuildId == guildId).ToList();
+            foreach (var gu in gus)
+            {
+                if (!StopTracking(gu.Key.UserId, gu.Key.GuildId))
+                    EndUserTrackingAfterInterval.Add(gu.Key);
+            }
+        }
     }
 }
