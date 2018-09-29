@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using GommeHDnetForumAPI.DataModels;
@@ -15,7 +14,7 @@ namespace Mitternacht.Modules.Verification.Services
         private readonly DiscordSocketClient _client;
 
         private Task _timerTask;
-        private const int GommeTeamMemberCheckRepeatDelay = 60 * 1000;
+        private const int GommeTeamMemberCheckRepeatDelay = 5 * 60 * 1000;
 
         public GommeTeamSyncService(DbService db, ForumService fs, DiscordSocketClient client)
         {
@@ -27,15 +26,12 @@ namespace Mitternacht.Modules.Verification.Services
             {
                 while (true)
                 {
-                    await Task.Delay(GommeTeamMemberCheckRepeatDelay).ConfigureAwait(false);
                     try
                     {
-                        await CheckGommeTeamMembers().ConfigureAwait(false);
+                        await CheckGommeTeamMembers();
                     }
-                    catch (Exception)
-                    {
-                        /*ignored*/
-                    }
+                    catch { /* ignored */ }
+                    await Task.Delay(GommeTeamMemberCheckRepeatDelay);
                 }
             });
         }
@@ -43,29 +39,27 @@ namespace Mitternacht.Modules.Verification.Services
         private async Task CheckGommeTeamMembers()
         {
             if (_fs.Forum == null) return;
-            var staffIds = (await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false))
-                .Select(ui => ui.Id).ToList();
+            var staffIds = (await _fs.Forum.GetMembersList(MembersListType.Staff)).Select(ui => ui.Id).ToList();
 
             using (var uow = _db.UnitOfWork)
             {
-                var guilds = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(sg => sg.Id).ToList())
-                    .Select(gc => (gc: gc, guild: _client.GetGuild(gc.GuildId))).ToList();
+                var guilds = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(sg => sg.Id).ToList()).Select(gc => (gc, guild: _client.GetGuild(gc.GuildId))).ToList();
                 foreach (var (gc, guild) in guilds)
                 {
                     if (gc.GommeTeamMemberRoleId == null) continue;
                     var gommeTeamRole = guild.GetRole(gc.GommeTeamMemberRoleId.Value);
                     if (gommeTeamRole == null) continue;
                     var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId)
-                        .Select(vu => (ForumUserId: vu.ForumUserId, User: guild.GetUser(vu.UserId)))
-                        .Where(a => a.User != null).ToList();
-                    foreach (var (_, user) in verifiedUsers.Where(a =>
-                        a.User.Roles.Any(r => r.Id == gommeTeamRole.Id) && !staffIds.Contains(a.ForumUserId)))
+                        .Select(vu => (vu.ForumUserId, User: guild.GetUser(vu.UserId)))
+                        .Where(a => a.User != null)
+                        .ToList();
+
+                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.Any(r => r.Id == gommeTeamRole.Id) && !staffIds.Contains(a.ForumUserId)))
                     {
                         await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
                     }
 
-                    foreach (var (_, user) in verifiedUsers.Where(a =>
-                        a.User.Roles.All(r => r.Id != gommeTeamRole.Id) && staffIds.Contains(a.ForumUserId)))
+                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.All(r => r.Id != gommeTeamRole.Id) && staffIds.Contains(a.ForumUserId)))
                     {
                         await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
                     }
