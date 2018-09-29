@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Verification.Services
                     if (gommeTeamRole == null) continue;
                     var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
                     var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId)
-                        .Select(vu => (vu.ForumUserId, User: guild.GetUser(vu.UserId)))
+                        .Select(vu => (ForumUserId: vu.ForumUserId, User: guild.GetUser(vu.UserId)))
                         .Where(a => a.User != null)
                         .ToList();
 
