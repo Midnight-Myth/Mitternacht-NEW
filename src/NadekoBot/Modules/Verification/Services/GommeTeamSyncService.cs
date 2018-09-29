@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Verification.Services
             });
         }
 
-        private async Task CheckGommeTeamMembers()
+        public async Task CheckGommeTeamMembers()
         {
             if (_fs.Forum == null) return;
             var staffIds = (await _fs.Forum.GetMembersList(MembersListType.Staff)).Select(ui => ui.Id).ToList();

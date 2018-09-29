@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Verification
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [OwnerOnly]
+            [OwnerOrGuildPermission(GuildPermission.Administrator)]
             public async Task GommeTeamRoleSet(IRole role = null)
             {
                 using (var uow = _db.UnitOfWork)
@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.Verification
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [OwnerOnly]
+            [OwnerOrGuildPermission(GuildPermission.Administrator)]
             public async Task VipRoleSet(IRole role = null)
             {
                 using (var uow = _db.UnitOfWork)
@@ -94,6 +94,15 @@ namespace Mitternacht.Modules.Verification
                 var ranks = memberslist.GroupBy(ui => ui.UserTitle).Select(g => $"- {g.Key} ({g.Count()})").ToList();
                 var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("ranks_title", ranks.Count)).WithDescription(string.Join("\n", ranks));
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [OwnerOrGuildPermission(GuildPermission.ManageMessages)]
+            public async Task GommeTeamUpdate()
+            {
+                await Service.CheckGommeTeamMembers().ConfigureAwait(false);
+                await ConfirmLocalized("gt_update").ConfigureAwait(false);
             }
         }
     }

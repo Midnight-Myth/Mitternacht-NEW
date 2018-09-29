@@ -3590,11 +3590,11 @@
     "usage": "`{0}viprole`"
   },
   {
-    "name": "viprole",
-    "cmd": "viprole",
+    "name": "viproleset",
+    "cmd": "viproleset",
     "aliases": [],
     "desc": "Setzt die VIP-Rolle.",
-    "usage": "`{0}viprole [rolle]`"
+    "usage": "`{0}viproleset [rolle]`"
   },
   {
     "name": "minecraftusernames",

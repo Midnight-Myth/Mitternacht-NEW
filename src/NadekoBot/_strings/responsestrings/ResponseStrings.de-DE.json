@@ -983,5 +983,6 @@
   "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
   "verification_viprole": "Die VIP-Rolle ist {0}.",
   "verification_viprole_not_set": "nicht gesetzt",
-  "verification_viprole_set": "Die VIP-Rolle wurde von {0} zu {1} geändert."
+  "verification_viprole_set": "Die VIP-Rolle wurde von {0} zu {1} geändert.",
+  "verification_gt_update": "Die GommeHDnet-Teammitglieder wurden aktualisiert."
 }
