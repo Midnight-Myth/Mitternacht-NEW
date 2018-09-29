@@ -114,14 +114,20 @@ namespace Mitternacht
         {
             Task.Run(async () =>
             {
+                var counter = 0;
                 while (true)
                 {
                     if (Client.ConnectionState == ConnectionState.Disconnected)
                     {
+                        counter++;
+                        //shutdown Bot after unsuccessfully trying to reconnect 3 times.
+                        if (counter > 3) Environment.Exit(0);
+
                         _log.Info($"Shard {Client.ShardId} is not connected, trying to reconnect!");
                         try
                         {
                             await Client.StopAsync();
+                            await Task.Delay(1000);
                             await Client.StartAsync();
                         }
                         catch { /* ignore exception */ }
