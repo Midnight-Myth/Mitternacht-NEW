@@ -249,7 +249,7 @@
   "administration_xmuted_voice": "Benutzer {0} vom Sprachchat",
   "birthday_all_title": "Alle Geburtstage",
   "birthday_disabled": "deaktiviert",
-  "birthday_enable": "Geburtstagsaktionen wurden **{1}**.",
+  "birthday_enable": "Geburtstagsaktionen wurden **{0}**.",
   "birthday_enable_same": "Geburtstagsaktionen sind schon **{0}**.",
   "birthday_enabled": "aktiviert",
   "birthday_list_title": "Geburtstage am **{0}**",
@@ -933,6 +933,9 @@
   "utility_verbose_errors_enabled": "",
   "utility_verified_members": "Verifizierungen",
   "utility_voice_channels": "Sprach-Kanäle",
+  "utility_voicestats_reset": "Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!",
+  "utility_voicestats_time": "Der Nutzer **{0}** hat bisher **{1}** in Sprachkanälen verbracht.",
+  "utility_voicestats_untracked": "Ich habe keine Aufzeichnungen über den Aufenthalt von **{0}** in Sprachkanälen!",
   "verification_additional_verification_users_not_set": "Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.",
   "verification_additional_verification_users_set": "Zusätzliche Verifizierungsnachrichtenempfänger wurden gesetzt.",
   "verification_additional_verification_users_set_void": "Zusätzliche Verifizierungsnachrichtenempfänger gelöscht.",
@@ -977,5 +980,9 @@
   "verification_verified_users": "Verifizierte Nutzer - {0}",
   "verification_verifystring": "Der aktuelle Verifizierungsstring ist `{0}`.",
   "verification_verifystring_new": "Der Verifizierungsstring wurde von `{0}` zu `{1}` geändert.",
-  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert."
+  "verification_verifystring_void": "Der Verifizierungsstring ist deaktiviert.",
+  "verification_viprole": "Die VIP-Rolle ist {0}.",
+  "verification_viprole_not_set": "nicht gesetzt",
+  "verification_viprole_set": "Die VIP-Rolle wurde von {0} zu {1} geändert.",
+  "verification_gt_update": "Die GommeHDnet-Teammitglieder wurden aktualisiert."
 }

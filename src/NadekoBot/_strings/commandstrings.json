@@ -3583,6 +3583,20 @@
     "usage": "`{0}gommeteamroleset [rolle]`"
   },
   {
+    "name": "viprole",
+    "cmd": "viprole",
+    "aliases": [],
+    "desc": "Zeigt die aktuelle VIP-Rolle an.",
+    "usage": "`{0}viprole`"
+  },
+  {
+    "name": "viproleset",
+    "cmd": "viproleset",
+    "aliases": [],
+    "desc": "Setzt die VIP-Rolle.",
+    "usage": "`{0}viproleset [rolle]`"
+  },
+  {
     "name": "minecraftusernames",
     "cmd": "minecraftusernames",
     "aliases": [ "mcusernames" ],
@@ -3655,8 +3669,29 @@
   {
     "name": "slowmodenative",
     "cmd": "slowmodenative",
-    "aliases": ["slowmoden"],
+    "aliases": [ "slowmoden" ],
     "desc": "**Native-Slowmode-Beta** Aktiviert den Slowmode mit 1 Nachricht pro Intervallzeit (in Sekunden). Deaktiviert den Slowmode mit Intervall 0 (default).",
     "usage": "`{0}slowmodenative [interval = 0]`"
+  },
+  {
+    "name": "voicestats",
+    "cmd": "voicestats",
+    "aliases": [ "vs" ],
+    "desc": "Zeigt die Zeit an, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
+    "usage": "`{0}voicestats [Nutzer]`"
+  },
+  {
+    "name": "voicestatsreset",
+    "cmd": "voicestatsreset",
+    "aliases": [ "vsr" ],
+    "desc": "Setzt die Zeit zurück, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
+    "usage": "`{0}voicestatsreset <Nutzer>`"
+  },
+  {
+    "name": "gommeteamupdate",
+    "cmd": "gommeteamupdate",
+    "aliases": [ "gtu" ],
+    "desc": "Aktualisiert die GommeHDnet-Teammitgliedschaften manuell.",
+    "usage": "`{0}gommeteamupdate`"
   }
 ]

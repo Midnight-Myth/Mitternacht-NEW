@@ -30,7 +30,6 @@ namespace Mitternacht.Modules.Birthday.Services
                 var log = LogManager.GetCurrentClassLogger();
                 while (true)
                 {
-                    await Task.Delay(BirthdayCheckRepeatDelay);
                     try
                     {
                         await TimerHandler();
@@ -39,6 +38,7 @@ namespace Mitternacht.Modules.Birthday.Services
                     {
                         log.Warn(e, CultureInfo.CurrentCulture, "Birthday Timer failed.");
                     }
+                    await Task.Delay(BirthdayCheckRepeatDelay);
                 }
             });
         }
@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Birthday.Services
                 var guildBirthdayRoles = uow.GuildConfigs
                     .GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList())
                     .Where(gc => gc.BirthdaysEnabled)
-                    .Select(gc => (Guild: _client.GetGuild(gc.GuildId), BirthdayRoleId: gc.BirthdayRoleId, MessageChannelId: gc.BirthdayMessageChannelId, Message: gc.BirthdayMessage))
+                    .Select(gc => (Guild: _client.GetGuild(gc.GuildId), gc.BirthdayRoleId, MessageChannelId: gc.BirthdayMessageChannelId, Message: gc.BirthdayMessage))
                     .ToList();
 
                 //maybe running in parallel?

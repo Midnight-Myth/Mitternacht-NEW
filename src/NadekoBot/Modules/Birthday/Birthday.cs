@@ -65,10 +65,7 @@ namespace Mitternacht.Modules.Birthday
                         }
                     }
                 }
-
             }
-
-
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

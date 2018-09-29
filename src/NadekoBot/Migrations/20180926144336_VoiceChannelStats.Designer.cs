@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mitternacht.Services.Database;
 
 namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20180926144336_VoiceChannelStats")]
+    partial class VoiceChannelStats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -695,8 +697,6 @@ namespace Mitternacht.Migrations
                     b.Property<ulong?>("VerifiedRoleId");
 
                     b.Property<string>("VerifyString");
-
-                    b.Property<ulong?>("VipRoleId");
 
                     b.Property<bool>("VoicePlusTextEnabled");
 
@@ -1515,15 +1515,13 @@ namespace Mitternacht.Migrations
 
                     b.Property<DateTime?>("DateAdded");
 
-                    b.Property<ulong>("GuildId");
-
                     b.Property<double>("TimeInVoiceChannel");
 
                     b.Property<ulong>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "GuildId")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("VoiceChannelStats");
