@@ -3583,6 +3583,20 @@
     "usage": "`{0}gommeteamroleset [rolle]`"
   },
   {
+    "name": "viprole",
+    "cmd": "viprole",
+    "aliases": [],
+    "desc": "Zeigt die aktuelle VIP-Rolle an.",
+    "usage": "`{0}viprole`"
+  },
+  {
+    "name": "viprole",
+    "cmd": "viprole",
+    "aliases": [],
+    "desc": "Setzt die VIP-Rolle.",
+    "usage": "`{0}viprole [rolle]`"
+  },
+  {
     "name": "minecraftusernames",
     "cmd": "minecraftusernames",
     "aliases": [ "mcusernames" ],

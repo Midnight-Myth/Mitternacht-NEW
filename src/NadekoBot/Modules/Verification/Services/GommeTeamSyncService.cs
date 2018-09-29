@@ -49,6 +49,7 @@ namespace Mitternacht.Modules.Verification.Services
                     if (gc.GommeTeamMemberRoleId == null) continue;
                     var gommeTeamRole = guild.GetRole(gc.GommeTeamMemberRoleId.Value);
                     if (gommeTeamRole == null) continue;
+                    var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
                     var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId)
                         .Select(vu => (vu.ForumUserId, User: guild.GetUser(vu.UserId)))
                         .Where(a => a.User != null)
@@ -57,6 +58,7 @@ namespace Mitternacht.Modules.Verification.Services
                     foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.Any(r => r.Id == gommeTeamRole.Id) && !staffIds.Contains(a.ForumUserId)))
                     {
                         await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
+                        if (vipRole != null && user.Roles.All(r => r.Id != vipRole.Id)) await user.AddRoleAsync(vipRole).ConfigureAwait(false);
                     }
 
                     foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.All(r => r.Id != gommeTeamRole.Id) && staffIds.Contains(a.ForumUserId)))

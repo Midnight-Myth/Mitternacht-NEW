@@ -112,6 +112,7 @@ namespace Mitternacht.Services.Database.Models
         public bool BirthdaysEnabled { get; set; } = true;
 
         public ulong? GommeTeamMemberRoleId { get; set; } = null;
+        public ulong? VipRoleId { get; set; } = null;
     }
 
     public class NsfwBlacklitedTag : DbEntity

@@ -58,6 +58,36 @@ namespace Mitternacht.Modules.Verification
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
+            public async Task VipRole()
+            {
+                using (var uow = _db.UnitOfWork)
+                {
+                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                    var viproleid = gc.VipRoleId;
+                    var role = viproleid == null ? null : Context.Guild.GetRole(viproleid.Value);
+                    await ReplyConfirmLocalized("viprole", Format.Bold(role?.Name ?? viproleid?.ToString() ?? GetText("viprole_not_set"))).ConfigureAwait(false);
+                }
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            [OwnerOnly]
+            public async Task VipRoleSet(IRole role = null)
+            {
+                using (var uow = _db.UnitOfWork)
+                {
+                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                    var oldRoleId = gc.VipRoleId;
+                    var oldRole = oldRoleId == null ? null : Context.Guild.GetRole(oldRoleId.Value);
+                    gc.VipRoleId = role?.Id;
+                    uow.GuildConfigs.Update(gc);
+                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await ReplyConfirmLocalized("viprole_set", Format.Bold(oldRole?.Name ?? oldRoleId?.ToString() ?? GetText("viprole_not_set")), Format.Bold(role?.Name ?? GetText("viprole_not_set"))).ConfigureAwait(false);
+                }
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
             public async Task GommeTeamRanks()
             {
                 var memberslist = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
