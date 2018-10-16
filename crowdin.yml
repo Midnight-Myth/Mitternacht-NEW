@@ -1,3 +1,22 @@
 files:
-  - source: /src/NadekoBot/data/*.json
+  - source: /src/NadekoBot/*/**/*.json
+    ignore:
+      - /src/NadekoBot/Properties
+      - /src/NadekoBot/data/English
+      - /src/NadekoBot/data/German
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.a*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.c*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.f*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.h*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.i*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.j*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.k*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.n*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.p*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.r*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.s*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.t*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.z*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.e*.json
+      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.da*.json
     translation: /src/NadekoBot/data/%language%/%original_file_name%
