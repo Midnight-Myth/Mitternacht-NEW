@@ -1,7 +1,7 @@
 {
   "administration_aar_disabled": "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **deaktiviert**.",
   "administration_aar_enabled": "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **aktiviert**.",
-  "administration_attachments": "Anhänge",
+  "administration_attachments": "Attachments",
   "administration_avatar_changed": "Avatar varändert",
   "administration_bandm": "Du wurdest vom Server {0} gebannt.\nGrund: {1}",
   "administration_banned_pl": "gebannt",
