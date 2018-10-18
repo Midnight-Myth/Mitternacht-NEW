@@ -10,7 +10,7 @@
   "administration_bot_nick": "Nickname des Bots wurde zu {0} geändert",
   "administration_bot_status": "Status des Bots geändert zu {0}",
   "administration_bye_off": "Abschiedsnachrichten deaktiviert.",
-  "administration_bye_on": "Abschiedsnachrichten eingeschaltet in diesem Kanal.",
+  "administration_bye_on": "Abschiedsnachrichten in diesem Kanal deaktiviert.",
   "administration_byedel_off": "Automatisches Löschen von Abschiedsnachrichten ist nun deaktiviert.",
   "administration_byedel_on": "Abschiedsnachrichten werden nun nach {0} Sekunden gelöscht.",
   "administration_byemsg_cur": "Aktuelle Abschiedsnachricht: {0}",
