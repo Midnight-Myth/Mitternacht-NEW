@@ -14,7 +14,7 @@
   "administration_byedel_off": "Automatic deletion of goodbye messages is now disabled.",
   "administration_byedel_on": "Goodbye messages are now being deleted after {0} seconds.",
   "administration_byemsg_cur": "Current goodbye message: {0}",
-  "administration_byemsg_enable": "Schalte Abschiedsnachrichten ein durch schreiben von {0}",
+  "administration_byemsg_enable": "Aktiviere Abschiedsnachrichten durch Schreiben von {0}",
   "administration_byemsg_new": "Neues Abschiedsnachrichtenset.",
   "administration_ch_name_change": "Kanalname geändert",
   "administration_ch_old_name": "Alter Name",
