@@ -1,23 +1,23 @@
 {
   "Animals": [
     {
-      "Word": "meerkat",
+      "Word": "Erdmännchen",
       "ImageUrl": "https://www.randomlists.com/img/animals/meerkat.jpg"
     },
     {
       "ImageUrl": "https://www.randomlists.com/img/animals/aardvark.jpg",
-      "Word": "aardvark"
+      "Word": "Erdferkel"
     },
     {
       "Word": "addax",
       "ImageUrl": "https://www.randomlists.com/img/animals/addax.jpg"
     },
     {
-      "Word": "alligator",
+      "Word": "Alligator",
       "ImageUrl": "https://www.randomlists.com/img/animals/alligator.jpg"
     },
     {
-      "Word": "alpaca",
+      "Word": "Alpaka",
       "ImageUrl": "https://www.randomlists.com/img/animals/alpaca.jpg"
     },
     {
@@ -25,7 +25,7 @@
       "ImageUrl": "https://www.randomlists.com/img/animals/anteater.jpg"
     },
     {
-      "Word": "antelope",
+      "Word": "Antilope",
       "ImageUrl": "https://www.randomlists.com/img/animals/antelope.jpg"
     },
     {
@@ -89,7 +89,7 @@
       "ImageUrl": "https://www.randomlists.com/img/animals/buffalo.jpg"
     },
     {
-      "Word": "bull",
+      "Word": "Bulle",
       "ImageUrl": "https://www.randomlists.com/img/animals/bull.jpg"
     },
     {
@@ -97,7 +97,7 @@
       "ImageUrl": "https://www.randomlists.com/img/animals/bunny.jpg"
     },
     {
-      "Word": "burro",
+      "Word": "Esel",
       "ImageUrl": "https://www.randomlists.com/img/animals/burro.jpg"
     },
     {
