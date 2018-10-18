@@ -1,4220 +1,4220 @@
 [
     {
-        "name": "warnremove",
-        "cmd": "warnremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Entfernt eine Verwarnung mit der gegebenen HexId aus der Datenbank.",
-        "usage": "`{0}warnremove <user> <hexid>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnid",
-        "cmd": "warnid",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt die Verwarnung mit der angegebenen HexId an.",
-        "usage": "`{0}warnid <hexid>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hashtag",
-        "cmd": "#",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Searches Tagdef.com for a hashtag.",
-        "usage": "`{0}# ff`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "startupcommandremove",
-        "cmd": "scrm",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Removes a startup command with the provided command text.",
-        "usage": "`{0}scrm .stats`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "autoassignrole",
-        "cmd": "autoassignrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "aar"
+            ""
         ],
-        "desc": "Automaticaly assigns a specified role to every user who joins the server.",
-        "usage": "`{0}aar` to disable, `{0}aar Role Name` to enable"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "die",
-        "cmd": "die",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shuts the bot down.",
-        "usage": "`{0}die`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "userpresence",
-        "cmd": "userpresence",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Starts logging to this channel when someone from the server goes online/offline/idle.",
-        "usage": "`{0}userpresence`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "divorce",
-        "cmd": "divorce",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Releases your claim on a specific waifu. You will get some of the money you've spent back unless that waifu has an affinity towards you. 6 hours cooldown.",
-        "usage": "`{0}divorce @CheatingSloot`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "log",
-        "cmd": "log",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles logging event. Disables it if it is active anywhere on the server. Enables if it isn't active. Use `{0}logevents` to see a list of all events you can subscribe to.",
-        "usage": "`{0}log userpresence` or `{0}log userbanned`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "randjoke",
-        "cmd": "randjoke",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rj"
+            ""
         ],
-        "desc": "Shows a random joke from <http://tambal.azurewebsites.net/joke/random>",
-        "usage": "`{0}rj`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "serverblacklist",
-        "cmd": "sbl",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Either [add]s or [rem]oves a server specified by a Name or an ID from a blacklist.",
-        "usage": "`{0}sbl add 12312321312` or `{0}sbl rem SomeTrashServer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rolecolor",
-        "cmd": "rolecolor",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "roleclr"
+            ""
         ],
-        "desc": "Setzt die Farbe einer Rolle auf den angegebenen Wert.",
-        "usage": "`{0}roleclr <Rolle> <rot> <grün> <blau>` or `{0}roleclr <Rolle> <#RRGGBB>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removerolelevelbinding",
-        "cmd": "removerolelevelbinding",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rrlb"
+            ""
         ],
-        "desc": "Entfernt die levelbezogene automatische Vergabe einer Rolle.",
-        "usage": "`{0}removerolelevelbinding <Rolle>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "typedel",
-        "cmd": "typedel",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Deletes a typing article given the ID.",
-        "usage": "`{0}typedel 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "typeadd",
-        "cmd": "typeadd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds a new article to the typing contest.",
-        "usage": "`{0}typeadd wordswords`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removeperm",
-        "cmd": "removeperm",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rp"
+            ""
         ],
-        "desc": "Removes a permission from a given position in the Permissions list.",
-        "usage": "`{0}rp 1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "give",
-        "cmd": "give",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "pay"
+            ""
         ],
-        "desc": "Give someone a certain amount of currency.",
-        "usage": "`{0}give 1 @SomeGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "soundcloudqueue",
-        "cmd": "soundcloudqueue",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sq"
+            ""
         ],
-        "desc": "Queue a soundcloud song using keywords. Bot will join your voice channel. **You must be in a voice channel**.",
-        "usage": "`{0}sq Dream Of Venice`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "type",
-        "cmd": "type",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Get the poketype of the target.",
-        "usage": "`{0}type @someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "pollstats",
-        "cmd": "pollstats",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows the poll results without stopping the poll on this server.",
-        "usage": "`{0}pollstats`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "usrcmd",
-        "cmd": "usrcmd",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "uc"
+            ""
         ],
-        "desc": "Sets a command's permission at the user level.",
-        "usage": "`{0}uc \"command name\" enable SomeUsername`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "playlists",
-        "cmd": "playlists",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "pls"
+            ""
         ],
-        "desc": "Lists all playlists. Paginated, 20 per page. Default page is 0.",
-        "usage": "`{0}pls 1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "claimpatreonrewards",
-        "cmd": "clparew",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Claim patreon rewards. If you're subscribed to bot owner's patreon you can use this command to claim your rewards - assuming bot owner did setup has their patreon key.",
-        "usage": "`{0}clparew`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "prune",
-        "cmd": "prune",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "clear"
+            ""
         ],
-        "desc": "`{0}prune` removes all Mitternacht's messages in the last 100 messages. `{0}prune X` removes last `X` number of messages from the channel (up to 100). `{0}prune @Someone` removes all Someone's messages in the last 100 messages. `{0}prune @Someone X` removes last `X` number of 'Someone's' messages in the channel.",
-        "usage": "`{0}prune` or `{0}prune 5` or `{0}prune @Someone` or `{0}prune @Someone X`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verify1",
-        "cmd": "verify1",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.",
-        "usage": "`{0}verify1 <forumuserid>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "filterword",
-        "cmd": "fw",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds or removes (if it exists) a word from the list of filtered words. Use`{0}sfw` or `{0}cfw` to toggle filtering.",
-        "usage": "`{0}fw poop`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "safebooru",
-        "cmd": "safebooru",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random image from safebooru with a given tag. Tag is optional but preferred. (multiple tags are appended with +)",
-        "usage": "`{0}safebooru yuri+kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shardstats",
-        "cmd": "shardstats",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Stats for shards. Paginated with 25 shards per page.",
-        "usage": "`{0}shardstats` or `{0}shardstats 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnpunish",
-        "cmd": "warnpunish",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "warnp"
+            ""
         ],
-        "desc": "Sets a punishment for a certain number of warnings. Provide no punishment to remove.",
-        "usage": "`{0}warnpunish 5 Ban` or `{0}warnpunish 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "restartshard",
-        "cmd": "restartshard",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Try (re)connecting a shard with a certain shardid when it dies. No one knows will it work. Keep an eye on the console for errors.",
-        "usage": "`{0}restartshard 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listservers",
-        "cmd": "listservers",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists servers the bot is on with some basic info. 15 per page.",
-        "usage": "`{0}listservers 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "srvrfilterwords",
-        "cmd": "srvrfilterwords",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sfw"
+            ""
         ],
-        "desc": "Toggles automatic deletion of messages containing filtered words on the server. Does not affect the Bot Owner.",
-        "usage": "`{0}sfw`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removerolemoney",
-        "cmd": "removerolemoney",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rmrm"
+            ""
         ],
-        "desc": "Entferne eine Rolle von der Gehaltsliste",
-        "usage": "`{0}removerolemoney <role>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "donadd",
-        "cmd": "donadd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Add a donator to the database.",
-        "usage": "`{0}donadd Donate Amount`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "howtoverify",
-        "cmd": "howtoverify",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt eine Anleitung zur Verifizierung",
-        "usage": "`{0}howtoverify`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "guide",
-        "cmd": "readme",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "guide"
+            ""
         ],
-        "desc": "Sends a readme and a guide links to the channel.",
-        "usage": "`{0}readme` or `{0}guide`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "playlist",
-        "cmd": "playlist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "pl"
+            ""
         ],
-        "desc": "Queues up to 500 songs from a youtube playlist specified by a link, or keywords.",
-        "usage": "`{0}pl playlist link or name`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "cash",
-        "cmd": "cash",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "currency",
-            "money",
-            "balance",
-            "$"
+            "",
+            "",
+            "",
+            ""
         ],
-        "desc": "Check how much currency a person has. (Defaults to yourself)",
-        "usage": "`{0}$` or `{0}$ @SomeGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "greet",
-        "cmd": "greet",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles anouncements on the current channel when someone joins the server.",
-        "usage": "`{0}greet`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "memegen",
-        "cmd": "memegen",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Generates a meme from memelist with top and bottom text.",
-        "usage": "`{0}memegen biw \"gets iced coffee\" \"in the winter\"`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "undeafen",
-        "cmd": "undeafen",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "undef"
+            ""
         ],
-        "desc": "Undeafens mentioned user or users.",
-        "usage": "`{0}undef \"@Someguy\"` or `{0}undef \"@Someguy\" \"@Someguy\"`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "leet",
-        "cmd": "leet",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Converts a text to leetspeak with 6 (1-6) severity levels",
-        "usage": "`{0}leet 3 Hello`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "tesar",
-        "cmd": "togglexclsar",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "tesar"
+            ""
         ],
-        "desc": "Toggles whether the self-assigned roles are exclusive. (So that any person can have only one of the self assignable roles)",
-        "usage": "`{0}tesar`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rotaterolecolor",
-        "cmd": "rotaterolecolor",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rrc"
+            ""
         ],
-        "desc": "Rotates a roles color on an interval with a list of supplied colors. First argument is interval in seconds (Minimum 60). Second argument is a role, followed by a space-separated list of colors in hex. Provide a rolename with a 0 interval to disable.",
-        "usage": "`{0}rrc 60 MyLsdRole #ff0000 #00ff00 #0000ff` or `{0}rrc 0 MyLsdRole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "softban",
-        "cmd": "softban",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sb"
+            ""
         ],
-        "desc": "Bans and then unbans a user by ID or name with an optional message.",
-        "usage": "`{0}sb \"@some Guy\" Your behaviour is toxic.`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rule34",
-        "cmd": "rule34",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random image from rule34.xx with a given tag. Tag is optional but preferred. (multiple tags are appended with +)",
-        "usage": "`{0}rule34 yuri+kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "createrole",
-        "cmd": "createrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cr"
+            ""
         ],
-        "desc": "Creates a role with a given name.",
-        "usage": "`{0}cr Awesome Role`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "antispamignore",
-        "cmd": "antispamignore",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether antispam ignores current channel. Antispam must be enabled.",
-        "usage": "`{0}antispamignore`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "youtube",
-        "cmd": "youtube",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "yt"
+            ""
         ],
-        "desc": "Searches youtubes and shows the first result",
-        "usage": "`{0}yt query`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rsar",
-        "cmd": "rsar",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Removes a specified role from the list of self-assignable roles.",
-        "usage": "`{0}rsar`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setmuterole",
-        "cmd": "setmuterole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets a name of the role which will be assigned to people who should be muted. Default is Muted.",
-        "usage": "`{0}setmuterole Silenced`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rank",
-        "cmd": "rank",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt den Rang eines Nutzers an.",
-        "usage": "`{0}rank [user]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "scsc",
-        "cmd": "scsc",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Starts an instance of cross server channel. You will get a token as a DM that other people will use to tune in to the same instance.",
-        "usage": "`{0}scsc`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "betroll",
-        "cmd": "betroll",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "br"
+            ""
         ],
-        "desc": "Bets a certain amount of currency and rolls a dice. Rolling over 66 yields x2 of your currency, over 90 - x4 and 100 x10.",
-        "usage": "`{0}br 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "voicepresence",
-        "cmd": "voicepresence",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles logging to this channel whenever someone joins or leaves a voice channel you are currently in.",
-        "usage": "`{0}voicepresence`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "translangs",
-        "cmd": "translangs",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists the valid languages for translation.",
-        "usage": "`{0}translangs`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "crstats",
-        "cmd": "crstats",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a list of custom reactions and the number of times they have been executed. Paginated with 10 per page. Use `{0}crstatsclear` to reset the counters.",
-        "usage": "`{0}crstats` or `{0}crstats 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removeallroles",
-        "cmd": "removeallroles",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rar"
+            ""
         ],
-        "desc": "Removes all roles from a mentioned user.",
-        "usage": "`{0}rar @User`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "radio",
-        "cmd": "radio",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ra"
+            ""
         ],
-        "desc": "Queues a radio stream from a link. It can be a direct mp3 radio stream, .m3u, .pls .asx or .xspf (Usage Video: <https://streamable.com/al54>)",
-        "usage": "`{0}ra radio link here`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnlog",
-        "cmd": "warnlog",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "See a list of warnings of a certain user.",
-        "usage": "`{0}warnlog @b1nzy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "patreonrewardsreload",
-        "cmd": "parewrel",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Forces the update of the list of patrons who are eligible for the reward.",
-        "usage": "`{0}parewrel`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "stop",
-        "cmd": "stop",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "s"
+            ""
         ],
-        "desc": "Stops the music and preserves the current song index. Stays in the channel.",
-        "usage": "`{0}s`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "liststreams",
-        "cmd": "liststreams",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ls"
+            ""
         ],
-        "desc": "Lists all streams you are following on this server.",
-        "usage": "`{0}ls`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "queuesearch",
-        "cmd": "queuesearch",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "qs",
-            "yqs"
+            "",
+            ""
         ],
-        "desc": "Search for top 5 youtube song result using keywords, and type the index of the song to play that song. Bot will join your voice channel. **You must be in a voice channel**.",
-        "usage": "`{0}qs Dream Of Venice`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "kick",
-        "cmd": "kick",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "k"
+            ""
         ],
-        "desc": "Kicks a mentioned user.",
-        "usage": "`{0}k \"@some Guy\" Your behaviour is toxic.`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "ban",
-        "cmd": "ban",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "b"
+            ""
         ],
-        "desc": "Bans a user by ID or name with an optional message.",
-        "usage": "`{0}b \"@some Guy\" Your behaviour is toxic.`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "antiraid",
-        "cmd": "antiraid",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets an anti-raid protection on the server. First argument is number of people which will trigger the protection. Second one is a time interval in which that number of people needs to join in order to trigger the protection, and third argument is punishment for those people (Kick, Ban, Mute)",
-        "usage": "`{0}antiraid 5 20 Kick`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chucknorris",
-        "cmd": "chucknorris",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cn"
+            ""
         ],
-        "desc": "Shows a random Chuck Norris joke from <http://api.icndb.com/jokes/random/>",
-        "usage": "`{0}cn`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "greetmsg",
-        "cmd": "greetmsg",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets a new join announcement message which will be shown in the server's channel. Type `%user%` if you want to mention the new member. Using it with no message will show the current greet message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded.",
-        "usage": "`{0}greetmsg Welcome, %user%.`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "repeat",
-        "cmd": "repeat",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Repeat a message every `X` minutes in the current channel. You can instead specify time of day for the message to be repeated at daily (make sure you've set your server's timezone). You can have up to 5 repeating messages on the server in total.",
-        "usage": "`{0}repeat 5 Hello there` or `{0}repeat 17:30 tea time`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "quotedelete",
-        "cmd": "quotedel",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "qdel"
+            ""
         ],
-        "desc": "Deletes a quote with the specified ID. You have to be either server Administrator or the creator of the quote to delete it.",
-        "usage": "`{0}qdel 123456`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mentionrole",
-        "cmd": "mentionrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "menro"
+            ""
         ],
-        "desc": "Mentions every person from the provided role or roles (separated by a ',') on this server.",
-        "usage": "`{0}menro RoleName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "waifuclaimeraffinity",
-        "cmd": "affinity",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets your affinity towards someone you want to be claimed by. Setting affinity will reduce their `{0}claim` on you by 20%. You can leave second argument empty to clear your affinity. 30 minutes cooldown.",
-        "usage": "`{0}affinity @MyHusband` or `{0}affinity`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "volume",
-        "cmd": "volume",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "vol"
+            ""
         ],
-        "desc": "Sets the music playback volume (0-100%)",
-        "usage": "`{0}vol 50`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "logignore",
-        "cmd": "logignore",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether the `.logserver` command ignores this channel. Useful if you have hidden admin channel and public log channel.",
-        "usage": "`{0}logignore`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "timezones",
-        "cmd": "timezones",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists all timezones available on the system to be used with `{0}timezone`.",
-        "usage": "`{0}timezones`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "aliaslist",
-        "cmd": "aliaslist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cmdmaplist",
-            "aliases"
+            "",
+            ""
         ],
-        "desc": "Shows the list of currently set aliases. Paginated.",
-        "usage": "`{0}aliaslist` or `{0}aliaslist 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "roles",
-        "cmd": "roles",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "List roles on this server or a roles of a specific user if specified. Paginated, 20 roles per page.",
-        "usage": "`{0}roles 2` or `{0}roles @Someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "wiki",
-        "cmd": "wikipedia",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "wiki"
+            ""
         ],
-        "desc": "Gives you back a wikipedia link",
-        "usage": "`{0}wiki query`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listplaying",
-        "cmd": "listplaying",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lipl"
+            ""
         ],
-        "desc": "Lists all playing statuses with their corresponding number.",
-        "usage": "`{0}lipl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "wikia",
-        "cmd": "wikia",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Gives you back a wikia link",
-        "usage": "`{0}wikia mtg Vigilance` or `{0}wikia mlp Dashy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verifiedrole",
-        "cmd": "verifiedrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt oder setzt die Rolle, die bei erfolgreicher Verifizierung vergeben wird.",
-        "usage": "`{0}verifiedrole [role]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "danbooru",
-        "cmd": "danbooru",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random hentai image from danbooru with a given tag. Tag is optional but preferred. (multiple tags are appended with +)",
-        "usage": "`{0}danbooru yuri+kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "modules",
-        "cmd": "modules",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mdls"
+            ""
         ],
-        "desc": "Zeigt alle Module des Bots an.",
-        "usage": "`{0}modules`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "submodules",
-        "cmd": "submodules",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "smdls"
+            ""
         ],
-        "desc": "Zeigt alle Submodule des Bots an.",
-        "usage": "`{0}submodules`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "srvrfilterinv",
-        "cmd": "srvrfilterinv",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sfi"
+            ""
         ],
-        "desc": "Toggles automatic deletion of invites posted in the server. Does not affect the Bot Owner.",
-        "usage": "`{0}sfi`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "nunchi",
-        "cmd": "nunchi",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Creates or joins an existing nunchi game. Users have to count up by 1 from the starting number shown by the bot. If someone makes a mistake (types an incorrent number, or repeats the same number) they are out of the game and a new round starts without them.  Minimum 3 users required.",
-        "usage": "`{0}nunchi`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "logevents",
-        "cmd": "logevents",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a list of all events you can subscribe to with `{0}log`",
-        "usage": "`{0}logevents`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verifiedusers",
-        "cmd": "verifiedusers",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "vu"
+            ""
         ],
-        "desc": "Zeigt alle verifizierten Nutzer an.",
-        "usage": "`{0}verifiedusers [page]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "avatar",
-        "cmd": "avatar",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "av"
+            ""
         ],
-        "desc": "Shows a mentioned person's avatar.",
-        "usage": "`{0}av @SomeGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "wheeloffortune",
-        "cmd": "wheeloffortune",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "wheel"
+            ""
         ],
-        "desc": "Bets a certain amount of currency on the wheel of fortune. Wheel can stop on one of many different multipliers. Won amount is rounded down to the nearest whole number.",
-        "usage": "`{0}wheel 10`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "define",
-        "cmd": "define",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "def"
+            ""
         ],
-        "desc": "Finds a definition of a word.",
-        "usage": "`{0}def heresy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "delmsgoncmd",
-        "cmd": "delmsgoncmd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles the automatic deletion of the user's successful command message to prevent chat flood.",
-        "usage": "`{0}delmsgoncmd`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "fairplay",
-        "cmd": "fairplay",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "fp"
+            ""
         ],
-        "desc": "Toggles fairplay. While enabled, the bot will prioritize songs from users who didn't have their song recently played instead of the song's position in the queue.",
-        "usage": "`{0}fp`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "addplaying",
-        "cmd": "addplaying",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "adpl"
+            ""
         ],
-        "desc": "Adds a specified string to the list of playing strings to rotate. Supported placeholders: `%servers%`, `%users%`, `%playing%`, `%queued%`, `%time%`, `%shardid%`, `%shardcount%`, `%shardguilds%`.",
-        "usage": "`{0}adpl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "remind",
-        "cmd": "remind",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sends a message to you or a channel after certain amount of time. First argument is `me`/`here`/'channelname'. Second argument is time in a descending order (mo>w>d>h>m) example: 1w5d3h10m. Third argument is a (multiword) message.",
-        "usage": "`{0}remind me 1d5h Do something` or `{0}remind #general 1m Start now!`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "race",
-        "cmd": "race",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Starts a new animal race.",
-        "usage": "`{0}race`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "pokemonability",
-        "cmd": "pokemonability",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "pokeab"
+            ""
         ],
-        "desc": "Searches for a pokemon ability.",
-        "usage": "`{0}pokeab overgrow`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "commandcost",
-        "cmd": "commandcost",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cmdcost"
+            ""
         ],
-        "desc": "Sets a price for a command. Running that command will take currency from users. Set 0 to remove the price.",
-        "usage": "`{0}cmdcost 0 !!q` or `{0}cmdcost 1 {0}8ball`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "msgxprestrictions",
-        "cmd": "msgxprestrictions",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "msgxpr"
+            ""
         ],
-        "desc": "Zeigt alle Textkanäle, die auf der MessageXP Blacklist stehen",
-        "usage": "`{0}msgxprestrictions`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setnick",
-        "cmd": "setnick",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Changes the nickname of the bot on this server. You can also target other users to change their nickname.",
-        "usage": "`{0}setnick BotNickname` or `{0}setnick @SomeUser New Nickname`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mutetime",
-        "cmd": "mutetime",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt die Zeit an, die ein User noch gemutet ist.",
-        "usage": "`{0}mutetime <user>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "startupcommands",
-        "cmd": "sclist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists all startup commands in the order they will be executed in.",
-        "usage": "`{0}sclist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chnlmdl",
-        "cmd": "chnlmdl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cm"
+            ""
         ],
-        "desc": "Sets a module's permission at the channel level.",
-        "usage": "`{0}cm ModuleName enable SomeChannel`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "addxp",
-        "cmd": "addxp",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Gibt einem Spieler XP aus der unendlich Bot-XP-Quelle",
-        "usage": "`{0}addxp <xp> <users>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "showcustreact",
-        "cmd": "showcustreact",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "scr"
+            ""
         ],
-        "desc": "Shows a custom reaction's response on a given ID.",
-        "usage": "`{0}scr 1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rotateplaying",
-        "cmd": "rotateplaying",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ropl"
+            ""
         ],
-        "desc": "Toggles rotation of playing status of the dynamic strings you previously specified.",
-        "usage": "`{0}ropl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "migratedata",
-        "cmd": "migratedata",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Migrate data from old bot configuration",
-        "usage": "`{0}migratedata`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "creatvoichanl",
-        "cmd": "creatvoichanl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cvch"
+            ""
         ],
-        "desc": "Creates a new voice channel with a given name.",
-        "usage": "`{0}cvch VoiceChannelName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "konachan",
-        "cmd": "konachan",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random hentai image from konachan with a given tag. Tag is optional but preferred.",
-        "usage": "`{0}konachan yuri`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "buy",
-        "cmd": "buy",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Buys an item from the shop on a given index. If buying items, make sure that the bot can DM you.",
-        "usage": "`{0}buy 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "languageslist",
-        "cmd": "languageslist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "langli"
+            ""
         ],
-        "desc": "List of languages for which translation (or part of it) exist atm.",
-        "usage": "`{0}langli`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hangmanlist",
-        "cmd": "hangmanlist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a list of hangman term types.",
-        "usage": "`{0}hangmanlist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "leaderboard",
-        "cmd": "leaderboard",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lb"
+            ""
         ],
-        "desc": "Displays the bot's currency leaderboard.",
-        "usage": "`{0}lb`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "reloadimages",
-        "cmd": "reloadimages",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Reloads images bot is using. Safe to use even when bot is being used heavily.",
-        "usage": "`{0}reloadimages`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "greetdel",
-        "cmd": "greetdel",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "grdel"
+            ""
         ],
-        "desc": "Sets the time it takes (in seconds) for greet messages to be auto-deleted. Set it to 0 to disable automatic deletion.",
-        "usage": "`{0}greetdel 0` or `{0}greetdel 30`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "channeltopic",
-        "cmd": "channeltopic",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ct"
+            ""
         ],
-        "desc": "Sends current channel's topic as a message.",
-        "usage": "`{0}ct`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gmod",
-        "cmd": "globalmodule",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gmod"
+            ""
         ],
-        "desc": "Toggles whether a module can be used on any server.",
-        "usage": "`{0}gmod nsfw`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hangman",
-        "cmd": "hangman",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Starts a game of hangman in the channel. Use `{0}hangmanlist` to see a list of available term types. Defaults to 'all'.",
-        "usage": "`{0}hangman` or `{0}hangman movies`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verifystring",
-        "cmd": "verifystring",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt oder setzt die Zeichenkette, die bei der Verifizierungskonversation als Titel angegeben werden muss.",
-        "usage": "`{0}verifystring [string]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "allchnlmdls",
-        "cmd": "allchnlmdls",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "acm"
+            ""
         ],
-        "desc": "Enable or disable all modules in a specified channel.",
-        "usage": "`{0}acm enable #SomeChannel`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "announce",
-        "cmd": "announce",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sends a message to all servers' default channel that bot is connected to.",
-        "usage": "`{0}announce Useless spam`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "joinrace",
-        "cmd": "joinrace",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "jr"
+            ""
         ],
-        "desc": "Joins a new race. You can specify an amount of currency for betting (optional). You will get YourBet*(participants-1) back if you win.",
-        "usage": "`{0}jr` or `{0}jr 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "resetpermissions",
-        "cmd": "resetperms",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Resets the bot's permissions module on this server to the default value.",
-        "usage": "`{0}resetperms`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "time",
-        "cmd": "time",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows the current time and timezone in the specified location.",
-        "usage": "`{0}time London, UK`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "byedel",
-        "cmd": "byedel",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets the time it takes (in seconds) for bye messages to be auto-deleted. Set it to `0` to disable automatic deletion.",
-        "usage": "`{0}byedel 0` or `{0}byedel 30`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shorten",
-        "cmd": "shorten",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Attempts to shorten an URL, if it fails, returns the input URL.",
-        "usage": "`{0}shorten https://google.com`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "crca",
-        "cmd": "crca",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether the custom reaction will trigger if the triggering message contains the keyword (instead of only starting with it).",
-        "usage": "`{0}crca 44`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "channelinfo",
-        "cmd": "channelinfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cinfo"
+            ""
         ],
-        "desc": "Shows info about the channel. If no channel is supplied, it defaults to current one.",
-        "usage": "`{0}cinfo #some-channel`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shopremove",
-        "cmd": "shoprem",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "shoprm"
+            ""
         ],
-        "desc": "Removes an item from the shop by its ID.",
-        "usage": "`{0}shoprm 1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "manga",
-        "cmd": "manga",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mang",
-            "mq"
+            "",
+            ""
         ],
-        "desc": "Queries anilist for a manga and shows the first result.",
-        "usage": "`{0}mq Shingeki no kyojin`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "renamerole",
-        "cmd": "renamerole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "renr"
+            ""
         ],
-        "desc": "Renames a role. The role you are renaming must be lower than bot's highest role.",
-        "usage": "`{0}renr \"First role\" SecondRole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "award",
-        "cmd": "award",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Awards someone a certain amount of currency.  You can also specify a role name to award currency to all users in a role.",
-        "usage": "`{0}award 100 @person` or `{0}award 5 Role Of Gamblers`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rolemdl",
-        "cmd": "rolemdl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rm"
+            ""
         ],
-        "desc": "Sets a module's permission at the role level.",
-        "usage": "`{0}rm ModuleName enable MyRole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "convert",
-        "cmd": "convert",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Convert quantities. Use `{0}convertlist` to see supported dimensions and currencies.",
-        "usage": "`{0}convert m km 1000`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "boobs",
-        "cmd": "boobs",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Real adult content.",
-        "usage": "`{0}boobs`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "slot",
-        "cmd": "slot",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Play Mitternacht slots. Max bet is 9999. 1.5 second cooldown per user.",
-        "usage": "`{0}slot 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "quotesearch",
-        "cmd": "qsearch",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random quote for a keyword that contains any text specified in the search.",
-        "usage": "`{0}qsearch keyword text`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "voiceplustext",
-        "cmd": "voice+text",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "v+t"
+            ""
         ],
-        "desc": "Creates a text channel for each voice channel only users in that voice channel can see. If you are server owner, keep in mind you will see them all the time regardless.",
-        "usage": "`{0}v+t`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "channelblacklist",
-        "cmd": "cbl",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Either [add]s or [rem]oves a channel specified by an ID from a blacklist.",
-        "usage": "`{0}cbl rem 12312312312`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listqueue",
-        "cmd": "listqueue",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lq"
+            ""
         ],
-        "desc": "Lists 10 currently queued songs per page. Default page is 1.",
-        "usage": "`{0}lq` or `{0}lq 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setmaxplaytime",
-        "cmd": "setmaxplaytime",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "smp"
+            ""
         ],
-        "desc": "Sets a maximum number of seconds (>14) a song can run before being skipped automatically. Set 0 to have no limit.",
-        "usage": "`{0}smp 0` or `{0}smp 270`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verify2",
-        "cmd": "verify2",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.",
-        "usage": "`{0}verify2 <forumuserid>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "userinfo",
-        "cmd": "userinfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "uinfo"
+            ""
         ],
-        "desc": "Shows info about the user. If no user is supplied, it defaults a user running the command.",
-        "usage": "`{0}uinfo @SomeUser`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "whosplaying",
-        "cmd": "whosplaying",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "whpl"
+            ""
         ],
-        "desc": "Shows a list of users who are playing the specified game.",
-        "usage": "`{0}whpl Overwatch`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setrolemoney",
-        "cmd": "setrolemoney",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Weise einer Rolle einen anderen Betrag an täglichem Geld zu.",
-        "usage": "`{0}setrolemoney <role> <money> [priority]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lstfilterwords",
-        "cmd": "lstfilterwords",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lfw"
+            ""
         ],
-        "desc": "Shows a list of filtered words.",
-        "usage": "`{0}lfw`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "roll",
-        "cmd": "roll",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Rolls 0-100. If you supply a number `X` it rolls up to 30 normal dice. If you split 2 numbers with letter `d` (`xdy`) it will roll `X` dice from 1 to `y`. `Y` can be a letter 'F' if you want to roll fate dice instead of dnd.",
-        "usage": "`{0}roll` or `{0}roll 7` or `{0}roll 3d5` or `{0}roll 5dF`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "calculate",
-        "cmd": "calculate",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "calc"
+            ""
         ],
-        "desc": "Evaluate a mathematical expression.",
-        "usage": "`{0}calc 1+1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "drawnew",
-        "cmd": "drawnew",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Draws a card from the NEW deck of cards. You can draw up to 10 cards by supplying a number of cards to draw.",
-        "usage": "`{0}drawnew` or `{0}drawnew 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "nowplaying",
-        "cmd": "nowplaying",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "np"
+            ""
         ],
-        "desc": "Shows the song that the bot is currently playing.",
-        "usage": "`{0}np`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "nroll",
-        "cmd": "nroll",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Rolls in a given range.",
-        "usage": "`{0}nroll 5` (rolls 0-5) or `{0}nroll 5-15`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "betflip",
-        "cmd": "betflip",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "bf"
+            ""
         ],
-        "desc": "Bet to guess will the result be heads or tails. Guessing awards you 1.95x the currency you've bet (rounded up). Multiplier can be changed by the bot owner.",
-        "usage": "`{0}bf 5 heads` or `{0}bf 3 t`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "movelist",
-        "cmd": "movelist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ml"
+            ""
         ],
-        "desc": "Lists the moves you are able to use",
-        "usage": "`{0}ml`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "allrolemdls",
-        "cmd": "allrolemdls",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "arm"
+            ""
         ],
-        "desc": "Enable or disable all modules for a specific role.",
-        "usage": "`{0}arm [enable/disable] MyRole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "waifuleaderboard",
-        "cmd": "waifus",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "waifulb"
+            ""
         ],
-        "desc": "Shows top 9 waifus. You can specify another page to show other waifus.",
-        "usage": "`{0}waifus` or `{0}waifulb 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "randomdog",
-        "cmd": "randomdog",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "woof"
+            ""
         ],
-        "desc": "Shows a random dog image.",
-        "usage": "`{0}woof`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "crdm",
-        "cmd": "crdm",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether the response message of the custom reaction will be sent as a direct message.",
-        "usage": "`{0}crdm 44`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "flip",
-        "cmd": "flip",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Flips coin(s) - heads or tails, and shows an image.",
-        "usage": "`{0}flip` or `{0}flip 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "allcmdcooldowns",
-        "cmd": "allcmdcooldowns",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "acmdcds"
+            ""
         ],
-        "desc": "Shows a list of all commands and their respective cooldowns.",
-        "usage": "`{0}acmdcds`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "addcustreact",
-        "cmd": "addcustreact",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "acr"
+            ""
         ],
-        "desc": "Add a custom reaction with a trigger and a response. Running this command in server requires the Administration permission. Running this command in DM is Bot Owner only and adds a new global custom reaction. Guide here: <https://nadekobot.readthedocs.io/en/latest/Custom%20Reactions/>",
-        "usage": "`{0}acr \"hello\" Hi there %user%`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "yomama",
-        "cmd": "yomama",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ym"
+            ""
         ],
-        "desc": "Shows a random joke from <http://api.yomomma.info/>",
-        "usage": "`{0}ym`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verify3",
-        "cmd": "verify3",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.",
-        "usage": "`{0}verify3 <key>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "creatxtchanl",
-        "cmd": "creatxtchanl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ctch"
+            ""
         ],
-        "desc": "Creates a new text channel with a given name.",
-        "usage": "`{0}ctch TextChannelName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "ping",
-        "cmd": "ping",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Ping the bot to see if there are latency issues.",
-        "usage": "`{0}ping`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnlogall",
-        "cmd": "warnlogall",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "See a list of all warnings on the server. 15 users per page.",
-        "usage": "`{0}warnlogall` or `{0}warnlogall 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "leave",
-        "cmd": "leave",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Makes Mitternacht leave the server. Either server name or server ID is required.",
-        "usage": "`{0}leave 123123123331`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "serverinfo",
-        "cmd": "serverinfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sinfo"
+            ""
         ],
-        "desc": "Shows info about the server the bot is on. If no server is supplied, it defaults to current one.",
-        "usage": "`{0}sinfo Some Server`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "magicitem",
-        "cmd": "magicitem",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mi"
+            ""
         ],
-        "desc": "Shows a random magic item from <https://1d4chan.org/wiki/List_of_/tg/%27s_magic_items>",
-        "usage": "`{0}mi`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shopadd",
-        "cmd": "shopadd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds an item to the shop by specifying type price and name. Available types are role and list.",
-        "usage": "`{0}shopadd role 1000 Rich`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "local",
-        "cmd": "local",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lo"
+            ""
         ],
-        "desc": "Queues a local file by specifying a full path.",
-        "usage": "`{0}lo C:/music/mysong.mp3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "permrole",
-        "cmd": "permrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "pr"
+            ""
         ],
-        "desc": "Sets a role which can change permissions. Supply no parameters to see the current one. Default is 'Permissions'.",
-        "usage": "`{0}pr role`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "greetdm",
-        "cmd": "greetdm",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether the greet messages will be sent in a DM (This is separate from greet - you can have both, any or neither enabled).",
-        "usage": "`{0}greetdm`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "createinvite",
-        "cmd": "createinvite",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "crinv"
+            ""
         ],
-        "desc": "Creates a new invite which has infinite max uses and never expires.",
-        "usage": "`{0}crinv`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listcustreactg",
-        "cmd": "listcustreactg",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lcrg"
+            ""
         ],
-        "desc": "Lists global or server custom reactions (20 commands per page) grouped by trigger, and show a number of responses for each. Running the command in DM will list global custom reactions, while running it in server will list that server's custom reactions.",
-        "usage": "`{0}lcrg 1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "delvoichanl",
-        "cmd": "delvoichanl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "dvch"
+            ""
         ],
-        "desc": "Deletes a voice channel with a given name.",
-        "usage": "`{0}dvch VoiceChannelName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "donate",
-        "cmd": "donate",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Instructions for helping the project financially.",
-        "usage": "`{0}donate`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "catfact",
-        "cmd": "catfact",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random catfact from <https://catfact.ninja/fact>",
-        "usage": "`{0}catfact`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setname",
-        "cmd": "setname",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "newnm"
+            ""
         ],
-        "desc": "Gives the bot a new name.",
-        "usage": "`{0}newnm BotName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "repeatlist",
-        "cmd": "repeatlist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "replst"
+            ""
         ],
-        "desc": "Shows currently repeating messages and their indexes.",
-        "usage": "`{0}repeatlist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "slowmodewhitelist",
-        "cmd": "slowmodewl",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Ignores a role or a user from the slowmode feature.",
-        "usage": "`{0}slowmodewl SomeRole` or `{0}slowmodewl AdminDude`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "pollend",
-        "cmd": "pollend",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Stops active poll on this server and prints the results in this channel.",
-        "usage": "`{0}pollend`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "moveperm",
-        "cmd": "moveperm",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mp"
+            ""
         ],
-        "desc": "Moves permission from one position to another in the Permissions list.",
-        "usage": "`{0}mp 2 4`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "typestart",
-        "cmd": "typestart",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Starts a typing contest.",
-        "usage": "`{0}typestart`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "load",
-        "cmd": "load",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Loads a saved playlist using its ID. Use `{0}pls` to list all saved playlists and `{0}save` to save new ones.",
-        "usage": "`{0}load 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mute",
-        "cmd": "mute",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Mutes a mentioned user both from speaking and chatting. You can also specify time in minutes (up to 1440) for how long the user should be muted.",
-        "usage": "`{0}mute @Someone` or `{0}mute 30 @Someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "queue",
-        "cmd": "queue",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "q",
-            "yq"
+            "",
+            ""
         ],
-        "desc": "Queue a song using keywords or a link. Bot will join your voice channel. **You must be in a voice channel**.",
-        "usage": "`{0}q Dream Of Venice`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lolchamp",
-        "cmd": "lolchamp",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows League Of Legends champion statistics. If there are spaces/apostrophes or in the name - omit them. Optional second parameter is a role.",
-        "usage": "`{0}lolchamp Riven` or `{0}lolchamp Annie sup`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lgp",
-        "cmd": "listglobalperms",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lgp"
+            ""
         ],
-        "desc": "Lists global permissions set by the bot owner.",
-        "usage": "`{0}lgp`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "osu",
-        "cmd": "osu",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows osu stats for a player.",
-        "usage": "`{0}osu Name` or `{0}osu Name taiko`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hearthstone",
-        "cmd": "hearthstone",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "hs"
+            ""
         ],
-        "desc": "Searches for a Hearthstone card and shows its image. Takes a while to complete.",
-        "usage": "`{0}hs Ysera`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setmusicchannel",
-        "cmd": "setmusicchannel",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "smch"
+            ""
         ],
-        "desc": "Sets the current channel as the default music output channel. This will output playing, finished, paused and removed songs to that channel instead of the channel where the first song was queued in.",
-        "usage": "`{0}smch`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "songautodelete",
-        "cmd": "songautodelete",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sad"
+            ""
         ],
-        "desc": "Toggles whether the song should be automatically removed from the music queue when it finishes playing.",
-        "usage": "`{0}sad`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "atfbooru",
-        "cmd": "atfbooru",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "atf"
+            ""
         ],
-        "desc": "Shows a random hentai image from atfbooru with a given tag. Tag is optional but preferred.",
-        "usage": "`{0}atfbooru yuri+kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "streamrolewhitelist",
-        "cmd": "streamrolewl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "srwl"
+            ""
         ],
-        "desc": "Adds or removes a whitelisted user. Whitelisted users will receive the stream role even if they don't have the specified keyword in their stream title.",
-        "usage": "`{0}srwl add @b1nzy#1234` or `{0}srwl rem @b1nzy#1234`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "urbandict",
-        "cmd": "urbandict",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ud"
+            ""
         ],
-        "desc": "Searches Urban Dictionary for a word.",
-        "usage": "`{0}ud Pineapple`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listquotes",
-        "cmd": "listquotes",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "liqu"
+            ""
         ],
-        "desc": "Zeigt alle Zitate dieser Gilde oder eines angegebenen Nutzers an.",
-        "usage": "`{0}liqu [seite]` oder `{0}liqu <nutzer> [seite]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lsar",
-        "cmd": "lsar",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt alle Rollen an, die selbst zugewiesen werden können.",
-        "usage": "`{0}lsar`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "play",
-        "cmd": "play",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "start"
+            ""
         ],
-        "desc": "If no arguments are specified, acts as `{0}next 1` command. If you specify a song number, it will jump to that song. If you specify a search query, acts as a `{0}q` command",
-        "usage": "`{0}play` or `{0}play 5` or `{0}play Dream Of Venice`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "streamrolekeyword",
-        "cmd": "streamrolekw",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "srkw"
+            ""
         ],
-        "desc": "Sets keyword which is required in the stream's title in order for the streamrole to apply. Provide no keyword in order to reset.",
-        "usage": "`{0}srkw` or `{0}srkw PUBG`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "userblacklist",
-        "cmd": "ubl",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Either [add]s or [rem]oves a user specified by a Mention or an ID from a blacklist.",
-        "usage": "`{0}ubl add @SomeUser` or `{0}ubl rem 12312312313`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "activity",
-        "cmd": "activity",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Checks for spammers.",
-        "usage": "`{0}activity`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "cleanup",
-        "cmd": "cleanup",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Cleans up hanging voice connections.",
-        "usage": "`{0}cleanup`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removerole",
-        "cmd": "removerole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rr"
+            ""
         ],
-        "desc": "Removes a role from a given user.",
-        "usage": "`{0}rr @User Admin`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "derpi",
-        "cmd": "derpi",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt ein zufälliges Hentai Bild von derpiboo.ru mit einem gegebenen Tag. Ein Tag ist optional aber bevorzugt. Benutze + für mehrere Tags.",
-        "usage": "`{0}derpi vinyl scratch+kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "antispam",
-        "cmd": "antispam",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Stops people from repeating same message X times in a row. You can specify to either mute, kick or ban the offenders. Max message count is 10.",
-        "usage": "`{0}antispam 3 Mute` or `{0}antispam 4 Kick` or `{0}antispam 6 Ban`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "logserver",
-        "cmd": "logserver",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Enables or Disables ALL log events. If enabled, all log events will log to this channel.",
-        "usage": "`{0}logserver enable` or `{0}logserver disable`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "languagesetdefault",
-        "cmd": "langsetdefault",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "langsetd"
+            ""
         ],
-        "desc": "Sets the bot's default response language. All servers which use a default locale will use this one. Setting to `default` will use the host's current culture. Provide no arguments to see currently set language.",
-        "usage": "`{0}langsetd en-US` or `{0}langsetd default`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shuffleplaylist",
-        "cmd": "shuffle",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sh",
-            "plsh"
+            "",
+            ""
         ],
-        "desc": "Shuffles the current playlist.",
-        "usage": "`{0}plsh`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verbose",
-        "cmd": "verbose",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "v"
+            ""
         ],
-        "desc": "Sets whether to show when a command/module is blocked.",
-        "usage": "`{0}verbose true`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "draw",
-        "cmd": "draw",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Draws a card from this server's deck. You can draw up to 10 cards by supplying a number of cards to draw.",
-        "usage": "`{0}draw` or `{0}draw 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "move",
-        "cmd": "move",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mv"
+            ""
         ],
-        "desc": "Moves the bot to your voice channel. (works only if music is already playing)",
-        "usage": "`{0}mv`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "trivia",
-        "cmd": "trivia",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "t"
+            ""
         ],
-        "desc": "Starts a game of trivia. You can add `nohint` to prevent hints. First player to get to 10 points wins by default. You can specify a different number. 30 seconds per question.",
-        "usage": "`{0}t` or `{0}t 5 nohint`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chatunmute",
-        "cmd": "chatunmute",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Removes a mute role previously set on a mentioned user with `{0}chatmute` which prevented him from chatting in text channels.",
-        "usage": "`{0}chatunmute @Someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warn",
-        "cmd": "warn",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Warns a user.",
-        "usage": "`{0}warn @b1nzy Very rude person`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "typelist",
-        "cmd": "typelist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists added typing articles with their IDs. 15 per page.",
-        "usage": "`{0}typelist` or `{0}typelist 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "languageset",
-        "cmd": "languageset",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "langset"
+            ""
         ],
-        "desc": "Sets this server's response language. If bot's response strings have been translated to that language, bot will use that language in this server. Reset by using `default` as the locale name. Provide no arguments to see currently set language.",
-        "usage": "`{0}langset de-DE ` or `{0}langset default`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "antilist",
-        "cmd": "antilist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "antilst"
+            ""
         ],
-        "desc": "Shows currently enabled protection features.",
-        "usage": "`{0}antilist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "commands",
-        "cmd": "commands",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cmds"
+            ""
         ],
-        "desc": "List all of the bot's commands from a certain module. You can either specify the full name or only the first few letters of the module name.",
-        "usage": "`{0}commands Administration` or `{0}cmds Admin`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "togethertube",
-        "cmd": "togethertube",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "totube"
+            ""
         ],
-        "desc": "Creates a new room on <https://togethertube.com> and shows the link in the chat.",
-        "usage": "`{0}totube`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lmgtfy",
-        "cmd": "lmgtfy",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Google something for an idiot.",
-        "usage": "`{0}lmgtfy query`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "convertlist",
-        "cmd": "convertlist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "List of the convertible dimensions and currencies.",
-        "usage": "`{0}convertlist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "jcsc",
-        "cmd": "jcsc",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Joins current channel to an instance of cross server channel using the token.",
-        "usage": "`{0}jcsc TokenHere`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "asar",
-        "cmd": "asar",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds a role to the list of self-assignable roles.",
-        "usage": "`{0}asar Gamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "savechat",
-        "cmd": "savechat",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Saves a number of messages to a text file and sends it to you.",
-        "usage": "`{0}savechat 150`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "osub",
-        "cmd": "osub",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows information about an osu beatmap.",
-        "usage": "`{0}osub https://osu.ppy.sh/s/127712`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hangmanstop",
-        "cmd": "hangmanstop",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Stops the active hangman game on this channel if it exists.",
-        "usage": "`{0}hangmanstop`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "randomimage",
-        "cmd": "randomimage",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rimg"
+            ""
         ],
-        "desc": "Pulls a random image using a search parameter.",
-        "usage": "`{0}rimg cute kitten`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hentai",
-        "cmd": "hentai",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a hentai image from a random website (gelbooru or danbooru or konachan or atfbooru or yandere) with a given tag. Tag is optional but preferred. Only 1 tag allowed.",
-        "usage": "`{0}hentai yuri`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "payroll",
-        "cmd": "payroll",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Gibt die Gehaltsliste der verschiedenen Rollen nach Priorität und Rangordnung aus.",
-        "usage": "`{0}payroll [count] [position]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setrolemoneypriority",
-        "cmd": "setrolemoneypriority",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Weise einer DailyMoney-Rolle eine bestimmte Priorität zu.",
-        "usage": "`{0}setrolemoneypriority <role> <priority>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "waifugift",
-        "cmd": "waifugift",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gift",
-            "gifts"
+            "",
+            ""
         ],
-        "desc": "Gift an item to someone. This will increase their waifu value by 50% of the gifted item's value if they don't have affinity set towards you, or 100% if they do. Provide no arguments to see a list of items that you can gift.",
-        "usage": "`{0}gifts` or `{0}gift Rose @Himesama`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "streamrole",
-        "cmd": "streamrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets a role which is monitored for streamers (FromRole), and a role to add if a user from 'FromRole' is streaming (AddRole). When a user from 'FromRole' starts streaming, they will receive an 'AddRole'. Provide no arguments to disable",
-        "usage": "`{0}streamrole \"Eligible Streamers\" \"Featured Streams\"`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "waifuinfo",
-        "cmd": "waifuinfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "waifustats"
+            ""
         ],
-        "desc": "Shows waifu stats for a target person. Defaults to you if no user is provided.",
-        "usage": "`{0}waifuinfo @MyCrush` or `{0}waifuinfo`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "iamnot",
-        "cmd": "iamnot",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "iamn",
-            "ibimsk1"
+            "",
+            ""
         ],
-        "desc": "Removes a specified role from you. Role must be on a list of self-assignable roles.",
-        "usage": "`{0}iamn Gamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "cleverbot",
-        "cmd": "cleverbot",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles cleverbot session. When enabled, the bot will reply to messages starting with bot mention in the server. Custom reactions starting with %mention% won't work if cleverbot is enabled.",
-        "usage": "`{0}cleverbot`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "quoteid",
-        "cmd": "quoteid",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "qid"
+            ""
         ],
-        "desc": "Displays the quote with the specified ID number. Quote ID numbers can be found by typing `.liqu [num]` where `[num]` is a number of a page which contains 15 quotes.",
-        "usage": "`{0}qid 123456`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "osu5",
-        "cmd": "osu5",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Displays a user's top 5 plays.",
-        "usage": "`{0}osu5 Name`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "reptcursong",
-        "cmd": "reptcursong",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rcs"
+            ""
         ],
-        "desc": "Toggles repeat of current song.",
-        "usage": "`{0}rcs`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "half",
-        "cmd": "half",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets the music playback volume to 50%.",
-        "usage": "`{0}half`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lcsc",
-        "cmd": "lcsc",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Leaves a cross server channel instance from this channel.",
-        "usage": "`{0}lcsc`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "magicthegathering",
-        "cmd": "magicthegathering",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mtg"
+            ""
         ],
-        "desc": "Searches for a Magic The Gathering card.",
-        "usage": "`{0}magicthegathering about face` or `{0}mtg about face`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gcmd",
-        "cmd": "globalcommand",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gcmd"
+            ""
         ],
-        "desc": "Toggles whether a command can be used on any server.",
-        "usage": "`{0}gcmd .stats`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "unstuck",
-        "cmd": "unstuck",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Clears the message queue.",
-        "usage": "`{0}unstuck`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "stats",
-        "cmd": "stats",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows some basic stats for Mitternacht.",
-        "usage": "`{0}stats`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "butts",
-        "cmd": "butts",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ass",
-            "butt"
+            "",
+            ""
         ],
-        "desc": "Real adult content.",
-        "usage": "`{0}butts` or `{0}ass`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "randomcat",
-        "cmd": "randomcat",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "meow"
+            ""
         ],
-        "desc": "Shows a random cat image.",
-        "usage": "`{0}meow`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verificationkeys",
-        "cmd": "verificationkeys",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt alle zur Zeit aktiven Verifizierungsschlüssel an.",
-        "usage": "`{0}verificationkeys [page]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "bye",
-        "cmd": "bye",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles anouncements on the current channel when someone leaves the server.",
-        "usage": "`{0}bye`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "localpl",
-        "cmd": "localplaylst",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lopl"
+            ""
         ],
-        "desc": "Queues all songs from a directory.",
-        "usage": "`{0}lopl C:/music/classical`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "soundcloudpl",
-        "cmd": "soundcloudpl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "scpl"
+            ""
         ],
-        "desc": "Queue a Soundcloud playlist using a link.",
-        "usage": "`{0}scpl soundcloudseturl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "iam",
-        "cmd": "iam",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ibims"
+            ""
         ],
-        "desc": "Adds a role to you that you choose. Role must be on a list of self-assignable roles.",
-        "usage": "`{0}iam Gamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gelbooru",
-        "cmd": "gelbooru",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random hentai image from gelbooru with a given tag. Tag is optional but preferred. (multiple tags are appended with +)",
-        "usage": "`{0}gelbooru yuri+kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "vcrolelist",
-        "cmd": "vcrolelist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a list of currently set voice channel roles.",
-        "usage": "`{0}vcrolelist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "resetglobalpermissions",
-        "cmd": "resetglobalperms",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Resets global permissions set by bot owner.",
-        "usage": "`{0}resetglobalperms`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rolehoist",
-        "cmd": "rolehoist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rh"
+            ""
         ],
-        "desc": "Toggles whether this role is displayed in the sidebar or not.",
-        "usage": "`{0}rh Guests` or `{0}rh \"Space Wizards\"`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "linux",
-        "cmd": "linux",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Prints a customizable Linux interjection",
-        "usage": "`{0}linux Spyware Windows`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setstatus",
-        "cmd": "setstatus",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets the bot's status. (Online/Idle/Dnd/Invisible)",
-        "usage": "`{0}setstatus Idle`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setxp",
-        "cmd": "setxp",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Set the XP of a specified user.",
-        "usage": "`{0}setxp <xp> [user]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "timezone",
-        "cmd": "timezone",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets this guilds timezone. This affects bot's time output in this server (logs, etc..)",
-        "usage": "`{0}timezone` or `{0}timezone GMT Standard Time`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rategirl",
-        "cmd": "rategirl",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Use the universal hot-crazy wife zone matrix to determine the girl's worth. It is everything young men need to know about women. At any moment in time, any woman you have previously located on this chart can vanish from that location and appear anywhere else on the chart.",
-        "usage": "`{0}rategirl @SomeGurl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "inrole",
-        "cmd": "inrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists every person from the specified role on this server. You can use role ID, role name.",
-        "usage": "`{0}inrole Some Role`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "tictactoe",
-        "cmd": "tictactoe",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ttt"
+            ""
         ],
-        "desc": "Starts a game of tic tac toe. Another user must run the command in the same channel in order to accept the challenge. Use numbers 1-9 to play. 15 seconds per move.",
-        "usage": "{0}ttt"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "checkstream",
-        "cmd": "checkstream",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cs"
+            ""
         ],
-        "desc": "Checks if a user is online on a certain streaming platform.",
-        "usage": "`{0}cs twitch MyFavStreamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setavatar",
-        "cmd": "setavatar",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "setav"
+            ""
         ],
-        "desc": "Sets a new avatar image for the MitternachtBot. Argument is a direct link to an image.",
-        "usage": "`{0}setav http://i.imgur.com/xTG3a1I.jpg`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "serverid",
-        "cmd": "serverid",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sid"
+            ""
         ],
-        "desc": "Shows current server ID.",
-        "usage": "`{0}sid`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "typestop",
-        "cmd": "typestop",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Stops a typing contest on the current channel.",
-        "usage": "`{0}typestop`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "image",
-        "cmd": "image",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "img"
+            ""
         ],
-        "desc": "Pulls the first image found using a search parameter. Use `{0}rimg` for different results.",
-        "usage": "`{0}img cute kitten`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "calcops",
-        "cmd": "calcops",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows all available operations in the `{0}calc` command",
-        "usage": "`{0}calcops`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setchanlname",
-        "cmd": "setchanlname",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "schn"
+            ""
         ],
-        "desc": "Changes the name of the current channel.",
-        "usage": "`{0}schn NewName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mcping",
-        "cmd": "minecraftping",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mcping"
+            ""
         ],
-        "desc": "Pings a minecraft server.",
-        "usage": "`{0}mcping 127.0.0.1:25565`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "destroy",
-        "cmd": "destroy",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "d"
+            ""
         ],
-        "desc": "Completely stops the music and unbinds the bot from the channel. (may cause weird behaviour)",
-        "usage": "`{0}d`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removeplaying",
-        "cmd": "removeplaying",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rmpl",
-            "repl"
+            "",
+            ""
         ],
-        "desc": "Removes a playing string on a given number.",
-        "usage": "`{0}rmpl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "overwatch",
-        "cmd": "overwatch",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ow"
+            ""
         ],
-        "desc": "Show's basic stats on a player (competitive rank, playtime, level etc) Region codes are: `eu` `us` `cn` `kr`",
-        "usage": "`{0}ow us Battletag#1337` or  `{0}overwatch eu Battletag#2016`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "userid",
-        "cmd": "userid",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "uid"
+            ""
         ],
-        "desc": "Shows user ID.",
-        "usage": "`{0}uid` or `{0}uid @SomeGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "acro",
-        "cmd": "acrophobia",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "acro"
+            ""
         ],
-        "desc": "Starts an Acrophobia game. Second argument is optional round length in seconds. (default is 60)",
-        "usage": "`{0}acro` or `{0}acro 30`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "verboseerror",
-        "cmd": "verboseerror",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ve"
+            ""
         ],
-        "desc": "Toggles whether the bot should print command errors when a command is incorrectly used.",
-        "usage": "`{0}ve`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "color",
-        "cmd": "color",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows you what color corresponds to that hex.",
-        "usage": "`{0}color 00ff00`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "weather",
-        "cmd": "weather",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "we"
+            ""
         ],
-        "desc": "Shows weather data for a specified city. You can also specify a country after a comma.",
-        "usage": "`{0}we Moscow, RU`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "raffle",
-        "cmd": "raffle",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Prints a name and ID of a random user from the online list from the (optional) role.",
-        "usage": "`{0}raffle` or `{0}raffle RoleName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "nsfwtagblacklist",
-        "cmd": "nsfwtagbl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "nsfwtbl"
+            ""
         ],
-        "desc": "Toggles whether the tag is blacklisted or not in nsfw searches. Provide no parameters to see the list of blacklisted tags.",
-        "usage": "`{0}nsfwtbl poop`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "ranks",
-        "cmd": "ranks",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ranklist"
+            ""
         ],
-        "desc": "Gibt eine geordnete Rangliste mit Nutzern und ihren Rängen zurück.",
-        "usage": "`{0}ranks [anzahl] [startposition]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setverifytutorialtext",
-        "cmd": "setverifytutorialtext",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Setzt den Text, der mit `howtoverify` angezeigt wird.",
-        "usage": "`{0}setverifytutorialtext <text>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "slottest",
-        "cmd": "slottest",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Tests to see how much slots payout for X number of plays.",
-        "usage": "`{0}slottest 1000`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rps",
-        "cmd": "rps",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Play a game of Rocket-Paperclip-Scissors with Mitternacht.",
-        "usage": "`{0}rps scissors`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "revav",
-        "cmd": "revav",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Returns a Google reverse image search for someone's avatar.",
-        "usage": "`{0}revav @SomeGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "deafen",
-        "cmd": "deafen",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "deaf"
+            ""
         ],
-        "desc": "Deafens mentioned user or users.",
-        "usage": "`{0}deaf \"@Someguy\"` or `{0}deaf \"@Someguy\" \"@Someguy\"`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "settopic",
-        "cmd": "settopic",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "st"
+            ""
         ],
-        "desc": "Sets a topic on the current channel.",
-        "usage": "`{0}st My new topic`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "channelid",
-        "cmd": "channelid",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cid"
+            ""
         ],
-        "desc": "Shows current channel ID.",
-        "usage": "`{0}cid`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "forwardmessages",
-        "cmd": "fwmsgs",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles forwarding of non-command messages sent to bot's DM to the bot owners",
-        "usage": "`{0}fwmsgs`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lucky7",
-        "cmd": "lucky7",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "l7"
+            ""
         ],
-        "desc": "Bet currency on the game and start rolling 3 sided dice. At any point you can choose to [m]ove (roll again) or [s]tay (get the amount bet times the current multiplier).",
-        "usage": "`{0}l7 10` or `{0}l7 move` or `{0}l7 s`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "smashcast",
-        "cmd": "smashcast",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "hb"
+            ""
         ],
-        "desc": "Notifies this channel when a certain user starts streaming.",
-        "usage": "`{0}smashcast SomeStreamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "turntoxp",
-        "cmd": "turntoxp",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "turntoexp",
-            "ttxp"
+            "",
+            ""
         ],
-        "desc": "Tauscht Geld in XP um.",
-        "usage": "`{0}turntoxp <geld>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setactivity",
-        "cmd": "setactivity",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets the bots activity.",
-        "usage": "`{0}setactivity <playing|listening|streaming|watching> [string]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "autoplay",
-        "cmd": "autoplay",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ap"
+            ""
         ],
-        "desc": "Toggles autoplay - When the song is finished, automatically queue a related Youtube song. (Works only for Youtube songs and when queue is empty)",
-        "usage": "`{0}ap`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "autotranslate",
-        "cmd": "autotrans",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "at"
+            ""
         ],
-        "desc": "Starts automatic translation of all messages by users who set their `{0}atl` in this channel. You can set \"del\" argument to automatically delete all translated user messages.",
-        "usage": "`{0}at` or `{0}at del`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "srvrmdl",
-        "cmd": "srvrmdl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sm"
+            ""
         ],
-        "desc": "Sets a module's permission at the server level.",
-        "usage": "`{0}sm ModuleName enable`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "prefix",
-        "cmd": "prefix",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets this server's prefix for all bot commands. Provide no arguments to see the current server prefix.",
-        "usage": "`{0}prefix +`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "autohentai",
-        "cmd": "autohentai",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Posts a hentai every X seconds with a random tag from the provided tags. Use `|` to separate tags. 20 seconds minimum. Provide no arguments to disable.",
-        "usage": "`{0}autohentai 30 yuri|tail|long_hair` or `{0}autohentai`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "_8ball",
-        "cmd": "8ball",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Ask the 8ball a yes/no question.",
-        "usage": "`{0}8ball should I do something`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "plant",
-        "cmd": "plant",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Spend an amount of currency to plant it in this channel. Default is 1. (If bot is restarted or crashes, the currency will be lost)",
-        "usage": "`{0}plant` or `{0}plant 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gamevoicechannel",
-        "cmd": "gvc",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles game voice channel feature in the voice channel you're currently in. Users who join the game voice channel will get automatically redirected to the voice channel with the name of their current game, if it exists. Can't move users to channels that the bot has no connect permission for. One per server.",
-        "usage": "`{0}gvc`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setrolelevelbinding",
-        "cmd": "setrolelevelbinding",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "srlb"
+            ""
         ],
-        "desc": "Setzt das benötigte Level für eine Rolle.",
-        "usage": "`{0}setrolelevelbinding <role> <minlevel>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "heal",
-        "cmd": "heal",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Heals someone. Revives those who fainted. Costs a Currency. ",
-        "usage": "`{0}heal @someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "allusrmdls",
-        "cmd": "allusrmdls",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "aum"
+            ""
         ],
-        "desc": "Enable or disable all modules for a specific user.",
-        "usage": "`{0}aum enable @someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "alias",
-        "cmd": "alias",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cmdmap"
+            ""
         ],
-        "desc": "Create a custom alias for a certain Mitternacht command. Provide no alias to remove the existing one.",
-        "usage": "`{0}alias allin $bf 100 h` or `{0}alias \"linux thingy\" >loonix Spyware Windows`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hentaibomb",
-        "cmd": "hentaibomb",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a total 5 images (from gelbooru, danbooru, konachan, yandere and atfbooru). Tag is optional but preferred.",
-        "usage": "`{0}hentaibomb yuri`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "settype",
-        "cmd": "settype",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Set your poketype. Costs a Currency. Provide no arguments to see a list of available types.",
-        "usage": "`{0}settype fire` or `{0}settype`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "queuenext",
-        "cmd": "queuenext",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "qn"
+            ""
         ],
-        "desc": "Works the same as `{0}queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.",
-        "usage": "`{0}qn Dream Of Venice`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "defprefix",
-        "cmd": "defprefix",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets bot's default prefix for all bot commands. Provide no arguments to see the current default prefix. This will not change this server's current prefix.",
-        "usage": "`{0}defprefix +`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "donators",
-        "cmd": "donators",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "List of the lovely people who donated to keep this project alive.",
-        "usage": "`{0}donators`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "allsrvrmdls",
-        "cmd": "allsrvrmdls",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "asm"
+            ""
         ],
-        "desc": "Enable or disable all modules for your server.",
-        "usage": "`{0}asm [enable/disable]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removestream",
-        "cmd": "removestream",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rms"
+            ""
         ],
-        "desc": "Removes notifications of a certain streamer from a certain platform on this channel.",
-        "usage": "`{0}rms Twitch SomeGuy` or `{0}rms mixer SomeOtherGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "xkcd",
-        "cmd": "xkcd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a XKCD comic. No arguments will retrieve random one. Number argument will retrieve a specific comic, and \"latest\" will get the latest one.",
-        "usage": "`{0}xkcd` or `{0}xkcd 1400` or `{0}xkcd latest`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "msgxprestrictionadd",
-        "cmd": "msgxprestrictionadd",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "msgxpradd"
+            ""
         ],
-        "desc": "Fügt einen Textkanal zur MessageXP Blacklist hinzu",
-        "usage": "`{0}msgxprestrictionadd <textchannel>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chnlfilterwords",
-        "cmd": "chnlfilterwords",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cfw"
+            ""
         ],
-        "desc": "Toggles automatic deletion of messages containing filtered words on the channel. Does not negate the `{0}srvrfilterwords` enabled setting. Does not affect the Bot Owner.",
-        "usage": "`{0}cfw`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "take",
-        "cmd": "take",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Takes a certain amount of currency from someone.",
-        "usage": "`{0}take 1 @SomeGuy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "deleteplaylist",
-        "cmd": "deleteplaylist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "delpls"
+            ""
         ],
-        "desc": "Deletes a saved playlist. Works only if you made it or if you are the bot owner.",
-        "usage": "`{0}delpls animu-5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "unmute",
-        "cmd": "unmute",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Unmutes a mentioned user previously muted with `{0}mute` command.",
-        "usage": "`{0}unmute @Someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "waifuclaim",
-        "cmd": "claimwaifu",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "claim"
+            ""
         ],
-        "desc": "Claim a waifu for yourself by spending currency.  You must spend at least 10% more than her current value unless she set `{0}affinity` towards you.",
-        "usage": "`{0}claim 50 @Himesama`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "addquote",
-        "cmd": ".",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds a new quote with the specified name and message.",
-        "usage": "`{0}. sayhi Hi`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "crad",
-        "cmd": "crad",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether the message triggering the custom reaction will be automatically deleted.",
-        "usage": "`{0}crad 59`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mcq",
-        "cmd": "minecraftquery",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mcq"
+            ""
         ],
-        "desc": "Finds information about a minecraft server.",
-        "usage": "`{0}mcq server:ip`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "place",
-        "cmd": "place",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a placeholder image of a given tag. Use `{0}placelist` to see all available tags. You can specify the width and height of the image as the last two optional arguments.",
-        "usage": "`{0}place Cage` or `{0}place steven 500 400`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "repeatinvoke",
-        "cmd": "repeatinvoke",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "repinv"
+            ""
         ],
-        "desc": "Immediately shows the repeat message on a certain index and restarts its timer.",
-        "usage": "`{0}repinv 1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "poll",
-        "cmd": "poll",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ppoll"
+            ""
         ],
-        "desc": "Creates a public poll which requires users to type a number of the voting option in the channel command is ran in.",
-        "usage": "`{0}ppoll Question?;Answer1;Answ 2;A_3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "pick",
-        "cmd": "pick",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Picks the currency planted in this channel. 60 seconds cooldown.",
-        "usage": "`{0}pick`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "wowjoke",
-        "cmd": "wowjoke",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Get one of Kwoth's penultimate WoW jokes.",
-        "usage": "`{0}wowjoke`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chnlcmd",
-        "cmd": "chnlcmd",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cc"
+            ""
         ],
-        "desc": "Sets a command's permission at the channel level.",
-        "usage": "`{0}cc \"command name\" enable SomeChannel`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "cmdcooldown",
-        "cmd": "cmdcooldown",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cmdcd"
+            ""
         ],
-        "desc": "Sets a cooldown per user for a command. Set it to 0 to remove the cooldown.",
-        "usage": "`{0}cmdcd \"some cmd\" 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "translate",
-        "cmd": "translate",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "trans"
+            ""
         ],
-        "desc": "Translates from>to text. From the given language to the destination language.",
-        "usage": "`{0}trans en>fr Hello`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "slotstats",
-        "cmd": "slotstats",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows the total stats of the slot command for this bot's session.",
-        "usage": "`{0}slotstats`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "defvol",
-        "cmd": "defvol",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "dv"
+            ""
         ],
-        "desc": "Sets the default music volume when music playback is started (0-100). Persists through restarts.",
-        "usage": "`{0}dv 80`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "streamroleblacklist",
-        "cmd": "streamrolebl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "srbl"
+            ""
         ],
-        "desc": "Adds or removes a blacklisted user. Blacklisted users will never receive the stream role.",
-        "usage": "`{0}srbl add @b1nzy#1234` or `{0}srbl rem @b1nzy#1234`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "slowmode",
-        "cmd": "slowmode",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles slowmode. Disable by specifying no parameters. To enable, specify a number of messages each user can send, and an interval in seconds. For example 1 message every 5 seconds.",
-        "usage": "`{0}slowmode 1 5` or `{0}slowmode`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shoplistadd",
-        "cmd": "shoplistadd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds an item to the list of items for sale in the shop entry given the index. You usually want to run this command in the secret channel, so that the unique items are not leaked.",
-        "usage": "`{0}shoplistadd 1 Uni-que-Steam-Key`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "wait",
-        "cmd": "wait",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Used only as a startup command. Waits a certain number of miliseconds before continuing the execution of the following startup commands.",
-        "usage": "`{0}wait 3000`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "revimg",
-        "cmd": "revimg",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Returns a Google reverse image search for an image from a link.",
-        "usage": "`{0}revimg Image link`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listcustreact",
-        "cmd": "listcustreact",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lcr"
+            ""
         ],
-        "desc": "Lists global or server custom reactions (20 commands per page). Running the command in DM will list global custom reactions, while running it in server will list that server's custom reactions. Specifying `all` argument instead of the number will DM you a text file with a list of all custom reactions.",
-        "usage": "`{0}lcr 1` or `{0}lcr all`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lolban",
-        "cmd": "lolban",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows top banned champions ordered by ban rate.",
-        "usage": "`{0}lolban`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "voicemute",
-        "cmd": "voicemute",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Prevents a mentioned user from speaking in voice channels.",
-        "usage": "`{0}voicemute @Someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shop",
-        "cmd": "shop",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Lists this server's administrators' shop. Paginated.",
-        "usage": "`{0}shop` or `{0}shop 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "repeatpl",
-        "cmd": "rpeatplaylst",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rpl"
+            ""
         ],
-        "desc": "Toggles repeat of all songs in the queue (every song that finishes is added to the end of the queue).",
-        "usage": "`{0}rpl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "next",
-        "cmd": "next",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "n"
+            ""
         ],
-        "desc": "Goes to the next song in the queue. You have to be in the same voice channel as the bot. You can skip multiple songs, but in that case songs will not be requeued if {0}rcs or {0}rpl is enabled.",
-        "usage": "`{0}n` or `{0}n 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rolluo",
-        "cmd": "rolluo",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Rolls `X` normal dice (up to 30) unordered. If you split 2 numbers with letter `d` (`xdy`) it will roll `X` dice from 1 to `y`.",
-        "usage": "`{0}rolluo` or `{0}rolluo 7` or `{0}rolluo 3d5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "songremove",
-        "cmd": "songremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "srm"
+            ""
         ],
-        "desc": "Remove a song by its # in the queue, or 'all' to remove all songs from the queue and reset the song index.",
-        "usage": "`{0}srm 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "deckshuffle",
-        "cmd": "deckshuffle",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "dsh"
+            ""
         ],
-        "desc": "Reshuffles all cards back into the deck.",
-        "usage": "`{0}dsh`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "restart",
-        "cmd": "restart",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Restarts the bot. Might not work.",
-        "usage": "`{0}restart`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "startevent",
-        "cmd": "startevent",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Startet ein Event, bei dem man eine bestimmte Menge der Währung bekommen kann. Möglichkeiten sind `reaction` und `sneakygamestatus`.",
-        "usage": "`{0}startevent reaction`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "anime",
-        "cmd": "anime",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ani",
-            "aq"
+            "",
+            ""
         ],
-        "desc": "Queries anilist for an anime and shows the first result.",
-        "usage": "`{0}ani aquarion evol`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "checkmyperms",
-        "cmd": "checkmyperms",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Checks your user-specific permissions on this channel.",
-        "usage": "`{0}checkmyperms`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chnlfilterinv",
-        "cmd": "chnlfilterinv",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cfi"
+            ""
         ],
-        "desc": "Toggles automatic deletion of invites posted in the channel. Does not negate the `{0}srvrfilterinv` enabled setting. Does not affect the Bot Owner.",
-        "usage": "`{0}cfi`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "pokemon",
-        "cmd": "pokemon",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "poke"
+            ""
         ],
-        "desc": "Searches for a pokemon.",
-        "usage": "`{0}poke Sylveon`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "deltxtchanl",
-        "cmd": "deltxtchanl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "dtch"
+            ""
         ],
-        "desc": "Deletes a text channel with a given name.",
-        "usage": "`{0}dtch TextChannelName`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "google",
-        "cmd": "google",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "g"
+            ""
         ],
-        "desc": "Get a Google search link for some terms.",
-        "usage": "`{0}google query`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnclear",
-        "cmd": "warnclear",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "warnc"
+            ""
         ],
-        "desc": "Clears all warnings from a certain user.",
-        "usage": "`{0}warnclear @PoorDude`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "autotranslang",
-        "cmd": "autotranslang",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "atl"
+            ""
         ],
-        "desc": "Sets your source and target language to be used with `{0}at`. Specify no arguments to remove previously set value.",
-        "usage": "`{0}atl en>fr`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "choose",
-        "cmd": "choose",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Chooses a thing from a list of things",
-        "usage": "`{0}choose Get up;Sleep;Sleep more`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "voiceunmute",
-        "cmd": "voiceunmute",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Gives a previously voice-muted user a permission to speak.",
-        "usage": "`{0}voiceunmute @Someguy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "crstatsclear",
-        "cmd": "crstatsclear",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Resets the counters on `{0}crstats`. You can specify a trigger to clear stats only for that trigger.",
-        "usage": "`{0}crstatsclear` or `{0}crstatsclear rng`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "movesong",
-        "cmd": "movesong",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "ms"
+            ""
         ],
-        "desc": "Moves a song from one position to another.",
-        "usage": "`{0}ms 5>3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setrole",
-        "cmd": "setrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sr"
+            ""
         ],
-        "desc": "Sets a role for a given user.",
-        "usage": "`{0}sr @User Guest`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "byemsg",
-        "cmd": "byemsg",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded.",
-        "usage": "`{0}byemsg %user% has left.`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "tq",
-        "cmd": "tq",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Quits current trivia after current question.",
-        "usage": "`{0}tq`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "greetdmmsg",
-        "cmd": "greetdmmsg",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets a new join announcement message which will be sent to the user who joined. Type `%user%` if you want to mention the new member. Using it with no message will show the current DM greet message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded.",
-        "usage": "`{0}greetdmmsg Welcome to the server, %user%`."
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "cleanvplust",
-        "cmd": "cleanvplust",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "cv+t"
+            ""
         ],
-        "desc": "Deletes all text channels ending in `-voice` for which voicechannels are not found. Use at your own risk.",
-        "usage": "`{0}cleanv+t`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "hgit",
-        "cmd": "hgit",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Generates the commandlist.md file.",
-        "usage": "`{0}hgit`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setstream",
-        "cmd": "setstream",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets the bots stream. First argument is the twitch link, second argument is stream name.",
-        "usage": "`{0}setstream TWITCHLINK Hello`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "connect4",
-        "cmd": "connect4",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "con4"
+            ""
         ],
-        "desc": "Creates or joins an existing connect4 game. 2 players are required for the game. Objective of the game is to get 4 of your pieces next to each other in a vertical, horizontal or diagonal line.",
-        "usage": "`{0}connect4`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "shardid",
-        "cmd": "shardid",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows which shard is a certain guild on, by guildid.",
-        "usage": "`{0}shardid 117523346618318850`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "srvrcmd",
-        "cmd": "srvrcmd",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "sc"
+            ""
         ],
-        "desc": "Sets a command's permission at the server level.",
-        "usage": "`{0}sc \"command name\" disable`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "repeatremove",
-        "cmd": "repeatremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "reprm"
+            ""
         ],
-        "desc": "Removes a repeating message on a specified index. Use `{0}repeatlist` to see indexes.",
-        "usage": "`{0}reprm 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "cmdcosts",
-        "cmd": "cmdcosts",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a list of command costs. Paginated with 9 commands per page.",
-        "usage": "`{0}cmdcosts` or `{0}cmdcosts 2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "botconfigedit",
-        "cmd": "botconfigedit",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "bce"
+            ""
         ],
-        "desc": "Sets one of available bot config settings to a specified value. Use the command without any parameters to get a list of available settings.",
-        "usage": "`{0}bce CurrencyName b1nzy` or `{0}bce`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "dailymoney",
-        "cmd": "dailymoney",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "dm"
+            ""
         ],
-        "desc": "Tägliches Geld (20 Euro, wird um 0 Uhr zurückgesetzt)",
-        "usage": "`{0}dm`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "delcustreact",
-        "cmd": "delcustreact",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "dcr"
+            ""
         ],
-        "desc": "Deletes a custom reaction on a specific index. If ran in DM, it is bot owner only and deletes a global custom reaction. If ran in a server, it requires Administration privileges and removes server custom reaction.",
-        "usage": "`{0}dcr 5`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "memelist",
-        "cmd": "memelist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Pulls a list of memes you can use with `{0}memegen` from http://memegen.link/templates/",
-        "usage": "`{0}memelist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chatmute",
-        "cmd": "chatmute",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Prevents a mentioned user from chatting in text channels.",
-        "usage": "`{0}chatmute @Someone`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gencurrency",
-        "cmd": "gencurrency",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gc"
+            ""
         ],
-        "desc": "Toggles currency generation on this channel. Every posted message will have chance to spawn currency. Chance is specified by the Bot Owner. (default is 2%)",
-        "usage": "`{0}gc`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "twitch",
-        "cmd": "twitch",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "tw"
+            ""
         ],
-        "desc": "Notifies this channel when a certain user starts streaming.",
-        "usage": "`{0}twitch SomeStreamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "adsarm",
-        "cmd": "adsarm",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles the automatic deletion of confirmations for `{0}iam` and `{0}iamn` commands.",
-        "usage": "`{0}adsarm`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "placelist",
-        "cmd": "placelist",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows the list of available tags for the `{0}place` command.",
-        "usage": "`{0}placelist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mal",
-        "cmd": "mal",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows basic info from a MyAnimeList profile.",
-        "usage": "`{0}mal straysocks`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "h",
-        "cmd": "help",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "h"
+            ""
         ],
-        "desc": "Either shows a help for a single command, or DMs you help link if no arguments are specified.",
-        "usage": "`{0}h {0}cmds` or `{0}h`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "lucky7test",
-        "cmd": "lucky7test",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "l7t"
+            ""
         ],
-        "desc": "Tests the l7 command.",
-        "usage": "`{0}l7t 10000`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "startupcommandsclear",
-        "cmd": "scclr",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Removes all startup commands.",
-        "usage": "`{0}scclr`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "startupcommandadd",
-        "cmd": "scadd",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Adds a command to the list of commands which will be executed automatically in the current channel, in the order they were added in, by the bot when it startups up.",
-        "usage": "`{0}scadd .stats`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "yandere",
-        "cmd": "yandere",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random image from yandere with a given tag. Tag is optional but preferred. (multiple tags are appended with +)",
-        "usage": "`{0}yandere tag1+tag2`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rolecmd",
-        "cmd": "rolecmd",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rc"
+            ""
         ],
-        "desc": "Sets a command's permission at the role level.",
-        "usage": "`{0}rc \"command name\" disable MyRole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "ponybooru",
-        "cmd": "pony",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "broni"
+            ""
         ],
-        "desc": "Shows a random image from bronibooru with a given tag. Tag is optional but preferred. (multiple tags are appended with +)",
-        "usage": "`{0}pony scootaloo`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "delallquotes",
-        "cmd": "delallq",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "daq"
+            ""
         ],
-        "desc": "Deletes all quotes on a specified keyword.",
-        "usage": "`{0}delallq kek`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mixer",
-        "cmd": "mixer",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "bm"
+            ""
         ],
-        "desc": "Notifies this channel when a certain user starts streaming.",
-        "usage": "`{0}mixer SomeStreamer`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "send",
-        "cmd": "send",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sends a message to someone on a different server through the bot.  Separate server and channel/user ids with `|` and prefix the channel id with `c:` and the user id with `u:`.",
-        "usage": "`{0}send serverid|c:channelid message` or `{0}send serverid|u:userid message`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "e621",
-        "cmd": "e621",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a random hentai image from e621.net with a given tag. Tag is optional but preferred. Use spaces for multiple tags.",
-        "usage": "`{0}e621 yuri kissing`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setmaxqueue",
-        "cmd": "setmaxqueue",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "smq"
+            ""
         ],
-        "desc": "Sets a maximum queue size. Supply 0 or no argument to have no limit.",
-        "usage": "`{0}smq 50` or `{0}smq`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "imdb",
-        "cmd": "imdb",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "omdb"
+            ""
         ],
-        "desc": "Queries omdb for movies or series, show first result.",
-        "usage": "`{0}imdb Batman vs Superman`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "attack",
-        "cmd": "attack",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Attacks a target with the given move. Use `{0}movelist` to see a list of moves your type can use.",
-        "usage": "`{0}attack \"vine whip\" @someguy`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "showquote",
-        "cmd": "..",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt ein zufälliges Zitat mit einem bestimmten Schlüsselwort an.",
-        "usage": "`{0}.. abc`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "vcrole",
-        "cmd": "vcrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets or resets a role which will be given to users who join the voice channel you're in when you run this command. Provide no role name to disable. You must be in a voice channel to run this command.",
-        "usage": "`{0}vcrole SomeRole` or `{0}vcrole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnpunishlist",
-        "cmd": "warnpunishlist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "warnpl"
+            ""
         ],
-        "desc": "Lists punishments for warnings.",
-        "usage": "`{0}warnpunishlist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "usrmdl",
-        "cmd": "usrmdl",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "um"
+            ""
         ],
-        "desc": "Sets a module's permission at the user level.",
-        "usage": "`{0}um ModuleName enable SomeUsername`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "msgxprestrictionremove",
-        "cmd": "msgxprestrictionremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "msgxprremove"
+            ""
         ],
-        "desc": "Entfernt einen Textkanal von der MessageXP Blacklist",
-        "usage": "`{0}msgxprestrictionremove <textchannel>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "tl",
-        "cmd": "tl",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Shows a current trivia leaderboard.",
-        "usage": "`{0}tl`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "remindtemplate",
-        "cmd": "remindtemplate",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets message for when the remind is triggered.  Available placeholders are `%user%` - user who ran the command, `%message%` - Message specified in the remind, `%target%` - target channel of the remind.",
-        "usage": "`{0}remindtemplate %user%, do %message%!`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "unban",
-        "cmd": "unban",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Unbans a user with the provided user#discrim or id.",
-        "usage": "`{0}unban kwoth#1234` or `{0}unban 123123123`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "forwardtoall",
-        "cmd": "fwtoall",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Toggles whether messages will be forwarded to all bot owners or only to the first one specified in the credentials.json file",
-        "usage": "`{0}fwtoall`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "pause",
-        "cmd": "pause",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "p"
+            ""
         ],
-        "desc": "Pauses or Unpauses the song.",
-        "usage": "`{0}p`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "showemojis",
-        "cmd": "showemojis",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "se"
+            ""
         ],
-        "desc": "Shows a name and a link to every SPECIAL emoji in the message.",
-        "usage": "`{0}se A message full of SPECIAL emojis`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "max",
-        "cmd": "max",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Sets the music playback volume to 100%.",
-        "usage": "`{0}max`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "goto",
-        "cmd": "goto",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Goes to a specific time in seconds in a song.",
-        "usage": "`{0}goto 30`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rolelevelbindings",
-        "cmd": "rolelevelbindings",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "rlb"
+            ""
         ],
-        "desc": "Zeigt eine Liste von Rollen und dem für sie benötigten Level.",
-        "usage": "`{0}rolelevelbindings [count] [position]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "save",
-        "cmd": "save",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Saves a playlist under a certain name. Playlist name must be no longer than 20 characters and must not contain dashes.",
-        "usage": "`{0}save classical1`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "yodify",
-        "cmd": "yodify",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "yoda"
+            ""
         ],
-        "desc": "Translates your normal sentences into Yoda styled sentences!",
-        "usage": "`{0}yoda my feelings hurt`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "removeverification",
-        "cmd": "removeverification",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Entfernt die Verifizierung des gegebenen Forumaccounts oder Discordusers.",
-        "usage": "`{0}removeverification <user/forumid>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "listperms",
-        "cmd": "listperms",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "lp"
+            ""
         ],
-        "desc": "Lists whole permission chain with their indexes. You can specify an optional page number if there are a lot of permissions.",
-        "usage": "`{0}lp` or `{0}lp 3`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "resetdailymoney",
-        "cmd": "resetdailymoney",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Erlaube einem User, sein tägliches Geld nochmal zu holen.",
-        "usage": "`{0}resetdailymoney [user]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "addverification",
-        "cmd": "addverification",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Verifiziere einen Nutzer manuell.",
-        "usage": "`{0}addverification <user> <forumid>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "reinitforum",
-        "cmd": "reinitforum",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Starte die Reinitialisierung der Foruminstanz.",
-        "usage": "`{0}reinitforum`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "additionalverificationusers",
-        "cmd": "additionalverificationusers",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "adverius"
+            ""
         ],
-        "desc": "Zeigt alle zusätzlichen Verifizierungsnachrichtenempfänger an.",
-        "usage": "`{0}additionalverificationusers`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setadditionalverificationusers",
-        "cmd": "setadditionalverificationusers",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "setadverius"
+            ""
         ],
-        "desc": "Setzt die zusätzlichen Verifizierungsnachrichtenempfänger.",
-        "usage": "`{0}setadditionalverificationusers [user1] [user2] ... [userN]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "conversationlink",
-        "cmd": "conversationlink",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt den Konversationslink mit aktuellen Einstellungen an.",
-        "usage": "`{0}conversationlink`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "foruminfo",
-        "cmd": "foruminfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "finfo"
+            ""
         ],
-        "desc": "Zeigt Informationen zur aktuellen Forum-Instanz an.",
-        "usage": "`{0}foruminfo`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "userinfoforum",
-        "cmd": "userinfoforum",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "uinfof"
+            ""
         ],
-        "desc": "Zeigt Informationen zum Forumaccount des angegebenen Discordnutzers an",
-        "usage": "`{0}userinfoforum <user>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "forumuserinfo",
-        "cmd": "forumuserinfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "fuinfo"
+            ""
         ],
-        "desc": "Zeigt Informationen zum angegebenen Forumaccount an",
-        "usage": "`{0}forumuserinfo <forumUsername>` oder `{0}forumuserinfo <forumUserId>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "replacedefaultlevelmodelguild",
-        "cmd": "replacedefaultlevelmodelguild",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Ersetzt die Standardgilde der Id 0 für jeden Eintrag in der DB-Tabelle LevelModel mit der angegebenen Id.",
-        "usage": "`{0}replacedefaultlevelmodelguild <guildId>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "levelguilddata",
-        "cmd": "levelguilddata",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Ersetzt eine der angegebenen Gildenkonfigurationen aus `levelguilddatachoices` mit dem angegebenen Wert oder zeigt diesen an.",
-        "usage": "`{0}levelguilddata <levelGuildDataChoice> [value]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "levelguilddatachoices",
-        "cmd": "levelguilddatachoices",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt die möglichen levelmodulrelevanten Gildenkonfigurationen an.",
-        "usage": "`{0}levelguilddatachoices`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "setguildconfigleveldefaults",
-        "cmd": "setguildconfigleveldefaults",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück.",
-        "usage": "`{0}setguildconfigleveldefaults [guildId1] ... [guildIdX]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "chnlfilterzalgo",
-        "cmd": "channelfilterzalgo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "chnlfilterzalgo"
+            ""
         ],
-        "desc": "Schaltet das Filtern von Zalgo in einem Kanal an oder ab.",
-        "usage": "`{0}channelfilterzalgo`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "srvrfilterzalgo",
-        "cmd": "serverfilterzalgo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "srvrfilterzalgo"
+            ""
         ],
-        "desc": "Schaltet das Filtern von Zalgo in einem Server an oder ab.",
-        "usage": "`{0}serverfilterzalgo`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "toggleusernamehistory",
-        "cmd": "toggleusernamehistory",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "toggleunh"
+            ""
         ],
-        "desc": "Aktiviert oder deaktiviert das Loggen von Nutzernamensänderungen global.",
-        "usage": "`{0}toggleusernamehistory`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "toggleusernamehistoryguild",
-        "cmd": "toggleusernamehistoryguild",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "toggleunhg"
+            ""
         ],
-        "desc": "Aktiviert, deaktiviert oder ignoriert das Loggen von Nutzernamensänderungen auf dem gegebenen Server. Beim Ignorieren wird die globale Einstellung verwendet.",
-        "usage": "`{0}toggleusernamehistoryguild <guild> <true|false|null>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "usernamehistory",
-        "cmd": "usernamehistory",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "unh"
+            ""
         ],
-        "desc": "Zeigt alle globalen und serverspezifischen User-/Nicknames eines angegebenen Nutzers an. Globale sind hinten mit einem `(G)` gekennzeichnet.",
-        "usage": "`{0}usernamehistory <user> [page]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "updateusernames",
-        "cmd": "updateusernames",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Updatet alle Nutzernamen und Nicknames manuell.",
-        "usage": "`{0}updateusernames`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "usernamehistoryglobal",
-        "cmd": "usernamehistoryglobal",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "unhglobal"
+            ""
         ],
-        "desc": "Zeigt alle globalen Nutzernamen eines angegebenen Nutzers an.",
-        "usage": "`{0}unhglobal <user> [page]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "usernamehistoryguild",
-        "cmd": "usernamehistoryguild",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "unhguild",
-            "nicks"
+            "",
+            ""
         ],
-        "desc": "Zeigt alle serverspezifischen Nicknames eines angegebenen Nutzers an.",
-        "usage": "`{0}unhguild <user> [page]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdayset",
-        "cmd": "birthdayset",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Setzt den eigenen Geburtstag. Die Angabe des Geburtsjahres ist optional. **Nur einmal verwendbar!**",
-        "usage": "`{0}birthdayset <dd.MM.yyyy oder dd.MM.>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdayget",
-        "cmd": "birthday",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt den Geburtstag eines Users an.",
-        "usage": "`{0}birthday [user]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdayremove",
-        "cmd": "birthdayremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Entfernt den Geburtstag eines Users.",
-        "usage": "`{0}birthdayremove [user]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdays",
-        "cmd": "birthdays",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt alle Geburtstage am angegebenen Datum (oder heute) an.",
-        "usage": "`{0}birthdays [dd.MM.yyyy]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdaysall",
-        "cmd": "birthdayslist",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "birthdaysall"
+            ""
         ],
-        "desc": "Zeigt alle Geburtstage nach Tag im Jahr aufsteigend sortiert an.",
-        "usage": "`{0}birthdayslist`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "edit",
-        "cmd": "edit",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Modifiziert eine vom Bot gesendete Nachricht.",
-        "usage": "`{0}edit <channel> <msgId> <text>` oder `{0}edit <msgId> <text>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "warnedit",
-        "cmd": "warnedit",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Ändert den Verwarngrund der Verwarnung mit der angegebenen HexId",
-        "usage": "`{0}warnedit <hexid> [grund]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdayrole",
-        "cmd": "birthdayrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt die aktuelle Geburtstagsrolle an oder setzt sie.",
-        "usage": "`{0}birthdayrole [rolle]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdayroleremove",
-        "cmd": "birthdayroleremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Entfernt die aktuelle Geburtstagsrolle.",
-        "usage": "`{0}birthdayroleremove`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdaymessagechannel",
-        "cmd": "birthdaymessagechannel",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "birthdaymsgch"
+            ""
         ],
-        "desc": "Zeigt den aktuellen Kanal für die Geburtstagsnachrichten an oder setzt ihn.",
-        "usage": "`{0}birthdaymessagechannel [channel]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdaymessagechannelremove",
-        "cmd": "birthdaymessagechannelremove",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "birthdaymsgchremove"
+            ""
         ],
-        "desc": "Entfernt den aktuellen Kanal für Geburtstagsnachrichten. Diese werden damit deaktiviert.",
-        "usage": "`{0}birthdayrole [rolle]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdaymessage",
-        "cmd": "birthdaymessage",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "birthdaymsg"
+            ""
         ],
-        "desc": "Setzt die Geburtstagsnachricht. {0} wird mit den Usern ersetzt, die Geburtstag haben.",
-        "usage": "`{0}birthdaymessage [msg]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "birthdayreactions",
-        "cmd": "birthdayreactions",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Aktiviert oder deaktiviert das Reagieren des Bots auf aktuelle Geburtstage.",
-        "usage": "`{0}birthdayreactions <true|false>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gommeteamrole",
-        "cmd": "gommeteamrole",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gtr"
+            ""
         ],
-        "desc": "Zeigt die aktuelle GommeHDnet-Teammitgliedsrolle an.",
-        "usage": "`{0}gommeteamrole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gommeteamroleset",
-        "cmd": "gommeteamroleset",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gtrs"
+            ""
         ],
-        "desc": "Setzt die GommeHDnet-Teammitgliedsrolle.",
-        "usage": "`{0}gommeteamroleset [rolle]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "viprole",
-        "cmd": "viprole",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Zeigt die aktuelle VIP-Rolle an.",
-        "usage": "`{0}viprole`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "viproleset",
-        "cmd": "viproleset",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Setzt die VIP-Rolle.",
-        "usage": "`{0}viproleset [rolle]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "minecraftusernames",
-        "cmd": "minecraftusernames",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mcusernames"
+            ""
         ],
-        "desc": "Zeigt alle Nutzernamen eines gegebenen Minecraftaccounts an.",
-        "usage": "`{0}minecraftusernames <username>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "minecraftplayerinfo",
-        "cmd": "minecraftplayerinfo",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mcpinfo"
+            ""
         ],
-        "desc": "Zeigt Informationen zu dem Minecraftaccount an, der bei gegebenem Datum (oder heute) einen bestimmten Namen besaß.",
-        "usage": "`{0}minecraftusernames <username> [datum]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gommeteamranks",
-        "cmd": "gommeteamranks",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gtranks"
+            ""
         ],
-        "desc": "Zeigt die aktuellen GommeHDnet-Teamränge an.",
-        "usage": "`{0}gommeteamranks`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "execsql",
-        "cmd": "execsql",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Führt einen SQL Query nach Bestätigung aus.",
-        "usage": "`{0}execsql <query>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "mojangapistatus",
-        "cmd": "mojangapistatus",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mapis"
+            ""
         ],
-        "desc": "Zeigt die Status der Mojang APIs an.",
-        "usage": "`{0}mapis`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "minecraftserverstatus",
-        "cmd": "mcserverstatus",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mcss"
+            ""
         ],
-        "desc": "Zeigt Informationen zu einem Minecraftserver an.",
-        "usage": "`{0}mcserverstatus [hostname[:port]]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "minecraftserverping",
-        "cmd": "mcping",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "mcp"
+            ""
         ],
-        "desc": "Zeigt die Laufzeit eines Pings zu einem Minecraftserver an.",
-        "usage": "`{0}mcping [hostname[:port]] [anzahl pings]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "dailymoneystats",
-        "cmd": "dmstats",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Schickt dem Ausführenden eine JSON-Datei mit Abrufstatistiken des DailyMoney-Befehls von angegebenen Nutzern.",
-        "usage": "`{0}dmstats [nutzer1] [nutzer2] [nutzer3] ...`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "dailymoneystatsall",
-        "cmd": "dmstatsall",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Schickt dem Ausführenden eine JSON-Datei mit allen Abrufstatistiken des DailyMoney-Befehls.",
-        "usage": "`{0}dmstatsall`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "rng",
-        "cmd": "rng",
+        "name": "",
+        "cmd": "",
         "aliases": [
 
         ],
-        "desc": "Generiert eine zufällige Zahl im angegebenen Intervall.",
-        "usage": "`{0}rng [minimum=0] [maximum = 1]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "slowmodenative",
-        "cmd": "slowmodenative",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "slowmoden"
+            ""
         ],
-        "desc": "**Native-Slowmode-Beta** Aktiviert den Slowmode mit 1 Nachricht pro Intervallzeit (in Sekunden). Deaktiviert den Slowmode mit Intervall 0 (default).",
-        "usage": "`{0}slowmodenative [interval = 0]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "voicestats",
-        "cmd": "voicestats",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "vs"
+            ""
         ],
-        "desc": "Zeigt die Zeit an, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
-        "usage": "`{0}voicestats [Nutzer]`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "voicestatsreset",
-        "cmd": "voicestatsreset",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "vsr"
+            ""
         ],
-        "desc": "Setzt die Zeit zurück, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
-        "usage": "`{0}voicestatsreset <Nutzer>`"
+        "desc": "",
+        "usage": ""
     },
     {
-        "name": "gommeteamupdate",
-        "cmd": "gommeteamupdate",
+        "name": "",
+        "cmd": "",
         "aliases": [
-            "gtu"
+            ""
         ],
-        "desc": "Aktualisiert die GommeHDnet-Teammitgliedschaften manuell.",
-        "usage": "`{0}gommeteamupdate`"
+        "desc": "",
+        "usage": ""
     }
 ]
