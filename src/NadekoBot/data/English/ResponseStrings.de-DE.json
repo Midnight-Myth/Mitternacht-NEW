@@ -38,7 +38,7 @@
   "administration_donadd": "Added new donator successfully. Total amount of donations by this user: {0} 👑",
   "administration_donators": "Keep the guys in mind who made this project possible!",
   "administration_fwall_start": "I'll send DMs to all owners.",
-  "administration_fwall_stop": "I'll send DMs to every owner.",
+  "administration_fwall_stop": "Ich werde DNs zum ersten Besitzer weiterleiten.",
   "administration_fwdm_start": "I'll send DMs from now on.",
   "administration_fwdm_stop": "I'll stop sending DMs.",
   "administration_greet_off": "Welcome messages have been disabled.",
