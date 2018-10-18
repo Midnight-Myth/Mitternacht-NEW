@@ -1,988 +1,988 @@
 [
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "millimeter",
+            "millimeters",
+            "millimeter",
+            "mm"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "0.001"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "centimeter",
+            "centimeters",
+            "centimeter",
+            "cm"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "0.01"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "decimeter",
+            "decimeters",
+            "decimeter",
+            "dm"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "0.1"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "meter",
+            "meters",
+            "meter",
+            "m"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "1"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "kilometer",
+            "kilometers",
+            "kilometer",
+            "km"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "1000"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "foot",
+            "feet",
+            "foot",
+            "ft"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "0.3048"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "inch",
+            "inches",
+            "inch",
+            "in"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "0.0254"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "mile",
+            "miles",
+            "mile",
+            "mi"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "1609.344"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "yard",
+            "yards",
+            "yard",
+            "yd"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "length",
+        "Modifier": "0.9144"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "cubic foot",
+            "cubic feet",
+            "cubic foot",
+            "ft3"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.02831685"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "cubic inch",
+            "cubic inches",
+            "cubic inch",
+            "in3"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "1.638706E-5"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "cubic mile",
+            "cubic miles",
+            "cubic mile",
+            "mi3"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "4168182000"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "cubic yard",
+            "cubic yards",
+            "cubic yard",
+            "yd3"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.7645549"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "cup",
+            "cups",
+            "cup",
+            "cup"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.0002365882"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "imperial gallon",
+            "Imperial gallons",
+            "Imperial gallon",
+            "gal"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.00454609"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "us gallon",
+            "US gallons",
+            "US gallon",
+            "gal"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.003785412"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "milliliter",
+            "milliliters",
+            "milliliter",
+            "mL"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "1.0E-6"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "liter",
+            "liters",
+            "liter",
+            "L"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.001"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "imperial fluid ounce",
+            "Imperial fluid ounces",
+            "Imperial fluid ounce",
+            "fl oz"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "2.841306E-5"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "us fluid ounce",
+            "US fluid ounces",
+            "US fluid ounce",
+            "fl oz"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "2.957353E-5"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "imperial pint",
+            "Imperial pints",
+            "Imperial pint",
+            "pt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.00056826125"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "us liquid pint",
+            "US pints (liquid)",
+            "US pint (liquid)",
+            "pt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.0004731765"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "us dry pint",
+            "US pints (dry)",
+            "US pint (dry)",
+            "pt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.0005506105"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "imperial quart",
+            "Imperial quarts",
+            "Imperial quart",
+            "qt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.00113652297"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "us liquid quart",
+            "US quarts (liquid)",
+            "US quart (liquid)",
+            "qt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.0009463529"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "us dry quart",
+            "US quarts (dry)",
+            "US quart (dry)",
+            "qt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "0.001101221"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "tablespoon",
+            "tablespoons",
+            "tablespoon",
+            "tbsp"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "1.478676E-5"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "teaspoon",
+            "teaspoons",
+            "teaspoon",
+            "tspn"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "volume",
+        "Modifier": "4.928922E-6"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "milligram",
+            "milligrams",
+            "milligram",
+            "mg"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "1.0E-6"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "gram",
+            "grams",
+            "gram",
+            "g"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "0.001"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "kilogram",
+            "kilograms",
+            "kilogram",
+            "kg"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "1"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "carat",
+            "carats",
+            "carat",
+            "CD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "0.0002"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "grain",
+            "grains",
+            "grain",
+            "gr"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "6.479891E-5"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "ounce",
+            "ounces",
+            "ounce",
+            "oz"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "0.02834952"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "pennyweight",
+            "pennyweights",
+            "pennyweight",
+            "dwt"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "0.001555174"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "pound",
+            "pounds",
+            "pound",
+            "lb"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "0.4535924"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "stone",
+            "stones",
+            "stone",
+            "st"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "6.35029318"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "slug",
+            "slugs",
+            "slug",
+            "slug"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "14.5939"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "metric ton",
+            "metric tons",
+            "metric ton",
+            "t"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "1000"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "long ton",
+            "long tons",
+            "long ton",
+            "t"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "1016.047"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "short ton",
+            "short tons",
+            "short ton",
+            "t"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "weight",
+        "Modifier": "907.1847"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "acre",
+            "acres",
+            "acre",
+            "acre"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "4046.873"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "are",
+            "ares",
+            "are",
+            "a"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "100"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "hectare",
+            "hectares",
+            "hectare",
+            "ha"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "10000"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "square foot",
+            "square feet",
+            "square foot",
+            "ft2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "0.09290304"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "square meter",
+            "square meters",
+            "square meter",
+            "m2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "1"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "square kilometer",
+            "square kilometers",
+            "square kilometer",
+            "km2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "1000000"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "square inch",
+            "square inches",
+            "square inch",
+            "in2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "0.00064516"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "square yard",
+            "square yards",
+            "square yard",
+            "yd2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "0.8361274"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "square mile",
+            "square miles",
+            "square mile",
+            "mi2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "2589988"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "aankadam",
+            "aankadam",
+            "aankadam",
+            "aankadam"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "6.69"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "perch",
+            "perches",
+            "perch",
+            "perch"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "25.29"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "cent",
+            "cents",
+            "cent",
+            "cent"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "40.47"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "chatak",
+            "chataks",
+            "chatak",
+            "chatak"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "41.81"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "kottah",
+            "kottah (B)",
+            "kottah (B)",
+            "kottah (B)"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "66.89"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "guntha",
+            "guntha",
+            "guntha",
+            "guntha"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "101.17"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "ground",
+            "grounds",
+            "ground",
+            "ground"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "222.97"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "marla",
+            "marla",
+            "marla",
+            "marla"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "501.68"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "rood",
+            "roods",
+            "rood",
+            "rood"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "1011.71"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "bigha I",
+            "bigha I",
+            "bigha I",
+            "bigha I"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "1618.74"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "bigha II",
+            "bigha II",
+            "bigha II",
+            "bigha II"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "2529.29"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "kanal",
+            "kanal",
+            "kanal",
+            "kanal"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "10033.53"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "biswa I",
+            "biswa I",
+            "biswa I",
+            "biswa I"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "32374.85"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "biswa II",
+            "biswa II",
+            "biswa II",
+            "biswa II"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "area",
+        "Modifier": "50585.71"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "pascal",
+            "pascal",
+            "pascal",
+            "Pa"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "pressure",
+        "Modifier": "1"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "torr",
+            "torr",
+            "torr",
+            "Torr"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "pressure",
+        "Modifier": "133.3224"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "bar",
+            "bars",
+            "bar",
+            "bar"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "pressure",
+        "Modifier": "100000"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "millibar",
+            "millibars",
+            "millibar",
+            "mb"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "pressure",
+        "Modifier": "100"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "psi",
+            "psi",
+            "psi",
+            "lbf/in2"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "pressure",
+        "Modifier": "6894.757"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "day",
+            "days",
+            "day",
+            "d"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "time",
+        "Modifier": "86400"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "hour",
+            "hours",
+            "hour",
+            "h"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "time",
+        "Modifier": "3600"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "minute",
+            "minutes",
+            "minute",
+            "min"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "time",
+        "Modifier": "60"
     },
     {
         "Triggers": [
-            "",
-            "",
-            "",
-            ""
+            "year",
+            "years",
+            "year",
+            "yr"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "time",
+        "Modifier": "31536000"
     },
     {
         "Triggers": [
-            ""
+            "AUD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.4787"
     },
     {
         "Triggers": [
-            ""
+            "BGN"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.9558"
     },
     {
         "Triggers": [
-            ""
+            "BRL"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "3.5991"
     },
     {
         "Triggers": [
-            ""
+            "CAD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.4562"
     },
     {
         "Triggers": [
-            ""
+            "CHF"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.0951"
     },
     {
         "Triggers": [
-            ""
+            "CNY"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "7.4565"
     },
     {
         "Triggers": [
-            ""
+            "CZK"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "27.025"
     },
     {
         "Triggers": [
-            ""
+            "DKK"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "7.4448"
     },
     {
         "Triggers": [
-            ""
+            "GBP"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "0.8517"
     },
     {
         "Triggers": [
-            ""
+            "HKD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "8.6631"
     },
     {
         "Triggers": [
-            ""
+            "HRK"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "7.4846"
     },
     {
         "Triggers": [
-            ""
+            "HUF"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "308.97"
     },
     {
         "Triggers": [
-            ""
+            "IDR"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "14814.35"
     },
     {
         "Triggers": [
-            ""
+            "ILS"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "4.2241"
     },
     {
         "Triggers": [
-            ""
+            "INR"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "74.8703"
     },
     {
         "Triggers": [
-            ""
+            "JPY"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "114.27"
     },
     {
         "Triggers": [
-            ""
+            "KRW"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1244.47"
     },
     {
         "Triggers": [
-            ""
+            "MXN"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "20.7542"
     },
     {
         "Triggers": [
-            ""
+            "MYR"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "4.5205"
     },
     {
         "Triggers": [
-            ""
+            "NOK"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "9.2873"
     },
     {
         "Triggers": [
-            ""
+            "NZD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.5427"
     },
     {
         "Triggers": [
-            ""
+            "PHP"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "51.797"
     },
     {
         "Triggers": [
-            ""
+            "PLN"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "4.3436"
     },
     {
         "Triggers": [
-            ""
+            "RON"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "4.4505"
     },
     {
         "Triggers": [
-            ""
+            "RUB"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "72.4564"
     },
     {
         "Triggers": [
-            ""
+            "SEK"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "9.5008"
     },
     {
         "Triggers": [
-            ""
+            "SGD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.5196"
     },
     {
         "Triggers": [
-            ""
+            "THB"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "38.608"
     },
     {
         "Triggers": [
-            ""
+            "TRY"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "3.2977"
     },
     {
         "Triggers": [
-            ""
+            "USD"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1.1168"
     },
     {
         "Triggers": [
-            ""
+            "ZAR"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "16.0537"
     },
     {
         "Triggers": [
-            "",
-            ""
+            "K",
+            "kelvin"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "temperature",
+        "Modifier": "0"
     },
     {
         "Triggers": [
-            "",
-            ""
+            "F",
+            "fahrenheit"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "temperature",
+        "Modifier": "0"
     },
     {
         "Triggers": [
-            "",
-            "",
-            ""
+            "C",
+            "Celcius",
+            "Centigrade"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "temperature",
+        "Modifier": "0"
     },
     {
         "Triggers": [
-            ""
+            "EUR"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "1"
     },
     {
         "Triggers": [
-            ""
+            "SKK"
         ],
-        "UnitType": "",
-        "Modifier": ""
+        "UnitType": "currency",
+        "Modifier": "30.13"
     }
 ]
