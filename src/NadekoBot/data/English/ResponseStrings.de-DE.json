@@ -5,7 +5,7 @@
   "administration_avatar_changed": "Avatar changed",
   "administration_bandm": "You were banned from the {0} server.\nReason: {1}",
   "administration_banned_pl": "banned",
-  "administration_banned_user": "user banned",
+  "administration_banned_user": "Benutzer gebannt",
   "administration_bot_name": "Changed the name of the bot to {0}",
   "administration_bot_nick": "Nickname of the bot has been changed to {0}",
   "administration_bot_status": "Change the status of the bot to {0}",
