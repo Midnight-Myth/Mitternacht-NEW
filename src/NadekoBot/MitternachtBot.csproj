@@ -9,7 +9,7 @@
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>MitternachtBot</PackageId>
-    <RuntimeFrameworkVersion>2.0</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.1</RuntimeFrameworkVersion>
     <AssetTargetFallback>$(AssetTargetFallback);dnxcore50;portable-net45+win8+wpa81</AssetTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
