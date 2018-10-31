@@ -67,6 +67,7 @@ namespace Mitternacht.Services.Database
         public DbSet<BirthDateModel> BirthDates { get; set; }
         public DbSet<DailyMoneyStats> DailyMoneyStats { get; set; }
         public DbSet<VoiceChannelStats> VoiceChannelStats { get; set; }
+        public DbSet<TeamUpdateRank> TeamUpdateRank { get; set; }
 
         public NadekoContext()
         {
@@ -331,6 +332,10 @@ namespace Mitternacht.Services.Database
 
             #region VoiceChannelStats
             modelBuilder.Entity<VoiceChannelStats>().HasIndex(vcs => new { vcs.UserId, vcs.GuildId }).IsUnique();
+            #endregion
+
+            #region TeamUpdateRank
+            modelBuilder.Entity<TeamUpdateRank>().HasIndex(tur => new { tur.GuildId, tur.Rankname }).IsUnique();
             #endregion
         }
     }

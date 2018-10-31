@@ -90,6 +90,9 @@ namespace Mitternacht.Services.Database
         private IVoiceChannelStatsRepository _voiceChannelStats;
         public IVoiceChannelStatsRepository VoiceChannelStats => _voiceChannelStats ?? (_voiceChannelStats = new VoiceChannelStatsRepository(Context));
 
+        private ITeamUpdateRankRepository _teamUpdateRank;
+        public ITeamUpdateRankRepository TeamUpdateRank => _teamUpdateRank ?? (_teamUpdateRank = new TeamUpdateRankRepository(Context));
+
         public UnitOfWork(NadekoContext context)
         {
             Context = context;

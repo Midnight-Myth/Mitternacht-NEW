@@ -35,6 +35,7 @@ namespace Mitternacht.Services.Database
         IBirthDateRepository BirthDates { get; }
         IDailyMoneyStatsRepository DailyMoneyStats { get; }
         IVoiceChannelStatsRepository VoiceChannelStats { get; }
+        ITeamUpdateRankRepository TeamUpdateRank { get; }
 
         int Complete();
         Task<int> CompleteAsync();
