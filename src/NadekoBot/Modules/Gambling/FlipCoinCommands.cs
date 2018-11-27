@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using ImageSharp;
+using SixLabors.ImageSharp;
 using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Image = ImageSharp.Image;
+using Image = SixLabors.ImageSharp.Image;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Mitternacht.Modules.Gambling
 {

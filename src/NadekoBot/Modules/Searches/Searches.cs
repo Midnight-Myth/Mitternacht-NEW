@@ -11,7 +11,8 @@ using AngleSharp.Dom;
 using AngleSharp.Dom.Html;
 using Discord;
 using Discord.Commands;
-using ImageSharp;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
@@ -391,7 +392,7 @@ namespace Mitternacht.Modules.Searches
                                 var imgStream = new MemoryStream();
                                 await sr.CopyToAsync(imgStream);
                                 imgStream.Position = 0;
-                                images.Add(ImageSharp.Image.Load(imgStream));
+                                images.Add(SixLabors.ImageSharp.Image.Load(imgStream));
                             }
                         }).ConfigureAwait(false);
                     }
@@ -651,7 +652,7 @@ namespace Mitternacht.Modules.Searches
 
             var img = new Image<Rgba32>(50, 50);
 
-            img.BackgroundColor(clr);
+            //img.BackgroundColor(clr);
 
             await Context.Channel.SendFileAsync(img.ToStream(), $"{color}.png").ConfigureAwait(false);
         }
