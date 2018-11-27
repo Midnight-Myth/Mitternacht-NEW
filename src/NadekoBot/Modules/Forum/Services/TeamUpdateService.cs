@@ -2,6 +2,7 @@
 using GommeHDnetForumAPI.DataModels;
 using GommeHDnetForumAPI.DataModels.Collections;
 using GommeHDnetForumAPI.DataModels.Entities;
+using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 using System;
@@ -21,7 +22,7 @@ namespace Mitternacht.Modules.Forum.Services
         private readonly Task _teamUpdateTask;
 
         public event Func<UserInfo[], Task> TeamRankAdded = ui => Task.CompletedTask;
-        public event Func<UserInfo[], Task> TeamRankChanged = ui => Task.CompletedTask;
+        public event Func<RankUpdateItem[], Task> TeamRankChanged = ui => Task.CompletedTask;
         public event Func<UserInfo[], Task> TeamRankRemoved = ui => Task.CompletedTask;
 
         public TeamUpdateService(DiscordSocketClient client, DbService db, ForumService fs, StringService ss)
@@ -47,9 +48,9 @@ namespace Mitternacht.Modules.Forum.Services
         {
             if (_fs.Forum == null) return;
             var staff = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
-            var rankAdded = staff.Where(ui => staff.All(ui2 => ui2.Id != ui.Id)).ToArray();
-            var rankChanged = _staff.Where(ui => staff.Any(ui2 => ui2.Id == ui.Id)).ToArray();
-            var rankRemoved = _staff.Where(ui => staff.All(ui2 => ui2.Id != ui.Id)).ToArray();
+            var rankAdded = staff.Where(uiNew => _staff.All(uiOld => uiOld.Id != uiNew.Id)).ToArray();
+            var rankChanged = _staff.Where(uiOld => staff.Any(uiNew => uiNew.Id == uiOld.Id)).Select(uiOld => new RankUpdateItem(uiOld, staff.First(uiNew => uiNew.Id == uiOld.Id))).ToArray();
+            var rankRemoved = _staff.Where(uiOld => staff.All(uiNew => uiNew.Id != uiOld.Id)).ToArray();
 
             await TeamRankAdded.Invoke(rankAdded).ConfigureAwait(false);
             await TeamRankChanged.Invoke(rankChanged).ConfigureAwait(false);
@@ -60,18 +61,20 @@ namespace Mitternacht.Modules.Forum.Services
                 foreach (var (guildId, tuChId, tuMPrefix) in uow.GuildConfigs.GetAll().Where(gc => gc.TeamUpdateChannelId.HasValue).Select(gc => (GuildId: gc.GuildId, TeamUpdateChannelId: gc.TeamUpdateChannelId.Value, TeamUpdateMessagePrefix: gc.TeamUpdateMessagePrefix)))
                 {
                     var guild = _client.GetGuild(guildId);
-                    if (guild == null) continue;
-                    var tuCh = guild.GetTextChannel(tuChId);
+                    var tuCh = guild?.GetTextChannel(tuChId);
                     if (tuCh == null) continue;
-                    var prefix = string.IsNullOrWhiteSpace(tuMPrefix) ? "" : tuMPrefix;
+                    var prefix = string.IsNullOrWhiteSpace(tuMPrefix) ? "" : $"{tuMPrefix.Trim()} ";
+                    var roles = uow.TeamUpdateRank.GetGuildRanks(guildId);
+                    if (roles.Count == 0) continue;
 
+                    //rankAdded.GroupBy()
                 }
             }
 
             _staff = staff;
         }
 
-        private string GetText(string key, ulong? guildId, params string[] replacements)
+        private string GetText(string key, ulong? guildId, params object[] replacements)
             => _ss.GetText(key, guildId, "forum", replacements);
     }
 }
