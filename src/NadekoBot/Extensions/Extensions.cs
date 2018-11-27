@@ -12,11 +12,12 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using ImageSharp;
+using SixLabors.ImageSharp;
 using Mitternacht.Common.Collections;
 using Mitternacht.Services.Discord;
 using Newtonsoft.Json;
 using SixLabors.Primitives;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Mitternacht.Extensions
 {
@@ -203,8 +204,8 @@ namespace Mitternacht.Extensions
 
             var xOffset = 0;
             foreach (var t in imgs) {
-                canvas.DrawImage(t, 100, default(Size), new Point(xOffset, 0));
-                xOffset += t.Bounds.Width;
+                //canvas.DrawImage(t, 100, default(Size), new Point(xOffset, 0));
+                //xOffset += t.Bounds.Width;
             }
 
             return canvas;
