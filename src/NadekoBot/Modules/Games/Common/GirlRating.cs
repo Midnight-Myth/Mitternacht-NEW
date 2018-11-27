@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using ImageSharp;
+using SixLabors.ImageSharp;
 using Mitternacht.Common;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Games.Common
                         using (var pointMs = new MemoryStream(_images.RategirlDot.ToArray(), false))
                         using (var pointImg = Image.Load(pointMs))
                         {
-                            img.DrawImage(pointImg, 100, default(Size), new Point(pointx - 10, pointy - 10));
+                            //img.DrawImage(pointImg, 100, default(Size), new Point(pointx - 10, pointy - 10));
                         }
 
                         string url;
