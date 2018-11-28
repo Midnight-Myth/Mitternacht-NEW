@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mitternacht.Services.Database;
 
 namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20181029165617_Guild_TeamUpdateMessagePrefix")]
+    partial class Guild_TeamUpdateMessagePrefix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1403,25 +1405,6 @@ namespace Mitternacht.Migrations
                     b.HasIndex("StreamRoleSettingsId");
 
                     b.ToTable("StreamRoleWhitelistedUser");
-                });
-
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.TeamUpdateRank", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime?>("DateAdded");
-
-                    b.Property<ulong>("GuildId");
-
-                    b.Property<string>("Rankname");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GuildId", "Rankname")
-                        .IsUnique();
-
-                    b.ToTable("TeamUpdateRank");
                 });
 
             modelBuilder.Entity("Mitternacht.Services.Database.Models.UnmuteTimer", b =>

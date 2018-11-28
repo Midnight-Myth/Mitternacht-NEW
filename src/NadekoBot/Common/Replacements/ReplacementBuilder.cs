@@ -70,8 +70,8 @@ namespace Mitternacht.Common.Replacements
         public ReplacementBuilder WithUser(IUser user)
         {
             _reps.TryAdd("%user%", () => user.Mention);
-            _reps.TryAdd("%userfull%", user.ToString);
-            _reps.TryAdd("%username%", () => user.Username);
+            _reps.TryAdd("%userfull%", () => Format.Sanitize(user.ToString()));
+            _reps.TryAdd("%username%", () => Format.Sanitize(user.Username));
             _reps.TryAdd("%userdiscrim%", () => user.Discriminator);
             _reps.TryAdd("%id%", () => user.Id.ToString());
             _reps.TryAdd("%uid%", () => user.Id.ToString());

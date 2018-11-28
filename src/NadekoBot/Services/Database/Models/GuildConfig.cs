@@ -113,6 +113,9 @@ namespace Mitternacht.Services.Database.Models
 
         public ulong? GommeTeamMemberRoleId { get; set; } = null;
         public ulong? VipRoleId { get; set; } = null;
+
+        public ulong? TeamUpdateChannelId { get; set; } = null;
+        public string TeamUpdateMessagePrefix { get; set; } = "";
     }
 
     public class NsfwBlacklitedTag : DbEntity
