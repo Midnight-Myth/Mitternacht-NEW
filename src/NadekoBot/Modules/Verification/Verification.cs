@@ -6,7 +6,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using GommeHDnetForumAPI.DataModels.Collections;
 using GommeHDnetForumAPI.DataModels.Entities;
-using GommeHDnetForumAPI.DataModels.Exceptions;
+using GommeHDnetForumAPI.Exceptions;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
