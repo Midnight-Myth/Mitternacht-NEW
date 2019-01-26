@@ -172,6 +172,7 @@
   "administration_shutting_down": "Fahre herunter",
   "administration_slowmode_desc": "Benutzer können nicht mehr als {0} Nachrichten alle {1}s senden.",
   "administration_slowmode_disabled": "Slowmode deaktiviert.",
+  "administration_slowmode_already_disabled": "Slowmode ist schon deaktiviert.",
   "administration_slowmode_enabled": "Slowmode aktiviert.",
   "administration_slowmodewl_role_start": "Slowmode wird jetzt die Rolle {0} ignorieren.",
   "administration_slowmodewl_role_stop": "Slowmode wird nicht mehr die Rolle {0} ignorieren.",

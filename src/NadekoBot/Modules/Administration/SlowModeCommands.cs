@@ -32,8 +32,13 @@ namespace Mitternacht.Modules.Administration
             public async Task SlowmodeNative()
             {
                 if (Context.Channel is ITextChannel tch) {
-                    await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = 0).ConfigureAwait(false);
-                    await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
+                    if(tch.SlowModeInterval == 0)
+                        await ReplyErrorLocalized("slowmode_already_disabled").ConfigureAwait(false);
+                    else
+                    {
+                        await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = 0).ConfigureAwait(false);
+                        await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
+                    }
                 }
             }
 
@@ -49,9 +54,9 @@ namespace Mitternacht.Modules.Administration
                         await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = msgPerSec).ConfigureAwait(false);
                         await ReplyConfirmLocalized("slowmode_enabled").ConfigureAwait(false);
                     }
-                    catch (ArgumentOutOfRangeException e)
+                    catch (ArgumentException e)
                     {
-                        await Context.Channel.SendConfirmAsync(e.Message, GetText("invalid_params")).ConfigureAwait(false);
+                        await Context.Channel.SendErrorAsync(GetText("invalid_params"), e.Message).ConfigureAwait(false);
                     }
                 }
             }
@@ -66,6 +71,7 @@ namespace Mitternacht.Modules.Administration
                     removed.CancelSource.Cancel();
                     await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
                 }
+                else await ReplyErrorLocalized("slowmode_already_disabled").ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
