@@ -1,14 +1,14 @@
 {
     "bulbasaur": {
         "num": 1,
-        "species": "Bulbasaur",
+        "species": "Bisasam",
         "types": [
-            "Grass",
-            "Poison"
+            "PFLANZE",
+            "GIFT"
         ],
         "genderRatio": {
-            "M": "0.875",
-            "F": "0.125"
+            "M": "0,875",
+            "F": "0,125"
         },
         "baseStats": {
             "hp": 45,
@@ -19,14 +19,14 @@
             "spe": 45
         },
         "abilities": {
-            "0": "Overgrow",
+            "0": "Notdünger",
             "H": "Chlorophyll"
         },
         "heightm": "0.7",
         "weightkg": "6.9",
-        "color": "Green",
+        "color": "Grün",
         "evos": [
-            "ivysaur"
+            "Bisaknosp"
         ],
         "eggGroups": [
             "Monster",
