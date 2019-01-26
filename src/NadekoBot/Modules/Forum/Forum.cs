@@ -29,6 +29,7 @@ namespace Mitternacht.Modules.Forum
         }
 
 
+
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task UserInfoForum(IGuildUser user = null)

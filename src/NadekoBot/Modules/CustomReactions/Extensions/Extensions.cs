@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using Discord;
 using Discord.WebSocket;
 using Mitternacht.Common;
