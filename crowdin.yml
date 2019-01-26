@@ -3,7 +3,7 @@ files:
     ignore:
       - /src/NadekoBot/data/English
       - /src/NadekoBot/data/German
-      - /src/NadekoBot/data/German, Austria
+      - '/src/NadekoBot/data/German, Austria'
       - /src/NadekoBot/_strings/responsestrings/ResponseStrings.*.json
     translation: /src/NadekoBot/locale/%locale%/data/%original_file_name%
   - source: /src/NadekoBot/_strings/responsestrings/ResponseStrings.de-DE.json
