@@ -189,10 +189,5 @@ namespace Mitternacht.Modules.Verification.Services
         {
             Forum, Discord
         }
-
-        public enum EventTrigger
-        {
-            User, Admin
-        }
     }
 }
