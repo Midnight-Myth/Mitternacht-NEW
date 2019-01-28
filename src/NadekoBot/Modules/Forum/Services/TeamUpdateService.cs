@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Forum.Services
 
             using (var uow = _db.UnitOfWork)
             {
-                guildConfigs = uow.GuildConfigs.GetAll().Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
+                guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
                 teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
             }
 
