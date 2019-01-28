@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Forum
@@ -129,6 +131,22 @@ namespace Mitternacht.Modules.Forum
                     else
                         await ReplyErrorLocalized("teamupdate_rank_not_existing", rank).ConfigureAwait(false);
                     await uow.CompleteAsync().ConfigureAwait(false);
+                }
+            }
+
+            [MitternachtCommand, Usage, Description, Aliases]
+            [RequireContext(ContextType.Guild)]
+            public async Task TeamUpdateRanks()
+            {
+                using(var uow = _db.UnitOfWork)
+                {
+                    var ranks = uow.TeamUpdateRank.GetGuildRanks(Context.Guild.Id);
+                    var embed = new EmbedBuilder()
+                        .WithOkColor()
+                        .WithDescription(string.Join("\n", ranks.Select(r => $"- {r}")))
+                        .WithTitle(GetText("teamupdate_ranks"))
+                        .Build();
+                    await ReplyAsync(embed: embed).ConfigureAwait(false);
                 }
             }
         }

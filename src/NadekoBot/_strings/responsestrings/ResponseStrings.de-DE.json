@@ -335,6 +335,7 @@
   "forum_teamupdate_rank_already_added": "Der Teamrang `{0}` bekommt schon Updates.",
   "forum_teamupdate_rank_removed": "Der Teamrang `{0}` wird keine Updates mehr bekommen.",
   "forum_teamupdate_rank_not_existing": "Der Teamrang `{0}` bekommt schon keine Updates.",
+  "forum_teamupdate_ranks": "Teamupdateränge",
   "gambling_animal_race": "Tierrennen",
   "gambling_animal_race_already_in": "Sie sind diesem Rennen schon beigetreten!",
   "gambling_animal_race_already_started": "Tierrennen läuft bereits.",

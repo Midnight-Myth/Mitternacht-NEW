@@ -3721,5 +3721,12 @@
     "aliases": [ "turr" ],
     "desc": "Löscht einen Rang aus den Teamupdates.",
     "usage": "`{0}turr [Rangname]`"
+  },
+  {
+    "name": "teamupdateranks",
+    "cmd": "teamupdateranks",
+    "aliases": [ "tur" ],
+    "desc": "Zeigt alle Teamupdateränge an.",
+    "usage": "`{0}tur`"
   }
 ]
