@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Forum.Services
 
                 while (true)
                 {
-                    await DoTeamUpdate();
+                    await DoTeamUpdate().ConfigureAwait(false);
                     await Task.Delay(30 * 1000);
                 }
             });
@@ -56,7 +56,7 @@ namespace Mitternacht.Modules.Forum.Services
             if (_fs.Forum == null) return;
             var staff = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
             var rankAdded = staff.Where(uiNew => _staff.All(uiOld => uiOld.Id != uiNew.Id)).ToArray();
-            var rankChanged = _staff.Where(uiOld => staff.Any(uiNew => uiNew.Id == uiOld.Id)).Select(uiOld => new RankUpdateItem(uiOld, staff.First(uiNew => uiNew.Id == uiOld.Id))).ToArray();
+            var rankChanged = _staff.Where(uiOld => staff.Any(uiNew => uiNew.Id == uiOld.Id && !string.Equals(uiNew.UserTitle, uiOld.UserTitle, StringComparison.OrdinalIgnoreCase))).Select(uiOld => new RankUpdateItem(uiOld, staff.First(uiNew => uiNew.Id == uiOld.Id))).ToArray();
             var rankRemoved = _staff.Where(uiOld => staff.All(uiNew => uiNew.Id != uiOld.Id)).ToArray();
 
             List<GuildConfig> guildConfigs;

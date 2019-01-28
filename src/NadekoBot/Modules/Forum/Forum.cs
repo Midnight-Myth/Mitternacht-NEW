@@ -11,7 +11,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Forum
 {
-    public class Forum : MitternachtTopLevelModule<ForumService>
+    public partial class Forum : MitternachtTopLevelModule<ForumService>
     {
         private readonly DbService _db;
 
