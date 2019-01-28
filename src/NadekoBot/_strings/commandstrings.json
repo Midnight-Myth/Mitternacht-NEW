@@ -3693,5 +3693,40 @@
     "aliases": [ "gtu" ],
     "desc": "Aktualisiert die GommeHDnet-Teammitgliedschaften manuell.",
     "usage": "`{0}gommeteamupdate`"
+  },
+  {
+    "name": "teamupdatemessageprefix",
+    "cmd": "teamupdatemessageprefix",
+    "aliases": [ "tump" ],
+    "desc": "Setzt oder löscht den Teamupdatenachrichtenpräfix.",
+    "usage": "`{0}tump [Präfixnachricht]`"
+  },
+  {
+    "name": "teamupdatechannel",
+    "cmd": "teamupdatechannel",
+    "aliases": [ "tuch" ],
+    "desc": "Setzt oder löscht den Teamupdatenachrichtenkanal",
+    "usage": "`{0}tuch [Kanalmention]`"
+  },
+  {
+    "name": "teamupdaterankadd",
+    "cmd": "teamupdaterankadd",
+    "aliases": [ "tura" ],
+    "desc": "Fügt einen Rang zu den Teamupdates hinzu.",
+    "usage": "`{0}tura [Rangname]`"
+  },
+  {
+    "name": "teamupdaterankremove",
+    "cmd": "teamupdaterankremove",
+    "aliases": [ "turr" ],
+    "desc": "Löscht einen Rang aus den Teamupdates.",
+    "usage": "`{0}turr [Rangname]`"
+  },
+  {
+    "name": "teamupdateranks",
+    "cmd": "teamupdateranks",
+    "aliases": [ "tur" ],
+    "desc": "Zeigt alle Teamupdateränge an.",
+    "usage": "`{0}tur`"
   }
 ]

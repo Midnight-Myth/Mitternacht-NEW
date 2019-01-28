@@ -202,11 +202,11 @@ namespace Mitternacht.Extensions
 
             var canvas = new Image<Rgba32>(imgs.Sum(img => img.Width), imgs.Max(img => img.Height));
 
-            var xOffset = 0;
-            foreach (var t in imgs) {
-                //canvas.DrawImage(t, 100, default(Size), new Point(xOffset, 0));
-                //xOffset += t.Bounds.Width;
-            }
+            //var xOffset = 0;
+            //foreach (var t in imgs) {
+            //    canvas.DrawImage(t, 100, default(Size), new Point(xOffset, 0));
+            //    xOffset += t.Bounds.Width;
+            //}
 
             return canvas;
         }

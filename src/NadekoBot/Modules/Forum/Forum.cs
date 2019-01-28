@@ -11,7 +11,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Forum
 {
-    public class Forum : MitternachtTopLevelModule<ForumService>
+    public partial class Forum : MitternachtTopLevelModule<ForumService>
     {
         private readonly DbService _db;
 
@@ -27,6 +27,7 @@ namespace Mitternacht.Modules.Forum
             Service.InitForumInstance();
             await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
         }
+
 
 
         [MitternachtCommand, Usage, Description, Aliases]
