@@ -3728,5 +3728,12 @@
     "aliases": [ "tur" ],
     "desc": "Zeigt alle Teamupdateränge an.",
     "usage": "`{0}tur`"
+  },
+  {
+    "name": "birthdaymoney",
+    "cmd": "birthdaymoney",
+    "aliases": [],
+    "desc": "Zeigt das aktuelle Geburtstagsgeld an oder setzt es.",
+    "usage": "`{0}birthdaymoney [Betrag]`"
   }
 ]

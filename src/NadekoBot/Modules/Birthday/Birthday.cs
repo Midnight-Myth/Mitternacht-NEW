@@ -17,12 +17,14 @@ namespace Mitternacht.Modules.Birthday
     public class Birthday : MitternachtTopLevelModule<BirthdayService>
     {
         private readonly DbService _db;
-        private readonly IBotCredentials _bc;
+        private readonly IBotCredentials _botCreds;
+        private readonly IBotConfigProvider _botConf;
 
-        public Birthday(DbService db, IBotCredentials bc)
+        public Birthday(DbService db, IBotCredentials botCreds, IBotConfigProvider botConf)
         {
             _db = db;
-            _bc = bc;
+            _botCreds = botCreds;
+            _botConf = botConf;
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -32,7 +34,7 @@ namespace Mitternacht.Modules.Birthday
             using (var uow = _db.UnitOfWork)
             {
                 var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
-                if (!_bc.IsOwner(Context.User) && (bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month)))
+                if (!_botCreds.IsOwner(Context.User) && (bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month)))
                 {
                     await ReplyErrorLocalized("set_before").ConfigureAwait(false);
                     return;
@@ -329,6 +331,41 @@ namespace Mitternacht.Modules.Birthday
                 await ConfirmLocalized("enable", GetEnabledText(enable)).ConfigureAwait(false);
             }
         }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        [OwnerOnly]
+        public async Task BirthdayMoney(long money)
+        {
+            using (var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                if (gc.BirthdayMoney == money)
+                {
+                    await ReplyErrorLocalized("money_already_set").ConfigureAwait(false);
+                    return;
+                }
+                var oldMoney = gc.BirthdayMoney ?? 0;
+                gc.BirthdayMoney = money;
+                uow.GuildConfigs.Update(gc);
+                await ReplyConfirmLocalized("money_set", _botConf.BotConfig.CurrencySign, oldMoney, money).ConfigureAwait(false);
+
+                await uow.CompleteAsync().ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task BirthdayMoney()
+        {
+            using(var uow = _db.UnitOfWork)
+            {
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+                var money = gc.BirthdayMoney ?? 0;
+                await ReplyConfirmLocalized("money", _botConf.BotConfig.CurrencySign, money).ConfigureAwait(false);
+            }
+        }
+
 
         private string BdmToString(BirthDateModel bdm)
             => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()} - **{bdm}**";

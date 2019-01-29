@@ -6,8 +6,10 @@ using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
+using NLog;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +29,8 @@ namespace Mitternacht.Modules.Forum.Services
         public event Func<SocketTextChannel, RankUpdateItem[], Task> TeamRankChanged = (g, rui) => Task.CompletedTask;
         public event Func<SocketTextChannel, UserInfo[], Task> TeamRankRemoved = (g, rui) => Task.CompletedTask;
 
+        private const int _teamUpdateInterval = 30 * 1000;
+
         public TeamUpdateService(DiscordSocketClient client, DbService db, ForumService fs, StringService ss)
         {
             _client = client;
@@ -39,10 +43,19 @@ namespace Mitternacht.Modules.Forum.Services
                 while (_fs.Forum == null) await Task.Delay(500);
                 _staff = await _fs.Forum.GetMembersList(MembersListType.Staff);
 
+                var log = LogManager.GetCurrentClassLogger();
+
                 while (true)
                 {
-                    await DoTeamUpdate().ConfigureAwait(false);
-                    await Task.Delay(30 * 1000);
+                    try
+                    {
+                        await DoTeamUpdate();
+                    }
+                    catch (Exception e)
+                    {
+                        log.Warn(e, CultureInfo.CurrentCulture, "Team updating failed!");
+                    }
+                    await Task.Delay(_teamUpdateInterval);
                 }
             });
 
@@ -64,7 +77,7 @@ namespace Mitternacht.Modules.Forum.Services
 
             using (var uow = _db.UnitOfWork)
             {
-                guildConfigs = uow.GuildConfigs.GetAll().Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
+                guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
                 teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
             }
 
