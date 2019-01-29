@@ -3735,5 +3735,12 @@
     "aliases": [],
     "desc": "Zeigt das aktuelle Geburtstagsgeld an oder setzt es.",
     "usage": "`{0}birthdaymoney [Betrag]`"
+  },
+  {
+    "name": "birthdaymessageevent",
+    "cmd": "birthdaymessageevent",
+    "aliases": [ "bdme" ],
+    "desc": "Zeigt an oder legt fest, ob der Nutzer Geburtstagsnachrichten bekommt.",
+    "usage": "`{0}birthdaymessageevent [true|false]`"
   }
 ]

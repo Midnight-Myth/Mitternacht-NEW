@@ -130,24 +130,23 @@ namespace Mitternacht.Modules.Birthday
         [RequireContext(ContextType.Guild)]
         public async Task Birthdays(IBirthDate bd = null)
         {
-            bd = bd ?? BirthDate.Today;
+            bd = bd ?? BirthDate.TodayWithoutYear;
             List<BirthDateModel> birthdates;
             using (var uow = _db.UnitOfWork)
             {
-                birthdates = uow.BirthDates.GetBirthdays(bd, true).ToList();
+                birthdates = uow.BirthDates.GetBirthdays(bd, bd.Year.HasValue).ToList();
             }
 
             if (!birthdates.Any())
-            {
                 await ConfirmLocalized("none_date", bd.ToString()).ConfigureAwait(false);
-                return;
+            else
+            {
+                var eb = new EmbedBuilder()
+                    .WithOkColor()
+                    .WithTitle(GetText("list_title", bd.ToString()))
+                    .WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
+                await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
             }
-
-            var eb = new EmbedBuilder()
-                .WithOkColor()
-                .WithTitle(GetText("list_title", bd.ToString()))
-                .WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
-            await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -363,6 +362,37 @@ namespace Mitternacht.Modules.Birthday
                 var gc = uow.GuildConfigs.For(Context.Guild.Id);
                 var money = gc.BirthdayMoney ?? 0;
                 await ReplyConfirmLocalized("money", _botConf.BotConfig.CurrencySign, money).ConfigureAwait(false);
+            }
+        }
+
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task BirthdayMessageEvent(bool? enable = null)
+        {
+            using(var uow = _db.UnitOfWork)
+            {
+                var hasBirthdate = uow.BirthDates.HasBirthDate(Context.User.Id);
+                if (!hasBirthdate)
+                {
+                    await ReplyErrorLocalized("messageevent_birthday_not_set").ConfigureAwait(false);
+                    return;
+                }
+
+                var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
+                if (!enable.HasValue)
+                    await ReplyConfirmLocalized($"messageevent_show", GetEnabledText(bdm.BirthdayMessageEnabled)).ConfigureAwait(false);
+                else
+                {
+                    if (bdm.BirthdayMessageEnabled == enable.Value)
+                        await ReplyErrorLocalized($"messageevent_already_set", GetEnabledText(bdm.BirthdayMessageEnabled)).ConfigureAwait(false);
+                    else
+                    {
+                        bdm.BirthdayMessageEnabled = enable.Value;
+                        uow.BirthDates.Update(bdm);
+                        await uow.CompleteAsync().ConfigureAwait(false);
+                        await ReplyConfirmLocalized($"messageevent_changed", GetEnabledText(enable.Value)).ConfigureAwait(false);
+                    }
+                }
             }
         }
 

@@ -78,7 +78,7 @@ namespace Mitternacht.Modules.Birthday.Services
         {
             using(var uow = _db.UnitOfWork)
             {
-                var usersGuildGroups = birthdayUsers.GroupBy(u => u.Guild).ToList();
+                var usersGuildGroups = birthdayUsers.Where(u => uow.BirthDates.BirthdayMessageEnabled(u.Id).Value).GroupBy(u => u.Guild).ToList();
 
                 foreach (var group in usersGuildGroups)
                 {
