@@ -366,6 +366,37 @@ namespace Mitternacht.Modules.Birthday
             }
         }
 
+        [MitternachtCommand, Usage, Description, Aliases]
+        [RequireContext(ContextType.Guild)]
+        public async Task BirthdayMessageEvent(bool? enable = null)
+        {
+            using(var uow = _db.UnitOfWork)
+            {
+                var hasBirthdate = uow.BirthDates.HasBirthDate(Context.User.Id);
+                if (!hasBirthdate)
+                {
+                    await ReplyErrorLocalized("messageevent_birthday_not_set").ConfigureAwait(false);
+                    return;
+                }
+
+                var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
+                if (!enable.HasValue)
+                    await ReplyConfirmLocalized($"messageevent_show", GetEnabledText(bdm.BirthdayMessageEnabled)).ConfigureAwait(false);
+                else
+                {
+                    if (bdm.BirthdayMessageEnabled == enable.Value)
+                        await ReplyErrorLocalized($"messageevent_already_set", GetEnabledText(bdm.BirthdayMessageEnabled)).ConfigureAwait(false);
+                    else
+                    {
+                        bdm.BirthdayMessageEnabled = enable.Value;
+                        uow.BirthDates.Update(bdm);
+                        await uow.CompleteAsync().ConfigureAwait(false);
+                        await ReplyConfirmLocalized($"messageevent_changed", GetEnabledText(enable.Value)).ConfigureAwait(false);
+                    }
+                }
+            }
+        }
+
 
         private string BdmToString(BirthDateModel bdm)
             => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()} - **{bdm}**";
