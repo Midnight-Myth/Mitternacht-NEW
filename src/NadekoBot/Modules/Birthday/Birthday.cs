@@ -130,24 +130,23 @@ namespace Mitternacht.Modules.Birthday
         [RequireContext(ContextType.Guild)]
         public async Task Birthdays(IBirthDate bd = null)
         {
-            bd = bd ?? BirthDate.Today;
+            bd = bd ?? BirthDate.TodayWithoutYear;
             List<BirthDateModel> birthdates;
             using (var uow = _db.UnitOfWork)
             {
-                birthdates = uow.BirthDates.GetBirthdays(bd, true).ToList();
+                birthdates = uow.BirthDates.GetBirthdays(bd, bd.Year.HasValue).ToList();
             }
 
             if (!birthdates.Any())
-            {
                 await ConfirmLocalized("none_date", bd.ToString()).ConfigureAwait(false);
-                return;
+            else
+            {
+                var eb = new EmbedBuilder()
+                    .WithOkColor()
+                    .WithTitle(GetText("list_title", bd.ToString()))
+                    .WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
+                await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
             }
-
-            var eb = new EmbedBuilder()
-                .WithOkColor()
-                .WithTitle(GetText("list_title", bd.ToString()))
-                .WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
-            await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

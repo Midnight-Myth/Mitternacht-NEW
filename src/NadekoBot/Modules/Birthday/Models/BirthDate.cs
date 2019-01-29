@@ -9,6 +9,7 @@ namespace Mitternacht.Modules.Birthday.Models
         public int? Year { get; set; }
 
         public static BirthDate Today => new BirthDate(DateTime.Now.Day, DateTime.Now.Month, DateTime.Now.Year);
+        public static BirthDate TodayWithoutYear => new BirthDate(DateTime.Now.Day, DateTime.Now.Month);
 
         public BirthDate(int day, int month, int? year = null)
         {
