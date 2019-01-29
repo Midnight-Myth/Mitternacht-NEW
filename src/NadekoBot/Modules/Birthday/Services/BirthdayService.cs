@@ -15,6 +15,7 @@ namespace Mitternacht.Modules.Birthday.Services
         private readonly DbService _db;
         private readonly DiscordSocketClient _client;
         private readonly Task _timerTask;
+        private readonly Logger _log;
 
         private const int BirthdayCheckRepeatDelay = 60 * 1000;
 
@@ -25,6 +26,8 @@ namespace Mitternacht.Modules.Birthday.Services
         {
             _db = db;
             _client = client;
+
+            _log = LogManager.GetCurrentClassLogger();
 
             _timerTask = Task.Run(async () =>
             {
@@ -44,6 +47,7 @@ namespace Mitternacht.Modules.Birthday.Services
             });
 
             UserBirthdayStarting += OnUserBirthdayStarting;
+            UserBirthdayStarting += OnBirthdayMoney;
             BirthdayUsers += OnBirthdayUsers;
         }
 
@@ -51,8 +55,8 @@ namespace Mitternacht.Modules.Birthday.Services
         {
             using (var uow = _db.UnitOfWork)
             {
-                //var time = DateTime.Now;
-                var time = CustomTimeForTesting;
+                var time = DateTime.Now;
+                //var time = CustomTimeForTesting;
                 var birthdays = uow.BirthDates.GetBirthdays(time).ToList();
                 var bc = uow.BotConfig.GetOrCreate();
                 var newDay = bc.LastTimeBirthdaysChecked.IsOtherDate(time);
@@ -126,21 +130,43 @@ namespace Mitternacht.Modules.Birthday.Services
             }
         }
 
-        private int _customTimeAccessCount = 0;
-        private DateTime CustomTimeForTesting
+        private async Task OnBirthdayMoney(SocketGuildUser[] birthdayUsers)
         {
-            get {
-                using (var uow = _db.UnitOfWork)
+            using(var uow = _db.UnitOfWork)
+            {
+                var usersGuildGroups = birthdayUsers.GroupBy(bu => bu.Guild).ToList();
+
+                foreach (var group in usersGuildGroups)
                 {
-                    var bc = uow.BotConfig.GetOrCreate();
-                    bc.LastTimeBirthdaysChecked = _customTimeAccessCount % 2 == 0 ? DateTime.Today : DateTime.MinValue;
-                    var time = _customTimeAccessCount % 2 == 0 ? DateTime.Today.AddDays(2) : DateTime.Today;
-                    uow.BotConfig.Update(bc);
-                    uow.Complete();
-                    _customTimeAccessCount++;
-                    return time;
+                    var gc = uow.GuildConfigs.For(group.Key.Id);
+                    var birthdayMoney = gc.BirthdayMoney;
+                    if (!birthdayMoney.HasValue || birthdayMoney.Value == 0) continue;
+
+                    foreach (var guildUser in group)
+                    {
+                        var success = uow.Currency.TryUpdateState(guildUser.Id, birthdayMoney.Value);
+                        if (!success) _log.Warn($"Failed to add BirthdayMoney to {guildUser.Username} on guild {guildUser.Guild.Name}");
+                    }
                 }
+                await uow.CompleteAsync().ConfigureAwait(false);
             }
         }
+
+        //private int _customTimeAccessCount = 0;
+        //private DateTime CustomTimeForTesting
+        //{
+        //    get {
+        //        using (var uow = _db.UnitOfWork)
+        //        {
+        //            var bc = uow.BotConfig.GetOrCreate();
+        //            bc.LastTimeBirthdaysChecked = _customTimeAccessCount % 2 == 0 ? DateTime.Today : DateTime.MinValue;
+        //            var time = _customTimeAccessCount % 2 == 0 ? DateTime.Today.AddDays(2) : DateTime.Today;
+        //            uow.BotConfig.Update(bc);
+        //            uow.Complete();
+        //            _customTimeAccessCount++;
+        //            return time;
+        //        }
+        //    }
+        //}
     }
 }
