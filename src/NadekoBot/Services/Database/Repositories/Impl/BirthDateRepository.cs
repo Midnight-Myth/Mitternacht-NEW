@@ -39,5 +39,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             _set.Remove(bdm);
             return true;
         }
+
+        public bool? BirthdayMessageEnabled(ulong userId)
+            => GetUserBirthDate(userId)?.BirthdayMessageEnabled;
     }
 }

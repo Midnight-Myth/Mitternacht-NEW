@@ -9,16 +9,18 @@ namespace Mitternacht.Services.Database.Models
         public int Day { get; set; }
         public int Month { get; set; }
         public int? Year { get; set; }
+        public bool BirthdayMessageEnabled { get; set; } = true;
 
         public BirthDateModel() { }
 
-        public BirthDateModel(ulong userid, int day, int month, int? year = null)
+        public BirthDateModel(ulong userid, int day, int month, int? year = null, bool birthdayMessageEnabled = true)
         {
             new DateTime(year ?? 2000, month, day);
             UserId = userid;
             Day = day;
             Month = month;
             Year = year;
+            BirthdayMessageEnabled = birthdayMessageEnabled;
         }
 
         public BirthDateModel(ulong userid, IBirthDate bd)
