@@ -2,6 +2,7 @@
 using GommeHDnetForumAPI.DataModels;
 using GommeHDnetForumAPI.DataModels.Collections;
 using GommeHDnetForumAPI.DataModels.Entities;
+using Mitternacht.Common;
 using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
@@ -29,8 +30,6 @@ namespace Mitternacht.Modules.Forum.Services
         public event Func<SocketTextChannel, RankUpdateItem[], Task> TeamRankChanged = (g, rui) => Task.CompletedTask;
         public event Func<SocketTextChannel, UserInfo[], Task> TeamRankRemoved = (g, rui) => Task.CompletedTask;
 
-        private const int _teamUpdateInterval = 30 * 1000;
-
         public TeamUpdateService(DiscordSocketClient client, DbService db, ForumService fs, StringService ss)
         {
             _client = client;
@@ -55,7 +54,7 @@ namespace Mitternacht.Modules.Forum.Services
                     {
                         log.Warn(e, CultureInfo.CurrentCulture, "Team updating failed!");
                     }
-                    await Task.Delay(_teamUpdateInterval);
+                    await Task.Delay(UpdateInterval.TeamUpdate);
                 }
             });
 
