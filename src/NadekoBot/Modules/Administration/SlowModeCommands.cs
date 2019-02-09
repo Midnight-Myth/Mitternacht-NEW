@@ -29,30 +29,23 @@ namespace Mitternacht.Modules.Administration
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
-            public async Task SlowmodeNative()
-            {
-                if (Context.Channel is ITextChannel tch) {
-                    if(tch.SlowModeInterval == 0)
-                        await ReplyErrorLocalized("slowmode_already_disabled").ConfigureAwait(false);
-                    else
-                    {
-                        await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = 0).ConfigureAwait(false);
-                        await ReplyConfirmLocalized("slowmode_disabled").ConfigureAwait(false);
-                    }
-                }
-            }
-
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageMessages)]
-            public async Task SlowmodeNative(int msgPerSec)
+            public async Task SlowmodeNative(int? msgPerSec = null)
             {
                 if(Context.Channel is ITextChannel tch)
                 {
+                    if (!msgPerSec.HasValue)
+                        msgPerSec = 0;
+
+                    if (tch.SlowModeInterval == 0 && msgPerSec.Value == 0)
+                    {
+                        await ReplyErrorLocalized("slowmode_already_disabled").ConfigureAwait(false);
+                        return;
+                    }
+
                     try
                     {
-                        await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = msgPerSec).ConfigureAwait(false);
-                        await ReplyConfirmLocalized("slowmode_enabled").ConfigureAwait(false);
+                        await tch.ModifyAsync((TextChannelProperties tcp) => tcp.SlowModeInterval = msgPerSec.Value).ConfigureAwait(false);
+                        await ReplyConfirmLocalized(msgPerSec.Value == 0 ? "slowmode_disabled" : "slowmode_enabled").ConfigureAwait(false);
                     }
                     catch (ArgumentException e)
                     {

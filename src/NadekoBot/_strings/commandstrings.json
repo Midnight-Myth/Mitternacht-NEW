@@ -3687,13 +3687,13 @@
     "desc": "Setzt die Zeit zurück, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.",
     "usage": "`{0}voicestatsreset <Nutzer>`"
   },
-  {
-    "name": "gommeteamupdate",
-    "cmd": "gommeteamupdate",
-    "aliases": [ "gtu" ],
-    "desc": "Aktualisiert die GommeHDnet-Teammitgliedschaften manuell.",
-    "usage": "`{0}gommeteamupdate`"
-  },
+  //{
+  //  "name": "gommeteamupdate",
+  //  "cmd": "gommeteamupdate",
+  //  "aliases": [ "gtu" ],
+  //  "desc": "Aktualisiert die GommeHDnet-Teammitgliedschaften manuell.",
+  //  "usage": "`{0}gommeteamupdate`"
+  //},
   {
     "name": "teamupdatemessageprefix",
     "cmd": "teamupdatemessageprefix",

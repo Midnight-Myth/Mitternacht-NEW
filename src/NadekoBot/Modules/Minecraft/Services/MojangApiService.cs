@@ -1,6 +1,7 @@
 ﻿using MinecraftQuery;
+using Mitternacht.Services;
 
-namespace Mitternacht.Services.Impl
+namespace Mitternacht.Modules.Minecraft.Services
 {
     public class MojangApiService : INService
     {

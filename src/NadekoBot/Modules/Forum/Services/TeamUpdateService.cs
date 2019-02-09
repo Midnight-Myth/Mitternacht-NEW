@@ -2,6 +2,7 @@
 using GommeHDnetForumAPI.DataModels;
 using GommeHDnetForumAPI.DataModels.Collections;
 using GommeHDnetForumAPI.DataModels.Entities;
+using Mitternacht.Common;
 using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
@@ -25,11 +26,13 @@ namespace Mitternacht.Modules.Forum.Services
 
         private readonly Task _teamUpdateTask;
 
-        public event Func<SocketTextChannel, UserInfo[], Task> TeamRankAdded = (g, ui) => Task.CompletedTask;
-        public event Func<SocketTextChannel, RankUpdateItem[], Task> TeamRankChanged = (g, rui) => Task.CompletedTask;
-        public event Func<SocketTextChannel, UserInfo[], Task> TeamRankRemoved = (g, rui) => Task.CompletedTask;
+        public event Func<UserInfo[], Task> TeamMemberAdded = ui => Task.CompletedTask;
+        public event Func<RankUpdateItem[], Task> TeamMemberRankChanged = rui => Task.CompletedTask;
+        public event Func<UserInfo[], Task> TeamMemberRemoved = ui => Task.CompletedTask;
 
-        private const int _teamUpdateInterval = 30 * 1000;
+        private event Func<SocketTextChannel, UserInfo[], Task> TeamMemberAdded_Message = (g, ui) => Task.CompletedTask;
+        private event Func<SocketTextChannel, RankUpdateItem[], Task> TeamMemberRankChanged_Message = (g, rui) => Task.CompletedTask;
+        private event Func<SocketTextChannel, UserInfo[], Task> TeamMemberRemoved_Message = (g, rui) => Task.CompletedTask;
 
         public TeamUpdateService(DiscordSocketClient client, DbService db, ForumService fs, StringService ss)
         {
@@ -40,7 +43,7 @@ namespace Mitternacht.Modules.Forum.Services
 
             _teamUpdateTask = Task.Run(async () =>
             {
-                while (_fs.Forum == null) await Task.Delay(500);
+                while (_fs.Forum == null) await Task.Delay(UpdateInterval.WaitForForum);
                 _staff = await _fs.Forum.GetMembersList(MembersListType.Staff);
 
                 var log = LogManager.GetCurrentClassLogger();
@@ -55,13 +58,13 @@ namespace Mitternacht.Modules.Forum.Services
                     {
                         log.Warn(e, CultureInfo.CurrentCulture, "Team updating failed!");
                     }
-                    await Task.Delay(_teamUpdateInterval);
+                    await Task.Delay(UpdateInterval.TeamUpdate);
                 }
             });
 
-            TeamRankAdded += OnRankAdded;
-            TeamRankChanged += OnRankChanged;
-            TeamRankRemoved += OnRankRemoved;
+            TeamMemberAdded_Message += MessageTeamMemberAdded;
+            TeamMemberRankChanged_Message += MessageTeamMemberRankChanged;
+            TeamMemberRemoved_Message += MessageTeamMemberRemoved;
         }
 
         public async Task DoTeamUpdate()
@@ -71,6 +74,11 @@ namespace Mitternacht.Modules.Forum.Services
             var rankAdded = staff.Where(uiNew => _staff.All(uiOld => uiOld.Id != uiNew.Id)).ToArray();
             var rankChanged = _staff.Where(uiOld => staff.Any(uiNew => uiNew.Id == uiOld.Id && !string.Equals(uiNew.UserTitle, uiOld.UserTitle, StringComparison.OrdinalIgnoreCase))).Select(uiOld => new RankUpdateItem(uiOld, staff.First(uiNew => uiNew.Id == uiOld.Id))).ToArray();
             var rankRemoved = _staff.Where(uiOld => staff.All(uiNew => uiNew.Id != uiOld.Id)).ToArray();
+
+            await TeamMemberAdded.Invoke(rankAdded).ConfigureAwait(false);
+            await TeamMemberRankChanged.Invoke(rankChanged).ConfigureAwait(false);
+            await TeamMemberRemoved.Invoke(rankRemoved).ConfigureAwait(false);
+
 
             List<GuildConfig> guildConfigs;
             List<IGrouping<ulong, TeamUpdateRank>> teamUpdateRanks;
@@ -89,9 +97,9 @@ namespace Mitternacht.Modules.Forum.Services
                 var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
                 if (roles is null || roles.Length == 0) continue;
 
-                await TeamRankAdded.Invoke(tuCh, rankAdded).ConfigureAwait(false);
-                await TeamRankChanged.Invoke(tuCh, rankChanged).ConfigureAwait(false);
-                await TeamRankRemoved.Invoke(tuCh, rankRemoved).ConfigureAwait(false);
+                await TeamMemberAdded_Message.Invoke(tuCh, rankAdded).ConfigureAwait(false);
+                await TeamMemberRankChanged_Message.Invoke(tuCh, rankChanged).ConfigureAwait(false);
+                await TeamMemberRemoved_Message.Invoke(tuCh, rankRemoved).ConfigureAwait(false);
             }
 
             _staff = staff;
@@ -100,7 +108,7 @@ namespace Mitternacht.Modules.Forum.Services
 
         #region TeamUpdate Event Handler
 
-        private async Task OnRankChanged(SocketTextChannel channel, RankUpdateItem[] rankUpdates)
+        private async Task MessageTeamMemberRankChanged(SocketTextChannel channel, RankUpdateItem[] rankUpdates)
         {
             var roles = GetForumRankUpdateRoles(channel.Guild.Id);
             if (roles.Length == 0) return;
@@ -126,10 +134,10 @@ namespace Mitternacht.Modules.Forum.Services
             }
         }
 
-        private async Task OnRankAdded(SocketTextChannel channel, UserInfo[] userInfos)
+        private async Task MessageTeamMemberAdded(SocketTextChannel channel, UserInfo[] userInfos)
             => await RankAddedRemovedUpdate(channel, userInfos, "added");
 
-        private async Task OnRankRemoved(SocketTextChannel channel, UserInfo[] userInfos)
+        private async Task MessageTeamMemberRemoved(SocketTextChannel channel, UserInfo[] userInfos)
             => await RankAddedRemovedUpdate(channel, userInfos, "removed");
 
         private async Task RankAddedRemovedUpdate(SocketTextChannel channel, UserInfo[] userInfos, string keypart)

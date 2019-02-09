@@ -6,20 +6,19 @@ using GommeHDnetForumAPI.DataModels;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
 
-namespace Mitternacht.Modules.Verification
+namespace Mitternacht.Modules.Forum
 {
-    public partial class Verification
+    public partial class Forum
     {
 		[Group]
-        public class GommeTeamSyncCommands : MitternachtSubmodule<GommeTeamSyncService>
+        public class TeamRolySyncCommands : MitternachtSubmodule<TeamRoleSyncService>
         {
             private readonly DbService _db;
             private readonly ForumService _fs;
 
-            public GommeTeamSyncCommands(DbService db, ForumService fs)
+            public TeamRolySyncCommands(DbService db, ForumService fs)
             {
                 _db = db;
                 _fs = fs;
@@ -96,14 +95,14 @@ namespace Mitternacht.Modules.Verification
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [OwnerOrGuildPermission(GuildPermission.ManageMessages)]
-            public async Task GommeTeamUpdate()
-            {
-                await Service.CheckGommeTeamMembers().ConfigureAwait(false);
-                await ConfirmLocalized("gt_update").ConfigureAwait(false);
-            }
+            //[MitternachtCommand, Usage, Description, Aliases]
+            //[RequireContext(ContextType.Guild)]
+            //[OwnerOrGuildPermission(GuildPermission.ManageMessages)]
+            //public async Task GommeTeamUpdate()
+            //{
+            //    await Service.CheckGommeTeamMembers().ConfigureAwait(false);
+            //    await ConfirmLocalized("gt_update").ConfigureAwait(false);
+            //}
         }
     }
 }

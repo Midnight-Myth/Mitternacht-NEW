@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
+using Mitternacht.Common;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using NLog;
@@ -16,8 +17,6 @@ namespace Mitternacht.Modules.Birthday.Services
         private readonly DiscordSocketClient _client;
         private readonly Task _timerTask;
         private readonly Logger _log;
-
-        private const int BirthdayCheckRepeatDelay = 60 * 1000;
 
         public event Func<SocketGuildUser[], Task> UserBirthdayStarting = u => Task.CompletedTask;
         public event Func<SocketGuildUser[], Task> BirthdayUsers = u => Task.CompletedTask;
@@ -42,7 +41,7 @@ namespace Mitternacht.Modules.Birthday.Services
                     {
                         log.Warn(e, CultureInfo.CurrentCulture, "Birthday Timer failed.");
                     }
-                    await Task.Delay(BirthdayCheckRepeatDelay);
+                    await Task.Delay(UpdateInterval.Birthday);
                 }
             });
 
