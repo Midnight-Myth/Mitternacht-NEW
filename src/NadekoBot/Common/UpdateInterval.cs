@@ -1,8 +1,8 @@
 ﻿namespace Mitternacht.Common
 {
-    public enum UpdateInterval : int
+    public class UpdateInterval
     {
-        TeamUpdate = 1 * 60 * 1000,
-        Birthday = 1* 60 * 1000
+        public const int TeamUpdate = 1 * 60 * 1000;
+        public const int Birthday = 1* 60 * 1000;
     }
 }
