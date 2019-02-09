@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using GommeHDnetForumAPI.DataModels;
-using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
 
-namespace Mitternacht.Modules.Verification.Services
+namespace Mitternacht.Modules.Forum.Services
 {
-    public class GommeTeamSyncService : INService
+    public class TeamRoleSyncService : INService
     {
         private readonly DbService _db;
         private readonly ForumService _fs;
@@ -16,7 +15,7 @@ namespace Mitternacht.Modules.Verification.Services
         private Task _timerTask;
         private const int GommeTeamMemberCheckRepeatDelay = 5 * 60 * 1000;
 
-        public GommeTeamSyncService(DbService db, ForumService fs, DiscordSocketClient client)
+        public TeamRoleSyncService(DbService db, ForumService fs, DiscordSocketClient client)
         {
             _db = db;
             _fs = fs;

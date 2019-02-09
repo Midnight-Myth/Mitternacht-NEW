@@ -6,20 +6,19 @@ using GommeHDnetForumAPI.DataModels;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
 
-namespace Mitternacht.Modules.Verification
+namespace Mitternacht.Modules.Forum
 {
-    public partial class Verification
+    public partial class Forum
     {
 		[Group]
-        public class GommeTeamSyncCommands : MitternachtSubmodule<GommeTeamSyncService>
+        public class TeamRolySyncCommands : MitternachtSubmodule<TeamRoleSyncService>
         {
             private readonly DbService _db;
             private readonly ForumService _fs;
 
-            public GommeTeamSyncCommands(DbService db, ForumService fs)
+            public TeamRolySyncCommands(DbService db, ForumService fs)
             {
                 _db = db;
                 _fs = fs;

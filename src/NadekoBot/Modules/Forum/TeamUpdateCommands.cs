@@ -12,6 +12,7 @@ namespace Mitternacht.Modules.Forum
 {
     public partial class Forum
     {
+        [Group]
         public class TeamUpdateCommands : MitternachtSubmodule<TeamUpdateService>
         {
             private readonly DbService _db;
