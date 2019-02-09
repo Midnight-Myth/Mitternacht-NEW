@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Forum.Services
             _loginTask?.Dispose();
             _loginTask = Task.Run(() => {
                 Forum = new GommeHDnetForumAPI.Forum(_creds.ForumUsername, _creds.ForumPassword);
-                _log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed, ignoring verification actions")}!");
+                _log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed")}!");
             });
         }
     }
