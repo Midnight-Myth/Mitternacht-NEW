@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels;
+using GommeHDnetForumAPI.DataModels.Entities;
 using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Forum.Services
@@ -10,59 +10,54 @@ namespace Mitternacht.Modules.Forum.Services
     {
         private readonly DbService _db;
         private readonly ForumService _fs;
+        private readonly TeamUpdateService _tus;
         private readonly DiscordSocketClient _client;
-
-        private Task _timerTask;
-        private const int GommeTeamMemberCheckRepeatDelay = 5 * 60 * 1000;
-
-        public TeamRoleSyncService(DbService db, ForumService fs, DiscordSocketClient client)
+        
+        public TeamRoleSyncService(DbService db, ForumService fs, TeamUpdateService tus, DiscordSocketClient client)
         {
             _db = db;
             _fs = fs;
+            _tus = tus;
             _client = client;
 
-            _timerTask = Task.Run(async () =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        await CheckGommeTeamMembers();
-                    }
-                    catch { /* ignored */ }
-                    await Task.Delay(GommeTeamMemberCheckRepeatDelay);
-                }
-            });
+            _tus.TeamMemberAdded += OnTeamMemberAdded;
+            _tus.TeamMemberRemoved += OnTeamMemberRemoved;
         }
 
-        public async Task CheckGommeTeamMembers()
-        {
-            if (_fs.Forum == null) return;
-            var staffIds = (await _fs.Forum.GetMembersList(MembersListType.Staff)).Select(ui => ui.Id).ToList();
+        private async Task OnTeamMemberAdded(UserInfo[] userInfos)
+            => await TeamMemberRoleChange(userInfos, true);
 
+        private async Task OnTeamMemberRemoved(UserInfo[] userInfos)
+            => await TeamMemberRoleChange(userInfos, false);
+
+        private async Task TeamMemberRoleChange(UserInfo[] userInfos, bool add)
+        {
             using (var uow = _db.UnitOfWork)
             {
-                var guilds = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(sg => sg.Id).ToList()).Select(gc => (gc, guild: _client.GetGuild(gc.GuildId))).ToList();
-                foreach (var (gc, guild) in guilds)
+                var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(sg => sg.Id).ToList());
+
+                foreach (var gc in guildConfigs)
                 {
-                    if (gc.GommeTeamMemberRoleId == null) continue;
-                    var gommeTeamRole = guild.GetRole(gc.GommeTeamMemberRoleId.Value);
+                    var guild = _client.GetGuild(gc.GuildId);
+                    var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
                     if (gommeTeamRole == null) continue;
                     var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
-                    var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(gc.GuildId)
-                        .Select(vu => (ForumUserId: vu.ForumUserId, User: guild.GetUser(vu.UserId)))
-                        .Where(a => a.User != null)
-                        .ToList();
 
-                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.Any(r => r.Id == gommeTeamRole.Id) && !staffIds.Contains(a.ForumUserId)))
+                    var verifiedUsers = userInfos.Select(ui => uow.VerifiedUsers.GetVerifiedUserId(guild.Id, ui.Id)).Select(uid => uid.HasValue ? guild.GetUser(uid.Value) : null).Where(gu => gu != null).ToList();
+                    if (add)
                     {
-                        await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
-                        if (vipRole != null && user.Roles.All(r => r.Id != vipRole.Id)) await user.AddRoleAsync(vipRole).ConfigureAwait(false);
+                        foreach (var user in verifiedUsers)
+                        {
+                            await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
+                        }
                     }
-
-                    foreach (var (_, user) in verifiedUsers.Where(a => a.User.Roles.All(r => r.Id != gommeTeamRole.Id) && staffIds.Contains(a.ForumUserId)))
+                    else
                     {
-                        await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
+                        foreach (var user in verifiedUsers)
+                        {
+                            await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
+                            if (vipRole != null) await user.AddRoleAsync(vipRole).ConfigureAwait(false);
+                        }
                     }
                 }
             }
