@@ -95,14 +95,14 @@ namespace Mitternacht.Modules.Forum
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [OwnerOrGuildPermission(GuildPermission.ManageMessages)]
-            public async Task GommeTeamUpdate()
-            {
-                await Service.CheckGommeTeamMembers().ConfigureAwait(false);
-                await ConfirmLocalized("gt_update").ConfigureAwait(false);
-            }
+            //[MitternachtCommand, Usage, Description, Aliases]
+            //[RequireContext(ContextType.Guild)]
+            //[OwnerOrGuildPermission(GuildPermission.ManageMessages)]
+            //public async Task GommeTeamUpdate()
+            //{
+            //    await Service.CheckGommeTeamMembers().ConfigureAwait(false);
+            //    await ConfirmLocalized("gt_update").ConfigureAwait(false);
+            //}
         }
     }
 }
