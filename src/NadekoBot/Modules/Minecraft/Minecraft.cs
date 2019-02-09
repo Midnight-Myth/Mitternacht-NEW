@@ -8,28 +8,21 @@ using Discord.WebSocket;
 using MinecraftQuery;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Services.Impl;
+using Mitternacht.Modules.Minecraft.Services;
 
 namespace Mitternacht.Modules.Minecraft
 {
-	[Group]
-    public class Minecraft : MitternachtTopLevelModule
+    [Group]
+    public class Minecraft : MitternachtTopLevelModule<MojangApiService>
     {
-        private readonly MojangApi _mapi;
-
-        public Minecraft(MojangApiService mapis)
-        {
-            _mapi = mapis.MojangApi;
-        }
-
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         public async Task MinecraftUsernames(string username, DateTime? date = null)
         {
             try
             {
-                var accountinfo = await _mapi.GetAccountInfoAsync(username, date).ConfigureAwait(false);
-                var accountnames = await _mapi.GetAllAccountNamesAsync(accountinfo.Uuid).ConfigureAwait(false);
+                var accountinfo = await Service.MojangApi.GetAccountInfoAsync(username, date).ConfigureAwait(false);
+                var accountnames = await Service.MojangApi.GetAllAccountNamesAsync(accountinfo.Uuid).ConfigureAwait(false);
 
                 var names = accountnames.Select(kv =>
                     kv.Key == DateTime.MinValue ? $"- {kv.Value}" : $"- {kv.Value} (> {kv.Key:dd.MM.yyyy})").Reverse().ToList();
@@ -56,7 +49,7 @@ namespace Mitternacht.Modules.Minecraft
         {
             try
             {
-                var accountinfo = await _mapi.GetAccountInfoAsync(username, date).ConfigureAwait(false);
+                var accountinfo = await Service.MojangApi.GetAccountInfoAsync(username, date).ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithTitle(GetText("pinfo_title", username))
@@ -79,7 +72,7 @@ namespace Mitternacht.Modules.Minecraft
         {
             try
             {
-                var status = await _mapi.GetServiceStatusAsync().ConfigureAwait(false);
+                var status = await Service.MojangApi.GetServiceStatusAsync().ConfigureAwait(false);
                 var embed = new EmbedBuilder()
                     .WithOkColor()
                     .WithTitle(GetText("apistatus_title"))
