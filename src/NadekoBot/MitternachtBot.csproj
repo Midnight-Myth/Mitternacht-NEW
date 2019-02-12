@@ -62,14 +62,14 @@
     <PackageReference Include="Discord.Net" Version="2.0.1" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.51" />
-    <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.37.0.138" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.37.0.1469" />
-    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.37.0.1369" />
+    <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.38.0.138" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.38.0.1488" />
+    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.38.0.1369" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev002212" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-dev002212" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
