@@ -216,20 +216,7 @@ namespace Mitternacht.Services
 
 				await OnValidMessage?.Invoke(usrMsg);
 
-				//send random @here at first of april
-				var isFirstApril = !DateTime.Now.IsOtherDate(new DateTime(2018, 04, 01), ignoreYear: true);
-                if (isFirstApril)
-                {
-                    using (var uow = _db.UnitOfWork)
-                    {
-                        var bc = uow.BotConfig.GetOrCreate();
-                        if (_random.NextDouble() < bc.FirstAprilHereChance)
-                            await channel.SendMessageAsync($"April April @here! Ich habe auf die Nachricht von {usrMsg.Author.Mention} reagiert.").ConfigureAwait(false);
-                    }
-                }
-                
-
-                await TryRunCommand(guild, channel, usrMsg);
+				await TryRunCommand(guild, channel, usrMsg);
             }
             catch (Exception ex)
             {
