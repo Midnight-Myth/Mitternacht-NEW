@@ -39,14 +39,9 @@ namespace Mitternacht.Services
         public string DefaultPrefix { get; private set; }
         private ConcurrentDictionary<ulong, string> Prefixes { get; }
 
-        public event Func<IUserMessage, CommandInfo, Task> CommandExecuted = delegate { return Task.CompletedTask; };
-
-        public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored = delegate
-        {
-            return Task.CompletedTask;
-        };
-
-        public event Func<IUserMessage, Task> OnMessageNoTrigger = delegate { return Task.CompletedTask; };
+        public event Func<IUserMessage, CommandInfo, Task>         CommandExecuted    = delegate { return Task.CompletedTask; };
+        public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored     = delegate { return Task.CompletedTask; };
+        public event Func<IUserMessage, Task>                      OnMessageNoTrigger = delegate { return Task.CompletedTask; };
 
         //userid/msg count
         public ConcurrentDictionary<ulong, uint> UserMessagesSent { get; } = new ConcurrentDictionary<ulong, uint>();
