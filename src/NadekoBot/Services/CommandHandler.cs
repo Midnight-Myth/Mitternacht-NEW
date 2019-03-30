@@ -39,14 +39,10 @@ namespace Mitternacht.Services
         public string DefaultPrefix { get; private set; }
         private ConcurrentDictionary<ulong, string> Prefixes { get; }
 
-        public event Func<IUserMessage, CommandInfo, Task> CommandExecuted = delegate { return Task.CompletedTask; };
-
-        public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored = delegate
-        {
-            return Task.CompletedTask;
-        };
-
-        public event Func<IUserMessage, Task> OnMessageNoTrigger = delegate { return Task.CompletedTask; };
+		public event Func<SocketUserMessage, Task>                 OnValidMessage     = delegate { return Task.CompletedTask; };
+        public event Func<IUserMessage, CommandInfo, Task>         CommandExecuted    = delegate { return Task.CompletedTask; };
+        public event Func<CommandInfo, ITextChannel, string, Task> CommandErrored     = delegate { return Task.CompletedTask; };
+        public event Func<IUserMessage, Task>                      OnMessageNoTrigger = delegate { return Task.CompletedTask; };
 
         //userid/msg count
         public ConcurrentDictionary<ulong, uint> UserMessagesSent { get; } = new ConcurrentDictionary<ulong, uint>();
@@ -209,8 +205,8 @@ namespace Mitternacht.Services
                 if (!(msg is SocketUserMessage usrMsg))
                     return;
 
-                // track how many messagges each user is sending
-                UserMessagesSent.AddOrUpdate(usrMsg.Author.Id, 1, (key, old) => ++old);
+				// track how many messagges each user is sending
+				UserMessagesSent.AddOrUpdate(usrMsg.Author.Id, 1, (key, old) => ++old);
 
                 var channel = msg.Channel;
                 var guild = (msg.Channel as SocketTextChannel)?.Guild;
@@ -218,20 +214,9 @@ namespace Mitternacht.Services
                 if (_bcp.BotConfig.DmCommandsOwnerOnly && !_bc.IsOwner(msg.Author) && guild == null)
                     return;
 
-                //send random @here at first of april
-                var isFirstApril = !DateTime.Now.IsOtherDate(new DateTime(2018, 04, 01), ignoreYear: true);
-                if (isFirstApril)
-                {
-                    using (var uow = _db.UnitOfWork)
-                    {
-                        var bc = uow.BotConfig.GetOrCreate();
-                        if (_random.NextDouble() < bc.FirstAprilHereChance)
-                            await channel.SendMessageAsync($"April April @here! Ich habe auf die Nachricht von {usrMsg.Author.Mention} reagiert.").ConfigureAwait(false);
-                    }
-                }
-                
+				await OnValidMessage?.Invoke(usrMsg);
 
-                await TryRunCommand(guild, channel, usrMsg);
+				await TryRunCommand(guild, channel, usrMsg);
             }
             catch (Exception ex)
             {

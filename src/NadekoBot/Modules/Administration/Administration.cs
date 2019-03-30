@@ -92,7 +92,41 @@ namespace Mitternacht.Modules.Administration
             }
         }
 
-        [MitternachtCommand, Usage, Description, Aliases]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
+		[RequireUserPermission(GuildPermission.Administrator)]
+		[RequireBotPermission(GuildPermission.ManageRoles)]
+		public async Task AddRoleForAll(IRole role) {
+			try {
+				var users = await Context.Guild.GetUsersAsync().ConfigureAwait(false);
+				foreach (var user in users) {
+					await user.AddRoleAsync(role).ConfigureAwait(false);
+				}
+
+				await ReplyConfirmLocalized("addroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
+			} catch (Exception) {
+				await ReplyErrorLocalized("addroleforall_error").ConfigureAwait(false);
+			}
+		}
+
+		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
+		[RequireUserPermission(GuildPermission.Administrator)]
+		[RequireBotPermission(GuildPermission.ManageRoles)]
+		public async Task RemoveRoleForAll(IRole role) {
+			try {
+				var users = await Context.Guild.GetUsersAsync().ConfigureAwait(false);
+				foreach (var user in users) {
+					await user.RemoveRoleAsync(role).ConfigureAwait(false);
+				}
+
+				await ReplyConfirmLocalized("removeroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
+			} catch (Exception) {
+				await ReplyErrorLocalized("removeroleforall_error").ConfigureAwait(false);
+			}
+		}
+
+		[MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         [RequireBotPermission(GuildPermission.ManageRoles)]
