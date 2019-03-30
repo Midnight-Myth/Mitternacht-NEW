@@ -120,9 +120,9 @@ namespace Mitternacht.Modules.Administration
 					await user.RemoveRoleAsync(role).ConfigureAwait(false);
 				}
 
-				await ReplyConfirmLocalized("addroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
+				await ReplyConfirmLocalized("removeroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
 			} catch (Exception) {
-				await ReplyErrorLocalized("addroleforall_error").ConfigureAwait(false);
+				await ReplyErrorLocalized("removeroleforall_error").ConfigureAwait(false);
 			}
 		}
 
