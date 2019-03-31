@@ -3742,19 +3742,19 @@
 		"aliases": [ "bdme" ],
 		"desc": "Zeigt an oder legt fest, ob der Nutzer Geburtstagsnachrichten bekommt.",
 		"usage": "`{0}birthdaymessageevent [true|false]`"
+	},
+	{
+		"name": "addroleforall",
+		"cmd": "addroleforall",
+		"aliases": [],
+		"desc": "Fügt allen Benutzern auf diesem Server die angegebene Rolle hinzu.",
+		"usage": "`{0}addroleforall <rolle>`"
+	},
+	{
+		"name": "removeroleforall",
+		"cmd": "removeroleforall",
+		"aliases": [],
+		"desc": "Entfernt die angegebene Rolle von allen Benutzern auf diesem Server.",
+		"usage": "`{0}removeroleforall <rolle>`"
 	}
-	//{
-	//	"name": "addroleforall",
-	//	"cmd": "addroleforall",
-	//	"aliases": [],
-	//	"desc": "Fügt allen Benutzern auf diesem Server die angegebene Rolle hinzu.",
-	//	"usage": "`{0}addroleforall <rolle>`"
-	//},
-	//{
-	//	"name": "removeroleforall",
-	//	"cmd": "removeroleforall",
-	//	"aliases": [],
-	//	"desc": "Entfernt die angegebene Rolle von allen Benutzern auf diesem Server.",
-	//	"usage": "`{0}removeroleforall <rolle>`"
-	//}
 ]
