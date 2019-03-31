@@ -62,6 +62,11 @@ namespace Mitternacht.Modules
         protected string GetText(string key, params object[] replacements) =>
             Strings.GetText(key, CultureInfo, LowerModuleTypeName, replacements);
 
+		public Task<IUserMessage> ReplyLocalized(string textKey, params object[] replacements) {
+			var text = GetText(textKey, replacements);
+			return Context.Channel.SendMessageAsync(text);
+		}
+
         public Task<IUserMessage> ErrorLocalized(string textKey, params object[] replacements)
         {
             var text = GetText(textKey, replacements);
