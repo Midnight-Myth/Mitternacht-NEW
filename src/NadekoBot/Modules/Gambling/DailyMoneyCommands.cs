@@ -24,7 +24,6 @@ namespace Mitternacht.Modules.Gambling
             private readonly CurrencyService _currency;
 
             private string CurrencyName => _bc.BotConfig.CurrencyName;
-            //private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
             private string CurrencySign => _bc.BotConfig.CurrencySign;
 
             public DailyMoneyCommands(IBotConfigProvider bc, DbService db, CurrencyService currency)
@@ -51,8 +50,8 @@ namespace Mitternacht.Modules.Gambling
                         var userRoles = userRolesAll.Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
                         var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderByDescending(m => m.Priority).ToList();
 
-                        if (!roleMoneys.Any())
-                            await Context.Channel.SendMessageAsync(GetText("dm_no_role", Context.User.Mention)).ConfigureAwait(false);
+						if (!roleMoneys.Any())
+							await ReplyLocalized("dm_no_role", Context.User.Mention).ConfigureAwait(false);
                         else
                         {
                             var rm = roleMoneys
@@ -64,12 +63,12 @@ namespace Mitternacht.Modules.Gambling
                             await _currency.AddAsync(user, $"Daily Reward ({role.Name})", rm.Money, false).ConfigureAwait(false);
                             uow.DailyMoneyStats.Add(user.Id, uow.DailyMoney.GetUserDate(user.Id), rm.Money);
 
-                            await Context.Channel.SendMessageAsync(GetText("dm_received", Context.User.Mention, role.Name, rm.Money, CurrencySign)).ConfigureAwait(false);
+							await uow.CompleteAsync().ConfigureAwait(false);
+
+							await ReplyLocalized("dm_received", Context.User.Mention, role.Name, rm.Money, CurrencySign).ConfigureAwait(false);
                         }
                     }
-                    else await Context.Channel.SendMessageAsync(GetText("dm_already_received", Context.User.Mention)).ConfigureAwait(false);
-
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    else await ReplyLocalized("dm_already_received", Context.User.Mention).ConfigureAwait(false);
                 }
             }
 
@@ -84,13 +83,14 @@ namespace Mitternacht.Modules.Gambling
                     uow.RoleMoney.SetPriority(role.Id, priority);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(GetText("dm_role_set", role.Name, money, CurrencySign, priority)).ConfigureAwait(false);
+                await ReplyLocalized("dm_role_set", role.Name, money, CurrencySign, priority).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOnly]
-            public async Task SetRoleMoney(IRole role, long money) => await SetRoleMoney(role, money, 0).ConfigureAwait(false);
+            public async Task SetRoleMoney(IRole role, long money)
+				=> await SetRoleMoney(role, money, 0).ConfigureAwait(false);
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Gambling
                     wasReset = uow.DailyMoney.TryResetReceived(user.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(GetText(wasReset ? "dm_again" : "dm_not_received", user.Username)).ConfigureAwait(false);
+                await ReplyLocalized(wasReset ? "dm_again" : "dm_not_received", user.Username).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -118,7 +118,7 @@ namespace Mitternacht.Modules.Gambling
                     removed = uow.RoleMoney.Remove(role.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(GetText(removed ? "dm_role_removed" : "dm_role_not_set", role.Name)).ConfigureAwait(false);
+                await ReplyLocalized(removed ? "dm_role_removed" : "dm_role_not_set", role.Name).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Gambling
                     if (exists) uow.RoleMoney.SetPriority(role.Id, priority);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await Context.Channel.SendMessageAsync(GetText(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority)).ConfigureAwait(false);
+                await ReplyLocalized(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -194,9 +194,19 @@ namespace Mitternacht.Modules.Gambling
                 }
             }
 
-            [MitternachtCommand, Usage, Description, Aliases]
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[Priority(0)]
+			public async Task DailyMoneyStats() {
+				if(Context.User is IGuildUser user){
+					await DailyMoneyStats(user).ConfigureAwait(false);
+				}
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOrGuildPermission(GuildPermission.Administrator)]
+			[Priority(1)]
             public async Task DailyMoneyStats(params IGuildUser[] users)
             {
                 users = users.Length == 0 ? new []{(IGuildUser)Context.User} : users;
@@ -207,7 +217,7 @@ namespace Mitternacht.Modules.Gambling
                         .GetAllUser(users.Select(gu => gu.Id).ToArray())
                         .GroupBy(dms => dms.UserId)
                         .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.UnixTimestamp(), money = dms.MoneyReceived}).ToArray());
-                    await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm}_dailymoney-stats.json").ConfigureAwait(false);
+                    await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_dailymoney-stats.json").ConfigureAwait(false);
                 }
             }
 
@@ -222,7 +232,7 @@ namespace Mitternacht.Modules.Gambling
                         .GetAll()
                         .GroupBy(dms => dms.UserId)
                         .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.UnixTimestamp(), money = dms.MoneyReceived}).ToArray());
-                    await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm}_dailymoney-stats.json").ConfigureAwait(false);
+                    await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_dailymoney-stats.json").ConfigureAwait(false);
                 }
             }
         }
