@@ -77,32 +77,32 @@ namespace Mitternacht.Modules.Administration.Services
                 }
             }, null, TimeSpan.FromSeconds(15), TimeSpan.FromSeconds(15));
 
-            //_client.MessageReceived += _client_MessageReceived;
-            _client.MessageUpdated += _client_MessageUpdated;
-            _client.MessageDeleted += _client_MessageDeleted;
-            _client.UserBanned += _client_UserBanned;
-            _client.UserUnbanned += _client_UserUnbanned;
-            _client.UserJoined += _client_UserJoined;
-            _client.UserLeft += _client_UserLeft;
-            //_client.UserPresenceUpdated += _client_UserPresenceUpdated;
-            _client.UserVoiceStateUpdated += _client_UserVoiceStateUpdated;
-            _client.UserVoiceStateUpdated += _client_UserVoiceStateUpdated_TTS;
-            _client.GuildMemberUpdated += _client_GuildUserUpdated;
-#if !GLOBAL_NADEKO
-            _client.UserUpdated += _client_UserUpdated;
+			//_client.MessageReceived      += _client_MessageReceived;
+			_client.MessageUpdated         += _client_MessageUpdated;
+            _client.MessageDeleted         += _client_MessageDeleted;
+            _client.UserBanned             += _client_UserBanned;
+            _client.UserUnbanned           += _client_UserUnbanned;
+            _client.UserJoined             += _client_UserJoined;
+            _client.UserLeft               += _client_UserLeft;
+            //_client.UserPresenceUpdated  += _client_UserPresenceUpdated;
+            _client.UserVoiceStateUpdated  += _client_UserVoiceStateUpdated;
+            _client.UserVoiceStateUpdated  += _client_UserVoiceStateUpdated_TTS;
+            _client.GuildMemberUpdated     += _client_GuildUserUpdated;
+#if !GLOBAL_NADEKO						   
+            _client.UserUpdated            += _client_UserUpdated;
 #endif
-            _client.ChannelCreated += _client_ChannelCreated;
-            _client.ChannelDestroyed += _client_ChannelDestroyed;
-            _client.ChannelUpdated += _client_ChannelUpdated;
-
-            mute.UserMuted += MuteCommands_UserMuted;
-            mute.UserUnmuted += MuteCommands_UserUnmuted;
-
+            _client.ChannelCreated         += _client_ChannelCreated;
+            _client.ChannelDestroyed       += _client_ChannelDestroyed;
+            _client.ChannelUpdated         += _client_ChannelUpdated;
+			
+            mute.UserMuted                 += MuteCommands_UserMuted;
+            mute.UserUnmuted               += MuteCommands_UserUnmuted;
+			
             prot.OnAntiProtectionTriggered += TriggeredAntiProtection;
         }
 
-        private string GetText(IGuild guild, string key, params object[] replacements) =>
-            _strings.GetText(key, guild.Id, "Administration".ToLowerInvariant(), replacements);
+        private string GetText(IGuild guild, string key, params object[] replacements)
+			=> _strings.GetText(key, guild.Id, "administration", replacements);
 
         private Task _client_UserUpdated(SocketUser before, SocketUser uAfter)
         {
