@@ -96,7 +96,7 @@ namespace Mitternacht.Modules.Administration
 		[RequireContext(ContextType.Guild)]
 		[RequireUserPermission(GuildPermission.Administrator)]
 		[RequireBotPermission(GuildPermission.ManageRoles)]
-		public async Task AddRoleForAll(IRole role) {
+		public async Task AddRoleForAll([Remainder] IRole role) {
 			try {
 				var users = await Context.Guild.GetUsersAsync().ConfigureAwait(false);
 				foreach (var user in users) {
@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Administration
 		[RequireContext(ContextType.Guild)]
 		[RequireUserPermission(GuildPermission.Administrator)]
 		[RequireBotPermission(GuildPermission.ManageRoles)]
-		public async Task RemoveRoleForAll(IRole role) {
+		public async Task RemoveRoleForAll([Remainder] IRole role) {
 			try {
 				var users = await Context.Guild.GetUsersAsync().ConfigureAwait(false);
 				foreach (var user in users) {
