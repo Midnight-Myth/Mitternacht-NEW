@@ -194,9 +194,19 @@ namespace Mitternacht.Modules.Gambling
                 }
             }
 
-            [MitternachtCommand, Usage, Description, Aliases]
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[Priority(0)]
+			public async Task DailyMoneyStats() {
+				if(Context.User is IGuildUser user){
+					await DailyMoneyStats(user).ConfigureAwait(false);
+				}
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [OwnerOrGuildPermission(GuildPermission.Administrator)]
+			[Priority(1)]
             public async Task DailyMoneyStats(params IGuildUser[] users)
             {
                 users = users.Length == 0 ? new []{(IGuildUser)Context.User} : users;
