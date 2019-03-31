@@ -101,6 +101,7 @@ namespace Mitternacht.Modules.Administration
 				var users = await Context.Guild.GetUsersAsync().ConfigureAwait(false);
 				foreach (var user in users) {
 					await user.AddRoleAsync(role).ConfigureAwait(false);
+					await Task.Delay(50);
 				}
 
 				await ReplyConfirmLocalized("addroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
@@ -118,6 +119,7 @@ namespace Mitternacht.Modules.Administration
 				var users = await Context.Guild.GetUsersAsync().ConfigureAwait(false);
 				foreach (var user in users) {
 					await user.RemoveRoleAsync(role).ConfigureAwait(false);
+					await Task.Delay(50);
 				}
 
 				await ReplyConfirmLocalized("removeroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
