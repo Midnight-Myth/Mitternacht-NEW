@@ -106,7 +106,7 @@ namespace Mitternacht.Modules.Administration
 
 				await ReplyConfirmLocalized("addroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
 			} catch (Exception) {
-				await ReplyErrorLocalized("addroleforall_error").ConfigureAwait(false);
+				await ReplyErrorLocalized("addroleforall_error", Format.Bold(role.Name)).ConfigureAwait(false);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace Mitternacht.Modules.Administration
 
 				await ReplyConfirmLocalized("removeroleforall", Format.Bold(role.Name)).ConfigureAwait(false);
 			} catch (Exception) {
-				await ReplyErrorLocalized("removeroleforall_error").ConfigureAwait(false);
+				await ReplyErrorLocalized("removeroleforall_error", Format.Bold(role.Name)).ConfigureAwait(false);
 			}
 		}
 
