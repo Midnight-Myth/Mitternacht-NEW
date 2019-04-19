@@ -7,16 +7,15 @@ using Mitternacht.Common.Collections;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Modules.Verification.Services
-{
-    public class VerificationService : INService
+namespace Mitternacht.Modules.Verification.Services {
+	public class VerificationService : INService
     {
         private readonly DbService _db;
 
         private readonly Random _rnd = new Random();
         public readonly ConcurrentHashSet<ValidationKey> ValidationKeys = new ConcurrentHashSet<ValidationKey>();
 
-        //public event Func<SocketGuildUser, UserInfo, EventTrigger> UserVerified;
+        public event Func<IGuildUser, long, Task> UserVerified = (user, forumUserId) => Task.CompletedTask;
         //public event Func<SocketGuildUser, UserInfo, EventTrigger> UserUnverified;
 
         private const int VerificationKeyValidationTime = 60 * 60 * 1000;
@@ -117,11 +116,14 @@ namespace Mitternacht.Modules.Verification.Services
                 var role = roleid != null ? guild.GetRole(roleid.Value) : null;
                 if (role != null) await user.AddRoleAsync(role).ConfigureAwait(false);
                 await uow.CompleteAsync().ConfigureAwait(false);
-                return true;
             }
-        }
 
-        public string[] GetAdditionalVerificationUsers(ulong guildId)
+			await UserVerified.Invoke(user, forumUserId).ConfigureAwait(false);
+
+			return true;
+		}
+
+		public string[] GetAdditionalVerificationUsers(ulong guildId)
         {
             using (var uow = _db.UnitOfWork)
             {
