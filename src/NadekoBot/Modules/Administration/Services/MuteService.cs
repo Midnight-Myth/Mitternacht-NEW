@@ -199,9 +199,9 @@ namespace Mitternacht.Modules.Administration.Services
             return muteRole;
         }
 
-        public async Task TimedMute(IGuildUser user, TimeSpan after)
+        public async Task TimedMute(IGuildUser user, TimeSpan after, MuteType muteType)
         {
-            await MuteUser(user).ConfigureAwait(false); // mute the user. This will also remove any previous unmute timers
+            await MuteUser(user, muteType).ConfigureAwait(false); // mute the user. This will also remove any previous unmute timers
             using (var uow = _db.UnitOfWork)
             {
                 var config = uow.GuildConfigs.For(user.GuildId, set => set.Include(x => x.UnmuteTimers));
@@ -209,7 +209,7 @@ namespace Mitternacht.Modules.Administration.Services
                 {
                     UserId = user.Id,
                     UnmuteAt = DateTime.UtcNow + after,
-                }); // add teh unmute timer to the database
+                }); // add the unmute timer to the database
                 uow.Complete();
             }
             StartUnmuteTimer(user.GuildId, user.Id, after); // start the timer

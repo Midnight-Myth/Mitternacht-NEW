@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Administration
             {
                 try
                 {
-                    await Service.MuteUser(user).ConfigureAwait(false);
+                    await Service.MuteUser(user, MuteType.Chat).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_muted", Format.Bold(user.ToString())).ConfigureAwait(false);
                 }
                 catch(Exception e)
@@ -102,7 +102,7 @@ namespace Mitternacht.Modules.Administration
                 var muteTime = days * 24 * 60 + hours * 60 + minutes;
                 try
                 {
-                    await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
+                    await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime), MuteType.Chat).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
                 }
                 catch (Exception e)
