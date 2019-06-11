@@ -126,8 +126,9 @@ namespace Mitternacht.Modules.Level
 
         [MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
+		[Priority(1)]
         [OwnerOnly]
-        public async Task AddXp(int xp, [Remainder] IUser user = null)
+		public async Task AddXp(int xp, [Remainder] IUser user = null)
         {
             user = user ?? Context.User;
 
@@ -139,7 +140,25 @@ namespace Mitternacht.Modules.Level
             }
         }
 
-        [MitternachtCommand, Usage, Description, Aliases]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
+		[Priority(0)]
+		[OwnerOnly]
+		public async Task AddXp(int xp, ulong userId) {
+			var user = await Context.Guild.GetUserAsync(userId);
+			if(user != null) {
+				await AddXp(xp, user).ConfigureAwait(false);
+				return;
+			}
+
+			using(var uow = _db.UnitOfWork) {
+				uow.LevelModel.AddXp(Context.Guild.Id, userId, xp, Context.Channel.Id);
+				await ConfirmLocalized("addxp", xp, userId.ToString()).ConfigureAwait(false);
+				await uow.CompleteAsync().ConfigureAwait(false);
+			}
+		}
+
+		[MitternachtCommand, Usage, Description, Aliases]
         [RequireContext(ContextType.Guild)]
         [Priority(1)]
         [OwnerOnly]
