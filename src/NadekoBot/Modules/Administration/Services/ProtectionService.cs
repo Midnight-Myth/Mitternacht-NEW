@@ -136,7 +136,7 @@ namespace Mitternacht.Modules.Administration.Services
                             if (muteTime <= 0)
                                 await _mute.MuteUser(gu).ConfigureAwait(false);
                             else
-                                await _mute.TimedMute(gu, TimeSpan.FromSeconds(muteTime)).ConfigureAwait(false);
+                                await _mute.TimedMute(gu, TimeSpan.FromSeconds(muteTime), MuteType.Chat).ConfigureAwait(false);
                         }
                         catch (Exception ex) { _log.Warn(ex, "I can't apply punishement"); }
                         break;

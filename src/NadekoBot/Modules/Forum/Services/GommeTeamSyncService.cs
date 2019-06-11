@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Discord.WebSocket;
+using GommeHDnetForumAPI.DataModels;
 using GommeHDnetForumAPI.DataModels.Entities;
+using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Forum.Services
@@ -13,7 +16,7 @@ namespace Mitternacht.Modules.Forum.Services
         private readonly TeamUpdateService _tus;
         private readonly DiscordSocketClient _client;
         
-        public TeamRoleSyncService(DbService db, ForumService fs, TeamUpdateService tus, DiscordSocketClient client)
+        public TeamRoleSyncService(DbService db, ForumService fs, TeamUpdateService tus, DiscordSocketClient client, VerificationService vs)
         {
             _db = db;
             _fs = fs;
@@ -22,7 +25,21 @@ namespace Mitternacht.Modules.Forum.Services
 
             _tus.TeamMemberAdded += OnTeamMemberAdded;
             _tus.TeamMemberRemoved += OnTeamMemberRemoved;
+			vs.UserVerified += OnUserVerified;
         }
+
+		private async Task OnUserVerified(IGuildUser user, long forumUserId) {
+			using(var uow = _db.UnitOfWork) {
+				var gc = uow.GuildConfigs.For(user.GuildId);
+				var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? user.Guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
+				if(gommeTeamRole != null) {
+					var staffList = await _fs.Forum.GetMembersList(MembersListType.Staff);
+					if(staffList.Any(s => s.Id == forumUserId)) {
+						await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
+					}
+				}
+			}
+		}
 
         private async Task OnTeamMemberAdded(UserInfo[] userInfos)
             => await TeamMemberRoleChange(userInfos, true);
