@@ -155,7 +155,7 @@ namespace Mitternacht.Modules.Verification.Common {
 						await ErrorAsync("message_no_botkey_try_again");
 						return;
 					}
-					if(message.Contains(GuildUser.ToString()) || message.Contains(GuildUser.Id.ToString())) {
+					if(!message.Contains(GuildUser.ToString()) && !message.Contains(GuildUser.Id.ToString())) {
 						await ErrorAsync("message_no_discorduser_try_again");
 						return;
 					}
