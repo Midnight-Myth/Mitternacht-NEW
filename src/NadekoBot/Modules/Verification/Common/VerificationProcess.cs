@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Verification.Common {
 		private async Task Step2_ReadPrivateForumMessage(SocketMessage msg) {
 			if(_fs.LoggedIn) {
 				if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
-					var conversations = await _fs.Forum.GetConversations(startPage: 0, pageCount: 2);
+					var conversations = await _fs.Forum.GetConversations(startPage: 1, pageCount: 2);
 					var conversation = conversations.FirstOrDefault(c => c.Author.Id == ForumUserId);
 
 					if(conversation is null) {
