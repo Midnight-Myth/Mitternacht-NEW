@@ -194,6 +194,7 @@ namespace Mitternacht.Modules.Verification.Common {
 				try {
 					await _verificationService.SetVerified(GuildUser, ForumUserId);
 					await EmbedAsync("process_completed");
+					_verificationService.EndVerification(this);
 				} catch(UserCannotVerifyException) {
 					await ErrorAsync("user_cannot_verify");
 				}
