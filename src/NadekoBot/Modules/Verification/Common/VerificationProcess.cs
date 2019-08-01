@@ -50,7 +50,6 @@ namespace Mitternacht.Modules.Verification.Common {
 
 			await UserChannel.EmbedAsync(eb);
 
-			_client.MessageReceived += ReceiveAbort;
 			_client.MessageReceived += Step1_ReceiveForumName;
 		}
 
@@ -58,25 +57,26 @@ namespace Mitternacht.Modules.Verification.Common {
 			_client.MessageReceived -= Step1_ReceiveForumName;
 			_client.MessageReceived -= Step2_ReadPrivateForumMessage;
 			_client.MessageReceived -= Step3_ReadDiscordBotkey;
-			_client.MessageReceived -= ReceiveAbort;
 		}
 
 		public void Dispose()
 			=> Stop();
 
-		private async Task ReceiveAbort(SocketMessage msg) {
+		private async Task<bool> ReceiveAbort(SocketMessage msg) {
 			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 				if(msg.Content.Equals(AbortString, StringComparison.OrdinalIgnoreCase)) {
 					Stop();
 
 					await ConfirmAsync("process_aborted");
 					_verificationService.EndVerification(this);
+					return true;
 				}
 			}
+			return false;
 		}
 
 		private async Task Step1_ReceiveForumName(SocketMessage msg) {
-			if(_fs.LoggedIn) {
+			if(!await ReceiveAbort(msg) && _fs.LoggedIn) {
 				if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 					var forumname = msg.Content.Trim();
 					UserInfo forumUser;
@@ -131,7 +131,7 @@ namespace Mitternacht.Modules.Verification.Common {
 		}
 
 		private async Task Step2_ReadPrivateForumMessage(SocketMessage msg) {
-			if(_fs.LoggedIn) {
+			if(!await ReceiveAbort(msg) && _fs.LoggedIn) {
 				if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 					var conversations = await _fs.Forum.GetConversations(startPage: 1, pageCount: 2);
 					var conversation = conversations.FirstOrDefault(c => c.Author.Id == ForumUserId);
@@ -184,7 +184,7 @@ namespace Mitternacht.Modules.Verification.Common {
 		}
 
 		private async Task Step3_ReadDiscordBotkey(SocketMessage msg) {
-			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
+			if(!await ReceiveAbort(msg) && msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 				var keyString = VerificationKeyManager.GetKeyString(GuildUser.GuildId, GuildUser.Id, ForumUserId, VerificationKeyScope.Discord);
 				if(!msg.Content.Equals(keyString)) {
 					await ErrorAsync("dm_no_botkey");
