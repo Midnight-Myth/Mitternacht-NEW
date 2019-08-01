@@ -167,7 +167,13 @@ namespace Mitternacht.Modules.Administration
                         case LogCommandService.LogType.VoicePresenceTTS:
                             channelId = logSetting.LogVoicePresenceTTSId = (logSetting.LogVoicePresenceTTSId == null ? channel.Id : default(ulong?));
                             break;
-                    }
+						case LogCommandService.LogType.VerificationSteps:
+							channelId = logSetting.VerificationSteps = logSetting.VerificationSteps == null ? channel.Id : default(ulong?);
+							break;
+						case LogCommandService.LogType.VerificationMessages:
+							channelId = logSetting.VerificationMessages = logSetting.VerificationMessages == null ? channel.Id : default(ulong?);
+							break;
+					}
 
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }

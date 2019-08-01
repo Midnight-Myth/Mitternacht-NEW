@@ -20,6 +20,8 @@ namespace Mitternacht.Modules.Verification.Services {
 		private readonly ForumService _fs;
 
 		public event Func<IGuildUser, long, Task> UserVerified = (user, forumUserId) => Task.CompletedTask;
+		public event Func<VerificationProcess, VerificationStep, Task> VerificationStep = (vp, step) => Task.CompletedTask;
+		public event Func<VerificationProcess, SocketMessage, Task> VerificationMessage = (vp, msg) => Task.CompletedTask;
 		//public event Func<SocketGuildUser, UserInfo, EventTrigger> UserUnverified;
 
 		private readonly ConcurrentHashSet<VerificationProcess> VerificationProcesses = new ConcurrentHashSet<VerificationProcess>();
@@ -135,5 +137,11 @@ namespace Mitternacht.Modules.Verification.Services {
 				await uow.CompleteAsync();
 			}
 		}
+
+		public async Task InvokeVerificationStep(VerificationProcess process, VerificationStep step)
+			=> await VerificationStep.Invoke(process, step).ConfigureAwait(false);
+
+		public async Task InvokeVerificationMessage(VerificationProcess process, SocketMessage msg)
+			=> await VerificationMessage.Invoke(process, msg).ConfigureAwait(false);
 	}
 }
