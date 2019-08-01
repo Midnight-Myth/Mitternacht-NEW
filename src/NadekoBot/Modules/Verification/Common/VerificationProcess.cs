@@ -40,12 +40,15 @@ namespace Mitternacht.Modules.Verification.Common {
 		public async Task Start() {
 			UserChannel = await GuildUser.GetOrCreateDMChannelAsync();
 
+			var eb = new EmbedBuilder().WithOkColor();
 			//verification process intro
-			await EmbedAsync("welcome_to_verification");
-			await EmbedAsync("why_do_we_need_verification");
-
+			eb.AddField(GetText("welcome_to_verification_title"), GetText("welcome_to_verification_text", AbortString));
+			eb.AddField(GetText("why_do_we_need_verification_title"), GetText("why_do_we_need_verification_text"));
+			
 			//Step 1 - forum name input
-			await EmbedAsync("write_your_forumname");
+			eb.AddField(GetText("write_your_forumname_title"), GetText("write_your_forumname_text"));
+
+			await UserChannel.EmbedAsync(eb);
 
 			_client.MessageReceived += ReceiveAbort;
 			_client.MessageReceived += Step1_ReceiveForumName;
@@ -62,7 +65,7 @@ namespace Mitternacht.Modules.Verification.Common {
 			=> Stop();
 
 		private async Task ReceiveAbort(SocketMessage msg) {
-			if(msg.Channel == UserChannel) {
+			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 				if(msg.Content.Equals(AbortString, StringComparison.OrdinalIgnoreCase)) {
 					Stop();
 
@@ -74,7 +77,7 @@ namespace Mitternacht.Modules.Verification.Common {
 
 		private async Task Step1_ReceiveForumName(SocketMessage msg) {
 			if(_fs.LoggedIn) {
-				if(msg.Channel == UserChannel) {
+				if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 					var forumname = msg.Content.Trim();
 					UserInfo forumUser;
 
@@ -85,6 +88,11 @@ namespace Mitternacht.Modules.Verification.Common {
 						return;
 					} catch(UserProfileAccessException) {
 						await ErrorAsync("forumaccount_not_viewable_try_again");
+						return;
+					}
+
+					if(forumUser.Id == _fs.Forum.SelfUser.Id) {
+						await ErrorAsync("forumaccount_is_self_try_again");
 						return;
 					}
 
@@ -124,7 +132,7 @@ namespace Mitternacht.Modules.Verification.Common {
 
 		private async Task Step2_ReadPrivateForumMessage(SocketMessage msg) {
 			if(_fs.LoggedIn) {
-				if(msg.Channel == UserChannel) {
+				if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 					var conversations = await _fs.Forum.GetConversations(startPage: 0, pageCount: 2);
 					var conversation = conversations.FirstOrDefault(c => c.Author.Id == ForumUserId);
 
@@ -176,7 +184,7 @@ namespace Mitternacht.Modules.Verification.Common {
 		}
 
 		private async Task Step3_ReadDiscordBotkey(SocketMessage msg) {
-			if(msg.Channel == UserChannel) {
+			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
 				var keyString = VerificationKeyManager.GetKeyString(GuildUser.GuildId, GuildUser.Id, ForumUserId, VerificationKeyScope.Discord);
 				if(!msg.Content.Equals(keyString)) {
 					await ErrorAsync("dm_no_botkey");
