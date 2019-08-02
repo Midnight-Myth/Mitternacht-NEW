@@ -108,7 +108,7 @@ namespace Mitternacht.Modules.Verification.Common {
 						ulong? passwordChannelId;
 						using(var uow = _db.UnitOfWork) {
 							if(uow.VerifiedUsers.IsForumUserVerified(GuildUser.GuildId, forumUser.Id)) {
-								await ErrorAsync("already_verified_try_again");
+								await ErrorAsync("forumaccount_already_verified_try_again");
 								return;
 							}
 

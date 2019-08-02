@@ -991,7 +991,7 @@
   "verification_why_do_we_need_verification_text": "Durch die Verifizierung speichere ich eine Verknüpfung zwischen deinem verifizierten Forum- und Discordaccount. Ein verifizierter Forumaccount ist dank eines System von GommeHDnet mit deinem Minecraftaccount verknüpft. Das ermöglicht es, die Plauderkonfi von Spammern freizuhalten.",
   "verification_write_your_forumname_title": "Schritt 1/3 - Forumnamen eingeben",
   "verification_write_your_forumname_text": "Bitte sende mir deinen kompletten Forumnamen oder die ID deines Forumaccounts.",
-  "verification_forumaccount_already_verified_try_again": "Dieser Forumaccount ist schon verifiziert. Bitte überprüfe deine Eingabe und versuche es nochmal.",
+  "verification_forumaccount_already_verified_try_again": "Dieser Forumaccount wurde schon erfolgreich für die Verifizierung benutzt. Bitte überprüfe deine Eingabe und versuche es nochmal.",
   "verification_forumaccount_not_verified_try_again": "Die Verifizierung mit diesem Forumaccount ist nicht möglich. Bitte verbinde ihn mit deinem Minecraftaccount und sende mir den Forumnamen danach nochmal.",
   "verification_forumaccount_not_found_try_again": "Zu `{0}` konnte kein Forumaccount gefunden werden. Bitte überprüfe deine Eingabe und versuche es nochmal.",
   "verification_forumaccount_not_viewable_try_again": "Das Profil des angegebenen Forumaccounts ist nicht sichtbar. Bitte überprüfe die Einstellungen und versuch es nochmal.",
