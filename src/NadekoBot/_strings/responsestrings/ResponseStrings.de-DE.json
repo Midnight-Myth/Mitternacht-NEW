@@ -374,7 +374,7 @@
   "gambling_dice_rolled": "würfelte {0}",
   "gambling_dice_rolled_num": "Würfel gerollt: {0}",
   "gambling_divorces": "Scheidungen",
-  "gambling_dm_again": "{0} kann seinen täglichen Anteil nochmal abholen.",
+  "gambling_dm_again": "`{0}` kann sich seinen täglichen Anteil nochmal abholen.",
   "gambling_dm_already_received": "Du hast deinen täglichen Anteil heute bereits abgeholt, {0}",
   "gambling_dm_no_role": "Deine Rollen erlauben kein DailyMoney, also bekommst du nichts, {0}!",
   "gambling_dm_not_received": "{0} hat seinen täglichen Anteil noch nicht abgeholt.",
