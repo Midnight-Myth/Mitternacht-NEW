@@ -80,6 +80,7 @@
   "administration_log_ignore": "Aufzeichnungen werden {0} ignorieren",
   "administration_log_not_ignore": "Aufzeichnungen werden {0} nicht ignorieren",
   "administration_log_stop": "Aufzeichnung von Ereignis {0} gestoppt.",
+  "administration_log_list_title": "Logkanalliste",
   "administration_menrole": "{0} hat eine Erwähnung von den folgenden Rollen aufgerufen",
   "administration_message_from_bo": "Nachricht von {0}  `[Besitzer des Bots]`:",
   "administration_message_sent": "Nachricht gesendet.",

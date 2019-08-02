@@ -183,6 +183,16 @@ namespace Mitternacht.Modules.Administration
                 else
                     await ReplyConfirmLocalized("log_stop", Format.Bold(type.ToString())).ConfigureAwait(false);
             }
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.Administrator)]
+			[OwnerOnly]
+			public async Task LogList() {
+				var logChannels = Service.GetLogChannelList(Context.Guild);
+				var logChannelString = string.Join("\n", logChannels.Select(kv => $"{kv.Key.ToString()}: {kv.Value?.Mention ?? "--"}").ToList());
+				await Context.Channel.SendConfirmAsync(GetText("log_list_title"), logChannelString).ConfigureAwait(false);
+			}
         }
     }
 }

@@ -3763,5 +3763,12 @@
     "aliases": [],
     "desc": "Setzt den Verifizierungspasswortkanal oder zeigt ihn an. Der Kanal wird in Nachrichten des Verifizierungsprozesses verwendet.",
     "usage": "`{0}verificationpasswordchannel [Textkanal]`"
+  },
+  {
+    "name": "loglist",
+    "cmd": "loglist",
+    "aliases": [],
+    "desc": "Zeigt eine Liste aller Logevents und der zugewiesenen Kanäle an.",
+    "usage": "`{0}loglist`"
   }
 ]

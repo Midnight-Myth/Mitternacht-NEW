@@ -1056,5 +1056,16 @@ namespace Mitternacht.Modules.Administration.Services
                 uow.Complete();
             }
         }
+
+		public Dictionary<LogType, ITextChannel> GetLogChannelList(IGuild guild) {
+			var success = GuildLogSettings.TryGetValue(guild.Id, out var logSetting);
+
+			if(success) {
+				var logTypes = (LogType[])Enum.GetValues(typeof(LogType));
+				return logTypes.ToDictionary(lt => lt, lt => TryGetLogChannel(guild, logSetting, lt).GetAwaiter().GetResult());
+			} else {
+				return null;
+			}
+		}
     }
 }
