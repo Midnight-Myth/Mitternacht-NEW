@@ -12,10 +12,10 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public BirthDateRepository(DbContext context) : base(context) { }
 
         public IEnumerable<BirthDateModel> GetBirthdays(DateTime date)
-            => _set.Where(b => b.IsBirthday(date.Date));
+            => _set.Where(b => b.Day == date.Day && b.Month == date.Month).ToList();
 
         public IEnumerable<BirthDateModel> GetBirthdays(IBirthDate bd, bool checkYear = false)
-            => _set.Where(b => b.IsBirthday(bd) && (!checkYear || !bd.Year.HasValue || b.Year.HasValue && bd.Year.HasValue && b.Year == bd.Year));
+            => _set.Where(b => b.Day == bd.Day && b.Month == bd.Month && (!checkYear || !bd.Year.HasValue || b.Year.HasValue && bd.Year.HasValue && b.Year == bd.Year)).ToList();
 
         public BirthDateModel GetUserBirthDate(ulong userid)
             => _set.FirstOrDefault(b => b.UserId == userid);

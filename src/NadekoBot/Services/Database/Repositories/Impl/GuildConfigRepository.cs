@@ -172,14 +172,14 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             return config;
         }
 
-        public IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included) =>
-            _set
-                .Where(gc => included.Contains(gc.GuildId))
-                .Include(gc => gc.FollowedStreams)
-                .SelectMany(gc => gc.FollowedStreams)
-                .ToList();
+		public IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included)
+			=> _set.Where(gc => included.Contains(gc.GuildId))
+				.Include(gc => gc.FollowedStreams)
+				.ToList()
+				.SelectMany(gc => gc.FollowedStreams)
+				.ToList();
 
-        public void SetCleverbotEnabled(ulong id, bool cleverbotEnabled)
+		public void SetCleverbotEnabled(ulong id, bool cleverbotEnabled)
         {
             var conf = _set.FirstOrDefault(gc => gc.GuildId == id);
 
