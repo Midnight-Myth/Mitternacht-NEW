@@ -166,7 +166,7 @@ namespace Mitternacht.Modules.Verification {
 			if(roleid == role.Id) {
 				await ErrorLocalized("new_identical", role.Name);
 			} else {
-				await Service.SetVerifiedRole(Context.Guild.Id, role?.Id);
+				Service.SetVerifiedRole(Context.Guild.Id, role?.Id);
 				await ConfirmLocalized("role_new", role.Name);
 			}
 		}
@@ -175,7 +175,7 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task VerifiedRoleDelete() {
-			await Service.SetVerifiedRole(Context.Guild.Id, null);
+			Service.SetVerifiedRole(Context.Guild.Id, null);
 			await ConfirmLocalized("role_deleted");
 		}
 
@@ -198,7 +198,7 @@ namespace Mitternacht.Modules.Verification {
 			var oldPassword = Service.GetVerifyString(Context.Guild.Id);
 			password = password.Equals("null", StringComparison.OrdinalIgnoreCase) ? null : password.Trim();
 
-			await Service.SetVerifyString(Context.Guild.Id, password);
+			Service.SetVerifyString(Context.Guild.Id, password);
 
 			await ConfirmLocalized("verifypassword_new", oldPassword ?? "null", password ?? "null").ConfigureAwait(false);
 		}
@@ -274,13 +274,21 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
+		[Priority(1)]
 		[OwnerOnly]
-		public async Task SetVerifyTutorialText([Remainder] string text) {
-			await Service.SetVerificationTutorialText(Context.Guild.Id, text).ConfigureAwait(false);
-			await ConfirmLocalized("tutorial_now_set").ConfigureAwait(false);
+		public async Task VerifyTutorialText() {
+			var text = Service.GetVerificationTutorialText(Context.Guild.Id);
+			await ConfirmLocalized("tutorial_current_text", text);
 		}
 
-
+		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
+		[Priority(0)]
+		[OwnerOnly]
+		public async Task VerifyTutorialText([Remainder] string text) {
+			Service.SetVerificationTutorialText(Context.Guild.Id, text);
+			await ConfirmLocalized("tutorial_now_set").ConfigureAwait(false);
+		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[OwnerOnly]
@@ -296,7 +304,7 @@ namespace Mitternacht.Modules.Verification {
 		[OwnerOnly]
 		public async Task SetAdditionalVerificationUsers([Remainder] string names = null) {
 			var namesarray = string.IsNullOrWhiteSpace(names) ? new string[0] : names.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			await Service.SetAdditionalVerificationUsers(Context.Guild.Id, namesarray);
+			Service.SetAdditionalVerificationUsers(Context.Guild.Id, namesarray);
 
 			if(namesarray.Any()) {
 				await ConfirmLocalized("additional_verification_users_set");

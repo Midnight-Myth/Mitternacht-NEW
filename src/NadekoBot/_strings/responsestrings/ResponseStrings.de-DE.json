@@ -1035,6 +1035,7 @@
   "verification_tutorial": "Verifizierungsanleitung",
   "verification_tutorial_not_set": "Keine Verifizierungsanleitung verfügbar.",
   "verification_tutorial_now_set": "Der Verifizierungstutorialtext wurde gesetzt.",
+  "verification_tutorial_current_text": "Der aktuelle Verifizierungstutorialtext ist: ```{0}```",
   "verification_verification_keys": "Verifizierungsschlüssel",
   "verification_verification_keys_field": "`Nutzer:` {0}\n`ForumId:` {1}\n`Bereich:` {2}",
   "verification_verified_users": "Verifizierte Nutzer - {0}",

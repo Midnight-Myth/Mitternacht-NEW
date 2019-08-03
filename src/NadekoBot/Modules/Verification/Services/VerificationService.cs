@@ -67,40 +67,40 @@ namespace Mitternacht.Modules.Verification.Services {
 				return uow.VerifiedUsers.GetCount(guildId);
 		}
 
-		public async Task SetVerifiedRole(ulong guildId, ulong? roleId) {
+		public void SetVerifiedRole(ulong guildId, ulong? roleId) {
 			using(var uow = _db.UnitOfWork) {
-				uow.GuildConfigs.For(guildId, set => set).VerifiedRoleId = roleId;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				uow.GuildConfigs.For(guildId).VerifiedRoleId = roleId;
+				uow.Complete();
 			}
 		}
 
 		public ulong? GetVerifiedRoleId(ulong guildId) {
 			using(var uow = _db.UnitOfWork) {
-				return uow.GuildConfigs.For(guildId, set => set).VerifiedRoleId;
+				return uow.GuildConfigs.For(guildId).VerifiedRoleId;
 			}
 		}
 
-		public async Task SetVerifyString(ulong guildId, string verifystring) {
+		public void SetVerifyString(ulong guildId, string verifystring) {
 			using(var uow = _db.UnitOfWork) {
-				uow.GuildConfigs.For(guildId, set => set).VerifyString = verifystring;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				uow.GuildConfigs.For(guildId).VerifyString = verifystring;
+				uow.Complete();
 			}
 		}
 
 		public string GetVerifyString(ulong guildId) {
 			using(var uow = _db.UnitOfWork)
-				return uow.GuildConfigs.For(guildId, set => set).VerifyString;
+				return uow.GuildConfigs.For(guildId).VerifyString;
 		}
 
 		public string GetVerificationTutorialText(ulong guildId) {
 			using(var uow = _db.UnitOfWork)
-				return uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText;
+				return uow.GuildConfigs.For(guildId).VerificationTutorialText;
 		}
 
-		public async Task SetVerificationTutorialText(ulong guildId, string text) {
+		public void SetVerificationTutorialText(ulong guildId, string text) {
 			using(var uow = _db.UnitOfWork) {
-				uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText = text;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				uow.GuildConfigs.For(guildId).VerificationTutorialText = text;
+				uow.Complete();
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace Mitternacht.Modules.Verification.Services {
 
 		public string[] GetAdditionalVerificationUsers(ulong guildId) {
 			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(guildId, set => set);
+				var gc = uow.GuildConfigs.For(guildId);
 				return string.IsNullOrWhiteSpace(gc.AdditionalVerificationUsers) ? new string[0] : gc.AdditionalVerificationUsers.Split(',');
 			}
 		}
@@ -129,12 +129,12 @@ namespace Mitternacht.Modules.Verification.Services {
 		public string[] GetVerificationConversationUsers(ulong guildId)
 			=> GetAdditionalVerificationUsers(guildId).Prepend(_fs.Forum.SelfUser.Username).ToArray();
 
-		public async Task SetAdditionalVerificationUsers(ulong guildId, string[] users) {
+		public void SetAdditionalVerificationUsers(ulong guildId, string[] users) {
 			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(guildId, set => set);
+				var gc = uow.GuildConfigs.For(guildId);
 				gc.AdditionalVerificationUsers = string.Join(',', users);
 				uow.GuildConfigs.Update(gc);
-				await uow.CompleteAsync();
+				uow.Complete();
 			}
 		}
 

@@ -2252,11 +2252,11 @@
     "usage": "`{0}ranks [anzahl] [startposition]`"
   },
   {
-    "name": "setverifytutorialtext",
-    "cmd": "setverifytutorialtext",
+    "name": "verifytutorialtext",
+    "cmd": "verifytutorialtext",
     "aliases": [],
-    "desc": "Setzt den Text, der mit `howtoverify` angezeigt wird.",
-    "usage": "`{0}setverifytutorialtext <text>`"
+    "desc": "Setzt oder zeigt den Verifizierungshilfstext, der mit `.howtoverify` abgerufen werden kann.",
+    "usage": "`{0}verifytutorialtext [text]`"
   },
   {
     "name": "slottest",
