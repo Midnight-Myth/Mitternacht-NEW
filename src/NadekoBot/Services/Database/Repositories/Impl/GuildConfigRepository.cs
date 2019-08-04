@@ -27,37 +27,42 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 }
             };
 
-        public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds) =>
-            _set.Where(gc => availableGuilds.Contains(gc.GuildId))
-                .Include(gc => gc.LogSetting)
-                .ThenInclude(ls => ls.IgnoredChannels)
-                .Include(gc => gc.MutedUsers)
-                .Include(gc => gc.CommandAliases)
-                .Include(gc => gc.UnmuteTimers)
-                .Include(gc => gc.VcRoleInfos)
-                .Include(gc => gc.GenerateCurrencyChannelIds)
-                .Include(gc => gc.FilterInvitesChannelIds)
-                .Include(gc => gc.FilterWordsChannelIds)
-                .Include(gc => gc.FilteredWords)
-                .Include(gc => gc.CommandCooldowns)
-                .Include(gc => gc.GuildRepeaters)
-                .Include(gc => gc.AntiRaidSetting)
-                .Include(gc => gc.SlowmodeIgnoredRoles)
-                .Include(gc => gc.SlowmodeIgnoredUsers)
-                .Include(gc => gc.AntiSpamSetting)
-                .ThenInclude(x => x.IgnoredChannels)
-                .Include(gc => gc.FollowedStreams)
-                .Include(gc => gc.StreamRole)
-                .Include(gc => gc.NsfwBlacklistedTags)
-                .ToList();
+		public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds) {
+			var guildConfigs = _set.Where(gc => availableGuilds.Contains(gc.GuildId)).ToList();
+			foreach(var guildConfig in guildConfigs) {
+				_context.Entry(guildConfig).Reference(gc => gc.LogSetting).Load();
+				if(guildConfig.LogSetting != null)
+					_context.Entry(guildConfig.LogSetting).Collection(ls => ls.IgnoredChannels).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.MutedUsers).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.CommandAliases).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.UnmuteTimers).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.VcRoleInfos).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.GenerateCurrencyChannelIds).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.FilterInvitesChannelIds).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.FilterWordsChannelIds).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.FilteredWords).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.CommandCooldowns).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.GuildRepeaters).Load();
+				_context.Entry(guildConfig).Reference(gc => gc.AntiRaidSetting).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.SlowmodeIgnoredRoles).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.SlowmodeIgnoredUsers).Load();
+				_context.Entry(guildConfig).Reference(gc => gc.AntiSpamSetting).Load();
+				if(guildConfig.AntiSpamSetting != null)
+					_context.Entry(guildConfig.AntiSpamSetting).Collection(x => x.IgnoredChannels).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.FollowedStreams).Load();
+				_context.Entry(guildConfig).Reference(gc => gc.StreamRole).Load();
+				_context.Entry(guildConfig).Collection(gc => gc.NsfwBlacklistedTags).Load();
+			}
+			return guildConfigs;
+		}
 
-        /// <summary>
-        /// Gets and creates if it doesn't exist a config for a guild.
-        /// </summary>
-        /// <param name="guildId">For which guild</param>
-        /// <param name="includes">Use to manipulate the set however you want</param>
-        /// <returns>Config for the guild</returns>
-        public GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null)
+		/// <summary>
+		/// Gets and creates if it doesn't exist a config for a guild.
+		/// </summary>
+		/// <param name="guildId">For which guild</param>
+		/// <param name="includes">Use to manipulate the set however you want</param>
+		/// <returns>Config for the guild</returns>
+		public GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null)
         {
             GuildConfig config;
 
