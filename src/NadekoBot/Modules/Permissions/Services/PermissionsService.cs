@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Permissions.Services
                 }
                 if (bc.PermissionVersion > 2) return;
                 var oldPrefixes = new[] { ".", ";", "!!", "!m", "!", "+", "-", "$", ">" };
-                uow.Context.Database.ExecuteSqlCommand(
+                uow.Context.Database.ExecuteSqlRaw(
                     $@"UPDATE {nameof(Permissionv2)}
                     SET secondaryTargetName=trim(substr(secondaryTargetName, 3))
                     WHERE secondaryTargetName LIKE '!!%' OR secondaryTargetName LIKE '!m%';

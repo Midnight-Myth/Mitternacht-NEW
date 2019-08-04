@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Forum.Services
 
             _teamUpdateTask = Task.Run(async () =>
             {
-                while (_fs.Forum == null) await Task.Delay(UpdateInterval.WaitForForum);
+                while (_fs.Forum == null) await Task.Delay(TimeConstants.WaitForForum);
                 _staff = await _fs.Forum.GetMembersList(MembersListType.Staff);
 
                 var log = LogManager.GetCurrentClassLogger();
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Forum.Services
                     {
                         log.Warn(e, CultureInfo.CurrentCulture, "Team updating failed!");
                     }
-                    await Task.Delay(UpdateInterval.TeamUpdate);
+                    await Task.Delay(TimeConstants.TeamUpdate);
                 }
             });
 

@@ -167,7 +167,13 @@ namespace Mitternacht.Modules.Administration
                         case LogCommandService.LogType.VoicePresenceTTS:
                             channelId = logSetting.LogVoicePresenceTTSId = (logSetting.LogVoicePresenceTTSId == null ? channel.Id : default(ulong?));
                             break;
-                    }
+						case LogCommandService.LogType.VerificationSteps:
+							channelId = logSetting.VerificationSteps = logSetting.VerificationSteps == null ? channel.Id : default(ulong?);
+							break;
+						case LogCommandService.LogType.VerificationMessages:
+							channelId = logSetting.VerificationMessages = logSetting.VerificationMessages == null ? channel.Id : default(ulong?);
+							break;
+					}
 
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
@@ -177,6 +183,16 @@ namespace Mitternacht.Modules.Administration
                 else
                     await ReplyConfirmLocalized("log_stop", Format.Bold(type.ToString())).ConfigureAwait(false);
             }
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.Administrator)]
+			[OwnerOnly]
+			public async Task LogList() {
+				var logChannels = Service.GetLogChannelList(Context.Guild);
+				var logChannelString = string.Join("\n", logChannels.Select(kv => $"{kv.Key.ToString()}: {kv.Value?.Mention ?? "--"}").ToList());
+				await Context.Channel.SendConfirmAsync(GetText("log_list_title"), logChannelString).ConfigureAwait(false);
+			}
         }
     }
 }

@@ -39,9 +39,9 @@ namespace Mitternacht.Modules.Birthday.Services
                     }
                     catch (Exception e)
                     {
-                        log.Warn(e, CultureInfo.CurrentCulture, "Birthday Timer failed.");
+                        log.Warn(e);
                     }
-                    await Task.Delay(UpdateInterval.Birthday);
+                    await Task.Delay(TimeConstants.Birthday);
                 }
             });
 

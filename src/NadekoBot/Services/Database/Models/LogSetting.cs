@@ -32,6 +32,8 @@ namespace Mitternacht.Services.Database.Models
         public ulong? LogVoicePresenceId { get; set; } = null;
         public ulong? LogVoicePresenceTTSId { get; set; } = null;
 
+		public ulong? VerificationSteps { get; set; } = null;
+		public ulong? VerificationMessages { get; set; } = null;
 
 
         //-------------------DO NOT USE----------------

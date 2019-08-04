@@ -97,6 +97,8 @@ namespace Mitternacht.Services.Database.Models
         public string VerifyString { get; set; } = null;
         public string VerificationTutorialText { get; set; } = null;
         public string AdditionalVerificationUsers { get; set; } = null;
+		public ulong? VerificationPasswordChannelId { get; set; } = null;
+
         public double TurnToXpMultiplier { get; set; } = 5;
         public double MessageXpTimeDifference { get; set; } = 60;
         public int MessageXpCharCountMin { get; set; } = 10;

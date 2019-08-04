@@ -54,10 +54,12 @@ namespace Mitternacht.Modules.Utility
         [RequireContext(ContextType.Guild)]
         public async Task WhosPlaying([Remainder] string game)
         {
+			//TODO: avoid upper case comparison.
             game = game?.Trim().ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(game))
                 return;
 
+			//TODO: remove cast.
             if (!(Context.Guild is SocketGuild socketGuild))
             {
                 _log.Warn("Can't cast guild to socket guild.");

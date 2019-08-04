@@ -4,13 +4,12 @@
     <Copyright>Kwoth</Copyright>
     <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
     <PublisherName>Kwoth</PublisherName>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>MitternachtBot</PackageId>
-    <RuntimeFrameworkVersion>2.1</RuntimeFrameworkVersion>
-    <AssetTargetFallback>$(AssetTargetFallback);dnxcore50;portable-net45+win8+wpa81</AssetTargetFallback>
+    <!--<AssetTargetFallback>$(AssetTargetFallback);dnxcore50;portable-net45+win8+wpa81</AssetTargetFallback>-->
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -19,7 +18,6 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <ApplicationIcon>nadeko_icon.ico</ApplicationIcon>
-    <RuntimeIdentifiers>win7-x64<!--;ubuntu.14.04-x64;osx.10.10-x64 --></RuntimeIdentifiers>
     <PackageProjectUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     <RootNamespace>Mitternacht</RootNamespace>
@@ -58,26 +56,26 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.12.1" />
-    <PackageReference Include="Discord.Net" Version="2.1.0-dev-20190513.4" />
+    <PackageReference Include="AngleSharp" Version="0.13.0-alpha-764" />
+    <PackageReference Include="Discord.Net" Version="2.2.0-dev-20190730.2" />
     
-    <PackageReference Include="CoreCLR-NCalc" Version="2.2.59" />
-    <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.40.0.138" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.40.0.1593" />
-    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.40.0.1369" />
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.61" />
+    <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.40.2.138" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.40.2.1593" />
+    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.40.2.1369" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev002212" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-dev002212" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-preview7.19362.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview7.19362.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0-preview7.19362.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0-preview7.19362.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.0.0-preview7.19362.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0-preview7.19362.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0-preview7.19362.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-preview7.19362.4" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NLog" Version="4.6.3" />
+    <PackageReference Include="NLog" Version="4.6.6" />
     <PackageReference Include="NYoutubeDL" Version="0.10.5" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
@@ -87,7 +85,7 @@
     <NoWarn>$(NoWarn);CS1573;CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />

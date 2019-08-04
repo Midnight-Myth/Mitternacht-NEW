@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Gambling
                     wasReset = uow.DailyMoney.TryResetReceived(user.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await ReplyLocalized(wasReset ? "dm_again" : "dm_not_received", user.Username).ConfigureAwait(false);
+                await ReplyLocalized(wasReset ? "dm_again" : "dm_not_received", user.ToString()).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

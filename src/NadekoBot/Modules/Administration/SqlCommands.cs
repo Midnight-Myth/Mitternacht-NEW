@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration
 					await msg.DeleteAsync().ConfigureAwait(false);
 					using (var uow = _db.UnitOfWork)
 					{
-						var res = await uow.Context.Database.ExecuteSqlCommandAsync(sql);
+						var res = await uow.Context.Database.ExecuteSqlRawAsync(sql);
 						await Context.Channel.SendConfirmAsync(res.ToString());
 					}
 				}

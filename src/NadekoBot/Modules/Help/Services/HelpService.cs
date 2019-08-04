@@ -27,15 +27,15 @@ namespace Mitternacht.Modules.Help.Services
 
         public async Task LateExecute(DiscordSocketClient client, IGuild guild, IUserMessage msg)
         {
-            try
-            {
-                if(guild == null)
-                    await msg.Channel.SendMessageAsync(_bc.BotConfig.DMHelpString).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                //ignore
-            }
+            //try
+            //{
+            //    if(guild == null)
+            //        await msg.Channel.SendMessageAsync(_bc.BotConfig.DMHelpString).ConfigureAwait(false);
+            //}
+            //catch (Exception)
+            //{
+            //    //ignore
+            //}
         }
 
         public EmbedBuilder GetCommandHelp(CommandInfo com, IGuild guild)

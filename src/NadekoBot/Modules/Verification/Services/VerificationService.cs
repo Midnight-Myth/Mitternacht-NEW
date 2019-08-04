@@ -3,193 +3,145 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 using Mitternacht.Common.Collections;
+using Mitternacht.Modules.Forum.Services;
+using Mitternacht.Modules.Verification.Common;
+using Mitternacht.Modules.Verification.Exceptions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification.Services {
-	public class VerificationService : INService
-    {
-        private readonly DbService _db;
+	public class VerificationService : INService {
+		private readonly DiscordSocketClient _client;
+		private readonly DbService _db;
+		private readonly StringService _stringService;
+		private readonly ForumService _fs;
 
-        private readonly Random _rnd = new Random();
-        public readonly ConcurrentHashSet<ValidationKey> ValidationKeys = new ConcurrentHashSet<ValidationKey>();
+		public event Func<IGuildUser, long, Task> UserVerified = (user, forumUserId) => Task.CompletedTask;
+		public event Func<VerificationProcess, VerificationStep, Task> VerificationStep = (vp, step) => Task.CompletedTask;
+		public event Func<VerificationProcess, SocketMessage, Task> VerificationMessage = (vp, msg) => Task.CompletedTask;
+		//public event Func<SocketGuildUser, UserInfo, EventTrigger> UserUnverified;
 
-        public event Func<IGuildUser, long, Task> UserVerified = (user, forumUserId) => Task.CompletedTask;
-        //public event Func<SocketGuildUser, UserInfo, EventTrigger> UserUnverified;
+		private readonly ConcurrentHashSet<VerificationProcess> VerificationProcesses = new ConcurrentHashSet<VerificationProcess>();
 
-        private const int VerificationKeyValidationTime = 60 * 60 * 1000;
-
-        public VerificationService(DbService db)
-        {
-            _db = db;
-        }
-
-        private string InternalGenerateKey()
-        {
-            var bytes = new byte[8];
-            _rnd.NextBytes(bytes);
-            return Convert.ToBase64String(bytes, Base64FormattingOptions.None);
-        }
-
-        public ValidationKey GenerateKey(KeyScope keyscope, long forumuserid, ulong userid, ulong guildid)
-        {
-            ValidationKey key;
-            while (ValidationKeys.Contains(key = new ValidationKey(InternalGenerateKey(), keyscope, forumuserid, userid, guildid))) { }
-            Task.Run(async () => {
-                await Task.Delay(VerificationKeyValidationTime);
-                ValidationKeys.TryRemove(key);
-            });
-            ValidationKeys.Add(key);
-            return key;
-        }
-
-        public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId)
-        {
-            using (var uow = _db.UnitOfWork)
-                return uow.VerifiedUsers.GetVerifiedUsers(guildId).ToList();
-        }
-
-        public int GetVerifiedUserCount(ulong guildId)
-        {
-            using (var uow = _db.UnitOfWork)
-                return uow.VerifiedUsers.GetCount(guildId);
-        }
-
-        public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId)
-        {
-            using (var uow = _db.UnitOfWork)
-                return uow.VerifiedUsers.CanVerifyForumAccount(guildId, userId, forumUserId);
-        }
-
-        public async Task SetVerifiedRole(ulong guildId, ulong? roleId)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                uow.GuildConfigs.For(guildId, set => set).VerifiedRoleId = roleId;
-                await uow.CompleteAsync().ConfigureAwait(false);
-            }
-        }
-
-        public ulong? GetVerifiedRoleId(ulong guildId)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                return uow.GuildConfigs.For(guildId, set => set).VerifiedRoleId;
-            }
-        }
-
-        public async Task SetVerifyString(ulong guildId, string verifystring)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                uow.GuildConfigs.For(guildId, set => set).VerifyString = verifystring;
-                await uow.CompleteAsync().ConfigureAwait(false);
-            }
-        }
-
-        public string GetVerifyString(ulong guildId)
-        {
-            using (var uow = _db.UnitOfWork) return uow.GuildConfigs.For(guildId, set => set).VerifyString;
-        }
-
-        public string GetVerificationTutorialText(ulong guildId)
-        {
-            using (var uow = _db.UnitOfWork) return uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText;
-        }
-
-        public async Task SetVerificationTutorialText(ulong guildId, string text)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                uow.GuildConfigs.For(guildId, set => set).VerificationTutorialText = text;
-                await uow.CompleteAsync().ConfigureAwait(false);
-            }
-        }
-
-        public async Task<bool> SetVerified(IGuild guild, IGuildUser user, long forumUserId)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                if (!uow.VerifiedUsers.SetVerified(guild.Id, user.Id, forumUserId)) return false;
-                var roleid = GetVerifiedRoleId(guild.Id);
-                var role = roleid != null ? guild.GetRole(roleid.Value) : null;
-                if (role != null) await user.AddRoleAsync(role).ConfigureAwait(false);
-                await uow.CompleteAsync().ConfigureAwait(false);
-            }
-
-			await UserVerified.Invoke(user, forumUserId).ConfigureAwait(false);
-
-			return true;
+		public VerificationService(DiscordSocketClient client, DbService db, StringService stringService, ForumService fs) {
+			_client = client;
+			_db = db;
+			_stringService = stringService;
+			_fs = fs;
 		}
 
-		public string[] GetAdditionalVerificationUsers(ulong guildId)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                var gc = uow.GuildConfigs.For(guildId, set => set);
-                return string.IsNullOrWhiteSpace(gc.AdditionalVerificationUsers) ? new string[0] : gc.AdditionalVerificationUsers.Split(',');
-            }
-        }
+		public async Task StartVerification(IGuildUser guildUser) {
+			if(VerificationProcesses.Any(vp => vp.GuildUser == guildUser))
+				throw new UserAlreadyVerifyingException();
 
-        public async Task SetAdditionalVerificationUsers(ulong guildId, string[] users)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                var gc = uow.GuildConfigs.For(guildId, set => set);
-                gc.AdditionalVerificationUsers = string.Join(',', users);
-                uow.GuildConfigs.Update(gc);
-                await uow.CompleteAsync();
-            }
-        }
+			using(var uow = _db.UnitOfWork) {
+				if(uow.VerifiedUsers.IsDiscordUserVerified(guildUser.GuildId, guildUser.Id))
+					throw new UserAlreadyVerifiedException();
+			}
 
-        public class ValidationKey
-        {
-            public string Key { get; }
-            public KeyScope KeyScope { get; }
-            public long ForumUserId { get; }
-            public ulong DiscordUserId { get; }
-            public ulong GuildId { get; }
-            public DateTime CreatedAt { get; }
+			var verificationProcess = new VerificationProcess(guildUser, _client, _db, this, _stringService, _fs);
+			try {
+				await verificationProcess.Start();
+			} catch(Exception) {
+				verificationProcess.Dispose();
+				throw;
+			}
+			VerificationProcesses.Add(verificationProcess);
+		}
 
-            public ValidationKey(string key, KeyScope keyscope, long forumuserid, ulong userid, ulong guildid)
-            {
-                Key = key;
-                KeyScope = keyscope;
-                ForumUserId = forumuserid;
-                DiscordUserId = userid;
-                GuildId = guildid;
-                CreatedAt = DateTime.UtcNow;
-            }
+		public bool EndVerification(VerificationProcess process) {
+			process.Dispose();
+			return VerificationProcesses.TryRemove(process);
+		}
 
-            public override bool Equals(object obj)
-            {
-                return obj is ValidationKey vk && Equals(vk);
-            }
+		public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId) {
+			using(var uow = _db.UnitOfWork)
+				return uow.VerifiedUsers.GetVerifiedUsers(guildId).ToList();
+		}
 
-            protected bool Equals(ValidationKey other)
-            {
-                return string.Equals(Key, other.Key) && KeyScope == other.KeyScope && ForumUserId == other.ForumUserId && DiscordUserId == other.DiscordUserId && GuildId == other.GuildId && CreatedAt == other.CreatedAt;
-            }
+		public int GetVerifiedUserCount(ulong guildId) {
+			using(var uow = _db.UnitOfWork)
+				return uow.VerifiedUsers.GetCount(guildId);
+		}
 
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    var hashCode = Key != null ? Key.GetHashCode() : 0;
-                    hashCode = (hashCode * 397) ^ (int)KeyScope;
-                    hashCode = (hashCode * 397) ^ ForumUserId.GetHashCode();
-                    hashCode = (hashCode * 397) ^ DiscordUserId.GetHashCode();
-                    hashCode = (hashCode * 397) ^ GuildId.GetHashCode();
-                    hashCode = (hashCode * 397) ^ CreatedAt.GetHashCode();
-                    return hashCode;
-                }
-            }
-        }
+		public void SetVerifiedRole(ulong guildId, ulong? roleId) {
+			using(var uow = _db.UnitOfWork) {
+				uow.GuildConfigs.For(guildId).VerifiedRoleId = roleId;
+				uow.Complete();
+			}
+		}
 
-        public enum KeyScope
-        {
-            Forum, Discord
-        }
-    }
+		public ulong? GetVerifiedRoleId(ulong guildId) {
+			using(var uow = _db.UnitOfWork) {
+				return uow.GuildConfigs.For(guildId).VerifiedRoleId;
+			}
+		}
+
+		public void SetVerifyString(ulong guildId, string verifystring) {
+			using(var uow = _db.UnitOfWork) {
+				uow.GuildConfigs.For(guildId).VerifyString = verifystring;
+				uow.Complete();
+			}
+		}
+
+		public string GetVerifyString(ulong guildId) {
+			using(var uow = _db.UnitOfWork)
+				return uow.GuildConfigs.For(guildId).VerifyString;
+		}
+
+		public string GetVerificationTutorialText(ulong guildId) {
+			using(var uow = _db.UnitOfWork)
+				return uow.GuildConfigs.For(guildId).VerificationTutorialText;
+		}
+
+		public void SetVerificationTutorialText(ulong guildId, string text) {
+			using(var uow = _db.UnitOfWork) {
+				uow.GuildConfigs.For(guildId).VerificationTutorialText = text;
+				uow.Complete();
+			}
+		}
+
+		public async Task SetVerified(IGuildUser guildUser, long forumUserId) {
+			using(var uow = _db.UnitOfWork) {
+				if(!uow.VerifiedUsers.SetVerified(guildUser.GuildId, guildUser.Id, forumUserId))
+					throw new UserCannotVerifyException();
+
+				var roleid = GetVerifiedRoleId(guildUser.GuildId);
+				var role = roleid != null ? guildUser.Guild.GetRole(roleid.Value) : null;
+				if(role != null)
+					await guildUser.AddRoleAsync(role).ConfigureAwait(false);
+				await uow.CompleteAsync().ConfigureAwait(false);
+			}
+
+			await UserVerified.Invoke(guildUser, forumUserId).ConfigureAwait(false);
+		}
+
+		public string[] GetAdditionalVerificationUsers(ulong guildId) {
+			using(var uow = _db.UnitOfWork) {
+				var gc = uow.GuildConfigs.For(guildId);
+				return string.IsNullOrWhiteSpace(gc.AdditionalVerificationUsers) ? new string[0] : gc.AdditionalVerificationUsers.Split(',');
+			}
+		}
+
+		public string[] GetVerificationConversationUsers(ulong guildId)
+			=> GetAdditionalVerificationUsers(guildId).Prepend(_fs.Forum.SelfUser.Username).ToArray();
+
+		public void SetAdditionalVerificationUsers(ulong guildId, string[] users) {
+			using(var uow = _db.UnitOfWork) {
+				var gc = uow.GuildConfigs.For(guildId);
+				gc.AdditionalVerificationUsers = string.Join(',', users);
+				uow.GuildConfigs.Update(gc);
+				uow.Complete();
+			}
+		}
+
+		public async Task InvokeVerificationStep(VerificationProcess process, VerificationStep step)
+			=> await VerificationStep.Invoke(process, step).ConfigureAwait(false);
+
+		public async Task InvokeVerificationMessage(VerificationProcess process, SocketMessage msg)
+			=> await VerificationMessage.Invoke(process, msg).ConfigureAwait(false);
+	}
 }

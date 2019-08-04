@@ -9,6 +9,8 @@ using Discord.WebSocket;
 using Mitternacht.Common;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Common;
+using Mitternacht.Modules.Verification.Common;
+using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
@@ -43,15 +45,16 @@ namespace Mitternacht.Modules.Administration.Services
         private readonly StringService _strings;
         private readonly DbService _db;
         private readonly GuildTimezoneService _tz;
+		private readonly VerificationService _vs;
 
-        public LogCommandService(DiscordSocketClient client, StringService strings,
-            IEnumerable<GuildConfig> gcs, DbService db, MuteService mute, ProtectionService prot, GuildTimezoneService tz)
+        public LogCommandService(DiscordSocketClient client, StringService strings, IEnumerable<GuildConfig> gcs, DbService db, MuteService mute, ProtectionService prot, GuildTimezoneService tz, VerificationService vs)
         {
             _client = client;
             _log = LogManager.GetCurrentClassLogger();
             _strings = strings;
             _db = db;
             _tz = tz;
+			_vs = vs;
 
             GuildLogSettings = gcs
                 .ToDictionary(g => g.GuildId, g => g.LogSetting)
@@ -99,10 +102,59 @@ namespace Mitternacht.Modules.Administration.Services
             mute.UserUnmuted               += MuteCommands_UserUnmuted;
 			
             prot.OnAntiProtectionTriggered += TriggeredAntiProtection;
-        }
+
+			_vs.VerificationStep           += VerificationService_VerificationStep;
+			_vs.VerificationMessage        += VerificationService_VerificationMessage;
+		}
 
         private string GetText(IGuild guild, string key, params object[] replacements)
 			=> _strings.GetText(key, guild.Id, "administration", replacements);
+
+		private Task VerificationService_VerificationStep(VerificationProcess vp, VerificationStep step) {
+			var _ = Task.Run(async () => {
+				try {
+					var guild = vp.GuildUser.Guild;
+
+					if(GuildLogSettings.TryGetValue(guild.Id, out var logSetting) && logSetting.VerificationSteps != null){
+						var logChannel = await TryGetLogChannel(guild, logSetting, LogType.VerificationSteps);
+
+						if(logChannel != null){
+							var eb = new EmbedBuilder().WithOkColor()
+								.WithTitle(GetText(guild, "log_verification_step_title"))
+								.WithDescription(vp.GuildUser.ToString())
+								.AddField(GetText(guild, "log_verification_step_subtitle"), step.ToString());
+							await logChannel.EmbedAsync(eb);
+						}
+					}
+				} catch (Exception e) {
+					_log.Warn(e);
+				}
+			});
+			return Task.CompletedTask;
+		}
+
+		private Task VerificationService_VerificationMessage(VerificationProcess vp, SocketMessage msg) {
+			var _ = Task.Run(async () => {
+				try {
+					var guild = vp.GuildUser.Guild;
+
+					if(GuildLogSettings.TryGetValue(guild.Id, out var logSetting) && logSetting.VerificationMessages != null){
+						var logChannel = await TryGetLogChannel(guild, logSetting, LogType.VerificationMessages);
+
+						if(logChannel != null){
+							var eb = new EmbedBuilder().WithOkColor()
+								.WithTitle(GetText(guild, "log_verification_message_title"))
+								.WithDescription(vp.GuildUser.ToString())
+								.AddField(GetText(guild, "log_verification_message_subtitle"), msg.Content);
+							await logChannel.EmbedAsync(eb);
+						}
+					}
+				} catch(Exception e){
+					_log.Warn(e);
+				}
+			});
+			return Task.CompletedTask;
+		}
 
         private Task _client_UserUpdated(SocketUser before, SocketUser uAfter)
         {
@@ -866,7 +918,9 @@ namespace Mitternacht.Modules.Administration.Services
             UserPresence,
             VoicePresence,
             VoicePresenceTTS,
-            UserMuted
+            UserMuted,
+			VerificationSteps,
+			VerificationMessages
         };
 
         private async Task<ITextChannel> TryGetLogChannel(IGuild guild, LogSetting logSetting, LogType logChannelType)
@@ -919,6 +973,12 @@ namespace Mitternacht.Modules.Administration.Services
                 case LogType.UserMuted:
                     id = logSetting.UserMutedId;
                     break;
+				case LogType.VerificationSteps:
+					id = logSetting.VerificationSteps;
+					break;
+				case LogType.VerificationMessages:
+					id = logSetting.VerificationMessages;
+					break;
             }
 
             if (!id.HasValue)
@@ -985,10 +1045,27 @@ namespace Mitternacht.Modules.Administration.Services
                     case LogType.VoicePresenceTTS:
                         newLogSetting.LogVoicePresenceTTSId = null;
                         break;
-                }
+					case LogType.VerificationSteps:
+						newLogSetting.VerificationSteps = null;
+						break;
+					case LogType.VerificationMessages:
+						newLogSetting.VerificationMessages = null;
+						break;
+				}
                 GuildLogSettings.AddOrUpdate(guildId, newLogSetting, (gid, old) => newLogSetting);
                 uow.Complete();
             }
         }
+
+		public Dictionary<LogType, ITextChannel> GetLogChannelList(IGuild guild) {
+			var success = GuildLogSettings.TryGetValue(guild.Id, out var logSetting);
+
+			if(success) {
+				var logTypes = (LogType[])Enum.GetValues(typeof(LogType));
+				return logTypes.ToDictionary(lt => lt, lt => TryGetLogChannel(guild, logSetting, lt).GetAwaiter().GetResult());
+			} else {
+				return null;
+			}
+		}
     }
 }

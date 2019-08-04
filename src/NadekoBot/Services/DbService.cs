@@ -37,7 +37,7 @@ namespace Mitternacht.Services
             var conn = context.Database.GetDbConnection();
             conn.Open();
 
-            context.Database.ExecuteSqlCommand("PRAGMA journal_mode=WAL");
+            context.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL");
             using (var com = conn.CreateCommand())
             {
                 com.CommandText = "PRAGMA journal_mode=WAL; PRAGMA synchronous=OFF";
