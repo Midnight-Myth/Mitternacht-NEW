@@ -119,6 +119,9 @@ namespace Mitternacht.Services.Database.Models
 
         public ulong? TeamUpdateChannelId { get; set; } = null;
         public string TeamUpdateMessagePrefix { get; set; } = "";
+
+		public ulong? CountToNumberChannelId { get; set; } = null;
+		public double CountToNumberMessageChance { get; set; } = 0.05;
     }
 
     public class NsfwBlacklitedTag : DbEntity
