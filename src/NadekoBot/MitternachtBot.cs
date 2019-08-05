@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using MinecraftQuery;
 using Mitternacht.Common;
 using Mitternacht.Common.ShardCom;
 using Mitternacht.Common.TypeReaders;
@@ -161,6 +162,7 @@ namespace Mitternacht
                     .AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
                     .AddManual(this)
                     .AddManual(uow)
+					.AddManual(new MojangApi())
                     .LoadFrom(Assembly.GetEntryAssembly())
                     .Build();
 

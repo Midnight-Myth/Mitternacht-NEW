@@ -3770,5 +3770,19 @@
     "aliases": [],
     "desc": "Zeigt eine Liste aller Logevents und der zugewiesenen Kanäle an.",
     "usage": "`{0}loglist`"
+  },
+  {
+    "name": "counttonumberchannel",
+    "cmd": "counttonumberchannel",
+    "aliases": [],
+    "desc": "Setzt oder zeigt den CountToNumber-Kanal an.",
+    "usage": "`{0}counttonumberchannel [Textkanal|null]`"
+  },
+  {
+    "name": "counttonumbermessagechance",
+    "cmd": "counttonumbermessagechance",
+    "aliases": [],
+    "desc": "Setzt oder zeigt die Chance einer Zahlreaktion im CountToNumber-Kanal an.",
+    "usage": "`{0}counttonumbermessagechance [Textkanal|null]`"
   }
 ]
