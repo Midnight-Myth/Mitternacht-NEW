@@ -62,9 +62,14 @@ namespace Mitternacht.Modules
         protected string GetText(string key, params object[] replacements) =>
             Strings.GetText(key, CultureInfo, LowerModuleTypeName, replacements);
 
-		public Task<IUserMessage> ReplyLocalized(string textKey, params object[] replacements) {
+		public Task<IUserMessage> MessageLocalized(string textKey, params object[] replacements) {
 			var text = GetText(textKey, replacements);
 			return Context.Channel.SendMessageAsync(text);
+		}
+
+		public Task<IUserMessage> ReplyLocalized(string textKey, params object[] replacements) {
+			var text = GetText(textKey, replacements);
+			return Context.Channel.SendMessageAsync($"{Context.User.Mention} {text}");
 		}
 
         public Task<IUserMessage> ErrorLocalized(string textKey, params object[] replacements)
@@ -76,7 +81,7 @@ namespace Mitternacht.Modules
         public Task<IUserMessage> ReplyErrorLocalized(string textKey, params object[] replacements)
         {
             var text = GetText(textKey, replacements);
-            return Context.Channel.SendErrorAsync(Context.User.Mention + " " + text);
+            return Context.Channel.SendErrorAsync($"{Context.User.Mention} {text}");
         }
 
         public Task<IUserMessage> ConfirmLocalized(string textKey, params object[] replacements)
@@ -88,7 +93,7 @@ namespace Mitternacht.Modules
         public Task<IUserMessage> ReplyConfirmLocalized(string textKey, params object[] replacements)
         {
             var text = GetText(textKey, replacements);
-            return Context.Channel.SendConfirmAsync(Context.User.Mention + " " + text);
+            return Context.Channel.SendConfirmAsync($"{Context.User.Mention} {text}");
         }
         
         // TypeConverter typeConverter = TypeDescriptor.GetConverter(propType); ?

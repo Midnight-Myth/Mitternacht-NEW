@@ -117,18 +117,10 @@ namespace Mitternacht.Modules.Gambling
         [Priority(2)]
         public async Task Award(int amount, [Remainder] IRole role)
         {
-            var users = (await Context.Guild.GetUsersAsync())
-                               .Where(u => u.GetRoles().Contains(role))
-                               .ToList();
-            await Task.WhenAll(users.Select(u => _currency.AddAsync(u.Id,
-                                                      $"Awarded by bot owner to **{role.Name}** role. ({Context.User.Username}/{Context.User.Id})",
-                                                      amount)))
-                         .ConfigureAwait(false);
+            var users = (await Context.Guild.GetUsersAsync()).Where(u => u.GetRoles().Contains(role)).ToList();
+            await Task.WhenAll(users.Select(u => _currency.AddAsync(u.Id, $"Awarded by bot owner to **{role.Name}** role. ({Context.User.Username}/{Context.User.Id})", amount))).ConfigureAwait(false);
 
-            await ReplyConfirmLocalized("mass_award", 
-                amount + CurrencySign, 
-                Format.Bold(users.Count.ToString()), 
-                Format.Bold(role.Name)).ConfigureAwait(false);
+            await ReplyConfirmLocalized("mass_award", amount + CurrencySign, Format.Bold(users.Count.ToString()), Format.Bold(role.Name)).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

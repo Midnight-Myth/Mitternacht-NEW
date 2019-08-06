@@ -837,7 +837,7 @@ namespace Mitternacht.Modules.Administration.Services
                         return;
                     var embed = new EmbedBuilder()
                         .WithOkColor()
-                        .WithTitle("🗑 " + GetText(logChannel.Guild, "msg_del", ((ITextChannel)msg.Channel).Name))
+                        .WithTitle("🗑 " + GetText(logChannel.Guild, "msg_del", ((ITextChannel)msg.Channel).Mention))
                         .WithDescription(msg.Author.ToString())
                         .AddField(efb => efb.WithName(GetText(logChannel.Guild, "content")).WithValue(string.IsNullOrWhiteSpace(msg.Content) ? "-" : msg.Resolve(TagHandling.FullName)).WithIsInline(false))
                         .AddField(efb => efb.WithName("Id").WithValue(msg.Id.ToString()).WithIsInline(false))
@@ -885,7 +885,7 @@ namespace Mitternacht.Modules.Administration.Services
 
                     var embed = new EmbedBuilder()
                         .WithOkColor()
-                        .WithTitle("📝 " + GetText(logChannel.Guild, "msg_update", ((ITextChannel)after.Channel).Name))
+                        .WithTitle("📝 " + GetText(logChannel.Guild, "msg_update", ((ITextChannel)after.Channel).Mention))
                         .WithDescription(after.Author.ToString())
                         .AddField(efb => efb.WithName(GetText(logChannel.Guild, "old_msg")).WithValue(string.IsNullOrWhiteSpace(before.Content) ? "-" : before.Resolve(TagHandling.FullName)).WithIsInline(false))
                         .AddField(efb => efb.WithName(GetText(logChannel.Guild, "new_msg")).WithValue(string.IsNullOrWhiteSpace(after.Content) ? "-" : after.Resolve(TagHandling.FullName)).WithIsInline(false))
