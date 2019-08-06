@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Gambling
                         var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderByDescending(m => m.Priority).ToList();
 
 						if (!roleMoneys.Any())
-							await ReplyLocalized("dm_no_role", Context.User.Mention).ConfigureAwait(false);
+							await ReplyLocalized("dm_no_role").ConfigureAwait(false);
                         else
                         {
                             var rm = roleMoneys
@@ -65,10 +65,10 @@ namespace Mitternacht.Modules.Gambling
 
 							await uow.CompleteAsync().ConfigureAwait(false);
 
-							await ReplyLocalized("dm_received", Context.User.Mention, role.Name, rm.Money, CurrencySign).ConfigureAwait(false);
+							await ReplyLocalized("dm_received", role.Name, rm.Money, CurrencySign).ConfigureAwait(false);
                         }
                     }
-                    else await ReplyLocalized("dm_already_received", Context.User.Mention).ConfigureAwait(false);
+                    else await ReplyLocalized("dm_already_received").ConfigureAwait(false);
                 }
             }
 
@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Gambling
                     uow.RoleMoney.SetPriority(role.Id, priority);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await ReplyLocalized("dm_role_set", role.Name, money, CurrencySign, priority).ConfigureAwait(false);
+                await MessageLocalized("dm_role_set", role.Name, money, CurrencySign, priority).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Gambling
                     wasReset = uow.DailyMoney.TryResetReceived(user.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await ReplyLocalized(wasReset ? "dm_again" : "dm_not_received", user.ToString()).ConfigureAwait(false);
+                await MessageLocalized(wasReset ? "dm_again" : "dm_not_received", user.ToString()).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -118,7 +118,7 @@ namespace Mitternacht.Modules.Gambling
                     removed = uow.RoleMoney.Remove(role.Id);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await ReplyLocalized(removed ? "dm_role_removed" : "dm_role_not_set", role.Name).ConfigureAwait(false);
+                await MessageLocalized(removed ? "dm_role_removed" : "dm_role_not_set", role.Name).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Gambling
                     if (exists) uow.RoleMoney.SetPriority(role.Id, priority);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
-                await ReplyLocalized(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority).ConfigureAwait(false);
+                await MessageLocalized(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
