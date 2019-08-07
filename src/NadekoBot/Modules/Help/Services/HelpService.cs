@@ -1,18 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
-using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 
-namespace Mitternacht.Modules.Help.Services
-{
-    public class HelpService : ILateExecutor, INService
+namespace Mitternacht.Modules.Help.Services {
+	public class HelpService : INService
     {
         private readonly IBotConfigProvider _bc;
         private readonly CommandHandler _ch;
@@ -23,19 +18,6 @@ namespace Mitternacht.Modules.Help.Services
             _bc = bc;
             _ch = ch;
             _strings = strings;
-        }
-
-        public async Task LateExecute(DiscordSocketClient client, IGuild guild, IUserMessage msg)
-        {
-            //try
-            //{
-            //    if(guild == null)
-            //        await msg.Channel.SendMessageAsync(_bc.BotConfig.DMHelpString).ConfigureAwait(false);
-            //}
-            //catch (Exception)
-            //{
-            //    //ignore
-            //}
         }
 
         public EmbedBuilder GetCommandHelp(CommandInfo com, IGuild guild)
