@@ -10,6 +10,7 @@ namespace Mitternacht.Modules.Forum.Services
         private readonly Logger _log;
         
         public GommeHDnetForumAPI.Forum Forum { get; private set; }
+		public bool HasForumInstance => Forum != null;
         public bool LoggedIn => Forum?.LoggedIn ?? false;
         private Task _loginTask;
 

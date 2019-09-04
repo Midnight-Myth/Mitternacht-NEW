@@ -153,18 +153,12 @@ namespace Mitternacht.Modules.Forum
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task ForumInfo()
         {
-            if (Service.Forum == null)
-            {
-                await ErrorLocalized("not_instantiated").ConfigureAwait(false);
-                return;
-            }
-            var embed = new EmbedBuilder()
-                .WithOkColor()
-                .WithTitle(GetText("finfo_title"))
-                .WithImageUrl(Service.Forum.SelfUser.AvatarUrl)
-                .AddField(GetText("finfo_loggedin"), Service.LoggedIn, true)
-                .AddField(GetText("finfo_selfuser"), $"[{Service.Forum.SelfUser.Username}]({Service.Forum.SelfUser.UrlPath})", true);
-            await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
-        }
+			if(Service.LoggedIn)
+				await ConfirmLocalized("foruminfo_logged_in", $"[{Service.Forum.SelfUser.Username}]({Service.Forum.SelfUser.UrlPath})").ConfigureAwait(false);
+			else if(Service.HasForumInstance)
+				await ConfirmLocalized("foruminfo_instance").ConfigureAwait(false);
+			else
+				await ConfirmLocalized("foruminfo_no_instance").ConfigureAwait(false);
+		}
     }
 }
