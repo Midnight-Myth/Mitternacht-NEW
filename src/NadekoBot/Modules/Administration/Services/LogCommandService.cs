@@ -18,7 +18,6 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    [NoPublicBot]
     public class LogCommandService : INService
     {
 

@@ -22,7 +22,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Mitternacht.Modules.Music
 {
-    [NoPublicBot]
     public class Music : MitternachtTopLevelModule<MusicService>
     {
         private readonly DiscordSocketClient _client;
