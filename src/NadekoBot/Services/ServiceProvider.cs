@@ -8,123 +8,98 @@ using System.Linq;
 using System.Reflection;
 using NLog;
 
-namespace Mitternacht.Services
-{
-    public interface INServiceProvider : IServiceProvider, IEnumerable<object>
-    {
-        T GetService<T>();
-    }
+namespace Mitternacht.Services {
+	public interface INServiceProvider : IServiceProvider, IEnumerable<object> {
+		T GetService<T>();
+	}
 
-    public class NServiceProvider : INServiceProvider
-    {
-        public class ServiceProviderBuilder
-        {
-            private readonly ConcurrentDictionary<Type, object> _dict = new ConcurrentDictionary<Type, object>();
-            private readonly Logger _log;
+	public class NServiceProvider : INServiceProvider {
+		public class ServiceProviderBuilder {
+			private readonly ConcurrentDictionary<Type, object> _typeInstances = new ConcurrentDictionary<Type, object>();
+			private readonly Logger                             _log;
 
-            public ServiceProviderBuilder()
-            {
-                _log = LogManager.GetCurrentClassLogger();
-            }
+			public ServiceProviderBuilder() {
+				_log = LogManager.GetCurrentClassLogger();
+			}
 
-            public ServiceProviderBuilder AddManual<T>(T obj)
-            {
-                _dict.TryAdd(typeof(T), obj);
-                return this;
-            }
+			public ServiceProviderBuilder AddManual<T>(T obj) {
+				_typeInstances.TryAdd(typeof(T), obj);
+				return this;
+			}
 
-            public NServiceProvider Build()
-            {
-                return new NServiceProvider(_dict);
-            }
+			public NServiceProvider Build()
+				=> new NServiceProvider(_typeInstances);
 
-            public ServiceProviderBuilder LoadFrom(Assembly assembly)
-            {
-                var allTypes = assembly.GetTypes();
-                var services = new Queue<Type>(allTypes
-                        .Where(x => x.GetInterfaces().Contains(typeof(INService))
-                            && !x.GetTypeInfo().IsInterface && !x.GetTypeInfo().IsAbstract
-						).ToArray());
+			public ServiceProviderBuilder LoadFrom(Assembly assembly) {
+				var allTypes = assembly.GetTypes();
+				var services = new Queue<Type>(allTypes.Where(x => x.GetInterfaces().Contains(typeof(INService)) && !x.GetTypeInfo().IsInterface && !x.GetTypeInfo().IsAbstract).ToArray());
 
-                var interfaces = new HashSet<Type>(allTypes
-                        .Where(x => x.GetInterfaces().Contains(typeof(INService))
-                            && x.GetTypeInfo().IsInterface));
+				var interfaces = new HashSet<Type>(allTypes.Where(x => x.GetInterfaces().Contains(typeof(INService)) && x.GetTypeInfo().IsInterface));
 
-                var alreadyFailed = new Dictionary<Type, int>();
+				var typeInstantiationFailures = new Dictionary<Type, int>();
 
-                var sw = Stopwatch.StartNew();
-                var swInstance = new Stopwatch();
-                while (services.Count > 0)
-                {
-                    var type = services.Dequeue(); //get a type i need to make an instance of
+				var sw         = Stopwatch.StartNew();
+				var swInstance = new Stopwatch();
+				while(services.Any()) {
+					var type = services.Dequeue();
 
-                    if (_dict.TryGetValue(type, out _)) // if that type is already instantiated, skip
-                        continue;
+					if(_typeInstances.TryGetValue(type, out _)) continue;
 
-                    var ctor = type.GetConstructors()[0];
-                    var argTypes = ctor
-                        .GetParameters()
-                        .Select(x => x.ParameterType)
-                        .ToArray(); // get constructor argument types i need to pass in
+					var constructor              = type.GetConstructors()[0];
+					var constructorArgumentTypes = constructor.GetParameters().Select(x => x.ParameterType).ToArray();
 
-                    var args = new List<object>(argTypes.Length);
-                    foreach (var arg in argTypes) //get constructor arguments from the dictionary of already instantiated types
-                    {
-                        if (_dict.TryGetValue(arg, out var argObj)) //if i got current one, add it to the list of instances and move on
-                            args.Add(argObj);
-                        else //if i failed getting it, add it to the end, and break
-                        {
-                            services.Enqueue(type);
-                            if (alreadyFailed.ContainsKey(type))
-                            {
-                                alreadyFailed[type]++;
-                                if (alreadyFailed[type] > 3)
-                                    _log.Warn(type.Name + " wasn't instantiated in the first 3 attempts. Missing " + arg.Name + " type");
-                            }
-                            else
-                                alreadyFailed.Add(type, 1);
-                            break;
-                        }
-                    }
-                    if (args.Count != argTypes.Length)
-                        continue;
-                    // _log.Info("Loading " + type.Name);
-                    swInstance.Restart();
-                    var instance = ctor.Invoke(args.ToArray());
-                    swInstance.Stop();
-                    if (swInstance.Elapsed.TotalSeconds > 5)
-                        _log.Info($"{type.Name} took {swInstance.Elapsed.TotalSeconds:F2}s to load.");
-                    var interfaceType = interfaces.FirstOrDefault(x => instance.GetType().GetInterfaces().Contains(x));
-                    if (interfaceType != null)
-                        _dict.TryAdd(interfaceType, instance);
+					var constructorArguments = constructorArgumentTypes.ToDictionary(argType => argType, argType => _typeInstances.TryGetValue(argType, out var argInstance) ? argInstance : null);
 
-                    _dict.TryAdd(type, instance);
-                }
-                sw.Stop();
-                _log.Info($"All services loaded in {sw.Elapsed.TotalSeconds:F2}s");
+					if(constructorArguments.ContainsValue(null)) {
+						services.Enqueue(type);
 
-                return this;
-            }
-        }
+						if(typeInstantiationFailures.ContainsKey(type)) {
+							typeInstantiationFailures[type]++;
+							if(typeInstantiationFailures[type] > 3) {
+								var missingArguments = constructorArguments.Where(kv => kv.Value == null).Select(kv => kv.Key.Name).ToArray();
+								_log.Warn($"{type.Name} wasn't instantiated in the first 3 attempts. Missing type(s) {string.Join(",", missingArguments)}.");
+							}
+						} else
+							typeInstantiationFailures.Add(type, 1);
+					} else {
+						swInstance.Restart();
+						var instance = constructor.Invoke(constructorArguments.Values.ToArray());
+						swInstance.Stop();
 
-        private readonly ImmutableDictionary<Type, object> _services;
+						if(swInstance.Elapsed.TotalSeconds > 5) _log.Info($"{type.Name} took {swInstance.Elapsed.TotalSeconds:F2}s to load.");
 
-        public NServiceProvider(IDictionary<Type, object> services)
-        {
-            _services = services.ToImmutableDictionary();
-        }
+						var interfaceType = interfaces.FirstOrDefault(x => type.GetInterfaces().Contains(x));
+						if(interfaceType != null) _typeInstances.TryAdd(interfaceType, instance);
 
-        public T GetService<T>() 
-            => (T)((IServiceProvider)this).GetService(typeof(T));
+						_typeInstances.TryAdd(type, instance);
+					}
+				}
 
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            _services.TryGetValue(serviceType, out var toReturn);
-            return toReturn;
-        }
+				sw.Stop();
+				_log.Info($"All services loaded in {sw.Elapsed.TotalSeconds:F2}s");
 
-        IEnumerator IEnumerable.GetEnumerator() => _services.Values.GetEnumerator();
+				return this;
+			}
+		}
 
-        public IEnumerator<object> GetEnumerator() => _services.Values.GetEnumerator();
-    }
+		private readonly ImmutableDictionary<Type, object> _services;
+
+		public NServiceProvider(IDictionary<Type, object> services) {
+			_services = services.ToImmutableDictionary();
+		}
+
+		public T GetService<T>()
+			=> (T)((IServiceProvider)this).GetService(typeof(T));
+
+		object IServiceProvider.GetService(Type serviceType) {
+			_services.TryGetValue(serviceType, out var toReturn);
+			return toReturn;
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+			=> _services.Values.GetEnumerator();
+
+		public IEnumerator<object> GetEnumerator()
+			=> _services.Values.GetEnumerator();
+	}
 }
