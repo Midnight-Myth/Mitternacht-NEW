@@ -8,11 +8,6 @@ using System.Linq;
 using System.Reflection;
 using NLog;
 
-#if GLOBAL_NADEKO
-using MitternachtBot.Common;
-#endif
-
-
 namespace Mitternacht.Services
 {
     public interface INServiceProvider : IServiceProvider, IEnumerable<object>
@@ -49,12 +44,7 @@ namespace Mitternacht.Services
                 var services = new Queue<Type>(allTypes
                         .Where(x => x.GetInterfaces().Contains(typeof(INService))
                             && !x.GetTypeInfo().IsInterface && !x.GetTypeInfo().IsAbstract
-
-#if GLOBAL_NADEKO
-                            && x.GetTypeInfo().GetCustomAttribute<NoPublicBot>() == null
-#endif
-                            )
-                        .ToArray());
+						).ToArray());
 
                 var interfaces = new HashSet<Type>(allTypes
                         .Where(x => x.GetInterfaces().Contains(typeof(INService))
