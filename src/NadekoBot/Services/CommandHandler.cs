@@ -20,7 +20,7 @@ namespace Mitternacht.Services
 {
     public class GuildUserComparer : IEqualityComparer<IGuildUser>
     {
-        public bool Equals(IGuildUser x, IGuildUser y) => x.Id == y.Id;
+        public bool Equals(IGuildUser x, IGuildUser y) => x?.Id == y?.Id;
 
         public int GetHashCode(IGuildUser obj) => obj.Id.GetHashCode();
     }
