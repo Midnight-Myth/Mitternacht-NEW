@@ -50,8 +50,6 @@ namespace Mitternacht.Services
         public ConcurrentHashSet<ulong> UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
 
         private readonly Timer _clearUsersOnShortCooldown;
-
-        private readonly Random _random = new Random();
         
         public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bcp,
             IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot, IBotCredentials bc)
@@ -128,23 +126,16 @@ namespace Mitternacht.Services
             if (guildId != null)
             {
                 var guild = _client.GetGuild(guildId.Value);
-                if (!(guild?.GetChannel(channelId) is SocketTextChannel channel))
-                {
-                    _log.Warn("Channel for external execution not found.");
-                    return;
-                }
-
-                try
-                {
-                    IUserMessage msg = await channel.SendMessageAsync(commandText).ConfigureAwait(false);
-                    msg = (IUserMessage) await channel.GetMessageAsync(msg.Id).ConfigureAwait(false);
-                    await TryRunCommand(guild, channel, msg).ConfigureAwait(false);
-                    //msg.DeleteAfter(5);
-                }
-                catch
-                { /*ignored*/
-                }
-            }
+				if(guild?.GetChannel(channelId) is SocketTextChannel channel) {
+					try {
+						IUserMessage msg = await channel.SendMessageAsync(commandText).ConfigureAwait(false);
+						msg = (IUserMessage)await channel.GetMessageAsync(msg.Id).ConfigureAwait(false);
+						await TryRunCommand(guild, channel, msg).ConfigureAwait(false);
+					} catch { /*ignored*/ }
+				} else {
+					_log.Warn("Channel for external execution not found.");
+				}
+			}
         }
 
         public Task StartHandling()
@@ -157,42 +148,26 @@ namespace Mitternacht.Services
             return Task.CompletedTask;
         }
 
-        private const float OneThousandth = 1.0f / 1000;
+        private const float OneThousandth = 0.001f;
         private readonly DbService _db;
 
-        private Task LogSuccessfulExecution(IMessage usrMsg, IGuildChannel channel, params int[] execPoints)
-        {
-            _log.Info("Command Executed after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) +
-                      "s\n\t" +
-                      "User: {0}\n\t" +
-                      "Server: {1}\n\t" +
-                      "Channel: {2}\n\t" +
-                      "Message: {3}",
-                usrMsg.Author + " [" + usrMsg.Author.Id + "]", // {0}
-                (channel == null ? "PRIVATE" : channel.Guild.Name + " [" + channel.Guild.Id + "]"), // {1}
-                (channel == null ? "PRIVATE" : channel.Name + " [" + channel.Id + "]"), // {2}
-                usrMsg.Content // {3}
-            );
-            return Task.CompletedTask;
+        private void LogSuccessfulExecution(IMessage userMsg, IGuildChannel channel, params int[] execPoints) {
+			_log.Info(GetLogMessageString(userMsg, channel, execPoints, "Executed"));
         }
 
-        private void LogErroredExecution(string errorMessage, IMessage usrMsg, IGuildChannel channel,
-            params int[] execPoints)
-        {
-            _log.Warn("Command Errored after " + string.Join("/", execPoints.Select(x => x * OneThousandth)) + "s\n\t" +
-                      "User: {0}\n\t" +
-                      "Server: {1}\n\t" +
-                      "Channel: {2}\n\t" +
-                      "Message: {3}\n\t" +
-                      "Error: {4}",
-                usrMsg.Author + " [" + usrMsg.Author.Id + "]", // {0}
-                (channel == null ? "PRIVATE" : channel.Guild.Name + " [" + channel.Guild.Id + "]"), // {1}
-                (channel == null ? "PRIVATE" : channel.Name + " [" + channel.Id + "]"), // {2}
-                usrMsg.Content, // {3}
-                errorMessage
-                //exec.Result.ErrorReason // {4}
-            );
+        private void LogErroredExecution(string errorMessage, IMessage userMsg, IGuildChannel channel, params int[] execPoints) {
+			_log.Warn(GetLogMessageString(userMsg, channel, execPoints, "Errored", $"Error: {errorMessage}"));
         }
+
+		private string GetLogMessageString(IMessage userMsg, IGuildChannel channel, int[] execPoints, string state, params string[] additionalStrings) {
+			var executionTime = string.Join("/", execPoints.Select(x => x * OneThousandth));
+			var userString    = $"{userMsg.Author} [{userMsg.Author.Id}]";
+			var guildString   = channel == null ? "PRIVATE" : $"{channel.Guild.Name} [{channel.Guild.Id}]";
+			var channelString = channel == null ? "PRIVATE" : $"{channel.Name} [{channel.Id}]";
+
+			var strings = new [] { $"Command {state} after {executionTime}s", $"User: {userString}", $"Server: {guildString}", $"Channel: {channelString}", $"Message: {userMsg.Content}" }.Concat(additionalStrings).ToArray();
+			return string.Join("\n\t", strings);
+		}
 
         private async Task MessageReceivedHandler(SocketMessage msg)
         {
@@ -278,10 +253,8 @@ namespace Mitternacht.Services
                     isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
                 execTime = Environment.TickCount - execTime;
 
-                if (result.Success)
-                {
-                    await LogSuccessfulExecution(usrMsg, channel as ITextChannel, exec2, exec3, execTime)
-                        .ConfigureAwait(false);
+                if (result.Success) {
+					LogSuccessfulExecution(usrMsg, channel as ITextChannel, exec2, exec3, execTime);
                     await CommandExecuted(usrMsg, result.Info).ConfigureAwait(false);
                     return;
                 }
