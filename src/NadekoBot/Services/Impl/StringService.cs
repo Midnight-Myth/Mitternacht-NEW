@@ -25,7 +25,7 @@ namespace Mitternacht.Services.Impl {
 			var log = LogManager.GetCurrentClassLogger();
 			_localization = loc;
 
-			var sw           = Stopwatch.StartNew();
+			var sw          = Stopwatch.StartNew();
 			var localesDict = new Dictionary<string, ImmutableDictionary<string, string>>(); // lang:(name:value)
 			var localeFiles = Directory.GetFiles(StringsPath)
 								.Select(filename => (Filename: filename, Match: Regex.Match(filename, FilenameRegex)))
