@@ -4,12 +4,15 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NLog;
 
 namespace Mitternacht.Services.Impl {
 	public class StringService : INService {
 		public const string StringsPath = @"_strings/responsestrings";
+		public const string FilenameRegex = @"ResponseStrings\.(.+)\.json$";
 
 		private readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> _responseStrings;
 
@@ -23,23 +26,22 @@ namespace Mitternacht.Services.Impl {
 			_localization = loc;
 
 			var sw           = Stopwatch.StartNew();
-			var allLangsDict = new Dictionary<string, ImmutableDictionary<string, string>>(); // lang:(name:value)
-			foreach(var file in Directory.GetFiles(StringsPath)) {
-				var langDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(file));
-
-				allLangsDict.Add(GetLocaleName(file).ToLowerInvariant(), langDict.ToImmutableDictionary());
+			var localesDict = new Dictionary<string, ImmutableDictionary<string, string>>(); // lang:(name:value)
+			var localeFiles = Directory.GetFiles(StringsPath)
+								.Select(filename => (Filename: filename, Match: Regex.Match(filename, FilenameRegex)))
+								.Where((fnm) => fnm.Match.Success)
+								.Select(fnm => (Filename: fnm.Filename, Locale: fnm.Match.Groups[1].Value))
+								.ToArray();
+			
+			foreach(var (filename, locale) in localeFiles) {
+				var langDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(filename));
+				localesDict.Add(locale.ToLowerInvariant(), langDict.ToImmutableDictionary());
 			}
 
-			_responseStrings = allLangsDict.ToImmutableDictionary();
+			_responseStrings = localesDict.ToImmutableDictionary();
 			sw.Stop();
 
-			log.Info($"Loaded {_responseStrings.Count} languages in {sw.Elapsed.TotalSeconds:F2}s");
-		}
-
-		private string GetLocaleName(string fileName) {
-			var dotIndex       = fileName.IndexOf('.') + 1;
-			var secondDotIndex = fileName.LastIndexOf('.');
-			return fileName.Substring(dotIndex, secondDotIndex - dotIndex);
+			log.Info($"Loaded {_responseStrings.Count} locales in {sw.Elapsed.TotalSeconds:F2}s");
 		}
 
 		private string GetString(string text, CultureInfo cultureInfo) {
