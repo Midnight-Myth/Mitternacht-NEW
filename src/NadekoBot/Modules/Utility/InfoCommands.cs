@@ -137,7 +137,7 @@ namespace Mitternacht.Modules.Utility
                 await Context.Channel.SendPaginatedConfirmAsync(_client, page, p => {
                     var startCount = page * activityPerPage;
                     var strng = from kvp in CmdHandler.UserMessagesSent.OrderByDescending(kvp => kvp.Value).Skip(page * activityPerPage).Take(activityPerPage)
-                                select GetText("activity_line", ++startCount, Format.Bold(kvp.Key.ToString()), kvp.Value, kvp.Value / _stats.GetUptime().TotalSeconds);
+                                select GetText("activity_line", ++startCount, Format.Bold(kvp.Key.ToString()), kvp.Value, kvp.Value / _stats.Uptime.TotalSeconds);
                     return new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle(GetText("activity_page"))

@@ -25,7 +25,7 @@ namespace Mitternacht.Services.Impl
         public string Author => string.Join(", ", AuthorIdBackupNames.Select(t => _client.GetUser(t.userId)?.ToString() ?? t.backupName));
         public string Library => "Discord.Net, GommeHDnetForumAPI, MinecraftQuery";
         public string Heap => Math.Round((double)GC.GetTotalMemory(false) / 1.MiB(), 2).ToString(CultureInfo.InvariantCulture);
-        public double MessagesPerSecond => MessageCounter / GetUptime().TotalSeconds;
+        public double MessagesPerSecond => MessageCounter / Uptime.TotalSeconds;
 
         private long _textChannels;
         public long TextChannels => Interlocked.Read(ref _textChannels);
@@ -156,13 +156,12 @@ namespace Mitternacht.Services.Impl
                 Messages: {MessageCounter} [{MessagesPerSecond:F2}/sec] Heap: [{Heap} MB]");
         }
 
-        public TimeSpan GetUptime() 
-            => DateTime.UtcNow - _started;
+        public TimeSpan Uptime => DateTime.UtcNow - _started;
 
         public string GetUptimeString(string separator = ", ")
         {
-            var time = GetUptime();
-            return $"{time.Days} days{separator}{time.Hours} hours{separator}{time.Minutes} minutes";
+            var uptime = Uptime;
+            return $"{uptime.Days} days{separator}{uptime.Hours} hours{separator}{uptime.Minutes} minutes";
         }
     }
 }
