@@ -10,7 +10,6 @@ using Mitternacht.Extensions;
 namespace Mitternacht.Services.Impl {
 	public class StatsService : IStatsService {
 		private readonly DiscordSocketClient _client;
-		private readonly IBotCredentials     _creds;
 		private readonly DateTime            _started;
 
 		public const string BotVersion = "1.10.0";
@@ -37,7 +36,6 @@ namespace Mitternacht.Services.Impl {
 
 		public StatsService(DiscordSocketClient client, CommandHandler cmdHandler, IBotCredentials creds, MitternachtBot mitternacht) {
 			_client = client;
-			_creds  = creds;
 			_sc     = mitternacht.ShardCoord;
 
 			_started                   =  DateTime.UtcNow;
