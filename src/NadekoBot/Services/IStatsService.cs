@@ -19,6 +19,5 @@ namespace Mitternacht.Services
 		TimeSpan Uptime { get; }
 		string GetUptimeString(string separator = ", ");
         void Initialize();
-        Task<string> Print();
     }
 }

@@ -123,21 +123,6 @@ namespace Mitternacht.Services.Impl {
 			_voiceChannels = guilds.Sum(g => g.Channels.Count) - _textChannels;
 		}
 
-		public Task<string> Print() {
-			SocketSelfUser curUser;
-			while((curUser = _client.CurrentUser) == null) Task.Delay(1000).ConfigureAwait(false);
-
-			return Task.FromResult($@"
-                Author: [{Author}] | Library: [{Library}]
-                Bot Version: [{BotVersion}]
-                Bot ID: {curUser.Id}
-                Owner ID(s): {string.Join(", ", _creds.OwnerIds)}
-                Uptime: {GetUptimeString()}
-                Servers: {_client.Guilds.Count} | TextChannels: {TextChannels} | VoiceChannels: {VoiceChannels}
-                Commands Ran this session: {CommandsRan}
-                Messages: {MessageCounter} [{MessagesPerSecond:F2}/sec] Heap: [{Heap} MB]");
-		}
-
 		public TimeSpan Uptime => DateTime.UtcNow - _started;
 
 		public string GetUptimeString(string separator = ", ") {
