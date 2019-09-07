@@ -13,12 +13,10 @@ namespace Mitternacht.Services.Impl {
 
 		private readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> _responseStrings;
 
-		/// <summary>
-		/// Used as failsafe in case response key doesn't exist in the selected or default language.
-		/// </summary>
-		private readonly CultureInfo _usCultureInfo = new CultureInfo("en-US");
-
+		// Used as failsafe in case response key doesn't exist in the selected or default language.
+		private readonly CultureInfo   _usCultureInfo = new CultureInfo("en-US");
 		private readonly ILocalization _localization;
+		private readonly Logger        _logger = LogManager.GetCurrentClassLogger();
 
 		public StringService(ILocalization loc) {
 			var log = LogManager.GetCurrentClassLogger();
@@ -55,13 +53,14 @@ namespace Mitternacht.Services.Impl {
 			=> GetText(key, _localization.GetCultureInfo(guildId), lowerModuleTypeName, replacements);
 
 		public string GetText(string key, CultureInfo cultureInfo, string lowerModuleTypeName) {
-			var text = GetString(lowerModuleTypeName + "_" + key, cultureInfo);
+			var text = GetString($"{lowerModuleTypeName}_{key}", cultureInfo);
 
 			if(!string.IsNullOrWhiteSpace(text)) return text;
-			LogManager.GetCurrentClassLogger().Warn(lowerModuleTypeName + "_" + key + " key is missing from " + cultureInfo + " response strings. PLEASE REPORT THIS.");
-			text = GetString(lowerModuleTypeName + "_" + key, _usCultureInfo) ?? $"Error: dkey {lowerModuleTypeName + "_" + key} not found!";
-			if(string.IsNullOrWhiteSpace(text)) return "I can't tell you if the command is executed, because there was an error printing out the response. Key '" + lowerModuleTypeName + "_" + key + "' " + "is missing from resources. Please report this.";
-			return text;
+			
+			_logger.Warn($"{lowerModuleTypeName}_{key} key is missing from {cultureInfo} response strings. PLEASE REPORT THIS.");
+			
+			text = GetString($"{lowerModuleTypeName}_{key}", _usCultureInfo) ?? $"Error: Key {lowerModuleTypeName}_{key} not found!";
+			return !string.IsNullOrWhiteSpace(text) ? text : $"I can't tell you if the command is executed, because there was an error printing out the response. Key '{lowerModuleTypeName}_{key}' is missing from resources. Please report this.";
 		}
 
 		public string GetText(string key, CultureInfo cultureInfo, string lowerModuleTypeName, params object[] replacements) {
