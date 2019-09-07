@@ -39,7 +39,7 @@
     <None Update="credentials_example.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="_strings\**">
+    <None Update="locales\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="libsodium.dll;opus.dll;libsodium.so;libopus.so">

@@ -11,8 +11,8 @@ using NLog;
 
 namespace Mitternacht.Services.Impl {
 	public class StringService : INService {
-		public const string StringsPath = @"_strings/responsestrings";
-		public const string FilenameRegex = @"ResponseStrings\.(.+)\.json$";
+		public const string StringsPath = @"locales";
+		public const string FilenameRegex = @"(.+)\.json$";
 
 		private readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> _responseStrings;
 
@@ -28,7 +28,7 @@ namespace Mitternacht.Services.Impl {
 			var sw          = Stopwatch.StartNew();
 			var localesDict = new Dictionary<string, ImmutableDictionary<string, string>>(); // lang:(name:value)
 			var localeFiles = Directory.GetFiles(StringsPath)
-								.Select(filename => (Filename: filename, Match: Regex.Match(filename, FilenameRegex)))
+								.Select(filename => (Filename: filename, Match: Regex.Match(Path.GetFileName(filename), FilenameRegex)))
 								.Where((fnm) => fnm.Match.Success)
 								.Select(fnm => (Filename: fnm.Filename, Locale: fnm.Match.Groups[1].Value))
 								.ToArray();
