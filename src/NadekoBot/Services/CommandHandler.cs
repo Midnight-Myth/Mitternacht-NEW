@@ -120,12 +120,8 @@ namespace Mitternacht.Services {
 			}
 		}
 
-		public Task StartHandling() {
-			_client.MessageReceived += (msg) => {
-				var _ = Task.Run(() => MessageReceivedHandler(msg));
-				return Task.CompletedTask;
-			};
-			return Task.CompletedTask;
+		public void StartHandling() {
+			_client.MessageReceived += async msg => { await MessageReceivedHandler(msg).ConfigureAwait(false); };
 		}
 
 		private const    float     OneThousandth = 0.001f;
@@ -152,11 +148,8 @@ namespace Mitternacht.Services {
 		private async Task MessageReceivedHandler(SocketMessage msg) {
 			try {
 				//no bots, wait until bot connected and initialized
-				if(msg.Author.IsBot || !_bot.Ready.Task.IsCompleted) return;
+				if(msg.Author.IsBot || !_bot.Ready.Task.IsCompleted || !(msg is SocketUserMessage usrMsg)) return;
 
-				if(!(msg is SocketUserMessage usrMsg)) return;
-
-				// track how many messagges each user is sending
 				UserMessagesSent.AddOrUpdate(usrMsg.Author.Id, 1, (key, old) => ++old);
 
 				var channel = msg.Channel;
@@ -164,45 +157,41 @@ namespace Mitternacht.Services {
 
 				if(_bcp.BotConfig.DmCommandsOwnerOnly && !_bc.IsOwner(msg.Author) && guild == null) return;
 
-				await OnValidMessage?.Invoke(usrMsg);
+				if(OnValidMessage != null) await OnValidMessage.Invoke(usrMsg);
 
 				await TryRunCommand(guild, channel, usrMsg);
 			} catch(Exception ex) {
-				_log.Warn("Error in CommandHandler");
-				_log.Warn(ex);
-				if(ex.InnerException != null) {
-					_log.Warn("Inner Exception of the error in CommandHandler");
-					_log.Warn(ex.InnerException);
-				}
+				_log.Warn(ex, "Error in CommandHandler");
+				if(ex.InnerException != null) _log.Warn(ex.InnerException, "Inner Exception of the error in CommandHandler");
 			}
 		}
 
-		public async Task TryRunCommand(SocketGuild guild, ISocketMessageChannel channel, IUserMessage usrMsg) {
-			var execTime = Environment.TickCount;
+		public async Task TryRunCommand(SocketGuild guild, ISocketMessageChannel channel, IUserMessage userMsg) {
+			var startTickCount = Environment.TickCount;
 
 			//its nice to have early blockers and early blocking executors separate, but
 			//i could also have one interface with priorities, and just put early blockers on
 			//highest priority. :thinking:
 			foreach(var svc in _services) {
-				if(!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, usrMsg).ConfigureAwait(false)) continue;
-				_log.Info("Blocked User: [{0}] Message: [{1}] Service: [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
+				if(!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, userMsg).ConfigureAwait(false)) continue;
+				_log.Info($"Blocked User: [{userMsg.Author}] Message: [{userMsg.Content}] Service: [{svc.GetType().Name}]");
 				return;
 			}
 
-			var exec2 = Environment.TickCount - execTime;
+			var afterEarlyBlockerTicks = Environment.TickCount - startTickCount;
 
 			foreach(var svc in _services) {
-				if(!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, usrMsg).ConfigureAwait(false)) continue;
-				_log.Info("User [{0}] executed [{1}] in [{2}]", usrMsg.Author, usrMsg.Content, svc.GetType().Name);
+				if(!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, userMsg).ConfigureAwait(false)) continue;
+				_log.Info("User [{0}] executed [{1}] in [{2}]", userMsg.Author, userMsg.Content, svc.GetType().Name);
 				return;
 			}
 
-			var exec3 = Environment.TickCount - execTime;
+			var afterEarlyBlockingExecutorTicks = Environment.TickCount - startTickCount;
 
-			var messageContent = usrMsg.Content;
+			var messageContent = userMsg.Content;
 			foreach(var svc in _services) {
 				string newContent;
-				if(!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
+				if(!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, userMsg.Channel, userMsg.Author, messageContent).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
 				messageContent = newContent;
 				break;
 			}
@@ -211,34 +200,32 @@ namespace Mitternacht.Services {
 			var isPrefixCommand = messageContent.StartsWith(".prefix");
 			// execute the command and measure the time it took
 			if(messageContent.StartsWith(prefix) || isPrefixCommand) {
-				var result = await ExecuteCommandAsync(new CommandContext(_client, usrMsg), messageContent, isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
-				execTime = Environment.TickCount - execTime;
+				var (success, error, info) = await ExecuteCommandAsync(new CommandContext(_client, userMsg), messageContent, isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
+				startTickCount = Environment.TickCount - startTickCount;
 
-				if(result.Success) {
-					LogSuccessfulExecution(usrMsg, channel as ITextChannel, exec2, exec3, execTime);
-					await CommandExecuted(usrMsg, result.Info).ConfigureAwait(false);
+				if(success) {
+					LogSuccessfulExecution(userMsg, channel as ITextChannel, afterEarlyBlockerTicks, afterEarlyBlockingExecutorTicks, startTickCount);
+					await CommandExecuted(userMsg, info).ConfigureAwait(false);
 					return;
 				}
 
-				if(result.Error != null) {
-					LogErroredExecution(result.Error, usrMsg, channel as ITextChannel, exec2, exec3, execTime);
-					if(guild != null) await CommandErrored(result.Info, channel as ITextChannel, result.Error);
+				if(error != null) {
+					LogErroredExecution(error, userMsg, channel as ITextChannel, afterEarlyBlockerTicks, afterEarlyBlockingExecutorTicks, startTickCount);
+					if(guild != null) await CommandErrored(info, channel as ITextChannel, error);
 				}
 			} else {
-				await OnMessageNoTrigger(usrMsg).ConfigureAwait(false);
+				await OnMessageNoTrigger(userMsg).ConfigureAwait(false);
 			}
 
 			foreach(var svc in _services) {
 				if(svc is ILateExecutor exec) {
-					await exec.LateExecute(_client, guild, usrMsg).ConfigureAwait(false);
+					await exec.LateExecute(_client, guild, userMsg).ConfigureAwait(false);
 				}
 			}
 		}
 
-		public Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommandAsync(CommandContext context, string input, int argPos, IServiceProvider serviceProvider, MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception)
-			=> ExecuteCommand(context, input.Substring(argPos), serviceProvider, multiMatchHandling);
-
-		public async Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommand(CommandContext context, string input, IServiceProvider services, MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception) {
+		public async Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommandAsync(CommandContext context, string message, int argPos, IServiceProvider services, MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception) {
+			var input        = message.Substring(argPos);
 			var searchResult = _commandService.Search(context, input);
 			if(!searchResult.IsSuccess) return (false, null, null);
 
@@ -249,17 +236,17 @@ namespace Mitternacht.Services {
 				preconditionResults[match] = await match.Command.CheckPreconditionsAsync(context, services).ConfigureAwait(false);
 			}
 
-			var successfulPreconditions = preconditionResults.Where(x => x.Value.IsSuccess).ToArray();
+			var successfulPreconditions = preconditionResults.Where(x => x.Value.IsSuccess).ToList();
 
-			if(successfulPreconditions.Length == 0) {
+			if(!successfulPreconditions.Any()) {
 				//All preconditions failed, return the one from the highest priority command
 				var bestCandidate = preconditionResults.OrderByDescending(x => x.Key.Command.Priority).FirstOrDefault(x => !x.Value.IsSuccess);
 				return (false, bestCandidate.Value.ErrorReason, commands[0].Command);
 			}
 
 			var parseResultsDict = new Dictionary<CommandMatch, ParseResult>();
-			foreach(var pair in successfulPreconditions) {
-				var parseResult = await pair.Key.ParseAsync(context, searchResult, pair.Value, services).ConfigureAwait(false);
+			foreach(var (commandMatch, preconditionResult) in successfulPreconditions) {
+				var parseResult = await commandMatch.ParseAsync(context, searchResult, preconditionResult, services).ConfigureAwait(false);
 
 				if(parseResult.Error == CommandError.MultipleMatches) {
 					if(multiMatchHandling == MultiMatchHandling.Best) {
@@ -269,7 +256,7 @@ namespace Mitternacht.Services {
 					}
 				}
 
-				parseResultsDict[pair.Key] = parseResult;
+				parseResultsDict[commandMatch] = parseResult;
 			}
 
 			// Calculates the 'score' of a command given a parse result
@@ -289,7 +276,7 @@ namespace Mitternacht.Services {
 			}
 
 			//Order the parse results by their score so that we choose the most likely result to execute
-			var parseResults = parseResultsDict.OrderByDescending(x => CalculateScore(x.Key, x.Value));
+			var parseResults = parseResultsDict.OrderByDescending(x => CalculateScore(x.Key, x.Value)).ToList();
 
 			var successfulParses = parseResults.Where(x => x.Value.IsSuccess).ToArray();
 
@@ -302,9 +289,8 @@ namespace Mitternacht.Services {
 			var cmd = successfulParses[0].Key.Command;
 
 			// Bot will ignore commands which are ran more often than what specified by
-			// GlobalCommandsCooldown constant (miliseconds)
+			// GlobalCommandsCooldown constant (milliseconds)
 			if(!UsersOnShortCooldown.Add(context.Message.Author.Id)) return (false, null, cmd);
-			//return SearchResult.FromError(CommandError.Exception, "You are on a global cooldown.");
 
 			var commandName = cmd.Aliases.First();
 			foreach(var svc in _services) {
@@ -320,7 +306,7 @@ namespace Mitternacht.Services {
 			if(execResult.Exception == null || execResult.Exception is HttpException he && he.DiscordCode == 50013) return (true, null, cmd);
 			lock(_errorLogLock) {
 				var now = DateTime.Now;
-				File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt", $"[{now:HH:mm-yyyy-MM-dd}]" + Environment.NewLine + execResult.Exception + Environment.NewLine + "------" + Environment.NewLine);
+				File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt", $"[{now:HH:mm-yyyy-MM-dd}]{Environment.NewLine}{execResult.Exception}{Environment.NewLine}------{Environment.NewLine}");
 				_log.Warn(execResult.Exception);
 			}
 
@@ -330,24 +316,24 @@ namespace Mitternacht.Services {
 		public async Task<bool> WouldGetExecuted(IMessage msg) {
 			try {
 				if(msg.Author.IsBot || !_bot.Ready.Task.IsCompleted) return false;
-				if(!(msg is SocketUserMessage usrMsg)) return false;
+				if(!(msg is SocketUserMessage userMsg)) return false;
 
 				var guild = (msg.Channel as SocketTextChannel)?.Guild;
 
 				foreach(var svc in _services) {
-					if(!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, usrMsg, false).ConfigureAwait(false)) continue;
+					if(!(svc is IEarlyBlocker blocker) || !await blocker.TryBlockEarly(guild, userMsg, false).ConfigureAwait(false)) continue;
 					return true;
 				}
 
 				foreach(var svc in _services) {
-					if(!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, usrMsg, false).ConfigureAwait(false)) continue;
+					if(!(svc is IEarlyBlockingExecutor exec) || !await exec.TryExecuteEarly(_client, guild, userMsg, false).ConfigureAwait(false)) continue;
 					return true;
 				}
 
-				var messageContent = usrMsg.Content;
+				var messageContent = userMsg.Content;
 				foreach(var svc in _services) {
 					string newContent;
-					if(!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, usrMsg.Channel, usrMsg.Author, messageContent, false).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
+					if(!(svc is IInputTransformer exec) || (newContent = await exec.TransformInput(guild, userMsg.Channel, userMsg.Author, messageContent, false).ConfigureAwait(false)) == messageContent.ToLowerInvariant()) continue;
 					messageContent = newContent;
 					break;
 				}

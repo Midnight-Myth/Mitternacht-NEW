@@ -251,7 +251,7 @@ namespace Mitternacht
             var commandService = Services.GetService<CommandService>();
 
             // start handling messages received in commandhandler
-            await commandHandler.StartHandling().ConfigureAwait(false);
+            commandHandler.StartHandling();
 
             var _ = await commandService.AddModulesAsync(GetType().GetTypeInfo().Assembly, Services);
 
