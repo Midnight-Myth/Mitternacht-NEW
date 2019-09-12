@@ -16,7 +16,6 @@ namespace Mitternacht.Modules.Administration
     public partial class Administration
     {
         [Group]
-        [NoPublicBot]
         public class LogCommands : MitternachtSubmodule<LogCommandService>
         {
             private readonly DbService _db;

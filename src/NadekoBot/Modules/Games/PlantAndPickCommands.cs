@@ -105,10 +105,7 @@ namespace Mitternacht.Modules.Games
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
             [RequireUserPermission(GuildPermission.ManageMessages)]
-#if GLOBAL_NADEKO
-            [OwnerOnly]
-#endif
-            public async Task GenCurrency()
+			public async Task GenCurrency()
             {
                 var channel = (ITextChannel)Context.Channel;
 

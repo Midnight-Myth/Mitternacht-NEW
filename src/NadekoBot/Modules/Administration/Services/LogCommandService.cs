@@ -18,7 +18,6 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    [NoPublicBot]
     public class LogCommandService : INService
     {
 
@@ -91,10 +90,8 @@ namespace Mitternacht.Modules.Administration.Services
             _client.UserVoiceStateUpdated  += _client_UserVoiceStateUpdated;
             _client.UserVoiceStateUpdated  += _client_UserVoiceStateUpdated_TTS;
             _client.GuildMemberUpdated     += _client_GuildUserUpdated;
-#if !GLOBAL_NADEKO						   
-            _client.UserUpdated            += _client_UserUpdated;
-#endif
-            _client.ChannelCreated         += _client_ChannelCreated;
+			_client.UserUpdated            += _client_UserUpdated;
+			_client.ChannelCreated         += _client_ChannelCreated;
             _client.ChannelDestroyed       += _client_ChannelDestroyed;
             _client.ChannelUpdated         += _client_ChannelUpdated;
 			

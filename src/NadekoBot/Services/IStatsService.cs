@@ -16,9 +16,8 @@ namespace Mitternacht.Services
         long VoiceChannels { get; }
         int GuildCount { get; }
 
-        TimeSpan GetUptime();
-        string GetUptimeString(string separator = ", ");
+		TimeSpan Uptime { get; }
+		string GetUptimeString(string separator = ", ");
         void Initialize();
-        Task<string> Print();
     }
 }

@@ -55,8 +55,8 @@ namespace Mitternacht.Modules.NSFW
         [MitternachtCommand, Usage, Description, Aliases]
         public Task Hentai([Remainder] string tag = null) =>
             InternalHentai(Context.Channel, tag, false);
-#if !GLOBAL_NADEKO
-        [MitternachtCommand, Usage, Description, Aliases]
+		
+		[MitternachtCommand, Usage, Description, Aliases]
         [RequireUserPermission(ChannelPermission.ManageMessages)]
         public async Task AutoHentai(int interval = 0, string tags = null)
         {
@@ -101,9 +101,8 @@ namespace Mitternacht.Modules.NSFW
                 interval,
                 string.Join(", ", tagsArr)).ConfigureAwait(false);
         }
-#endif
 
-        [MitternachtCommand, Usage, Description, Aliases]
+		[MitternachtCommand, Usage, Description, Aliases]
         public async Task HentaiBomb([Remainder] string tag = null)
         {
             if (!_hentaiBombBlacklist.Add(Context.Guild?.Id ?? Context.User.Id))
