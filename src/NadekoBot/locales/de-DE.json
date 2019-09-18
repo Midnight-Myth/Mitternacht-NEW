@@ -330,6 +330,7 @@
   "forum_reinit_forum": "Reinitialisierung der Foruminstanz gestartet!",
   "forum_status": "Status",
   "forum_trophies": "Erfolgspunkte",
+  "forum_teamupdate_last_separator": " und ",
   "forum_teamupdate_added_single": "{0} ist nun **{1}**.",
   "forum_teamupdate_added_multi": "{0} sind nun **{1}**.",
   "forum_teamupdate_changed_single": "{0} hat den Rang von **{1}** zu **{2}** gewechselt.",

@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Gambling
                     var currentCard = cards.DrawACard();
                     cardObjects.Add(currentCard);
                     using (var stream = File.OpenRead(Path.Combine(_cardsPath, currentCard.ToString().ToLowerInvariant() + ".jpg").Replace(' ', '_')))
-                        images.Add(Image.Load(stream));
+                        images.Add(Image.Load<Rgba32>(stream));
                 }
                 MemoryStream bitmapStream = new MemoryStream();
                 images.Merge().SaveAsPng(bitmapStream);

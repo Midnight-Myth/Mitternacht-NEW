@@ -226,15 +226,15 @@ namespace Mitternacht.Modules.Gambling
                     using (var imgOneStream = images[1].ToStream())
                     using (var imgZeroStream = images[0].ToStream())
                     {
-                        var imgOne = Image.Load(imgOneStream);
-                        var imgZero = Image.Load(imgZeroStream);
+                        var imgOne = Image.Load<Rgba32>(imgOneStream);
+                        var imgZero = Image.Load<Rgba32>(imgZeroStream);
 
                         return new[] { imgOne, imgZero }.Merge();
                     }
                 }
                 using (var die = _images.Dice[num].ToStream())
                 {
-                    return Image.Load(die);
+                    return Image.Load<Rgba32>(die);
                 }
             }
         }

@@ -392,7 +392,7 @@ namespace Mitternacht.Modules.Searches
                                 var imgStream = new MemoryStream();
                                 await sr.CopyToAsync(imgStream);
                                 imgStream.Position = 0;
-                                images.Add(SixLabors.ImageSharp.Image.Load(imgStream));
+                                images.Add(SixLabors.ImageSharp.Image.Load<Rgba32>(imgStream));
                             }
                         }).ConfigureAwait(false);
                     }
