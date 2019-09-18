@@ -270,8 +270,11 @@ namespace Mitternacht.Modules.Administration
                 await Task.Delay(500).ConfigureAwait(false);
                 try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { /*ignored*/ }
 
-                await _client.StopAsync();
-                await _client.LogoutAsync();
+				await Task.WhenAny(Task.Run(async () => {
+					await _client.StopAsync();
+					await _client.LogoutAsync();
+				}), Task.Delay(5000));
+                
                 Environment.Exit(0);
             }
 
