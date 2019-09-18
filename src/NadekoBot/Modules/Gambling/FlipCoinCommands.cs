@@ -65,11 +65,11 @@ namespace Mitternacht.Modules.Gambling
                     {
                         if (rng.Next(0, 10) < 5)
                         {
-                            imgs[i] = Image.Load(heads);
+                            imgs[i] = Image.Load<Rgba32>(heads);
                         }
                         else
                         {
-                            imgs[i] = Image.Load(tails);
+                            imgs[i] = Image.Load<Rgba32>(tails);
                         }
                     }
                 }
