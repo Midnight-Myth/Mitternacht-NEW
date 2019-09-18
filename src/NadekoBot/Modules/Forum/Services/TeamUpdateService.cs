@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Forum.Services
@@ -110,27 +111,17 @@ namespace Mitternacht.Modules.Forum.Services
 
         private async Task MessageTeamMemberRankChanged(SocketTextChannel channel, RankUpdateItem[] rankUpdates)
         {
-            var roles = GetForumRankUpdateRoles(channel.Guild.Id);
-            if (roles.Length == 0) return;
-            var userGroup = rankUpdates.Where(rui => roles.Any(r => r.Equals(rui.NewRank, StringComparison.OrdinalIgnoreCase) || r.Equals(rui.OldRank, StringComparison.OrdinalIgnoreCase)))
+            var announcingTeamRoles = GetForumRankUpdateRoles(channel.Guild.Id);
+            if (announcingTeamRoles.Length == 0) return;
+            var announcingUsers = rankUpdates.Where(rui => announcingTeamRoles.Any(r => r.Equals(rui.NewRank, StringComparison.OrdinalIgnoreCase) || r.Equals(rui.OldRank, StringComparison.OrdinalIgnoreCase)))
                                        .GroupBy<RankUpdateItem, (string OldRank, string NewRank)>(rui => (rui.OldRank, rui.NewRank), new StringValueTupleComparer()).ToList();
             var prefix = GetForumRankUpdateMessagePrefix(channel.Guild.Id);
 
-            using (var uow = _db.UnitOfWork)
+            foreach (var rank in announcingUsers)
             {
-                foreach (var rank in userGroup)
-                {
-                    var key = $"teamupdate_changed_{(rank.Count() == 1 ? "single" : "multi")}";
-                    var userString = string.Join(", ", rank.Select(rui =>
-                    {
-                        var uid = uow.VerifiedUsers.GetVerifiedUserId(channel.Guild.Id, rui.NewUserInfo.Id);
-                        if (!uid.HasValue) return rui.NewUserInfo.Username;
-                        var user = channel.Guild.GetUser(uid.Value);
-                        if (user is null) return rui.NewUserInfo.Username;
-                        return user.Mention;
-                    }));
-                    await channel.SendMessageAsync(prefix + GetText(key, channel.Guild.Id, userString, rank.Key.OldRank, rank.Key.NewRank)).ConfigureAwait(false);
-                }
+                var key = $"teamupdate_changed_{(rank.Count() == 1 ? "single" : "multi")}";
+				var users = ConcatenateUsernames(channel.Guild, rank.Select(rui => rui.NewUserInfo).ToArray());
+                await channel.SendMessageAsync(prefix + GetText(key, channel.Guild.Id, users, rank.Key.OldRank, rank.Key.NewRank)).ConfigureAwait(false);
             }
         }
 
@@ -142,26 +133,16 @@ namespace Mitternacht.Modules.Forum.Services
 
         private async Task RankAddedRemovedUpdate(SocketTextChannel channel, UserInfo[] userInfos, string keypart)
         {
-            var roles = GetForumRankUpdateRoles(channel.Guild.Id);
-            if (roles.Length == 0) return;
-            var userGroup = userInfos.Where(ui => roles.Any(r => r.Equals(ui.UserTitle, StringComparison.OrdinalIgnoreCase))).GroupBy(ui => ui.UserTitle, StringComparer.OrdinalIgnoreCase).ToList();
+            var announcingTeamRoles = GetForumRankUpdateRoles(channel.Guild.Id);
+            if (announcingTeamRoles.Length == 0) return;
+            var announcingUsers = userInfos.Where(ui => announcingTeamRoles.Any(r => r.Equals(ui.UserTitle, StringComparison.OrdinalIgnoreCase))).GroupBy(ui => ui.UserTitle, StringComparer.OrdinalIgnoreCase).ToList();
             var prefix = GetForumRankUpdateMessagePrefix(channel.Guild.Id);
-
-            using (var uow = _db.UnitOfWork)
+			
+            foreach (var rank in announcingUsers)
             {
-                foreach (var rank in userGroup)
-                {
-                    var key = $"teamupdate_{keypart}_{(rank.Count() == 1 ? "single" : "multi")}";
-                    var userString = string.Join(", ", rank.Select(ui =>
-                    {
-                        var uid = uow.VerifiedUsers.GetVerifiedUserId(channel.Guild.Id, ui.Id);
-                        if (!uid.HasValue) return ui.Username;
-                        var user = channel.Guild.GetUser(uid.Value);
-                        if (user is null) return ui.Username;
-                        return user.Mention;
-                    }));
-                    await channel.SendMessageAsync(prefix + GetText(key, channel.Guild.Id, userString, rank.Key)).ConfigureAwait(false);
-                }
+                var key = $"teamupdate_{keypart}_{(rank.Count() == 1 ? "single" : "multi")}";
+				var users = ConcatenateUsernames(channel.Guild, rank.ToArray());
+                await channel.SendMessageAsync(prefix + GetText(key, channel.Guild.Id, users, rank.Key)).ConfigureAwait(false);
             }
         }
 
@@ -181,6 +162,17 @@ namespace Mitternacht.Modules.Forum.Services
                 return string.IsNullOrWhiteSpace(prefix) ? "" : $"{prefix.Trim()} ";
             }
         }
+
+		private string ConcatenateUsernames(SocketGuild guild, UserInfo[] userInfos) {
+			using(var uow = _db.UnitOfWork) {
+				var usernames = (from userInfo in userInfos
+					let verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(guild.Id, userInfo.Id)
+					let user = verifiedUserId.HasValue ? guild.GetUser(verifiedUserId.Value) : null
+					select user != null ? user.Mention : userInfo.Username).ToArray();
+
+				return string.Join(", ", usernames);
+			}
+		}
 
         #endregion
 
