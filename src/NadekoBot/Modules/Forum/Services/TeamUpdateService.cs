@@ -170,7 +170,9 @@ namespace Mitternacht.Modules.Forum.Services
 					let user = verifiedUserId.HasValue ? guild.GetUser(verifiedUserId.Value) : null
 					select user != null ? user.Mention : userInfo.Username).ToArray();
 
-				return string.Join(", ", usernames);
+				if(usernames.Length >= 2)
+					usernames = new[] {string.Join(", ", usernames.Take(usernames.Length - 1)), usernames.Last()};
+				return string.Join(GetText("teamupdate_last_separator", guild.Id), usernames);
 			}
 		}
 
