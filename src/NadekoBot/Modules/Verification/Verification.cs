@@ -5,7 +5,7 @@ using Discord;
 using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels.Entities;
+using GommeHDnetForumAPI.Models.Entities;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;

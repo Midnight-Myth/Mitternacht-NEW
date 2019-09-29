@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels.Entities;
+using GommeHDnetForumAPI.Models.Entities;
 using GommeHDnetForumAPI.Exceptions;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
