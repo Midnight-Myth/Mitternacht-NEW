@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels;
-using GommeHDnetForumAPI.DataModels.Entities;
+using GommeHDnetForumAPI.Models;
+using GommeHDnetForumAPI.Models.Entities;
 using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
 

@@ -1,7 +1,7 @@
 ﻿using Discord.WebSocket;
-using GommeHDnetForumAPI.DataModels;
-using GommeHDnetForumAPI.DataModels.Collections;
-using GommeHDnetForumAPI.DataModels.Entities;
+using GommeHDnetForumAPI.Models;
+using GommeHDnetForumAPI.Models.Collections;
+using GommeHDnetForumAPI.Models.Entities;
 using Mitternacht.Common;
 using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;

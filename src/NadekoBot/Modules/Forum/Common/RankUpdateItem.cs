@@ -1,4 +1,4 @@
-﻿using GommeHDnetForumAPI.DataModels.Entities;
+﻿using GommeHDnetForumAPI.Models.Entities;
 
 namespace Mitternacht.Modules.Forum.Common
 {
