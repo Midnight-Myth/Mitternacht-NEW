@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[Priority(0)]
 			public async Task Warnlog(int page, [Remainder] IGuildUser user = null)
-				=> await (user == null ? InternalWarnlog(Context.User.Id, page - 1) : (Context.User.Id == user.Id || ((IGuildUser) Context.User).GuildPermissions.KickMembers ? InternalWarnlog(user.Id, page - 1) : Task.CompletedTask));
+				=> await (user == null ? InternalWarnlog(Context.User.Id, page - 1) : Context.User.Id == user.Id || ((IGuildUser) Context.User).GuildPermissions.KickMembers ? InternalWarnlog(user.Id, page - 1) : Task.CompletedTask);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Administration {
 																		foreach(var w in warnings) {
 																			var name = GetText("warned_on_by", w.DateAdded?.ToString("dd.MM.yyy"), w.DateAdded?.ToString("HH:mm"), w.Moderator);
 
-																			if(w.Forgiven) name = Format.Strikethrough(name) + " " + GetText("warn_cleared_by", w.ForgivenBy);
+																			if(w.Forgiven) name = $"{Format.Strikethrough(name)} {GetText("warn_cleared_by", w.ForgivenBy)}";
 																			name += $" ({w.Id.ToHex()})";
 																			embed.AddField(x => x.WithName(name).WithValue(w.Reason));
 																		}
@@ -234,7 +234,7 @@ namespace Mitternacht.Modules.Administration {
 					var ps = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.WarnPunishments)).WarnPunishments;
 					ps.RemoveAll(x => x.Count == number);
 
-					ps.Add(new WarningPunishment {Count = number, Punishment = punish, Time = time,});
+					ps.Add(new WarningPunishment {Count = number, Punishment = punish, Time = time});
 					uow.Complete();
 				}
 
@@ -291,7 +291,7 @@ namespace Mitternacht.Modules.Administration {
 				}
 
 				await Context.Guild.AddBanAsync(user, 7, msg).ConfigureAwait(false);
-				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor().WithTitle("⛔️ " + GetText("banned_user")).AddField(efb => efb.WithName(GetText("username")).WithValue(user.ToString()).WithIsInline(true)).AddField(efb => efb.WithName("ID").WithValue(user.Id.ToString()).WithIsInline(true))).ConfigureAwait(false);
+				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor().WithTitle($"⛔️ {GetText("banned_user")}").AddField(efb => efb.WithName(GetText("username")).WithValue(user.ToString()).WithIsInline(true)).AddField(efb => efb.WithName("ID").WithValue(user.Id.ToString()).WithIsInline(true))).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -360,7 +360,7 @@ namespace Mitternacht.Modules.Administration {
 					await Context.Guild.RemoveBanAsync(user).ConfigureAwait(false);
 				}
 
-				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor().WithTitle("☣ " + GetText("sb_user")).AddField(efb => efb.WithName(GetText("username")).WithValue(user.ToString()).WithIsInline(true)).AddField(efb => efb.WithName("ID").WithValue(user.Id.ToString()).WithIsInline(true))).ConfigureAwait(false);
+				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor().WithTitle($"☣ {GetText("sb_user")}").AddField(efb => efb.WithName(GetText("username")).WithValue(user.ToString()).WithIsInline(true)).AddField(efb => efb.WithName("ID").WithValue(user.Id.ToString()).WithIsInline(true))).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
