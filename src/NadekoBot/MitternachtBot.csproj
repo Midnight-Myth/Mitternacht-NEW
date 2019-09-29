@@ -81,7 +81,7 @@
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>latest</LangVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
