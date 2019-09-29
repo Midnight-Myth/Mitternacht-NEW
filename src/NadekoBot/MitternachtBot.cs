@@ -264,10 +264,7 @@ namespace Mitternacht {
 
 			new Thread(() => {
 				try {
-					var p = Process.GetProcessById(parentProcessId);
-					if(p == null)
-						return;
-					p.WaitForExit();
+					Process.GetProcessById(parentProcessId).WaitForExit();
 				} finally {
 					Environment.Exit(10);
 				}
