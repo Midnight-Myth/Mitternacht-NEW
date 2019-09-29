@@ -368,7 +368,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			[RequireBotPermission(GuildPermission.KickMembers)]
 			public async Task Kick(IGuildUser user, [Remainder] string msg = null) {
-				if(Context.Message.Author.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Select(r => r.Position).Max()) {
+				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Select(r => r.Position).Max()) {
 					await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
 					return;
 				}
