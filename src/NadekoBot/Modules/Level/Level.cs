@@ -9,6 +9,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Level.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level {
@@ -66,34 +67,42 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task Ranks(int count = 20, int position = 1) {
-			const int elementsPerList = 20;
 			using var uow = _db.UnitOfWork;
 			var levelModels = uow.LevelModel
 								.GetAll()
 								.Where(p => p.TotalXP != 0 && p.GuildId == Context.Guild.Id)
 								.OrderByDescending(p => p.TotalXP)
-								.Skip(position - 1 <= 0 ? 0 : position - 1)
+								.Skip(position <= 1 ? 0 : position - 1)
 								.Take(count)
 								.ToList();
+			var channel = count <= 20
+				? Context.Channel
+				: await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
 
+			await SendRanks(levelModels, channel, position).ConfigureAwait(false);
+		}
+
+		private async Task SendRanks(List<LevelModel> levelModels, IMessageChannel channel, int position) {
+			const int elementsPerList = 20;
+			
 			if(!levelModels.Any()) return;
 
-			var groupedLevelModels =
-				levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
+			using var uow = _db.UnitOfWork;
+			var groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
 			var rankStrings = new List<string>();
 			var sb          = new StringBuilder();
 			sb.AppendLine(GetText("ranks_header"));
+			
 			foreach(var glm in groupedLevelModels) {
 				if(!glm.Any()) continue;
 				var listNumber = glm.Key + 1;
 				sb.Append($"```{GetText("ranks_list_header", listNumber)}");
+				
 				foreach(var lm in glm) {
 					var user      = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 					var level     = uow.LevelModel.GetLevel(lm.GuildId, lm.UserId);
 					var currentXp = uow.LevelModel.GetCurrentXp(lm.GuildId, lm.UserId);
-					sb.Append("\n" + GetText("ranks_list_row",                                   $"{position + levelModels.IndexOf(lm),3}",
-											$"{user?.ToString() ?? lm.UserId.ToString(),-37}",   $"{level,3}", $"{currentXp,6}",
-											$"{LevelModelRepository.GetXpToNextLevel(level),6}", $"{lm.TotalXP,8}"));
+					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{user?.ToString() ?? lm.UserId.ToString(),-37}", $"{level,3}", $"{currentXp,6}", $"{LevelModelRepository.GetXpToNextLevel(level),6}", $"{lm.TotalXP,8}"));
 				}
 
 				sb.Append("```");
@@ -101,9 +110,6 @@ namespace Mitternacht.Modules.Level {
 				sb.Clear();
 			}
 
-			var channel = count <= 20
-				? Context.Channel
-				: await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
 			foreach(var s in rankStrings) {
 				await channel.SendMessageAsync(s).ConfigureAwait(false);
 				Thread.Sleep(250);
