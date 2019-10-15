@@ -72,12 +72,12 @@ namespace Mitternacht {
 			});
 			CommandService = new CommandService(new CommandServiceConfig {CaseSensitiveCommands = false, DefaultRunMode = RunMode.Sync});
 
-			port       = port ?? Credentials.ShardRunPort;
-			_comClient = new ShardComClient(port.Value);
+			port       ??=Credentials.ShardRunPort;
+			_comClient =  new ShardComClient(port.Value);
 
 			using(var uow = _db.UnitOfWork) {
 				_botConfig = uow.BotConfig.GetOrCreate();
-				OkColor    = new Color(Convert.ToUInt32(_botConfig.OkColor,    16));
+				OkColor    = new Color(Convert.ToUInt32(_botConfig.OkColor, 16));
 				ErrorColor = new Color(Convert.ToUInt32(_botConfig.ErrorColor, 16));
 			}
 
@@ -122,42 +122,41 @@ namespace Mitternacht {
 			var startingGuildIdList = Client.Guilds.Select(x => x.Id).ToList();
 
 			//this unit of work will be used for initialization of all modules too, to prevent multiple queries from running
-			using(var uow = _db.UnitOfWork) {
-				AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
+			using var uow = _db.UnitOfWork;
+			AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
 
-				IBotConfigProvider botConfigProvider = new BotConfigProvider(_db, _botConfig);
+			IBotConfigProvider botConfigProvider = new BotConfigProvider(_db, _botConfig);
 
-				//var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
+			//var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
 
-				//initialize Services
-				Services = new NServiceProvider.ServiceProviderBuilder()
-							.AddManual<IBotCredentials>(Credentials)
-							.AddManual(_db)
-							.AddManual(Client)
-							.AddManual(CommandService)
-							.AddManual(botConfigProvider)
-							//.AddManual<ILocalization>(localization)
-							.AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
-							.AddManual(this)
-							.AddManual(uow)
-							.AddManual(new MojangApi())
-							.LoadFrom(Assembly.GetEntryAssembly())
-							.Build();
+			//initialize Services
+			Services = new NServiceProvider.ServiceProviderBuilder()
+						.AddManual<IBotCredentials>(Credentials)
+						.AddManual(_db)
+						.AddManual(Client)
+						.AddManual(CommandService)
+						.AddManual(botConfigProvider)
+						//.AddManual<ILocalization>(localization)
+						.AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
+						.AddManual(this)
+						.AddManual(uow)
+						.AddManual(new MojangApi())
+						.LoadFrom(Assembly.GetEntryAssembly())
+						.Build();
 
-				var commandHandler = Services.GetService<CommandHandler>();
-				commandHandler.AddServices(Services);
+			var commandHandler = Services.GetService<CommandHandler>();
+			commandHandler.AddServices(Services);
 
-				//setup typereaders
-				CommandService.AddTypeReader<PermissionAction>(new PermissionActionTypeReader());
-				CommandService.AddTypeReader<CommandInfo>(new CommandTypeReader());
-				CommandService.AddTypeReader<CommandOrCrInfo>(new CommandOrCrTypeReader());
-				CommandService.AddTypeReader<ModuleInfo>(new ModuleTypeReader(CommandService));
-				CommandService.AddTypeReader<ModuleOrCrInfo>(new ModuleOrCrTypeReader(CommandService));
-				CommandService.AddTypeReader<IGuild>(new GuildTypeReader(Client));
-				CommandService.AddTypeReader<GuildDateTime>(new GuildDateTimeTypeReader());
-				CommandService.AddTypeReader<IBirthDate>(new BirthDateTypeReader());
-				CommandService.AddTypeReader<HexColor>(new HexColorTypeReader());
-			}
+			//setup typereaders
+			CommandService.AddTypeReader<PermissionAction>(new PermissionActionTypeReader());
+			CommandService.AddTypeReader<CommandInfo>(new CommandTypeReader());
+			CommandService.AddTypeReader<CommandOrCrInfo>(new CommandOrCrTypeReader());
+			CommandService.AddTypeReader<ModuleInfo>(new ModuleTypeReader(CommandService));
+			CommandService.AddTypeReader<ModuleOrCrInfo>(new ModuleOrCrTypeReader(CommandService));
+			CommandService.AddTypeReader<IGuild>(new GuildTypeReader(Client));
+			CommandService.AddTypeReader<GuildDateTime>(new GuildDateTimeTypeReader());
+			CommandService.AddTypeReader<IBirthDate>(new BirthDateTypeReader());
+			CommandService.AddTypeReader<HexColor>(new HexColorTypeReader());
 		}
 
 		private async Task LoginAsync(string token) {
@@ -229,7 +228,7 @@ namespace Mitternacht {
 		}
 
 		private Task Client_Log(LogMessage arg) {
-			_log.Warn(arg.Source + " | " + arg.Message);
+			_log.Warn($"{arg.Source} | {arg.Message}");
 			if(arg.Exception != null) _log.Warn(arg.Exception);
 			return Task.CompletedTask;
 		}
@@ -264,10 +263,7 @@ namespace Mitternacht {
 
 			new Thread(() => {
 				try {
-					var p = Process.GetProcessById(parentProcessId);
-					if(p == null)
-						return;
-					p.WaitForExit();
+					Process.GetProcessById(parentProcessId).WaitForExit();
 				} finally {
 					Environment.Exit(10);
 				}
