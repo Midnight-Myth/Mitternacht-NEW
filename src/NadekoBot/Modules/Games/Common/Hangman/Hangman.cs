@@ -6,73 +6,69 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mitternacht.Extensions;
 
-namespace Mitternacht.Modules.Games.Common.Hangman
-{
-    public class Hangman : IDisposable
-    {
-        public string TermType { get; }
-        public HangmanObject Term { get; }
+namespace Mitternacht.Modules.Games.Common.Hangman {
+	public class Hangman : IDisposable {
+		public string        TermType { get; }
+		public HangmanObject Term     { get; }
 
-        public string ScrambledWord => "`" + String.Concat(Term.Word.Select(c =>
-        {
-            if (c == ' ')
-                return " \u2000";
-            if (!(char.IsLetter(c) || char.IsDigit(c)))
-                return $" {c}";
+		public string ScrambledWordCode => $"`{ScrambledWord}`";
 
-            c = char.ToLowerInvariant(c);
-            return _previousGuesses.Contains(c) ? $" {c}" : " ◯";
-        })) + "`";
+		public string ScrambledWord => String.Concat(Term.Word.Select(c => {
+			if(c == ' ')
+				return " \u2000";
+			if(!(char.IsLetter(c) || char.IsDigit(c)))
+				return $" {c}";
 
-        private Phase _currentPhase = Phase.Active;
-        public Phase CurrentPhase
-        {
-            get => _currentPhase;
-            set
-            {
-                if (value == Phase.Ended)
-                    _endingCompletionSource.TrySetResult(true);
+			c = char.ToLowerInvariant(c);
+			return _previousGuesses.Contains(c) ? $" {c}" : " ◯";
+		}));
 
-                _currentPhase = value;
-            }
-        }
+		private Phase _currentPhase = Phase.Active;
 
-        private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
+		public Phase CurrentPhase {
+			get => _currentPhase;
+			set {
+				if(value == Phase.Ended)
+					_endingCompletionSource.TrySetResult(true);
 
-        private readonly HashSet<ulong> _recentUsers = new HashSet<ulong>();
+				_currentPhase = value;
+			}
+		}
 
-        public uint Errors { get; private set; } = 0;
-        public uint MaxErrors { get; } = 6;
+		private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
 
-        public event Func<Hangman, string, Task> OnGameEnded = delegate { return Task.CompletedTask; };
-        public event Func<Hangman, string, char, Task> OnLetterAlreadyUsed = delegate { return Task.CompletedTask; };
-        public event Func<Hangman, string, char, Task> OnGuessFailed = delegate { return Task.CompletedTask; };
-        public event Func<Hangman, string, char, Task> OnGuessSucceeded = delegate { return Task.CompletedTask; };
+		private readonly HashSet<ulong> _recentUsers = new HashSet<ulong>();
 
-        private readonly HashSet<char> _previousGuesses = new HashSet<char>();
-        public ImmutableArray<char> PreviousGuesses => _previousGuesses.ToImmutableArray();
+		public uint Errors    { get; private set; } = 0;
+		public uint MaxErrors { get; }              = 6;
 
-        private readonly TaskCompletionSource<bool> _endingCompletionSource = new TaskCompletionSource<bool>();
+		public event Func<Hangman, string, Task>       OnGameEnded         = delegate { return Task.CompletedTask; };
+		public event Func<Hangman, string, char, Task> OnLetterAlreadyUsed = delegate { return Task.CompletedTask; };
+		public event Func<Hangman, string, char, Task> OnGuessFailed       = delegate { return Task.CompletedTask; };
+		public event Func<Hangman, string, char, Task> OnGuessSucceeded    = delegate { return Task.CompletedTask; };
 
-        public Task EndedTask => _endingCompletionSource.Task;
+		private readonly HashSet<char>        _previousGuesses = new HashSet<char>();
+		public           ImmutableArray<char> PreviousGuesses => _previousGuesses.ToImmutableArray();
 
-        public Hangman(TermType type)
-        {
-            this.TermType = type.ToString().Replace('_', ' ').ToTitleCase();
-            this.Term = TermPool.GetTerm(type);
-        }
+		private readonly TaskCompletionSource<bool> _endingCompletionSource = new TaskCompletionSource<bool>();
 
-        private void AddError()
-        {
-            Errors++;
-            if (Errors > MaxErrors)
-            {
-                var _ = OnGameEnded(this, null);
-                CurrentPhase = Phase.Ended;
-            }
-        }
+		public Task EndedTask => _endingCompletionSource.Task;
 
-        public string GetHangman() => $@". ┌─────┐
+		public Hangman(TermType type) {
+			this.TermType = type.ToString().Replace('_', ' ').ToTitleCase();
+			this.Term     = TermPool.GetTerm(type);
+		}
+
+		private void AddError() {
+			Errors++;
+			if(Errors > MaxErrors) {
+				var _ = OnGameEnded(this, null);
+				CurrentPhase = Phase.Ended;
+			}
+		}
+
+		public string GetHangman()
+			=> $@". ┌─────┐
 .┃...............┋
 .┃...............┋
 .┃{(Errors > 0 ? ".............😲" : "")}
@@ -80,91 +76,81 @@ namespace Mitternacht.Modules.Games.Common.Hangman
 .┃{(Errors > 4 ? "............../" : "")} {(Errors > 5 ? "\\" : "")}
 /-\";
 
-        public async Task Input(ulong userId, string userName, string input)
-        {
-            if (CurrentPhase == Phase.Ended)
-                return;
+		public async Task Input(ulong userId, string userName, string input) {
+			if(CurrentPhase == Phase.Ended)
+				return;
 
-            if (string.IsNullOrWhiteSpace(input))
-                return;
+			if(string.IsNullOrWhiteSpace(input))
+				return;
 
-            input = input.Trim().ToLowerInvariant();
+			input = input.Trim().ToLowerInvariant();
 
-            await _locker.WaitAsync().ConfigureAwait(false);
-            try
-            {
-                if (CurrentPhase == Phase.Ended)
-                    return;
+			await _locker.WaitAsync().ConfigureAwait(false);
+			try {
+				if(CurrentPhase == Phase.Ended)
+					return;
 
-                if (input.Length > 1) // tried to guess the whole word
-                {
-                    if (input != Term.Word) // failed
-                        return;
+				if(input.Length > 1) // tried to guess the whole word
+				{
+					if(input != Term.Word) // failed
+						return;
 
-                    var _ = OnGameEnded?.Invoke(this, userName);
-                    CurrentPhase = Phase.Ended;
-                    return;
-                }
+					var _ = OnGameEnded?.Invoke(this, userName);
+					CurrentPhase = Phase.Ended;
+					return;
+				}
 
-                var ch = input[0];
+				var ch = input[0];
 
-                if (!(char.IsLetterOrDigit(ch)))
-                    return;
+				if(!(char.IsLetterOrDigit(ch)))
+					return;
+				
+				// Do not let users spam letters.
+				if(!_recentUsers.Add(userId))
+					return;
+				
+				if(!_previousGuesses.Add(ch)) {
+					var _ = OnLetterAlreadyUsed?.Invoke(this, userName, ch);
+					AddError();
+				} else if(!Term.Word.Contains(ch)) {
+					var _ = OnGuessFailed?.Invoke(this, userName, ch);
+					AddError();
+				} else if(_previousGuesses.IsSupersetOf(Term.Word.ToLowerInvariant().Where(char.IsLetterOrDigit))) {
+					var _ = OnGameEnded.Invoke(this, userName);
+					CurrentPhase = Phase.Ended;
+				} else {
+					var _ = OnGuessSucceeded?.Invoke(this, userName, ch);
+					// Remove spam restriction for user with a correct guess.
+					_recentUsers.Remove(userId);
+					return;
+				}
 
-                if (!_recentUsers.Add(userId)) // don't let a single user spam guesses
-                    return;
+				var clearSpam = Task.Run(async () => {
+					await Task.Delay(3000).ConfigureAwait(false);
+					_recentUsers.Remove(userId);
+				});
+			} finally {
+				_locker.Release();
+			}
+		}
 
-                if (!_previousGuesses.Add(ch)) // that latter was already guessed
-                {
-                    var _ = OnLetterAlreadyUsed?.Invoke(this, userName, ch);
-                    AddError();
-                }
-                else if (!Term.Word.Contains(ch)) // guessed letter doesn't exist
-                {
-                    var _ = OnGuessFailed?.Invoke(this, userName, ch);
-                    AddError();
-                }
-                else if (Term.Word.All(x => _previousGuesses.IsSupersetOf(Term.Word.ToLowerInvariant()
-                                                                            .Where(c => char.IsLetterOrDigit(c)))))
-                {
-                    var _ = OnGameEnded.Invoke(this, userName); //if all letters are guessed
-                    CurrentPhase = Phase.Ended;
-                }
-                else //guessed but not last letter
-                {
-                    var _ = OnGuessSucceeded?.Invoke(this, userName, ch);
-                    _recentUsers.Remove(userId); // he can guess again right away
-                    return;
-                }
+		public async Task Stop() {
+			await _locker.WaitAsync().ConfigureAwait(false);
+			try {
+				CurrentPhase = Phase.Ended;
+			} finally {
+				_locker.Release();
+			}
+		}
 
-                var clearSpam = Task.Run(async () =>
-                {
-                    await Task.Delay(3000).ConfigureAwait(false); // remove the user from the spamlist after 5 seconds
-                    _recentUsers.Remove(userId);
-                });
-            }
-            finally { _locker.Release(); }
-        }
-
-        public async Task Stop()
-        {
-            await _locker.WaitAsync().ConfigureAwait(false);
-            try
-            {
-                CurrentPhase = Phase.Ended;
-            }
-            finally { _locker.Release(); }
-        }
-
-        public void Dispose()
-        {
-            OnGameEnded = null;
-            OnGuessFailed = null;
-            OnGuessSucceeded = null;
-            OnLetterAlreadyUsed = null;
-            _previousGuesses.Clear();
-            _recentUsers.Clear();
-            _locker.Dispose();
-        }
-    }
+		public void Dispose() {
+			OnGameEnded         = null;
+			OnGuessFailed       = null;
+			OnGuessSucceeded    = null;
+			OnLetterAlreadyUsed = null;
+			_previousGuesses.Clear();
+			_recentUsers.Clear();
+			_locker.Dispose();
+		}
+	}
 }

@@ -8,130 +8,102 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Games.Common.Hangman;
 
-namespace Mitternacht.Modules.Games
-{
-    public partial class Games
-    {
-        [Group]
-        public class HangmanCommands : MitternachtSubmodule
-        {
-            private readonly DiscordSocketClient _client;
+namespace Mitternacht.Modules.Games {
+	public partial class Games {
+		[Group]
+		public class HangmanCommands : MitternachtSubmodule {
+			private readonly DiscordSocketClient _client;
 
-            public HangmanCommands(DiscordSocketClient client)
-            {
-                _client = client;
-            }
+			public HangmanCommands(DiscordSocketClient client) {
+				_client = client;
+			}
 
-            //channelId, game
-            public static ConcurrentDictionary<ulong, Hangman> HangmanGames { get; } = new ConcurrentDictionary<ulong, Hangman>();
+			public static ConcurrentDictionary<ulong, Hangman> HangmanGames { get; } = new ConcurrentDictionary<ulong, Hangman>();
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            public async Task Hangmanlist()
-            {
-                await Context.Channel.SendConfirmAsync(Format.Code(GetText("hangman_types", Prefix)) + "\n" + string.Join(", ", TermPool.Data.Keys));
-            }
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			public async Task Hangmanlist() {
+				await Context.Channel.SendConfirmAsync(Format.Code(GetText("hangman_types", Prefix)) + "\n" + string.Join(", ", TermPool.Data.Keys));
+			}
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            public async Task Hangman([Remainder]TermType type = TermType.Random)
-            {
-                var hm = new Hangman(type);
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			public Task Hangman([Remainder]TermType type = TermType.Random) {
+				var _ = Task.Run(async () => await PerformHangmanGame(type));
+				return Task.CompletedTask;
+			}
 
-                if (!HangmanGames.TryAdd(Context.Channel.Id, hm))
-                {
-                    hm.Dispose();
-                    await ReplyErrorLocalized("hangman_running").ConfigureAwait(false);
-                    return;
-                }
-                hm.OnGameEnded += Hm_OnGameEnded;
-                hm.OnGuessFailed += Hm_OnGuessFailed;
-                hm.OnGuessSucceeded += Hm_OnGuessSucceeded;
-                hm.OnLetterAlreadyUsed += Hm_OnLetterAlreadyUsed;
-                _client.MessageReceived += _client_MessageReceived;
+			Task Hm_OnGameEnded(Hangman game, string winner) {
+				if(winner == null) {
+					var loseEmbed = new EmbedBuilder().WithTitle($"Hangman Game ({game.TermType}) - Ended")
+													.WithDescription(Format.Bold("You lose."))
+													.AddField(efb => efb.WithName("It was").WithValue(game.Term.Word.ToTitleCase()))
+													.WithFooter(efb => efb.WithText(string.Join(" ", game.PreviousGuesses)))
+													.WithErrorColor();
 
-                try
-                {
-                    await Context.Channel.SendConfirmAsync(GetText("hangman_game_started") + $" ({hm.TermType})",
-                        hm.ScrambledWord + "\n" + hm.GetHangman())
-                        .ConfigureAwait(false);
-                }
-                catch { }
+					if(Uri.IsWellFormedUriString(game.Term.ImageUrl, UriKind.Absolute))
+						loseEmbed.WithImageUrl(game.Term.ImageUrl);
 
-                await hm.EndedTask.ConfigureAwait(false);
+					return Context.Channel.EmbedAsync(loseEmbed);
+				}
 
-                _client.MessageReceived -= _client_MessageReceived;
-                HangmanGames.TryRemove(Context.Channel.Id, out _);
-                hm.Dispose();
+				var winEmbed = new EmbedBuilder().WithTitle($"Hangman Game ({game.TermType}) - Ended")
+												.WithDescription(Format.Bold($"{winner} Won."))
+												.AddField(efb => efb.WithName("It was").WithValue(game.Term.Word.ToTitleCase()))
+												.WithFooter(efb => efb.WithText(string.Join(" ", game.PreviousGuesses)))
+												.WithOkColor();
 
-                Task _client_MessageReceived(SocketMessage msg)
-                {
-                    var _ = Task.Run(() =>
-                    {
-                        if (Context.Channel.Id == msg.Channel.Id)
-                            return hm.Input(msg.Author.Id, msg.Author.ToString(), msg.Content);
-                        else
-                            return Task.CompletedTask;
-                    });
-                    return Task.CompletedTask;
-                }
-            }
+				if(Uri.IsWellFormedUriString(game.Term.ImageUrl, UriKind.Absolute))
+					winEmbed.WithImageUrl(game.Term.ImageUrl);
 
-            Task Hm_OnGameEnded(Hangman game, string winner)
-            {
-                if (winner == null)
-                {
-                    var loseEmbed = new EmbedBuilder().WithTitle($"Hangman Game ({game.TermType}) - Ended")
-                                             .WithDescription(Format.Bold("You lose."))
-                                             .AddField(efb => efb.WithName("It was").WithValue(game.Term.Word.ToTitleCase()))
-                                             .WithFooter(efb => efb.WithText(string.Join(" ", game.PreviousGuesses)))
-                                             .WithErrorColor();
+				return Context.Channel.EmbedAsync(winEmbed);
+			}
 
-                    if (Uri.IsWellFormedUriString(game.Term.ImageUrl, UriKind.Absolute))
-                        loseEmbed.WithImageUrl(game.Term.ImageUrl);
+			private Task Hm_OnLetterAlreadyUsed(Hangman game, string user, char guess)
+				=> Context.Channel.SendErrorAsync($"Hangman Game ({game.TermType})", $"{user} Letter `{guess}` has already been used. You can guess again in 3 seconds.\n{game.ScrambledWordCode}\n{game.GetHangman()}", footer: string.Join(" ", game.PreviousGuesses));
 
-                    return Context.Channel.EmbedAsync(loseEmbed);
-                }
+			private Task Hm_OnGuessSucceeded(Hangman game, string user, char guess)
+				=> Context.Channel.SendConfirmAsync($"Hangman Game ({game.TermType})", $"{user} guessed a letter `{guess}`!\n{game.ScrambledWordCode}\n{game.GetHangman()}");
 
-                var winEmbed = new EmbedBuilder().WithTitle($"Hangman Game ({game.TermType}) - Ended")
-                                             .WithDescription(Format.Bold($"{winner} Won."))
-                                             .AddField(efb => efb.WithName("It was").WithValue(game.Term.Word.ToTitleCase()))
-                                             .WithFooter(efb => efb.WithText(string.Join(" ", game.PreviousGuesses)))
-                                             .WithOkColor();
+			private Task Hm_OnGuessFailed(Hangman game, string user, char guess)
+				=> Context.Channel.SendErrorAsync($"Hangman Game ({game.TermType})", $"{user} Letter `{guess}` does not exist. You can guess again in 3 seconds.\n{game.ScrambledWordCode}\n{game.GetHangman()}", footer: string.Join(" ", game.PreviousGuesses));
 
-                if (Uri.IsWellFormedUriString(game.Term.ImageUrl, UriKind.Absolute))
-                    winEmbed.WithImageUrl(game.Term.ImageUrl);
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			public async Task HangmanStop() {
+				if(HangmanGames.TryRemove(Context.Channel.Id, out var removed)) {
+					await removed.Stop().ConfigureAwait(false);
+					await ReplyConfirmLocalized("hangman_stopped").ConfigureAwait(false);
+				}
+			}
 
-                return Context.Channel.EmbedAsync(winEmbed);
-            }
+			private async Task PerformHangmanGame(TermType type) {
+				using var hm = new Hangman(type);
 
-            private Task Hm_OnLetterAlreadyUsed(Hangman game, string user, char guess)
-            {
-                return Context.Channel.SendErrorAsync($"Hangman Game ({game.TermType})", $"{user} Letter `{guess}` has already been used. You can guess again in 3 seconds.\n" + game.ScrambledWord + "\n" + game.GetHangman(),
-                                    footer: string.Join(" ", game.PreviousGuesses));
-            }
+				if(HangmanGames.TryAdd(Context.Channel.Id, hm)) {
+					Task _client_MessageReceived(SocketMessage msg) {
+						var _ = Task.Run(() => Context.Channel.Id == msg.Channel.Id ? hm.Input(msg.Author.Id, msg.Author.ToString(), msg.Content) : Task.CompletedTask);
+						return Task.CompletedTask;
+					}
 
-            private Task Hm_OnGuessSucceeded(Hangman game, string user, char guess)
-            {
-                return Context.Channel.SendConfirmAsync($"Hangman Game ({game.TermType})", $"{user} guessed a letter `{guess}`!\n" + game.ScrambledWord + "\n" + game.GetHangman());
-            }
+					hm.OnGameEnded          += Hm_OnGameEnded;
+					hm.OnGuessFailed        += Hm_OnGuessFailed;
+					hm.OnGuessSucceeded     += Hm_OnGuessSucceeded;
+					hm.OnLetterAlreadyUsed  += Hm_OnLetterAlreadyUsed;
+					_client.MessageReceived += _client_MessageReceived;
 
-            private Task Hm_OnGuessFailed(Hangman game, string user, char guess)
-            {
-                return Context.Channel.SendErrorAsync($"Hangman Game ({game.TermType})", $"{user} Letter `{guess}` does not exist. You can guess again in 3 seconds.\n" + game.ScrambledWord + "\n" + game.GetHangman(),
-                                    footer: string.Join(" ", game.PreviousGuesses));
-            }
+					try {
+						await Context.Channel.SendConfirmAsync($"{GetText("hangman_game_started")} ({hm.TermType})", $"{hm.ScrambledWordCode}\n{hm.GetHangman()}").ConfigureAwait(false);
+					} catch { }
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            public async Task HangmanStop()
-            {
-                if (HangmanGames.TryRemove(Context.Channel.Id, out var removed))
-                {
-                    await removed.Stop().ConfigureAwait(false);
-                    await ReplyConfirmLocalized("hangman_stopped").ConfigureAwait(false);
-                }
-            }
-        }
-    }
+					await hm.EndedTask.ConfigureAwait(false);
+
+					_client.MessageReceived -= _client_MessageReceived;
+					HangmanGames.TryRemove(Context.Channel.Id, out var _);
+				} else {
+					await ReplyErrorLocalized("hangman_running").ConfigureAwait(false);
+				}
+			}
+		}
+	}
 }
