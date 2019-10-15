@@ -72,12 +72,12 @@ namespace Mitternacht {
 			});
 			CommandService = new CommandService(new CommandServiceConfig {CaseSensitiveCommands = false, DefaultRunMode = RunMode.Sync});
 
-			port       = port ?? Credentials.ShardRunPort;
-			_comClient = new ShardComClient(port.Value);
+			port       ??=Credentials.ShardRunPort;
+			_comClient =  new ShardComClient(port.Value);
 
 			using(var uow = _db.UnitOfWork) {
 				_botConfig = uow.BotConfig.GetOrCreate();
-				OkColor    = new Color(Convert.ToUInt32(_botConfig.OkColor,    16));
+				OkColor    = new Color(Convert.ToUInt32(_botConfig.OkColor, 16));
 				ErrorColor = new Color(Convert.ToUInt32(_botConfig.ErrorColor, 16));
 			}
 
