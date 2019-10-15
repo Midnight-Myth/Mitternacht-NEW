@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Permissions.Services
         }
 
         public async Task<bool> TryBlockEarly(IGuild guild, IUserMessage msg, bool realExecution = true)
-            => msg.Author is IGuildUser gu && !gu.GuildPermissions.Administrator && (await FilterInvites(guild, msg, realExecution) || await FilterWords(guild, msg, realExecution) || await FilterZalgo(guild, msg, realExecution));
+            => msg.Author is IGuildUser gu && !gu.GuildPermissions.ManageMessages && (await FilterInvites(guild, msg, realExecution) || await FilterWords(guild, msg, realExecution) || await FilterZalgo(guild, msg, realExecution));
 
         public async Task<bool> FilterWords(IGuild guild, IUserMessage usrMsg, bool realExecution = true)
         {
