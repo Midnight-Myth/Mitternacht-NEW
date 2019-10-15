@@ -41,9 +41,11 @@ namespace Mitternacht.Extensions {
 		public static Task<IUserMessage> SendTableAsync<T>(this IMessageChannel ch, IEnumerable<T> items, Func<T, string> howToPrint, int columns = 3)
 			=> ch.SendTableAsync("", items, howToPrint, columns);
 
-		private static readonly IEmote ArrowLeft  = new Emoji("⬅");
-		private static readonly IEmote ArrowRight = new Emoji("➡");
-
+		private static readonly IEmote ArrowLeft          = new Emoji("⬅");
+		private static readonly IEmote ArrowRight         = new Emoji("➡");
+		private const           int    ReactionStartDelay = 500;
+		private const           int    ReactionTime       = 30000;
+		
 		/// <summary>
 		/// Creates a paginated confirm embed.
 		/// </summary>
@@ -88,7 +90,7 @@ namespace Mitternacht.Extensions {
 				await msg.AddReactionAsync(ArrowLeft).ConfigureAwait(false);
 				await msg.AddReactionAsync(ArrowRight).ConfigureAwait(false);
 
-				await Task.Delay(500).ConfigureAwait(false);
+				await Task.Delay(ReactionStartDelay).ConfigureAwait(false);
 
 				async void ChangePage(SocketReaction r) {
 					try {
@@ -114,7 +116,7 @@ namespace Mitternacht.Extensions {
 				}
 
 				using(msg.OnReaction(client, ChangePage, ChangePage)) {
-					await Task.Delay(30000).ConfigureAwait(false);
+					await Task.Delay(ReactionTime).ConfigureAwait(false);
 				}
 
 				await msg.RemoveAllReactionsAsync().ConfigureAwait(false);
@@ -137,7 +139,7 @@ namespace Mitternacht.Extensions {
 				await msg.AddReactionAsync(ArrowLeft);
 				await msg.AddReactionAsync(ArrowRight);
 
-				await Task.Delay(500);
+				await Task.Delay(ReactionStartDelay);
 
 				async void ChangePage(SocketReaction r) {
 					try {
@@ -160,7 +162,7 @@ namespace Mitternacht.Extensions {
 				}
 
 				using(msg.OnReaction(client, ChangePage, ChangePage)) {
-					await Task.Delay(30000);
+					await Task.Delay(ReactionTime);
 				}
 
 				await msg.RemoveAllReactionsAsync();
