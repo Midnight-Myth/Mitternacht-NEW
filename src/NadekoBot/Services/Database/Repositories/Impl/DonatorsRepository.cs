@@ -2,6 +2,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -13,7 +15,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 
         public Donator AddOrUpdateDonator(ulong userId, string name, int amount)
         {
-            var donator = _set.Where(d => d.UserId == userId).FirstOrDefault();
+            var donator = _set.FirstOrDefault(d => d.UserId == userId);
 
             if (donator == null)
             {
@@ -35,6 +37,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public IEnumerable<Donator> GetDonatorsOrdered() => 
-            _set.OrderByDescending(d => d.Amount).ToList();
+            _set.OrderByDescending((Expression<Func<Donator, int>>)(d => d.Amount)).ToList();
     }
 }

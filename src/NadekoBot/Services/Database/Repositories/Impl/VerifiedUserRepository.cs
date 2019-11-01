@@ -2,6 +2,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -60,7 +62,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId) {
-            return _set.Where(v => v.GuildId == guildId);
+            return _set.Where((Expression<Func<VerifiedUser, bool>>)(v => v.GuildId == guildId));
         }
 
         public long? GetVerifiedUserForumId(ulong guildId, ulong userId) 

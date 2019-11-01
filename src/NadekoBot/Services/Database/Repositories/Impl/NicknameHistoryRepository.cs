@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -13,15 +14,15 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public IEnumerable<NicknameHistoryModel> GetGuildUserNames(ulong guildId, ulong userId)
-            => _set.Where(n => n.GuildId == guildId && n.UserId == userId).OrderByDescending(n => n.DateAdded);
+            => _set.Where((Expression<Func<NicknameHistoryModel, bool>>)(n => n.GuildId == guildId && n.UserId == userId)).OrderByDescending(n => n.DateAdded);
 
         public IEnumerable<NicknameHistoryModel> GetUserNames(ulong userId)
-            => _set.Where(n => n.UserId == userId);
+            => _set.Where((Expression<Func<NicknameHistoryModel, bool>>)(n => n.UserId == userId));
 
         public bool AddUsername(ulong guildId, ulong userId, string nickname, ushort discriminator)
         {
             nickname = nickname?.Trim() ?? "";
-            var current = _set.Where(u => u.GuildId == guildId && u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
+            var current = _set.Where((Expression<Func<NicknameHistoryModel, bool>>)(u => u.GuildId == guildId && u.UserId == userId)).OrderByDescending(u => u.DateSet).FirstOrDefault();
             if (current == null && string.IsNullOrWhiteSpace(nickname)) return false;
             var now = DateTime.UtcNow;
             if (current != null)
@@ -56,7 +57,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 
         public bool CloseNickname(ulong guildId, ulong userId)
         {
-            var current = _set.Where(u => u.UserId == userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
+            var current = GetUserNames(userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current == null || current.DateReplaced.HasValue) return false;
             current.DateReplaced = now;

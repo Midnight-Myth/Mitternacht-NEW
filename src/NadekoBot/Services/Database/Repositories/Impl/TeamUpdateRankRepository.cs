@@ -3,6 +3,7 @@ using Mitternacht.Services.Database.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -31,6 +32,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public List<string> GetGuildRanks(ulong guildId)
-            => _set.Where(tur => tur.GuildId == guildId).Select(tur => tur.Rankname).ToList();
+            => _set.Where((Expression<Func<TeamUpdateRank, bool>>) (tur => tur.GuildId == guildId)).Select(tur => tur.Rankname).ToList();
     }
 }
