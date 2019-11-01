@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -28,7 +29,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             };
 
 		public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds) {
-			var guildConfigs = _set.Where(gc => availableGuilds.Contains(gc.GuildId)).ToList();
+			var guildConfigs = _set.Where((Expression<Func<GuildConfig, bool>>)(gc => availableGuilds.Contains(gc.GuildId))).ToList();
 			foreach(var guildConfig in guildConfigs) {
 				_context.Entry(guildConfig).Reference(gc => gc.LogSetting).Load();
 				if(guildConfig.LogSetting != null)
@@ -132,7 +133,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public IEnumerable<GuildConfig> OldPermissionsForAll()
         {
             var query = _set
-                .Where(gc => gc.RootPermission != null)
+                .Where((Expression<Func<GuildConfig, bool>>)(gc => gc.RootPermission != null))
                 .Include(gc => gc.RootPermission);
 
             for (var i = 0; i < 60; i++)
@@ -146,7 +147,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include)
         {
             var query = _set
-                .Where(x => include.Contains(x.GuildId))
+                .Where((Expression<Func<GuildConfig, bool>>)(x => include.Contains(x.GuildId)))
                 .Include(gc => gc.Permissions);
 
             return query.ToList();
@@ -155,7 +156,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public GuildConfig GcWithPermissionsv2For(ulong guildId)
         {
             var config = _set
-                .Where(gc => gc.GuildId == guildId)
+                .Where((Expression<Func<GuildConfig, bool>>)(gc => gc.GuildId == guildId))
                 .Include(gc => gc.Permissions)
                 .FirstOrDefault();
 
@@ -178,7 +179,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
 		public IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included)
-			=> _set.Where(gc => included.Contains(gc.GuildId))
+			=> _set.Where((Expression<Func<GuildConfig, bool>>)(gc => included.Contains(gc.GuildId)))
 				.Include(gc => gc.FollowedStreams)
 				.ToList()
 				.SelectMany(gc => gc.FollowedStreams)

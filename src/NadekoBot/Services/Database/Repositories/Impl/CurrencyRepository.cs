@@ -2,6 +2,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -28,7 +30,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public IEnumerable<Currency> GetTopRichest(int count, int skip = 0) =>
-            _set.OrderByDescending(c => c.Amount).Skip(skip).Take(count).ToList();
+            _set.OrderByDescending((Expression<Func<Currency, long>>)(c => c.Amount)).Skip(skip).Take(count).ToList();
 
         public long GetUserCurrency(ulong userId) => 
             GetOrCreate(userId).Amount;

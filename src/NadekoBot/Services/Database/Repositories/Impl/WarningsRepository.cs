@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -13,7 +15,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 
         public Warning[] For(ulong guildId, ulong userId)
         {
-            var query = _set.Where(x => x.GuildId == guildId && x.UserId == userId)
+            var query = _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId))
                 .OrderByDescending(x => x.DateAdded);
 
             return query.ToArray();
@@ -21,21 +23,19 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 
         public async Task ForgiveAll(ulong guildId, ulong userId, string mod)
         {
-            await _set.Where(x => x.GuildId == guildId && x.UserId == userId)
+            await _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId))
                 .ForEachAsync(x =>
                 {
-                    if (x.Forgiven != true)
-                    {
-                        x.Forgiven = true;
-                        x.ForgivenBy = mod;
-                    }
-                })
+					if(x.Forgiven) return;
+					x.Forgiven   = true;
+					x.ForgivenBy = mod;
+				})
                 .ConfigureAwait(false);
         }
 
         public Warning[] GetForGuild(ulong id)
         {
-            return _set.Where(x => x.GuildId == id).ToArray();
+            return _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == id)).ToArray();
         }
     }
 }

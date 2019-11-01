@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -22,7 +23,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public List<DailyMoneyStats> GetAllUser(params ulong[] userIds)
-            => _set.Where(dms => userIds.Contains(dms.UserId)).ToList();
+            => _set.Where((Expression<Func<DailyMoneyStats, bool>>)(dms => userIds.Contains(dms.UserId))).ToList();
 
         public void RemoveAll(ulong userId)
         {

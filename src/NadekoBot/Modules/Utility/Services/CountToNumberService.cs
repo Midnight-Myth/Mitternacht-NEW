@@ -25,9 +25,8 @@ namespace Mitternacht.Modules.Utility.Services {
 		}
 
 		public void ReloadGuildConfigs() {
-			using(var uow = _db.UnitOfWork) {
-				_countChannelIds = uow.GuildConfigs.GetAll().ToDictionary(gc => gc.GuildId, gc => (gc.CountToNumberChannelId, gc.CountToNumberMessageChance));
-			}
+			using var uow = _db.UnitOfWork;
+			_countChannelIds = uow.GuildConfigs.GetAll().ToDictionary(gc => gc.GuildId, gc => (gc.CountToNumberChannelId, gc.CountToNumberMessageChance));
 		}
 
 		public bool SetCountToNumberChannel(IGuild guild, ITextChannel channel) {
@@ -78,7 +77,7 @@ namespace Mitternacht.Modules.Utility.Services {
 							var channel = guild.GetTextChannel(channelId);
 							var currentnumber = ulong.Parse(match.Groups[1].Value);
 
-							if(_random.NextDouble() < messageChance) {
+							if(currentnumber != 9998 && (currentnumber == 9999 || _random.NextDouble() < messageChance)) {
 								await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
 							}
 						}

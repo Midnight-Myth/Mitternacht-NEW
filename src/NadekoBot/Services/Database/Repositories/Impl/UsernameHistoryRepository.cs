@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -43,6 +44,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public IEnumerable<UsernameHistoryModel> GetUserNames(ulong userId)
-            => _set.Where(u => u.UserId == userId && !(u is NicknameHistoryModel)).OrderByDescending(u => u.DateSet);
+            => _set.Where((Expression<Func<UsernameHistoryModel, bool>>)(u => u.UserId == userId && !(u is NicknameHistoryModel))).OrderByDescending(u => u.DateSet);
     }
 }

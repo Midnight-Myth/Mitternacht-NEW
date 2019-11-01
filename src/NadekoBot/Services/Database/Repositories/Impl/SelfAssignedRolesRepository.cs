@@ -2,6 +2,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
+using System;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl
 {
@@ -23,6 +25,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         }
 
         public IEnumerable<SelfAssignedRole> GetFromGuild(ulong guildId) => 
-            _set.Where(s => s.GuildId == guildId).ToList();
+            _set.Where((Expression<Func<SelfAssignedRole, bool>>) (s => s.GuildId == guildId)).ToList();
     }
 }

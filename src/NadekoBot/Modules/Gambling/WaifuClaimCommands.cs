@@ -10,6 +10,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using System.Linq.Expressions;
 
 namespace Mitternacht.Modules.Gambling
 {
@@ -587,7 +588,7 @@ namespace Mitternacht.Modules.Gambling
                 using (var uow = _db.UnitOfWork)
                 {
                     count = uow.Context.WaifuUpdates
-                        .Where(w => w.User.UserId == userId && w.UpdateType == WaifuUpdateType.AffinityChanged && w.New != null)
+                        .Where((Expression<Func<WaifuUpdate, bool>>)(w => w.User.UserId == userId && w.UpdateType == WaifuUpdateType.AffinityChanged && w.New != null))
                         .GroupBy(x => x.New)
                         .Count();
                 }
