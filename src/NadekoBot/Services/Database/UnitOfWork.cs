@@ -10,88 +10,88 @@ namespace Mitternacht.Services.Database
         public NadekoContext Context { get; }
 
         private IQuoteRepository _quotes;
-        public IQuoteRepository Quotes => _quotes ?? (_quotes = new QuoteRepository(Context));
+        public IQuoteRepository Quotes => _quotes ??= new QuoteRepository(Context);
 
         private IGuildConfigRepository _guildConfigs;
-        public IGuildConfigRepository GuildConfigs => _guildConfigs ?? (_guildConfigs = new GuildConfigRepository(Context));
+        public IGuildConfigRepository GuildConfigs => _guildConfigs ??= new GuildConfigRepository(Context);
 
         private IDonatorsRepository _donators;
-        public IDonatorsRepository Donators => _donators ?? (_donators = new DonatorsRepository(Context));
+        public IDonatorsRepository Donators => _donators ??= new DonatorsRepository(Context);
 
         private IClashOfClansRepository _clashOfClans;
-        public IClashOfClansRepository ClashOfClans => _clashOfClans ?? (_clashOfClans = new ClashOfClansRepository(Context));
+        public IClashOfClansRepository ClashOfClans => _clashOfClans ??= new ClashOfClansRepository(Context);
 
         private IReminderRepository _reminders;
-        public IReminderRepository Reminders => _reminders ?? (_reminders = new ReminderRepository(Context));
+        public IReminderRepository Reminders => _reminders ??= new ReminderRepository(Context);
 
         private ISelfAssignedRolesRepository _selfAssignedRoles;
-        public ISelfAssignedRolesRepository SelfAssignedRoles => _selfAssignedRoles ?? (_selfAssignedRoles = new SelfAssignedRolesRepository(Context));
+        public ISelfAssignedRolesRepository SelfAssignedRoles => _selfAssignedRoles ??= new SelfAssignedRolesRepository(Context);
 
         private IBotConfigRepository _botConfig;
-        public IBotConfigRepository BotConfig => _botConfig ?? (_botConfig = new BotConfigRepository(Context));
+        public IBotConfigRepository BotConfig => _botConfig ??= new BotConfigRepository(Context);
 
         private ICurrencyRepository _currency;
-        public ICurrencyRepository Currency => _currency ?? (_currency = new CurrencyRepository(Context));
+        public ICurrencyRepository Currency => _currency ??= new CurrencyRepository(Context);
 
         private ICurrencyTransactionsRepository _currencyTransactions;
-        public ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ?? (_currencyTransactions = new CurrencyTransactionsRepository(Context));
+        public ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ??= new CurrencyTransactionsRepository(Context);
 
         private IUnitConverterRepository _conUnits;
-        public IUnitConverterRepository ConverterUnits => _conUnits ?? (_conUnits = new UnitConverterRepository(Context));
+        public IUnitConverterRepository ConverterUnits => _conUnits ??= new UnitConverterRepository(Context);
 
         private IMusicPlaylistRepository _musicPlaylists;
-        public IMusicPlaylistRepository MusicPlaylists => _musicPlaylists ?? (_musicPlaylists = new MusicPlaylistRepository(Context));
+        public IMusicPlaylistRepository MusicPlaylists => _musicPlaylists ??= new MusicPlaylistRepository(Context);
 
         private ICustomReactionRepository _customReactions;
-        public ICustomReactionRepository CustomReactions => _customReactions ?? (_customReactions = new CustomReactionsRepository(Context));
+        public ICustomReactionRepository CustomReactions => _customReactions ??= new CustomReactionsRepository(Context);
 
         private IPokeGameRepository _pokegame;
-        public IPokeGameRepository PokeGame => _pokegame ?? (_pokegame = new PokeGameRepository(Context));
+        public IPokeGameRepository PokeGame => _pokegame ??= new PokeGameRepository(Context);
 
         private IWaifuRepository _waifus;
-        public IWaifuRepository Waifus => _waifus ?? (_waifus = new WaifuRepository(Context));
+        public IWaifuRepository Waifus => _waifus ??= new WaifuRepository(Context);
 
         private IDiscordUserRepository _discordUsers;
-        public IDiscordUserRepository DiscordUsers => _discordUsers ?? (_discordUsers = new DiscordUserRepository(Context));
+        public IDiscordUserRepository DiscordUsers => _discordUsers ??= new DiscordUserRepository(Context);
 
         private IWarningsRepository _warnings;
-        public IWarningsRepository Warnings => _warnings ?? (_warnings = new WarningsRepository(Context));
+        public IWarningsRepository Warnings => _warnings ??= new WarningsRepository(Context);
 
         private ILevelModelRepository _levelmodel;
-        public ILevelModelRepository LevelModel => _levelmodel ?? (_levelmodel = new LevelModelRepository(Context, this));
+        public ILevelModelRepository LevelModel => _levelmodel ??= new LevelModelRepository(Context, this);
 
         private IDailyMoneyRepository _dailymoney;
-        public IDailyMoneyRepository DailyMoney => _dailymoney ?? (_dailymoney = new DailyMoneyRepository(Context));
+        public IDailyMoneyRepository DailyMoney => _dailymoney ??= new DailyMoneyRepository(Context);
 
         private IRoleMoneyRepository _rolemoney;
-        public IRoleMoneyRepository RoleMoney => _rolemoney ?? (_rolemoney = new RoleMoneyRepository(Context));
+        public IRoleMoneyRepository RoleMoney => _rolemoney ??= new RoleMoneyRepository(Context);
 
         private IRoleLevelBindingRepository _rolelevelbinding;
-        public IRoleLevelBindingRepository RoleLevelBinding => _rolelevelbinding ?? (_rolelevelbinding = new RoleLevelBindingRepository(Context));
+        public IRoleLevelBindingRepository RoleLevelBinding => _rolelevelbinding ??= new RoleLevelBindingRepository(Context);
 
         private IMessageXpBlacklist _messagexpblacklist;
-        public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ?? (_messagexpblacklist = new MessageXpBlacklist(Context));
+        public IMessageXpBlacklist MessageXpBlacklist => _messagexpblacklist ??= new MessageXpBlacklist(Context);
 
         private IVerifiedUserRepository _verifiedusers;
-        public IVerifiedUserRepository VerifiedUsers => _verifiedusers ?? (_verifiedusers = new VerifiedUserRepository(Context));
+        public IVerifiedUserRepository VerifiedUsers => _verifiedusers ??= new VerifiedUserRepository(Context);
 
         private IUsernameHistoryRepository _usernamehistory;
-        public IUsernameHistoryRepository UsernameHistory => _usernamehistory ?? (_usernamehistory = new UsernameHistoryRepository(Context));
+        public IUsernameHistoryRepository UsernameHistory => _usernamehistory ??= new UsernameHistoryRepository(Context);
 
         private INicknameHistoryRepository _nicknamehistory;
-        public INicknameHistoryRepository NicknameHistory => _nicknamehistory ?? (_nicknamehistory = new NicknameHistoryRepository(Context));
+        public INicknameHistoryRepository NicknameHistory => _nicknamehistory ??= new NicknameHistoryRepository(Context);
 
         private IBirthDateRepository _birthdates;
-        public IBirthDateRepository BirthDates => _birthdates ?? (_birthdates = new BirthDateRepository(Context));
+        public IBirthDateRepository BirthDates => _birthdates ??= new BirthDateRepository(Context);
 
         private IDailyMoneyStatsRepository _dailyMoneyStats;
-        public IDailyMoneyStatsRepository DailyMoneyStats => _dailyMoneyStats ?? (_dailyMoneyStats = new DailyMoneyStatsRepository(Context));
+        public IDailyMoneyStatsRepository DailyMoneyStats => _dailyMoneyStats ??= new DailyMoneyStatsRepository(Context);
 
         private IVoiceChannelStatsRepository _voiceChannelStats;
-        public IVoiceChannelStatsRepository VoiceChannelStats => _voiceChannelStats ?? (_voiceChannelStats = new VoiceChannelStatsRepository(Context));
+        public IVoiceChannelStatsRepository VoiceChannelStats => _voiceChannelStats ??= new VoiceChannelStatsRepository(Context);
 
         private ITeamUpdateRankRepository _teamUpdateRank;
-        public ITeamUpdateRankRepository TeamUpdateRank => _teamUpdateRank ?? (_teamUpdateRank = new TeamUpdateRankRepository(Context));
+        public ITeamUpdateRankRepository TeamUpdateRank => _teamUpdateRank ??= new TeamUpdateRankRepository(Context);
 
         public UnitOfWork(NadekoContext context)
         {

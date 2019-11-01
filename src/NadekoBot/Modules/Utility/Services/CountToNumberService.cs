@@ -25,9 +25,8 @@ namespace Mitternacht.Modules.Utility.Services {
 		}
 
 		public void ReloadGuildConfigs() {
-			using(var uow = _db.UnitOfWork) {
-				_countChannelIds = uow.GuildConfigs.GetAll().ToDictionary(gc => gc.GuildId, gc => (gc.CountToNumberChannelId, gc.CountToNumberMessageChance));
-			}
+			using var uow = _db.UnitOfWork;
+			_countChannelIds = uow.GuildConfigs.GetAll().ToDictionary(gc => gc.GuildId, gc => (gc.CountToNumberChannelId, gc.CountToNumberMessageChance));
 		}
 
 		public bool SetCountToNumberChannel(IGuild guild, ITextChannel channel) {
