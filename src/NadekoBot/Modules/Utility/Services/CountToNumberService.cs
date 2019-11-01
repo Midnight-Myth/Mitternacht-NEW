@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Utility.Services {
 							var channel = guild.GetTextChannel(channelId);
 							var currentnumber = ulong.Parse(match.Groups[1].Value);
 
-							if(_random.NextDouble() < messageChance) {
+							if(currentnumber != 9998 && (currentnumber == 9999 || _random.NextDouble() < messageChance)) {
 								await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
 							}
 						}
