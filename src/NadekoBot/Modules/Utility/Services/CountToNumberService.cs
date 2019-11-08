@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Utility.Services {
 
 
 		public bool SetCountToNumberMessageChance(ulong guildId, double chance) {
-			if(_countChannelIds.TryGetValue(guildId, out var guildCountToNumberItem) && guildCountToNumberItem.MessageChance == chance)
+			if(_countChannelIds.TryGetValue(guildId, out var guildCountToNumberItem) && Math.Abs(guildCountToNumberItem.MessageChance - chance) < double.Epsilon)
 				return false;
 
 			using(var uow = _db.UnitOfWork) {
@@ -69,7 +69,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			if(!msg.Author.IsBot) {
 				var guildChannels = _countChannelIds.Where(gc => gc.Value.ChannelId != null).Select(gc => (gc.Key, gc.Value.ChannelId.Value, gc.Value.MessageChance)).ToList();
 				if(guildChannels.Any(gc => gc.Value == msg.Channel.Id)) {
-					var match = Regex.Match(msg.Content.Trim(), "^(\\d+)$");
+					var match = Regex.Match(msg.Content.Trim(), "\\A(\\d+)");
 					if(match.Success) {
 						var (guildId, channelId, messageChance) = guildChannels.First(gc => gc.Value == msg.Channel.Id);
 						var guild = _client.GetGuild(guildId);
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Utility.Services {
 							var channel = guild.GetTextChannel(channelId);
 							var currentnumber = ulong.Parse(match.Groups[1].Value);
 
-							if(currentnumber != 9998 && (currentnumber == 9999 || _random.NextDouble() < messageChance)) {
+							if(_random.NextDouble() < messageChance) {
 								await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
 							}
 						}
