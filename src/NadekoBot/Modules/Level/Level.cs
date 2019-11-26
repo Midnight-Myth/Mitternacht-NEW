@@ -84,20 +84,20 @@ namespace Mitternacht.Modules.Level {
 
 		private async Task SendRanks(List<LevelModel> levelModels, IMessageChannel channel, int position) {
 			const int elementsPerList = 20;
-			
+
 			if(!levelModels.Any()) return;
 
-			using var uow = _db.UnitOfWork;
-			var groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
-			var rankStrings = new List<string>();
-			var sb          = new StringBuilder();
+			using var uow                = _db.UnitOfWork;
+			var       groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
+			var       rankStrings        = new List<string>();
+			var       sb                 = new StringBuilder();
 			sb.AppendLine(GetText("ranks_header"));
-			
+
 			foreach(var glm in groupedLevelModels) {
 				if(!glm.Any()) continue;
 				var listNumber = glm.Key + 1;
 				sb.Append($"```{GetText("ranks_list_header", listNumber)}");
-				
+
 				foreach(var lm in glm) {
 					var user      = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 					var level     = uow.LevelModel.GetLevel(lm.GuildId, lm.UserId);
