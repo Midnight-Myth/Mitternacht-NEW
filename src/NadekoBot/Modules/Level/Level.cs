@@ -37,30 +37,22 @@ namespace Mitternacht.Modules.Level {
 		public async Task Rank(ulong userId = 0) {
 			userId = userId != 0 ? userId : Context.User.Id;
 
-			int totalRanks, rank, totalXp, level, currentXp;
-			using(var uow = _db.UnitOfWork) {
-				var lm = uow.LevelModel.Get(Context.Guild.Id, userId);
-				totalXp    = uow.LevelModel.GetTotalXp(Context.Guild.Id, userId);
-				level      = uow.LevelModel.GetLevel(Context.Guild.Id, userId);
-				currentXp  = uow.LevelModel.GetCurrentXp(Context.Guild.Id, userId);
-				totalRanks = uow.LevelModel.GetAll().Count(m => m.TotalXP > 0 && m.GuildId == Context.Guild.Id);
-				rank = lm == null
-					? -1
-					: uow.LevelModel.GetAll().Where(p => p.GuildId == Context.Guild.Id)
-						.OrderByDescending(p => p.TotalXP).ToList().IndexOf(lm) + 1;
-				await uow.CompleteAsync().ConfigureAwait(false);
-			}
+			using var uow = _db.UnitOfWork;
+
+			var lm         = uow.LevelModel.Get(Context.Guild.Id, userId);
+			var totalXp    = uow.LevelModel.GetTotalXp(Context.Guild.Id, userId);
+			var level      = uow.LevelModel.GetLevel(Context.Guild.Id, userId);
+			var currentXp  = uow.LevelModel.GetCurrentXp(Context.Guild.Id, userId);
+			var totalRanks = uow.LevelModel.GetAll().Count(m => m.TotalXP > 0 && m.GuildId == Context.Guild.Id);
+			var rank       = lm == null ? -1 : uow.LevelModel.GetAll().Where(p => p.GuildId == Context.Guild.Id).OrderByDescending(p => p.TotalXP).ToList().IndexOf(lm) + 1;
+			await uow.CompleteAsync().ConfigureAwait(false);
 
 			if(userId == Context.User.Id) {
-				await Context.Channel.SendMessageAsync(GetText("rank_self",                                   Context.User.Mention, level, currentXp,
-																LevelModelRepository.GetXpToNextLevel(level), totalXp,              totalXp > 0 ? rank.ToString() : "-",
-																totalRanks)).ConfigureAwait(false);
+				await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, level, currentXp, LevelModelRepository.GetXpToNextLevel(level), totalXp, totalXp > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
 			} else {
 				var user       = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var namestring = user?.Nickname ?? (user?.Username ?? userId.ToString());
-				await Context.Channel.SendMessageAsync(GetText("rank_other",                         Context.User.Mention,                         namestring, level,
-																currentXp,                           LevelModelRepository.GetXpToNextLevel(level), totalXp,
-																totalXp > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
+				await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, level, currentXp, LevelModelRepository.GetXpToNextLevel(level), totalXp, totalXp > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
 			}
 		}
 
@@ -68,9 +60,13 @@ namespace Mitternacht.Modules.Level {
 		[RequireContext(ContextType.Guild)]
 		public async Task Ranks(int count = 20, int position = 1) {
 			using var uow = _db.UnitOfWork;
+			
+			var users = (await Context.Guild.GetUsersAsync()).Select(u => u.Id).ToArray();
+			
 			var levelModels = uow.LevelModel
 								.GetAll()
-								.Where(p => p.TotalXP != 0 && p.GuildId == Context.Guild.Id)
+								.Where(p => p.TotalXP != 0)
+								.Where(lm => lm.GuildId == Context.Guild.Id && users.Contains(lm.UserId))
 								.OrderByDescending(p => p.TotalXP)
 								.Skip(position <= 1 ? 0 : position - 1)
 								.Take(count)
@@ -84,20 +80,20 @@ namespace Mitternacht.Modules.Level {
 
 		private async Task SendRanks(List<LevelModel> levelModels, IMessageChannel channel, int position) {
 			const int elementsPerList = 20;
-			
+
 			if(!levelModels.Any()) return;
 
-			using var uow = _db.UnitOfWork;
-			var groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
-			var rankStrings = new List<string>();
-			var sb          = new StringBuilder();
+			using var uow                = _db.UnitOfWork;
+			var       groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
+			var       rankStrings        = new List<string>();
+			var       sb                 = new StringBuilder();
 			sb.AppendLine(GetText("ranks_header"));
-			
+
 			foreach(var glm in groupedLevelModels) {
 				if(!glm.Any()) continue;
 				var listNumber = glm.Key + 1;
 				sb.Append($"```{GetText("ranks_list_header", listNumber)}");
-				
+
 				foreach(var lm in glm) {
 					var user      = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 					var level     = uow.LevelModel.GetLevel(lm.GuildId, lm.UserId);
