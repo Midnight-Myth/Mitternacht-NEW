@@ -9,22 +9,25 @@ namespace Mitternacht.Common.TypeReaders
 {
     public class CommandTypeReader : TypeReader
     {
-        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
-        {
-            var cmds = ((INServiceProvider)services).GetService<CommandService>();
-            var cmdHandler = ((INServiceProvider)services).GetService<CommandHandler>();
-            input = input.ToUpperInvariant();
-            var prefix = cmdHandler.GetPrefix(context.Guild);
-            if (!input.StartsWith(prefix.ToUpperInvariant(), StringComparison.Ordinal))
-                return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "No such command found."));
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services) {
+			var cmds = ((INServiceProvider)services).GetService<CommandService>();
+			var cmdHandler = ((INServiceProvider)services).GetService<CommandHandler>();
+			
+			var prefix = cmdHandler.GetPrefix(context.Guild);
 
-            input = input.Substring(prefix.Length);
+			CommandInfo cmd = null;
+			if(input.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) {
+				var inputWithoutPrefix = input.Substring(prefix.Length);
 
-            var cmd = cmds.Commands.FirstOrDefault(c => 
-                c.Aliases.Select(a => a.ToUpperInvariant()).Contains(input));
-            return Task.FromResult(cmd == null ? TypeReaderResult.FromError(CommandError.ParseFailed, "No such command found.") : TypeReaderResult.FromSuccess(cmd));
-        }
-    }
+				cmd = cmds.Commands.FirstOrDefault(c => c.Aliases.Any(ca => ca.Equals(inputWithoutPrefix, StringComparison.OrdinalIgnoreCase)));
+			}
+			if(cmd == null) {
+				cmd = cmds.Commands.FirstOrDefault(c => c.Aliases.Any(ca => ca.Equals(input, StringComparison.OrdinalIgnoreCase)));
+			}
+
+			return Task.FromResult(cmd == null ? TypeReaderResult.FromError(CommandError.ParseFailed, "No such command found.") : TypeReaderResult.FromSuccess(cmd));
+		}
+	}
 
     public class CommandOrCrTypeReader : CommandTypeReader
     {
