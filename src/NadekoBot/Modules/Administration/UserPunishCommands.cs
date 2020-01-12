@@ -49,14 +49,26 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[Priority(0)]
-			public async Task Warnlog(int page, [Remainder] IGuildUser user = null)
-				=> await (user == null ? InternalWarnlog(Context.User.Id, page - 1) : Context.User.Id == user.Id || ((IGuildUser) Context.User).GuildPermissions.KickMembers ? InternalWarnlog(user.Id, page - 1) : Task.CompletedTask);
+			public async Task Warnlog(int page, [Remainder] ulong? userId = null)
+				=> await (!userId.HasValue ? InternalWarnlog(Context.User.Id, page - 1) : Context.User.Id == userId || ((IGuildUser) Context.User).GuildPermissions.KickMembers ? InternalWarnlog(userId.Value, page - 1) : Task.CompletedTask);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[Priority(1)]
+			public async Task Warnlog(int page, [Remainder] IGuildUser user = null)
+				=> await Warnlog(1, user?.Id);
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[Priority(2)]
+			public async Task Warnlog([Remainder] ulong? userId = null)
+				=> await Warnlog(1, userId);
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[Priority(3)]
 			public async Task Warnlog([Remainder] IGuildUser user = null)
-				=> await Warnlog(1, user);
+				=> await Warnlog(1, user?.Id);
 
 			private async Task InternalWarnlog(ulong userId, int page) {
 				if(page < 0) return;
