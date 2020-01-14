@@ -46,8 +46,8 @@ namespace Mitternacht.Modules.Gambling {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
-			public async Task StartEvent(CurrencyEvent e, int arg = -1) {
-				await Task.Run(async () => {
+			public Task StartEvent(CurrencyEvent e, int arg = -1) {
+				_ = Task.Run(async () => {
 					switch(e) {
 						case CurrencyEvent.Reaction:
 							await ReactionEvent(Context, arg).ConfigureAwait(false);
@@ -57,6 +57,7 @@ namespace Mitternacht.Modules.Gambling {
 							break;
 					}
 				});
+				return Task.CompletedTask;
 			}
 
 			public async Task SneakyGameStatusEvent(ICommandContext context, int? arg) {
