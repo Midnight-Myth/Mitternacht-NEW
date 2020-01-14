@@ -96,28 +96,29 @@ namespace Mitternacht {
 		}
 
 		private void StayConnected() {
-			var stayConnectedThread = new Thread(new ThreadStart(async () => {
+			Task.Run(async () => {
 				var counter = 0;
 				while(true) {
 					if(Client.ConnectionState == ConnectionState.Disconnected || Client.ConnectionState == ConnectionState.Disconnecting) {
 						counter++;
 						//shutdown Bot after unsuccessfully trying to reconnect 3 times.
-						if(counter > 3)
-							Environment.Exit(0);
+						if(counter > 3) Environment.Exit(0);
 
-						_log.Info($"Shard {Client.ShardId} is not connected, trying to reconnect!");
+						_log.Warn($"Shard {Client.ShardId} is not connected, trying to reconnect!");
 						try {
-							await Client.StopAsync();
-							await Task.Delay(1000);
-							await Client.StartAsync();
+							await Task.WhenAny(Task.Delay(10000), new Task(async () => {
+								await Client.StopAsync();
+								await Task.Delay(1000);
+								await Client.StartAsync();
+							}));
 						} catch { /* ignore exception */
+							_log.Warn($"Shard {Client.ShardId} failed to reconnect, trying again in 10s.");
 						}
 					}
 
 					await Task.Delay(10000);
 				}
-			}));
-			stayConnectedThread.Start();
+			});
 		}
 
 		private void AddServices() {
