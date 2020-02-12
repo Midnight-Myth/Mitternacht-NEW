@@ -4,7 +4,7 @@
     <Copyright>Kwoth</Copyright>
     <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
     <PublisherName>Kwoth</PublisherName>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.13.0" />
-    <PackageReference Include="Discord.Net" Version="2.2.0-dev-20191226.1" />
+    <PackageReference Include="Discord.Net" Version="2.2.0-dev-20191025.3" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
