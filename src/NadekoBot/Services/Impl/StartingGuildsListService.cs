@@ -6,7 +6,7 @@ using Discord.WebSocket;
 
 namespace Mitternacht.Services.Impl
 {
-    public class StartingGuildsService : IEnumerable<ulong>, INService
+    public class StartingGuildsService : IEnumerable<ulong>, IMService
     {
         private readonly ImmutableList<ulong> _guilds;
 

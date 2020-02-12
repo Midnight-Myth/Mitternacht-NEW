@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.Searches.Services
 {
-    public class StreamNotificationService : INService
+    public class StreamNotificationService : IMService
     {
         private readonly Timer _streamCheckTimer;
         private bool firstStreamNotifPass { get; set; } = true;

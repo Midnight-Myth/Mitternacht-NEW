@@ -14,7 +14,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class SlowmodeService : IEarlyBlocker, INService
+    public class SlowmodeService : IEarlyBlocker, IMService
     {
         public ConcurrentDictionary<ulong, Ratelimiter> RatelimitingChannels = new ConcurrentDictionary<ulong, Ratelimiter>();
         public ConcurrentDictionary<ulong, HashSet<ulong>> IgnoredRoles;

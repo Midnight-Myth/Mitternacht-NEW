@@ -8,7 +8,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Permissions.Services
 {
-    public class GlobalPermissionService : ILateBlocker, INService
+    public class GlobalPermissionService : ILateBlocker, IMService
     {
         public readonly ConcurrentHashSet<string> BlockedModules;
         public readonly ConcurrentHashSet<string> BlockedCommands;

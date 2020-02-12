@@ -17,7 +17,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class StreamRoleService : INService
+    public class StreamRoleService : IMService
     {
         private readonly DbService _db;
         private readonly ConcurrentDictionary<ulong, StreamRoleSettings> _guildSettings;

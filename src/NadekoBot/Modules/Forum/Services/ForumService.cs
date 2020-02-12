@@ -4,7 +4,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Forum.Services
 {
-    public class ForumService : INService
+    public class ForumService : IMService
     {
         private readonly IBotCredentials _creds;
         private readonly Logger _log;

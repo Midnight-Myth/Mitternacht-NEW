@@ -18,7 +18,7 @@ using NLog;
 
 namespace Mitternacht.Modules.CustomReactions.Services
 {
-    public class CustomReactionsService : IEarlyBlockingExecutor, INService
+    public class CustomReactionsService : IEarlyBlockingExecutor, IMService
     {
         public CustomReaction[] GlobalReactions;
         public ConcurrentDictionary<ulong, CustomReaction[]> GuildReactions { get; }

@@ -9,7 +9,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class MessageRepeaterService : INService
+    public class MessageRepeaterService : IMService
     {
         //messagerepeater
         //guildid/RepeatRunners

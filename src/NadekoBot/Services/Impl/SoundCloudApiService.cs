@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Mitternacht.Services.Impl
 {
-    public class SoundCloudApiService : INService
+    public class SoundCloudApiService : IMService
     {
         public async Task<SoundCloudVideo> ResolveVideoAsync(string url)
         {

@@ -10,7 +10,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class PlayingRotateService : INService
+    public class PlayingRotateService : IMService
     {
         private readonly Timer _t;
         private readonly DiscordSocketClient _client;

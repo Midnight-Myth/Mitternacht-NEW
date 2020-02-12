@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Forum.Services
 {
-    public class TeamUpdateService : INService
+    public class TeamUpdateService : IMService
     {
         private readonly DiscordSocketClient _client;
         private readonly DbService _db;

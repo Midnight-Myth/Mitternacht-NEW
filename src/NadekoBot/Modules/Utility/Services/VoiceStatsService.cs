@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class VoiceStatsService : INService
+    public class VoiceStatsService : IMService
     {
         private readonly DbService _db;
         private readonly DiscordSocketClient _client;

@@ -20,7 +20,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Games.Services
 {
-    public class GamesService : INService
+    public class GamesService : IMService
     {
         private readonly IBotConfigProvider _bc;
 

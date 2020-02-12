@@ -12,7 +12,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class AdministrationService : INService
+    public class AdministrationService : IMService
     {
         public readonly ConcurrentHashSet<ulong> DeleteMessagesOnCommand;
         private readonly Logger _log;

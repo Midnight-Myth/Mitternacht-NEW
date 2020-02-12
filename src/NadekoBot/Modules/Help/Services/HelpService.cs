@@ -7,7 +7,7 @@ using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Help.Services {
-	public class HelpService : INService
+	public class HelpService : IMService
     {
         private readonly IBotConfigProvider _bc;
         private readonly CommandHandler _ch;

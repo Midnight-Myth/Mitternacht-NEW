@@ -5,7 +5,7 @@ using Mitternacht.Extensions;
 
 namespace Mitternacht.Services.Impl
 {
-	public class AprilFoolsService : INService {
+	public class AprilFoolsService : IMService {
 		private readonly DbService _db;
 
 		private readonly Random _rnd = new Random();

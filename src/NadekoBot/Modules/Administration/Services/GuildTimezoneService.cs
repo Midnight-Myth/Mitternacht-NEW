@@ -9,7 +9,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class GuildTimezoneService : INService
+    public class GuildTimezoneService : IMService
     {
         // todo 70 this is a hack >.<
         public static ConcurrentDictionary<ulong, GuildTimezoneService> AllServices { get; } = new ConcurrentDictionary<ulong, GuildTimezoneService>();

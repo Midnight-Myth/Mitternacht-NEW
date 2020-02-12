@@ -11,7 +11,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class VcRoleService : INService
+    public class VcRoleService : IMService
     {
         private readonly Logger _log;
 

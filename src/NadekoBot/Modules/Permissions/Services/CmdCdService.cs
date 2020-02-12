@@ -11,7 +11,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Services
 {
-    public class CmdCdService : ILateBlocker, INService
+    public class CmdCdService : ILateBlocker, IMService
     {
         public ConcurrentDictionary<ulong, ConcurrentHashSet<CommandCooldown>> CommandCooldowns { get; }
         public ConcurrentDictionary<ulong, ConcurrentHashSet<ActiveCooldown>> ActiveCooldowns { get; } = new ConcurrentDictionary<ulong, ConcurrentHashSet<ActiveCooldown>>();

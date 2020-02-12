@@ -5,7 +5,7 @@ using Google.Apis.Customsearch.v1.Data;
 
 namespace Mitternacht.Services
 {
-    public interface IGoogleApiService : INService
+    public interface IGoogleApiService : IMService
     {
         IEnumerable<string> Languages { get; }
 

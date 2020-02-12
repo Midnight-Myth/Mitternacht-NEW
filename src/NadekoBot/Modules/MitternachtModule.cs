@@ -102,7 +102,7 @@ namespace Mitternacht.Modules {
 		}
 	}
 
-	public abstract class MitternachtTopLevelModule<TService> : MitternachtTopLevelModule where TService : INService {
+	public abstract class MitternachtTopLevelModule<TService> : MitternachtTopLevelModule where TService : IMService {
 		public TService Service { get; set; }
 
 		protected MitternachtTopLevelModule(bool isTopLevel = true) : base(isTopLevel) { }
@@ -112,7 +112,7 @@ namespace Mitternacht.Modules {
 		protected MitternachtSubmodule() : base(false) { }
 	}
 
-	public abstract class MitternachtSubmodule<TService> : MitternachtTopLevelModule<TService> where TService : INService {
+	public abstract class MitternachtSubmodule<TService> : MitternachtTopLevelModule<TService> where TService : IMService {
 		protected MitternachtSubmodule() : base(false) { }
 	}
 }

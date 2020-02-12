@@ -8,7 +8,7 @@ using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Forum.Services {
-	public class TeamRoleSyncService : INService {
+	public class TeamRoleSyncService : IMService {
 		private readonly DbService           _db;
 		private readonly ForumService        _fs;
 		private readonly DiscordSocketClient _client;

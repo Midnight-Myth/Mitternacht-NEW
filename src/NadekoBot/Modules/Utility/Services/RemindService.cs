@@ -15,7 +15,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class RemindService : INService
+    public class RemindService : IMService
     {
         public readonly Regex Regex = new Regex(@"^(?:(?<months>\d)mo)?(?:(?<weeks>\d)w)?(?:(?<days>\d{1,2})d)?(?:(?<hours>\d{1,2})h)?(?:(?<minutes>\d{1,2})m)?$",
                                 RegexOptions.Compiled | RegexOptions.Multiline);

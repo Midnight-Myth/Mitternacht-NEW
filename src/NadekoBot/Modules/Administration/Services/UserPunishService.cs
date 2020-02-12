@@ -8,7 +8,7 @@ using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration.Services {
-	public class UserPunishService : INService {
+	public class UserPunishService : IMService {
 		private readonly MuteService _mute;
 		private readonly DbService   _db;
 

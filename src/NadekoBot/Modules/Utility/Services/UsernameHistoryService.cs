@@ -8,7 +8,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class UsernameHistoryService : INService
+    public class UsernameHistoryService : IMService
     {
         private readonly DbService _db;
         private readonly DiscordSocketClient _client;

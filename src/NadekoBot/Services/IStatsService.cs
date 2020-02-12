@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Mitternacht.Services
 {
-    public interface IStatsService : INService
+    public interface IStatsService : IMService
     {
         (ulong userId, string backupName)[] AuthorIdBackupNames { get; }
         string Author { get; }

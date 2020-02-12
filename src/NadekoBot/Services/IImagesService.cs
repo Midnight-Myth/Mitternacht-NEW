@@ -2,7 +2,7 @@
 
 namespace Mitternacht.Services
 {
-    public interface IImagesService : INService
+    public interface IImagesService : IMService
     {
         ImmutableArray<byte> Heads { get; }
         ImmutableArray<byte> Tails { get; }

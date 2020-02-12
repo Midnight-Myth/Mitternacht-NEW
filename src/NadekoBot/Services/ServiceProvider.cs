@@ -32,9 +32,9 @@ namespace Mitternacht.Services {
 
 			public ServiceProviderBuilder LoadFrom(Assembly assembly) {
 				var allTypes = assembly.GetTypes();
-				var services = new Queue<Type>(allTypes.Where(x => x.GetInterfaces().Contains(typeof(INService)) && !x.GetTypeInfo().IsInterface && !x.GetTypeInfo().IsAbstract).ToArray());
+				var services = new Queue<Type>(allTypes.Where(x => x.GetInterfaces().Contains(typeof(IMService)) && !x.GetTypeInfo().IsInterface && !x.GetTypeInfo().IsAbstract).ToArray());
 
-				var interfaces = new HashSet<Type>(allTypes.Where(x => x.GetInterfaces().Contains(typeof(INService)) && x.GetTypeInfo().IsInterface));
+				var interfaces = new HashSet<Type>(allTypes.Where(x => x.GetInterfaces().Contains(typeof(IMService)) && x.GetTypeInfo().IsInterface));
 
 				var typeInstantiationFailures = new Dictionary<Type, int>();
 

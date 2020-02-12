@@ -9,7 +9,7 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class PruneService : INService
+    public class PruneService : IMService
     {
         //channelids where prunes are currently occuring
         private readonly ConcurrentHashSet<ulong> _pruningGuilds = new ConcurrentHashSet<ulong>();

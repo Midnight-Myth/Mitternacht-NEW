@@ -11,7 +11,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class GameVoiceChannelService : INService
+    public class GameVoiceChannelService : IMService
     {
         public readonly ConcurrentHashSet<ulong> GameVoiceChannels;
 

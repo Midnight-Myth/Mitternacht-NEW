@@ -18,7 +18,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Music.Services
 {
-    public class MusicService : INService
+    public class MusicService : IMService
     {
         public const string MusicDataPath = "data/musicdata";
 

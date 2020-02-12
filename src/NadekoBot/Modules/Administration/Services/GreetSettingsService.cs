@@ -14,7 +14,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class GreetSettingsService : INService
+    public class GreetSettingsService : IMService
     {
         private readonly DbService _db;
 

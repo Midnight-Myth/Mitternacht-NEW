@@ -15,7 +15,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class PatreonRewardsService : INService
+    public class PatreonRewardsService : IMService
     {
         private readonly SemaphoreSlim _getPledgesLocker = new SemaphoreSlim(1, 1);
 

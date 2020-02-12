@@ -11,7 +11,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class VerboseErrorsService : INService
+    public class VerboseErrorsService : IMService
     {
         private readonly ConcurrentHashSet<ulong> guildsEnabled;
         private readonly DbService _db;

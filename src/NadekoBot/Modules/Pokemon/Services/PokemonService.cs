@@ -8,7 +8,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Pokemon.Services
 {
-    public class PokemonService : INService
+    public class PokemonService : IMService
     {
         public readonly List<PokemonType> PokemonTypes = new List<PokemonType>();
         public readonly ConcurrentDictionary<ulong, PokeStats> Stats = new ConcurrentDictionary<ulong, PokeStats>();
