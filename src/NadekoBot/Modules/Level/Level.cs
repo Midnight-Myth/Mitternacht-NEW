@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
+using Mitternacht.Extensions;
 using Mitternacht.Modules.Level.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level {
 	[Group]
@@ -35,24 +35,28 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task Rank(ulong userId = 0) {
-			userId = userId != 0 ? userId : Context.User.Id;
+			userId        = userId != 0 ? userId : Context.User.Id;
 
 			using var uow = _db.UnitOfWork;
+			var lm        = uow.LevelModel.Get(Context.Guild.Id, userId);
 
-			var lm         = uow.LevelModel.Get(Context.Guild.Id, userId);
-			var totalXp    = uow.LevelModel.GetTotalXp(Context.Guild.Id, userId);
-			var level      = uow.LevelModel.GetLevel(Context.Guild.Id, userId);
-			var currentXp  = uow.LevelModel.GetCurrentXp(Context.Guild.Id, userId);
-			var totalRanks = uow.LevelModel.GetAll().Count(m => m.TotalXP > 0 && m.GuildId == Context.Guild.Id);
-			var rank       = lm == null ? -1 : uow.LevelModel.GetAll().Where(p => p.GuildId == Context.Guild.Id).OrderByDescending(p => p.TotalXP).ToList().IndexOf(lm) + 1;
-			await uow.CompleteAsync().ConfigureAwait(false);
+			if(lm != null) {
+				var guildUserIds = await Context.Guild.GetUserIdsAsync();
+				var levelModels  = uow.LevelModel.GetAllSortedForRanks(Context.Guild.Id, guildUserIds);
 
-			if(userId == Context.User.Id) {
-				await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, level, currentXp, LevelModelRepository.GetXpToNextLevel(level), totalXp, totalXp > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
+				var rank         = levelModels.ToList().IndexOf(lm) + 1;
+				var totalRanks   = levelModels.Count();
+				var rankString   = lm.TotalXP > 0 && rank > 0 ? rank.ToString() : "-";
+
+				if(userId == Context.User.Id) {
+					await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, lm.Level, lm.CurrentXP, LevelModel.GetXpToNextLevel(lm.Level), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
+				} else {
+					var user       = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
+					var namestring = user?.ToString() ?? uow.UsernameHistory.GetLastUsername(userId) ?? userId.ToString();
+					await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, lm.Level, lm.CurrentXP, LevelModel.GetXpToNextLevel(lm.Level), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
+				}
 			} else {
-				var user       = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
-				var namestring = user?.Nickname ?? (user?.Username ?? userId.ToString());
-				await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, level, currentXp, LevelModelRepository.GetXpToNextLevel(level), totalXp, totalXp > 0 ? rank.ToString() : "-", totalRanks)).ConfigureAwait(false);
+				await ReplyErrorLocalized("rank_not_found").ConfigureAwait(false);
 			}
 		}
 
@@ -61,16 +65,14 @@ namespace Mitternacht.Modules.Level {
 		public async Task Ranks(int count = 20, int position = 1) {
 			using var uow = _db.UnitOfWork;
 			
-			var users = (await Context.Guild.GetUsersAsync()).Select(u => u.Id).ToArray();
+			var guildUserIds = await Context.Guild.GetUserIdsAsync();
 			
 			var levelModels = uow.LevelModel
-								.GetAll()
-								.Where(p => p.TotalXP != 0)
-								.Where(lm => lm.GuildId == Context.Guild.Id && users.Contains(lm.UserId))
-								.OrderByDescending(p => p.TotalXP)
-								.Skip(position <= 1 ? 0 : position - 1)
-								.Take(count)
-								.ToList();
+				.GetAllSortedForRanks(Context.Guild.Id, guildUserIds)
+				.Skip(position <= 1 ? 0 : position - 1)
+				.Take(count)
+				.ToList();
+
 			var channel = count <= 20
 				? Context.Channel
 				: await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
@@ -95,10 +97,9 @@ namespace Mitternacht.Modules.Level {
 				sb.Append($"```{GetText("ranks_list_header", listNumber)}");
 
 				foreach(var lm in glm) {
-					var user      = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
-					var level     = uow.LevelModel.GetLevel(lm.GuildId, lm.UserId);
-					var currentXp = uow.LevelModel.GetCurrentXp(lm.GuildId, lm.UserId);
-					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{user?.ToString() ?? lm.UserId.ToString(),-37}", $"{level,3}", $"{currentXp,6}", $"{LevelModelRepository.GetXpToNextLevel(level),6}", $"{lm.TotalXP,8}"));
+					var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
+					var namestring = user?.ToString() ?? uow.UsernameHistory.GetLastUsername(lm.UserId) ?? lm.UserId.ToString();
+					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{namestring,-37}", $"{lm.Level,3}", $"{lm.CurrentXP,6}", $"{LevelModel.GetXpToNextLevel(lm.Level),6}", $"{lm.TotalXP,8}"));
 				}
 
 				sb.Append("```");
@@ -120,7 +121,7 @@ namespace Mitternacht.Modules.Level {
 			user??=Context.User;
 
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.AddXp(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, user.ToString()).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -137,7 +138,7 @@ namespace Mitternacht.Modules.Level {
 			}
 
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.AddXp(Context.Guild.Id, userId, xp, Context.Channel.Id);
+			uow.LevelModel.AddXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, userId.ToString()).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -149,7 +150,7 @@ namespace Mitternacht.Modules.Level {
 		public async Task SetXp(int xp, [Remainder] IUser user = null) {
 			user??=Context.User;
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.SetXp(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+			uow.LevelModel.SetXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", user.ToString(), xp).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -166,7 +167,7 @@ namespace Mitternacht.Modules.Level {
 			}
 
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.SetXp(Context.Guild.Id, userId, xp, Context.Channel.Id);
+			uow.LevelModel.SetXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", userId, xp).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -194,7 +195,7 @@ namespace Mitternacht.Modules.Level {
 			}
 
 			var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id, set => set).TurnToXpMultiplier);
-			uow.LevelModel.AddXp(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			if(user == Context.User)
 				await ReplyConfirmLocalized("ttxp_turned_self", moneyToSpend, CurrencySign, xp)
 					.ConfigureAwait(false);

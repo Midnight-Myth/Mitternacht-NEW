@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
 using System.Linq.Expressions;
 
-namespace Mitternacht.Services.Database.Repositories.Impl
-{
-    public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository
+namespace Mitternacht.Services.Database.Repositories.Impl {
+	public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository
     {
         public UsernameHistoryRepository(DbContext context) : base(context) { }
 
@@ -15,7 +13,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             if (string.IsNullOrWhiteSpace(username)) return false;
 
             username = username.Trim();
-            var current = GetUserNames(userId).FirstOrDefault();
+            var current = GetUsernamesDescending(userId).FirstOrDefault();
             var now = DateTime.UtcNow;
             if (current != null)
             {
@@ -43,7 +41,11 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             return true;
         }
 
-        public IEnumerable<UsernameHistoryModel> GetUserNames(ulong userId)
+		public IOrderedQueryable<UsernameHistoryModel> GetUsernamesDescending(ulong userId)
             => _set.Where((Expression<Func<UsernameHistoryModel, bool>>)(u => u.UserId == userId && !(u is NicknameHistoryModel))).OrderByDescending(u => u.DateSet);
-    }
+
+		public string GetLastUsername(ulong userId)
+			=> GetUsernamesDescending(userId).FirstOrDefault()?.Name;
+
+	}
 }

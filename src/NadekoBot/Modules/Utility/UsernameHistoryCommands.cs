@@ -74,7 +74,7 @@ namespace Mitternacht.Modules.Utility {
 				List<UsernameHistoryModel> usernicknames;
 				using(var uow = _db.UnitOfWork) {
 					var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId);
-					var usernames = uow.UsernameHistory.GetUserNames(userId);
+					var usernames = uow.UsernameHistory.GetUsernamesDescending(userId);
 					usernicknames = usernames.Concat(nicknames).OrderByDescending(u => u.DateSet).ToList();
 				}
 
@@ -107,7 +107,7 @@ namespace Mitternacht.Modules.Utility {
 
 				List<UsernameHistoryModel> usernames;
 				using(var uow = _db.UnitOfWork) {
-					usernames = uow.UsernameHistory.GetUserNames(userId).OrderByDescending(u => u.DateSet).ToList();
+					usernames = uow.UsernameHistory.GetUsernamesDescending(userId).OrderByDescending(u => u.DateSet).ToList();
 				}
 
 				if(!usernames.Any()) {
