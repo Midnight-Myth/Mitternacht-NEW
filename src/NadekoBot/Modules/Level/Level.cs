@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Level {
 					await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, lm.Level, lm.CurrentXP, LevelModel.GetXpToNextLevel(lm.Level), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
 				} else {
 					var user       = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
-					var namestring = user?.Nickname ?? (user?.Username ?? userId.ToString());
+					var namestring = user?.ToString() ?? uow.UsernameHistory.GetLastUsername(userId) ?? userId.ToString();
 					await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, lm.Level, lm.CurrentXP, LevelModel.GetXpToNextLevel(lm.Level), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
 				}
 			} else {
@@ -99,7 +99,8 @@ namespace Mitternacht.Modules.Level {
 
 				foreach(var lm in glm) {
 					var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
-					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{user?.ToString() ?? lm.UserId.ToString(),-37}", $"{lm.Level,3}", $"{lm.CurrentXP,6}", $"{LevelModel.GetXpToNextLevel(lm.Level),6}", $"{lm.TotalXP,8}"));
+					var namestring = user?.ToString() ?? uow.UsernameHistory.GetLastUsername(lm.UserId) ?? lm.UserId.ToString();
+					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{namestring,-37}", $"{lm.Level,3}", $"{lm.CurrentXP,6}", $"{LevelModel.GetXpToNextLevel(lm.Level),6}", $"{lm.TotalXP,8}"));
 				}
 
 				sb.Append("```");
