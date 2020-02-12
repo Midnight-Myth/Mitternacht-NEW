@@ -8,6 +8,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Database.Repositories.Impl;
 using NCalc;
 
@@ -133,72 +134,77 @@ namespace Mitternacht.Modules.Utility
                 //context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}").GetAwaiter().GetResult();
                 if (user == null) return null;
 
-                using (var uow = db.UnitOfWork)
-                {
-                    return uow.LevelModel.GetLevel(context.Guild.Id, user.Id);
-                }
-            }
+				using(var uow = db.UnitOfWork) {
+					return uow.LevelModel.Get(context.Guild.Id, user.Id).Level;
+				}
+			}
 
-            //money(user): money of a given user
-            public static object UMoney(ICommandContext context, DbService db, FunctionArgs args)
-            {
-                if (args.Parameters.Length > 1) return null;
-                var user = context.User as IGuildUser;
-                if (args.Parameters.Length == 1)
-                {
-                    var parameter = args.Parameters[0];
-                    if (parameter.ParsedExpression == null) parameter.Evaluate();
-                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
-                    user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
-                }
-                if (user == null) return null;
+			//money(user): money of a given user
+			public static object UMoney(ICommandContext context, DbService db, FunctionArgs args) {
+				if(args.Parameters.Length > 1)
+					return null;
+				var user = context.User as IGuildUser;
+				if(args.Parameters.Length == 1) {
+					var parameter = args.Parameters[0];
+					if(parameter.ParsedExpression == null)
+						parameter.Evaluate();
+					var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
+					user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
+				}
+				if(user == null)
+					return null;
 
-                using (var uow = db.UnitOfWork)
-                    return uow.Currency.GetUserCurrency(user.Id);
-            }
+				using(var uow = db.UnitOfWork)
+					return uow.Currency.GetUserCurrency(user.Id);
+			}
 
-            //xp(user): xp of a given user
-            public static object UXp(ICommandContext context, DbService db, FunctionArgs args)
-            {
-                if (args.Parameters.Length > 1) return null;
-                var user = context.User as IGuildUser;
-                if (args.Parameters.Length == 1)
-                {
-                    var parameter = args.Parameters[0];
-                    if (parameter.ParsedExpression == null) parameter.Evaluate();
-                    var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
-                    user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
-                }
-                if (user == null) return null;
+			//xp(user): xp of a given user
+			public static object UXp(ICommandContext context, DbService db, FunctionArgs args) {
+				if(args.Parameters.Length > 1)
+					return null;
+				var user = context.User as IGuildUser;
+				if(args.Parameters.Length == 1) {
+					var parameter = args.Parameters[0];
+					if(parameter.ParsedExpression == null)
+						parameter.Evaluate();
+					var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
+					user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
+				}
+				if(user == null)
+					return null;
 
-                using (var uow = db.UnitOfWork)
-                    return uow.LevelModel.GetTotalXp(context.Guild.Id, user.Id);
-            }
+				using(var uow = db.UnitOfWork)
+					return uow.LevelModel.Get(context.Guild.Id, user.Id).TotalXP;
+			}
 
-            //levelxp(lvl): xp needed to reach the given level beginning at level 0
-            //levelxp(lvl1, lvl2): xp needed to get to lvl2 from lvl1
-            public static object LevelXp(ICommandContext context, DbService db, FunctionArgs args)
-            {
-                if (args.Parameters.Length < 1 || args.Parameters.Length > 2) return null;
-                var arg1 = args.Parameters[0];
-                if (arg1.ParsedExpression == null) arg1.Evaluate();
-                var expr = arg1.ParsedExpression.ToString();
-                if (!int.TryParse(expr, out var lvl1)) return null;
-                if (args.Parameters.Length < 2) return LevelModelRepository.GetXpForLevel(lvl1);
+			//levelxp(lvl): xp needed to reach the given level beginning at level 0
+			//levelxp(lvl1, lvl2): xp needed to get to lvl2 from lvl1
+			public static object LevelXp(ICommandContext context, DbService db, FunctionArgs args) {
+				if(args.Parameters.Length < 1 || args.Parameters.Length > 2)
+					return null;
+				var arg1 = args.Parameters[0];
+				if(arg1.ParsedExpression == null)
+					arg1.Evaluate();
+				var expr = arg1.ParsedExpression.ToString();
+				if(!int.TryParse(expr, out var lvl1))
+					return null;
+				if(args.Parameters.Length < 2)
+					return LevelModel.GetXpForLevel(lvl1);
 
-                var arg2 = args.Parameters[1];
-                if (arg2.ParsedExpression == null) arg2.Evaluate();
-                expr = arg2.ParsedExpression.ToString();
-                if (!int.TryParse(expr, out var lvl2)) return null;
-                return LevelModelRepository.GetXpForLevel(lvl2) - LevelModelRepository.GetXpForLevel(lvl1);
-            }
-        }
+				var arg2 = args.Parameters[1];
+				if(arg2.ParsedExpression == null)
+					arg2.Evaluate();
+				expr = arg2.ParsedExpression.ToString();
+				if(!int.TryParse(expr, out var lvl2))
+					return null;
+				return LevelModel.GetXpForLevel(lvl2) - LevelModel.GetXpForLevel(lvl1);
+			}
+		}
 
-        private class MethodInfoEqualityComparer : IEqualityComparer<MethodInfo>
-        {
-            public bool Equals(MethodInfo x, MethodInfo y) => x.Name == y.Name;
+		private class MethodInfoEqualityComparer : IEqualityComparer<MethodInfo> {
+			public bool Equals(MethodInfo x, MethodInfo y) => x.Name == y.Name;
 
-            public int GetHashCode(MethodInfo obj) => obj.Name.GetHashCode();
-        }
-    }
+			public int GetHashCode(MethodInfo obj) => obj.Name.GetHashCode();
+		}
+	}
 }

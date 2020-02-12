@@ -568,6 +568,7 @@
 	"level_msgxpr_title":                                   "Kanäle ohne Nachrichten-XP",
 	"level_rank_other":                                     "{0}: **{1}'s Rang > LEVEL {2} | XP {3}/{4} | TOTAL XP {5} | RANK {6}/{7}**",
 	"level_rank_self":                                      "{0}: **LEVEL {1} | XP {2}/{3} | TOTAL XP {4} | RANK {5}/{6}**",
+	"level_rank_not_found":                                 "Der angegebene Nutzer konnte nicht gefunden werden!",
 	"level_ranks_header":                                   "__**Rangliste**__",
 	"level_ranks_list_header":                              "Liste {0}\nRang | Username                              | Lvl | XP            | Total XP\n-----|---------------------------------------|-----|---------------|---------",
 	"level_ranks_list_row":                                 "{0}. | {1} | {2} | {3}/{4} | {5}",

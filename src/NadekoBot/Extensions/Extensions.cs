@@ -258,5 +258,10 @@ namespace Mitternacht.Extensions
             : (mi.Name.EndsWith("commands", StringComparison.OrdinalIgnoreCase) && mi.Name.Length > 8
                 ? mi.Name.Substring(0, mi.Name.Length - 8)
                 : mi.Name);
+
+		public static async Task<ulong[]> GetUserIdsAsync(this IGuild guild) {
+			var guildUsers = await guild.GetUsersAsync();
+			return guildUsers.Select(gu => gu.Id).ToArray();
+		}
     }
 }

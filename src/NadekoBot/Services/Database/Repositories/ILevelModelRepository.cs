@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services.Database.Repositories
@@ -59,24 +60,8 @@ namespace Mitternacht.Services.Database.Repositories
         /// <param name="timestamp">The new Timestamp</param>
         /// <returns>True, if the timestamp was successfully replaced.</returns>
         void ReplaceTimestamp(ulong guildId, ulong userId, DateTime timestamp);
-
-        /// <summary>
-        /// Get the level of a specified user.
-        /// </summary>
-        /// <param name="guildId"></param>
-        /// <param name="userId">The id of the user.</param>
-        /// <returns>The current amount of levels.</returns>
-        int GetLevel(ulong guildId, ulong userId);
-
-        /// <summary>
-        /// Get the XP of a specified user.
-        /// </summary>
-        /// <param name="guildId"></param>
-        /// <param name="userId">The id of the user.</param>
-        /// <returns>The current amount of xp.</returns>
-        int GetTotalXp(ulong guildId, ulong userId);
-
-        int GetCurrentXp(ulong guildId, ulong userId);
+		
+		IOrderedQueryable<LevelModel> GetAllSortedForRanks(ulong guildId, ulong[] guildUserIds);
     }
 
     public class LevelChangedArgs
