@@ -16,12 +16,10 @@ using SixLabors.ImageSharp;
 using Mitternacht.Common.Collections;
 using Mitternacht.Services.Discord;
 using Newtonsoft.Json;
-using SixLabors.Primitives;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Mitternacht.Extensions
-{
-    public static class Extensions
+namespace Mitternacht.Extensions {
+	public static class Extensions
     {
         public static async Task<string> ReplaceAsync(this Regex regex, string input, Func<Match, Task<string>> replacementFn)
         {

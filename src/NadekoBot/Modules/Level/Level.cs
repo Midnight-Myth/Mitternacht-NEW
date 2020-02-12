@@ -11,7 +11,6 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Level.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level {
 	[Group]

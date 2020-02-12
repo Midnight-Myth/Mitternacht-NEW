@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
 using System.Linq.Expressions;
 
-namespace Mitternacht.Services.Database.Repositories.Impl
-{
-    public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository
+namespace Mitternacht.Services.Database.Repositories.Impl {
+	public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository
     {
         public UsernameHistoryRepository(DbContext context) : base(context) { }
 
