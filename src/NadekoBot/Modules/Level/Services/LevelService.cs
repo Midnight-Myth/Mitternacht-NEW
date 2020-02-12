@@ -47,10 +47,10 @@ namespace Mitternacht.Modules.Level.Services {
 				return;
 
 			var time = DateTime.Now;
-			if(uow.LevelModel.CanGetMessageXp(user.GuildId, user.Id, time)) {
+			if(uow.LevelModel.CanGetMessageXP(user.GuildId, user.Id, time)) {
 				var maxXp = uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax;
-				uow.LevelModel.AddXp(user.GuildId, user.Id, um.Content.Length > maxXp ? maxXp : um.Content.Length, um.Channel.Id);
-				uow.LevelModel.ReplaceTimestamp(user.GuildId, user.Id, time);
+				uow.LevelModel.AddXP(user.GuildId, user.Id, um.Content.Length > maxXp ? maxXp : um.Content.Length, um.Channel.Id);
+				uow.LevelModel.ReplaceTimestampOfLastMessageXP(user.GuildId, user.Id, time);
 			}
 
 			await uow.CompleteAsync().ConfigureAwait(false);
@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Level.Services {
 
 			using var uow = _db.UnitOfWork;
 			if(uow.MessageXpBlacklist.IsRestricted(channel as ITextChannel)) return;
-			uow.LevelModel.AddXp(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax, channel.Id);
+			uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax, channel.Id);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
 

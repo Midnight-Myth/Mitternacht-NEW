@@ -33,7 +33,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
         public LevelModel Get(ulong guildId, ulong userId) 
             => _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId);
 
-        public void AddXp(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
+        public void AddXP(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
             var lm = GetOrCreate(guildId, userId);
             var oldLevel = lm.Level;
             if (lm.TotalXP + xp < 0) xp = -lm.TotalXP;
@@ -44,7 +44,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
             if(oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
 
-        public void SetXp(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
+        public void SetXP(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
             var lm = GetOrCreate(guildId, userId);
             var oldLevel = lm.Level;
             lm.TotalXP = xp;
@@ -55,14 +55,14 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
         }
 
         public void SetLevel(ulong guildId, ulong userId, int level, ulong? channelId = null) 
-            => SetXp(guildId, userId, LevelModel.GetXpForLevel(level));
+            => SetXP(guildId, userId, LevelModel.GetXpForLevel(level));
 
-        public bool CanGetMessageXp(ulong guildId, ulong userId, DateTime time) {
+        public bool CanGetMessageXP(ulong guildId, ulong userId, DateTime time) {
             var lm = Get(guildId, userId);
 			return lm == null ? true : (time - lm.timestamp).TotalSeconds >= _uow.GuildConfigs.For(guildId, set => set).MessageXpTimeDifference;
 		}
 
-		public void ReplaceTimestamp(ulong guildId, ulong userId, DateTime timestamp) {
+		public void ReplaceTimestampOfLastMessageXP(ulong guildId, ulong userId, DateTime timestamp) {
             var lm = Get(guildId, userId);
             if (lm == null) return;
             lm.timestamp = timestamp;

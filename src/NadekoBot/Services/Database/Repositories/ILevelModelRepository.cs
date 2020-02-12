@@ -6,11 +6,11 @@ namespace Mitternacht.Services.Database.Repositories {
 	public interface ILevelModelRepository : IRepository<LevelModel> {
 		LevelModel GetOrCreate(ulong guildId, ulong userId);
 		LevelModel Get(ulong guildId, ulong userId);
-		void AddXp(ulong guildId, ulong userId, int xp, ulong? channelId = null);
-		void SetXp(ulong guildId, ulong userId, int xp, ulong? channelId = null);
+		void AddXP(ulong guildId, ulong userId, int xp, ulong? channelId = null);
+		void SetXP(ulong guildId, ulong userId, int xp, ulong? channelId = null);
 		void SetLevel(ulong guildId, ulong userId, int level, ulong? channelId = null);
-		bool CanGetMessageXp(ulong guildId, ulong userId, DateTime time);
-		void ReplaceTimestamp(ulong guildId, ulong userId, DateTime timestamp);
+		bool CanGetMessageXP(ulong guildId, ulong userId, DateTime time);
+		void ReplaceTimestampOfLastMessageXP(ulong guildId, ulong userId, DateTime timestamp);
 
 		IOrderedQueryable<LevelModel> GetAllSortedForRanks(ulong guildId, ulong[] guildUserIds);
 	}

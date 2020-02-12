@@ -121,7 +121,7 @@ namespace Mitternacht.Modules.Level {
 			user??=Context.User;
 
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.AddXp(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, user.ToString()).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -138,7 +138,7 @@ namespace Mitternacht.Modules.Level {
 			}
 
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.AddXp(Context.Guild.Id, userId, xp, Context.Channel.Id);
+			uow.LevelModel.AddXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, userId.ToString()).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -150,7 +150,7 @@ namespace Mitternacht.Modules.Level {
 		public async Task SetXp(int xp, [Remainder] IUser user = null) {
 			user??=Context.User;
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.SetXp(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+			uow.LevelModel.SetXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", user.ToString(), xp).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -167,7 +167,7 @@ namespace Mitternacht.Modules.Level {
 			}
 
 			using var uow = _db.UnitOfWork;
-			uow.LevelModel.SetXp(Context.Guild.Id, userId, xp, Context.Channel.Id);
+			uow.LevelModel.SetXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", userId, xp).ConfigureAwait(false);
 			await uow.CompleteAsync().ConfigureAwait(false);
 		}
@@ -195,7 +195,7 @@ namespace Mitternacht.Modules.Level {
 			}
 
 			var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id, set => set).TurnToXpMultiplier);
-			uow.LevelModel.AddXp(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			if(user == Context.User)
 				await ReplyConfirmLocalized("ttxp_turned_self", moneyToSpend, CurrencySign, xp)
 					.ConfigureAwait(false);
