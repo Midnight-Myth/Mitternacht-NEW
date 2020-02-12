@@ -253,11 +253,7 @@ namespace Mitternacht.Extensions
         /// <param name="mi">ModuleInfo of Module</param>
         /// <returns>Module name</returns>
         public static string GetModuleName(this ModuleInfo mi)
-            => !mi.IsSubmodule
-            ? mi.Name
-            : (mi.Name.EndsWith("commands", StringComparison.OrdinalIgnoreCase) && mi.Name.Length > 8
-                ? mi.Name.Substring(0, mi.Name.Length - 8)
-                : mi.Name);
+            => !mi.IsSubmodule ? mi.Name : (mi.Name.EndsWith("commands", StringComparison.OrdinalIgnoreCase) && mi.Name.Length > 8 ? mi.Name[0..^8] : mi.Name);
 
 		public static async Task<ulong[]> GetUserIdsAsync(this IGuild guild) {
 			var guildUsers = await guild.GetUsersAsync();
