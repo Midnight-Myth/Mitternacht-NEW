@@ -9,12 +9,10 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using Mitternacht.Services.Database.Repositories.Impl;
 using NCalc;
 
-namespace Mitternacht.Modules.Utility
-{
-    public partial class Utility
+namespace Mitternacht.Modules.Utility {
+	public partial class Utility
     {
         [Group]
         public class CalcCommands : MitternachtSubmodule
@@ -134,9 +132,8 @@ namespace Mitternacht.Modules.Utility
                 //context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}").GetAwaiter().GetResult();
                 if (user == null) return null;
 
-				using(var uow = db.UnitOfWork) {
-					return uow.LevelModel.Get(context.Guild.Id, user.Id).Level;
-				}
+				using var uow = db.UnitOfWork;
+				return uow.LevelModel.Get(context.Guild.Id, user.Id).Level;
 			}
 
 			//money(user): money of a given user
@@ -154,8 +151,8 @@ namespace Mitternacht.Modules.Utility
 				if(user == null)
 					return null;
 
-				using(var uow = db.UnitOfWork)
-					return uow.Currency.GetUserCurrency(user.Id);
+				using var uow = db.UnitOfWork;
+				return uow.Currency.GetUserCurrency(user.Id);
 			}
 
 			//xp(user): xp of a given user
@@ -173,8 +170,8 @@ namespace Mitternacht.Modules.Utility
 				if(user == null)
 					return null;
 
-				using(var uow = db.UnitOfWork)
-					return uow.LevelModel.Get(context.Guild.Id, user.Id).TotalXP;
+				using var uow = db.UnitOfWork;
+				return uow.LevelModel.Get(context.Guild.Id, user.Id).TotalXP;
 			}
 
 			//levelxp(lvl): xp needed to reach the given level beginning at level 0
@@ -195,9 +192,7 @@ namespace Mitternacht.Modules.Utility
 				if(arg2.ParsedExpression == null)
 					arg2.Evaluate();
 				expr = arg2.ParsedExpression.ToString();
-				if(!int.TryParse(expr, out var lvl2))
-					return null;
-				return LevelModel.GetXpForLevel(lvl2) - LevelModel.GetXpForLevel(lvl1);
+				return !int.TryParse(expr, out var lvl2) ? null : (object)(LevelModel.GetXpForLevel(lvl2) - LevelModel.GetXpForLevel(lvl1));
 			}
 		}
 
