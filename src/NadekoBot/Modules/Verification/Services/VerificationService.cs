@@ -58,84 +58,77 @@ namespace Mitternacht.Modules.Verification.Services {
 		}
 
 		public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId) {
-			using(var uow = _db.UnitOfWork)
-				return uow.VerifiedUsers.GetVerifiedUsers(guildId).ToList();
+			using var uow = _db.UnitOfWork;
+			return uow.VerifiedUsers.GetVerifiedUsers(guildId).ToList();
 		}
 
 		public int GetVerifiedUserCount(ulong guildId) {
-			using(var uow = _db.UnitOfWork)
-				return uow.VerifiedUsers.GetCount(guildId);
+			using var uow = _db.UnitOfWork;
+			return uow.VerifiedUsers.GetCount(guildId);
 		}
 
 		public void SetVerifiedRole(ulong guildId, ulong? roleId) {
-			using(var uow = _db.UnitOfWork) {
-				uow.GuildConfigs.For(guildId).VerifiedRoleId = roleId;
-				uow.Complete();
-			}
+			using var uow = _db.UnitOfWork;
+			uow.GuildConfigs.For(guildId).VerifiedRoleId = roleId;
+			uow.Complete();
 		}
 
 		public ulong? GetVerifiedRoleId(ulong guildId) {
-			using(var uow = _db.UnitOfWork) {
-				return uow.GuildConfigs.For(guildId).VerifiedRoleId;
-			}
+			using var uow = _db.UnitOfWork;
+			return uow.GuildConfigs.For(guildId).VerifiedRoleId;
 		}
 
 		public void SetVerifyString(ulong guildId, string verifystring) {
-			using(var uow = _db.UnitOfWork) {
-				uow.GuildConfigs.For(guildId).VerifyString = verifystring;
-				uow.Complete();
-			}
+			using var uow = _db.UnitOfWork;
+			uow.GuildConfigs.For(guildId).VerifyString = verifystring;
+			uow.Complete();
 		}
 
 		public string GetVerifyString(ulong guildId) {
-			using(var uow = _db.UnitOfWork)
-				return uow.GuildConfigs.For(guildId).VerifyString;
+			using var uow = _db.UnitOfWork;
+			return uow.GuildConfigs.For(guildId).VerifyString;
 		}
 
 		public string GetVerificationTutorialText(ulong guildId) {
-			using(var uow = _db.UnitOfWork)
-				return uow.GuildConfigs.For(guildId).VerificationTutorialText;
+			using var uow = _db.UnitOfWork;
+			return uow.GuildConfigs.For(guildId).VerificationTutorialText;
 		}
 
 		public void SetVerificationTutorialText(ulong guildId, string text) {
-			using(var uow = _db.UnitOfWork) {
-				uow.GuildConfigs.For(guildId).VerificationTutorialText = text;
-				uow.Complete();
-			}
+			using var uow = _db.UnitOfWork;
+			uow.GuildConfigs.For(guildId).VerificationTutorialText = text;
+			uow.Complete();
 		}
 
 		public async Task SetVerified(IGuildUser guildUser, long forumUserId) {
-			using(var uow = _db.UnitOfWork) {
-				if(!uow.VerifiedUsers.SetVerified(guildUser.GuildId, guildUser.Id, forumUserId))
-					throw new UserCannotVerifyException();
+			using var uow = _db.UnitOfWork;
+			if(!uow.VerifiedUsers.SetVerified(guildUser.GuildId, guildUser.Id, forumUserId))
+				throw new UserCannotVerifyException();
 
-				var roleid = GetVerifiedRoleId(guildUser.GuildId);
-				var role = roleid != null ? guildUser.Guild.GetRole(roleid.Value) : null;
-				if(role != null)
-					await guildUser.AddRoleAsync(role).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
-			}
+			var roleid = GetVerifiedRoleId(guildUser.GuildId);
+			var role = roleid != null ? guildUser.Guild.GetRole(roleid.Value) : null;
+			if(role != null)
+				await guildUser.AddRoleAsync(role).ConfigureAwait(false);
+			await uow.CompleteAsync().ConfigureAwait(false);
 
 			await UserVerified.Invoke(guildUser, forumUserId).ConfigureAwait(false);
 		}
 
 		public string[] GetAdditionalVerificationUsers(ulong guildId) {
-			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(guildId);
-				return string.IsNullOrWhiteSpace(gc.AdditionalVerificationUsers) ? new string[0] : gc.AdditionalVerificationUsers.Split(',');
-			}
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guildId);
+			return string.IsNullOrWhiteSpace(gc.AdditionalVerificationUsers) ? new string[0] : gc.AdditionalVerificationUsers.Split(',');
 		}
 
 		public string[] GetVerificationConversationUsers(ulong guildId)
 			=> GetAdditionalVerificationUsers(guildId).Prepend(_fs.Forum.SelfUser.Username).ToArray();
 
 		public void SetAdditionalVerificationUsers(ulong guildId, string[] users) {
-			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(guildId);
-				gc.AdditionalVerificationUsers = string.Join(',', users);
-				uow.GuildConfigs.Update(gc);
-				uow.Complete();
-			}
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guildId);
+			gc.AdditionalVerificationUsers = string.Join(',', users);
+			uow.GuildConfigs.Update(gc);
+			uow.Complete();
 		}
 
 		public async Task InvokeVerificationStep(VerificationProcess process, VerificationStep step)
