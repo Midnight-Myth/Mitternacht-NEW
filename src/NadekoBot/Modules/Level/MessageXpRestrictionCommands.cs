@@ -48,16 +48,28 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			public async Task MsgXpRestrictions() {
 				using var uow = _db.UnitOfWork;
-				var blacklistedChannelsString = uow.MessageXpBlacklist
-						.GetAll()
-						.OrderByDescending(m => m.ChannelId)
-						.Aggregate("", (s, m) => $"{s}{MentionUtils.MentionChannel(m.ChannelId)}, ", s => s[0..^2]);
+				var blacklistedChannelsString = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id).Aggregate("", (s, channelId) => $"{s}{MentionUtils.MentionChannel(channelId)}, ", s => s[0..^2]);
 
 				if(blacklistedChannelsString.Length > 0) {
 					await Context.Channel.SendConfirmAsync(GetText("msgxpr_title"), blacklistedChannelsString).ConfigureAwait(false);
 				} else {
 					await ErrorLocalized("msgxpr_none").ConfigureAwait(false);
 				}
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[OwnerOrGuildPermission(GuildPermission.BanMembers)]
+			public async Task MsgXpRestrictionsClean() {
+				using var uow = _db.UnitOfWork;
+				var channelIds = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id);
+				foreach(var cid in channelIds) {
+					var channel = await Context.Guild.GetChannelAsync(cid).ConfigureAwait(false);
+					if(channel == null) {
+						uow.MessageXpBlacklist.RemoveRestriction(Context.Guild.Id, cid);
+					}
+				}
+				await uow.CompleteAsync().ConfigureAwait(false);
 			}
 		}
 	}

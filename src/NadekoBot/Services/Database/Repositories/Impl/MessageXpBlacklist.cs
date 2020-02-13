@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Discord;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
@@ -22,7 +24,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             return true;
         }
 
-        public bool IsRestricted(ITextChannel channel)
+		public bool IsRestricted(ITextChannel channel)
             => IsRestricted(channel.GuildId, channel.Id);
 
         public bool IsRestricted(ulong guildId, ulong channelId)
@@ -36,5 +38,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             _set.Remove(_set.First(m => m.GuildId == guildId && m.ChannelId == channelId));
             return true;
         }
-    }
+
+		public ulong[] GetRestrictedChannelsForGuild(ulong guildId)
+			=> _set.Where((Expression<Func<MessageXpRestriction, bool>>)(m => m.GuildId == guildId)).Select(m => m.ChannelId).ToArray();
+	}
 }
