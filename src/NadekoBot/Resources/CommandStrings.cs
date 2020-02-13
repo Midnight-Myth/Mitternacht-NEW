@@ -2,15 +2,14 @@
 using System.IO;
 using System.Linq;
 using Mitternacht.Common.Collections;
-using Newtonsoft.Json;
 using NLog;
+using YamlDotNet.Serialization;
 
-namespace Mitternacht.Resources
-{
-    public class CommandStrings
+namespace Mitternacht.Resources {
+	public class CommandStrings
     {
         private static readonly Logger Log;
-        private const string CmdStringPath = @"./_strings/commandstrings.json";
+        private const string CmdStringPath = @"./_strings/commandstrings.yml";
         private static ConcurrentHashSet<CommandStringsModel> _commandStrings;
 
         static CommandStrings() {
@@ -20,8 +19,9 @@ namespace Mitternacht.Resources
 
         public static void LoadCommandStrings() {
             try {
-                var json = File.ReadAllText(CmdStringPath);
-                _commandStrings = JsonConvert.DeserializeObject<ConcurrentHashSet<CommandStringsModel>>(json);
+				var yml = File.ReadAllText(CmdStringPath);
+				var deserializer = new Deserializer();
+				_commandStrings = deserializer.Deserialize<ConcurrentHashSet<CommandStringsModel>>(yml);
             }
             catch (Exception e) {
 				Log.Error(e);
