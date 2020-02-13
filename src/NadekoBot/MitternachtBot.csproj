@@ -82,6 +82,7 @@
     <PackageReference Include="NYoutubeDL" Version="0.10.8" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
+    <PackageReference Include="YamlDotNet" Version="8.1.0" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <LangVersion>8</LangVersion>
@@ -91,7 +92,7 @@
     <ProjectReference Include="..\..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="_strings\commandstrings.json">
+    <None Update="_strings\commandstrings.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
