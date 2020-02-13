@@ -12,7 +12,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Games.Services
 {
-    public class PollService : IEarlyBlockingExecutor, INService
+    public class PollService : IEarlyBlockingExecutor, IMService
     {
         public ConcurrentDictionary<ulong, Poll> ActivePolls = new ConcurrentDictionary<ulong, Poll>();
         private readonly Logger _log;

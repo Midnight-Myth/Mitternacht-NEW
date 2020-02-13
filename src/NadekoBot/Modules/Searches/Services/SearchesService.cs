@@ -17,7 +17,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Searches.Services
 {
-    public class SearchesService : INService
+    public class SearchesService : IMService
     {
         private readonly DiscordSocketClient _client;
         private readonly IGoogleApiService _google;

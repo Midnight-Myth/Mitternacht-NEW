@@ -12,7 +12,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class ProtectionService : INService
+    public class ProtectionService : IMService
     {
         public readonly ConcurrentDictionary<ulong, AntiRaidStats> AntiRaidGuilds = new ConcurrentDictionary<ulong, AntiRaidStats>();
         // guildId | (userId|messages)

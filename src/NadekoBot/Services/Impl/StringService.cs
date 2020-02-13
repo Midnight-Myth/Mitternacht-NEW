@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using NLog;
 
 namespace Mitternacht.Services.Impl {
-	public class StringService : INService {
+	public class StringService : IMService {
 		public const string StringsPath = @"locales";
 		public const string FilenameRegex = @"(.+)\.json$";
 

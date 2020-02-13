@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Administration.Services
         All
     }
 
-    public class MuteService : INService
+    public class MuteService : IMService
     {
         public ConcurrentDictionary<ulong, string> GuildMuteRoles { get; }
         public ConcurrentDictionary<ulong, ConcurrentHashSet<ulong>> MutedUsers { get; }

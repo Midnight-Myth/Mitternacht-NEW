@@ -8,7 +8,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Services
 {
-    public class BlacklistService : IEarlyBlocker, INService
+    public class BlacklistService : IEarlyBlocker, IMService
     {
         public ConcurrentHashSet<ulong> BlacklistedUsers { get; }
         public ConcurrentHashSet<ulong> BlacklistedGuilds { get; }

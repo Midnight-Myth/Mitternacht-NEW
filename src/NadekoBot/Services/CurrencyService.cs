@@ -7,7 +7,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services
 {
-    public class CurrencyService : INService
+    public class CurrencyService : IMService
     {
         private readonly IBotConfigProvider _config;
         private readonly DbService _db;

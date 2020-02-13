@@ -13,7 +13,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class SelfService : ILateExecutor, INService
+    public class SelfService : ILateExecutor, IMService
     {
         //todo bot config
         public bool ForwardDMs => _bc.BotConfig.ForwardMessages;

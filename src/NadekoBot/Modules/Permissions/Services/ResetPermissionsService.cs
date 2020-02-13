@@ -4,7 +4,7 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Services
 {
-    public class ResetPermissionsService : INService
+    public class ResetPermissionsService : IMService
     {
         private readonly PermissionService _perms;
         private readonly GlobalPermissionService _globalPerms;

@@ -17,7 +17,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Games.Services
 {
-    public class ChatterBotService : IEarlyBlockingExecutor, INService
+    public class ChatterBotService : IEarlyBlockingExecutor, IMService
     {
         private readonly DiscordSocketClient _client;
         private readonly Logger _log;

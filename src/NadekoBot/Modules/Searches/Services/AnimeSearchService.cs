@@ -8,7 +8,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Searches.Services
 {
-    public class AnimeSearchService : INService
+    public class AnimeSearchService : IMService
     {
         private readonly Logger _log;
 

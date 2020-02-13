@@ -4,7 +4,7 @@ using Discord;
 
 namespace Mitternacht.Services
 {
-    public interface ILocalization : INService
+    public interface ILocalization : IMService
     {
         CultureInfo DefaultCultureInfo { get; }
         ConcurrentDictionary<ulong, CultureInfo> GuildCultureInfos { get; }

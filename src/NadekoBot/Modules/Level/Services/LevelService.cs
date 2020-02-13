@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -10,7 +9,7 @@ using Mitternacht.Services.Database.Repositories;
 using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Modules.Level.Services {
-	public class LevelService : INService {
+	public class LevelService : IMService {
 		private readonly DiscordSocketClient _client;
 		private readonly DbService           _db;
 		private readonly CommandHandler      _ch;

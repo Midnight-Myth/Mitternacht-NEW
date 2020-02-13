@@ -11,7 +11,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Birthday.Services
 {
-    public class BirthdayService : INService
+    public class BirthdayService : IMService
     {
         private readonly DbService _db;
         private readonly DiscordSocketClient _client;

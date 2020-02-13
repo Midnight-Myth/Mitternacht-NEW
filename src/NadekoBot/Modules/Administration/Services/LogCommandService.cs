@@ -18,7 +18,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class LogCommandService : INService
+    public class LogCommandService : IMService
     {
 
         private readonly DiscordSocketClient _client;

@@ -3785,5 +3785,14 @@
     "aliases": [],
     "desc": "Setzt oder zeigt die Chance einer Zahlreaktion im CountToNumber-Kanal an.",
     "usage": "`{0}counttonumbermessagechance [Textkanal|null]`"
+  },
+  {
+    "name": "msgxprestrictionsclean",
+    "cmd": "msgxprestrictionsclean",
+    "aliases": [
+      "msgxprclean"
+    ],
+    "desc": "Entfernt gelöschte Kanäle aus den Kanälen ohne Nachrichten-XP.",
+    "usage": "`{0}msgxprestrictionsclean`"
   }
 ]

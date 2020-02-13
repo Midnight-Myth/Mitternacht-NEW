@@ -8,7 +8,7 @@ using Discord.WebSocket;
 using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Utility.Services {
-	public class CountToNumberService : INService {
+	public class CountToNumberService : IMService {
 		private readonly DiscordSocketClient _client;
 		private readonly DbService _db;
 

@@ -11,7 +11,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class CommandMapService : IInputTransformer, INService
+    public class CommandMapService : IInputTransformer, IMService
     {
         private readonly Logger _log;
 

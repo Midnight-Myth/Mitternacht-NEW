@@ -13,7 +13,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services
 {
-    public class ConverterService : INService
+    public class ConverterService : IMService
     {
         public List<ConvertUnit> Units { get; } = new List<ConvertUnit>();
         private readonly Logger _log;

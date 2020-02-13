@@ -10,7 +10,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class AutoAssignRoleService : INService
+    public class AutoAssignRoleService : IMService
     {
         private readonly Logger _log;
         private readonly DiscordSocketClient _client;

@@ -16,7 +16,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services
 {
-    public class VplusTService : INService
+    public class VplusTService : IMService
     {
         private readonly Regex _channelNameRegex = new Regex(@"[^a-zA-Z0-9 -]", RegexOptions.Compiled);
 

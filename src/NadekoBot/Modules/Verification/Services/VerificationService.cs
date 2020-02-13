@@ -13,7 +13,7 @@ using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification.Services {
-	public class VerificationService : INService {
+	public class VerificationService : IMService {
 		private readonly DiscordSocketClient _client;
 		private readonly DbService _db;
 		private readonly StringService _stringService;

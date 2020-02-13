@@ -15,7 +15,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Permissions.Services
 {
-    public class PermissionService : ILateBlocker, INService
+    public class PermissionService : ILateBlocker, IMService
     {
         private readonly DbService _db;
         private readonly CommandHandler _cmd;

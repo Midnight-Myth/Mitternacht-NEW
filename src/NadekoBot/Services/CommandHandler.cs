@@ -25,7 +25,7 @@ namespace Mitternacht.Services {
 			=> obj.Id.GetHashCode();
 	}
 
-	public class CommandHandler : INService {
+	public class CommandHandler : IMService {
 		public const int GlobalCommandsCooldown = 750;
 
 		private readonly DiscordSocketClient                 _client;

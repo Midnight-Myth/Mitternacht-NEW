@@ -16,7 +16,7 @@ using NLog;
 
 namespace Mitternacht.Modules.Permissions.Services
 {
-    public class FilterService : IEarlyBlocker, INService
+    public class FilterService : IEarlyBlocker, IMService
     {
         private readonly Logger _log;
 
