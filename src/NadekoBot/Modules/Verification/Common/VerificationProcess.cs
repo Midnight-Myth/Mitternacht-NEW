@@ -86,7 +86,15 @@ namespace Mitternacht.Modules.Verification.Common {
 						UserInfo forumUser;
 
 						try {
-							forumUser = long.TryParse(forumname, out var forumUserId) ? await _fs.Forum.GetUserInfo(forumUserId) : await _fs.Forum.GetUserInfo(forumname);
+							try {
+								forumUser = await _fs.Forum.GetUserInfo(forumname);
+							} catch(Exception) {
+								if(long.TryParse(forumname, out var forumUserId)) {
+									forumUser = await _fs.Forum.GetUserInfo(forumUserId);
+								} else {
+									throw;
+								}
+							}
 						} catch(UserNotFoundException) {
 							await ErrorAsync("forumaccount_not_found_try_again", forumname);
 							return;
