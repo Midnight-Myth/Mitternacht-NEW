@@ -93,7 +93,7 @@ namespace Mitternacht.Modules.Games.Services
         }
 
         private string GetText(IGuildChannel ch, string key, params object[] rep)
-            => _strings.GetText(key, ch.GuildId, "Games".ToLowerInvariant(), rep);
+            => _strings.GetText("Games".ToLowerInvariant(), key, ch.GuildId, rep);
 
         private Task PotentialFlowerGeneration(SocketMessage imsg)
         {

@@ -106,10 +106,10 @@ namespace Mitternacht.Modules.Games
             }
 
             private string GetText(string key, params object[] replacements) =>
-                _strings.GetText(key,
-                    _channel.GuildId,
-                    typeof(Games).Name.ToLowerInvariant(),
-                    replacements);
+                _strings.GetText(typeof(Games).Name.ToLowerInvariant(),
+					key,
+					_channel.GuildId,
+					replacements);
 
             public string GetState()
             {

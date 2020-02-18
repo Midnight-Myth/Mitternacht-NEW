@@ -61,10 +61,10 @@ namespace Mitternacht.Modules.Games.Common.Trivia
         }
 
         private string GetText(string key, params object[] replacements) =>
-            _strings.GetText(key,
-                Channel.GuildId,
-                typeof(Games).Name.ToLowerInvariant(),
-                replacements);
+            _strings.GetText(typeof(Games).Name.ToLowerInvariant(),
+				key,
+				Channel.GuildId,
+				replacements);
 
         public async Task StartGame()
         {

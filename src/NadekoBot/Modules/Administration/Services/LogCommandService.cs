@@ -105,7 +105,7 @@ namespace Mitternacht.Modules.Administration.Services
 		}
 
         private string GetText(IGuild guild, string key, params object[] replacements)
-			=> _strings.GetText(key, guild.Id, "administration", replacements);
+			=> _strings.GetText("administration", key, guild.Id, replacements);
 
 		private Task VerificationService_VerificationStep(VerificationProcess vp, VerificationStep step) {
 			var _ = Task.Run(async () => {

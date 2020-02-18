@@ -66,10 +66,10 @@ namespace Mitternacht.Modules.Administration.Services
                         try
                         {
                             await guild.Owner.SendErrorAsync(
-                                _strings.GetText("vt_exit",
-                                    guild.Id,
-                                    "Administration".ToLowerInvariant(),
-                                    Format.Bold(guild.Name))).ConfigureAwait(false);
+                                _strings.GetText("Administration".ToLowerInvariant(),
+									"vt_exit",
+									guild.Id,
+									Format.Bold(guild.Name))).ConfigureAwait(false);
                         }
                         catch
                         {

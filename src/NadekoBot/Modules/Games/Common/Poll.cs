@@ -111,9 +111,9 @@ namespace Mitternacht.Modules.Games.Common
         }
 
         private string GetText(string key, params object[] replacements)
-            => _strings.GetText(key,
-                _guild.Id,
-                "Games".ToLowerInvariant(),
-                replacements);
+            => _strings.GetText("Games".ToLowerInvariant(),
+				key,
+				_guild.Id,
+				replacements);
     }
 }

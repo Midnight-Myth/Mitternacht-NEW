@@ -32,10 +32,10 @@ namespace Mitternacht.Modules {
 		}
 
 		protected string GetText(string key)
-			=> Strings.GetText(key, CultureInfo, LowerModuleTypeName);
+			=> Strings.GetText(LowerModuleTypeName, key, CultureInfo);
 
 		protected string GetText(string key, params object[] replacements)
-			=> Strings.GetText(key, CultureInfo, LowerModuleTypeName, replacements);
+			=> Strings.GetText(LowerModuleTypeName, key, CultureInfo, replacements);
 
 		protected Task<IUserMessage> MessageLocalized(string textKey, params object[] replacements) {
 			var text = GetText(textKey, replacements);
