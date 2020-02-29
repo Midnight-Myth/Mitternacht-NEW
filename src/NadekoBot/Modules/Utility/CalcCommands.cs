@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Utility {
                 if (user == null) return null;
 
 				using var uow = db.UnitOfWork;
-				return uow.LevelModel.Get(context.Guild.Id, user.Id).Level;
+				return uow.LevelModel.Get(context.Guild.Id, user.Id).CurrentLevel;
 			}
 
 			//money(user): money of a given user
