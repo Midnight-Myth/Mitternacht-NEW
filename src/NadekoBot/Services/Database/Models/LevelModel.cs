@@ -9,9 +9,13 @@ namespace Mitternacht.Services.Database.Models
         public ulong UserId { get; set; }
         public int TotalXP { get; set; }
         public DateTime timestamp { get; set; }
-
-
-		public int Level {
+        
+        [Obsolete]
+        public int CurrentXP { get; set; }
+        [Obsolete]
+        public int Level { get; set; }
+        
+		public int CurrentLevel {
 			get {
 				var lvl = 1;
 
@@ -22,7 +26,7 @@ namespace Mitternacht.Services.Database.Models
 			}
 		}
 
-		public int CurrentXP => TotalXP - GetXpForLevel(Level);
+		public int XP => TotalXP - GetXpForLevel(CurrentLevel);
 
 		public static int GetXpToNextLevel(int previous)
 			=> (int)(5 * Math.Pow(previous, 2) + 50 * previous + 100);

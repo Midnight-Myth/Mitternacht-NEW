@@ -35,22 +35,22 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
         public void AddXP(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
             var lm = GetOrCreate(guildId, userId);
-            var oldLevel = lm.Level;
+            var oldLevel = lm.CurrentLevel;
             if (lm.TotalXP + xp < 0) xp = -lm.TotalXP;
             lm.TotalXP += xp;
             _set.Update(lm);
             _context.SaveChanges();
-            var newLevel = lm.Level;
+            var newLevel = lm.CurrentLevel;
             if(oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
 
         public void SetXP(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
             var lm = GetOrCreate(guildId, userId);
-            var oldLevel = lm.Level;
+            var oldLevel = lm.CurrentLevel;
             lm.TotalXP = xp;
             _set.Update(lm);
             _context.SaveChanges();
-            var newLevel = lm.Level;
+            var newLevel = lm.CurrentLevel;
             if (oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
 

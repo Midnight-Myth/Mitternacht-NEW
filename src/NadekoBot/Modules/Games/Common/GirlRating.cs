@@ -7,7 +7,6 @@ using Mitternacht.Common;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using NLog;
-using SixLabors.Primitives;
 
 namespace Mitternacht.Modules.Games.Common
 {

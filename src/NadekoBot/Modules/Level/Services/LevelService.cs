@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Level.Services {
 			if(!(sm.Author is IGuildUser user)) return;
 
 			using var uow = _db.UnitOfWork;
-			var level     = uow.LevelModel.Get(user.GuildId, user.Id)?.Level ?? 0;
+			var level     = uow.LevelModel.Get(user.GuildId, user.Id)?.CurrentLevel ?? 0;
 			var userroles = user.GetRoles().ToList();
 			var rlb       = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
 			var rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).OrderBy(r => r.Position).ToList();
