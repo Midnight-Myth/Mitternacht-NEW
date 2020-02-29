@@ -61,8 +61,8 @@
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.43.0.1834" />
-    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.43.0.1369" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.44.0.1869" />
+    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.44.0.1369" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-unstable0853" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-unstable0421" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
