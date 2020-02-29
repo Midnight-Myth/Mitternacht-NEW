@@ -230,7 +230,7 @@ namespace Mitternacht.Modules.Verification.Common {
 
 
 		private string GetText(string key, params object[] replacements)
-			=> _stringService.GetText(key, GuildUser.GuildId, "verification", replacements);
+			=> _stringService.GetText("verification", key, GuildUser.GuildId, replacements);
 
 		private async Task<IUserMessage> EmbedAsync(string key, params object[] replacements)
 			=> await UserChannel.SendConfirmAsync(GetText($"{key}_title"), GetText($"{key}_text", replacements)).ConfigureAwait(false);

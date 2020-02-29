@@ -188,7 +188,7 @@ namespace Mitternacht.Modules.Forum.Services
         }
 
         private string GetText(string key, ulong? guildId, params object[] replacements)
-            => _ss.GetText(key, guildId, "forum", replacements);
+            => _ss.GetText("forum", key, guildId, replacements);
 
 
         private class StringValueTupleComparer : IEqualityComparer<(string s1, string s2)>

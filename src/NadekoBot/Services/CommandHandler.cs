@@ -161,8 +161,8 @@ namespace Mitternacht.Services {
 
 				await TryRunCommand(guild, channel, usrMsg);
 			} catch(Exception ex) {
-				_log.Warn(ex, "Error in CommandHandler");
-				if(ex.InnerException != null) _log.Warn(ex.InnerException, "Inner Exception of the error in CommandHandler");
+				_log.Warn(ex, $"Error in CommandHandler. Stacktrace:\n{ex.StackTrace}");
+				if(ex.InnerException != null) _log.Warn(ex.InnerException, $"Inner Exception of the error in CommandHandler. Stacktrace:\n{ex.InnerException.StackTrace}");
 			}
 		}
 

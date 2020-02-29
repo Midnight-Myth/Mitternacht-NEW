@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.CustomReactions.Services
                     if (!pc.Permissions.CheckPermissions(msg, cr.Trigger, "ActualCustomReactions", out var index))
                     {
                         if (!pc.Verbose) return true;
-                        var returnMsg = _strings.GetText("trigger", guild.Id, "Permissions".ToLowerInvariant(), index + 1, Format.Bold(pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), sg)));
+                        var returnMsg = _strings.GetText("Permissions".ToLowerInvariant(), "trigger", guild.Id, index + 1, Format.Bold(pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), sg)));
                         try { await msg.Channel.SendErrorAsync(returnMsg).ConfigureAwait(false); } catch { /*ignored*/ }
                         _log.Info(returnMsg);
                         return true;

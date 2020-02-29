@@ -1,0 +1,1112 @@
+---
+administration:
+  aar_disabled:                                  "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **deaktiviert**."
+  aar_enabled:                                   "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **aktiviert**."
+  addroleforall:                                 Erfolgreich die Rolle {0} zu allen Benutzern hinzugefügt.
+  addroleforall_error:                           Hinzufügen der Rolle {0} fehlgeschlagen.
+  attachments:                                   Anhänge
+  avatar_changed:                                Avatar varändert
+  bandm:                                         |-
+                                                 Du wurdest vom Server {0} gebannt.
+                                                 Grund: {1}
+  banned_pl:                                     gebannt
+  banned_user:                                   Benutzer gebannt
+  bot_name:                                      Name des Bots wurde zu `{0}` geändert.
+  bot_nick:                                      Nickname des Bots wurde zu `{0}` geändert.
+  bot_status:                                    Status des Bots geändert zu {0}
+  bye_off:                                       Abschiedsnachrichten wurden deaktiviert.
+  bye_on:                                        Abschiedsnachrichten wurden in diesem Kanal eingeschaltet.
+  byedel_off:                                    Automatisches Löschen von Abschiedsnachrichten ist nun deaktiviert.
+  byedel_on:                                     Abschiedsnachrichten werden nun nach {0} Sekunden gelöscht.
+  byemsg_cur:                                    'Aktuelle Abschiedsnachricht: {0}'
+  byemsg_enable:                                 Schalte Abschiedsnachrichten ein durch Schreiben von {0}
+  byemsg_new:                                    Neues Abschiedsnachrichtenset.
+  ch_name_change:                                Kanalname geändert
+  ch_old_name:                                   Alter Name
+  ch_topic_change:                               Kanalthema geändert
+  channel:                                       Kanal
+  cleaned_up:                                    Aufgeräumt.
+  command_text:                                  Befehlstext
+  content:                                       Inhalt
+  cr:                                            Rolle {0} erfolgreich erstellt
+  createtextchan:                                Textkanal {0} erstellt.
+  createvoich:                                   Sprachkanal {0} erstellt.
+  deafen:                                        Taubschaltung erfolgreich.
+  defprefix_current:                             Standardbefehlspräfix ist {0}
+  defprefix_new:                                 Standardbefehlspräfix wurde von {0} zu {1} geändert
+  deleted_server:                                Server {0} gelöscht
+  delmsg_off:                                    Automatisches Löschen von erfolgreichen Befehlsausführungen gestoppt.
+  delmsg_on:                                     Automatisches Löschen von erfolgreichen Befehlsausführungen gestartet.
+  deltextchan:                                   Textkanal {0} gelöscht.
+  delvoich:                                      Sprachkanal {0} gelöscht.
+  dm_from:                                       DN von
+  donadd:                                        "Hinzufügen eines neuen Spenders erfolgreich. Gesamtespenden dieses Benutzers: {0} \U0001F451"
+  donators:                                      Danke an die untenstehenden Leute, die dieses Projekt möglich gemacht haben!
+  fwall_start:                                   Ich werde DNs zu allen Besitzern weiterleiten.
+  fwall_stop:                                    Ich werde DNs zum ersten Besitzer weiterleiten.
+  fwdm_start:                                    Ich werde nun DNs weiterleiten.
+  fwdm_stop:                                     Ich werde aufhören, DNs weiterzuleiten.
+  greet_off:                                     Begrüßungsankündigungen wurden deaktiviert.
+  greet_on:                                      Begrüßungsankündigungen wurden für diesen Kanal aktiviert.
+  greetdel_off:                                  Automatisches löschen der Begrüßungsnachrichten wurde deaktiviert.
+  greetdel_on:                                   Begrüßungsnachrichten werden gelöscht nach {0}s.
+  greetdm_off:                                   Begrüßungsankündigungen wurden deaktiviert.
+  greetdm_on:                                    DN Begrüßungsankündigungen wurden aktiviert.
+  greetdmmsg_cur:                                'Aktuelle DN-Begrüßungsnachricht: {0}'
+  greetdmmsg_enable:                             'Aktiviere DN-Begrüßungsnachrichten durch Schreiben von: {0}'
+  greetdmmsg_new:                                Neue DN-Begrüßungsnachricht wurde gesetzt.
+  greetmsg_cur:                                  'Aktuelle Begrüßungsnachricht: {0}'
+  greetmsg_enable:                               'Aktiviere Begrüßungsnachrichten durch Schreiben von: {0}'
+  greetmsg_new:                                  Neue Begrüßungsnachricht wurde gesetzt.
+  gvc_disabled:                                  Spiel-Sprachkanal-Feature ist auf diesem Server nicht eingeschaltet.
+  gvc_enabled:                                   "{0} ist nun ein Spiel-Sprachkanal."
+  hierarchy:                                     Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
+  images_loaded:                                 Bilder wurden nach {0}s geladen!
+  invalid_format:                                Ungültiges Eingabeformat.
+  invalid_params:                                Ungültige Parameter.
+  joined:                                        "{0} ist {1} beigetreten"
+  joined_discord:                                Discord beigetreten
+  joined_server:                                 Server beigetreten
+  kickdm:                                        |-
+                                                 Du hast {0} von dem Server gekickt.
+                                                 Grund: {1}
+  kicked_pl:                                     Kicked
+  kicked_user:                                   Benutzer wurde gekickt
+  lang_list:                                     Sprachliste
+  lang_set:                                      Die Sprache des Servers ist jetzt {0} - {1}
+  lang_set_bot:                                  Die Sprache des Bots ist nun {0} - {1}
+  lang_set_bot_show:                             Die Sprache des Bots ist {0} - {1}
+  lang_set_fail:                                 Sprache konnte nicht gesetzt werden.
+  lang_set_show:                                 Diese Serversprache wurde auf {0} - {1} gesetzt
+  left:                                          "{0} hat {1} verlassen"
+  left_server:                                   Server {0} wurde verlassen
+  log:                                           Ereignis {0} wird in diesem Kanal aufgezeichnet.
+  log_all:                                       Alle Ereignisse werden in diesem Kanal aufgezeichnet.
+  log_disabled:                                  Aufzeichnungen wurden deaktiviert.
+  log_events:                                    'Abonnierbare Aufzeichnungsereignisse:'
+  log_ignore:                                    Aufzeichnungen werden {0} ignorieren.
+  log_list_title:                                Logkanalliste
+  log_not_ignore:                                Aufzeichnungen werden {0} nicht ignorieren.
+  log_stop:                                      Aufzeichnung von Ereignis {0} gestoppt.
+  log_verification_message_subtitle:             Nachricht
+  log_verification_message_title:                ":incoming_envelope: Verifizierungsnachricht erhalten"
+  log_verification_step_subtitle:                Schritt
+  log_verification_step_title:                   ":dolphin: Verifizierungsschritt geändert"
+  menrole:                                       "{0} hat eine Erwähnung von den folgenden Rollen aufgerufen"
+  message_from_bo:                               'Nachricht von {0}  `[Besitzer des Bots]`:'
+  message_sent:                                  Nachricht gesendet.
+  migration_done:                                Migration fertig!
+  migration_error:                               ''
+  moderator:                                     Moderator
+  moved:                                         "{0} wurde von {1} zu {2} verschoben."
+  msg_del:                                       'Nachricht in #{0} gelöscht.'
+  msg_update:                                    'Nachricht in #{0} aktualisiert.'
+  must_be_in_voice:                              Du musst auf diesem Server in einem Sprachkanal sein!
+  mute_error:                                    Ich habe wahrscheinlich die benötigten Rechte nicht.
+  mute_role_set:                                 Neue Mute-Rolle gesetzt.
+  muted_pl:                                      wurden stummgeschaltet
+  muted_sn:                                      wurde stummgeschaltet
+  need_admin:                                    Ich brauche **Administrationsrechte**, um dies tun zu können.
+  new_msg:                                       Neue Nachricht
+  new_nick:                                      Neuer Nickname
+  new_topic:                                     Neues Thema
+  nick_change:                                   Nickname wurde geändert
+  no_server:                                     Konnte den Server nicht finden
+  no_shard_id:                                   Kein Shard mit dieser ID gefunden.
+  no_vcroles:                                    Keine Sprachkanalrollen gefunden.
+  not_in_voice:                                  Du bist auf diesem Server in keinem Sprachkanal.
+  old_msg:                                       Alte Nachricht
+  old_nick:                                      Alter Nickname
+  old_topic:                                     Altes Thema
+  page:                                          Seite {0}
+  perms:                                         Fehler, ich habe wahrscheinlich keine ausreichenden Rechte.
+  prefix_current:                                Der Präfix des Servers ist {0}
+  prefix_new:                                    Der Präfix auf diesem Server wurde von {0} zu {1} geändert
+  presence_updates:                              Anwesenheitsänderungen
+  prot_active:                                   Aktive Schutzmechanismen
+  prot_disable:                                  "{0} wurde auf diesem Server **deaktiviert**."
+  prot_enable:                                   "{0} aktiviert"
+  prot_error:                                    Fehler, ich benötige die Berechtigung 'Rollen verwalten'
+  prot_none:                                     Keine Schutzmechanismen aktiviert.
+  raid_cnt:                                      Benutzerschwelle muss zwischen {0} und {1} sein.
+  raid_stats:                                    Wenn {0} oder mehr Benutzer innerhalb von {1}s beitreten werde ich sie {2}.
+  raid_time:                                     Zeit muss zwischen {0} und {1}s sein.
+  rar:                                           Erfolgreich alle Rollen vom Benutzer {0} entfernt
+  rar_err:                                       Rollen konnten nicht entfernt werden. Ich habe nicht die erforderlichen Rechte.
+  rc:                                            Farbe der Rolle {0} wurde zu {1} geändert.
+  rc_not_exist:                                  Diese Rolle existiert nicht.
+  rc_perms:                                      Die Farbänderung konnte wegen fehlenden Rechten nicht durchgeführt werden.
+  rc_perms_pos:                                  Du darfst nur Rollen unter deiner höchsten verändern!
+  reason:                                        Grund
+  removeroleforall:                              Erfolgreich die Rolle {0} von allen Benutzern entfernt.
+  removeroleforall_error:                        Entfernen der Rolle {0} fehlgeschlagen.
+  remrole:                                       Erfolgreich die Rolle {0} vom Benutzer {1} entfernt
+  remrole_err:                                   Entfernen der Rolle fehlgeschlagen. Ich habe nicht die erforderlichen Rechte.
+  renrole:                                       Rolle umbenannt.
+  renrole_err:                                   Umbenennen der Rolle fehlgeschlagen. Ich habe nicht die erforderlichen Rechte.
+  renrole_perms:                                 Du kannst keine Rollen über deiner höchsten bearbeiten.
+  replacedefaultlevelmodelguild:                 "{0} Einträge aktualisiert!"
+  reprm:                                         'Die Abspielnachricht wurde entfernt: {0}'
+  rh:                                            Die Anzeige der Serverrolle {0} wurde auf {1} gesetzt.
+  role_added:                                    Die Rolle {0} wurde zur Liste hinzugefügt.
+  role_clean:                                    "{0} nicht gefunden. Aufgeräumt."
+  role_in_list:                                  Die Rolle {0} ist bereits in der Liste.
+  ropl_added:                                    Hinzugefügt.
+  ropl_disabled:                                 Rotation des Spielstatus deaktiviert.
+  ropl_enabled:                                  Rotation des Spielstatus aktiviert.
+  ropl_list:                                     |-
+                                                 Hier ist die Liste der rotierenden Status:
+                                                 {0}
+  ropl_not_set:                                  Keine rotierenden Status gesetzt.
+  sb_user:                                       Nutzer wurde gekickt
+  sbdm:                                          |-
+                                                 Du wurdest vom Server {0} gekickt.
+                                                 Grund: {1}
+  scadd:                                         Neuer Startbefehl hinzugefügt.
+  scrm:                                          Startbefehl wurde erfolgreich entfernt.
+  scrm_fail:                                     Startbefehl konnte nicht gefunden werden
+  self_assign_already:                           Du hast die Rolle {0} bereits.
+  self_assign_already_excl:                      Du hast schon die exklusive, selbstzugewiesene Rolle {0}.
+  self_assign_excl:                              Selbst zugewiesene Rollen sind nun exklusiv!
+  self_assign_list:                              Es gibt {0} Rollen, die man sich selbst zuweisen kann.
+  self_assign_no_excl:                           Selbst zugewiesene Rollen sind nicht länger exklusiv!
+  self_assign_not:                               Diese Rolle kann man sich nicht selbst zuweisen.
+  self_assign_not_have:                          Du hast die Rolle {0} nicht.
+  self_assign_perms:                             Ich kann dir diese Rolle nicht zuweisen. Sie liegt über meiner Höchsten.
+  self_assign_rem:                               "{0} wurde von der Liste der selbst zuweisbaren Rollen entfernt."
+  self_assign_remove:                            Du hast die Rolle {0} nicht mehr.
+  self_assign_success:                           Du hast nun die Rolle {0}.
+  server:                                        Server
+  set_activity:                                  Neue Aktivität gesetzt!
+  set_avatar:                                    Neuer Avatar gesetzt!
+  set_channel_name:                              Neuer Kanalname gesetzt.
+  set_stream:                                    Neuer Stream gesetzt!
+  set_topic:                                     Neues Kanalthema gesetzt.
+  setguildconfigleveldefaults:                   Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt.
+  setrole:                                       Erfolgreich die Rolle {0} zum Benutzer {1} hinzugefügt
+  setrole_err:                                   Hinzufügen der Rolle fehlgeschlagen. Ich habe nicht die nötigen Rechte.
+  shard_reconnected:                             Verbindung zu Shard {0} wiederhergestellt.
+  shard_reconnecting:                            Verbindung zu Shard {0} wird wiederhergestellt.
+  shutting_down:                                 Fahre herunter...
+  slowmode_already_disabled:                     Slowmode ist schon deaktiviert.
+  slowmode_desc:                                 Benutzer können nicht mehr als {0} Nachrichten alle {1}s senden.
+  slowmode_disabled:                             Slowmode deaktiviert.
+  slowmode_enabled:                              Slowmode aktiviert.
+  slowmodewl_role_start:                         Slowmode wird jetzt die Rolle {0} ignorieren.
+  slowmodewl_role_stop:                          Slowmode wird nicht mehr die Rolle {0} ignorieren.
+  slowmodewl_user_start:                         Slowmod witrd jetzt den Benutzer {0} ignorieren.
+  slowmodewl_user_stop:                          Slowmod witrd nicht mehr Benutzer {0} ignorieren.
+  soft_banned_pl:                                soft-banned (gekickt)
+  spam_ignore:                                   "{0} wird diesen Kanal ignorieren."
+  spam_not_ignore:                               "{0} wird diesen Kanal nicht mehr ignorieren."
+  spam_stats:                                    |-
+                                                 Wenn ein Benutzer {0} gleiche Nachrichten sendet werde ich ihn {1}.
+                                                 __ignoredChannels__: {2}
+  sql_confirm:                                   Bestätige Ausführung
+  startcmdlist_none:                             Keine Startbefehle auf dieser Seite
+  startcmds_cleared:                             Alle Startbefehle wurden entfernt.
+  text_chan_created:                             Textkanal erstellt
+  text_chan_destroyed:                           Textkanal gelöscht
+  timezone_guild:                                Die Zeitzone für des Servers ist `{0}`
+  timezone_not_found:                            Zeitzone nicht gefunden.
+  timezones_available:                           Verfügbare Zeitzonen
+  unbanned_user:                                 Benutzer {0} wurde entbannt.
+  undeafen:                                      Taubschaltung aufgehoben.
+  unmuted_sn:                                    Stummschaltung aufgehoben
+  user_banned:                                   Benutzer gebannt
+  user_chat_mute:                                "{0} wurde im Chat **stummgeschaltet**."
+  user_chat_unmute:                              "{0} ist im Chat nicht länger **stummgeschaltet**."
+  user_joined:                                   Benutzer ist beigetreten
+  user_left:                                     Benutzer ist gegangen
+  user_muted:                                    "{0} wurde im Text- und Sprachchat **stummgeschaltet**."
+  user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1}min **stummgeschaltet**."
+  user_nick:                                     Nickname des Benutzers {0} wurde zu {1} geändert
+  user_not_found:                                Benutzer nicht gefunden.
+  user_role_add:                                 Benutzerrolle hinzugefügt
+  user_role_rem:                                 Benutzerrolle entfernt
+  user_status_change:                            "{0} ist nun {1}"
+  user_unbanned:                                 Benutzer entbannt
+  user_unmuted:                                  "{0} ist im Text- und Sprachchat nicht länger **stummgeschaltet**."
+  user_vjoined:                                  "{0} ist dem Sprachkanal {1} beigetreten."
+  user_vleft:                                    "{0} hat den Sprachkanal {1} verlassen."
+  user_vmoved:                                   "{0} ging vom Sprachkanal {1} zu {2}."
+  user_voice_mute:                               "{0} wurde im Sprachchat **stummgeschaltet**."
+  user_voice_unmute:                             "{0} ist im Sprachchat nicht länger **stummgeschaltet**."
+  user_warned:                                   Benutzer {0} wurde verwarnt.
+  user_warned_and_punished:                      Benutzer {0} wurde verwarnt und Strafe {1} ausgeführt.
+  username:                                      Benutzername
+  username_changed:                              Benutzername geändert
+  users:                                         Benutzer
+  vc_role_list:                                  Rollen für Sprachkanäle
+  vcrole_added:                                  Nutzern wird beim Beitritt zum Sprachkanal {0} die Rolle {1} zugewiesen.
+  vcrole_removed:                                Nutzern wird beim Beitritt zum Sprachkanal {0} nicht länger eine Rolle zugewiesen.
+  voice_chan_created:                            Sprachkanal erstellt
+  voice_chan_destroyed:                          Sprachkanal gelöscht
+  vt_disabled:                                   Text- und Sprachfunktion deaktiviert.
+  vt_enabled:                                    Text- und Sprachfunktion aktiviert.
+  vt_exit:                                       Ich habe keine **Rollenmanagement**- und/oder **Kanalmanagement**-Rechte, sodass ich `voice+text` auf dem Server {0} nicht ausführen kann.
+  vt_no_admin:                                   Sie schalten diese Funktion ein bzw. aus und **ich habe keine ADMINISTRATORRECHTE**. Dies könnte einige Probleme hervorrufen, sodass sie ihre Textkanäle eventuell selber aufräumen müssen.
+  vt_perms:                                      Ich benötige mindestens **Rollenmanagement**- und **Kanalmanagement**-Rechte um diese Funktion zu aktivieren. (Bevorzugt Administratorrechte)
+  warn_cleared_by:                               Gelöscht von {0}
+  warn_edit:                                     Der Grund der Verwarnung `{0}` von `{1}` wurde von `{2}` auf `{3}` gesetzt.
+  warn_edit_perms:                               Zum Ändern der Verwarnung `{0}` musst du als Botowner eingetragen sein oder Solche fragen!
+  warn_hexid_no_entry:                           Zur HexId **`{0}`** konnte keine Verwarnung gefunden werden!
+  warn_hexid_parsefail:                          Der String **`{0}`** konnte nicht in eine HexId konvertiert werden!
+  warn_punish_list:                              Verwarnungsstrafliste
+  warn_punish_rem:                               "{0} Verwarnungen werden keine Bestrafung mehr auslösen."
+  warn_punish_set:                               Ich werde die Bestrafung {0} an Benutzern mit {1} Verwarnungen ausführen.
+  warned_by:                                     Verwarnt von {0}
+  warned_on:                                     Verwarnt auf dem Server {0}
+  warned_on_by:                                  Am {0} um {1} von {2}
+  warning_remove_other_user:                     Der angegebene Nutzer stimmt nicht mit der Verwarnung {0} überein!
+  warning_removed:                               Die Verwarnung {0} des Nutzers {1} wurde entfernt.
+  warnings_cleared:                              Alle Warnungen für {0} bereinigt.
+  warnings_list:                                 Liste aller verwarnten Benutzer auf diesem Server
+  warnings_none:                                 Keine Warnungen auf dieser Seite.
+  warnlog_for:                                   Warnlog für {0}
+  warnpl_none:                                   Keine Bestrafungen gesetzt.
+  xmuted_text:                                   Benutzer {0} vom Textchat
+  xmuted_text_and_voice:                         Benutzer {0} vom Text- und Sprachchat
+  xmuted_voice:                                  Benutzer {0} vom Sprachchat
+birthday:                                        
+  all_title:                                     Alle Geburtstage
+  disabled:                                      deaktiviert
+  enable:                                        Geburtstagsaktionen wurden **{0}**.
+  enable_same:                                   Geburtstagsaktionen sind schon **{0}**.
+  enabled:                                       aktiviert
+  list_title:                                    Geburtstage am **{0}**
+  messageevent_already_set:                      Geburtstagsnachrichten sind für dich sind schon **{0}**.
+  messageevent_birthday_not_set:                 Dein Geburtstag ist mir unbekannt, daher kannst du keine Geburtstagsnachrichten bekommen.
+  messageevent_changed:                          Geburtstagsnachrichten wurden für dich **{0}**.
+  messageevent_show:                             Geburtstagsnachrichten sind für dich **{0}**.
+  money:                                         Das Geburtstagsgeld beträgt {1}{0}
+  money_already_set:                             Das Geburtstagsgeld ist schon auf {0}{1} gesetzt.
+  money_set:                                     Das Geburtstagsgeld wurde von {1}{0} auf {2}{0} gesetzt.
+  msg:                                           Die aktuelle Geburtstagsnachricht lautet `{0}`
+  msg_changed:                                   Die Geburtstagsnachricht wurde von `{0}` auf `{1}` geändert.
+  msgch:                                         Der aktuelle Geburtstagsnachrichtenkanal ist **{0}**.
+  msgch_not_existing:                            nicht existent
+  msgch_not_set:                                 nicht gesetzt
+  msgch_set:                                     Der Geburtstagsnachrichtenkanal wurde von **{0}** zu **{1}** geändert.
+  none:                                          Es sind keine Geburtstage eingetragen!
+  none_date:                                     Für den **{0}** sind keine Geburtstage eingetragen.
+  remove_failed:                                 Für `{0}` ist kein Geburtstag bekannt, löschen unmöglich.
+  removed:                                       Der Geburtstag von `{0}` wurde gelöscht.
+  role:                                          Die Geburtstagsrolle ist **{0}**.
+  role_not_existing:                             nicht existent
+  role_not_set:                                  nicht gesetzt
+  role_set:                                      Die Geburtstagsrolle wurde von **{0}** zu **{1}** geändert.
+  self:                                          Du hast am **{0}** Geburtstag.
+  self_age:                                      Du hast am **{0}** Geburtstag und bist {1} Jahre alt.
+  self_none:                                     Dein Geburtstag ist dem Bot nicht bekannt.
+  set:                                           Du hast nun am **{0}** Geburtstag.
+  set_before:                                    Du hast deinen Geburtstag schon registriert. Für Änderungen frage den Botowner.
+  set_owner:                                     Der User `{0}` hat nun am **{1}** Geburtstag.
+  user:                                          "`{0}` hat am **{1}** Geburtstag."
+  user_age:                                      "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt."
+  user_none:                                     Der Geburtstag von `{0}` ist dem Bot nicht bekannt.
+customreactions:                                 
+  all_stats_cleared:                             Reaktionsstatistiken gelöscht.
+  crad_disabled:                                 Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird nicht automatisch gelöscht.
+  crad_enabled:                                  Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird automatisch gelöscht.
+  crdm_disabled:                                 Reaktionsnachricht für die benutzerdefinierte Reaktion mit der ID {0} wird nicht als DN gesendet.
+  crdm_enabled:                                  Reaktionsnachricht für die benutzerdefinierte Reaktion mit der ID {0} wird als DN gesendet.
+  deleted:                                       Benutzerdefinierte Reaktion gelöscht.
+  insuff_perms:                                  Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
+  list_all:                                      Liste aller benutzerdefinierten Reaktionen
+  name:                                          Benutzerdefinierte Reaktionen
+  new_cust_react:                                Neue benutzerdefinierte Reaktion
+  no_found:                                      Keine benutzerdefinierten Reaktionen gefunden.
+  no_found_id:                                   Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
+  response:                                      Antwort
+  stats:                                         Reaktionsstatistiken
+  stats_cleared:                                 Statistiken für die Reaktion {0} gelöscht.
+  stats_not_found:                               Keine Statistiken für diesen Auslöser gefunden, keine Aktion unternommen.
+  trigger:                                       Auslöser
+forum:                                           
+  dev_failed:                                    Hoppla, da bin ich doch glatt in einen unmöglichen Fall gestolpert! Um mich wieder aufzufangen, kontaktiere den Botentwickler.
+  forum_id:                                      ForumId
+  forum_name:                                    Forumname
+  forum_user_not_accessible:                     Zu **`{0}`** kann kein Forumaccount angezeigt werden!
+  forum_user_not_existing:                       Zu **`{0}`** existiert kein Forumaccount!
+  forum_user_not_seeable:                        Die Einsicht des Profils von **`{0}`** wurde eingeschränkt!
+  foruminfo_instance:                            Es existiert eine Instanz des Forums ohne Anmeldung.
+  foruminfo_logged_in:                           Angemeldet im Forum mit dem Nutzer {0}.
+  foruminfo_no_instance:                         Es existiert keine Instanz des Forums.
+  forumuserinfo_title:                           Forumaccount von {0}
+  gender:                                        Geschlecht
+  gt_update:                                     Die GommeHDnet-Teammitglieder wurden aktualisiert.
+  gtr:                                           Die GommeHDnet-Teammitgliedsrolle ist {0}.
+  gtr_not_set:                                   nicht gesetzt
+  gtr_set:                                       Die GommeHDnet-Teammitgliedsrolle wurde von {0} zu {1} geändert.
+  id:                                            ID
+  likes:                                         Zustimmungen
+  location:                                      Ort
+  name:                                          Name
+  posts:                                         Beiträge
+  rank:                                          Rang
+  ranks_title:                                   GommeHDnet-Teammitgliederränge ({0})
+  reinit_forum:                                  Reinitialisierung der Foruminstanz gestartet!
+  status:                                        Status
+  teamupdate_added_multi:                        "{0} sind nun **{1}**."
+  teamupdate_added_single:                       "{0} ist nun **{1}**."
+  teamupdate_changed_multi:                      "{0} haben den Rang von **{1}** zu **{2}** gewechselt."
+  teamupdate_changed_single:                     "{0} hat den Rang von **{1}** zu **{2}** gewechselt."
+  teamupdate_channel_already_not_set:            Der Teamupdatenachrichtenkanal ist schon unbesetzt.
+  teamupdate_channel_already_set:                Der Teamupdatenachrichtenkanal ist schon auf {0} gesetzt.
+  teamupdate_channel_changed:                    Der Teamupdatenachrichtenkanal wurde von {0} auf {1} gesetzt.
+  teamupdate_channel_removed:                    Der Teamupdatenachrichtenkanal wurde gelöscht.
+  teamupdate_channel_set:                        Der Teamupdatenachrichtenkanal wurde auf {0} gesetzt.
+  teamupdate_last_separator:                     " und "
+  teamupdate_prefix_already_not_set:             Der Teamupdatenachrichtenpräfix ist schon unbesetzt.
+  teamupdate_prefix_already_set:                 Der Teamupdatenachrichtenpräfix ist schon auf `{0}` gesetzt.
+  teamupdate_prefix_changed:                     Der Teamupdatenachrichtenpräfix wurde von `{0}` zu `{1}` geändert.
+  teamupdate_prefix_removed:                     Der Teamupdatenachrichtenpräfix wurde entfernt.
+  teamupdate_prefix_set:                         Der Teamupdatenachrichtenpräfix wurde zu `{0}` geändert.
+  teamupdate_rank_added:                         Der Teamrang `{0}` bekommt nun Updates.
+  teamupdate_rank_already_added:                 Der Teamrang `{0}` bekommt schon Updates.
+  teamupdate_rank_not_existing:                  Der Teamrang `{0}` bekommt schon keine Updates.
+  teamupdate_rank_removed:                       Der Teamrang `{0}` wird keine Updates mehr bekommen.
+  teamupdate_ranks:                              Teamupdateränge
+  teamupdate_removed_multi:                      "{0} sind nun kein **{1}** mehr."
+  teamupdate_removed_single:                     "{0} ist nun kein **{1}** mehr."
+  trophies:                                      Erfolgspunkte
+  viprole:                                       Die VIP-Rolle ist {0}.
+  viprole_not_set:                               nicht gesetzt
+  viprole_set:                                   Die VIP-Rolle wurde von {0} zu {1} geändert.
+gambling:                                        
+  animal_race:                                   Tierrennen
+  animal_race_already_in:                        Du bist diesem Rennen schon beigetreten!
+  animal_race_already_started:                   Tierrennen läuft bereits.
+  animal_race_failed:                            Das Rennen konnte nicht gestartet werden, da es nicht genügend Teilnehmer gibt.
+  animal_race_full:                              Rennen ist voll! Startet sofort.
+  animal_race_join:                              "{0} tritt als {1} bei"
+  animal_race_join_bet:                          "{0} tritt als {1} bei und wettet {2}!"
+  animal_race_join_instr:                        Schreibe {0}jr um dem Rennen beizutreten.
+  animal_race_no_race:                           Dieses Tierrennen ist voll!
+  animal_race_starting:                          Starte in 20 Sekunden oder wenn der Raum voll ist.
+  animal_race_starting_with_x:                   Starte mit {0} Teilnehmern.
+  animal_race_won:                               "{0} hat als {1} das Rennen gewonnen!"
+  animal_race_won_money:                         "{0} hat als {1} das Rennen und {2} gewonnen!"
+  awarded:                                       gab {0} an {1}
+  better_luck:                                   Hoffentlich hast du beim nächsten Mal mehr Glück.
+  br_win:                                        Glückwunsch! Du hast über {1} gewürfelt und {0} gewonnen.
+  changes_of_heart:                              Sinneswandel
+  claimed_by:                                    Beansprucht von
+  deck_reshuffled:                               Deck neu gemischt.
+  dice_invalid_number:                           Ungültige Anzahl angegeben. Du kannst {0}-{1} Würfel gleichzeitig rollen.
+  dice_rolled:                                   würfelte {0}
+  dice_rolled_num:                               'Würfel gerollt: {0}'
+  divorces:                                      Scheidungen
+  dm_again:                                      "`{0}` kann sich seinen täglichen Anteil nochmal abholen."
+  dm_already_received:                           Du hast deinen täglichen Anteil heute bereits abgeholt.
+  dm_no_role:                                    Deine Rollen erlauben kein DailyMoney, also bekommst du nichts.
+  dm_not_received:                               "`{0}` hat seinen täglichen Anteil noch nicht abgeholt."
+  dm_received:                                   hat sich seinen täglichen "{0}"-Anteil von {1} {2} abgeholt.
+  dm_role_not_set:                               Rolle "{0}" steht nicht auf der Gehaltsliste!
+  dm_role_priority_set:                          Die Gehaltspriorität von Rolle "{0}" wurde auf {1} gesetzt.
+  dm_role_removed:                               Rolle "{0}" wurde von der Gehaltsliste entfernt.
+  dm_role_set:                                   Rolle {0} bekommt nun {1} {2} mit Priorität {3}.
+  flip_guess:                                    Du hast es erraten und {0} gewonnen.
+  flip_invalid:                                  Ungültige Anzahl angegeben. Du kannst 1 bis {0} Münzen werfen.
+  flipped:                                       'Münzwurfergebnis: {0}.'
+  gifted:                                        hat {0} an {1} verschenkt.
+  has:                                           "{0} hat {1}"
+  heads:                                         Kopf
+  item:                                          Gegenstand
+  leaderboard:                                   Bestenliste
+  likes:                                         Mag
+  mass_award:                                    "{0} an alle {1} Nutzer mit der Rolle {2} verschenkt."
+  max_bet_limit:                                 Du kannst nicht mehr als {0} wetten
+  min_bet_limit:                                 Du kannst nicht weniger als {0} wetten
+  name:                                          Name
+  no_more_cards:                                 Keine Karten mehr im Deck.
+  no_users_found:                                Kein Benutzer gefunden.
+  nobody:                                        Niemand
+  not_enough:                                    Du hast nicht genug {0}
+  out_of_stock:                                  Ausverkauft.
+  page:                                          Seite {0}
+  payroll_header:                                __**Gehaltsliste**__
+  payroll_list_header:                           Rang | Rolle                | {0} | Priorität
+  payroll_list_number:                           Liste {0}
+  price:                                         Preis
+  race_failed_starting:                          Das Rennen konnte nicht gestartet werden. Ein anderes Rennen läuft wahrscheinlich.
+  race_not_exist:                                Es gibt kein Rennen auf diesem Server
+  raffled_user:                                  Ausgewählter Benutzer
+  random_unique_item:                            Zufälliger, einzigartiger Gegenstand.
+  reaction_desc:                                 Füge die {0} Reaktion zu dieser Nachricht hinzu um {1} zu erhalten
+  reaction_footer:                               Dieses Ereignis ist aktiv für bis zu {0} Stunden.
+  reaction_title:                                Reaktions-Ereignis gestartet
+  roll:                                          Du hast eine {0} gewürfelt.
+  second_larger_than_first:                      Die zweite Zahl muss größer sein als die erste.
+  shop:                                          Shop
+  shop_buy_error:                                Fehler beim DNen des Gegenstandes. Dir wurde alles zurückerstattet.
+  shop_item_add:                                 Gegenstand zum Shop hinzugefügt
+  shop_item_not_found:                           Keinen Gegenstand mit diesem Index gefunden.
+  shop_item_purchase:                            Gegenstand erfolgreich erworben.
+  shop_item_rm:                                  Gegenstand aus dem Shop entfernt
+  shop_item_wrong_type:                          Diesem Shopeintrag können keine Gegenstände hinzugefügt werden.
+  shop_list_item_added:                          Gegenstand erfolgreich hinzugefügt.
+  shop_list_item_not_unique:                     Dieser Gegenstand wurde bereits hinzugefügt.
+  shop_none:                                     Keine Gegenstände gefunden auf dieser Seite.
+  shop_purchase:                                 Kauf auf dem Server `{0}`
+  shop_role:                                     Du wirst die Rolle {0} erhalten.
+  shop_role_not_found:                           Die zum Kauf angebotene Rolle existiert nicht mehr.
+  shop_role_purchase:                            Du hast erfolgreich die Rolle "{0}" erworben.
+  shop_role_purchase_error:                      Die Rolle konnte dir nicht zugewiesen werden. Dir wurde alles zurückerstattet.
+  slot_bet:                                      Wette
+  slot_jackpot:                                  WOAAHHHHHH!!! Glückwunsch!!! x{0}
+  slot_single:                                   Eine einzelne {0}, x{1}
+  slot_three:                                    Wow! Glückspilz! Ein Drilling! x{0}
+  slot_two:                                      Gut gemacht! Zwei {0} - Einsatz x{1}
+  slot_won:                                      Gewonnen
+  sneakygamestatus_desc:                         Benutzer müssen einen geheimen Code schreiben um {0} zu erhalten. Gültig für {1} Sekunden. Erzähls niemanden. Pshhh.
+  sneakygamestatus_end:                          Das SneakyGame-Event ist beendet. {0} Nutzer haben die Belohnung erhalten
+  sneakygamestatus_title:                        SneakyGameStatus-Event wurde gestartet
+  tails:                                         Zahl
+  take:                                          hat erfolgreich {0} von {1} genommen
+  take_fail:                                     war es nicht möglich, {0} von {1} zu nehmen, da der Benutzer nicht so viel {2} besitzt!
+  total_average:                                 'Insgesamt: {0} Durchschnitt: {1}'
+  type:                                          Art
+  unique_items_left:                             "{0} einzigartige Gegenstände übrig."
+  waifu_affinity_already:                        Deine Zuneigung ist bereits zu dieser Waifu gesetzt oder du versuchst, deine Zuneigung zu entfernen, während du keine gesetzt hast.
+  waifu_affinity_changed:                        "hat seine Zuneigung von {0} zu {1} geändert.\n\n*Das ist moralisch nicht vertretbar.*\U0001F914"
+  waifu_affinity_cooldown:                       Du musst {0}h{1}min warten, bevor du deine Zuneigung ändern kannst.
+  waifu_affinity_reset:                          Ihre Neigung wurde zurückgesetzt. Sie haben keine Person mehr die Sie mögen.
+  waifu_affinity_set:                            will {0}s Waifu sein. Aww <3
+  waifu_claimed:                                 hat {0} als seine/Ihre Waifu für {1} beansprucht!
+  waifu_divorced_like:                           Sie haben sich von Ihrer Waifu die Sie mochte scheiden lassen. Du herzloses Monster. {0} hat {1} als Kompensation erhalten.
+  waifu_divorced_notlike:                        Sie haben sich von einer Waifu scheiden lassen die Sie nicht mochte, Du erhältst {0} zurück.
+  waifu_egomaniac:                               Sie können deine Neigung nicht zu Ihnen selbst setzen, Sie egomanische Person.
+  waifu_fulfilled:                               "\U0001F389 Ihre Liebe ist besiegelt! \U0001F389\n{0}'s neuer Wert ist {1}!"
+  waifu_isnt_cheap:                              Keine Waifu ist so billig. Sie müssen wenigstens {0} bezahlen um diese Waifu zu beanspruchen, selbst wenn Ihr tatsächlicher Wert geringer ist.
+  waifu_not_enough:                              Sie müssen {0} oder mehr bezahlen um diese Waifu zu beanspruchen!
+  waifu_not_yours:                               Diese Waifu gehört nicht Ihnen.
+  waifu_not_yourself:                            Sie können sich nicht selbst beanspruchen.
+  waifu_recent_divorce:                          Sie haben sich vor kurzem scheiden lassen. Sie müssen {0} Stunden und {1} Minuten warten bevor Sie sich erneut scheiden lassen können.
+  waifus_none:                                   Keine Waifus wurden bisher beansprucht.
+  waifus_top_waifus:                             Top Waifus
+games:                                           
+  8ball:                                         8ball
+  acro_ended_no_sub:                             Spiel wurde ohne Einsendungen beendet.
+  acro_no_votes_cast:                            Keine Stimmen abgegeben. Spiel endet ohne Gewinner.
+  acro_nym_was:                                  Das Akronym war {0}.
+  acro_running:                                  Akrophobia läuft bereits in diesem Kanal.
+  acro_started:                                  'Spiel gestartet. Erstelle einen Satz aus dem folgenden Akronym: {0}.'
+  acro_started_footer:                           Du hast {0}s für deine Einsendung.
+  acro_submit:                                   "{0} hat seinen Satz eingereicht. ({1} insgesamt)"
+  acro_vote:                                     Stimme ab, indem du die Nummer der Einsendung eingibst
+  acro_vote_cast:                                "{0} hat seine Stimme abgegeben!"
+  acro_winner:                                   Der Gewinner ist {0} mit {1} Punkten.
+  acro_winner_only:                              "{0} gewinnt, weil dieser Benutzer die einzigste Einsendung hat!"
+  acrophobia:                                    Akrophobie
+  category:                                      Kategorie
+  cleverbot_disabled:                            Cleverbot auf diesem Server deaktiviert.
+  cleverbot_enabled:                             Cleverbot auf diesem Server aktiviert.
+  curgen_disabled:                               Währungsgeneration in diesem Kanal deaktiviert.
+  curgen_enabled:                                Währungsgeneration in diesem Kanal aktiviert.
+  curgen_pl:                                     "{0} zufällige {1} sind erschienen! "
+  curgen_sn:                                     Eine zufällige {0} ist erschienen!
+  current_poll_results:                          Aktuelle Umfragewerte
+  failed_loading_question:                       Laden einer Frage fehlgeschlagen.
+  game_started:                                  Spiel gestartet
+  hangman_game_started:                          Galgenraten gestartet
+  hangman_running:                               Galgenraten läuft bereits in diesem Kanal.
+  hangman_start_errored:                         Starten von Galgenraten hat einen Fehler ausgelöst.
+  hangman_stopped:                               ''
+  hangman_types:                                 'Liste der "{0}hangman" Worttypen:'
+  leaderboard:                                   Bestenliste
+  no_results:                                    Keine Ergebnisse
+  no_votes_cast:                                 Keine Abstimmungen eingereicht.
+  not_enough:                                    Du hast nicht genug {0}
+  pick_pl:                                       Sammel sie durch Schreiben von `{0}pick`
+  pick_sn:                                       Sammel sie durch Schreiben von `{0}pick`
+  picked:                                        hat {0} aufgehoben
+  planted:                                       "{0} pflanzte {1}! "
+  poll_already_running:                          Eine Umfrage läuft bereits auf diesem Server.
+  poll_created:                                  "\U0001F4C3 {0} hat eine Umfrage erstellt"
+  poll_result:                                   "`{0}.` {1} mit {2} Abstimmungen."
+  poll_vote_private:                             Sende mir eine private Nachricht mit der entsprechenden Nummer der Antwort.
+  poll_vote_public:                              Sende hier eine Nachricht mit der entsprechenden Nummer der Antwort.
+  poll_voted:                                    "{0} stimmte ab."
+  question:                                      Gestellte Frage
+  rps_draw:                                      Unentschieden! Beide haben {0} gewählt
+  rps_win:                                       "{0} hat gewonnen! {1} schlägt {2}"
+  submissions_closed:                            Einsendungen geschlossen
+  thanks_for_voting:                             Danke für das Abstimmen. {0}
+  trivia_already_running:                        Ein Triviaspiel läuft schon auf diesem Server
+  trivia_game:                                   Triviaspiel
+  trivia_guess:                                  "{0} hat es erraten! Die Antwort war: {1}"
+  trivia_none:                                   Kein aktives Triviaspiel auf diesem Server.
+  trivia_points:                                 "{0} hat {1} Punkte"
+  trivia_stopping:                               Wird beendet nach dieser Frage.
+  trivia_times_up:                               Die Zeit ist um! Die richtige Antwort war {0}
+  trivia_win:                                    "{0} hat es erraten und das Spiel GEWONNEN! Die Antwort war: {1}"
+  ttt_a_draw:                                    Unentschieden!
+  ttt_against_yourself:                          Du kannst nicht gegen dich selber spielen.
+  ttt_already_running:                           Eine Runde TicTacToe läuft schon in diesem Kanal.
+  ttt_created:                                   hat eine Runde TicTacToe erstellt.
+  ttt_has_won:                                   "{0} hat gewonnen!"
+  ttt_matched_three:                             Drei in einer Reihe
+  ttt_no_moves:                                  Keine Züge übrig
+  ttt_time_expired:                              Zeit abgelaufen
+  ttt_users_move:                                "{0}'s Zug"
+  vs:                                            "{0} gegen {1}"
+  x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
+help:                                            
+  back_to_toc:                                   Zurück zu ToC
+  bot_owner_only:                                Nur Bot-Besitzer
+  channel_permission:                            Benötigt Kanalrecht {0}.
+  cmd_and_alias:                                 Befehle und Aliase
+  cmdlist_donate:                                'Du kannst das Projekt auf Patreon: <{0}> oder Paypal: <{1}> unterstützen.'
+  command_not_found:                             Ich konnte diesen Befehl nicht finden. Hast du dich vielleicht vertippt?
+  commandlist_regen:                             Befehlsliste neu generiert.
+  commands_instr:                                Gib `{0}h NameDesBefehls` ein, um die Hilfestellung für diesen Befehl zu sehen. Z.B. `{0}h {0}dailymoney`
+  desc:                                          Beschreibung
+  donate:                                        |-
+                                                 Du kannst die Entwicklung von Mitternacht auf
+                                                 Patreon <{0}>
+                                                 unterstützen. Vergiss nicht, deinen Discord-Namen oder ID in der Nachricht zu hinterlassen.
+                                                 
+                                                 Vielen Dank :)
+  guide:                                         "**Liste der Befehle**: <{0}>"
+  list_of_commands:                              Befehlsliste
+  list_of_modules:                               Modulliste
+  list_of_submodules:                            Submodulliste
+  module:                                        'Modul: {0}'
+  module_not_found:                              Dieses Modul existiert nicht.
+  modules_footer:                                Schreibe `{0}cmds ModuleName` um eine Liste aller Befehle dieses Moduls zu erhalten. z.B. `{0}cmds games`
+  server_permission:                             Benötigt Serverrecht {0}.
+  table_of_contents:                             Inhaltsverzeichnis
+  usage:                                         Verwendung
+level:                                           
+  addxp:                                         "{0} XP an {1} vergeben."
+  levelguilddata:                                "{0} ist gesetzt auf {1}"
+  levelguilddata_changed:                        "{0} wurde von {1} auf {2} gesetzt."
+  msgxpr_add_fail:                               In Kanal {0} gibt es schon keine XP auf Nachrichten.
+  msgxpr_add_success:                            Nachrichten in Kanal {0} geben nun keine XP mehr.
+  msgxpr_none:                                   Es gibt keine Kanäle, in denen es keine XP auf Nachrichten gibt.
+  msgxpr_remove_fail:                            In Channel {0} gibt es schon XP auf Nachrichten.
+  msgxpr_remove_success:                         Nachrichten in Channel {0} geben nun wieder XP.
+  msgxpr_title:                                  Kanäle ohne Nachrichten-XP
+  rank_other:                                    "{0}: **{1}'s Rang > LEVEL {2} | XP {3}/{4} | TOTAL XP {5} | RANK {6}/{7}**"
+  rank_self:                                     "{0}: **LEVEL {1} | XP {2}/{3} | TOTAL XP {4} | RANK {5}/{6}**"
+  rank_not_found:                                Der angegebene Nutzer konnte nicht gefunden werden!
+  ranks_header:                                  __**Rangliste**__
+  ranks_list_header:                             |-
+                                                 Liste {0}
+                                                 Rang | Username                              | Lvl | XP            | Total XP
+                                                 -----|---------------------------------------|-----|---------------|---------
+  ranks_list_row:                                "{0}. | {1} | {2} | {3}/{4} | {5}"
+  rlb_already_independent:                       Für die Rolle {0} gibt es keine Steigerung der Levelunabhängigkeit!
+  rlb_none:                                      Es existieren keine Rolle-Level-Beziehungen.
+  rlb_page_too_high:                             Die Seitenzahl ist zu groß.
+  rlb_removed:                                   Die Rolle {0} ist nun levelunabhängig.
+  rlb_set:                                       Die Rolle {0} wird nun Nutzern ab Level {1} vergeben.
+  rlb_set_minlevel:                              Das Mindestlevel muss mindestens 0 sein.
+  rlb_title:                                     Rolle-Level-Beziehungen
+  setxp:                                         XP von {0} auf {1} gesetzt.
+  ttxp_error_negative_value:                     Du kannst XP nicht in Geld zurückverwandeln!
+  ttxp_error_no_money_other:                     "{0} hat nicht genug Geld."
+  ttxp_error_no_money_self:                      Du hast nicht genug Geld.
+  ttxp_error_zero_value:                         0 {0} sind 0 XP!
+  ttxp_turned_other:                             Dem Nutzer {0} wurden {1}{2} in {3} XP umgewandelt.
+  ttxp_turned_self:                              "{0}{1} wurden in {2} XP umgewandelt."
+minecraft:                                       
+  apistatus_title:                               Status der Mojang-APIs
+  error_apistatus:                               'Beim Abrufen der Status ist ein Fehler aufgetreten: {0}'
+  error_names:                                   'Beim Abrufen der Namen ist ein Fehler aufgetreten: {0}'
+  error_player:                                  'Beim Abrufen des Spielers ist ein Fehler aufgetreten: {0}'
+  error_server:                                  Die Anfrage an den Server schlug fehl!
+  pinfo_title:                                   MC-Info zu `{0}`
+  ping_fail:                                     Ich konnte den Server `{0}:{1}` nicht erreichen!
+  ping_success:                                  Ich habe zum Server `{0}` einen Ping von {1}ms
+  ping_success_mult:                             Ich habe zum Server `{0}` über {1}/{2} Versuche gemittelt einen Ping von {3}ms
+  server_motd:                                   MotD
+  server_ping:                                   Ping
+  server_players:                                Spieler
+  server_port:                                   Port
+  server_status:                                 Serverstatus
+  server_title:                                  Informationen zu `{0}`
+  server_version:                                Version
+  usernames_title:                               Minecraftnamen von {0} ({1})
+music:                                           
+  attempting_to_queue:                           Versuche {0} Lieder einzureihen...
+  autoplay_disabled:                             Autoplay deaktiviert.
+  autoplay_enabled:                              Autoplay aktiviert.
+  autoplaying:                                   ''
+  defvol_set:                                    Standard-Lautstärke auf {0}% gesetzt
+  dir_queue_complete:                            Ordner-Einreihung fertig.
+  fairplay:                                      fairer Modus
+  finished_song:                                 Lied beendet
+  fp_disabled:                                   Fairer Modus deaktiviert.
+  fp_enabled:                                    Fairer Modus aktiviert.
+  from_position:                                 Von Position
+  id:                                            ID
+  invalid_input:                                 Ungültige Eingabe.
+  max_playtime_none:                             Maximale Länge eines Liedes hat kein Limit mehr.
+  max_playtime_set:                              Maximale länge eines Liedes ist nun {0} Sekunden.
+  max_queue_unlimited:                           Maximale Musik-Warteschlangengröße ist nun unbegrenzt.
+  max_queue_x:                                   Maximale Musik-Warteschlangengröße ist nun {0} Lieder.
+  must_be_in_voice:                              Sie müssen sich in einem Sprachkanal auf diesem Server befinden.
+  name:                                          Name
+  no_player:                                     Kein aktiver Musikspieler.
+  no_search_results:                             Keine Suchergebnisse.
+  now_playing:                                   'Aktuelles Lied:'
+  paused:                                        Musikwiedergabe pausiert.
+  play_limit:                                    "{0}'s Limit"
+  player_queue:                                  Musik-Warteschlange - Seite {0}/{1}
+  playing_song:                                  Spiele Lied
+  playlist_delete_fail:                          Playlist konnte nicht gelöscht werden. Entweder es existiert nicht oder es gehört nicht Ihnen.
+  playlist_deleted:                              Playlist gelöscht.
+  playlist_id_not_found:                         Es gibt keine Playlist mit dieser ID.
+  playlist_queue_complete:                       Playlist wurde an die Warteschlange angehängt.
+  playlist_saved:                                Playlist gespeichert
+  playlists:                                     "`#{0}` - **{1}** by *{2}* ({3} Lieder)"
+  playlists_page:                                Seite {0} der gespeicherten Playlists
+  queue:                                         Warteschlange
+  queue_cleared:                                 Musik-Warteschlange geleert.
+  queue_full:                                    Warteschlange ist voll mit {0}/{0}.
+  queue_stopped:                                 ''
+  queued_song:                                   Eingereihtes Lied
+  removed_song:                                  Lied entfernt
+  removed_song_error:                            Lied an diesem Index existiert nicht
+  repeating_cur_song:                            Aktuelles Lied wird wiederholt
+  repeating_playlist:                            Playlist wird wiederholt
+  repeating_track:                               Lied wird wiederholt
+  repeating_track_stopped:                       Aktuelles Lied wird nicht mehr wiederholt.
+  resumed:                                       Musikwiedergabe wiederaufgenommen.
+  rpl_disabled:                                  Playlist-Wiederholung deaktiviert.
+  rpl_enabled:                                   Playlist-Wiederholung aktiviert.
+  set_music_channel:                             Ich werde nun spielende, beendete, pausierte und entfernte Lieder in diesem Channel ausgeben.
+  shuffling_playlist:                            ''
+  skipped_to:                                    Gesprungen zu `{0}:{1}`
+  song_moved:                                    Lied bewegt
+  song_not_found:                                Kein Lied gefunden
+  song_skips_after:                              Lieder werden übersprungen nach {0}
+  songs_shuffle_disable:                         ''
+  songs_shuffle_enable:                          Lieder werden jetzt zufällig wiedergegeben.
+  time_format:                                   "{0}h {1}m {2}s"
+  to_position:                                   Zu Position
+  unlimited:                                     unbegrenzt
+  volume_input_invalid:                          Lautstärke muss zwischen 0 und 100 sein
+  volume_set:                                    Lautstärke auf {0}% gesetzt
+nsfw:                                            
+  autohentai_started:                            'Autohentai wurde gestartet. Es wird alle {0} Sekunden etwas mit einem der folgenden Stichwörtern gepostet: {1}'
+  autohentai_stopped:                            Autohentai angehalten.
+  not_found:                                     Keine Ergebnisse gefunden.
+  tag:                                           Stichwort
+permissions:                                     
+  acm_disable:                                   Benutzung ALLER MODULE für Kanal {0} verboten.
+  acm_enable:                                    Benutzung ALLER MODULE für Kanal {0} erlaubt.
+  allowed:                                       Erlaubt
+  arm_disable:                                   Benutzung ALLER MODULE für die Rolle {0} verboten.
+  arm_enable:                                    Benutzung ALLER MODULE für die Rolle {0} erlaubt.
+  asm_disable:                                   Benutzung ALLER MODULE für diesen Server verboten.
+  asm_enable:                                    Benutzung ALLER MODULE für diesen Server erlaubt.
+  aum_disable:                                   Benutzung ALLER MODULE für den Benutzer {0} verboten.
+  aum_enable:                                    Benutzung ALLER MODULE für den Benutzer {0} erlaubt.
+  blacklisted:                                   "{0} mit ID {1} wurde zur Sperrliste hinzugefügt"
+  blocked_commands:                              Gesperrte Befehle
+  blocked_modules:                               Gesperrte Module
+  cmdcd_add:                                     Befehl {0} hat nun {1}s Abklingzeit.
+  cmdcd_cleared:                                 Befehl {0} hat keine Abklingzeit mehr und alle laufenden Abklingzeiten wurden entfernt.
+  cmdcd_none:                                    Keine Befehls Abklingzeiten gesetzt.
+  command_costs:                                 Preis für Befehle
+  cx_disable:                                    Benutzung von {0} {1} wurde für Kanal {2} verboten.
+  cx_enable:                                     Benutzung von {0} {1} wurde für Kanal {2} erlaubt.
+  denied:                                        Verweigert
+  filter_word_add:                               Wort {0} zu der Liste der gefilterten Wörter hinzugefügt.
+  filter_word_list:                              Liste der gefilterten Wörter
+  filter_word_remove:                            Wort {0} von der Liste der gefilterten Wörter entfernt.
+  gcmd_add:                                      Der Befehl {0} wurde auf allen Servern ausgeschaltet.
+  gcmd_remove:                                   Der Befehl {0} wurde auf allen Servern eingeschaltet.
+  global_perms_reset:                            ''
+  gmod_add:                                      Das Modul {0} wurde auf allen Servern ausgeschaltet.
+  gmod_remove:                                   Das Modul {0} wurde auf allen Servern eingeschaltet.
+  invalid_second_param_between:                  Ungültiger zweiter Parameter. (Muss eine Nummer zwischen {0} und {1} sein)
+  invite_filter_channel_off:                     Filterung von Einladungen auf diesem Kanal deaktiviert.
+  invite_filter_channel_on:                      Filterung von Einladungen auf diesem Kanal aktiviert.
+  invite_filter_server_off:                      Filterung von Einladungen auf diesem Server deaktiviert.
+  invite_filter_server_on:                       Filterung von Einladungen auf diesem Server aktiviert.
+  lgp_none:                                      Keine blockierten Befehle oder Module.
+  moved_permission:                              'Berechtigung {0} von #{1} zu #{2} gesetzt'
+  no_costs:                                      Kein Preis gesetzt.
+  not_found:                                     'Konnte Berechtigung an Index #{0} nicht finden'
+  of_command:                                    Befehl
+  of_module:                                     Modul
+  page:                                          Berechtigungen
+  perm_out_of_range:                             Keine Berechtigung für diesen Index gefunden.
+  permrole:                                      Aktuelle Berechtigungsrolle ist {0}.
+  permrole_changed:                              Benutzer brauchen nun Rolle {0}, um die Berechtigungen zu editieren.
+  perms_reset:                                   ''
+  removed:                                       'Berechtigung #{0} - {1} entfernt'
+  rx_disable:                                    Benutzung von {0} {1} wurde für Rolle {2} verboten.
+  rx_enable:                                     Benutzung von {0} {1} wurde für Rolle {2} erlaubt.
+  sec:                                           sek.
+  sx_disable:                                    Benutzung von {0} {1} wurde für diesen Server verboten.
+  sx_enable:                                     Benutzung von {0} {1} wurde für diesen Server erlaubt.
+  trigger:                                       ''
+  unblacklisted:                                 "{0} mit ID {1} von Sperrliste entfernt"
+  uneditable:                                    Nicht editierbar
+  ux_disable:                                    Benutzung von {0} {1} wurde für Benutzer {2} verboten.
+  ux_enable:                                     Benutzung von {0} {1} wurde für Benutzer {2} erlaubt.
+  verbose_false:                                 Ich werde keine Warnungen für Rechte mehr anzeigen.
+  verbose_true:                                  Ich werde jetzt Warnungen für Rechte anzeigen.
+  word_filter_channel_off:                       Filterung für Wörter in diesem Kanal deaktiviert.
+  word_filter_channel_on:                        Filterung für Wörter in diesem Kanal aktiviert.
+  word_filter_server_off:                        Filterung für Wörter auf diesem Server deaktiviert.
+  word_filter_server_on:                         Filterung für Wörter auf diesem Server aktiviert.
+  zalgo_filter_channel_off:                      Filterung für Zalgo in diesem Kanal deaktiviert.
+  zalgo_filter_channel_on:                       Filterung für Zalgo in diesem Kanal aktiviert.
+  zalgo_filter_server_off:                       Filterung für Zalgo auf diesem Server deaktiviert.
+  zalgo_filter_server_on:                        Filterung für Zalgo auf diesem Server aktiviert.
+pokemon:                                         
+  already_fainted:                               "{0} ist bereits ohnmächtig."
+  already_full:                                  "{0} hat bereits volle LP."
+  already_that_type:                             Dein Typ ist bereits {0}
+  attack:                                        benutzte {0}{1} an {2}{3} für {4} Schaden.
+  cant_attack_again:                             Sie können ohne Gegenangriff nicht erneut angreifen!
+  cant_attack_yourself:                          Sie können sich nicht selber angreifen.
+  fainted:                                       "{0} wurde ohnmächtig!"
+  healed:                                        heilte {0} mit einer {1}
+  hp_remaining:                                  "{0} hat {1} LP übrig."
+  invalid_move:                                  Sie können {0} nicht benutzen. Schreibe `{1}ml` um eine Liste deiner verfügbaren Angriffe zu sehen.
+  moves:                                         Angriffsliste für den Typ {0}
+  no_currency:                                   Sie haben nicht genug {0}
+  not_effective:                                 Das ist nicht sehr effektiv.
+  revive_other:                                  belebte {0} wieder mit einem {1}
+  revive_yourself:                               Sie haben sich selbst wiederbelebt mit einem {0}
+  settype_success:                               Dein Typ wurde verändert von {0} mit einem {1}
+  somewhat_effective:                            Das ist etwas effektiv.
+  super_effective:                               Das ist sehr effektiv!
+  too_many_moves:                                Sie haben zu viele Angriffe hintereinander eingesetzt, sodass Sie sich nicht bewegen können!
+  type_of_user:                                  Typ von {0} ist {1}
+  user_not_found:                                Benutzer nicht gefunden.
+  you_fainted:                                   Sie sind ohnmächtig, daher können Sie sich nicht bewegen!
+precattr:                                        
+  owner_only:                                    Diesen Befehl dürfen nur Botowner ausführen!
+  perms_missing:                                 Du darfst diesen Befehl erst mit der Berechtigung `{0}` ausführen!
+searches:                                        
+  abilities:                                     Fähigkeiten
+  anime_no_fav:                                  Keine favorisierten anime
+  atl_ad_started:                                Startete die Automatische Übersetzung der Nachrichten auf diesem Kanal. Nachrichten von Benutzern werden automatisch gelöscht.
+  atl_removed:                                   Ihre Automatische-Übersetzungs Sprache wurde entfernt.
+  atl_set:                                       Ihre Automatische-Übersetzungs Sprache wurde zu {0}>{1} gesetzt
+  atl_started:                                   Automatische Übersetzung der Nachrichten wurde auf diesem kanal gestartet.
+  atl_stopped:                                   Automatische Übersetzung der Nachrichten wurde auf diesem kanal gestoppt.
+  bad_input_format:                              Schlechtes Eingabeformat oder etwas lief schief.
+  card_not_found:                                Konnte diese Karte nicht finden.
+  catfact:                                       fakt
+  chapters:                                      Kapitel
+  comic_number:                                  'Comic #'
+  compet_loses:                                  Verlorene Competitives
+  compet_played:                                 Gespielte Competitives
+  compet_playtime:                               Kompetetive Spielzeit
+  compet_rank:                                   Competitive Rang
+  compet_wins:                                   Gewonnene Competitives
+  completed:                                     Beendet
+  condition:                                     Kondition
+  cost:                                          Kosten
+  date:                                          Datum
+  define:                                        'Definiere:'
+  define_unknown:                                Konnte keine Definition für diesen Term finden.
+  dropped:                                       Abgebrochen
+  episodes:                                      Episoden
+  error_occured:                                 Ein fehler ist aufgetreten.
+  example:                                       Beispiel
+  failed_finding_anime:                          Konnte diesen animu nicht finden.
+  failed_finding_manga:                          Konnte diesen mango nicht finden.
+  genres:                                        Genres
+  hashtag_error:                                 Konnte keine definition für dieses Stichwort finden.
+  height_weight:                                 Höhe/Gewicht
+  height_weight_val:                             "{0}m/{1}kg"
+  hex_invalid:                                   Ungültige Farbe angegeben
+  humidity:                                      Feuchtigkeit
+  image_search_for:                              'Bildersuche für:'
+  imdb_fail:                                     Konnte diesen Film nicht finden.
+  invalid_lang:                                  Ungültige Quell- oder Zielsprache.
+  jokes_not_loaded:                              Witze nicht geladen.
+  latlong:                                       Lat/long
+  level:                                         Level
+  list_of_place_tags:                            Liste der "{0}place" Stichwörtern
+  location:                                      Standort
+  magicitems_not_loaded:                         Magic Items nicht geladen.
+  mal_profile:                                   "{0}s MAL Profil"
+  mashape_api_missing:                           Der Besitzer des Bots hat keinen MashapeApi-Schlüssel angegeben. Du kannst diese Funktion nicht benutzen.
+  min_max:                                       Min/Max
+  no_channel_found:                              Keine Kanäle gefunden.
+  no_results:                                    Keine Ergebnisse gefunden.
+  on_hold:                                       Pausierte
+  original_url:                                  Ursprüngliche Url
+  osu_api_key:                                   Ein osu!-API-Schlüssel wird benötigt.
+  osu_failed:                                    osu!-Signatur konnte nicht abgefragt werden.
+  over_x:                                        Über {0} Bilder gefunden. Zeige zufälliges {0}.
+  ow_user_not_found:                             Benutzer nicht gefunden! Bitte überprüfe die Region und den BattleTag bevor erneuten Versuchen.
+  plan_to_watch:                                 Vermerkt
+  platform:                                      Plattform
+  pokemon_ability_none:                          Keine Fähigkeit gefunden.
+  pokemon_none:                                  Kein Pokemon gefunden.
+  profile_link:                                  'Profillink:'
+  quality:                                       Qualität
+  quick_playtime:                                Quick Spielzeit
+  quick_wins:                                    Gewonnene Quicks
+  rating:                                        Bewertung
+  score:                                         'Punktzahl:'
+  search_for:                                    'Suche nach:'
+  short_url:                                     Kurze Url
+  shorten_fail:                                  Url konnte nicht gekürzt werden
+  something_went_wrong:                          Etwas lief schief.
+  specify_search_params:                         Bitte spezifiziere die Suchparameter.
+  status:                                        Status
+  store_url:                                     Geschäfts-Url
+  stream_no:                                     Diesen Stream gibt es nicht.
+  stream_not_exist:                              Stream existiert wahrscheinlich nicht.
+  stream_removed:                                "{0}s Stream ({1}) von den Benachrichtigungen entfernt."
+  stream_tracked:                                Ich werde diesen Kanal benachrichtigen, wenn der Status sich verändert.
+  streamer_offline:                              Streamer {0} ist jetzt offline.
+  streamer_online:                               Streamer {0} ist online mit {1} Zuschauern.
+  streams_following:                             Du folgst {0} Streamern auf diesem Server.
+  streams_none:                                  Du folgst keinem Streamer auf diesem Server.
+  sunrise:                                       Sonnenaufgang
+  sunset:                                        Sonnenuntergang
+  temperature:                                   Temperatur
+  time:                                          Die Zeit in {0} ist {1} - {2}
+  title:                                         'Titel:'
+  top_3_fav_anime:                               'Top 3 Lieblingsanime:'
+  translation:                                   'Übersetzung:'
+  types:                                         Typen
+  ud_error:                                      Die Definition für den Begriff konnte nicht gefunden werden.
+  url:                                           Url
+  viewers:                                       Zuschauer
+  watching:                                      Am schauen
+  wiki_page_not_found:                           Seite konnte nicht gefunden werden.
+  wikia_error:                                   Der Begriff konnte auf dem spezifizierten Wikia nicht gefunden werden.
+  wikia_input_error:                             Bitte gib hinter der Suchanfrage ein Wikia ein.
+  wind_speed:                                    Windgeschwindigkeit
+  x_most_banned_champs:                          Die {0} meistgebannten Champions
+  yodify_error:                                  Deine Nachricht konnte nicht yodifiziert werden.
+utility:                                         
+  activity_line:                                 "`{0}.` {1} - {2} [{3:F2}/s]"
+  activity_page:                                 Nachrichtenaktivitätsliste
+  activity_users_total:                          "{0} Benutzer insgesamt"
+  alias_added:                                   "{0} ist nun ein Alias für {1}"
+  alias_list:                                    Liste der Aliase
+  alias_remove_fail:                             Der Auslöser {0} hatte keinen Alias
+  alias_removed:                                 Der Auslöser {0} hat keinen Alias mehr
+  aliases_none:                                  Keinen Alias gefunden
+  author:                                        Autor
+  bot_config_edit_fail:                          Konnte den Wert von {0} nicht auf {1} setzen
+  bot_config_edit_success:                       Der Wert von {0} wurde auf {1} gesetzt.
+  botid:                                         ID des Bots
+  calcops:                                       Liste der Funktionen im {0}calc Befehl
+  cant_read_or_send:                             Du kannst in diesem Kanal keine Nachrichten lesen oder schreiben.
+  channel_topic:                                 Thema des Kanals
+  channelid:                                     "{0} dieses Kanals ist {1}"
+  clpa_fail:                                     'Belohnungen konnten nicht beansprucht werden wegen einem dieser Gründe:'
+  clpa_fail_already:                             Eventuell hast du deine Belohnung für diesen Monat schon bekommen. Du kannst Belohnungen nur einmal pro Monat beanspruchen, außer du erhöhst deine Unterstützung.
+  clpa_fail_already_title:                       Belohnung schon beansprucht
+  clpa_fail_conn:                                Dein Discordaccount ist eventuell nicht mit Patreon verbunden.
+  clpa_fail_conn_title:                          Discordaccount nicht verbunden
+  clpa_fail_sup:                                 Um die Belohnung zu erhalten, musst du das Projekt auf Patreon unterstützen. Mit dem Befehl {0} bekommst du einen Link zum Unterstützen.
+  clpa_fail_sup_title:                           Keine Unterstützung
+  clpa_fail_wait:                                Du musst ein paar Stunden warten, nachdem du deine Unterstützung zugesagt hast.
+  clpa_fail_wait_title:                          Bitte warte ein wenig
+  clpa_next_update:                              Nächste Aktualisierung in {0}
+  clpa_success:                                  Du hast {0} erhalten. Danke für deine Unterstützung des Projekts!
+  clpa_too_early:                                Belohnungen können ab dem fünften Tag jedes Monats beansprucht werden.
+  commands_ran:                                  Befehle ausgeführt
+  convert:                                       "{0} {1} ist gleich zu {2} {3}"
+  convert_not_found:                             'Kann {0} nicht zu {1} konvertieren: Einheiten nicht gefunden'
+  convert_type_error:                            'Kann {0} nicht zu {1} konvertieren: Einheiten sind nicht gleich'
+  convertlist:                                   Einheiten, die von dem Konvertierer benutzt werden können
+  counttonumber_chance_already_set:              Die Chance einer Zahlreaktion im CountToNumber-Kanal ist schon auf {0:F3} gesetzt.
+  counttonumber_chance_current:                  Die Chance einer Zahlreaktion im CountToNumber-Kanal beträgt {0:F3}.
+  counttonumber_chance_set:                      Die Chance einer Zahlreaktion im CountToNumber-Kanal wurde auf {0:F3} gesetzt.
+  counttonumber_channel_already_removed:         CountToNumber-Kanal kann nicht entfernt werden, es ist keiner gesetzt.
+  counttonumber_channel_already_set:             CountToNumber-Kanal ist schon auf {0} gesetzt.
+  counttonumber_channel_current:                 Der aktuelle CountToNumber-Kanal ist {0}
+  counttonumber_channel_not_existing:            Der aktuell gesetzte CountToNumber-Kanal existiert nicht.
+  counttonumber_channel_not_set:                 CountToNumber-Kanal ist nicht gesetzt.
+  counttonumber_channel_removed:                 CountToNumber-Kanal wurde entfernt.
+  counttonumber_channel_set:                     CountToNumber-Kanal wurde auf {0} gesetzt.
+  created_at:                                    Erstellt am
+  custom_emojis:                                 Benutzerdefinierte Emojis
+  error:                                         Fehler
+  features:                                      Funktionalitäten
+  forum_id:                                      ForumId
+  forum_name:                                    Forumname
+  id:                                            ID
+  index_out_of_range:                            Index außer Reichweite.
+  inrole_list:                                   'Hier ist eine Liste mit Nutzern in Rolle {0}:'
+  inrole_not_allowed:                            Du hast keine Berechtigung, diesen Befehl auf Rollen mit vielen Nutzern anzuwenden.
+  invalid_value:                                 Ungültiger {0} Wert.
+  joined:                                        Beigetreten
+  joined_discord:                                Discord beigetreten
+  joined_server:                                 Server beigetreten
+  list_of_repeaters:                             Liste der Wiederholer
+  listservers:                                   |-
+                                                 ID: {0}
+                                                 Mitglieder: {1}
+                                                 ID des Besitzers: {2}
+  listservers_none:                              Keine Server auf dieser Seite gefunden.
+  members:                                       Mitglieder
+  memory:                                        Speicher
+  message_repeater:                              Nachrichtenwiederholer
+  messages:                                      Nachrichten
+  name:                                          Name
+  nickname:                                      Nickname
+  no_active_repeaters:                           Keine aktiven Wiederholer.
+  no_roles_on_page:                              Keine Rollen auf dieser Seite.
+  no_shards_on_page:                             Keine Shards auf dieser Seite.
+  no_topic_set:                                  Kein Thema gesetzt.
+  nobody_playing_game:                           Niemand spielt dieses Spiel.
+  owner:                                         Besitzer
+  owner_ids:                                     IDs der Besitzer
+  presence:                                      Anwesenheit
+  presence_txt:                                  |-
+                                                 {0} Server
+                                                 {1} Textkanäle
+                                                 {2} Sprachkanäle
+  quote_added:                                   Zitat hinzugefügt
+  quote_deleted:                                 'Zitat #{0} wurde gelöscht.'
+  quote_not_found:                               Kein Zitat mit Schlüsselwort `{0}` gefunden!
+  quote_text_not_found:                          Kein Zitat mit Schlüsselwort `{0}` und Text `{1}` gefunden!
+  quotes_deleted:                                Alle Zitate mit dem Stichwort {0} wurden gelöscht.
+  quotes_list_item:                              "`#{0}` {1,-20}"
+  quotes_list_item_author:                       "`#{0}` {1,-20} von {2}"
+  quotes_notfound:                               'Kein Zitat mit der ID #{0} gefunden.'
+  quotes_page:                                   Seite {0} der Zitate
+  quotes_page_none:                              Keine Zitate gefunden!
+  quotes_remove_none:                            Es wurde kein Zitat gefunden, das entfernt werden kann!
+  quotes_user_page:                              Seite {0} der Zitate von {1}
+  region:                                        Region
+  registered_on:                                 Registriert am
+  remind:                                        Ich werde {0} erinnern, {1} in {2} `({3:d.M.yyyy.} um {4:HH:mm})` zu tun.
+  remind_invalid_format:                         Kein gültiges Zeitformat. Überprüfe die Befehlsliste.
+  remind_template:                               Neue Erinnerungsvorlage wurde gesetzt.
+  repeat_invoke_none:                            Auf diesem Server wurden keine wiederholende Nachrichten gefunden.
+  repeater:                                      "{0} wird alle {1}d{2}h{3}min wiederholt."
+  repeater_initial:                              ''
+  repeater_stopped:                              "#{0} wurde gestoppt."
+  repeaters_list:                                Liste der Wiederholungen
+  repeaters_none:                                Auf diesem Server sind keine Wiederholer.
+  result:                                        Resultat
+  rng:                                           'Zufällige Zahl zwischen {0} und {1}: `{2}`'
+  roles:                                         Rollen
+  roles_all_page:                                'Seite #{0} aller Rollen für diesen Server:'
+  roles_count:                                   Rollen - {0}
+  roles_page:                                    'Seite #{0} der Rollen für {1}'
+  rrc_no_colors:                                 Die Farben haben das falsche Format. Benutze zum Beispiel `#00ff00`.
+  rrc_start:                                     Starte die Farbrotation für Rolle {0}.
+  rrc_stop:                                      Stoppe die Farbrotation für Rolle {0}
+  server_info:                                   Serverinfo
+  serverid:                                      "{0} dieses Servers ist {1}"
+  shard:                                         Shard
+  shard_stats:                                   Shardstatistiken
+  shard_stats_txt:                               Shard **#{0}** ist im Status {1} mit {2} Servern
+  showemojis:                                    "**Name:** {0} **Link:** {1}"
+  showemojis_none:                               Keine speziellen Emoji gefunden.
+  stats_songs:                                   Wiedergabe von {0} Liedern, {1} in der Musikliste.
+  text_channels:                                 Textkanäle
+  togtub_room_link:                              Hier ist dein Raumlink
+  unh_active:                                    aktiviert
+  unh_global:                                    global
+  unh_guild_log_equals:                          Die Einstellung zum Loggen der Nutzernamen auf Server **{0}** ist schon auf **{1}**!
+  unh_guild_null:                                Es muss ein gültiger Discordserver angegeben werden!
+  unh_inactive:                                  deaktiviert
+  unh_log_global:                                Globales Loggen der Nutzernamen wurde **{0}**.
+  unh_log_global_append:                         Globales Loggen ist **{0}**
+  unh_log_guild:                                 Loggen der Nutzernamen auf Server `{0}` wurde von **{1}** auf **{2}** gesetzt.
+  unh_no_names:                                  Für den Benutzer **`{0}`** existiert kein Nutzername (wie auch immer das möglich ist...)
+  unh_title:                                     Nutzernamen von **{0}**
+  unh_title_global:                              Globale Nutzernamen von **{0}**
+  unh_title_guild:                               Nicknames von **{0}**
+  unh_update_usernames:                          "{0} Nicknames und {1} Usernames von {2} Nutzern wurden in {3} geupdatet."
+  uptime:                                        Betriebszeit
+  userid:                                        "{0} von Benutzer {1} ist {2}"
+  users:                                         Benutzer
+  verbose_errors_disabled:                       ''
+  verbose_errors_enabled:                        ''
+  verified_members:                              Verifizierungen
+  voice_channels:                                Sprachkanäle
+  voicestats_reset:                              Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!
+  voicestats_time:                               Der Nutzer **{0}** hat bisher **{1}** in Sprachkanälen verbracht.
+  voicestats_untracked:                          Ich habe keine Aufzeichnungen über den Aufenthalt von **{0}** in Sprachkanälen!
+verification:                                    
+  add_manually_success:                          Der Nutzer `{0}` wurde manuell mit dem Forumaccount `{1}` verifiziert.
+  additional_verification_users_not_set:         Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.
+  additional_verification_users_set:             Zusätzliche Verifizierungsnachrichtenempfänger wurden gesetzt.
+  additional_verification_users_set_void:        Zusätzliche Verifizierungsnachrichtenempfänger gelöscht.
+  additional_verification_users_title:           Zusätzliche Verifizierungsnachrichtenempfänger
+  already_started:                               Der Verifizierungsprozess wurde schon gestartet, dir wurde eine private Nachricht gesendet.
+  already_verified:                              Du bist schon verifiziert. Wenn du deine Verifizierung auflösen oder dich mit einem anderen Forumaccount verifizieren möchtest, melde dich bei einem Teammitglied.
+  already_verified_discord:                      Der Nutzer `{0}` ist schon verifiziert.
+  already_verified_forum:                        Der Forumaccount `{0}` ist schon verifiziert.
+  conversation_answer_failed_try_again:          Ich konnte keine Antwort in der Unterhaltung schreiben. Bitte schreib mir in einer Weile nochmal, dann versuche ich es nochmal.
+  conversation_start_link:                       'Konversationslink: {0}'
+  dm_no_botkey:                                  Deine Nachricht besteht nicht ausschließlich aus dem **Botkey**, den ich dir als Antwort auf deine Unterhaltung im Forum geschrieben habe. Bitte sende mir nur den **Botkey**
+  forum_not_logged_in:                           Aktuell bin ich im nicht GommeHDnet-Forum eingeloggt, bitte versuche es später nochmal.
+  forumaccount_already_verified_try_again:       Dieser Forumaccount wurde schon erfolgreich für die Verifizierung benutzt. Bitte überprüfe deine Eingabe und versuche es nochmal.
+  forumaccount_is_self_try_again:                Guter Witz, aber mit meinem Forumaccount wirst du dich nicht verifizieren können. Versuch es nochmal mit einem anderen Account.
+  forumaccount_not_existing:                     Es konnte kein Forumaccount mit dem Nutzernamen `{0}` gefunden werden.
+  forumaccount_not_found_try_again:              Zu `{0}` konnte kein Forumaccount gefunden werden. Bitte überprüfe deine Eingabe und versuche es nochmal.
+  forumaccount_not_verified_try_again:           Die Verifizierung mit diesem Forumaccount ist nicht möglich. Bitte verbinde ihn mit deinem Minecraftaccount und sende mir den Forumnamen danach nochmal.
+  forumaccount_not_viewable:                     Der angegebene Forumnutzer hat die Einsicht seines Profils eingeschränkt.
+  forumaccount_not_viewable_try_again:           Das Profil des angegebenen Forumaccounts ist nicht sichtbar. Bitte überprüfe die Einstellungen und versuch es nochmal.
+  message_no_botkey_try_again:                   In deiner Unterhaltung kommt der dir hier zugesendete **Botkey** nicht vor. Bitte füge ihn deiner Nachricht hinzu und versuche es nochmal
+  message_no_discorduser_try_again:              In deiner Unterhaltung ist weder dein **Discordname mit Tag** noch die ID deines Discordaccounts vorhanden. Bitte füge mindestens eines der beiden deiner Nachricht hinzu und versuche es nochmal.
+  message_wrong_title_try_again:                 Der Titel deiner Unterhaltung ist nicht richtig. Bitte ändere ihn und versuche es nochmal.
+  no_keys_present:                               Es existieren keine aktiven Verifizierungsschlüssel.
+  no_message_by_author:                          Ich konnte keine Unterhaltung von dem angegebenen Forumaccount finden. Falls du sie vor ein paar Tagen erstellt hast, erstell bitte eine neue.
+  no_users_verified:                             Es gibt keine verifizierten Nutzer.
+  no_valid_conversation:                         Der angegebene Forumaccount hat keine gültige Konversation erstellt.
+  passwordchannel_current:                       Der aktuelle Verifizierungspasswortkanal ist {0}.
+  passwordchannel_current_not_set:               Der Verifizierungspasswortkanal ist nicht gesetzt. Für eine korrekte Anzeige der Verifizierungsprozessnachrichten sollte er gesetzt sein.
+  passwordchannel_new:                           Der Verifizierungspasswortkanal wurde von {0} zu {1} geändert.
+  passwordchannel_new_identical:                 Der Verifizierungspasswortkanal ist schon {0}.
+  process_aborted:                               Die Verifizierung wurde erfolgreich abgebrochen.
+  process_completed_text:                        Herzlichen Glückwunsch, du hast dich erfolgreich verifiziert. Damit ist unser Gespräch zwar erstmal vorbei, aber ich kann noch viele andere tolle Dinge. Falls du Hilfe brauchst, frag einfach in der Plauderkonfi nach.
+  process_completed_title:                       Verifizierung abgeschlossen
+  removed_discord:                               Der Nutzer `{0}` ist nun nicht mehr verifiziert.
+  removed_discord_error:                         Der Nutzer `{0}` ist nicht verifiziert.
+  removed_forum:                                 Der mit dem Forumaccount `{0}` verifizierte Nutzer ist nun nicht mehr verifiziert.
+  removed_forum_error:                           Kein Nutzer ist mit dem Forumaccount `{0}` verifiziert.
+  role_current:                                  Nach der Verifizierung wird die Rolle `{0}` vergeben.
+  role_current_not_set:                          Nach der Verifizierung wird keine Rolle vergeben.
+  role_deleted:                                  Nach der Verifizierung wird ab jetzt keine Rolle mehr vergeben.
+  role_new:                                      Nach der Verifizierung wird ab jetzt die Rolle `{0}` vergeben.
+  role_new_identical:                            Nach der Verifizierung wird schon die Rolle `{0}` vergeben.
+  role_not_found:                                Die Rolle `{0}` konnte nicht gefunden werden.
+  send_botkey_in_dm_text:                        Ich habe dir auf deine Konversation geantwortet. Dort steht ein **neuer Botkey**. Schick ihn mir in einer eigenen Nachricht hier in diesem Kanal, dann kann ich die Verifizierung abschließen.
+  send_botkey_in_dm_title:                       Schritt 3/3 - Andere Richtung
+  send_message_in_forum_text:                    |-
+                                                 **Botkey: ** `{0}`
+                                                 **Dein Discordname mit Tag: ** `{1}`
+                                                 Schreibe im GommeHDnet-Forum eine Nachricht mit dem gerade angegebenen Forumaccount an den Bot ([Starte eine Konversation]({2})).
+                                                 Lies dir zunächst {3} gut durch, dort findest du noch einen notwendigen Hinweis zum Titel der Unterhaltung. In der Nachricht selber müssen der **Botkey** und dein **Discordname mit Tag** vorkommen.
+                                                 Sende nach dem Absenden der Nachricht im Forum auch hier eine beliebige Nachricht, damit ich den Eingang der Nachricht prüfen kann.
+  send_message_in_forum_title:                   Schritt 2/3 - Forumnachricht senden
+  tutorial:                                      Verifizierungsanleitung
+  tutorial_current_text:                         'Der aktuelle Verifizierungstutorialtext ist: ```{0}```'
+  tutorial_not_set:                              Keine Verifizierungsanleitung verfügbar.
+  tutorial_now_set:                              Der Verifizierungstutorialtext wurde gesetzt.
+  unable_sending_dm:                             Dir konnte keine private Nachricht gesendet werden, bitte prüfe deine Discordeinstellungen.
+  unknown_error:                                 Es ist ein unbekannter Fehler aufgetreten, bitte melde das bei einem Teammitglied.
+  unknown_http_exception:                        Beim Senden von privaten Nachrichten ist ein Fehler aufgetreten (Statuscode {0}), bitte melde das bei einem Temmitglied.
+  user_cannot_verify:                            Die Verifizierung konnte nicht abgeschlossen werden. Möglicherweise wurde dein Account schon manuell verifiziert. Bitte wende dich an ein Teammitglied.
+  verification_keys:                             Verifizierungsschlüssel
+  verification_keys_field:                       |-
+                                                 `Nutzer:` {0}
+                                                 `ForumId:` {1}
+                                                 `Bereich:` {2}
+  verified_users:                                Verifizierte Nutzer - {0}
+  verifypassword_current:                        Der aktuelle Verifizierungsforumunterhaltungstitel ist `{0}`.
+  verifypassword_new:                            Der Verifizierungsforumunterhaltungstitel wurde von `{0}` zu `{1}` geändert.
+  verifypassword_not_checking:                   Der Verifizierungsforumunterhaltungstitel wird nun nicht mehr überprüft.
+  welcome_to_verification_text:                  Ich bin der Bot der inoffiziellen GommeHDnet-Plauderkonfi und führe dich durch die Verifizierung mit deinem GommeHDnet-Forumaccount. Falls du Hilfe brauchst, wende dich an das Team der Plauderkonfi. Wenn du die Verifizierung an irgendeiner Stelle abbrechen möchtest, schreibe `{0}`
+  welcome_to_verification_title:                 Hallo, ich bin Mitternacht
+  why_do_we_need_verification_text:              Durch die Verifizierung speichere ich eine Verknüpfung zwischen deinem verifizierten Forum- und Discordaccount. Ein verifizierter Forumaccount ist dank eines System von GommeHDnet mit deinem Minecraftaccount verknüpft. Das ermöglicht es, die Plauderkonfi von Spammern freizuhalten.
+  why_do_we_need_verification_title:             Warum musst du dich verifizieren?
+  write_your_forumname_text:                     Bitte sende mir deinen kompletten Forumnamen oder die ID deines Forumaccounts.
+  write_your_forumname_title:                    Schritt 1/3 - Forumnamen eingeben

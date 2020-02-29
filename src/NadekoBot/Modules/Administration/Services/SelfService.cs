@@ -106,14 +106,14 @@ namespace Mitternacht.Modules.Administration.Services
         {
             if (msg.Channel is IDMChannel && ForwardDMs && ownerChannels.Length > 0)
             {
-                var title = _strings.GetText("dm_from",
-                                _localization.DefaultCultureInfo,
-                                "Administration".ToLowerInvariant()) +
+                var title = _strings.GetText("Administration".ToLowerInvariant(),
+					"dm_from",
+					_localization.DefaultCultureInfo) +
                             $" [{msg.Author}]({msg.Author.Id})";
 
-                var attachamentsTxt = _strings.GetText("attachments",
-                    _localization.DefaultCultureInfo,
-                    "Administration".ToLowerInvariant());
+                var attachamentsTxt = _strings.GetText("Administration".ToLowerInvariant(),
+					"attachments",
+					_localization.DefaultCultureInfo);
 
                 var toSend = msg.Content;
 

@@ -49,6 +49,6 @@ namespace Mitternacht.Modules.Help.Services {
                   }));
 
         private string GetText(string text, IGuild guild, params object[] replacements) =>
-            _strings.GetText(text, guild?.Id, "help", replacements);
+            _strings.GetText("help", text, guild?.Id, replacements);
     }
 }

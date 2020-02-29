@@ -74,7 +74,7 @@ namespace Mitternacht.Modules.Music.Services
         public async Task<MusicPlayer> GetOrCreatePlayer(ulong guildId, IVoiceChannel voiceCh, ITextChannel textCh)
         {
             string GetText(string text, params object[] replacements) =>
-                _strings.GetText(text, _localization.GetCultureInfo(textCh.Guild), "Music".ToLowerInvariant(), replacements);
+                _strings.GetText("Music".ToLowerInvariant(), text, _localization.GetCultureInfo(textCh.Guild), replacements);
 
             _log.Info("Checks");
             if (voiceCh == null || voiceCh.Guild != textCh.Guild)

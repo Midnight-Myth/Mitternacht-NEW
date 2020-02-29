@@ -171,10 +171,10 @@ namespace Mitternacht.Modules.Searches.Services
         }
 
         public string GetText(FollowedStream fs, string key, params object[] replacements) =>
-            _strings.GetText(key,
-                fs.GuildId,
-                "Searches".ToLowerInvariant(),
-                replacements);
+            _strings.GetText("Searches".ToLowerInvariant(),
+				key,
+				fs.GuildId,
+				replacements);
 
         public string GetLink(FollowedStream fs)
         {
