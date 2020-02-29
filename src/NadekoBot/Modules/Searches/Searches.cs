@@ -641,7 +641,7 @@ namespace Mitternacht.Modules.Searches
             Rgba32 clr;
             try
             {
-                clr = Rgba32.FromHex(color);
+                clr = Rgba32.ParseHex(color);
             }
             catch
             {
