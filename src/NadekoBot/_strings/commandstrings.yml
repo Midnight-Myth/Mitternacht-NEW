@@ -1289,6 +1289,7 @@
   aliases:
   -        iamn
   -        ibimsk1
+  -        ichhabkein
   desc:    Removes a specified role from you. Role must be on a list of self-assignable roles.
   usage:   "`{0}iamn Gamer`"
 - name:    cleverbot
@@ -1384,6 +1385,7 @@
   cmd:     iam
   aliases:
   -        ibims
+  -        ichhab
   desc:    Adds a role to you that you choose. Role must be on a list of self-assignable roles.
   usage:   "`{0}iam Gamer`"
 - name:    gelbooru
