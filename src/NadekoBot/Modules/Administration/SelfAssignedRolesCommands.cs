@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 if (!success)
                 {
-                    await ReplyErrorLocalized("self_assign_not").ConfigureAwait(false);
+                    await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
                     return;
                 }
                 await ReplyConfirmLocalized("self_assign_rem", Format.Bold(role.Name)).ConfigureAwait(false);
@@ -190,7 +190,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 if (roles.FirstOrDefault(r => r.RoleId == role.Id) == null)
                 {
-                    await ReplyErrorLocalized("self_assign_not").ConfigureAwait(false);
+                    await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
                     return;
                 }
                 if (guildUser.RoleIds.Contains(role.Id))
@@ -253,7 +253,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 if (roles.FirstOrDefault(r => r.RoleId == role.Id) == null)
                 {
-                    await ReplyErrorLocalized("self_assign_not").ConfigureAwait(false);
+                    await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
                     return;
                 }
                 if (!guildUser.RoleIds.Contains(role.Id))
