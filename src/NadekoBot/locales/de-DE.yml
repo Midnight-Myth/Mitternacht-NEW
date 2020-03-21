@@ -170,7 +170,7 @@ administration:
   self_assign_excl:                              Selbst zugewiesene Rollen sind nun exklusiv!
   self_assign_list:                              Es gibt {0} Rollen, die man sich selbst zuweisen kann.
   self_assign_no_excl:                           Selbst zugewiesene Rollen sind nicht länger exklusiv!
-  self_assign_not:                               Diese Rolle kann man sich nicht selbst zuweisen.
+  self_assign_not:                               Die Rolle {0} kann man sich nicht selbst zuweisen.
   self_assign_not_have:                          Du hast die Rolle {0} nicht.
   self_assign_perms:                             Ich kann dir diese Rolle nicht zuweisen. Sie liegt über meiner Höchsten.
   self_assign_rem:                               "{0} wurde von der Liste der selbst zuweisbaren Rollen entfernt."
