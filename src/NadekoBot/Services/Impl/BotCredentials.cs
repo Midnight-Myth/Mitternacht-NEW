@@ -59,7 +59,6 @@ namespace Mitternacht.Services.Impl
                 if (string.IsNullOrWhiteSpace(Token))
                 {
                     log.Error($"Token is missing from '{_credsFileName}' or Environment variables. Add it and restart the program.");
-                    Console.ReadKey();
                     Environment.Exit(3);
                 }
                 OwnerIds = data.GetSection("OwnerIds").GetChildren().Select(c => ulong.Parse(c.Value)).ToImmutableArray();
