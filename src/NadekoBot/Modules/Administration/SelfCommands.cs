@@ -399,7 +399,7 @@ namespace Mitternacht.Modules.Administration
                          await ch.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
                          return;
                      }
-                     await ch.SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
+                     await ch.SendMessageAsync($"{rep.Replace(msg)?.SanitizeMentions() ?? ""}");
                 }
                 else if (ids[1].ToUpperInvariant().StartsWith("U:"))
                 {
