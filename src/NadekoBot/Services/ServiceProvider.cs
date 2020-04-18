@@ -10,6 +10,8 @@ using NLog;
 
 namespace Mitternacht.Services {
 	public interface INServiceProvider : IServiceProvider, IEnumerable<object> {
+		ImmutableDictionary<Type, object> Services { get; }
+		
 		T GetService<T>();
 	}
 
@@ -82,24 +84,24 @@ namespace Mitternacht.Services {
 			}
 		}
 
-		private readonly ImmutableDictionary<Type, object> _services;
+		public ImmutableDictionary<Type, object> Services { get; }
 
 		public NServiceProvider(IDictionary<Type, object> services) {
-			_services = services.ToImmutableDictionary();
+			Services = services.ToImmutableDictionary();
 		}
 
 		public T GetService<T>()
 			=> (T)((IServiceProvider)this).GetService(typeof(T));
 
 		object IServiceProvider.GetService(Type serviceType) {
-			_services.TryGetValue(serviceType, out var toReturn);
+			Services.TryGetValue(serviceType, out var toReturn);
 			return toReturn;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
-			=> _services.Values.GetEnumerator();
+			=> Services.Values.GetEnumerator();
 
 		public IEnumerator<object> GetEnumerator()
-			=> _services.Values.GetEnumerator();
+			=> Services.Values.GetEnumerator();
 	}
 }
