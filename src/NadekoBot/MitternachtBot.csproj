@@ -36,9 +36,6 @@
     <EmbeddedResource Remove="Modules\Utility\Models\**" />
     <None Remove="Modules\Music\Classes\**" />
     <None Remove="Modules\Utility\Models\**" />
-    <None Update="credentials_example.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="locales\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
