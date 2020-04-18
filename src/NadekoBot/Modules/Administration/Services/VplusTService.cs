@@ -107,7 +107,7 @@ namespace Mitternacht.Modules.Administration.Services
                         {
                             var roleName = GetRoleName(afterVch);
                             var roleToAdd = guild.Roles.FirstOrDefault(x => x.Name == roleName) ??
-                                              (IRole)await guild.CreateRoleAsync(roleName, GuildPermissions.None).ConfigureAwait(false);
+                                              (IRole)await guild.CreateRoleAsync(roleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
 
                             ITextChannel textChannel = guild.TextChannels
                                                         .FirstOrDefault(t => t.Name == GetChannelName(afterVch.Name).ToLowerInvariant());

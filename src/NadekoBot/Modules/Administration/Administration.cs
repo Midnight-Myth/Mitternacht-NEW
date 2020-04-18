@@ -184,7 +184,7 @@ namespace Mitternacht.Modules.Administration
             if (string.IsNullOrWhiteSpace(roleName))
                 return;
 
-            var r = await Context.Guild.CreateRoleAsync(roleName).ConfigureAwait(false);
+            var r = await Context.Guild.CreateRoleAsync(roleName, isMentionable: false).ConfigureAwait(false);
             await ReplyConfirmLocalized("cr", Format.Bold(r.Name)).ConfigureAwait(false);
         }
 

@@ -170,12 +170,12 @@ namespace Mitternacht.Modules.Administration.Services
             if (muteRole != null) return muteRole;
             //if it doesn't exist, create it 
             try {
-                muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None).ConfigureAwait(false);
+                muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
             }
             catch {
                 //if creations fails,  maybe the name is not correct, find default one, if doesn't work, create default one
                 muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName) ??
-                           await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None).ConfigureAwait(false);
+                           await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
             }
 
             //foreach (var toOverwrite in (await guild.GetTextChannelsAsync()))

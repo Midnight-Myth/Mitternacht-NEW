@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace MitternachtWeb {
 	public class Startup {
@@ -14,6 +17,9 @@ namespace MitternachtWeb {
 
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddControllersWithViews();
+			services.AddDbContext<MitternachtWebContext>();
+			services.Add(ServiceDescriptor.Singleton(Program.MitternachtBot));
+			services.Add(Program.MitternachtBot.Services.Services.Select(s => ServiceDescriptor.Singleton(s.Key, s.Value)));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -25,7 +31,7 @@ namespace MitternachtWeb {
 			}
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
-
+			
 			app.UseRouting();
 
 			app.UseAuthorization();
@@ -35,6 +41,9 @@ namespace MitternachtWeb {
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
+
+			using var scope = app.ApplicationServices.CreateScope();
+			scope.ServiceProvider.GetRequiredService<MitternachtWebContext>().Database.Migrate();
 		}
 	}
 }

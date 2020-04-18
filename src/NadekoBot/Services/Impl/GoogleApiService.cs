@@ -205,7 +205,8 @@ namespace Mitternacht.Services.Impl
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentNullException(nameof(query));
 
-            var req = _cs.Cse.List(query);
+            var req = _cs.Cse.List();
+			req.Q = query;
             req.Cx = SearchEngineId;
             req.Num = 1;
             req.Fields = "items(image(contextLink,thumbnailLink),link)";
