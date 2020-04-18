@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace MitternachtWeb {
 	public class Program {
+		public static MitternachtBot MitternachtBot;
+
 		public static async Task Main(string[] args) {
-			await new MitternachtBot(0, 0).RunAsync(args);
+			MitternachtBot = new MitternachtBot(0, 0);
+			await MitternachtBot.RunAsync(args);
 			
 			await CreateHostBuilder(args).Build().RunAsync();
 		}
