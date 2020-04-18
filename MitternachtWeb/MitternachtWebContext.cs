@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MitternachtWeb.Models;
 
 namespace MitternachtWeb {
 	public partial class MitternachtWebContext : DbContext {
+		public DbSet<DiscordAuthentication> DiscordAuthentications { get; set; }
+
 		public MitternachtWebContext() { }
 
 		public MitternachtWebContext(DbContextOptions<MitternachtWebContext> options) : base(options) { }
