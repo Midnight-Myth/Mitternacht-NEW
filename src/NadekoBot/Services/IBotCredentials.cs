@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using Discord;
+using Mitternacht.Common;
 
 namespace Mitternacht.Services
 {
@@ -26,16 +27,5 @@ namespace Mitternacht.Services
         string CleverbotApiKey { get; }
         string ForumUsername { get; }
         string ForumPassword { get; }
-    }
-
-    public class DbConfig
-    {
-        public DbConfig(string type, string connString)
-        {
-            Type = type;
-            ConnectionString = connString;
-        }
-        public string Type { get; }
-        public string ConnectionString { get; }
     }
 }
