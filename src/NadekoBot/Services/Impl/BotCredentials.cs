@@ -38,9 +38,14 @@ namespace Mitternacht.Services.Impl {
 		public BotCredentials() {
 			var log = LogManager.GetCurrentClassLogger();
 
-			try { File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new CredentialsModel(), Formatting.Indented)); } catch { }
-			if(!File.Exists(_credsFileName))
+			try {
+				File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new CredentialsModel(), Formatting.Indented));
+			} catch { }
+
+			if(!File.Exists(_credsFileName)) {
 				log.Warn($"credentials.json is missing. Attempting to load creds from environment variables prefixed with 'NadekoBot_'. Example is in {Path.GetFullPath("./credentials_example.json")}");
+			}
+
 			try {
 				var configBuilder = new ConfigurationBuilder();
 				configBuilder.AddJsonFile(_credsFileName, true).AddEnvironmentVariables("NadekoBot_");
@@ -58,7 +63,7 @@ namespace Mitternacht.Services.Impl {
 				MashapeKey         = data[nameof(MashapeKey)];
 				OsuApiKey          = data[nameof(OsuApiKey)];
 				PatreonAccessToken = data[nameof(PatreonAccessToken)];
-				PatreonCampaignId  = data[nameof(PatreonCampaignId)] ?? "334038";
+				PatreonCampaignId  = data[nameof(PatreonCampaignId)];
 				ShardRunCommand    = data[nameof(ShardRunCommand)];
 				ShardRunArguments  = data[nameof(ShardRunArguments)];
 				CleverbotApiKey    = data[nameof(CleverbotApiKey)];
@@ -76,11 +81,6 @@ namespace Mitternacht.Services.Impl {
 				ulong.TryParse(data[nameof(ClientId)], out var clId);
 				ClientId = clId;
 
-				//var scId = data[nameof(SoundCloudClientId)];
-				//SoundCloudClientId = scId;
-				//SoundCloudClientId = string.IsNullOrWhiteSpace(scId)
-				//    ? 
-				//    : scId;
 				CarbonKey     = data[nameof(CarbonKey)];
 				var dbSection = data.GetSection("db");
 				Db            = new DbConfig(string.IsNullOrWhiteSpace(dbSection["Type"]) ? "sqlite" : dbSection["Type"], string.IsNullOrWhiteSpace(dbSection["ConnectionString"]) ? "Filename=./data/MitternachtBot.db" : dbSection["ConnectionString"]);
@@ -96,7 +96,7 @@ namespace Mitternacht.Services.Impl {
 		}
 
 		private class CredentialsModel {
-			public ulong   ClientId           { get; set; } = 123123123;
+			public ulong   ClientId           { get; set; } = 0;
 			public string  Token              { get; set; } = "";
 			public ulong[] OwnerIds           { get; set; } = new ulong[1];
 
@@ -107,8 +107,7 @@ namespace Mitternacht.Services.Impl {
 			public string  CleverbotApiKey    { get; set; } = "";
 			public string  CarbonKey          { get; set; } = "";
 			public string  PatreonAccessToken { get; set; } = "";
-			public string  PatreonCampaignId  { get; set; } = "334038";
-			public string  SoundCloudClientId { get; set; } = "";
+			public string  PatreonCampaignId  { get; set; } = "";
 
 			public DbConfig Db                { get; set; } = new DbConfig("sqlite", "Filename=./data/MitternachtBot.db");
 
