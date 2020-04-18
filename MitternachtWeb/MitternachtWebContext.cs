@@ -4,9 +4,7 @@ namespace MitternachtWeb {
 	public partial class MitternachtWebContext : DbContext {
 		public MitternachtWebContext() { }
 
-		public MitternachtWebContext(DbContextOptions<MitternachtWebContext> options) : base(options) {
-			Database.Migrate();
-		}
+		public MitternachtWebContext(DbContextOptions<MitternachtWebContext> options) : base(options) { }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
 			if(!optionsBuilder.IsConfigured) {
