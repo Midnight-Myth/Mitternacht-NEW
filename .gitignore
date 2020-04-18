@@ -357,3 +357,4 @@ __pycache__/
 ### VisualStudio Patch ###
 build/
 /src/NadekoBot/Services/Database/Models/SupportMessage.cs
+*.sqlite
