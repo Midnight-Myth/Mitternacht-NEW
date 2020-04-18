@@ -10,39 +10,43 @@ using NLog;
 
 namespace Mitternacht.Services.Impl {
 	public class BotCredentials : IBotCredentials {
-		public ulong  ClientId                { get; private set; }
-		public string Token                   { get; private set; }
+		public ulong  ClientId                { get; private set; } = 0;
+		public string Token                   { get; private set; } = "";
 		public string DbConnectionString      { get; private set; } = "Filename=./data/MitternachtBot.db";
 
-		public ImmutableArray<ulong> OwnerIds { get; private set; }
+		public ImmutableArray<ulong> OwnerIds { get; private set; } = new ulong[1].ToImmutableArray();
 		
-		public string GoogleApiKey            { get; private set; }
-		public string MashapeKey              { get; private set; }
-		public string LoLApiKey               { get; private set; }
-		public string OsuApiKey               { get; private set; }
-		public string CleverbotApiKey         { get; private set; }
-		public string CarbonKey               { get; private set; }
-		public string PatreonAccessToken      { get; private set; }
-		public string PatreonCampaignId       { get; private set; }
+		public string GoogleApiKey            { get; private set; } = "";
+		public string MashapeKey              { get; private set; } = "";
+		public string LoLApiKey               { get; private set; } = "";
+		public string OsuApiKey               { get; private set; } = "";
+		public string CleverbotApiKey         { get; private set; } = "";
+		public string CarbonKey               { get; private set; } = "";
+		public string PatreonAccessToken      { get; private set; } = "";
+		public string PatreonCampaignId       { get; private set; } = "";
 
 		public int    TotalShards             { get; private set; } = 1;
-		public string ShardRunCommand         { get; private set; }
-		public string ShardRunArguments       { get; private set; }
-		public int    ShardRunPort            { get; private set; }
+		public string ShardRunCommand         { get; private set; } = "";
+		public string ShardRunArguments       { get; private set; } = "";
+		public int?   ShardRunPort            { get; private set; } = null;
 
-		public string ForumUsername           { get; private set; }
-		public string ForumPassword           { get; private set; }
+		public string ForumUsername           { get; private set; } = "";
+		public string ForumPassword           { get; private set; } = "";
 
 		private readonly string _credsFileName = Path.Combine(Directory.GetCurrentDirectory(), "credentials.json");
 
-		public BotCredentials(bool loadCredentials = true) {
+		public BotCredentials() {
+			Load();
+		}
+
+		private BotCredentials(bool loadCredentials) {
 			if(loadCredentials) {
 				Load();
 			}
 		}
 
 		public void WriteCredentialsExampleFile() {
-			File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new CredentialsModel(), Formatting.Indented));
+			File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new BotCredentials(false), Formatting.Indented));
 		}
 
 		public void Load() {
@@ -99,31 +103,6 @@ namespace Mitternacht.Services.Impl {
 				log.Fatal(ex);
 				throw;
 			}
-		}
-
-		private class CredentialsModel {
-			public ulong   ClientId           { get; set; } = 0;
-			public string  Token              { get; set; } = "";
-			public ulong[] OwnerIds           { get; set; } = new ulong[1];
-
-			public string  GoogleApiKey       { get; set; } = "";
-			public string  MashapeKey         { get; set; } = "";
-			public string  LoLApiKey          { get; set; } = "";
-			public string  OsuApiKey          { get; set; } = "";
-			public string  CleverbotApiKey    { get; set; } = "";
-			public string  CarbonKey          { get; set; } = "";
-			public string  PatreonAccessToken { get; set; } = "";
-			public string  PatreonCampaignId  { get; set; } = "";
-
-			public string  DbConnectionString { get; set; } = "Filename=./data/MitternachtBot.db";
-
-			public int     TotalShards        { get; set; } = 1;
-			public string  ShardRunCommand    { get; set; } = "";
-			public string  ShardRunArguments  { get; set; } = "";
-			public int?    ShardRunPort       { get; set; } = null;
-
-			public string  ForumUsername      { get; set; } = null;
-			public string  ForumPassword      { get; set; } = null;
 		}
 
 		public bool IsOwner(IUser u) => OwnerIds.Contains(u.Id);

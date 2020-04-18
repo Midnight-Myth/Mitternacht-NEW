@@ -20,6 +20,7 @@ namespace Mitternacht.Services {
 		int                   TotalShards        { get; }
 		string                ShardRunCommand    { get; }
 		string                ShardRunArguments  { get; }
+		int?                  ShardRunPort       { get; }
 		
 		string                ForumUsername      { get; }
 		string                ForumPassword      { get; }
