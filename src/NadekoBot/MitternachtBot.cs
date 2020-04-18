@@ -60,7 +60,7 @@ namespace Mitternacht {
 			_log = LogManager.GetCurrentClassLogger();
 			TerribleElevatedPermissionCheck();
 
-			Credentials = new BotCredentials();
+			Credentials = BotCredentials.Load();
 			_db         = new DbService(Credentials);
 			Client = new DiscordSocketClient(new DiscordSocketConfig {
 				MessageCacheSize    = 10,
@@ -228,6 +228,9 @@ namespace Mitternacht {
 			Ready.TrySetResult(true);
 			_log.Info($"Shard {Client.ShardId} ready.");
 			//_log.Info(await stats.Print().ConfigureAwait(false));
+
+			StartSendingData();
+			StayConnected();
 		}
 
 		private Task Client_Log(LogMessage arg) {
@@ -238,8 +241,7 @@ namespace Mitternacht {
 
 		public async Task RunAndBlockAsync(params string[] args) {
 			await RunAsync(args).ConfigureAwait(false);
-			StartSendingData();
-			StayConnected();
+
 			if(ShardCoord != null)
 				await ShardCoord.RunAndBlockAsync();
 			else {
