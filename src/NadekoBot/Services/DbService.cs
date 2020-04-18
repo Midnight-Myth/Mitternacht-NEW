@@ -10,7 +10,7 @@ namespace Mitternacht.Services
         public DbService(IBotCredentials creds)
         {
             var optionsBuilder = new DbContextOptionsBuilder();
-            optionsBuilder.UseSqlite(creds.Db.ConnectionString);
+            optionsBuilder.UseSqlite(creds.DbConnectionString);
             _options = optionsBuilder.Options;
             //switch (_creds.Db.Type.ToUpperInvariant())
             //{

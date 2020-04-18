@@ -1,13 +1,12 @@
 ﻿using System.Collections.Immutable;
 using Discord;
-using Mitternacht.Common;
 
 namespace Mitternacht.Services {
 	public interface IBotCredentials {
 		ulong                 ClientId           { get; }
 		string                Token              { get; }
 		ImmutableArray<ulong> OwnerIds           { get; }
-		DbConfig              Db                 { get; }
+		string                DbConnectionString { get; }
 		
 		string                GoogleApiKey       { get; }
 		string                MashapeKey         { get; }
