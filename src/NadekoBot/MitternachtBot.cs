@@ -144,7 +144,7 @@ namespace Mitternacht {
 						.AddManual(this)
 						.AddManual(uow)
 						.AddManual(new MojangApi())
-						.LoadFrom(Assembly.GetEntryAssembly())
+						.LoadFrom(typeof(MitternachtBot).Assembly)
 						.Build();
 
 			var commandHandler = Services.GetService<CommandHandler>();
