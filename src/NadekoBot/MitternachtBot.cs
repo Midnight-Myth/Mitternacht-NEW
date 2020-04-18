@@ -60,7 +60,7 @@ namespace Mitternacht {
 			_log = LogManager.GetCurrentClassLogger();
 			TerribleElevatedPermissionCheck();
 
-			Credentials = new BotCredentials();
+			Credentials = BotCredentials.Load();
 			_db         = new DbService(Credentials);
 			Client = new DiscordSocketClient(new DiscordSocketConfig {
 				MessageCacheSize    = 10,

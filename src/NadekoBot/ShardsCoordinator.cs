@@ -26,7 +26,7 @@ namespace Mitternacht
         public ShardsCoordinator(int port)
         {
             LogSetup.SetupLogger();
-            _creds = new BotCredentials();
+            _creds = BotCredentials.Load();
             _shardProcesses = new Process[_creds.TotalShards];
             Statuses = new ShardComMessage[_creds.TotalShards];
             _log = LogManager.GetCurrentClassLogger();
