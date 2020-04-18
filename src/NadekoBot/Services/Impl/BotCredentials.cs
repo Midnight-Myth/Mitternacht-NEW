@@ -12,7 +12,7 @@ namespace Mitternacht.Services.Impl {
 	public class BotCredentials : IBotCredentials {
 		public ulong    ClientId              { get; }
 		public string   Token                 { get; }
-		public DbConfig Db                    { get; }
+		public DbConfig Db                    { get; } = new DbConfig("sqlite", "Filename=./data/MitternachtBot.db");
 
 		public ImmutableArray<ulong> OwnerIds { get; }
 		
@@ -25,7 +25,7 @@ namespace Mitternacht.Services.Impl {
 		public string PatreonAccessToken      { get; }
 		public string PatreonCampaignId       { get; }
 
-		public int    TotalShards             { get; }
+		public int    TotalShards             { get; } = 1;
 		public string ShardRunCommand         { get; }
 		public string ShardRunArguments       { get; }
 		public int    ShardRunPort            { get; }
