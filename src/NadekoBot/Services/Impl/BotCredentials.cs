@@ -10,37 +10,45 @@ using NLog;
 
 namespace Mitternacht.Services.Impl {
 	public class BotCredentials : IBotCredentials {
-		public ulong    ClientId              { get; }
-		public string   Token                 { get; }
-		public DbConfig Db                    { get; } = new DbConfig("sqlite", "Filename=./data/MitternachtBot.db");
+		public ulong    ClientId              { get; private set; }
+		public string   Token                 { get; private set; }
+		public DbConfig Db                    { get; private set; } = new DbConfig("sqlite", "Filename=./data/MitternachtBot.db");
 
-		public ImmutableArray<ulong> OwnerIds { get; }
+		public ImmutableArray<ulong> OwnerIds { get; private set; }
 		
-		public string GoogleApiKey            { get; }
-		public string MashapeKey              { get; }
-		public string LoLApiKey               { get; }
-		public string OsuApiKey               { get; }
-		public string CleverbotApiKey         { get; }
-		public string CarbonKey               { get; }
-		public string PatreonAccessToken      { get; }
-		public string PatreonCampaignId       { get; }
+		public string GoogleApiKey            { get; private set; }
+		public string MashapeKey              { get; private set; }
+		public string LoLApiKey               { get; private set; }
+		public string OsuApiKey               { get; private set; }
+		public string CleverbotApiKey         { get; private set; }
+		public string CarbonKey               { get; private set; }
+		public string PatreonAccessToken      { get; private set; }
+		public string PatreonCampaignId       { get; private set; }
 
-		public int    TotalShards             { get; } = 1;
-		public string ShardRunCommand         { get; }
-		public string ShardRunArguments       { get; }
-		public int    ShardRunPort            { get; }
+		public int    TotalShards             { get; private set; } = 1;
+		public string ShardRunCommand         { get; private set; }
+		public string ShardRunArguments       { get; private set; }
+		public int    ShardRunPort            { get; private set; }
 
-		public string ForumUsername           { get; }
-		public string ForumPassword           { get; }
+		public string ForumUsername           { get; private set; }
+		public string ForumPassword           { get; private set; }
 
 		private readonly string _credsFileName = Path.Combine(Directory.GetCurrentDirectory(), "credentials.json");
 
-		public BotCredentials() {
+		public BotCredentials(bool loadCredentials = true) {
+			if(loadCredentials) {
+				Load();
+			}
+		}
+
+		public void WriteCredentialsExampleFile() {
+			File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new CredentialsModel(), Formatting.Indented));
+		}
+
+		public void Load() {
 			var log = LogManager.GetCurrentClassLogger();
 
-			try {
-				File.WriteAllText("./credentials_example.json", JsonConvert.SerializeObject(new CredentialsModel(), Formatting.Indented));
-			} catch { }
+			try { WriteCredentialsExampleFile(); } catch { }
 
 			if(!File.Exists(_credsFileName)) {
 				log.Warn($"credentials.json is missing. Attempting to load creds from environment variables prefixed with 'NadekoBot_'. Example is in {Path.GetFullPath("./credentials_example.json")}");
@@ -92,7 +100,6 @@ namespace Mitternacht.Services.Impl {
 				log.Fatal(ex);
 				throw;
 			}
-
 		}
 
 		private class CredentialsModel {
