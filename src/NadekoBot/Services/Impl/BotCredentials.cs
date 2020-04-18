@@ -121,11 +121,6 @@ namespace Mitternacht.Services.Impl {
 			public string  ForumPassword      { get; set; } = null;
 		}
 
-		private class DbModel {
-			public string Type             { get; set; }
-			public string ConnectionString { get; set; }
-		}
-
 		public bool IsOwner(IUser u) => OwnerIds.Contains(u.Id);
 	}
 }
