@@ -1,1 +1,9 @@
-﻿<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+﻿@{
+	var DiscordUser = UserHelper.GetDiscordUser(User);
+}
+
+@if(DiscordUser == null) {
+	<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+} else {
+	@DiscordUser
+}
