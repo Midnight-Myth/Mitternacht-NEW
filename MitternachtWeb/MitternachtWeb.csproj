@@ -22,4 +22,10 @@
     <ProjectReference Include="..\src\NadekoBot\MitternachtBot.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="mitternachtweb.config.example">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
