@@ -25,7 +25,6 @@ namespace MitternachtWeb {
 
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddControllersWithViews();
-			services.AddDbContext<MitternachtWebContext>();
 			services.Add(ServiceDescriptor.Singleton(Program.MitternachtBot));
 			services.Add(Program.MitternachtBot.Services.Services.Select(s => ServiceDescriptor.Singleton(s.Key, s.Value)));
 
@@ -87,9 +86,6 @@ namespace MitternachtWeb {
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
-
-			using var scope = app.ApplicationServices.CreateScope();
-			scope.ServiceProvider.GetRequiredService<MitternachtWebContext>().Database.Migrate();
 		}
 	}
 }
