@@ -73,8 +73,10 @@ namespace MitternachtWeb {
 				app.UseHsts();
 			}
 			app.UseHttpsRedirection();
-			app.UseStaticFiles();
-			
+			if(Configuration.GetValue("ServeStaticFiles", true)) {
+				app.UseStaticFiles();
+			}
+
 			app.UseRouting();
 
 			app.UseAuthentication();
