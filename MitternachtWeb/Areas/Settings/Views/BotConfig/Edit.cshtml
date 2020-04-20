@@ -1,0 +1,152 @@
+﻿@model Mitternacht.Services.Database.Models.BotConfig
+
+<h4>BotConfig</h4>
+<hr />
+<div class="container-fluid">
+	<form asp-action="Index">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="ForwardMessages" /> @Html.DisplayNameFor(model => model.ForwardMessages)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="ForwardToAllOwners" /> @Html.DisplayNameFor(model => model.ForwardToAllOwners)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencyGenerationChance" class="control-label"></label>
+			<input asp-for="CurrencyGenerationChance" class="form-control" />
+			<span asp-validation-for="CurrencyGenerationChance" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencyGenerationCooldown" class="control-label"></label>
+			<input asp-for="CurrencyGenerationCooldown" class="form-control" />
+			<span asp-validation-for="CurrencyGenerationCooldown" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="RotatingStatuses" /> @Html.DisplayNameFor(model => model.RotatingStatuses)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="RemindMessageFormat" class="control-label"></label>
+			<input asp-for="RemindMessageFormat" class="form-control" />
+			<span asp-validation-for="RemindMessageFormat" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencySign" class="control-label"></label>
+			<input asp-for="CurrencySign" class="form-control" />
+			<span asp-validation-for="CurrencySign" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencyName" class="control-label"></label>
+			<input asp-for="CurrencyName" class="form-control" />
+			<span asp-validation-for="CurrencyName" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencyPluralName" class="control-label"></label>
+			<input asp-for="CurrencyPluralName" class="form-control" />
+			<span asp-validation-for="CurrencyPluralName" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="TriviaCurrencyReward" class="control-label"></label>
+			<input asp-for="TriviaCurrencyReward" class="form-control" />
+			<span asp-validation-for="TriviaCurrencyReward" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="MinimumBetAmount" class="control-label"></label>
+			<input asp-for="MinimumBetAmount" class="form-control" />
+			<span asp-validation-for="MinimumBetAmount" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="BetflipMultiplier" class="control-label"></label>
+			<input asp-for="BetflipMultiplier" class="form-control" />
+			<span asp-validation-for="BetflipMultiplier" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencyDropAmount" class="control-label"></label>
+			<input asp-for="CurrencyDropAmount" class="form-control" />
+			<span asp-validation-for="CurrencyDropAmount" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CurrencyDropAmountMax" class="control-label"></label>
+			<input asp-for="CurrencyDropAmountMax" class="form-control" />
+			<span asp-validation-for="CurrencyDropAmountMax" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Betroll67Multiplier" class="control-label"></label>
+			<input asp-for="Betroll67Multiplier" class="form-control" />
+			<span asp-validation-for="Betroll67Multiplier" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Betroll91Multiplier" class="control-label"></label>
+			<input asp-for="Betroll91Multiplier" class="form-control" />
+			<span asp-validation-for="Betroll91Multiplier" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Betroll100Multiplier" class="control-label"></label>
+			<input asp-for="Betroll100Multiplier" class="form-control" />
+			<span asp-validation-for="Betroll100Multiplier" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="DMHelpString" class="control-label"></label>
+			<input asp-for="DMHelpString" class="form-control" />
+			<span asp-validation-for="DMHelpString" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="HelpString" class="control-label"></label>
+			<input asp-for="HelpString" class="form-control" />
+			<span asp-validation-for="HelpString" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="OkColor" class="control-label"></label>
+			<input asp-for="OkColor" class="form-control" />
+			<span asp-validation-for="OkColor" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="ErrorColor" class="control-label"></label>
+			<input asp-for="ErrorColor" class="form-control" />
+			<span asp-validation-for="ErrorColor" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Locale" class="control-label"></label>
+			<input asp-for="Locale" class="form-control" />
+			<span asp-validation-for="Locale" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="DefaultPrefix" class="control-label"></label>
+			<input asp-for="DefaultPrefix" class="form-control" />
+			<span asp-validation-for="DefaultPrefix" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="CustomReactionsStartWith" /> @Html.DisplayNameFor(model => model.CustomReactionsStartWith)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="LogUsernames" /> @Html.DisplayNameFor(model => model.LogUsernames)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="LastTimeBirthdaysChecked" class="control-label"></label>
+			<input asp-for="LastTimeBirthdaysChecked" class="form-control" disabled />
+		</div>
+		<div class="form-group">
+			<label asp-for="FirstAprilHereChance" class="control-label"></label>
+			<input asp-for="FirstAprilHereChance" class="form-control" />
+			<span asp-validation-for="FirstAprilHereChance" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="DmCommandsOwnerOnly" /> @Html.DisplayNameFor(model => model.DmCommandsOwnerOnly)
+			</label>
+		</div>
+		<input type="hidden" asp-for="Id" />
+		<div class="form-group">
+			<input type="submit" value="Save" class="btn btn-primary" />
+		</div>
+	</form>
+</div>
