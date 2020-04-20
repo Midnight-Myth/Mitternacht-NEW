@@ -20,25 +20,27 @@ namespace Mitternacht.Modules.Utility.Services
         public readonly Regex Regex = new Regex(@"^(?:(?<months>\d)mo)?(?:(?<weeks>\d)w)?(?:(?<days>\d{1,2})d)?(?:(?<hours>\d{1,2})h)?(?:(?<minutes>\d{1,2})m)?$",
                                 RegexOptions.Compiled | RegexOptions.Multiline);
 
-        public string RemindMessageFormat { get; }
-
         private readonly Logger _log;
         private readonly CancellationToken _cancelAllToken;
         private readonly DiscordSocketClient _client;
         private readonly DbService _db;
+		private readonly IBotConfigProvider _bcp;
 
-        public RemindService(DiscordSocketClient client, IBotConfigProvider config, DbService db,
+		public string RemindMessageFormat => _bcp.BotConfig.RemindMessageFormat;
+
+
+		public RemindService(DiscordSocketClient client, IBotConfigProvider bcp, DbService db,
              StartingGuildsService guilds, IUnitOfWork uow)
         {
             _client = client;
             _log = LogManager.GetCurrentClassLogger();
             _db = db;
+			_bcp = bcp;
 
             var cancelSource = new CancellationTokenSource();
             _cancelAllToken = cancelSource.Token;
             
             var reminders = uow.Reminders.GetIncludedReminders(guilds).ToList();
-            RemindMessageFormat = config.BotConfig.RemindMessageFormat;
 
             foreach (var r in reminders)
             {

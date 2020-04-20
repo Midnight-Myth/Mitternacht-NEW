@@ -35,7 +35,7 @@ namespace Mitternacht.Services {
 		private readonly IBotConfigProvider                  _bcp;
 		private readonly IBotCredentials                     _bc;
 		private          INServiceProvider                   _services;
-		public           string                              DefaultPrefix { get; private set; }
+		public           string                              DefaultPrefix => _bcp.BotConfig.DefaultPrefix;
 		private          ConcurrentDictionary<ulong, string> Prefixes      { get; }
 
 		public event Func<SocketUserMessage, Task>                 OnValidMessage     = delegate { return Task.CompletedTask; };
@@ -61,8 +61,7 @@ namespace Mitternacht.Services {
 
 			_clearUsersOnShortCooldown = new Timer(_ => { UsersOnShortCooldown.Clear(); }, null, GlobalCommandsCooldown, GlobalCommandsCooldown);
 
-			DefaultPrefix = bcp.BotConfig.DefaultPrefix;
-			Prefixes      = gcs.Where(x => x.Prefix != null).ToDictionary(x => x.GuildId, x => x.Prefix).ToConcurrent();
+			Prefixes = gcs.Where(x => x.Prefix != null).ToDictionary(x => x.GuildId, x => x.Prefix).ToConcurrent();
 		}
 
 		public string GetPrefix(IGuild guild)
@@ -76,12 +75,13 @@ namespace Mitternacht.Services {
 
 			prefix = prefix.ToLowerInvariant();
 
-			using(var uow = _db.UnitOfWork) {
-				uow.BotConfig.GetOrCreate(set => set).DefaultPrefix = prefix;
-				uow.Complete();
-			}
+			using var uow = _db.UnitOfWork;
+			uow.BotConfig.GetOrCreate(set => set).DefaultPrefix = prefix;
+			uow.Complete();
 
-			return DefaultPrefix = prefix;
+			_bcp.Reload();
+
+			return prefix;
 		}
 
 		public string SetPrefix(IGuild guild, string prefix) {
