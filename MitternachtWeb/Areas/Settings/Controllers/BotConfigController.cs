@@ -22,7 +22,7 @@ namespace MitternachtWeb.Areas.Settings.Controllers {
 			using var uow = _db.UnitOfWork;
 			var botConfig = uow.BotConfig.GetOrCreate();
 
-			return _creds.IsOwner(DiscordUser) ? View("Edit", botConfig) : View(botConfig);
+			return _creds.IsOwner(DiscordUser.User) ? View("Edit", botConfig) : View(botConfig);
 		}
 
 		// POST: Settings/BotConfig
