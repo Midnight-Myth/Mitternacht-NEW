@@ -10,9 +10,10 @@ namespace Mitternacht.Services.Impl {
 
 		public event Action<BotConfig> BotConfigChanged;
 
-		public BotConfigProvider(DbService db, BotConfig bc) {
-			_db       = db;
-			BotConfig = bc;
+		public BotConfigProvider(DbService db) {
+			_db = db;
+
+			Reload();
 		}
 
 		public void Reload() {
