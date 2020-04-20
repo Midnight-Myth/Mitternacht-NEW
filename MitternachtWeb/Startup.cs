@@ -88,6 +88,9 @@ namespace MitternachtWeb {
 
 			app.UseEndpoints(endpoints => {
 				endpoints.MapControllerRoute(
+					name: "settings",
+					pattern: "{area:exists}/{controller=Settings}/{action=Index}/{id?}");
+				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
