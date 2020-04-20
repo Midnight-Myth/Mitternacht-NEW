@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Utility {
 			public async Task Remind(MeOrHere meorhere, string timeStr, [Remainder] string message) {
 				var target = meorhere == MeOrHere.Me ? Context.User.Id : Context.Channel.Id;
 
-				await RemindInternal(target, meorhere == MeOrHere.Me, timeStr, message).ConfigureAwait(false);
+				var _ = RemindInternal(target, meorhere == MeOrHere.Me, timeStr, message).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Utility {
 					return;
 				}
 
-				await RemindInternal(channel.Id, false, timeStr, message).ConfigureAwait(false);
+				var _ = RemindInternal(channel.Id, false, timeStr, message).ConfigureAwait(false);
 			}
 
 			public async Task RemindInternal(ulong targetId, bool isPrivate, string timeStr, [Remainder] string message) {
@@ -102,7 +102,7 @@ namespace Mitternacht.Modules.Utility {
 				} catch {
 					// ignored
 				}
-				await Task.Run(() => Service.StartReminder(rem)).ConfigureAwait(false);
+				await Service.StartReminder(rem).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
