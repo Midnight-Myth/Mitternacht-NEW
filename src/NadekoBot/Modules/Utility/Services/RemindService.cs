@@ -13,86 +13,69 @@ using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 
-namespace Mitternacht.Modules.Utility.Services
-{
-    public class RemindService : IMService
-    {
-        public readonly Regex Regex = new Regex(@"^(?:(?<months>\d)mo)?(?:(?<weeks>\d)w)?(?:(?<days>\d{1,2})d)?(?:(?<hours>\d{1,2})h)?(?:(?<minutes>\d{1,2})m)?$",
-                                RegexOptions.Compiled | RegexOptions.Multiline);
+namespace Mitternacht.Modules.Utility.Services {
+	public class RemindService : IMService {
+		public readonly Regex Regex = new Regex(@"^(?:(?<months>\d)mo)?(?:(?<weeks>\d)w)?(?:(?<days>\d{1,2})d)?(?:(?<hours>\d{1,2})h)?(?:(?<minutes>\d{1,2})m)?$", RegexOptions.Compiled | RegexOptions.Multiline);
 
-        private readonly Logger _log;
-        private readonly CancellationToken _cancelAllToken;
-        private readonly DiscordSocketClient _client;
-        private readonly DbService _db;
-		private readonly IBotConfigProvider _bcp;
+		private readonly Logger              _log;
+		private readonly CancellationToken   _cancelAllToken;
+		private readonly DiscordSocketClient _client;
+		private readonly DbService           _db;
+		private readonly IBotConfigProvider  _bcp;
 
 		public string RemindMessageFormat => _bcp.BotConfig.RemindMessageFormat;
 
+		public RemindService(DiscordSocketClient client, IBotConfigProvider bcp, DbService db, StartingGuildsService guilds, IUnitOfWork uow) {
+			_log    = LogManager.GetCurrentClassLogger();
+			_client = client;
+			_db     = db;
+			_bcp    = bcp;
 
-		public RemindService(DiscordSocketClient client, IBotConfigProvider bcp, DbService db,
-             StartingGuildsService guilds, IUnitOfWork uow)
-        {
-            _client = client;
-            _log = LogManager.GetCurrentClassLogger();
-            _db = db;
-			_bcp = bcp;
+			var cancelSource = new CancellationTokenSource();
+			_cancelAllToken  = cancelSource.Token;
 
-            var cancelSource = new CancellationTokenSource();
-            _cancelAllToken = cancelSource.Token;
-            
-            var reminders = uow.Reminders.GetIncludedReminders(guilds).ToList();
+			var reminders = uow.Reminders.GetIncludedReminders(guilds).ToList();
 
-            foreach (var r in reminders)
-            {
-                Task.Run(() => StartReminder(r));
-            }
-        }
+			foreach(var r in reminders) {
+				Task.Run(() => StartReminder(r));
+			}
+		}
 
-        public async Task StartReminder(Reminder r)
-        {
-            var t = _cancelAllToken;
-            var now = DateTime.UtcNow;
+		public async Task StartReminder(Reminder r) {
+			var t   = _cancelAllToken;
+			var now = DateTime.UtcNow;
 
-            var time = r.When - now;
+			var time = r.When - now;
 
-            if (time.TotalMilliseconds > int.MaxValue)
-                return;
+			if(time.TotalMilliseconds > int.MaxValue)
+				return;
 
-            await Task.Delay(time, t).ConfigureAwait(false);
-            try
-            {
-                IMessageChannel ch;
-                if (r.IsPrivate)
-                {
-                    var user = _client.GetGuild(r.ServerId).GetUser(r.ChannelId);
-                    if (user == null)
-                        return;
-                    ch = await user.GetOrCreateDMChannelAsync().ConfigureAwait(false);
-                }
-                else
-                {
-                    ch = _client.GetGuild(r.ServerId)?.GetTextChannel(r.ChannelId);
-                }
-                if (ch == null)
-                    return;
+			await Task.Delay(time, t).ConfigureAwait(false);
+			try {
+				IMessageChannel ch;
+				if(r.IsPrivate) {
+					var user = _client.GetGuild(r.ServerId).GetUser(r.ChannelId);
+					if(user == null)
+						return;
+					ch = await user.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+				} else {
+					ch = _client.GetGuild(r.ServerId)?.GetTextChannel(r.ChannelId);
+				}
+				if(ch == null)
+					return;
 
-                var rep = new ReplacementBuilder()
-                    .WithOverride("%user%", () => $"<@!{r.UserId}>")
-                    .WithOverride("%message%", () => r.Message)
-                    .WithOverride("%target%", () => r.IsPrivate ? "Direct Message" : $"<#{r.ChannelId}>")
-                    .Build();
+				var rep = new ReplacementBuilder()
+					.WithOverride("%user%", () => $"<@!{r.UserId}>")
+					.WithOverride("%message%", () => r.Message)
+					.WithOverride("%target%", () => r.IsPrivate ? "Direct Message" : $"<#{r.ChannelId}>")
+					.Build();
 
-                await ch.SendMessageAsync(rep.Replace(RemindMessageFormat).SanitizeMentions()).ConfigureAwait(false); //it works trust me
-            }
-            catch (Exception ex) { _log.Warn(ex); }
-            finally
-            {
-                using (var uow = _db.UnitOfWork)
-                {
-                    uow.Reminders.Remove(r);
-                    await uow.CompleteAsync();
-                }
-            }
-        }
-    }
+				await ch.SendMessageAsync(rep.Replace(RemindMessageFormat).SanitizeMentions()).ConfigureAwait(false);
+			} catch(Exception ex) { _log.Warn(ex); } finally {
+				using var uow = _db.UnitOfWork;
+				uow.Reminders.Remove(r);
+				await uow.CompleteAsync();
+			}
+		}
+	}
 }
