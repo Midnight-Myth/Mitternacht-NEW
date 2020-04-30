@@ -2,183 +2,123 @@
 
 <h4>BotConfig</h4>
 <hr />
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.ForwardMessages)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.ForwardToAllOwners)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencyGenerationChance)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencyGenerationCooldown)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.RotatingStatuses)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.RemindMessageFormat)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencySign)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencyName)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencyPluralName)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.TriviaCurrencyReward)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.MinimumBetAmount)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.BetflipMultiplier)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencyDropAmount)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CurrencyDropAmountMax)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Betroll67Multiplier)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Betroll91Multiplier)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Betroll100Multiplier)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.DMHelpString)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.HelpString)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.OkColor)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.ErrorColor)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Locale)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.DefaultPrefix)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.CustomReactionsStartWith)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.LogUsernames)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.LastTimeBirthdaysChecked)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.FirstAprilHereChance)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.DmCommandsOwnerOnly)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				@Html.DisplayFor(modelItem => Model.ForwardMessages)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.ForwardToAllOwners)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencyGenerationChance)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencyGenerationCooldown)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.RotatingStatuses)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.RemindMessageFormat)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencySign)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencyName)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencyPluralName)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.TriviaCurrencyReward)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.MinimumBetAmount)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.BetflipMultiplier)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencyDropAmount)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CurrencyDropAmountMax)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.Betroll67Multiplier)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.Betroll91Multiplier)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.Betroll100Multiplier)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.DMHelpString)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.HelpString)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.OkColor)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.ErrorColor)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.Locale)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.DefaultPrefix)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.CustomReactionsStartWith)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.LogUsernames)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.LastTimeBirthdaysChecked)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.FirstAprilHereChance)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => Model.DmCommandsOwnerOnly)
-			</td>
-		</tr>
-		}
-	</tbody>
-</table>
+<div class="container-fluid">
+	<div class="form-group form-check">
+		<label class="form-check-label">
+			<input class="form-check-input" asp-for="ForwardMessages" disabled /> @Html.DisplayNameFor(model => model.ForwardMessages)
+		</label>
+	</div>
+	<div class="form-group form-check">
+		<label class="form-check-label">
+			<input class="form-check-input" asp-for="ForwardToAllOwners" disabled /> @Html.DisplayNameFor(model => model.ForwardToAllOwners)
+		</label>
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencyGenerationChance" class="control-label"></label>
+		<input asp-for="CurrencyGenerationChance" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencyGenerationCooldown" class="control-label"></label>
+		<input asp-for="CurrencyGenerationCooldown" class="form-control" disabled />
+	</div>
+	<div class="form-group form-check">
+		<label class="form-check-label">
+			<input class="form-check-input" asp-for="RotatingStatuses" disabled /> @Html.DisplayNameFor(model => model.RotatingStatuses)
+		</label>
+	</div>
+	<div class="form-group">
+		<label asp-for="RemindMessageFormat" class="control-label"></label>
+		<input asp-for="RemindMessageFormat" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencySign" class="control-label"></label>
+		<input asp-for="CurrencySign" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencyName" class="control-label"></label>
+		<input asp-for="CurrencyName" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencyPluralName" class="control-label"></label>
+		<input asp-for="CurrencyPluralName" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="TriviaCurrencyReward" class="control-label"></label>
+		<input asp-for="TriviaCurrencyReward" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="MinimumBetAmount" class="control-label"></label>
+		<input asp-for="MinimumBetAmount" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="BetflipMultiplier" class="control-label"></label>
+		<input asp-for="BetflipMultiplier" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencyDropAmount" class="control-label"></label>
+		<input asp-for="CurrencyDropAmount" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="CurrencyDropAmountMax" class="control-label"></label>
+		<input asp-for="CurrencyDropAmountMax" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="Betroll67Multiplier" class="control-label"></label>
+		<input asp-for="Betroll67Multiplier" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="Betroll91Multiplier" class="control-label"></label>
+		<input asp-for="Betroll91Multiplier" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="Betroll100Multiplier" class="control-label"></label>
+		<input asp-for="Betroll100Multiplier" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="DMHelpString" class="control-label"></label>
+		<input asp-for="DMHelpString" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="HelpString" class="control-label"></label>
+		<input asp-for="HelpString" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="OkColor" class="control-label"></label>
+		<input asp-for="OkColor" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="ErrorColor" class="control-label"></label>
+		<input asp-for="ErrorColor" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="Locale" class="control-label"></label>
+		<input asp-for="Locale" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="DefaultPrefix" class="control-label"></label>
+		<input asp-for="DefaultPrefix" class="form-control" disabled />
+	</div>
+	<div class="form-group form-check">
+		<label class="form-check-label">
+			<input class="form-check-input" asp-for="CustomReactionsStartWith" disabled /> @Html.DisplayNameFor(model => model.CustomReactionsStartWith)
+		</label>
+	</div>
+	<div class="form-group form-check">
+		<label class="form-check-label">
+			<input class="form-check-input" asp-for="LogUsernames" disabled /> @Html.DisplayNameFor(model => model.LogUsernames)
+		</label>
+	</div>
+	<div class="form-group">
+		<label asp-for="LastTimeBirthdaysChecked" class="control-label"></label>
+		<input asp-for="LastTimeBirthdaysChecked" class="form-control" disabled />
+	</div>
+	<div class="form-group">
+		<label asp-for="FirstAprilHereChance" class="control-label"></label>
+		<input asp-for="FirstAprilHereChance" class="form-control" disabled />
+	</div>
+	<div class="form-group form-check">
+		<label class="form-check-label">
+			<input class="form-check-input" asp-for="DmCommandsOwnerOnly" disabled /> @Html.DisplayNameFor(model => model.DmCommandsOwnerOnly)
+		</label>
+	</div>
+</div>
