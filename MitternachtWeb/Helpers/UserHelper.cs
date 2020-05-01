@@ -65,7 +65,7 @@ namespace MitternachtWeb.Helpers {
 					if(response.IsSuccessStatusCode) {
 						var content = JsonConvert.DeserializeObject<JArray>(await response.Content.ReadAsStringAsync());
 						var botGuilds = Program.MitternachtBot.Client.Guilds.Select(g => g.Id).ToArray();
-						var guilds = content.Select(o => o.Value<ulong>("id")).Where(g => botGuilds.Contains(g)).Distinct().ToArray();
+						var guilds = content.Select(o => o.Value<ulong>("id")).Intersect(botGuilds).Distinct().ToArray();
 
 						userGuilds.Add(userId, (DateTime.UtcNow, guilds));
 						return guilds;
