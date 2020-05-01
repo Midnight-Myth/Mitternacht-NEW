@@ -32,7 +32,7 @@ namespace MitternachtWeb.Helpers {
 					var dUser          = Program.MitternachtBot.Client.GetUser(userId);
 					var botPagePerms   = Program.MitternachtBot.Credentials.IsOwner(dUser) ? BotPagePermission.WriteBotConfig : BotPagePermission.None;
 					var guilds         = await GetKnownDiscordUserGuildsAsync(user, context);
-					var guildPagePerms = guilds.Select(id => Program.MitternachtBot.Client.Guilds.FirstOrDefault(g => g.Id == id)?.GetUser(userId)).Where(gu => gu != null).ToDictionary(gu => gu.Id, gu => gu.GuildPermissions.GetGuildPagePermissions());
+					var guildPagePerms = guilds.Select(id => Program.MitternachtBot.Client.Guilds.FirstOrDefault(g => g.Id == id)?.GetUser(userId)).Where(gu => gu != null).ToDictionary(gu => gu.Guild.Id, gu => gu.GuildPermissions.GetGuildPagePermissions());
 
 					var discordUser = new DiscordUser {
 						User                 = dUser,
