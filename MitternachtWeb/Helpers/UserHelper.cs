@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Mitternacht.Services;
 using MitternachtWeb.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace MitternachtWeb.Helpers {
 	public static class UserHelper {
+		public const double DiscordUserCacheTime = 60.0;
+		public const double DiscordUserGuildsCacheTime = 300.0;
+
 		private static readonly Dictionary<ulong, (DateTime RequestTime, DiscordUser User)> discordUsers = new Dictionary<ulong, (DateTime, DiscordUser)>();
 		private static readonly Dictionary<ulong, (DateTime RequestTime, ulong[] Guilds  )> userGuilds   = new Dictionary<ulong, (DateTime, ulong[]    )>();
 
@@ -24,7 +26,7 @@ namespace MitternachtWeb.Helpers {
 			if(ulong.TryParse(userIdString, out var userId)) {
 				var success = discordUsers.TryGetValue(userId, out var t);
 
-				if(success && (t.RequestTime - DateTime.UtcNow).TotalSeconds < 60.0) {
+				if(success && (t.RequestTime - DateTime.UtcNow).TotalSeconds < DiscordUserCacheTime) {
 					return t.User;
 				} else {
 					var dUser          = Program.MitternachtBot.Client.GetUser(userId);
@@ -51,7 +53,7 @@ namespace MitternachtWeb.Helpers {
 			if(ulong.TryParse(userIdString, out var userId)) {
 				var success = userGuilds.TryGetValue(userId, out var t);
 
-				if(success && (t.RequestTime - DateTime.UtcNow).TotalSeconds < 300.0) {
+				if(success && (t.RequestTime - DateTime.UtcNow).TotalSeconds < DiscordUserGuildsCacheTime) {
 					return t.Guilds;
 				} else {
 					var request = new HttpRequestMessage(HttpMethod.Get, "https://discordapp.com/api/users/@me/guilds");
