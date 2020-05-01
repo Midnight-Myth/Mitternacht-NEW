@@ -1,9 +1,5 @@
-﻿@{
-	var DiscordUser = UserHelper.GetDiscordUser(User);
-}
-
-@if(DiscordUser == null) {
+﻿@if(ViewBag.DiscordUser == null) {
 	<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
 } else {
-	@DiscordUser.User
+	@ViewBag.DiscordUser.User
 }

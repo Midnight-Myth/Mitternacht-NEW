@@ -1,11 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using MitternachtWeb.Controllers;
+using MitternachtWeb.Models;
 
 namespace MitternachtWeb.Areas.Settings.Controllers {
 	[Area("Settings")]
+	[Authorize("ReadBotConfig")]
 	public class BotConfigController : DiscordUserController {
 		private readonly DbService          _db;
 		private readonly IBotCredentials    _creds;
@@ -22,12 +25,13 @@ namespace MitternachtWeb.Areas.Settings.Controllers {
 			using var uow = _db.UnitOfWork;
 			var botConfig = uow.BotConfig.GetOrCreate();
 
-			return _creds.IsOwner(DiscordUser.User) ? View("Edit", botConfig) : View(botConfig);
+			return DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.WriteBotConfig) ? View("Edit", botConfig) : View(botConfig);
 		}
 
 		// POST: Settings/BotConfig
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize("WriteBotConfig")]
 		public async Task<IActionResult> Index([Bind("ForwardMessages,ForwardToAllOwners,CurrencyGenerationChance,CurrencyGenerationCooldown,RotatingStatuses,RemindMessageFormat,CurrencySign,CurrencyName,CurrencyPluralName,TriviaCurrencyReward,MinimumBetAmount,BetflipMultiplier,CurrencyDropAmount,CurrencyDropAmountMax,Betroll67Multiplier,Betroll91Multiplier,Betroll100Multiplier,DMHelpString,HelpString,OkColor,ErrorColor,Locale,DefaultPrefix,CustomReactionsStartWith,LogUsernames,FirstAprilHereChance,DmCommandsOwnerOnly,Id")] BotConfig botConfig) {
 			if(ModelState.IsValid) {
 				using var uow = _db.UnitOfWork;

@@ -4,6 +4,7 @@ using MitternachtWeb.Models;
 
 namespace MitternachtWeb.Controllers {
 	public abstract class DiscordUserController : Controller {
-		public DiscordUser DiscordUser => UserHelper.GetDiscordUser(User);
+		[ViewData]
+		public DiscordUser DiscordUser => UserHelper.GetDiscordUserAsync(User, HttpContext).GetAwaiter().GetResult();
 	}
 }

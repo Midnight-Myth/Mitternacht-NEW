@@ -1,15 +1,17 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using MitternachtWeb.Authorization;
+using MitternachtWeb.Models;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -26,6 +28,7 @@ namespace MitternachtWeb {
 
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddControllersWithViews();
+			services.AddHttpContextAccessor();
 			services.Add(ServiceDescriptor.Singleton(Program.MitternachtBot));
 			services.Add(Program.MitternachtBot.Services.Services.Select(s => ServiceDescriptor.Singleton(s.Key, s.Value)));
 
@@ -41,8 +44,10 @@ namespace MitternachtWeb {
 				options.TokenEndpoint           = $"{discordApiUrl}/oauth2/token";
 				options.UserInformationEndpoint = $"{discordApiUrl}/users/@me";
 				options.CallbackPath            = new PathString("/login/authenticate_discord");
+				options.SaveTokens              = true;
 
 				options.Scope.Add("identify");
+				options.Scope.Add("guilds");
 				
 				options.ClientId     = Configuration.GetValue<string>("Discord:ClientId");
 				options.ClientSecret = Configuration.GetValue<string>("Discord:ClientSecret");
@@ -62,6 +67,12 @@ namespace MitternachtWeb {
 						context.RunClaimActions(content);
 					}
 				};
+			});
+
+			services.AddSingleton<IAuthorizationHandler, BotPagePermissionHandler>();
+			services.AddAuthorization(options => {
+				options.AddPolicy("ReadBotConfig",  p => p.Requirements.Add(new BotPagePermissionRequirement(BotPagePermission. ReadBotConfig)));
+				options.AddPolicy("WriteBotConfig", p => p.Requirements.Add(new BotPagePermissionRequirement(BotPagePermission.WriteBotConfig)));
 			});
 		}
 
