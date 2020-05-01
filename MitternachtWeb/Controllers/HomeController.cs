@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using MitternachtWeb.Models;
 
 namespace MitternachtWeb.Controllers {
-	public class HomeController : Controller {
+	public class HomeController : DiscordUserController {
 		private readonly ILogger<HomeController> _logger;
 
 		public HomeController(ILogger<HomeController> logger) {
@@ -12,10 +12,6 @@ namespace MitternachtWeb.Controllers {
 		}
 
 		public IActionResult Index() {
-			return View();
-		}
-
-		public IActionResult Privacy() {
 			return View();
 		}
 

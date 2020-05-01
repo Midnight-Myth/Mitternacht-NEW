@@ -33,12 +33,6 @@ namespace Mitternacht {
 		private readonly DbService                   _db;
 		public           ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
 
-		/* I don't know how to make this not be static
-		* and keep the convenience of .WithOkColor
-		* and .WithErrorColor extensions methods.
-		* I don't want to pass botconfig every time I 
-		* want to send a confirm or error message, so
-		* I'll keep this for now */
 		public static Color OkColor    { get; private set; }
 		public static Color ErrorColor { get; private set; }
 
@@ -49,8 +43,6 @@ namespace Mitternacht {
 		public ShardsCoordinator ShardCoord { get; private set; }
 
 		private readonly ShardComClient _comClient;
-
-		private readonly BotConfig _botConfig;
 
 		public MitternachtBot(int shardId, int parentProcessId, int? port = null) {
 			if(shardId < 0)
@@ -75,11 +67,8 @@ namespace Mitternacht {
 			port       ??=Credentials.ShardRunPort;
 			_comClient =  new ShardComClient(port.Value);
 
-			using(var uow = _db.UnitOfWork) {
-				_botConfig = uow.BotConfig.GetOrCreate();
-				OkColor    = new Color(Convert.ToUInt32(_botConfig.OkColor, 16));
-				ErrorColor = new Color(Convert.ToUInt32(_botConfig.ErrorColor, 16));
-			}
+			using var uow = _db.UnitOfWork;
+			OnBotConfigChanged(uow.BotConfig.GetOrCreate());
 
 			SetupShard(parentProcessId, port.Value);
 
@@ -128,7 +117,8 @@ namespace Mitternacht {
 			using var uow = _db.UnitOfWork;
 			AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
 
-			IBotConfigProvider botConfigProvider = new BotConfigProvider(_db, _botConfig);
+			IBotConfigProvider botConfigProvider = new BotConfigProvider(_db);
+			botConfigProvider.BotConfigChanged  += OnBotConfigChanged;
 
 			//var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
 
@@ -273,6 +263,11 @@ namespace Mitternacht {
 					Environment.Exit(10);
 				}
 			}).Start();
+		}
+
+		private void OnBotConfigChanged(BotConfig bc) {
+			OkColor    = new Color(Convert.ToUInt32(bc.OkColor, 16));
+			ErrorColor = new Color(Convert.ToUInt32(bc.ErrorColor, 16));
 		}
 	}
 }

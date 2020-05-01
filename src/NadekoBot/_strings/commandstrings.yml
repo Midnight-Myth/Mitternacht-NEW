@@ -276,7 +276,9 @@
   usage:   "`{0}setmuterole Silenced`"
 - name:    rank
   cmd:     rank
-  aliases: []
+  aliases:
+  -        level
+  -        lvl
   desc:    Zeigt den Rang eines Nutzers an.
   usage:   "`{0}rank [user]`"
 - name:    scsc

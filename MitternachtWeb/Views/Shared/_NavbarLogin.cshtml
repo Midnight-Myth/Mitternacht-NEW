@@ -1,0 +1,5 @@
+﻿@if(ViewBag.DiscordUser == null) {
+	<a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+} else {
+	@ViewBag.DiscordUser.User
+}
