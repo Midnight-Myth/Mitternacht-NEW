@@ -9,7 +9,7 @@
 			<li class="nav-item">
 				<a class="nav-link text-dark" asp-area="Settings" asp-controller="Settings" asp-action="Index">Index</a>
 			</li>
-			@if(ViewBag.DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.ReadBotConfig)) {
+			@if(ViewBag.DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadBotConfig)) {
 				<li class="nav-item">
 					<a class="nav-link text-dark" asp-area="Settings" asp-controller="BotConfig" asp-action="Index">BotConfig</a>
 				</li>

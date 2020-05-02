@@ -25,7 +25,7 @@ namespace MitternachtWeb.Areas.Settings.Controllers {
 			using var uow = _db.UnitOfWork;
 			var botConfig = uow.BotConfig.GetOrCreate();
 
-			return DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.WriteBotConfig) ? View("Edit", botConfig) : View(botConfig);
+			return DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteBotConfig) ? View("Edit", botConfig) : View(botConfig);
 		}
 
 		// POST: Settings/BotConfig

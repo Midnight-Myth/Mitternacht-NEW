@@ -19,7 +19,7 @@ namespace MitternachtWeb.Areas.Settings.Controllers {
 			using var uow = _db.UnitOfWork;
 
 			if(id == null) {
-				var guildConfigs         = DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.ReadAllGuildConfigs) ? uow.GuildConfigs.GetAll() : uow.GuildConfigs.GetAllGuildConfigs(DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildPagePermission.ReadGuildConfig)).Select(kv => kv.Key).ToList());
+				var guildConfigs         = DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllGuildConfigs) ? uow.GuildConfigs.GetAll() : uow.GuildConfigs.GetAllGuildConfigs(DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ReadGuildConfig)).Select(kv => kv.Key).ToList());
 				var guildConfigWithNames = guildConfigs.Select(gc => (gc, Program.MitternachtBot.Client.GetGuild(gc.GuildId)?.Name ?? ""));
 
 				return guildConfigWithNames.Any() ? View(guildConfigWithNames) : (IActionResult)Unauthorized();
@@ -122,9 +122,9 @@ namespace MitternachtWeb.Areas.Settings.Controllers {
 		}
 
 		private bool HasReadPermission(ulong guildId)
-			=> DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.ReadAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildPagePermission.ReadGuildConfig);
+			=> DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildLevelPermission.ReadGuildConfig);
 
 		private bool HasWritePermission(ulong guildId)
-			=> DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.WriteAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildPagePermission.WriteGuildConfig);
+			=> DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildLevelPermission.WriteGuildConfig);
 	}
 }
