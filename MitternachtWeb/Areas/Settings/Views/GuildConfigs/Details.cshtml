@@ -1,0 +1,306 @@
+﻿@model Mitternacht.Services.Database.Models.GuildConfig
+
+<h4>GuildConfig for server "@ViewBag.GuildName" (GuildId @Model.GuildId)</h4>
+<hr />
+<dl class="row">
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.Prefix)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.Prefix)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.DeleteMessageOnCommand)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.DeleteMessageOnCommand)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.AutoAssignRoleId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.AutoAssignRoleId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.AutoDeleteGreetMessagesTimer)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.AutoDeleteGreetMessagesTimer)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.AutoDeleteByeMessagesTimer)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.AutoDeleteByeMessagesTimer)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.GreetMessageChannelId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.GreetMessageChannelId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.ByeMessageChannelId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.ByeMessageChannelId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.SendDmGreetMessage)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.SendDmGreetMessage)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.DmGreetMessageText)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.DmGreetMessageText)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.SendChannelGreetMessage)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.SendChannelGreetMessage)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.ChannelGreetMessageText)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.ChannelGreetMessageText)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.SendChannelByeMessage)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.SendChannelByeMessage)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.ChannelByeMessageText)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.ChannelByeMessageText)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.ExclusiveSelfAssignedRoles)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.ExclusiveSelfAssignedRoles)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.AutoDeleteSelfAssignedRoleMessages)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.AutoDeleteSelfAssignedRoleMessages)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.DefaultMusicVolume)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.DefaultMusicVolume)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VoicePlusTextEnabled)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VoicePlusTextEnabled)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.CleverbotEnabled)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.CleverbotEnabled)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.MuteRoleName)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.MuteRoleName)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.Locale)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.Locale)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.TimeZoneId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.TimeZoneId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.GameVoiceChannel)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.GameVoiceChannel)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VerboseErrors)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VerboseErrors)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VerifiedRoleId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VerifiedRoleId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VerifyString)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VerifyString)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VerificationTutorialText)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VerificationTutorialText)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.AdditionalVerificationUsers)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.AdditionalVerificationUsers)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VerificationPasswordChannelId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VerificationPasswordChannelId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.TurnToXpMultiplier)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.TurnToXpMultiplier)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.MessageXpTimeDifference)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.MessageXpTimeDifference)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.MessageXpCharCountMin)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.MessageXpCharCountMin)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.MessageXpCharCountMax)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.MessageXpCharCountMax)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.LogUsernameHistory)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.LogUsernameHistory)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.BirthdayRoleId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.BirthdayRoleId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.BirthdayMessage)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.BirthdayMessage)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.BirthdayMessageChannelId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.BirthdayMessageChannelId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.BirthdaysEnabled)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.BirthdaysEnabled)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.BirthdayMoney)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.BirthdayMoney)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.GommeTeamMemberRoleId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.GommeTeamMemberRoleId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VipRoleId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VipRoleId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.TeamUpdateChannelId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.TeamUpdateChannelId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.TeamUpdateMessagePrefix)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.TeamUpdateMessagePrefix)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.CountToNumberChannelId)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.CountToNumberChannelId)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.CountToNumberMessageChance)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.CountToNumberMessageChance)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.VerbosePermissions)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.VerbosePermissions)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.PermissionRole)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.PermissionRole)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.FilterInvites)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.FilterInvites)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.FilterWords)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.FilterWords)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.FilterZalgo)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.FilterZalgo)
+    </dd>
+    <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.WarningsInitialized)
+    </dt>
+    <dd class = "col-sm-10">
+        @Html.DisplayFor(model => model.WarningsInitialized)
+    </dd>
+</dl>

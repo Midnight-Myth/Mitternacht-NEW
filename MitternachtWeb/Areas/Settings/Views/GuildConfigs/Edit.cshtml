@@ -1,0 +1,263 @@
+﻿@model Mitternacht.Services.Database.Models.GuildConfig
+
+<h4>GuildConfig for server "@ViewBag.GuildName" (GuildId @Model.GuildId)</h4>
+<hr />
+<div class="container-fluid">
+	<form asp-action="Edit" asp-route-id="@Model.GuildId">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-group">
+			<label asp-for="Prefix" class="control-label"></label>
+			<input asp-for="Prefix" class="form-control" />
+			<span asp-validation-for="Prefix" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="DeleteMessageOnCommand" /> @Html.DisplayNameFor(model => model.DeleteMessageOnCommand)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="AutoAssignRoleId" class="control-label"></label>
+			<input asp-for="AutoAssignRoleId" class="form-control" />
+			<span asp-validation-for="AutoAssignRoleId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="AutoDeleteGreetMessagesTimer" class="control-label"></label>
+			<input asp-for="AutoDeleteGreetMessagesTimer" class="form-control" />
+			<span asp-validation-for="AutoDeleteGreetMessagesTimer" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="AutoDeleteByeMessagesTimer" class="control-label"></label>
+			<input asp-for="AutoDeleteByeMessagesTimer" class="form-control" />
+			<span asp-validation-for="AutoDeleteByeMessagesTimer" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="GreetMessageChannelId" class="control-label"></label>
+			<input asp-for="GreetMessageChannelId" class="form-control" />
+			<span asp-validation-for="GreetMessageChannelId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="ByeMessageChannelId" class="control-label"></label>
+			<input asp-for="ByeMessageChannelId" class="form-control" />
+			<span asp-validation-for="ByeMessageChannelId" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="SendDmGreetMessage" /> @Html.DisplayNameFor(model => model.SendDmGreetMessage)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="DmGreetMessageText" class="control-label"></label>
+			<input asp-for="DmGreetMessageText" class="form-control" />
+			<span asp-validation-for="DmGreetMessageText" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="SendChannelGreetMessage" /> @Html.DisplayNameFor(model => model.SendChannelGreetMessage)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="ChannelGreetMessageText" class="control-label"></label>
+			<input asp-for="ChannelGreetMessageText" class="form-control" />
+			<span asp-validation-for="ChannelGreetMessageText" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="SendChannelByeMessage" /> @Html.DisplayNameFor(model => model.SendChannelByeMessage)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="ChannelByeMessageText" class="control-label"></label>
+			<input asp-for="ChannelByeMessageText" class="form-control" />
+			<span asp-validation-for="ChannelByeMessageText" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="ExclusiveSelfAssignedRoles" /> @Html.DisplayNameFor(model => model.ExclusiveSelfAssignedRoles)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="AutoDeleteSelfAssignedRoleMessages" /> @Html.DisplayNameFor(model => model.AutoDeleteSelfAssignedRoleMessages)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="DefaultMusicVolume" class="control-label"></label>
+			<input asp-for="DefaultMusicVolume" class="form-control" />
+			<span asp-validation-for="DefaultMusicVolume" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="VoicePlusTextEnabled" /> @Html.DisplayNameFor(model => model.VoicePlusTextEnabled)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="CleverbotEnabled" /> @Html.DisplayNameFor(model => model.CleverbotEnabled)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="MuteRoleName" class="control-label"></label>
+			<input asp-for="MuteRoleName" class="form-control" />
+			<span asp-validation-for="MuteRoleName" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Locale" class="control-label"></label>
+			<input asp-for="Locale" class="form-control" />
+			<span asp-validation-for="Locale" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="TimeZoneId" class="control-label"></label>
+			<input asp-for="TimeZoneId" class="form-control" />
+			<span asp-validation-for="TimeZoneId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="GameVoiceChannel" class="control-label"></label>
+			<input asp-for="GameVoiceChannel" class="form-control" />
+			<span asp-validation-for="GameVoiceChannel" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="VerboseErrors" /> @Html.DisplayNameFor(model => model.VerboseErrors)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="VerifiedRoleId" class="control-label"></label>
+			<input asp-for="VerifiedRoleId" class="form-control" />
+			<span asp-validation-for="VerifiedRoleId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="VerifyString" class="control-label"></label>
+			<input asp-for="VerifyString" class="form-control" />
+			<span asp-validation-for="VerifyString" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="VerificationTutorialText" class="control-label"></label>
+			<input asp-for="VerificationTutorialText" class="form-control" />
+			<span asp-validation-for="VerificationTutorialText" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="AdditionalVerificationUsers" class="control-label"></label>
+			<input asp-for="AdditionalVerificationUsers" class="form-control" />
+			<span asp-validation-for="AdditionalVerificationUsers" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="VerificationPasswordChannelId" class="control-label"></label>
+			<input asp-for="VerificationPasswordChannelId" class="form-control" />
+			<span asp-validation-for="VerificationPasswordChannelId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="TurnToXpMultiplier" class="control-label"></label>
+			<input asp-for="TurnToXpMultiplier" class="form-control" />
+			<span asp-validation-for="TurnToXpMultiplier" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="MessageXpTimeDifference" class="control-label"></label>
+			<input asp-for="MessageXpTimeDifference" class="form-control" />
+			<span asp-validation-for="MessageXpTimeDifference" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="MessageXpCharCountMin" class="control-label"></label>
+			<input asp-for="MessageXpCharCountMin" class="form-control" />
+			<span asp-validation-for="MessageXpCharCountMin" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="MessageXpCharCountMax" class="control-label"></label>
+			<input asp-for="MessageXpCharCountMax" class="form-control" />
+			<span asp-validation-for="MessageXpCharCountMax" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="LogUsernameHistory" class="control-label"></label>
+			<input asp-for="LogUsernameHistory" class="form-control" />
+			<span asp-validation-for="LogUsernameHistory" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="BirthdayRoleId" class="control-label"></label>
+			<input asp-for="BirthdayRoleId" class="form-control" />
+			<span asp-validation-for="BirthdayRoleId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="BirthdayMessage" class="control-label"></label>
+			<input asp-for="BirthdayMessage" class="form-control" />
+			<span asp-validation-for="BirthdayMessage" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="BirthdayMessageChannelId" class="control-label"></label>
+			<input asp-for="BirthdayMessageChannelId" class="form-control" />
+			<span asp-validation-for="BirthdayMessageChannelId" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="BirthdaysEnabled" /> @Html.DisplayNameFor(model => model.BirthdaysEnabled)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="BirthdayMoney" class="control-label"></label>
+			<input asp-for="BirthdayMoney" class="form-control" />
+			<span asp-validation-for="BirthdayMoney" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="GommeTeamMemberRoleId" class="control-label"></label>
+			<input asp-for="GommeTeamMemberRoleId" class="form-control" />
+			<span asp-validation-for="GommeTeamMemberRoleId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="VipRoleId" class="control-label"></label>
+			<input asp-for="VipRoleId" class="form-control" />
+			<span asp-validation-for="VipRoleId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="TeamUpdateChannelId" class="control-label"></label>
+			<input asp-for="TeamUpdateChannelId" class="form-control" />
+			<span asp-validation-for="TeamUpdateChannelId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="TeamUpdateMessagePrefix" class="control-label"></label>
+			<input asp-for="TeamUpdateMessagePrefix" class="form-control" />
+			<span asp-validation-for="TeamUpdateMessagePrefix" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CountToNumberChannelId" class="control-label"></label>
+			<input asp-for="CountToNumberChannelId" class="form-control" />
+			<span asp-validation-for="CountToNumberChannelId" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="CountToNumberMessageChance" class="control-label"></label>
+			<input asp-for="CountToNumberMessageChance" class="form-control" />
+			<span asp-validation-for="CountToNumberMessageChance" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="VerbosePermissions" /> @Html.DisplayNameFor(model => model.VerbosePermissions)
+			</label>
+		</div>
+		<div class="form-group">
+			<label asp-for="PermissionRole" class="control-label"></label>
+			<input asp-for="PermissionRole" class="form-control" />
+			<span asp-validation-for="PermissionRole" class="text-danger"></span>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="FilterInvites" /> @Html.DisplayNameFor(model => model.FilterInvites)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="FilterWords" /> @Html.DisplayNameFor(model => model.FilterWords)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="FilterZalgo" /> @Html.DisplayNameFor(model => model.FilterZalgo)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
+				<input class="form-check-input" asp-for="WarningsInitialized" /> @Html.DisplayNameFor(model => model.WarningsInitialized)
+			</label>
+		</div>
+		<input type="hidden" asp-for="GuildId" />
+		<div class="form-group">
+			<input type="submit" value="Save" class="btn btn-primary" />
+		</div>
+	</form>
+</div>
