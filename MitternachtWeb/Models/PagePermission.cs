@@ -9,6 +9,7 @@ namespace MitternachtWeb.Models {
 		WriteBotConfig       = 0b_0011,
 		ReadAllGuildConfigs  = 0b_0100,
 		WriteAllGuildConfigs = 0b_1100,
+		All                  = 0b_1111,
 	}
 
 	[Flags]
