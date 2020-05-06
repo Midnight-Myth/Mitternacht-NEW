@@ -1776,9 +1776,7 @@
     "unburden": {
         "desc": "If this Pokemon loses its held item for any reason, its Speed is doubled. This boost is lost if it switches out or gains a new item or Ability.",
         "shortDesc": "Speed is doubled on held item loss; boost is lost if it switches, gets new item/Ability.",
-        "effect": {
-
-        },
+        "effect": {},
         "id": "unburden",
         "name": "Unburden",
         "rating": "3.5",
@@ -1887,9 +1885,7 @@
         "desc": "If this Pokemon is a Darmanitan, it changes to Zen Mode if it has 1/2 or less of its maximum HP at the end of a turn. If Darmanitan's HP is above 1/2 of its maximum HP at the end of a turn, it changes back to Standard Mode. If Darmanitan loses this Ability while in Zen Mode it reverts to Standard Mode immediately.",
         "shortDesc": "If Darmanitan, at end of turn changes Mode to Standard if > 1/2 max HP, else Zen.",
         "onResidualOrder": 27,
-        "effect": {
-
-        },
+        "effect": {},
         "id": "zenmode",
         "name": "Zen Mode",
         "rating": -1,
