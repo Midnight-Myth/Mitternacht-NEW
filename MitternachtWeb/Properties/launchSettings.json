@@ -17,6 +17,7 @@
     },
     "MitternachtWeb": {
       "commandName": "Project",
+      "workingDirectory": "$(OutDir)",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
