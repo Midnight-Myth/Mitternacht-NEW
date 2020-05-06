@@ -4,17 +4,17 @@ using MitternachtWeb.Helpers;
 using System.Threading.Tasks;
 
 namespace MitternachtWeb.Authorization {
-	public class BotPagePermissionHandler : AuthorizationHandler<BotPagePermissionRequirement> {
+	public class BotLevelPermissionHandler : AuthorizationHandler<BotLevelPermissionRequirement> {
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		
-		public BotPagePermissionHandler(IHttpContextAccessor httpContextAccessor) {
+		public BotLevelPermissionHandler(IHttpContextAccessor httpContextAccessor) {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, BotPagePermissionRequirement requirement) {
+		protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, BotLevelPermissionRequirement requirement) {
 			var user = await UserHelper.GetDiscordUserAsync(context.User, _httpContextAccessor.HttpContext);
 
-			if(user.BotPagePermissions.HasFlag(requirement.BotPagePermissions)) {
+			if(user.BotPagePermissions.HasFlag(requirement.BotLevelPermissions)) {
 				context.Succeed(requirement);
 			}
 		}

@@ -9,11 +9,14 @@
 			<li class="nav-item">
 				<a class="nav-link text-dark" asp-area="Settings" asp-controller="Settings" asp-action="Index">Index</a>
 			</li>
-			@if(ViewBag.DiscordUser.BotPagePermissions.HasFlag(BotPagePermission.ReadBotConfig)) {
+			@if(ViewBag.DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadBotConfig)) {
 				<li class="nav-item">
 					<a class="nav-link text-dark" asp-area="Settings" asp-controller="BotConfig" asp-action="Index">BotConfig</a>
 				</li>
 			}
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Settings" asp-controller="GuildConfigs" asp-action="Index" asp-route-id="">GuildConfigs</a>
+			</li>
 		</ul>
 	</nav>
 	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">

@@ -69,10 +69,10 @@ namespace MitternachtWeb {
 				};
 			});
 
-			services.AddSingleton<IAuthorizationHandler, BotPagePermissionHandler>();
+			services.AddSingleton<IAuthorizationHandler, BotLevelPermissionHandler>();
 			services.AddAuthorization(options => {
-				options.AddPolicy("ReadBotConfig",  p => p.Requirements.Add(new BotPagePermissionRequirement(BotPagePermission. ReadBotConfig)));
-				options.AddPolicy("WriteBotConfig", p => p.Requirements.Add(new BotPagePermissionRequirement(BotPagePermission.WriteBotConfig)));
+				options.AddPolicy("ReadBotConfig",  p => p.Requirements.Add(new BotLevelPermissionRequirement(BotLevelPermission. ReadBotConfig)));
+				options.AddPolicy("WriteBotConfig", p => p.Requirements.Add(new BotLevelPermissionRequirement(BotLevelPermission.WriteBotConfig)));
 			});
 		}
 
