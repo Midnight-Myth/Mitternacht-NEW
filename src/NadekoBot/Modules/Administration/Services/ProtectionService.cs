@@ -134,7 +134,7 @@ namespace Mitternacht.Modules.Administration.Services
                         try
                         {
                             if (muteTime <= 0)
-                                await _mute.MuteUser(gu).ConfigureAwait(false);
+                                await Service.MuteUser(gu, MuteType.Chat).ConfigureAwait(false);
                             else
                                 await _mute.TimedMute(gu, TimeSpan.FromSeconds(muteTime), MuteType.Chat).ConfigureAwait(false);
                         }
