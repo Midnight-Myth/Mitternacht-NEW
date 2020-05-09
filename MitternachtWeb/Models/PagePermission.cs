@@ -23,7 +23,7 @@ namespace MitternachtWeb.Models {
 		public static GuildLevelPermission GetGuildPagePermissions(this GuildPermissions guildPerms) {
 			var perms = GuildLevelPermission.None;
 
-			if(guildPerms.KickMembers) {
+			if(guildPerms.ViewAuditLog) {
 				perms |= GuildLevelPermission.ReadGuildConfig;
 			}
 			
