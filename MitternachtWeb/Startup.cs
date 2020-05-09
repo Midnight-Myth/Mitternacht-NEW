@@ -27,6 +27,10 @@ namespace MitternachtWeb {
 		public IConfiguration Configuration { get; }
 
 		public void ConfigureServices(IServiceCollection services) {
+			services.AddRouting(o => {
+				o.LowercaseUrls         = true;
+				o.LowercaseQueryStrings = true;
+			});
 			services.AddControllersWithViews();
 			services.AddHttpContextAccessor();
 			services.Add(ServiceDescriptor.Singleton(Program.MitternachtBot));

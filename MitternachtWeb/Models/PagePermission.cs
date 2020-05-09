@@ -20,10 +20,10 @@ namespace MitternachtWeb.Models {
 	}
 
 	public static class PagePermissionExtensions {
-		public static GuildLevelPermission GetGuildPagePermissions(this GuildPermissions guildPerms) {
+		public static GuildLevelPermission GetGuildLevelPermissions(this GuildPermissions guildPerms) {
 			var perms = GuildLevelPermission.None;
 
-			if(guildPerms.KickMembers) {
+			if(guildPerms.ViewAuditLog) {
 				perms |= GuildLevelPermission.ReadGuildConfig;
 			}
 			
