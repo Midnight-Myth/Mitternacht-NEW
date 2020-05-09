@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Verification.Common {
 			//verification process intro
 			eb.AddField(GetText("welcome_to_verification_title"), GetText("welcome_to_verification_text", AbortString));
 			eb.AddField(GetText("why_do_we_need_verification_title"), GetText("why_do_we_need_verification_text"));
-			
+
 			//Step 1 - forum name input
 			eb.AddField(GetText("write_your_forumname_title"), GetText("write_your_forumname_text"));
 
@@ -113,15 +113,13 @@ namespace Mitternacht.Modules.Verification.Common {
 							return;
 						}
 
-						ulong? passwordChannelId;
-						using(var uow = _db.UnitOfWork) {
-							if(uow.VerifiedUsers.IsForumUserVerified(GuildUser.GuildId, forumUser.Id)) {
-								await ErrorAsync("forumaccount_already_verified_try_again").ConfigureAwait(false);
-								return;
-							}
-
-							passwordChannelId = uow.GuildConfigs.For(GuildUser.GuildId).VerificationPasswordChannelId;
+						using var uow = _db.UnitOfWork;
+						if(uow.VerifiedUsers.IsForumUserVerified(GuildUser.GuildId, forumUser.Id)) {
+							await ErrorAsync("forumaccount_already_verified_try_again").ConfigureAwait(false);
+							return;
 						}
+
+						var passwordChannelId = uow.GuildConfigs.For(GuildUser.GuildId).VerificationPasswordChannelId;
 
 						ForumUserId = forumUser.Id;
 
@@ -159,12 +157,11 @@ namespace Mitternacht.Modules.Verification.Common {
 							return;
 						}
 						await conversation.DownloadMessagesAsync().ConfigureAwait(false);
-						using(var uow = _db.UnitOfWork) {
-							var verifystring = uow.GuildConfigs.For(GuildUser.GuildId).VerifyString;
-							if(!string.IsNullOrWhiteSpace(verifystring) && !conversation.Title.Equals(verifystring, StringComparison.OrdinalIgnoreCase)) {
-								await ErrorAsync("message_wrong_title_try_again").ConfigureAwait(false);
-								return;
-							}
+						using var uow = _db.UnitOfWork;
+						var verifystring = uow.GuildConfigs.For(GuildUser.GuildId).VerifyString;
+						if(!string.IsNullOrWhiteSpace(verifystring) && !conversation.Title.Equals(verifystring, StringComparison.OrdinalIgnoreCase)) {
+							await ErrorAsync("message_wrong_title_try_again").ConfigureAwait(false);
+							return;
 						}
 						var message = conversation.Messages.First().Content;
 
