@@ -214,10 +214,7 @@ namespace Mitternacht.Modules.Administration.Services
                 conf.ChannelByeMessageText = settings.ChannelByeMessageText?.SanitizeMentions();
 
                 conf.AutoDeleteGreetMessagesTimer = settings.AutoDeleteGreetMessagesTimer;
-                conf.AutoDeleteGreetMessages = settings.AutoDeleteGreetMessagesTimer > 0;
-
                 conf.AutoDeleteByeMessagesTimer = settings.AutoDeleteByeMessagesTimer;
-                conf.AutoDeleteByeMessages = settings.AutoDeleteByeMessagesTimer > 0;
 
                 conf.GreetMessageChannelId = settings.GreetMessageChannelId;
                 conf.ByeMessageChannelId = settings.ByeMessageChannelId;

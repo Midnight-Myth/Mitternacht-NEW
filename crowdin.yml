@@ -1,10 +1,5 @@
 files:
-  - source: /src/NadekoBot/data/*/**/*.json
-    ignore:
-      - /src/NadekoBot/data/English
-      - /src/NadekoBot/data/German
-      - '/src/NadekoBot/data/German, Austria'
-      - /src/NadekoBot/_strings/responsestrings/ResponseStrings.*.json
-    translation: /src/NadekoBot/locale/%locale%/data/%original_file_name%
-  - source: /src/NadekoBot/_strings/responsestrings/ResponseStrings.de-DE.json
-    translation: /src/NadekoBot/locale/%locale%/ResponseStrings.json
+  - source: /src/MitternachtBot/data/*/**/*.json
+    translation: /src/MitternachtBot/locale/%locale%/%original_file_name%
+  - source: /src/MitternachtBot/locales/de-DE.yml
+    translation: /src/MitternachtBot/locales/%locale%.yml
