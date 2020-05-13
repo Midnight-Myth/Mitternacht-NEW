@@ -21,14 +21,14 @@ namespace Mitternacht.Modules.Help {
 		private readonly CommandService          _cmds;
 		private readonly GlobalPermissionService _perms;
 
-		public string HelpString   => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
+		public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
 		public string DmHelpString => _config.BotConfig.DMHelpString;
 
 		public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds) {
-			_creds  = creds;
+			_creds = creds;
 			_config = config;
-			_cmds   = cmds;
-			_perms  = perms;
+			_cmds = cmds;
+			_perms = perms;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
