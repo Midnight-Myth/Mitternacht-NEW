@@ -76,7 +76,7 @@ namespace Mitternacht.Services {
 			prefix = prefix.ToLowerInvariant();
 
 			using var uow = _db.UnitOfWork;
-			uow.BotConfig.GetOrCreate(set => set).DefaultPrefix = prefix;
+			uow.BotConfig.GetOrCreate().DefaultPrefix = prefix;
 			uow.Complete();
 
 			_bcp.Reload();

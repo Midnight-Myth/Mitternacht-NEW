@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
@@ -17,9 +16,8 @@ using Mitternacht.Services.Database.Models;
 using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
 
-namespace Mitternacht.Modules.Administration
-{
-    public partial class Administration
+namespace Mitternacht.Modules.Administration {
+	public partial class Administration
     {
         [Group]
         public class SelfCommands : MitternachtSubmodule<SelfService>
@@ -56,9 +54,7 @@ namespace Mitternacht.Modules.Administration
                 };
                 using (var uow = _db.UnitOfWork)
                 {
-                    uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
-                       .StartupCommands.Add(cmd);
+                    uow.BotConfig.GetOrCreate().StartupCommands.Add(cmd);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
@@ -84,7 +80,7 @@ namespace Mitternacht.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     scmds = uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
+                       .GetOrCreate()
                        .StartupCommands
                        .OrderBy(x => x.Id)
                        .ToArray();
@@ -134,9 +130,7 @@ namespace Mitternacht.Modules.Administration
                 StartupCommand cmd;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var cmds = uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
-                       .StartupCommands;
+                    var cmds = uow.BotConfig.GetOrCreate().StartupCommands;
                     cmd = cmds
                        .FirstOrDefault(x => x.CommandText.ToLowerInvariant() == cmdText.ToLowerInvariant());
 
@@ -160,10 +154,7 @@ namespace Mitternacht.Modules.Administration
             {
                 using (var uow = _db.UnitOfWork)
                 {
-                    uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
-                       .StartupCommands
-                       .Clear();
+                    uow.BotConfig.GetOrCreate().StartupCommands.Clear();
                     uow.Complete();
                 }
 

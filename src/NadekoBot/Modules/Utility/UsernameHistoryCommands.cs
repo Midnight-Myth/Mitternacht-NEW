@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Utility {
 			[OwnerOnly]
 			public async Task ToggleUsernameHistory() {
 				using(var uow = _db.UnitOfWork) {
-					var bc      = uow.BotConfig.GetOrCreate(set => set);
+					var bc      = uow.BotConfig.GetOrCreate();
 					var logging = bc.LogUsernames = !bc.LogUsernames;
 					uow.BotConfig.Update(bc);
 					await uow.CompleteAsync().ConfigureAwait(false);
@@ -44,7 +44,7 @@ namespace Mitternacht.Modules.Utility {
 				}
 
 				using(var uow = _db.UnitOfWork) {
-					var globalLogging = uow.BotConfig.GetOrCreate(set => set).LogUsernames;
+					var globalLogging = uow.BotConfig.GetOrCreate().LogUsernames;
 					var gc            = uow.GuildConfigs.For(guild.Id, set => set);
 					var loggingBefore = gc.LogUsernameHistory;
 					if(loggingBefore == toggle) {
