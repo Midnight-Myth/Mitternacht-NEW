@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\NadekoBot\MitternachtBot.csproj" />
+    <ProjectReference Include="..\src\MitternachtBot\MitternachtBot.csproj" />
   </ItemGroup>
 
   <ItemGroup>

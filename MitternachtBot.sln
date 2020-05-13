@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{04929013-5BAB-42B0-B9B2-8F2BB8F16AF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitternachtBot", "src\NadekoBot\MitternachtBot.csproj", "{45EC1473-C678-4857-A544-07DFE0D0B478}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitternachtBot", "src\MitternachtBot\MitternachtBot.csproj", "{45EC1473-C678-4857-A544-07DFE0D0B478}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GommeHDnetForumAPI", "GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj", "{7FC96783-23B7-4D74-A68F-BDCC61418996}"
 EndProject
