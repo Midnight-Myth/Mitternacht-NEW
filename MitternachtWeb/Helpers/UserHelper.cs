@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using MitternachtWeb.Models;
 using Newtonsoft.Json;
