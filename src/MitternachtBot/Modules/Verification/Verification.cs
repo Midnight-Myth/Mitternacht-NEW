@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Verification {
 			} else {
 				await RemoveVerificationDiscord(guildUser).ConfigureAwait(false);
 			}
-			
+
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
