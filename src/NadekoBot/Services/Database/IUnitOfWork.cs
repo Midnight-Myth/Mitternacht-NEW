@@ -19,7 +19,6 @@ namespace Mitternacht.Services.Database
         ICustomReactionRepository CustomReactions { get; }
         ICurrencyRepository Currency { get; }
         ICurrencyTransactionsRepository CurrencyTransactions { get; }
-        IMusicPlaylistRepository MusicPlaylists { get; }
         IPokeGameRepository PokeGame { get; }
         IWaifuRepository Waifus { get; }
         IDiscordUserRepository DiscordUsers { get; }

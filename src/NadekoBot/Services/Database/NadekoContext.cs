@@ -37,7 +37,6 @@ namespace Mitternacht.Services.Database
         public DbSet<BotConfig> BotConfig { get; set; }
         public DbSet<Currency> Currency { get; set; }
         public DbSet<ConvertUnit> ConversionUnits { get; set; }
-        public DbSet<MusicPlaylist> MusicPlaylists { get; set; }
         public DbSet<CustomReaction> CustomReactions { get; set; }
         public DbSet<CurrencyTransaction> CurrencyTransactions { get; set; }
         public DbSet<UserPokeTypes> PokeGame { get; set; }
@@ -260,17 +259,6 @@ namespace Mitternacht.Services.Database
             //logSettingEntity
             //    .HasMany(ls => ls.IgnoredVoicePresenceChannelIds)
             //    .WithOne(ls => ls.LogSetting);
-            #endregion
-
-            #region MusicPlaylists
-            var musicPlaylistEntity = modelBuilder.Entity<MusicPlaylist>();
-
-            musicPlaylistEntity
-                .HasMany(p => p.Songs)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
-
-
             #endregion
 
             #region PokeGame

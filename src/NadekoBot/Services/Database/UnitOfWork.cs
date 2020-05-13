@@ -27,8 +27,6 @@ namespace Mitternacht.Services.Database {
 		public  ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ??= new CurrencyTransactionsRepository(Context);
 		private IUnitConverterRepository        _conUnits;
 		public  IUnitConverterRepository        ConverterUnits => _conUnits ??= new UnitConverterRepository(Context);
-		private IMusicPlaylistRepository        _musicPlaylists;
-		public  IMusicPlaylistRepository        MusicPlaylists => _musicPlaylists ??= new MusicPlaylistRepository(Context);
 		private ICustomReactionRepository       _customReactions;
 		public  ICustomReactionRepository       CustomReactions => _customReactions ??= new CustomReactionsRepository(Context);
 		private IPokeGameRepository             _pokegame;
