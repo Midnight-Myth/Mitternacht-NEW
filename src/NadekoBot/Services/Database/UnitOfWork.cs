@@ -29,8 +29,6 @@ namespace Mitternacht.Services.Database {
 		public  IUnitConverterRepository        ConverterUnits => _conUnits ??= new UnitConverterRepository(Context);
 		private ICustomReactionRepository       _customReactions;
 		public  ICustomReactionRepository       CustomReactions => _customReactions ??= new CustomReactionsRepository(Context);
-		private IPokeGameRepository             _pokegame;
-		public  IPokeGameRepository             PokeGame => _pokegame ??= new PokeGameRepository(Context);
 		private IWaifuRepository                _waifus;
 		public  IWaifuRepository                Waifus => _waifus ??= new WaifuRepository(Context);
 		private IDiscordUserRepository          _discordUsers;

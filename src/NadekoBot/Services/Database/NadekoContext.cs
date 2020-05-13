@@ -39,7 +39,6 @@ namespace Mitternacht.Services.Database
         public DbSet<ConvertUnit> ConversionUnits { get; set; }
         public DbSet<CustomReaction> CustomReactions { get; set; }
         public DbSet<CurrencyTransaction> CurrencyTransactions { get; set; }
-        public DbSet<UserPokeTypes> PokeGame { get; set; }
         public DbSet<WaifuUpdate> WaifuUpdates { get; set; }
         public DbSet<Warning> Warnings { get; set; }
         public DbSet<DailyMoney> DailyMoney { get; set; }
@@ -259,16 +258,6 @@ namespace Mitternacht.Services.Database
             //logSettingEntity
             //    .HasMany(ls => ls.IgnoredVoicePresenceChannelIds)
             //    .WithOne(ls => ls.LogSetting);
-            #endregion
-
-            #region PokeGame
-            var pokeGameEntity = modelBuilder.Entity<UserPokeTypes>();
-
-            pokeGameEntity
-                .HasIndex(pt => pt.UserId)
-                .IsUnique();
-
-
             #endregion
 
             #region CommandPrice
