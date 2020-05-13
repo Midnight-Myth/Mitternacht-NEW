@@ -53,10 +53,10 @@ namespace Mitternacht.Modules.Help {
 					.Where(m => !_perms.BlockedModules.Any(bm => bm.Equals(m.Key.Name, StringComparison.OrdinalIgnoreCase)))
 					.OrderBy(m => m.Key.Name)
 					.Select(m => {
-						var s = $"• {m.Key.Name}";
+						var s = $"{m.Key.Name}";
 						var sms = m.Where(sm => sm.IsSubmodule).ToList();
 						if(sms.Any())
-							s += "\n" + string.Join("\n", sms.Select(sm => $"   • {sm.GetModuleName()}"));
+							s += "\n" + string.Join("\n", sms.Select(sm => $"• {sm.GetModuleName()}"));
 						return s;
 					})));
 			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
