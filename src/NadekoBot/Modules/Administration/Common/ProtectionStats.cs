@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Discord;
 using Mitternacht.Common.Collections;
 using Mitternacht.Services.Database.Models;

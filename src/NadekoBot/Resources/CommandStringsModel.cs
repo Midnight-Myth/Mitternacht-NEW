@@ -1,4 +1,4 @@
-﻿using YamlDotNet.Serialization;
+using YamlDotNet.Serialization;
 
 namespace Mitternacht.Resources {
 	public class CommandStringsModel {

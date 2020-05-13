@@ -1,4 +1,4 @@
-﻿using Discord.WebSocket;
+using Discord.WebSocket;
 using Mitternacht.Modules.Utility.Common;
 using Mitternacht.Services;
 using System.Linq;

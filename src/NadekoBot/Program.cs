@@ -1,4 +1,4 @@
-﻿namespace Mitternacht {
+namespace Mitternacht {
 	public class Program {
 		public static void Main(string[] args) {
 			if(args.Length == 3 && int.TryParse(args[0], out var shardId) && int.TryParse(args[1], out var parentProcessId)) {

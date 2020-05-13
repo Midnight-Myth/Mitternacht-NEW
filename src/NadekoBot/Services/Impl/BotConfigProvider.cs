@@ -1,4 +1,4 @@
-﻿using Mitternacht.Common;
+using Mitternacht.Common;
 using Mitternacht.Services.Database.Models;
 using System;
 using System.Globalization;

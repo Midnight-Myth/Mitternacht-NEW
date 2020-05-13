@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -25,8 +25,9 @@ namespace Mitternacht.Modules.Forum {
 
 		[MitternachtCommand, Usage, Description, Aliases, RequireContext(ContextType.Guild)]
 		public async Task UserInfoForum(IGuildUser user = null) {
-			user = user ?? Context.User as IGuildUser;
-			if(user == null) return;
+			user ??= Context.User as IGuildUser;
+			if(user == null)
+				return;
 
 			UserInfo uinfo = null;
 			using(var uow = _db.UnitOfWork) {
@@ -105,12 +106,18 @@ namespace Mitternacht.Modules.Forum {
 						.AddField(GetText("id"), uinfo.Id, true)
 						.AddField(GetText("gender"), uinfo.Gender.ToString(), true);
 
-			if(!string.IsNullOrWhiteSpace(uinfo.Status   )) embed.AddField(GetText("status"  ), uinfo.Status,          true);
-			if(uinfo.PostCount != null                    ) embed.AddField(GetText("posts"   ), uinfo.PostCount.Value, true);
-			if(uinfo.LikeCount != null                    ) embed.AddField(GetText("likes"   ), uinfo.LikeCount.Value, true);
-			if(uinfo.Trophies  != null                    ) embed.AddField(GetText("trophies"), uinfo.Trophies.Value,  true);
-			if(!string.IsNullOrWhiteSpace(uinfo.Location )) embed.AddField(GetText("location"), uinfo.Location,        true);
-			if(!string.IsNullOrWhiteSpace(uinfo.UserTitle)) embed.AddField(GetText("rank"    ), uinfo.UserTitle,       true);
+			if(!string.IsNullOrWhiteSpace(uinfo.Status))
+				embed.AddField(GetText("status"), uinfo.Status, true);
+			if(uinfo.PostCount != null)
+				embed.AddField(GetText("posts"), uinfo.PostCount.Value, true);
+			if(uinfo.LikeCount != null)
+				embed.AddField(GetText("likes"), uinfo.LikeCount.Value, true);
+			if(uinfo.Trophies != null)
+				embed.AddField(GetText("trophies"), uinfo.Trophies.Value, true);
+			if(!string.IsNullOrWhiteSpace(uinfo.Location))
+				embed.AddField(GetText("location"), uinfo.Location, true);
+			if(!string.IsNullOrWhiteSpace(uinfo.UserTitle))
+				embed.AddField(GetText("rank"), uinfo.UserTitle, true);
 
 			return embed;
 		}

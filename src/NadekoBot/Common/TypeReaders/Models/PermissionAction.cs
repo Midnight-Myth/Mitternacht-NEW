@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Common.TypeReaders.Models
+namespace Mitternacht.Common.TypeReaders.Models
 {
     public class PermissionAction
     {

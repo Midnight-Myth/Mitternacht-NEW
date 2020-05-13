@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Discord;
 using Mitternacht.Extensions;
 using Newtonsoft.Json;

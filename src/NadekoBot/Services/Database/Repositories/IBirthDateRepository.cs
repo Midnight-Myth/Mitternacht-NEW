@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Mitternacht.Modules.Birthday.Models;
 using Mitternacht.Services.Database.Models;

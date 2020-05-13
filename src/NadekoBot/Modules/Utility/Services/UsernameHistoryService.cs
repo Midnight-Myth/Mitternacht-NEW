@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -94,7 +94,7 @@ namespace Mitternacht.Modules.Utility.Services
             bool? guildLogging = null;
             using (var uow = _db.UnitOfWork)
             {
-                globalLogging = uow.BotConfig.GetOrCreate(set => set).LogUsernames;
+                globalLogging = uow.BotConfig.GetOrCreate().LogUsernames;
                 if (guildId != 0)
                     guildLogging = uow.GuildConfigs.For(guildId, set => set)?.LogUsernameHistory;
             }

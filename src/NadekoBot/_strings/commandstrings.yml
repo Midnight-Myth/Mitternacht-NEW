@@ -90,17 +90,6 @@
   -        pay
   desc:    Give someone a certain amount of currency.
   usage:   "`{0}give 1 @SomeGuy`"
-- name:    soundcloudqueue
-  cmd:     soundcloudqueue
-  aliases:
-  -        sq
-  desc:    Queue a soundcloud song using keywords. Bot will join your voice channel. **You must be in a voice channel**.
-  usage:   "`{0}sq Dream Of Venice`"
-- name:    type
-  cmd:     type
-  aliases: []
-  desc:    Get the poketype of the target.
-  usage:   "`{0}type @someone`"
 - name:    pollstats
   cmd:     pollstats
   aliases: []
@@ -112,12 +101,6 @@
   -        uc
   desc:    Sets a command's permission at the user level.
   usage:   '`{0}uc "command name" enable SomeUsername`'
-- name:    playlists
-  cmd:     playlists
-  aliases:
-  -        pls
-  desc:    Lists all playlists. Paginated, 20 per page. Default page is 0.
-  usage:   "`{0}pls 1`"
 - name:    claimpatreonrewards
   cmd:     clparew
   aliases: []
@@ -188,12 +171,6 @@
   -        guide
   desc:    Sends a readme and a guide links to the channel.
   usage:   "`{0}readme` or `{0}guide`"
-- name:    playlist
-  cmd:     playlist
-  aliases:
-  -        pl
-  desc:    Queues up to 500 songs from a youtube playlist specified by a link, or keywords.
-  usage:   "`{0}pl playlist link or name`"
 - name:    cash
   cmd:     cash
   aliases:
@@ -313,12 +290,6 @@
   -        rar
   desc:    Removes all roles from a mentioned user.
   usage:   "`{0}rar @User`"
-- name:    radio
-  cmd:     radio
-  aliases:
-  -        ra
-  desc:    'Queues a radio stream from a link. It can be a direct mp3 radio stream, .m3u, .pls .asx or .xspf (Usage Video: <https://streamable.com/al54>)'
-  usage:   "`{0}ra radio link here`"
 - name:    warnlog
   cmd:     warnlog
   aliases: []
@@ -329,25 +300,12 @@
   aliases: []
   desc:    Forces the update of the list of patrons who are eligible for the reward.
   usage:   "`{0}parewrel`"
-- name:    stop
-  cmd:     stop
-  aliases:
-  -        s
-  desc:    Stops the music and preserves the current song index. Stays in the channel.
-  usage:   "`{0}s`"
 - name:    liststreams
   cmd:     liststreams
   aliases:
   -        ls
   desc:    Lists all streams you are following on this server.
   usage:   "`{0}ls`"
-- name:    queuesearch
-  cmd:     queuesearch
-  aliases:
-  -        qs
-  -        yqs
-  desc:    Search for top 5 youtube song result using keywords, and type the index of the song to play that song. Bot will join your voice channel. **You must be in a voice channel**.
-  usage:   "`{0}qs Dream Of Venice`"
 - name:    kick
   cmd:     kick
   aliases:
@@ -398,12 +356,6 @@
   aliases: []
   desc:    Sets your affinity towards someone you want to be claimed by. Setting affinity will reduce their `{0}claim` on you by 20%. You can leave second argument empty to clear your affinity. 30 minutes cooldown.
   usage:   "`{0}affinity @MyHusband` or `{0}affinity`"
-- name:    volume
-  cmd:     volume
-  aliases:
-  -        vol
-  desc:    Sets the music playback volume (0-100%)
-  usage:   "`{0}vol 50`"
 - name:    logignore
   cmd:     logignore
   aliases: []
@@ -515,17 +467,11 @@
   aliases: []
   desc:    Toggles the automatic deletion of the user's successful command message to prevent chat flood.
   usage:   "`{0}delmsgoncmd`"
-- name:    fairplay
-  cmd:     fairplay
-  aliases:
-  -        fp
-  desc:    Toggles fairplay. While enabled, the bot will prioritize songs from users who didn't have their song recently played instead of the song's position in the queue.
-  usage:   "`{0}fp`"
 - name:    addplaying
   cmd:     addplaying
   aliases:
   -        adpl
-  desc:    'Adds a specified string to the list of playing strings to rotate. Supported placeholders: `%servers%`, `%users%`, `%playing%`, `%queued%`, `%time%`, `%shardid%`, `%shardcount%`, `%shardguilds%`.'
+  desc:    'Adds a specified string to the list of playing strings to rotate. Supported placeholders: `%servers%`, `%users%`, `%time%`, `%shardid%`, `%shardcount%`, `%shardguilds%`.'
   usage:   "`{0}adpl`"
 - name:    remind
   cmd:     remind
@@ -537,12 +483,6 @@
   aliases: []
   desc:    Starts a new animal race.
   usage:   "`{0}race`"
-- name:    pokemonability
-  cmd:     pokemonability
-  aliases:
-  -        pokeab
-  desc:    Searches for a pokemon ability.
-  usage:   "`{0}pokeab overgrow`"
 - name:    commandcost
   cmd:     commandcost
   aliases:
@@ -773,18 +713,6 @@
   aliases: []
   desc:    Either [add]s or [rem]oves a channel specified by an ID from a blacklist.
   usage:   "`{0}cbl rem 12312312312`"
-- name:    listqueue
-  cmd:     listqueue
-  aliases:
-  -        lq
-  desc:    Lists 10 currently queued songs per page. Default page is 1.
-  usage:   "`{0}lq` or `{0}lq 2`"
-- name:    setmaxplaytime
-  cmd:     setmaxplaytime
-  aliases:
-  -        smp
-  desc:    Sets a maximum number of seconds (>14) a song can run before being skipped automatically. Set 0 to have no limit.
-  usage:   "`{0}smp 0` or `{0}smp 270`"
 - name:    userinfo
   cmd:     userinfo
   aliases:
@@ -824,12 +752,6 @@
   aliases: []
   desc:    Draws a card from the NEW deck of cards. You can draw up to 10 cards by supplying a number of cards to draw.
   usage:   "`{0}drawnew` or `{0}drawnew 5`"
-- name:    nowplaying
-  cmd:     nowplaying
-  aliases:
-  -        np
-  desc:    Shows the song that the bot is currently playing.
-  usage:   "`{0}np`"
 - name:    nroll
   cmd:     nroll
   aliases: []
@@ -841,12 +763,6 @@
   -        bf
   desc:    Bet to guess will the result be heads or tails. Guessing awards you 1.95x the currency you've bet (rounded up). Multiplier can be changed by the bot owner.
   usage:   "`{0}bf 5 heads` or `{0}bf 3 t`"
-- name:    movelist
-  cmd:     movelist
-  aliases:
-  -        ml
-  desc:    Lists the moves you are able to use
-  usage:   "`{0}ml`"
 - name:    allrolemdls
   cmd:     allrolemdls
   aliases:
@@ -931,12 +847,6 @@
   aliases: []
   desc:    Adds an item to the shop by specifying type price and name. Available types are role and list.
   usage:   "`{0}shopadd role 1000 Rich`"
-- name:    local
-  cmd:     local
-  aliases:
-  -        lo
-  desc:    Queues a local file by specifying a full path.
-  usage:   "`{0}lo C:/music/mysong.mp3`"
 - name:    permrole
   cmd:     permrole
   aliases:
@@ -1009,11 +919,6 @@
   aliases: []
   desc:    Starts a typing contest.
   usage:   "`{0}typestart`"
-- name:    load
-  cmd:     load
-  aliases: []
-  desc:    Loads a saved playlist using its ID. Use `{0}pls` to list all saved playlists and `{0}save` to save new ones.
-  usage:   "`{0}load 5`"
 - name:    mute
   cmd:     mute
   aliases: []
@@ -1048,18 +953,6 @@
   -        hs
   desc:    Searches for a Hearthstone card and shows its image. Takes a while to complete.
   usage:   "`{0}hs Ysera`"
-- name:    setmusicchannel
-  cmd:     setmusicchannel
-  aliases:
-  -        smch
-  desc:    Sets the current channel as the default music output channel. This will output playing, finished, paused and removed songs to that channel instead of the channel where the first song was queued in.
-  usage:   "`{0}smch`"
-- name:    songautodelete
-  cmd:     songautodelete
-  aliases:
-  -        sad
-  desc:    Toggles whether the song should be automatically removed from the music queue when it finishes playing.
-  usage:   "`{0}sad`"
 - name:    atfbooru
   cmd:     atfbooru
   aliases:
@@ -1089,12 +982,6 @@
   aliases: []
   desc:    Zeigt alle Rollen an, die selbst zugewiesen werden können.
   usage:   "`{0}lsar`"
-- name:    play
-  cmd:     play
-  aliases:
-  -        start
-  desc:    If no arguments are specified, acts as `{0}next 1` command. If you specify a song number, it will jump to that song. If you specify a search query, acts as a `{0}q` command
-  usage:   "`{0}play` or `{0}play 5` or `{0}play Dream Of Venice`"
 - name:    streamrolekeyword
   cmd:     streamrolekw
   aliases:
@@ -1143,13 +1030,6 @@
   -        langsetd
   desc:    Sets the bot's default response language. All servers which use a default locale will use this one. Setting to `default` will use the host's current culture. Provide no arguments to see currently set language.
   usage:   "`{0}langsetd en-US` or `{0}langsetd default`"
-- name:    shuffleplaylist
-  cmd:     shuffle
-  aliases:
-  -        sh
-  -        plsh
-  desc:    Shuffles the current playlist.
-  usage:   "`{0}plsh`"
 - name:    verbose
   cmd:     verbose
   aliases:
@@ -1161,12 +1041,6 @@
   aliases: []
   desc:    Draws a card from this server's deck. You can draw up to 10 cards by supplying a number of cards to draw.
   usage:   "`{0}draw` or `{0}draw 5`"
-- name:    move
-  cmd:     move
-  aliases:
-  -        mv
-  desc:    Moves the bot to your voice channel. (works only if music is already playing)
-  usage:   "`{0}mv`"
 - name:    trivia
   cmd:     trivia
   aliases:
@@ -1310,12 +1184,6 @@
   aliases: []
   desc:    Displays a user's top 5 plays.
   usage:   "`{0}osu5 Name`"
-- name:    reptcursong
-  cmd:     reptcursong
-  aliases:
-  -        rcs
-  desc:    Toggles repeat of current song.
-  usage:   "`{0}rcs`"
 - name:    half
   cmd:     half
   aliases: []
@@ -1371,18 +1239,6 @@
   aliases: []
   desc:    Toggles anouncements on the current channel when someone leaves the server.
   usage:   "`{0}bye`"
-- name:    localpl
-  cmd:     localplaylst
-  aliases:
-  -        lopl
-  desc:    Queues all songs from a directory.
-  usage:   "`{0}lopl C:/music/classical`"
-- name:    soundcloudpl
-  cmd:     soundcloudpl
-  aliases:
-  -        scpl
-  desc:    Queue a Soundcloud playlist using a link.
-  usage:   "`{0}scpl soundcloudseturl`"
 - name:    iam
   cmd:     iam
   aliases:
@@ -1493,12 +1349,6 @@
   -        mcping
   desc:    Pings a minecraft server.
   usage:   "`{0}mcping 127.0.0.1:25565`"
-- name:    destroy
-  cmd:     destroy
-  aliases:
-  -        d
-  desc:    Completely stops the music and unbinds the bot from the channel. (may cause weird behaviour)
-  usage:   "`{0}d`"
 - name:    removeplaying
   cmd:     removeplaying
   aliases:
@@ -1626,12 +1476,6 @@
   aliases: []
   desc:    Sets the bots activity.
   usage:   "`{0}setactivity <playing|listening|streaming|watching> [string]`"
-- name:    autoplay
-  cmd:     autoplay
-  aliases:
-  -        ap
-  desc:    Toggles autoplay - When the song is finished, automatically queue a related Youtube song. (Works only for Youtube songs and when queue is empty)
-  usage:   "`{0}ap`"
 - name:    autotranslate
   cmd:     autotrans
   aliases:
@@ -1675,11 +1519,6 @@
   -        srlb
   desc:    Setzt das benötigte Level für eine Rolle.
   usage:   "`{0}setrolelevelbinding <role> <minlevel>`"
-- name:    heal
-  cmd:     heal
-  aliases: []
-  desc:    'Heals someone. Revives those who fainted. Costs a Currency. '
-  usage:   "`{0}heal @someone`"
 - name:    allusrmdls
   cmd:     allusrmdls
   aliases:
@@ -1697,17 +1536,6 @@
   aliases: []
   desc:    Shows a total 5 images (from gelbooru, danbooru, konachan, yandere and atfbooru). Tag is optional but preferred.
   usage:   "`{0}hentaibomb yuri`"
-- name:    settype
-  cmd:     settype
-  aliases: []
-  desc:    Set your poketype. Costs a Currency. Provide no arguments to see a list of available types.
-  usage:   "`{0}settype fire` or `{0}settype`"
-- name:    queuenext
-  cmd:     queuenext
-  aliases:
-  -        qn
-  desc:    Works the same as `{0}queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.
-  usage:   "`{0}qn Dream Of Venice`"
 - name:    defprefix
   cmd:     defprefix
   aliases: []
@@ -1752,12 +1580,6 @@
   aliases: []
   desc:    Takes a certain amount of currency from someone.
   usage:   "`{0}take 1 @SomeGuy`"
-- name:    deleteplaylist
-  cmd:     deleteplaylist
-  aliases:
-  -        delpls
-  desc:    Deletes a saved playlist. Works only if you made it or if you are the bot owner.
-  usage:   "`{0}delpls animu-5`"
 - name:    unmute
   cmd:     unmute
   aliases: []
@@ -1835,12 +1657,6 @@
   aliases: []
   desc:    Shows the total stats of the slot command for this bot's session.
   usage:   "`{0}slotstats`"
-- name:    defvol
-  cmd:     defvol
-  aliases:
-  -        dv
-  desc:    Sets the default music volume when music playback is started (0-100). Persists through restarts.
-  usage:   "`{0}dv 80`"
 - name:    streamroleblacklist
   cmd:     streamrolebl
   aliases:
@@ -1888,29 +1704,11 @@
   aliases: []
   desc:    Lists this server's administrators' shop. Paginated.
   usage:   "`{0}shop` or `{0}shop 2`"
-- name:    repeatpl
-  cmd:     rpeatplaylst
-  aliases:
-  -        rpl
-  desc:    Toggles repeat of all songs in the queue (every song that finishes is added to the end of the queue).
-  usage:   "`{0}rpl`"
-- name:    next
-  cmd:     next
-  aliases:
-  -        n
-  desc:    Goes to the next song in the queue. You have to be in the same voice channel as the bot. You can skip multiple songs, but in that case songs will not be requeued if {0}rcs or {0}rpl is enabled.
-  usage:   "`{0}n` or `{0}n 5`"
 - name:    rolluo
   cmd:     rolluo
   aliases: []
   desc:    Rolls `X` normal dice (up to 30) unordered. If you split 2 numbers with letter `d` (`xdy`) it will roll `X` dice from 1 to `y`.
   usage:   "`{0}rolluo` or `{0}rolluo 7` or `{0}rolluo 3d5`"
-- name:    songremove
-  cmd:     songremove
-  aliases:
-  -        srm
-  desc:    'Remove a song by its # in the queue, or ''all'' to remove all songs from the queue and reset the song index.'
-  usage:   "`{0}srm 5`"
 - name:    deckshuffle
   cmd:     deckshuffle
   aliases:
@@ -1945,12 +1743,6 @@
   -        cfi
   desc:    Toggles automatic deletion of invites posted in the channel. Does not negate the `{0}srvrfilterinv` enabled setting. Does not affect the Bot Owner.
   usage:   "`{0}cfi`"
-- name:    pokemon
-  cmd:     pokemon
-  aliases:
-  -        poke
-  desc:    Searches for a pokemon.
-  usage:   "`{0}poke Sylveon`"
 - name:    deltxtchanl
   cmd:     deltxtchanl
   aliases:
@@ -1990,12 +1782,6 @@
   aliases: []
   desc:    Resets the counters on `{0}crstats`. You can specify a trigger to clear stats only for that trigger.
   usage:   "`{0}crstatsclear` or `{0}crstatsclear rng`"
-- name:    movesong
-  cmd:     movesong
-  aliases:
-  -        ms
-  desc:    Moves a song from one position to another.
-  usage:   "`{0}ms 5>3`"
 - name:    setrole
   cmd:     setrole
   aliases:
@@ -2177,23 +1963,12 @@
   aliases: []
   desc:    Shows a random hentai image from e621.net with a given tag. Tag is optional but preferred. Use spaces for multiple tags.
   usage:   "`{0}e621 yuri kissing`"
-- name:    setmaxqueue
-  cmd:     setmaxqueue
-  aliases:
-  -        smq
-  desc:    Sets a maximum queue size. Supply 0 or no argument to have no limit.
-  usage:   "`{0}smq 50` or `{0}smq`"
 - name:    imdb
   cmd:     imdb
   aliases:
   -        omdb
   desc:    Queries omdb for movies or series, show first result.
   usage:   "`{0}imdb Batman vs Superman`"
-- name:    attack
-  cmd:     attack
-  aliases: []
-  desc:    Attacks a target with the given move. Use `{0}movelist` to see a list of moves your type can use.
-  usage:   '`{0}attack "vine whip" @someguy`'
 - name:    showquote
   cmd:     ".."
   aliases: []
@@ -2242,12 +2017,6 @@
   aliases: []
   desc:    Toggles whether messages will be forwarded to all bot owners or only to the first one specified in the credentials.json file
   usage:   "`{0}fwtoall`"
-- name:    pause
-  cmd:     pause
-  aliases:
-  -        p
-  desc:    Pauses or Unpauses the song.
-  usage:   "`{0}p`"
 - name:    showemojis
   cmd:     showemojis
   aliases:
@@ -2270,11 +2039,6 @@
   -        rlb
   desc:    Zeigt eine Liste von Rollen und dem für sie benötigten Level.
   usage:   "`{0}rolelevelbindings [count] [position]`"
-- name:    save
-  cmd:     save
-  aliases: []
-  desc:    Saves a playlist under a certain name. Playlist name must be no longer than 20 characters and must not contain dashes.
-  usage:   "`{0}save classical1`"
 - name:    yodify
   cmd:     yodify
   aliases:

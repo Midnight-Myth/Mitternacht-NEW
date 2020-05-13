@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using System.Collections.Generic;
 
 namespace MitternachtWeb.Models {

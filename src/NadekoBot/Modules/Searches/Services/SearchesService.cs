@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -27,11 +27,6 @@ namespace Mitternacht.Modules.Searches.Services
         public ConcurrentDictionary<ulong, bool> TranslatedChannels { get; } = new ConcurrentDictionary<ulong, bool>();
         public ConcurrentDictionary<UserChannelPair, string> UserLanguages { get; } = new ConcurrentDictionary<UserChannelPair, string>();
         
-        public readonly string PokemonAbilitiesFile = "data/pokemon/pokemon_abilities7.json";
-        public readonly string PokemonListFile = "data/pokemon/pokemon_list7.json";
-        public Dictionary<string, SearchPokemon> Pokemons { get; } = new Dictionary<string, SearchPokemon>();
-        public Dictionary<string, SearchPokemonAbility> PokemonAbilities { get; } = new Dictionary<string, SearchPokemonAbility>();
-
         public List<WoWJoke> WowJokes { get; } = new List<WoWJoke>();
         public List<MagicItem> MagicItems { get; } = new List<MagicItem>();
 
@@ -84,18 +79,6 @@ namespace Mitternacht.Modules.Searches.Services
                 });
                 return Task.CompletedTask;
             };
-
-            //pokemon commands
-            if (File.Exists(PokemonListFile))
-            {
-                Pokemons = JsonConvert.DeserializeObject<Dictionary<string, SearchPokemon>>(File.ReadAllText(PokemonListFile));
-            }
-            else
-                _log.Warn(PokemonListFile + " is missing. Pokemon abilities not loaded.");
-            if (File.Exists(PokemonAbilitiesFile))
-                PokemonAbilities = JsonConvert.DeserializeObject<Dictionary<string, SearchPokemonAbility>>(File.ReadAllText(PokemonAbilitiesFile));
-            else
-                _log.Warn(PokemonAbilitiesFile + " is missing. Pokemon abilities not loaded.");
 
             //joke commands
             if (File.Exists("data/wowjokes.json"))

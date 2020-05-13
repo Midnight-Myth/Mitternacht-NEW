@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -37,10 +37,8 @@ namespace Mitternacht.Services.Database
         public DbSet<BotConfig> BotConfig { get; set; }
         public DbSet<Currency> Currency { get; set; }
         public DbSet<ConvertUnit> ConversionUnits { get; set; }
-        public DbSet<MusicPlaylist> MusicPlaylists { get; set; }
         public DbSet<CustomReaction> CustomReactions { get; set; }
         public DbSet<CurrencyTransaction> CurrencyTransactions { get; set; }
-        public DbSet<UserPokeTypes> PokeGame { get; set; }
         public DbSet<WaifuUpdate> WaifuUpdates { get; set; }
         public DbSet<Warning> Warnings { get; set; }
         public DbSet<DailyMoney> DailyMoney { get; set; }
@@ -83,26 +81,6 @@ namespace Mitternacht.Services.Database
             if (BotConfig.Any()) return;
             var bc = new BotConfig();
 
-            bc.ModulePrefixes.AddRange(new HashSet<ModulePrefix>
-            {
-                new ModulePrefix { ModuleName = "Administration", Prefix = "." },
-                new ModulePrefix { ModuleName = "Searches", Prefix = "~" },
-                new ModulePrefix { ModuleName = "Translator", Prefix = "~" },
-                new ModulePrefix { ModuleName = "NSFW", Prefix = "~" },
-                new ModulePrefix { ModuleName = "ClashOfClans", Prefix = "," },
-                new ModulePrefix { ModuleName = "Help", Prefix = "-" },
-                new ModulePrefix { ModuleName = "Music", Prefix = "!!" },
-                new ModulePrefix { ModuleName = "Trello", Prefix = "trello" },
-                new ModulePrefix { ModuleName = "Games", Prefix = ">" },
-                new ModulePrefix { ModuleName = "Gambling", Prefix = "$" },
-                new ModulePrefix { ModuleName = "Permissions", Prefix = ";" },
-                new ModulePrefix { ModuleName = "Pokemon", Prefix = ">" },
-                new ModulePrefix { ModuleName = "Utility", Prefix = "." },
-                new ModulePrefix { ModuleName = "CustomReactions", Prefix = "." },
-                new ModulePrefix { ModuleName = "PokeGame", Prefix = ">" }, 
-                new ModulePrefix { ModuleName = "Level", Prefix = "!"},
-                new ModulePrefix { ModuleName = "Verification", Prefix = "." }
-            });
             bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
             {
                 new RaceAnimal { Icon = "🐼", Name = "Panda" },
@@ -260,27 +238,6 @@ namespace Mitternacht.Services.Database
             //logSettingEntity
             //    .HasMany(ls => ls.IgnoredVoicePresenceChannelIds)
             //    .WithOne(ls => ls.LogSetting);
-            #endregion
-
-            #region MusicPlaylists
-            var musicPlaylistEntity = modelBuilder.Entity<MusicPlaylist>();
-
-            musicPlaylistEntity
-                .HasMany(p => p.Songs)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-            #endregion
-
-            #region PokeGame
-            var pokeGameEntity = modelBuilder.Entity<UserPokeTypes>();
-
-            pokeGameEntity
-                .HasIndex(pt => pt.UserId)
-                .IsUnique();
-
-
             #endregion
 
             #region CommandPrice

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;

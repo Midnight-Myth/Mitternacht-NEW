@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,19 +8,16 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Modules.Music.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
 
-namespace Mitternacht.Modules.Administration
-{
-    public partial class Administration
+namespace Mitternacht.Modules.Administration {
+	public partial class Administration
     {
         [Group]
         public class SelfCommands : MitternachtSubmodule<SelfService>
@@ -30,16 +27,13 @@ namespace Mitternacht.Modules.Administration
             private static readonly object Locker = new object();
             private readonly DiscordSocketClient _client;
             private readonly IImagesService _images;
-            private readonly MusicService _music;
             private readonly IBotConfigProvider _bc;
 
-            public SelfCommands(DbService db, DiscordSocketClient client,
-                MusicService music, IImagesService images, IBotConfigProvider bc)
+            public SelfCommands(DbService db, DiscordSocketClient client, IImagesService images, IBotConfigProvider bc)
             {
                 _db = db;
                 _client = client;
                 _images = images;
-                _music = music;
                 _bc = bc;
             }
 
@@ -60,9 +54,7 @@ namespace Mitternacht.Modules.Administration
                 };
                 using (var uow = _db.UnitOfWork)
                 {
-                    uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
-                       .StartupCommands.Add(cmd);
+                    uow.BotConfig.GetOrCreate().StartupCommands.Add(cmd);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
 
@@ -88,7 +80,7 @@ namespace Mitternacht.Modules.Administration
                 using (var uow = _db.UnitOfWork)
                 {
                     scmds = uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
+                       .GetOrCreate()
                        .StartupCommands
                        .OrderBy(x => x.Id)
                        .ToArray();
@@ -138,9 +130,7 @@ namespace Mitternacht.Modules.Administration
                 StartupCommand cmd;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var cmds = uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
-                       .StartupCommands;
+                    var cmds = uow.BotConfig.GetOrCreate().StartupCommands;
                     cmd = cmds
                        .FirstOrDefault(x => x.CommandText.ToLowerInvariant() == cmdText.ToLowerInvariant());
 
@@ -164,10 +154,7 @@ namespace Mitternacht.Modules.Administration
             {
                 using (var uow = _db.UnitOfWork)
                 {
-                    uow.BotConfig
-                       .GetOrCreate(set => set.Include(x => x.StartupCommands))
-                       .StartupCommands
-                       .Clear();
+                    uow.BotConfig.GetOrCreate().StartupCommands.Clear();
                     uow.Complete();
                 }
 
@@ -268,7 +255,6 @@ namespace Mitternacht.Modules.Administration
                 try { await ReplyConfirmLocalized("shutting_down").ConfigureAwait(false); } catch { /*ignored*/ }
 
                 await Task.Delay(500).ConfigureAwait(false);
-                try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { /*ignored*/ }
 
 				await Task.WhenAny(Task.Run(async () => {
 					await _client.StopAsync();

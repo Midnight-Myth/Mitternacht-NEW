@@ -8,21 +8,21 @@
 - [Games](#games)
 - [Level](#level)
 - [Minecraft](#minecraft)
-- [Music](#music)
 - [NSFW](#nsfw)
 - [Permissions](#permissions)
-- [Pokemon](#pokemon)
 - [Searches](#searches)
 - [Utility](#utility)
 - [Verification](#verification)
 
 
 ### Administration  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.delmsgoncmd` | Toggles the automatic deletion of the user's successful command message to prevent chat flood. **Benötigt Serverrecht Administrator.** | `.delmsgoncmd`
 `.setrole` `.sr` | Sets a role for a given user. **Benötigt Serverrecht ManageRoles.** | `.sr @User Guest`
 `.removerole` `.rr` | Removes a role from a given user. **Benötigt Serverrecht ManageRoles.** | `.rr @User Admin`
+`.addroleforall` | Fügt allen Benutzern auf diesem Server die angegebene Rolle hinzu. **Benötigt Serverrecht Administrator.** | `.addroleforall <rolle>`
+`.removeroleforall` | Entfernt die angegebene Rolle von allen Benutzern auf diesem Server. **Benötigt Serverrecht Administrator.** | `.removeroleforall <rolle>`
 `.renamerole` `.renr` | Renames a role. The role you are renaming must be lower than bot's highest role. **Benötigt Serverrecht ManageRoles.** | `.renr "First role" SecondRole`
 `.removeallroles` `.rar` | Removes all roles from a mentioned user. **Benötigt Serverrecht ManageRoles.** | `.rar @User`
 `.createrole` `.cr` | Creates a role with a given name. **Benötigt Serverrecht ManageRoles.** | `.cr Awesome Role`
@@ -49,6 +49,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.logignore` | Toggles whether the `.logserver` command ignores this channel. Useful if you have hidden admin channel and public log channel. **Benötigt Serverrecht Administrator.** **Nur Bot-Besitzer** | `.logignore`
 `.logevents` | Shows a list of all events you can subscribe to with `.log` **Benötigt Serverrecht Administrator.** **Nur Bot-Besitzer** | `.logevents`
 `.log` | Toggles logging event. Disables it if it is active anywhere on the server. Enables if it isn't active. Use `.logevents` to see a list of all events you can subscribe to. **Benötigt Serverrecht Administrator.** **Nur Bot-Besitzer** | `.log userpresence` or `.log userbanned`
+`.loglist` | Zeigt eine Liste aller Logevents und der zugewiesenen Kanäle an. **Benötigt Serverrecht Administrator.** **Nur Bot-Besitzer** | `.loglist`
 `.migratedata` | Migrate data from old bot configuration **Nur Bot-Besitzer** | `.migratedata`
 `.replacedefaultlevelmodelguild` | Ersetzt die Standardgilde der Id 0 für jeden Eintrag in der DB-Tabelle LevelModel mit der angegebenen Id. **Nur Bot-Besitzer** | `.replacedefaultlevelmodelguild <guildId>`
 `.setguildconfigleveldefaults` | Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück. **Nur Bot-Besitzer** | `.setguildconfigleveldefaults [guildId1] ... [guildIdX]`
@@ -61,7 +62,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.voicemute` | Prevents a mentioned user from speaking in voice channels. **Benötigt Serverrecht MuteMembers.** | `.voicemute @Someone`
 `.voiceunmute` | Gives a previously voice-muted user a permission to speak. **Benötigt Serverrecht MuteMembers.** | `.voiceunmute @Someguy`
 `.rotateplaying` `.ropl` | Toggles rotation of playing status of the dynamic strings you previously specified. **Nur Bot-Besitzer** | `.ropl`
-`.addplaying` `.adpl` | Adds a specified string to the list of playing strings to rotate. Supported placeholders: `%servers%`, `%users%`, `%playing%`, `%queued%`, `%time%`, `%shardid%`, `%shardcount%`, `%shardguilds%`. **Nur Bot-Besitzer** | `.adpl`
+`.addplaying` `.adpl` | Adds a specified string to the list of playing strings to rotate. Supported placeholders: `%servers%`, `%users%`, `%time%`, `%shardid%`, `%shardcount%`, `%shardguilds%`. **Nur Bot-Besitzer** | `.adpl`
 `.listplaying` `.lipl` | Lists all playing statuses with their corresponding number. **Nur Bot-Besitzer** | `.lipl`
 `.removeplaying` `.rmpl` `.repl` | Removes a playing string on a given number. **Nur Bot-Besitzer** | `.rmpl`
 `.prefix` | Sets this server's prefix for all bot commands. Provide no arguments to see the current server prefix.  | `.prefix +`
@@ -71,15 +72,13 @@ Befehle und Alias | Beschreibung | Verwendung
 `.antispamignore` | Toggles whether antispam ignores current channel. Antispam must be enabled. **Benötigt Serverrecht Administrator.** | `.antispamignore`
 `.antilist` `.antilst` | Shows currently enabled protection features.  | `.antilist`
 `.prune` `.clear` | `.prune` removes all Mitternacht's messages in the last 100 messages. `.prune X` removes last `X` number of messages from the channel (up to 100). `.prune @Someone` removes all Someone's messages in the last 100 messages. `.prune @Someone X` removes last `X` number of 'Someone's' messages in the channel. **Benötigt Kanalrecht ManageMessages.** | `.prune` or `.prune 5` or `.prune @Someone` or `.prune @Someone X`
-`.slowmode` | Toggles slowmode. Disable by specifying no parameters. To enable, specify a number of messages each user can send, and an interval in seconds. For example 1 message every 5 seconds. **Benötigt Serverrecht ManageMessages.** | `.slowmode 1 5` or `.slowmode`
-`.slowmodewl` | Ignores a role or a user from the slowmode feature. **Benötigt Serverrecht ManageMessages.** | `.slowmodewl SomeRole` or `.slowmodewl AdminDude`
 `.adsarm` | Toggles the automatic deletion of confirmations for `.iam` and `.iamn` commands. **Benötigt Serverrecht ManageMessages.** | `.adsarm`
 `.asar` | Adds a role to the list of self-assignable roles. **Benötigt Serverrecht ManageRoles.** | `.asar Gamer`
 `.rsar` | Removes a specified role from the list of self-assignable roles. **Benötigt Serverrecht ManageRoles.** | `.rsar`
 `.lsar` | Zeigt alle Rollen an, die selbst zugewiesen werden können.  | `.lsar`
 `.togglexclsar` `.tesar` | Toggles whether the self-assigned roles are exclusive. (So that any person can have only one of the self assignable roles) **Benötigt Serverrecht ManageRoles.** | `.tesar`
-`.iam` `.ibims` | Adds a role to you that you choose. Role must be on a list of self-assignable roles.  | `.iam Gamer`
-`.iamnot` `.iamn` `.ibimsk1` | Removes a specified role from you. Role must be on a list of self-assignable roles.  | `.iamn Gamer`
+`.iam` `.ibims` `.ichhab` | Adds a role to you that you choose. Role must be on a list of self-assignable roles.  | `.iam Gamer`
+`.iamnot` `.iamn` `.ibimsk1` `.ichhabkein` | Removes a specified role from you. Role must be on a list of self-assignable roles.  | `.iamn Gamer`
 `.scadd` | Adds a command to the list of commands which will be executed automatically in the current channel, in the order they were added in, by the bot when it startups up. **Nur Bot-Besitzer** | `.scadd .stats`
 `.sclist` | Lists all startup commands in the order they will be executed in. **Nur Bot-Besitzer** | `.sclist`
 `.wait` | Used only as a startup command. Waits a certain number of miliseconds before continuing the execution of the following startup commands. **Nur Bot-Besitzer** | `.wait 3000`
@@ -95,7 +94,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.setavatar` `.setav` | Sets a new avatar image for the MitternachtBot. Argument is a direct link to an image. **Nur Bot-Besitzer** | `.setav http://i.imgur.com/xTG3a1I.jpg`
 `.setactivity` | Sets the bots activity. **Nur Bot-Besitzer** | `.setactivity <playing|listening|streaming|watching> [string]`
 `.setstream` | Sets the bots stream. First argument is the twitch link, second argument is stream name. **Nur Bot-Besitzer** | `.setstream TWITCHLINK Hello`
-`.send` | Sends a message to someone on a different server through the bot.  Separate server and channel/user ids with `|` and prefix the channel id with `c:` and the user id with `u:`. **Nur Bot-Besitzer** | `.send serverid|c:channelid message` or `.send serverid|u:userid message`
+`.send` | Sends a message to someone on a different server through the bot. Separate server and channel/user ids with `|` and prefix the channel id with `c:` and the user id with `u:`. **Nur Bot-Besitzer** | `.send serverid|c:channelid message` or `.send serverid|u:userid message`
 `.announce` | Sends a message to all servers' default channel that bot is connected to. **Nur Bot-Besitzer** | `.announce Useless spam`
 `.reloadimages` | Reloads images bot is using. Safe to use even when bot is being used heavily. **Nur Bot-Besitzer** | `.reloadimages`
 `.greetdel` `.grdel` | Sets the time it takes (in seconds) for greet messages to be auto-deleted. Set it to 0 to disable automatic deletion. **Benötigt Serverrecht ManageServer.** | `.greetdel 0` or `.greetdel 30`
@@ -106,6 +105,9 @@ Befehle und Alias | Beschreibung | Verwendung
 `.bye` | Toggles anouncements on the current channel when someone leaves the server. **Benötigt Serverrecht ManageServer.** | `.bye`
 `.byemsg` | Sets a new leave announcement message. Type `%user%` if you want to show the name the user who left. Type `%id%` to show id. Using this command with no message will show the current bye message. You can use embed json from <https://embedbuilder.nadekobot.me/> instead of a regular text, if you want the message to be embedded. **Benötigt Serverrecht ManageServer.** | `.byemsg %user% has left.`
 `.byedel` | Sets the time it takes (in seconds) for bye messages to be auto-deleted. Set it to `0` to disable automatic deletion. **Benötigt Serverrecht ManageServer.** | `.byedel 0` or `.byedel 30`
+`.slowmodenative` `.slowmoden` | **Native-Slowmode-Beta** Aktiviert den Slowmode mit 1 Nachricht pro Intervallzeit (in Sekunden). Deaktiviert den Slowmode mit Intervall 0 (default). **Benötigt Serverrecht ManageMessages.** | `.slowmodenative [interval = 0]`
+`.slowmode` | Toggles slowmode. Disable by specifying no parameters. To enable, specify a number of messages each user can send, and an interval in seconds. For example 1 message every 5 seconds. **Benötigt Serverrecht ManageMessages.** | `.slowmode 1 5` or `.slowmode`
+`.slowmodewl` | Ignores a role or a user from the slowmode feature. **Benötigt Serverrecht ManageMessages.** | `.slowmodewl SomeRole` or `.slowmodewl AdminDude`
 `.execsql` | Führt einen SQL Query nach Bestätigung aus. **Nur Bot-Besitzer** | `.execsql <query>`
 `.timezones` | Lists all timezones available on the system to be used with `.timezone`.  | `.timezones`
 `.timezone` | Sets this guilds timezone. This affects bot's time output in this server (logs, etc..)  | `.timezone` or `.timezone GMT Standard Time`
@@ -130,7 +132,7 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Birthday  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.birthdayset` | Setzt den eigenen Geburtstag. Die Angabe des Geburtsjahres ist optional. **Nur einmal verwendbar!**  | `.birthdayset <dd.MM.yyyy oder dd.MM.>`
 `.birthdayremove` | Entfernt den Geburtstag eines Users. **Nur Bot-Besitzer** | `.birthdayremove [user]`
@@ -143,11 +145,13 @@ Befehle und Alias | Beschreibung | Verwendung
 `.birthdaymessagechannelremove` `.birthdaymsgchremove` | Entfernt den aktuellen Kanal für Geburtstagsnachrichten. Diese werden damit deaktiviert. **Nur Bot-Besitzer** | `.birthdayrole [rolle]`
 `.birthdaymessage` `.birthdaymsg` | Setzt die Geburtstagsnachricht. . wird mit den Usern ersetzt, die Geburtstag haben. **Nur Bot-Besitzer** | `.birthdaymessage [msg]`
 `.birthdayreactions` | Aktiviert oder deaktiviert das Reagieren des Bots auf aktuelle Geburtstage. **Nur Bot-Besitzer** | `.birthdayreactions <true|false>`
+`.birthdaymoney` | Zeigt das aktuelle Geburtstagsgeld an oder setzt es. **Nur Bot-Besitzer** | `.birthdaymoney [Betrag]`
+`.birthdaymessageevent` `.bdme` | Zeigt an oder legt fest, ob der Nutzer Geburtstagsnachrichten bekommt.  | `.birthdaymessageevent [true|false]`
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### CustomReactions  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.addcustreact` `.acr` | Add a custom reaction with a trigger and a response. Running this command in server requires the Administration permission. Running this command in DM is Bot Owner only and adds a new global custom reaction. Guide here: <https://nadekobot.readthedocs.io/en/latest/Custom%20Reactions/>  | `.acr "hello" Hi there %user%`
 `.listcustreact` `.lcr` | Lists global or server custom reactions (20 commands per page). Running the command in DM will list global custom reactions, while running it in server will list that server's custom reactions. Specifying `all` argument instead of the number will DM you a text file with a list of all custom reactions.  | `.lcr 1` or `.lcr all`
@@ -163,17 +167,27 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Forum  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.reinitforum` | Starte die Reinitialisierung der Foruminstanz. **Nur Bot-Besitzer** | `.reinitforum`
 `.userinfoforum` `.uinfof` | Zeigt Informationen zum Forumaccount des angegebenen Discordnutzers an  | `.userinfoforum <user>`
 `.forumuserinfo` `.fuinfo` | Zeigt Informationen zum angegebenen Forumaccount an  | `.forumuserinfo <forumUsername>` oder `.forumuserinfo <forumUserId>`
 `.foruminfo` `.finfo` | Zeigt Informationen zur aktuellen Forum-Instanz an.  | `.foruminfo`
+`.gommeteamrole` `.gtr` | Zeigt die aktuelle GommeHDnet-Teammitgliedsrolle an.  | `.gommeteamrole`
+`.gommeteamroleset` `.gtrs` | Setzt die GommeHDnet-Teammitgliedsrolle.  | `.gommeteamroleset [rolle]`
+`.viprole` | Zeigt die aktuelle VIP-Rolle an.  | `.viprole`
+`.viproleset` | Setzt die VIP-Rolle.  | `.viproleset [rolle]`
+`.gommeteamranks` `.gtranks` | Zeigt die aktuellen GommeHDnet-Teamränge an.  | `.gommeteamranks`
+`.teamupdatemessageprefix` `.tump` | Setzt oder löscht den Teamupdatenachrichtenpräfix.  | `.tump [Präfixnachricht]`
+`.teamupdatechannel` `.tuch` | Setzt oder löscht den Teamupdatenachrichtenkanal  | `.tuch [Kanalmention]`
+`.teamupdaterankadd` `.tura` | Fügt einen Rang zu den Teamupdates hinzu.  | `.tura [Rangname]`
+`.teamupdaterankremove` `.turr` | Löscht einen Rang aus den Teamupdates.  | `.turr [Rangname]`
+`.teamupdateranks` `.tur` | Zeigt alle Teamupdateränge an.  | `.tur`
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Gambling  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.raffle` | Prints a name and ID of a random user from the online list from the (optional) role.  | `.raffle` or `.raffle RoleName`
 `.cash` `.currency` `.money` `.balance` `.$` | Check how much currency a person has. (Defaults to yourself)  | `.$` or `.$ @SomeGuy`
@@ -220,7 +234,7 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Games  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.choose` | Chooses a thing from a list of things  | `.choose Get up;Sleep;Sleep more`
 `.8ball` | Ask the 8ball a yes/no question.  | `.8ball should I do something`
@@ -234,7 +248,7 @@ Befehle und Alias | Beschreibung | Verwendung
 `.hangmanlist` | Shows a list of hangman term types.  | `.hangmanlist`
 `.hangman` | Starts a game of hangman in the channel. Use `.hangmanlist` to see a list of available term types. Defaults to 'all'.  | `.hangman` or `.hangman movies`
 `.hangmanstop` | Stops the active hangman game on this channel if it exists.  | `.hangmanstop`
-`.nunchi` | Creates or joins an existing nunchi game. Users have to count up by 1 from the starting number shown by the bot. If someone makes a mistake (types an incorrent number, or repeats the same number) they are out of the game and a new round starts without them.  Minimum 3 users required.  | `.nunchi`
+`.nunchi` | Creates or joins an existing nunchi game. Users have to count up by 1 from the starting number shown by the bot. If someone makes a mistake (types an incorrent number, or repeats the same number) they are out of the game and a new round starts without them. Minimum 3 users required.  | `.nunchi`
 `.pick` | Picks the currency planted in this channel. 60 seconds cooldown.  | `.pick`
 `.plant` | Spend an amount of currency to plant it in this channel. Default is 1. (If bot is restarted or crashes, the currency will be lost)  | `.plant` or `.plant 5`
 `.gencurrency` `.gc` | Toggles currency generation on this channel. Every posted message will have chance to spawn currency. Chance is specified by the Bot Owner. (default is 2%) **Benötigt Serverrecht ManageMessages.** | `.gc`
@@ -254,10 +268,10 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Help  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
-`.modules` `.mdls` | Lists all bot modules.  | `.modules`
-`.submodules` | Lists all bot (sub-)modules.  | `.submodules`
+`.modules` `.mdls` | Zeigt alle Module des Bots an.  | `.modules`
+`.submodules` `.smdls` | Zeigt alle Submodule des Bots an.  | `.submodules`
 `.commands` `.cmds` | List all of the bot's commands from a certain module. You can either specify the full name or only the first few letters of the module name.  | `.commands Administration` or `.cmds Admin`
 `.help` `.h` | Either shows a help for a single command, or DMs you help link if no arguments are specified.  | `.h .cmds` or `.h`
 `.hgit` | Generates the commandlist.md file. **Nur Bot-Besitzer** | `.hgit`
@@ -267,18 +281,19 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Level  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
-`.rank` | Zeigt den Rang eines Nutzers an.  | `.rank [user]`
+`.rank` `.level` `.lvl` | Zeigt den Rang eines Nutzers an.  | `.rank [user]`
 `.ranks` `.ranklist` | Gibt eine geordnete Rangliste mit Nutzern und ihren Rängen zurück.  | `.ranks [anzahl] [startposition]`
 `.addxp` | Gibt einem Spieler XP aus der unendlich Bot-XP-Quelle **Nur Bot-Besitzer** | `.addxp <xp> <users>`
 `.setxp` | Set the XP of a specified user. **Nur Bot-Besitzer** | `.setxp <xp> [user]`
-`.turntoxp` `.turntoexp` `.ttxp` | Tauscht Geld in XP um.  | `.turntoxp <geld>`
+`.turntoxp` `.turntoexp` `.ttxp` `.converttoxp` | Tauscht Geld in XP um.  | `.turntoxp <geld>`
 `.levelguilddata` | Ersetzt eine der angegebenen Gildenkonfigurationen aus `levelguilddatachoices` mit dem angegebenen Wert oder zeigt diesen an. **Nur Bot-Besitzer** | `.levelguilddata <levelGuildDataChoice> [value]`
 `.levelguilddatachoices` | Zeigt die möglichen levelmodulrelevanten Gildenkonfigurationen an. **Nur Bot-Besitzer** | `.levelguilddatachoices`
 `.msgxprestrictionadd` `.msgxpradd` | Fügt einen Textkanal zur MessageXP Blacklist hinzu **Nur Bot-Besitzer** | `.msgxprestrictionadd <textchannel>`
 `.msgxprestrictionremove` `.msgxprremove` | Entfernt einen Textkanal von der MessageXP Blacklist **Nur Bot-Besitzer** | `.msgxprestrictionremove <textchannel>`
 `.msgxprestrictions` `.msgxpr` | Zeigt alle Textkanäle, die auf der MessageXP Blacklist stehen  | `.msgxprestrictions`
+`.msgxprestrictionsclean` `.msgxprclean` | Entfernt gelöschte Kanäle aus den Kanälen ohne Nachrichten-XP.  | `.msgxprestrictionsclean`
 `.setrolelevelbinding` `.srlb` | Setzt das benötigte Level für eine Rolle. **Nur Bot-Besitzer** | `.setrolelevelbinding <role> <minlevel>`
 `.removerolelevelbinding` `.rrlb` | Entfernt die levelbezogene automatische Vergabe einer Rolle. **Nur Bot-Besitzer** | `.removerolelevelbinding <Rolle>`
 `.rolelevelbindings` `.rlb` | Zeigt eine Liste von Rollen und dem für sie benötigten Level.  | `.rolelevelbindings [count] [position]`
@@ -286,7 +301,7 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Minecraft  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.minecraftusernames` `.mcusernames` | Zeigt alle Nutzernamen eines gegebenen Minecraftaccounts an.  | `.minecraftusernames <username>`
 `.minecraftplayerinfo` `.mcpinfo` | Zeigt Informationen zu dem Minecraftaccount an, der bei gegebenem Datum (oder heute) einen bestimmten Namen besaß.  | `.minecraftusernames <username> [datum]`
@@ -296,48 +311,8 @@ Befehle und Alias | Beschreibung | Verwendung
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
-### Music  
-Befehle und Alias | Beschreibung | Verwendung
-----------------|--------------|-------
-`.play` `.start` | If no arguments are specified, acts as `.next 1` command. If you specify a song number, it will jump to that song. If you specify a search query, acts as a `.q` command  | `.play` or `.play 5` or `.play Dream Of Venice`
-`.queue` `.q` `.yq` | Queue a song using keywords or a link. Bot will join your voice channel. **You must be in a voice channel**.  | `.q Dream Of Venice`
-`.queuenext` `.qn` | Works the same as `.queue` command, except it enqueues the new song after the current one. **You must be in a voice channel**.  | `.qn Dream Of Venice`
-`.queuesearch` `.qs` `.yqs` | Search for top 5 youtube song result using keywords, and type the index of the song to play that song. Bot will join your voice channel. **You must be in a voice channel**.  | `.qs Dream Of Venice`
-`.listqueue` `.lq` | Lists 10 currently queued songs per page. Default page is 1.  | `.lq` or `.lq 2`
-`.next` `.n` | Goes to the next song in the queue. You have to be in the same voice channel as the bot. You can skip multiple songs, but in that case songs will not be requeued if .rcs or .rpl is enabled.  | `.n` or `.n 5`
-`.stop` `.s` | Stops the music and preserves the current song index. Stays in the channel.  | `.s`
-`.destroy` `.d` | Completely stops the music and unbinds the bot from the channel. (may cause weird behaviour)  | `.d`
-`.pause` `.p` | Pauses or Unpauses the song.  | `.p`
-`.volume` `.vol` | Sets the music playback volume (0-100%)  | `.vol 50`
-`.defvol` `.dv` | Sets the default music volume when music playback is started (0-100). Persists through restarts.  | `.dv 80`
-`.songremove` `.srm` | Remove a song by its # in the queue, or 'all' to remove all songs from the queue and reset the song index.  | `.srm 5`
-`.playlists` `.pls` | Lists all playlists. Paginated, 20 per page. Default page is 0.  | `.pls 1`
-`.deleteplaylist` `.delpls` | Deletes a saved playlist. Works only if you made it or if you are the bot owner.  | `.delpls animu-5`
-`.save` | Saves a playlist under a certain name. Playlist name must be no longer than 20 characters and must not contain dashes.  | `.save classical1`
-`.load` | Loads a saved playlist using its ID. Use `.pls` to list all saved playlists and `.save` to save new ones.  | `.load 5`
-`.fairplay` `.fp` | Toggles fairplay. While enabled, the bot will prioritize songs from users who didn't have their song recently played instead of the song's position in the queue.  | `.fp`
-`.songautodelete` `.sad` | Toggles whether the song should be automatically removed from the music queue when it finishes playing.  | `.sad`
-`.soundcloudqueue` `.sq` | Queue a soundcloud song using keywords. Bot will join your voice channel. **You must be in a voice channel**.  | `.sq Dream Of Venice`
-`.soundcloudpl` `.scpl` | Queue a Soundcloud playlist using a link.  | `.scpl soundcloudseturl`
-`.nowplaying` `.np` | Shows the song that the bot is currently playing.  | `.np`
-`.shuffle` `.sh` `.plsh` | Shuffles the current playlist.  | `.plsh`
-`.playlist` `.pl` | Queues up to 500 songs from a youtube playlist specified by a link, or keywords.  | `.pl playlist link or name`
-`.radio` `.ra` | Queues a radio stream from a link. It can be a direct mp3 radio stream, .m3u, .pls .asx or .xspf (Usage Video: <https://streamable.com/al54>)  | `.ra radio link here`
-`.local` `.lo` | Queues a local file by specifying a full path. **Nur Bot-Besitzer** | `.lo C:/music/mysong.mp3`
-`.localplaylst` `.lopl` | Queues all songs from a directory. **Nur Bot-Besitzer** | `.lopl C:/music/classical`
-`.move` `.mv` | Moves the bot to your voice channel. (works only if music is already playing)  | `.mv`
-`.movesong` `.ms` | Moves a song from one position to another.  | `.ms 5>3`
-`.setmaxqueue` `.smq` | Sets a maximum queue size. Supply 0 or no argument to have no limit.  | `.smq 50` or `.smq`
-`.setmaxplaytime` `.smp` | Sets a maximum number of seconds (>14) a song can run before being skipped automatically. Set 0 to have no limit.  | `.smp 0` or `.smp 270`
-`.reptcursong` `.rcs` | Toggles repeat of current song.  | `.rcs`
-`.rpeatplaylst` `.rpl` | Toggles repeat of all songs in the queue (every song that finishes is added to the end of the queue).  | `.rpl`
-`.autoplay` `.ap` | Toggles autoplay - When the song is finished, automatically queue a related Youtube song. (Works only for Youtube songs and when queue is empty)  | `.ap`
-`.setmusicchannel` `.smch` | Sets the current channel as the default music output channel. This will output playing, finished, paused and removed songs to that channel instead of the channel where the first song was queued in. **Benötigt Serverrecht ManageMessages.** | `.smch`
-
-###### [Zurück zu ToC](#inhaltsverzeichnis)
-
 ### NSFW  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.hentai` | Shows a hentai image from a random website (gelbooru or danbooru or konachan or atfbooru or yandere) with a given tag. Tag is optional but preferred. Only 1 tag allowed.  | `.hentai yuri`
 `.autohentai` | Posts a hentai every X seconds with a random tag from the provided tags. Use `|` to separate tags. 20 seconds minimum. Provide no arguments to disable. **Benötigt Kanalrecht ManageMessages.** | `.autohentai 30 yuri|tail|long_hair` or `.autohentai`
@@ -356,7 +331,7 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Permissions  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.verbose` `.v` | Sets whether to show when a command/module is blocked.  | `.verbose true`
 `.permrole` `.pr` | Sets a role which can change permissions. Supply no parameters to see the current one. Default is 'Permissions'.  | `.pr role`
@@ -396,19 +371,8 @@ Befehle und Alias | Beschreibung | Verwendung
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
-### Pokemon  
-Befehle und Alias | Beschreibung | Verwendung
-----------------|--------------|-------
-`.attack` | Attacks a target with the given move. Use `.movelist` to see a list of moves your type can use.  | `.attack "vine whip" @someguy`
-`.movelist` `.ml` | Lists the moves you are able to use  | `.ml`
-`.heal` | Heals someone. Revives those who fainted. Costs a Currency.   | `.heal @someone`
-`.type` | Get the poketype of the target.  | `.type @someone`
-`.settype` | Set your poketype. Costs a Currency. Provide no arguments to see a list of available types.  | `.settype fire` or `.settype`
-
-###### [Zurück zu ToC](#inhaltsverzeichnis)
-
 ### Searches  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.lolban` | Shows top banned champions ordered by ban rate.  | `.lolban`
 `.weather` `.we` | Shows weather data for a specified city. You can also specify a country after a comma.  | `.we Moscow, RU`
@@ -450,11 +414,9 @@ Befehle und Alias | Beschreibung | Verwendung
 `.osu` | Shows osu stats for a player.  | `.osu Name` or `.osu Name taiko`
 `.osub` | Shows information about an osu beatmap.  | `.osub https://osu.ppy.sh/s/127712`
 `.osu5` | Displays a user's top 5 plays.  | `.osu5 Name`
-`.overwatch` `.ow` | Show's basic stats on a player (competitive rank, playtime, level etc) Region codes are: `eu` `us` `cn` `kr`  | `.ow us Battletag#1337` or  `.overwatch eu Battletag#2016`
+`.overwatch` `.ow` | Show's basic stats on a player (competitive rank, playtime, level etc) Region codes are: `eu` `us` `cn` `kr`  | `.ow us Battletag#1337` or `.overwatch eu Battletag#2016`
 `.placelist` | Shows the list of available tags for the `.place` command.  | `.placelist`
 `.place` | Shows a placeholder image of a given tag. Use `.placelist` to see all available tags. You can specify the width and height of the image as the last two optional arguments.  | `.place Cage` or `.place steven 500 400`
-`.pokemon` `.poke` | Searches for a pokemon.  | `.poke Sylveon`
-`.pokemonability` `.pokeab` | Searches for a pokemon ability.  | `.pokeab overgrow`
 `.smashcast` `.hb` | Notifies this channel when a certain user starts streaming. **Benötigt Serverrecht ManageMessages.** | `.smashcast SomeStreamer`
 `.twitch` `.tw` | Notifies this channel when a certain user starts streaming. **Benötigt Serverrecht ManageMessages.** | `.twitch SomeStreamer`
 `.mixer` `.bm` | Notifies this channel when a certain user starts streaming. **Benötigt Serverrecht ManageMessages.** | `.mixer SomeStreamer`
@@ -470,7 +432,7 @@ Befehle und Alias | Beschreibung | Verwendung
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Utility  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
 `.togethertube` `.totube` | Creates a new room on <https://togethertube.com> and shows the link in the chat.  | `.totube`
 `.whosplaying` `.whpl` | Shows a list of users who are playing the specified game.  | `.whpl Overwatch`
@@ -491,8 +453,11 @@ Befehle und Alias | Beschreibung | Verwendung
 `.botconfigedit` `.bce` | Sets one of available bot config settings to a specified value. Use the command without any parameters to get a list of available settings. **Nur Bot-Besitzer** | `.bce CurrencyName b1nzy` or `.bce`
 `.calculate` `.calc` | Evaluate a mathematical expression.  | `.calc 1+1`
 `.calcops` | Shows all available operations in the `.calc` command  | `.calcops`
+`.rng` | Generiert eine zufällige Zahl im angegebenen Intervall.  | `.rng [minimum=0] [maximum = 1]`
 `.alias` `.cmdmap` | Create a custom alias for a certain Mitternacht command. Provide no alias to remove the existing one. **Benötigt Serverrecht Administrator.** | `.alias allin $bf 100 h` or `.alias "linux thingy" >loonix Spyware Windows`
 `.aliaslist` `.cmdmaplist` `.aliases` | Shows the list of currently set aliases. Paginated.  | `.aliaslist` or `.aliaslist 3`
+`.counttonumberchannel` | Setzt oder zeigt den CountToNumber-Kanal an.  | `.counttonumberchannel [Textkanal|null]`
+`.counttonumbermessagechance` | Setzt oder zeigt die Chance einer Zahlreaktion im CountToNumber-Kanal an.  | `.counttonumbermessagechance [Textkanal|null]`
 `.serverinfo` `.sinfo` | Shows info about the server the bot is on. If no server is supplied, it defaults to current one.  | `.sinfo Some Server`
 `.channelinfo` `.cinfo` | Shows info about the channel. If no channel is supplied, it defaults to current one.  | `.cinfo #some-channel`
 `.userinfo` `.uinfo` | Shows info about the user. If no user is supplied, it defaults a user running the command.  | `.uinfo @SomeUser`
@@ -525,26 +490,26 @@ Befehle und Alias | Beschreibung | Verwendung
 `.usernamehistoryguild` `.unhguild` `.nicks` | Zeigt alle serverspezifischen Nicknames eines angegebenen Nutzers an.  | `.unhguild <user> [page]`
 `.updateusernames` | Updatet alle Nutzernamen und Nicknames manuell. **Nur Bot-Besitzer** | `.updateusernames`
 `.verboseerror` `.ve` | Toggles whether the bot should print command errors when a command is incorrectly used. **Benötigt Serverrecht ManageMessages.** | `.ve`
+`.voicestats` `.vs` | Zeigt die Zeit an, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.  | `.voicestats [Nutzer]`
+`.voicestatsreset` `.vsr` | Setzt die Zeit zurück, die ein Nutzer in Sprachkanälen auf dem aktuellen Server verbracht hat.  | `.voicestatsreset <Nutzer>`
 
 ###### [Zurück zu ToC](#inhaltsverzeichnis)
 
 ### Verification  
-Befehle und Alias | Beschreibung | Verwendung
+Befehle und Aliase | Beschreibung | Verwendung
 ----------------|--------------|-------
-`.verify1` | Generiert einen einmaligen Key für einen bestimmten Forumaccount zur Verwendung in der Verifizierungskonversation im Forum.  | `.verify1 <forumuserid>`
-`.verify2` | Prüft, ob der angegebene Forumaccount eine Verifizierungskonversation gestartet hat und antwortet mit einem neuen Key auf die Konversation.  | `.verify2 <forumuserid>`
-`.verify3` | Verifiziert den Discorduser, der den Befehl ausgeführt hat, wenn der angegebene Key gültig ist.  | `.verify3 <key>`
+`.verify` | Startet den interaktiven Verifizierungsprozess.  | `.verify`
 `.addverification` | Verifiziere einen Nutzer manuell. **Nur Bot-Besitzer** | `.addverification <user> <forumid>`
-`.removeverification` | Entfernt die Verifizierung des gegebenen Forumaccounts oder Discordusers. **Nur Bot-Besitzer** | `.removeverification <user/forumid>`
+`.removeverificationdiscord` | Entfernt die Verifizierung des gegebenen Discordusers. **Nur Bot-Besitzer** | `.removeverificationdiscord <user>`
+`.removeverificationforum` | Entfernt die Verifizierung des gegebenen Forumaccounts. **Nur Bot-Besitzer** | `.removeverificationforum <forumUserId|forumUserName>`
 `.verifiedrole` | Zeigt oder setzt die Rolle, die bei erfolgreicher Verifizierung vergeben wird. **Nur Bot-Besitzer** | `.verifiedrole [role]`
-`.verifystring` | Zeigt oder setzt die Zeichenkette, die bei der Verifizierungskonversation als Titel angegeben werden muss. **Nur Bot-Besitzer** | `.verifystring [string]`
+`.verifiedroledelete` | Löscht die Rolle, die bei erfolgreicher Verifizierung vergeben wird. **Nur Bot-Besitzer** | `.verifiedroledelete`
+`.verifypassword` | Zeigt oder setzt die Zeichenkette, die bei der Verifizierungskonversation als Titel angegeben werden muss. **Nur Bot-Besitzer** | `.verifypassword [passwort]`
 `.verificationkeys` | Zeigt alle zur Zeit aktiven Verifizierungsschlüssel an. **Nur Bot-Besitzer** | `.verificationkeys [page]`
 `.verifiedusers` `.vu` | Zeigt alle verifizierten Nutzer an.  | `.verifiedusers [page]`
 `.howtoverify` | Zeigt eine Anleitung zur Verifizierung  | `.howtoverify`
-`.setverifytutorialtext` | Setzt den Text, der mit `howtoverify` angezeigt wird. **Nur Bot-Besitzer** | `.setverifytutorialtext <text>`
+`.verifytutorialtext` | Setzt oder zeigt den Verifizierungshilfstext, der mit `.howtoverify` abgerufen werden kann. **Nur Bot-Besitzer** | `.verifytutorialtext [text]`
 `.additionalverificationusers` `.adverius` | Zeigt alle zusätzlichen Verifizierungsnachrichtenempfänger an. **Nur Bot-Besitzer** | `.additionalverificationusers`
 `.setadditionalverificationusers` `.setadverius` | Setzt die zusätzlichen Verifizierungsnachrichtenempfänger. **Nur Bot-Besitzer** | `.setadditionalverificationusers [user1] [user2] ... [userN]`
 `.conversationlink` | Zeigt den Konversationslink mit aktuellen Einstellungen an.  | `.conversationlink`
-`.gommeteamrole` `.gtr` | Zeigt die aktuelle GommeHDnet-Teammitgliedsrolle an.  | `.gommeteamrole`
-`.gommeteamroleset` `.gtrs` | Setzt die GommeHDnet-Teammitgliedsrolle. **Nur Bot-Besitzer** | `.gommeteamroleset [rolle]`
-`.gommeteamranks` `.gtranks` | Zeigt die aktuellen GommeHDnet-Teamränge an.  | `.gommeteamranks`
+`.verificationpasswordchannel` | Setzt den Verifizierungspasswortkanal oder zeigt ihn an. Der Kanal wird in Nachrichten des Verifizierungsprozesses verwendet. **Nur Bot-Besitzer** | `.verificationpasswordchannel [Textkanal]`
