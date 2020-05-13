@@ -630,67 +630,6 @@ minecraft:
   server_title:                                  Informationen zu `{0}`
   server_version:                                Version
   usernames_title:                               Minecraftnamen von {0} ({1})
-music:                                           
-  attempting_to_queue:                           Versuche {0} Lieder einzureihen...
-  autoplay_disabled:                             Autoplay deaktiviert.
-  autoplay_enabled:                              Autoplay aktiviert.
-  autoplaying:                                   ''
-  defvol_set:                                    Standard-Lautstärke auf {0}% gesetzt
-  dir_queue_complete:                            Ordner-Einreihung fertig.
-  fairplay:                                      fairer Modus
-  finished_song:                                 Lied beendet
-  fp_disabled:                                   Fairer Modus deaktiviert.
-  fp_enabled:                                    Fairer Modus aktiviert.
-  from_position:                                 Von Position
-  id:                                            ID
-  invalid_input:                                 Ungültige Eingabe.
-  max_playtime_none:                             Maximale Länge eines Liedes hat kein Limit mehr.
-  max_playtime_set:                              Maximale länge eines Liedes ist nun {0} Sekunden.
-  max_queue_unlimited:                           Maximale Musik-Warteschlangengröße ist nun unbegrenzt.
-  max_queue_x:                                   Maximale Musik-Warteschlangengröße ist nun {0} Lieder.
-  must_be_in_voice:                              Sie müssen sich in einem Sprachkanal auf diesem Server befinden.
-  name:                                          Name
-  no_player:                                     Kein aktiver Musikspieler.
-  no_search_results:                             Keine Suchergebnisse.
-  now_playing:                                   'Aktuelles Lied:'
-  paused:                                        Musikwiedergabe pausiert.
-  play_limit:                                    "{0}'s Limit"
-  player_queue:                                  Musik-Warteschlange - Seite {0}/{1}
-  playing_song:                                  Spiele Lied
-  playlist_delete_fail:                          Playlist konnte nicht gelöscht werden. Entweder es existiert nicht oder es gehört nicht Ihnen.
-  playlist_deleted:                              Playlist gelöscht.
-  playlist_id_not_found:                         Es gibt keine Playlist mit dieser ID.
-  playlist_queue_complete:                       Playlist wurde an die Warteschlange angehängt.
-  playlist_saved:                                Playlist gespeichert
-  playlists:                                     "`#{0}` - **{1}** by *{2}* ({3} Lieder)"
-  playlists_page:                                Seite {0} der gespeicherten Playlists
-  queue:                                         Warteschlange
-  queue_cleared:                                 Musik-Warteschlange geleert.
-  queue_full:                                    Warteschlange ist voll mit {0}/{0}.
-  queue_stopped:                                 ''
-  queued_song:                                   Eingereihtes Lied
-  removed_song:                                  Lied entfernt
-  removed_song_error:                            Lied an diesem Index existiert nicht
-  repeating_cur_song:                            Aktuelles Lied wird wiederholt
-  repeating_playlist:                            Playlist wird wiederholt
-  repeating_track:                               Lied wird wiederholt
-  repeating_track_stopped:                       Aktuelles Lied wird nicht mehr wiederholt.
-  resumed:                                       Musikwiedergabe wiederaufgenommen.
-  rpl_disabled:                                  Playlist-Wiederholung deaktiviert.
-  rpl_enabled:                                   Playlist-Wiederholung aktiviert.
-  set_music_channel:                             Ich werde nun spielende, beendete, pausierte und entfernte Lieder in diesem Channel ausgeben.
-  shuffling_playlist:                            ''
-  skipped_to:                                    Gesprungen zu `{0}:{1}`
-  song_moved:                                    Lied bewegt
-  song_not_found:                                Kein Lied gefunden
-  song_skips_after:                              Lieder werden übersprungen nach {0}
-  songs_shuffle_disable:                         ''
-  songs_shuffle_enable:                          Lieder werden jetzt zufällig wiedergegeben.
-  time_format:                                   "{0}h {1}m {2}s"
-  to_position:                                   Zu Position
-  unlimited:                                     unbegrenzt
-  volume_input_invalid:                          Lautstärke muss zwischen 0 und 100 sein
-  volume_set:                                    Lautstärke auf {0}% gesetzt
 nsfw:                                            
   autohentai_started:                            'Autohentai wurde gestartet. Es wird alle {0} Sekunden etwas mit einem der folgenden Stichwörtern gepostet: {1}'
   autohentai_stopped:                            Autohentai angehalten.

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using Discord.WebSocket;
 using Mitternacht.Common.Replacements;
-using Mitternacht.Modules.Music.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using NLog;
@@ -14,7 +13,6 @@ namespace Mitternacht.Modules.Administration.Services
     {
         private readonly Timer _t;
         private readonly DiscordSocketClient _client;
-        private readonly MusicService _music;
         private readonly Logger _log;
         private readonly Replacer _rep;
         private readonly DbService _db;
@@ -27,17 +25,15 @@ namespace Mitternacht.Modules.Administration.Services
             public int Index { get; set; }
         }
 
-        public PlayingRotateService(DiscordSocketClient client, IBotConfigProvider bcp, MusicService music, DbService db)
+        public PlayingRotateService(DiscordSocketClient client, IBotConfigProvider bcp, DbService db)
         {
             _client = client;
             _bcp = bcp;
-            _music = music;
             _db = db;
             _log = LogManager.GetCurrentClassLogger();
             _rep = new ReplacementBuilder()
                 .WithClient(client)
                 .WithStats(client)
-                .WithMusic(music)
                 .Build();
 
             _t = new Timer(async (objState) =>

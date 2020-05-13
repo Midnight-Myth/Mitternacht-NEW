@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Modules.Music.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Common;
@@ -30,16 +29,13 @@ namespace Mitternacht.Modules.Administration
             private static readonly object Locker = new object();
             private readonly DiscordSocketClient _client;
             private readonly IImagesService _images;
-            private readonly MusicService _music;
             private readonly IBotConfigProvider _bc;
 
-            public SelfCommands(DbService db, DiscordSocketClient client,
-                MusicService music, IImagesService images, IBotConfigProvider bc)
+            public SelfCommands(DbService db, DiscordSocketClient client, IImagesService images, IBotConfigProvider bc)
             {
                 _db = db;
                 _client = client;
                 _images = images;
-                _music = music;
                 _bc = bc;
             }
 
@@ -268,7 +264,6 @@ namespace Mitternacht.Modules.Administration
                 try { await ReplyConfirmLocalized("shutting_down").ConfigureAwait(false); } catch { /*ignored*/ }
 
                 await Task.Delay(500).ConfigureAwait(false);
-                try { await _music.DestroyAllPlayers().ConfigureAwait(false); } catch { /*ignored*/ }
 
 				await Task.WhenAny(Task.Run(async () => {
 					await _client.StopAsync();

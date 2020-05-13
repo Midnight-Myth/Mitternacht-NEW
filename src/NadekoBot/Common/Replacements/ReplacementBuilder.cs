@@ -7,7 +7,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Modules.Music.Services;
 
 namespace Mitternacht.Common.Replacements
 {
@@ -82,27 +81,6 @@ namespace Mitternacht.Common.Replacements
         {
             _reps.TryAdd("%servers%", () => c.Guilds.Count.ToString());
             _reps.TryAdd("%users%", () => c.Guilds.Sum(s => s.Users.Count).ToString());
-            return this;
-        }
-
-        public ReplacementBuilder WithMusic(MusicService ms)
-        {
-            _reps.TryAdd("%playing%", () =>
-            {
-                var cnt = ms.MusicPlayers.Count(kvp => kvp.Value.Current.Current != null);
-                if (cnt != 1) return cnt.ToString();
-                try
-                {
-                    var mp = ms.MusicPlayers.FirstOrDefault();
-                    var title =  mp.Value?.Current.Current?.Title;
-                    return title ?? "No songs";
-                }
-                catch
-                {
-                    return "error";
-                }
-            });
-            _reps.TryAdd("%queued%", () => ms.MusicPlayers.Sum(kvp => kvp.Value.QueueArray().Songs.Length).ToString());
             return this;
         }
 

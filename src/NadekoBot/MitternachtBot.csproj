@@ -30,17 +30,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="data\**\*;credentials.json" />
-    <Compile Remove="Modules\Music\Classes\**" />
     <Compile Remove="Modules\Utility\Models\**" />
-    <EmbeddedResource Remove="Modules\Music\Classes\**" />
     <EmbeddedResource Remove="Modules\Utility\Models\**" />
-    <None Remove="Modules\Music\Classes\**" />
     <None Remove="Modules\Utility\Models\**" />
     <None Update="locales\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="libsodium.dll;opus.dll;libsodium.so;libopus.so">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="nadeko_icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
