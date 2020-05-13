@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Forum {
 
 		[MitternachtCommand, Usage, Description, Aliases, RequireContext(ContextType.Guild)]
 		public async Task UserInfoForum(IGuildUser user = null) {
-			user = user ?? Context.User as IGuildUser;
+			user ??= Context.User as IGuildUser;
 			if(user == null)
 				return;
 

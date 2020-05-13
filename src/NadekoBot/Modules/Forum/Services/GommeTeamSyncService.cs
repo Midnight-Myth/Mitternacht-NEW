@@ -24,14 +24,13 @@ namespace Mitternacht.Modules.Forum.Services {
 		}
 
 		private async Task OnUserVerified(IGuildUser user, long forumUserId) {
-			using(var uow = _db.UnitOfWork) {
-				var gc            = uow.GuildConfigs.For(user.GuildId);
-				var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? user.Guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
-				if(gommeTeamRole != null) {
-					var staffList = await _fs.Forum.GetMembersList(MembersListType.Staff);
-					if(staffList.Any(s => s.Id == forumUserId)) {
-						await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
-					}
+			using var uow = _db.UnitOfWork;
+			var gc            = uow.GuildConfigs.For(user.GuildId);
+			var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? user.Guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
+			if(gommeTeamRole != null) {
+				var staffList = await _fs.Forum.GetMembersList(MembersListType.Staff);
+				if(staffList.Any(s => s.Id == forumUserId)) {
+					await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
 				}
 			}
 		}
@@ -43,27 +42,26 @@ namespace Mitternacht.Modules.Forum.Services {
 			=> await TeamMemberRoleChange(userInfos, false);
 
 		private async Task TeamMemberRoleChange(UserInfo[] userInfos, bool addGommeTeamRole) {
-			using(var uow = _db.UnitOfWork) {
-				var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(sg => sg.Id).ToList());
+			using var uow = _db.UnitOfWork;
+			var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(sg => sg.Id).ToList());
 
-				foreach(var gc in guildConfigs) {
-					var guild         = _client.GetGuild(gc.GuildId);
-					var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
-					if(gommeTeamRole == null)
-						continue;
-					var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
+			foreach(var gc in guildConfigs) {
+				var guild         = _client.GetGuild(gc.GuildId);
+				var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
+				if(gommeTeamRole == null)
+					continue;
+				var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
 
-					var verifiedUsers = userInfos.Select(ui => uow.VerifiedUsers.GetVerifiedUserId(guild.Id, ui.Id)).Select(uid => uid.HasValue ? guild.GetUser(uid.Value) : null).Where(gu => gu != null).ToList();
-					if(addGommeTeamRole) {
-						foreach(var user in verifiedUsers) {
-							await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
-						}
-					} else {
-						foreach(var user in verifiedUsers) {
-							await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
-							if(vipRole != null)
-								await user.AddRoleAsync(vipRole).ConfigureAwait(false);
-						}
+				var verifiedUsers = userInfos.Select(ui => uow.VerifiedUsers.GetVerifiedUserId(guild.Id, ui.Id)).Select(uid => uid.HasValue ? guild.GetUser(uid.Value) : null).Where(gu => gu != null).ToList();
+				if(addGommeTeamRole) {
+					foreach(var user in verifiedUsers) {
+						await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);
+					}
+				} else {
+					foreach(var user in verifiedUsers) {
+						await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
+						if(vipRole != null)
+							await user.AddRoleAsync(vipRole).ConfigureAwait(false);
 					}
 				}
 			}

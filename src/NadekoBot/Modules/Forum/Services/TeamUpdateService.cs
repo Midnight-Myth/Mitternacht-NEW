@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Forum.Services {
@@ -77,10 +76,9 @@ namespace Mitternacht.Modules.Forum.Services {
 			List<GuildConfig> guildConfigs;
 			List<IGrouping<ulong, TeamUpdateRank>> teamUpdateRanks;
 
-			using(var uow = _db.UnitOfWork) {
-				guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
-				teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
-			}
+			using var uow = _db.UnitOfWork;
+			guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
+			teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
 
 			foreach(var gc in guildConfigs) {
 				var guild = _client.GetGuild(gc.GuildId);
@@ -138,38 +136,34 @@ namespace Mitternacht.Modules.Forum.Services {
 		}
 
 		private string[] GetForumRankUpdateRoles(ulong guildId) {
-			using(var uow = _db.UnitOfWork) {
-				return uow.TeamUpdateRank.GetGuildRanks(guildId).ToArray();
-			}
+			using var uow = _db.UnitOfWork;
+			return uow.TeamUpdateRank.GetGuildRanks(guildId).ToArray();
 		}
 
 		private string GetForumRankUpdateMessagePrefix(ulong guildId) {
-			using(var uow = _db.UnitOfWork) {
-				var prefix = uow.GuildConfigs.For(guildId).TeamUpdateMessagePrefix;
-				return string.IsNullOrWhiteSpace(prefix) ? "" : $"{prefix.Trim()} ";
-			}
+			using var uow = _db.UnitOfWork;
+			var prefix = uow.GuildConfigs.For(guildId).TeamUpdateMessagePrefix;
+			return string.IsNullOrWhiteSpace(prefix) ? "" : $"{prefix.Trim()} ";
 		}
 
 		private string ConcatenateUsernames(SocketGuild guild, UserInfo[] userInfos) {
-			using(var uow = _db.UnitOfWork) {
-				var usernames = (from userInfo in userInfos
-								 let verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(guild.Id, userInfo.Id)
-								 let user = verifiedUserId.HasValue ? guild.GetUser(verifiedUserId.Value) : null
-								 select user != null ? user.Mention : userInfo.Username).ToArray();
+			using var uow = _db.UnitOfWork;
+			var usernames = (from userInfo in userInfos
+							 let verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(guild.Id, userInfo.Id)
+							 let user = verifiedUserId.HasValue ? guild.GetUser(verifiedUserId.Value) : null
+							 select user != null ? user.Mention : userInfo.Username).ToArray();
 
-				if(usernames.Length >= 2)
-					usernames = new[] { string.Join(", ", usernames.Take(usernames.Length - 1)), usernames.Last() };
-				return string.Join(GetText("teamupdate_last_separator", guild.Id), usernames);
-			}
+			if(usernames.Length >= 2)
+				usernames = new[] { string.Join(", ", usernames.Take(usernames.Length - 1)), usernames.Last() };
+			return string.Join(GetText("teamupdate_last_separator", guild.Id), usernames);
 		}
 
 		#endregion
 
 
 		public bool AnnouncesTeamUpdates(ulong guildId) {
-			using(var uow = _db.UnitOfWork) {
-				return uow.GuildConfigs.For(guildId).TeamUpdateChannelId.HasValue;
-			}
+			using var uow = _db.UnitOfWork;
+			return uow.GuildConfigs.For(guildId).TeamUpdateChannelId.HasValue;
 		}
 
 		private string GetText(string key, ulong? guildId, params object[] replacements)
