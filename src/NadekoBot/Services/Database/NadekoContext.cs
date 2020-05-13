@@ -81,26 +81,6 @@ namespace Mitternacht.Services.Database
             if (BotConfig.Any()) return;
             var bc = new BotConfig();
 
-            bc.ModulePrefixes.AddRange(new HashSet<ModulePrefix>
-            {
-                new ModulePrefix { ModuleName = "Administration", Prefix = "." },
-                new ModulePrefix { ModuleName = "Searches", Prefix = "~" },
-                new ModulePrefix { ModuleName = "Translator", Prefix = "~" },
-                new ModulePrefix { ModuleName = "NSFW", Prefix = "~" },
-                new ModulePrefix { ModuleName = "ClashOfClans", Prefix = "," },
-                new ModulePrefix { ModuleName = "Help", Prefix = "-" },
-                new ModulePrefix { ModuleName = "Music", Prefix = "!!" },
-                new ModulePrefix { ModuleName = "Trello", Prefix = "trello" },
-                new ModulePrefix { ModuleName = "Games", Prefix = ">" },
-                new ModulePrefix { ModuleName = "Gambling", Prefix = "$" },
-                new ModulePrefix { ModuleName = "Permissions", Prefix = ";" },
-                new ModulePrefix { ModuleName = "Pokemon", Prefix = ">" },
-                new ModulePrefix { ModuleName = "Utility", Prefix = "." },
-                new ModulePrefix { ModuleName = "CustomReactions", Prefix = "." },
-                new ModulePrefix { ModuleName = "PokeGame", Prefix = ">" }, 
-                new ModulePrefix { ModuleName = "Level", Prefix = "!"},
-                new ModulePrefix { ModuleName = "Verification", Prefix = "." }
-            });
             bc.RaceAnimals.AddRange(new HashSet<RaceAnimal>
             {
                 new RaceAnimal { Icon = "🐼", Name = "Panda" },

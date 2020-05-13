@@ -38,7 +38,6 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 		public bool     DmCommandsOwnerOnly        { get; set; } = true;
 
 		public HashSet<BlacklistItem>     Blacklist              { get; set; }
-		public HashSet<ModulePrefix>      ModulePrefixes         { get; set; } = new HashSet<ModulePrefix>();
 		public List<PlayingStatus>        RotatingStatusMessages { get; set; } = new List<PlayingStatus>();
 		public HashSet<EightBallResponse> EightBallResponses     { get; set; } = new HashSet<EightBallResponse>();
 		public HashSet<RaceAnimal>        RaceAnimals            { get; set; } = new HashSet<RaceAnimal>();
@@ -51,7 +50,9 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 
 
 		[Obsolete]
-		public HashSet<CommandPrice> CommandPrices { get; set; } = new HashSet<CommandPrice>();
+		public HashSet<CommandPrice> CommandPrices  { get; set; } = new HashSet<CommandPrice>();
+		[Obsolete]
+		public HashSet<ModulePrefix> ModulePrefixes { get; set; } = new HashSet<ModulePrefix>();
 	}
 
 	public class BlockedCmdOrMdl : DbEntity {
