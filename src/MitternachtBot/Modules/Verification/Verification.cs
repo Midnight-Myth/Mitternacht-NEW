@@ -55,22 +55,21 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task AddVerification(IGuildUser user, long forumUserId) {
-			using(var uow = _db.UnitOfWork) {
-				var forumUserName = forumUserId.ToString();
-				try {
-					var forumUser = await _fs.Forum.GetUserInfo(forumUserId).ConfigureAwait(false);
-					if(!string.IsNullOrWhiteSpace(forumUser.Username))
-						forumUserName = forumUser.Username;
-				} catch(Exception) { /* ignore, any exception here is irrelevant to the execution of this method */ }
+			using var uow = _db.UnitOfWork;
+			var forumUserName = forumUserId.ToString();
+			try {
+				var forumUser = await _fs.Forum.GetUserInfo(forumUserId).ConfigureAwait(false);
+				if(!string.IsNullOrWhiteSpace(forumUser.Username))
+					forumUserName = forumUser.Username;
+			} catch(Exception) { /* ignore, any exception here is irrelevant to the execution of this method */ }
 
-				if(uow.VerifiedUsers.IsDiscordUserVerified(user.GuildId, user.Id))
-					await ErrorLocalized("already_verified_discord", user.ToString()).ConfigureAwait(false);
-				else if(uow.VerifiedUsers.IsForumUserVerified(user.GuildId, forumUserId))
-					await ErrorLocalized("already_verified_forum", forumUserName).ConfigureAwait(false);
-				else {
-					await Service.SetVerified(user, forumUserId).ConfigureAwait(false);
-					await ConfirmLocalized("add_manually_success", user.ToString(), forumUserName).ConfigureAwait(false);
-				}
+			if(uow.VerifiedUsers.IsDiscordUserVerified(user.GuildId, user.Id))
+				await ErrorLocalized("already_verified_discord", user.ToString()).ConfigureAwait(false);
+			else if(uow.VerifiedUsers.IsForumUserVerified(user.GuildId, forumUserId))
+				await ErrorLocalized("already_verified_forum", forumUserName).ConfigureAwait(false);
+			else {
+				await Service.SetVerified(user, forumUserId).ConfigureAwait(false);
+				await ConfirmLocalized("add_manually_success", user.ToString(), forumUserName).ConfigureAwait(false);
 			}
 		}
 
@@ -79,11 +78,11 @@ namespace Mitternacht.Modules.Verification {
 		[Priority(1)]
 		[OwnerOnly]
 		public async Task RemoveVerificationDiscord(IGuildUser guildUser) {
-			using(var uow = _db.UnitOfWork)
-				if(uow.VerifiedUsers.RemoveVerification(guildUser.GuildId, guildUser.Id))
-					await ConfirmLocalized("removed_discord", guildUser.ToString()).ConfigureAwait(false);
-				else
-					await ErrorLocalized("removed_discord_error", guildUser.ToString()).ConfigureAwait(false);
+			using var uow = _db.UnitOfWork;
+			if(uow.VerifiedUsers.RemoveVerification(guildUser.GuildId, guildUser.Id))
+				await ConfirmLocalized("removed_discord", guildUser.ToString()).ConfigureAwait(false);
+			else
+				await ErrorLocalized("removed_discord_error", guildUser.ToString()).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -94,12 +93,11 @@ namespace Mitternacht.Modules.Verification {
 			var guildUser = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 
 			if(guildUser is null) {
-				using(var uow = _db.UnitOfWork) {
-					if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, userId))
-						await ConfirmLocalized("removed_discord", userId.ToString()).ConfigureAwait(false);
-					else
-						await ErrorLocalized("removed_discord_error", userId.ToString()).ConfigureAwait(false);
-				}
+				using var uow = _db.UnitOfWork;
+				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, userId))
+					await ConfirmLocalized("removed_discord", userId.ToString()).ConfigureAwait(false);
+				else
+					await ErrorLocalized("removed_discord_error", userId.ToString()).ConfigureAwait(false);
 			} else {
 				await RemoveVerificationDiscord(guildUser).ConfigureAwait(false);
 			}
@@ -111,12 +109,11 @@ namespace Mitternacht.Modules.Verification {
 		[Priority(1)]
 		[OwnerOnly]
 		public async Task RemoveVerificationForum(long forumUserId) {
-			using(var uow = _db.UnitOfWork) {
-				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, forumUserId))
-					await ConfirmLocalized("removed_forum", forumUserId).ConfigureAwait(false);
-				else
-					await ErrorLocalized("removed_forum_error", forumUserId).ConfigureAwait(false);
-			}
+			using var uow = _db.UnitOfWork;
+			if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, forumUserId))
+				await ConfirmLocalized("removed_forum", forumUserId).ConfigureAwait(false);
+			else
+				await ErrorLocalized("removed_forum_error", forumUserId).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -132,12 +129,11 @@ namespace Mitternacht.Modules.Verification {
 			if(uinfo == null) {
 				await ErrorLocalized("forumaccount_not_existing", forumUsername).ConfigureAwait(false);
 			} else {
-				using(var uow = _db.UnitOfWork) {
-					if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, uinfo.Id))
-						await ConfirmLocalized("removed_forum", uinfo.Username).ConfigureAwait(false);
-					else
-						await ErrorLocalized("removed_forum_error", uinfo.Username).ConfigureAwait(false);
-				}
+				using var uow = _db.UnitOfWork;
+				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, uinfo.Id))
+					await ConfirmLocalized("removed_forum", uinfo.Username).ConfigureAwait(false);
+				else
+					await ErrorLocalized("removed_forum_error", uinfo.Username).ConfigureAwait(false);
 			}
 		}
 
@@ -324,14 +320,13 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task VerificationPasswordChannel() {
-			using(var uow = _db.UnitOfWork) {
-				var channelId = uow.GuildConfigs.For(Context.Guild.Id).VerificationPasswordChannelId;
+			using var uow = _db.UnitOfWork;
+			var channelId = uow.GuildConfigs.For(Context.Guild.Id).VerificationPasswordChannelId;
 
-				if(channelId.HasValue) {
-					await ConfirmLocalized("passwordchannel_current", MentionUtils.MentionChannel(channelId.Value)).ConfigureAwait(false);
-				} else {
-					await ConfirmLocalized("passwordchannel_current_not_set").ConfigureAwait(false);
-				}
+			if(channelId.HasValue) {
+				await ConfirmLocalized("passwordchannel_current", MentionUtils.MentionChannel(channelId.Value)).ConfigureAwait(false);
+			} else {
+				await ConfirmLocalized("passwordchannel_current_not_set").ConfigureAwait(false);
 			}
 		}
 
@@ -339,19 +334,18 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task VerificationPasswordChannel(ITextChannel channel) {
-			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(Context.Guild.Id);
-				if(channel.Id == gc.VerificationPasswordChannelId) {
-					await ErrorLocalized("passwordchannel_new_identical", channel.Mention).ConfigureAwait(false);
-				} else {
-					var oldPasswordChannelId = gc.VerificationPasswordChannelId;
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(Context.Guild.Id);
+			if(channel.Id == gc.VerificationPasswordChannelId) {
+				await ErrorLocalized("passwordchannel_new_identical", channel.Mention).ConfigureAwait(false);
+			} else {
+				var oldPasswordChannelId = gc.VerificationPasswordChannelId;
 
-					gc.VerificationPasswordChannelId = channel.Id;
+				gc.VerificationPasswordChannelId = channel.Id;
 
-					uow.GuildConfigs.Update(gc);
-					await uow.CompleteAsync().ConfigureAwait(false);
-					await ConfirmLocalized("passwordchannel_new", oldPasswordChannelId.HasValue ? MentionUtils.MentionChannel(oldPasswordChannelId.Value) : "null", channel.Mention).ConfigureAwait(false);
-				}
+				uow.GuildConfigs.Update(gc);
+				await uow.CompleteAsync().ConfigureAwait(false);
+				await ConfirmLocalized("passwordchannel_new", oldPasswordChannelId.HasValue ? MentionUtils.MentionChannel(oldPasswordChannelId.Value) : "null", channel.Mention).ConfigureAwait(false);
 			}
 		}
 	}
