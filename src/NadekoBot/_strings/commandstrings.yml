@@ -90,11 +90,6 @@
   -        pay
   desc:    Give someone a certain amount of currency.
   usage:   "`{0}give 1 @SomeGuy`"
-- name:    type
-  cmd:     type
-  aliases: []
-  desc:    Get the poketype of the target.
-  usage:   "`{0}type @someone`"
 - name:    pollstats
   cmd:     pollstats
   aliases: []
@@ -488,12 +483,6 @@
   aliases: []
   desc:    Starts a new animal race.
   usage:   "`{0}race`"
-- name:    pokemonability
-  cmd:     pokemonability
-  aliases:
-  -        pokeab
-  desc:    Searches for a pokemon ability.
-  usage:   "`{0}pokeab overgrow`"
 - name:    commandcost
   cmd:     commandcost
   aliases:
@@ -774,12 +763,6 @@
   -        bf
   desc:    Bet to guess will the result be heads or tails. Guessing awards you 1.95x the currency you've bet (rounded up). Multiplier can be changed by the bot owner.
   usage:   "`{0}bf 5 heads` or `{0}bf 3 t`"
-- name:    movelist
-  cmd:     movelist
-  aliases:
-  -        ml
-  desc:    Lists the moves you are able to use
-  usage:   "`{0}ml`"
 - name:    allrolemdls
   cmd:     allrolemdls
   aliases:
@@ -1536,11 +1519,6 @@
   -        srlb
   desc:    Setzt das benötigte Level für eine Rolle.
   usage:   "`{0}setrolelevelbinding <role> <minlevel>`"
-- name:    heal
-  cmd:     heal
-  aliases: []
-  desc:    'Heals someone. Revives those who fainted. Costs a Currency. '
-  usage:   "`{0}heal @someone`"
 - name:    allusrmdls
   cmd:     allusrmdls
   aliases:
@@ -1558,11 +1536,6 @@
   aliases: []
   desc:    Shows a total 5 images (from gelbooru, danbooru, konachan, yandere and atfbooru). Tag is optional but preferred.
   usage:   "`{0}hentaibomb yuri`"
-- name:    settype
-  cmd:     settype
-  aliases: []
-  desc:    Set your poketype. Costs a Currency. Provide no arguments to see a list of available types.
-  usage:   "`{0}settype fire` or `{0}settype`"
 - name:    defprefix
   cmd:     defprefix
   aliases: []
@@ -1770,12 +1743,6 @@
   -        cfi
   desc:    Toggles automatic deletion of invites posted in the channel. Does not negate the `{0}srvrfilterinv` enabled setting. Does not affect the Bot Owner.
   usage:   "`{0}cfi`"
-- name:    pokemon
-  cmd:     pokemon
-  aliases:
-  -        poke
-  desc:    Searches for a pokemon.
-  usage:   "`{0}poke Sylveon`"
 - name:    deltxtchanl
   cmd:     deltxtchanl
   aliases:
@@ -2002,11 +1969,6 @@
   -        omdb
   desc:    Queries omdb for movies or series, show first result.
   usage:   "`{0}imdb Batman vs Superman`"
-- name:    attack
-  cmd:     attack
-  aliases: []
-  desc:    Attacks a target with the given move. Use `{0}movelist` to see a list of moves your type can use.
-  usage:   '`{0}attack "vine whip" @someguy`'
 - name:    showquote
   cmd:     ".."
   aliases: []
