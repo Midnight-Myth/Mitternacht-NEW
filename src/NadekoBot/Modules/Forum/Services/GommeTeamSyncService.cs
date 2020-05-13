@@ -49,7 +49,8 @@ namespace Mitternacht.Modules.Forum.Services {
 				foreach(var gc in guildConfigs) {
 					var guild         = _client.GetGuild(gc.GuildId);
 					var gommeTeamRole = gc.GommeTeamMemberRoleId.HasValue ? guild.GetRole(gc.GommeTeamMemberRoleId.Value) : null;
-					if(gommeTeamRole == null) continue;
+					if(gommeTeamRole == null)
+						continue;
 					var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
 
 					var verifiedUsers = userInfos.Select(ui => uow.VerifiedUsers.GetVerifiedUserId(guild.Id, ui.Id)).Select(uid => uid.HasValue ? guild.GetUser(uid.Value) : null).Where(gu => gu != null).ToList();
@@ -60,7 +61,8 @@ namespace Mitternacht.Modules.Forum.Services {
 					} else {
 						foreach(var user in verifiedUsers) {
 							await user.RemoveRoleAsync(gommeTeamRole).ConfigureAwait(false);
-							if(vipRole != null) await user.AddRoleAsync(vipRole).ConfigureAwait(false);
+							if(vipRole != null)
+								await user.AddRoleAsync(vipRole).ConfigureAwait(false);
 						}
 					}
 				}
