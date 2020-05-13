@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Modules.Games.Common.Acrophobia
+namespace Mitternacht.Modules.Games.Common.Acrophobia
 {
     public class AcrophobiaUser
     {

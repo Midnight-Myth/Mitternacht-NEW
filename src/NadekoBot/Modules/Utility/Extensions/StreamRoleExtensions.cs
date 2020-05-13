@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Database.Repositories;
 

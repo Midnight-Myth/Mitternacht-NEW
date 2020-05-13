@@ -1,4 +1,4 @@
-﻿using Mitternacht.Extensions;
+using Mitternacht.Extensions;
 
 namespace Mitternacht.Modules.Searches.Common
 {

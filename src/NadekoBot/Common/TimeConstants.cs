@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Common
+namespace Mitternacht.Common
 {
     public class TimeConstants
     {

@@ -1,4 +1,4 @@
-﻿using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Database.Models;
 using System.Collections.Generic;
 
 namespace Mitternacht.Services.Database.Repositories

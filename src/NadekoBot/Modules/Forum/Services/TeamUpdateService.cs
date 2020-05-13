@@ -1,4 +1,4 @@
-﻿using Discord.WebSocket;
+using Discord.WebSocket;
 using GommeHDnetForumAPI.Models;
 using GommeHDnetForumAPI.Models.Collections;
 using GommeHDnetForumAPI.Models.Entities;

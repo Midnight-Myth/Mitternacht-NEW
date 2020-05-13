@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Services.Database.Models
+namespace Mitternacht.Services.Database.Models
 {
     public class DiscordUser : DbEntity
     {

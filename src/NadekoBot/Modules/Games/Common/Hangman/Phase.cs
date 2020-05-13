@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Modules.Games.Common.Hangman
+namespace Mitternacht.Modules.Games.Common.Hangman
 {
     public enum Phase
     {

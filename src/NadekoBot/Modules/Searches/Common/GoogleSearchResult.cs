@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Modules.Searches.Common
+namespace Mitternacht.Modules.Searches.Common
 {
     public struct GoogleSearchResult
     {

@@ -1,4 +1,4 @@
-﻿// License MIT
+// License MIT
 // Source: https://github.com/i3arnon/ConcurrentHashSet
 
 using System;

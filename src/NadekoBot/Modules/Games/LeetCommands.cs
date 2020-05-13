@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
