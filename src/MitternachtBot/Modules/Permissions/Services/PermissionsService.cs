@@ -163,7 +163,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 			if(!resetCommand && !pc.Permissions.CheckPermissions(msg, commandName, moduleName, out var index)) {
 				if(!pc.Verbose)
 					return true;
-				try { await channel.SendErrorAsync(_strings.GetText("permissions", "trigger", guild.Id, index + 1, Format.Bold(pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), (SocketGuild)guild)))).ConfigureAwait(false); } catch { }
+				try { await channel.SendErrorAsync(_strings.GetText("permissions", "trigger", guild.Id, index + 1, pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), (SocketGuild)guild))).ConfigureAwait(false); } catch { }
 				return true;
 			}
 
