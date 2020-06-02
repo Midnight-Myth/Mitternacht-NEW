@@ -48,15 +48,8 @@ namespace Mitternacht.Services.Impl {
 			log.Info($"Loaded {_responseStrings.Count} locales in {sw.Elapsed.TotalSeconds:F2}s");
 		}
 
-		private string GetString(string moduleName, string key, CultureInfo cultureInfo) {
-			if(_responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var moduleStrings) && moduleStrings.TryGetValue(moduleName, out var strings)) {
-				strings.TryGetValue(key, out var val);
-				return val;
-			} else {
-				UnknownKeyRequested(moduleName, key, cultureInfo);
-				return null;
-			}
-		}
+		private string GetString(string moduleName, string key, CultureInfo cultureInfo)
+			=> _responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var moduleStrings) && moduleStrings.TryGetValue(moduleName, out var strings) && strings.TryGetValue(key, out var val) ? val : null;
 
 		public string GetText(string lowerModuleTypeName, string key, ulong? guildId, params object[] replacements)
 			=> GetText(lowerModuleTypeName, key, _localization.GetCultureInfo(guildId), replacements);
@@ -67,7 +60,8 @@ namespace Mitternacht.Services.Impl {
 			if(!string.IsNullOrWhiteSpace(text)) return text;
 			
 			_logger.Warn($"Key {lowerModuleTypeName}.{key} is missing from {cultureInfo} response strings. PLEASE REPORT THIS.");
-			
+			UnknownKeyRequested(lowerModuleTypeName, key, cultureInfo);
+
 			text = GetString(lowerModuleTypeName, key, _fallbackCultureInfo) ?? $"Error: Key {lowerModuleTypeName}.{key} not found!";
 			return !string.IsNullOrWhiteSpace(text) ? text : $"I can't tell you if the command is executed, because there was an error printing out the response. Key '{lowerModuleTypeName}.{key}' is missing from resources. Please report this.";
 		}
