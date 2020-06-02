@@ -105,12 +105,18 @@ namespace MitternachtWeb {
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints => {
-				endpoints.MapControllerRoute(
+				endpoints.MapAreaControllerRoute(
 					name: "settings",
-					pattern: "{area:exists}/{controller=Settings}/{action=Index}/{id?}");
-				endpoints.MapControllerRoute(
+					areaName: "Settings",
+					pattern: "settings/{controller=Settings}/{action=Index}/{id?}");
+				endpoints.MapAreaControllerRoute(
 					name: "analysis",
-					pattern: "{area:exists}/{controller=UnknownKeyRequests}/{action=Index}/{id?}");
+					areaName: "Analysis",
+					pattern: "analysis/{controller=Analysis}/{action=Index}/{id?}");
+				endpoints.MapAreaControllerRoute(
+					name: "moderation",
+					areaName: "Moderation",
+					pattern: "moderation/{guildId}/{controller=Stats}/{action=Index}/{id?}");
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
