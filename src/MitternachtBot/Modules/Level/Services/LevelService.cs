@@ -63,17 +63,15 @@ namespace Mitternacht.Modules.Level.Services {
 		}
 
 		private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel) {
-			await Task.Run(async () => {
-				var msg = await before.GetOrDownloadAsync().ConfigureAwait(false);
-				if(!(msg.Author is IGuildUser user) || await _ch.WouldGetExecuted(msg).ConfigureAwait(false))
-					return;
+			var msg = await before.GetOrDownloadAsync().ConfigureAwait(false);
+			if(msg == null || !(msg.Author is IGuildUser user) || await _ch.WouldGetExecuted(msg).ConfigureAwait(false))
+				return;
 
-				using var uow = _db.UnitOfWork;
-				if(uow.MessageXpBlacklist.IsRestricted(channel as ITextChannel))
-					return;
-				uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax, channel.Id);
-				await uow.CompleteAsync().ConfigureAwait(false);
-			}).ConfigureAwait(false);
+			using var uow = _db.UnitOfWork;
+			if(uow.MessageXpBlacklist.IsRestricted(channel as ITextChannel))
+				return;
+			uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId, set => set).MessageXpCharCountMax, channel.Id);
+			await uow.CompleteAsync().ConfigureAwait(false);
 		}
 
 		private async Task SendLevelChangedMessage(LevelChangedArgs lc) {
