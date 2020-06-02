@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -61,28 +63,15 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.MuteMembers)]
 			[Priority(1)]
 			public async Task Mute(string time, IGuildUser user) {
-				var argTime = time;
-				string sdays = "0", shours = "0", sminutes = "0";
+				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?";
+				
+				var match = Regex.Match(time, timeRegex);
 
+				var days    = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
+				var hours   = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
+				var minutes = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
 
-				if(argTime.Contains('d')) {
-					sdays = argTime.Split('d')[0];
-					argTime = argTime.Split('d')[1];
-				}
-
-				if(argTime.Contains('h')) {
-					shours = argTime.Split('h')[0];
-					argTime = argTime.Split('h')[1];
-				}
-				if(argTime.Contains('m')) {
-					sminutes = argTime.Split('m')[0];
-				}
-
-				var days = Convert.ToInt32(sdays);
-				var hours = Convert.ToInt32(shours);
-				var minutes = Convert.ToInt32(sminutes);
-
-				var muteTime = days * 24 * 60 + hours * 60 + minutes;
+				var muteTime = days*24*60 + hours*60 + minutes;
 				try {
 					await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
 					await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
