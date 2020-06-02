@@ -49,6 +49,7 @@ namespace Mitternacht.Services.Database.Models {
 		public string TeamUpdateMessagePrefix            { get; set; } = "";
 		public ulong? CountToNumberChannelId             { get; set; } = null;
 		public double CountToNumberMessageChance         { get; set; } = 0.05;
+		public ulong? ForumNotificationChannelId         { get; set; } = null;
 
 		public Permission         RootPermission     { get; set; } = null;
 		public List<Permissionv2> Permissions        { get; set; }

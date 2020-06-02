@@ -327,6 +327,7 @@ forum:
   dev_failed:                                    Hoppla, da bin ich doch glatt in einen unmöglichen Fall gestolpert! Um mich wieder aufzufangen, kontaktiere den Botentwickler.
   forum_id:                                      ForumId
   forum_name:                                    Forumname
+  forum_notification:                            "**Forumbenachrichtigung:** {0}"
   forum_user_not_accessible:                     Zu **`{0}`** kann kein Forumaccount angezeigt werden!
   forum_user_not_existing:                       Zu **`{0}`** existiert kein Forumaccount!
   forum_user_not_seeable:                        Die Einsicht des Profils von **`{0}`** wurde eingeschränkt!
