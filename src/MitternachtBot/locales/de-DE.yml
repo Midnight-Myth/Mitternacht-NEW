@@ -686,7 +686,7 @@ permissions:
   sec:                                           sek.
   sx_disable:                                    Benutzung von {0} {1} wurde für diesen Server verboten.
   sx_enable:                                     Benutzung von {0} {1} wurde für diesen Server erlaubt.
-  trigger:                                       ''
+  trigger:                                       'Getriggert auf Server mit ID {0}. Zugriffslevel {1} ist zu gering für Befehl `{2}`'
   unblacklisted:                                 "{0} mit ID {1} von Sperrliste entfernt"
   uneditable:                                    Nicht editierbar
   ux_disable:                                    Benutzung von {0} {1} wurde für Benutzer {2} verboten.
