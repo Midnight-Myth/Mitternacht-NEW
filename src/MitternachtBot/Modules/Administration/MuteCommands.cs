@@ -26,11 +26,10 @@ namespace Mitternacht.Modules.Administration {
 				if(string.IsNullOrWhiteSpace(name))
 					return;
 
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id, set => set);
-					config.MuteRoleName = name;
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
+				using var uow = _db.UnitOfWork;
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+				gc.MuteRoleName = name;
+				await uow.CompleteAsync().ConfigureAwait(false);
 				await ReplyConfirmLocalized("mute_role_set").ConfigureAwait(false);
 			}
 
