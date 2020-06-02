@@ -273,7 +273,7 @@ namespace Mitternacht.Modules.Administration.Services
             return Task.CompletedTask;
         }
 
-        private void MuteCommands_UserMuted(IGuildUser usr, MuteType muteType)
+        private void MuteCommands_UserMuted(IGuildUser usr)
         {
             var _ = Task.Run(async () =>
             {
@@ -286,22 +286,10 @@ namespace Mitternacht.Modules.Administration.Services
                     ITextChannel logChannel;
                     if ((logChannel = await TryGetLogChannel(usr.Guild, logSetting, LogType.UserMuted)) == null)
                         return;
-                    var mutes = "";
                     var mutedLocalized = GetText(logChannel.Guild, "muted_sn");
-                    switch (muteType)
-                    {
-                        case MuteType.Voice:
-                            mutes = "🔇 " + GetText(logChannel.Guild, "xmuted_voice", mutedLocalized);
-                            break;
-                        case MuteType.Chat:
-                            mutes = "🔇 " + GetText(logChannel.Guild, "xmuted_text", mutedLocalized);
-                            break;
-                        case MuteType.All:
-                            mutes = "🔇 " + GetText(logChannel.Guild, "xmuted_text_and_voice", mutedLocalized);
-                            break;
-                    }
+					var mutes = $"🔇 {GetText(logChannel.Guild, "xmuted_text_and_voice", mutedLocalized)}";
 
-                    var embed = new EmbedBuilder().WithAuthor(eab => eab.WithName(mutes))
+					var embed = new EmbedBuilder().WithAuthor(eab => eab.WithName(mutes))
                             .WithTitle($"{usr.Username}#{usr.Discriminator} | {usr.Id}")
                             .WithFooter(fb => fb.WithText(CurrentTime(usr.Guild)))
                             .WithOkColor();
@@ -315,7 +303,7 @@ namespace Mitternacht.Modules.Administration.Services
             });
         }
 
-        private void MuteCommands_UserUnmuted(IGuildUser usr, MuteType muteType)
+        private void MuteCommands_UserUnmuted(IGuildUser usr)
         {
             var _ = Task.Run(async () =>
             {
@@ -329,20 +317,8 @@ namespace Mitternacht.Modules.Administration.Services
                     if ((logChannel = await TryGetLogChannel(usr.Guild, logSetting, LogType.UserMuted)) == null)
                         return;
 
-                    var mutes = "";
                     var unmutedLocalized = GetText(logChannel.Guild, "unmuted_sn");
-                    switch (muteType)
-                    {
-                        case MuteType.Voice:
-                            mutes = "🔊 " + GetText(logChannel.Guild, "xmuted_voice", unmutedLocalized);
-                            break;
-                        case MuteType.Chat:
-                            mutes = "🔊 " + GetText(logChannel.Guild, "xmuted_text", unmutedLocalized);
-                            break;
-                        case MuteType.All:
-                            mutes = "🔊 " + GetText(logChannel.Guild, "xmuted_text_and_voice", unmutedLocalized);
-                            break;
-                    }
+                    var mutes = $"🔊 {GetText(logChannel.Guild, "xmuted_text_and_voice", unmutedLocalized)}";
 
                     var embed = new EmbedBuilder().WithAuthor(eab => eab.WithName(mutes))
                             .WithTitle($"{usr.Username}#{usr.Discriminator} | {usr.Id}")

@@ -57,7 +57,7 @@ namespace Mitternacht.Modules.Administration.Services {
 					if(p.Time == 0)
 						await _mute.MuteUser(user).ConfigureAwait(false);
 					else
-						await _mute.TimedMute(user, TimeSpan.FromMinutes(p.Time), MuteType.Chat).ConfigureAwait(false);
+						await _mute.TimedMute(user, TimeSpan.FromMinutes(p.Time)).ConfigureAwait(false);
 					break;
 				case PunishmentAction.Kick:
 					await user.KickAsync().ConfigureAwait(false);

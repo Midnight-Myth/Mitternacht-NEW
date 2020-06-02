@@ -1047,11 +1047,6 @@
   -        t
   desc:    Starts a game of trivia. You can add `nohint` to prevent hints. First player to get to 10 points wins by default. You can specify a different number. 30 seconds per question.
   usage:   "`{0}t` or `{0}t 5 nohint`"
-- name:    chatunmute
-  cmd:     chatunmute
-  aliases: []
-  desc:    Removes a mute role previously set on a mentioned user with `{0}chatmute` which prevented him from chatting in text channels.
-  usage:   "`{0}chatunmute @Someone`"
 - name:    warn
   cmd:     warn
   aliases: []
@@ -1694,11 +1689,6 @@
   aliases: []
   desc:    Shows top banned champions ordered by ban rate.
   usage:   "`{0}lolban`"
-- name:    voicemute
-  cmd:     voicemute
-  aliases: []
-  desc:    Prevents a mentioned user from speaking in voice channels.
-  usage:   "`{0}voicemute @Someone`"
 - name:    shop
   cmd:     shop
   aliases: []
@@ -1772,11 +1762,6 @@
   aliases: []
   desc:    Chooses a thing from a list of things
   usage:   "`{0}choose Get up;Sleep;Sleep more`"
-- name:    voiceunmute
-  cmd:     voiceunmute
-  aliases: []
-  desc:    Gives a previously voice-muted user a permission to speak.
-  usage:   "`{0}voiceunmute @Someguy`"
 - name:    crstatsclear
   cmd:     crstatsclear
   aliases: []
@@ -1870,11 +1855,6 @@
   aliases: []
   desc:    Pulls a list of memes you can use with `{0}memegen` from http://memegen.link/templates/
   usage:   "`{0}memelist`"
-- name:    chatmute
-  cmd:     chatmute
-  aliases: []
-  desc:    Prevents a mentioned user from chatting in text channels.
-  usage:   "`{0}chatmute @Someone`"
 - name:    gencurrency
   cmd:     gencurrency
   aliases:

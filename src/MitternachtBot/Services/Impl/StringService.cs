@@ -21,6 +21,8 @@ namespace Mitternacht.Services.Impl {
 		private readonly ILocalization _localization;
 		private readonly Logger        _logger = LogManager.GetCurrentClassLogger();
 
+		public event Action<string, string, CultureInfo> UnknownKeyRequested = delegate{ };
+
 		public StringService(ILocalization loc) {
 			var log = LogManager.GetCurrentClassLogger();
 			_localization = loc;
@@ -47,13 +49,13 @@ namespace Mitternacht.Services.Impl {
 		}
 
 		private string GetString(string moduleName, string key, CultureInfo cultureInfo) {
-			if(!_responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var moduleStrings)) return null;
-
-			if(moduleStrings.TryGetValue(moduleName, out var strings)) {
+			if(_responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var moduleStrings) && moduleStrings.TryGetValue(moduleName, out var strings)) {
 				strings.TryGetValue(key, out var val);
 				return val;
+			} else {
+				UnknownKeyRequested(moduleName, key, cultureInfo);
+				return null;
 			}
-			return null;
 		}
 
 		public string GetText(string lowerModuleTypeName, string key, ulong? guildId, params object[] replacements)

@@ -7,276 +7,165 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Common.Collections;
-using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public enum MuteType
-    {
-        Voice,
-        Chat,
-        All
-    }
+namespace Mitternacht.Modules.Administration.Services {
+	public class MuteService : IMService {
+		public ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, Timer>> UnmuteTimers { get; } = new ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, Timer>>();
 
-    public class MuteService : IMService
-    {
-        public ConcurrentDictionary<ulong, string> GuildMuteRoles { get; }
-        public ConcurrentDictionary<ulong, ConcurrentHashSet<ulong>> MutedUsers { get; }
-        public ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, Timer>> UnmuteTimers { get; }
-            = new ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, Timer>>();
+		public event Action<IGuildUser> UserMuted   = delegate { };
+		public event Action<IGuildUser> UserUnmuted = delegate { };
 
-        public event Action<IGuildUser, MuteType> UserMuted = delegate { };
-        public event Action<IGuildUser, MuteType> UserUnmuted = delegate { };
+		private readonly Logger _log = LogManager.GetCurrentClassLogger();
+		private readonly DiscordSocketClient _client;
+		private readonly DbService _db;
 
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
-        private readonly DiscordSocketClient _client;
-        private readonly DbService _db;
+		public MuteService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, DbService db) {
+			_client = client;
+			_db = db;
 
-        public MuteService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, DbService db)
-        {
-            _client = client;
-            _db = db;
+			foreach(var gc in gcs) {
+				foreach(var ut in gc.UnmuteTimers) {
+					var after = ut.UnmuteAt - TimeSpan.FromMinutes(2) <= DateTime.UtcNow ? TimeSpan.FromMinutes(2) : ut.UnmuteAt - DateTime.UtcNow;
+					StartUnmuteTimer(gc.GuildId, ut.UserId, after);
+				}
+			}
 
-            GuildMuteRoles = gcs
-                    .Where(c => !string.IsNullOrWhiteSpace(c.MuteRoleName))
-                    .ToDictionary(c => c.GuildId, c => c.MuteRoleName)
-                    .ToConcurrent();
+			_client.UserJoined += Client_UserJoined;
+		}
 
-            MutedUsers = new ConcurrentDictionary<ulong, ConcurrentHashSet<ulong>>(gcs.ToDictionary(
-                k => k.GuildId,
-                v => new ConcurrentHashSet<ulong>(v.MutedUsers.Select(m => m.UserId))
-            ));
+		private Task Client_UserJoined(IGuildUser guildUser) {
+			try {
+				using var uow = _db.UnitOfWork;
 
-            foreach (var conf in gcs)
-            {
-                foreach (var x in conf.UnmuteTimers)
-                {
-                    TimeSpan after;
-                    if (x.UnmuteAt - TimeSpan.FromMinutes(2) <= DateTime.UtcNow)
-                    {
-                        after = TimeSpan.FromMinutes(2);
-                    }
-                    else
-                    {
-                        after = x.UnmuteAt - DateTime.UtcNow;
-                    }
-                    StartUnmuteTimer(conf.GuildId, x.UserId, after);
-                }
-            }
+				//Mute user if a mute is saved in the database.
+				if(uow.GuildConfigs.For(guildUser.GuildId, set => set.Include(gc => gc.MutedUsers)).MutedUsers.Any(mu => mu.UserId == guildUser.Id)) {
+					var _ = Task.Run(() => MuteUser(guildUser).ConfigureAwait(false));
+				}
+			} catch(Exception ex) {
+				_log.Warn(ex);
+			}
+			return Task.CompletedTask;
+		}
 
-            _client.UserJoined += Client_UserJoined;
-        }
+		public async Task MuteUser(IGuildUser guildUser) {
+			StopUnmuteTimer(guildUser.GuildId, guildUser.Id);
 
-        private Task Client_UserJoined(IGuildUser usr)
-        {
-            try
-            {
-                MutedUsers.TryGetValue(usr.Guild.Id, out var muted);
+			//Add muted role to user.
+			var muteRole = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
+			if(!guildUser.RoleIds.Contains(muteRole.Id))
+				await guildUser.AddRoleAsync(muteRole).ConfigureAwait(false);
 
-                if (muted == null || !muted.Contains(usr.Id))
-                    return Task.CompletedTask;
-                var _ = Task.Run(() => MuteUser(usr).ConfigureAwait(false));
-            }
-            catch (Exception ex)
-            {
-                _log.Warn(ex);
-            }
-            return Task.CompletedTask;
-        }
+			//Save mute to database.
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
+			var mutedUser = gc.MutedUsers.FirstOrDefault(mu => mu.UserId == guildUser.Id);
+			if(mutedUser == null) {
+				gc.MutedUsers.Add(new MutedUserId { UserId = guildUser.Id });
+				await uow.CompleteAsync().ConfigureAwait(false);
+			}
 
-        public async Task MuteUser(IGuildUser usr, MuteType type = MuteType.All)
-        {
-            if (type == MuteType.All)
-            {
-                await usr.ModifyAsync(x => x.Mute = true).ConfigureAwait(false);
-                var muteRole = await GetMuteRole(usr.Guild);
-                if (!usr.RoleIds.Contains(muteRole.Id))
-                    await usr.AddRoleAsync(muteRole).ConfigureAwait(false);
-                StopUnmuteTimer(usr.GuildId, usr.Id);
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.GuildConfigs.For(usr.Guild.Id,
-                        set => set.Include(gc => gc.MutedUsers)
-                            .Include(gc => gc.UnmuteTimers));
-                    config.MutedUsers.Add(new MutedUserId {
-                        UserId = usr.Id
-                    });
-                    if (MutedUsers.TryGetValue(usr.Guild.Id, out var muted))
-                        muted.Add(usr.Id);
+			UserMuted(guildUser);
+		}
 
-                    config.UnmuteTimers.RemoveWhere(x => x.UserId == usr.Id);
+		public async Task UnmuteUser(IGuildUser guildUser) {
+			StopUnmuteTimer(guildUser.GuildId, guildUser.Id);
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
-                }
-                UserMuted(usr, MuteType.All);
-            }
-            else if (type == MuteType.Voice)
-            {
-                await usr.ModifyAsync(x => x.Mute = true).ConfigureAwait(false);
-                UserMuted(usr, MuteType.Voice);
-            }
-            else if (type == MuteType.Chat)
-            {
-                await usr.AddRoleAsync(await GetMuteRole(usr.Guild).ConfigureAwait(false)).ConfigureAwait(false);
-                UserMuted(usr, MuteType.Chat);
-            }
-        }
+			//Remove muted role from user.
+			var muteRole = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
+			if(guildUser.RoleIds.Contains(muteRole.Id))
+				await guildUser.RemoveRoleAsync(muteRole).ConfigureAwait(false);
 
-        public async Task UnmuteUser(IGuildUser usr, MuteType type = MuteType.All)
-        {
-            if (type == MuteType.All)
-            {
-                StopUnmuteTimer(usr.GuildId, usr.Id);
-                try { await usr.ModifyAsync(x => x.Mute = false).ConfigureAwait(false); } catch { /*ignore*/ }
-                try { await usr.RemoveRoleAsync(await GetMuteRole(usr.Guild)).ConfigureAwait(false); } catch { /*ignore*/ }
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.GuildConfigs.For(usr.Guild.Id, set => set.Include(gc => gc.MutedUsers)
-                        .Include(gc => gc.UnmuteTimers));
-                    config.MutedUsers.Remove(new MutedUserId {
-                        UserId = usr.Id
-                    });
-                    if (MutedUsers.TryGetValue(usr.Guild.Id, out var muted))
-                        muted.TryRemove(usr.Id);
+			//Remove mute from database.
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
+			gc.MutedUsers.RemoveWhere(mu => mu.UserId == guildUser.Id);
+			await uow.CompleteAsync().ConfigureAwait(false);
 
-                    config.UnmuteTimers.RemoveWhere(x => x.UserId == usr.Id);
+			UserUnmuted(guildUser);
+		}
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
-                }
-                UserUnmuted(usr, MuteType.All);
-            }
-            else if (type == MuteType.Voice)
-            {
-                await usr.ModifyAsync(x => x.Mute = false).ConfigureAwait(false);
-                UserUnmuted(usr, MuteType.Voice);
-            }
-            else if (type == MuteType.Chat)
-            {
-                await usr.RemoveRoleAsync(await GetMuteRole(usr.Guild).ConfigureAwait(false)).ConfigureAwait(false);
-                UserUnmuted(usr, MuteType.Chat);
-            }
-        }
+		public async Task<IRole> GetMuteRole(IGuild guild) {
+			const string defaultMuteRoleName = "Muted";
 
-        public async Task<IRole> GetMuteRole(IGuild guild) {
-            const string defaultMuteRoleName = "Muted";
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guild.Id, set => set);
+			if(string.IsNullOrWhiteSpace(gc.MuteRoleName)) {
+				gc.MuteRoleName = defaultMuteRoleName;
+				await uow.CompleteAsync().ConfigureAwait(false);
+			}
 
-            var muteRoleName = GuildMuteRoles.GetOrAdd(guild.Id, defaultMuteRoleName);
+			var muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName);
+			if(muteRole == null) {
+				//TODO: Silently creating the role is not a good design.
+				try {
+					muteRole = await guild.CreateRoleAsync(gc.MuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
+				} catch {
+					muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName) ?? await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
+				}
+			}
 
-            var muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName);
-            if (muteRole != null) return muteRole;
-            //if it doesn't exist, create it 
-            try {
-                muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
-            }
-            catch {
-                //if creations fails,  maybe the name is not correct, find default one, if doesn't work, create default one
-                muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName) ??
-                           await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
-            }
+			return muteRole;
+		}
 
-            //foreach (var toOverwrite in (await guild.GetTextChannelsAsync()))
-            //{
-            //    try
-            //    {
-            //        if (!toOverwrite.PermissionOverwrites.Select(x => x.Permissions).Contains(denyOverwrite))
-            //        {
-            //            await toOverwrite.AddPermissionOverwriteAsync(muteRole, denyOverwrite)
-            //                    .ConfigureAwait(false);
-            //
-            //            await Task.Delay(200).ConfigureAwait(false);
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        // ignored
-            //    }
-            //}
+		public async Task TimedMute(IGuildUser guildUser, TimeSpan after) {
+			await MuteUser(guildUser).ConfigureAwait(false);
 
-            return muteRole;
-        }
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guildUser.GuildId, set => set.Include(x => x.UnmuteTimers));
+			gc.UnmuteTimers.Add(new UnmuteTimer {
+				UserId = guildUser.Id,
+				UnmuteAt = DateTime.UtcNow + after,
+			});
+			await uow.CompleteAsync().ConfigureAwait(false);
 
-        public async Task TimedMute(IGuildUser user, TimeSpan after, MuteType muteType)
-        {
-            await MuteUser(user, muteType).ConfigureAwait(false); // mute the user. This will also remove any previous unmute timers
-            using (var uow = _db.UnitOfWork)
-            {
-                var config = uow.GuildConfigs.For(user.GuildId, set => set.Include(x => x.UnmuteTimers));
-                config.UnmuteTimers.Add(new UnmuteTimer()
-                {
-                    UserId = user.Id,
-                    UnmuteAt = DateTime.UtcNow + after,
-                }); // add the unmute timer to the database
-                uow.Complete();
-            }
-            StartUnmuteTimer(user.GuildId, user.Id, after); // start the timer
-        }
+			StartUnmuteTimer(guildUser.GuildId, guildUser.Id, after);
+		}
 
-        public void StartUnmuteTimer(ulong guildId, ulong userId, TimeSpan after)
-        {
-            //load the unmute timers for this guild
-            var userUnmuteTimers = UnmuteTimers.GetOrAdd(guildId, new ConcurrentDictionary<ulong, Timer>());
+		public void StartUnmuteTimer(ulong guildId, ulong userId, TimeSpan after) {
+			var guildUpdateTimers = UnmuteTimers.GetOrAdd(guildId, new ConcurrentDictionary<ulong, Timer>());
 
-            //unmute timer to be added
-            var toAdd = new Timer(async _ =>
-            {
-                try
-                {
-                    var guild = _client.GetGuild(guildId); // load the guild
-                    if (guild == null)
-                    {
-                        RemoveUnmuteTimerFromDb(guildId, userId);
-                        return; // if guild can't be found, just remove the timer from db
-                    }
-                    // unmute the user, this will also remove the timer from the db
-                    await UnmuteUser(guild.GetUser(userId)).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    RemoveUnmuteTimerFromDb(guildId, userId); // if unmute errored, just remove unmute from db
+			var unmuteTimer = new Timer(async _ => {
+				try {
+					var guild     = _client.GetGuild(guildId);
+					var guildUser = guild?.GetUser(userId);
+
+					if(guild == null) {
+						RemoveUnmuteTimerFromDb(guildId, userId);
+					} else {
+						await UnmuteUser(guildUser).ConfigureAwait(false);
+					}
+				} catch(Exception ex) {
+					RemoveUnmuteTimerFromDb(guildId, userId);
                     _log.Warn("Couldn't unmute user {0} in guild {1}", userId, guildId);
-                    _log.Warn(ex);
-                }
-            }, null, after, Timeout.InfiniteTimeSpan);
+					_log.Warn(ex);
+				}
+			}, null, after, Timeout.InfiniteTimeSpan);
 
-            //add it, or stop the old one and add this one
-            userUnmuteTimers.AddOrUpdate(userId, key => toAdd, (key, old) =>
-            {
-                old.Change(Timeout.Infinite, Timeout.Infinite);
-                return toAdd;
-            });
-        }
+			guildUpdateTimers.AddOrUpdate(userId, key => unmuteTimer, (key, old) => {
+				old.Dispose();
+				return unmuteTimer;
+			});
+		}
 
-        public void StopUnmuteTimer(ulong guildId, ulong userId)
-        {
-            if (!UnmuteTimers.TryGetValue(guildId, out var userUnmuteTimers)) return;
+		public void StopUnmuteTimer(ulong guildId, ulong userId) {
+			if(UnmuteTimers.TryGetValue(guildId, out var userUnmuteTimers) && userUnmuteTimers.TryRemove(userId, out var removed)) {
+				removed.Dispose();
+			}
+		}
 
-            if (userUnmuteTimers.TryRemove(userId, out var removed))
-            {
-                removed.Change(Timeout.Infinite, Timeout.Infinite);
-            }
-        }
+		public DateTime? GetMuteTime(IGuildUser guildUser) {
+			using var uow = _db.UnitOfWork;
+			return uow.GuildConfigs.For(guildUser.GuildId, set => set.Include(x => x.UnmuteTimers)).UnmuteTimers.FirstOrDefault(ut => ut.UserId == guildUser.Id)?.UnmuteAt;
+		}
 
-        public DateTime? GetMuteTime(ulong guildId, ulong userId) {
-            using (var uow = _db.UnitOfWork) {
-                return uow.GuildConfigs.For(guildId, set => set.Include(x => x.UnmuteTimers)).UnmuteTimers.FirstOrDefault(ut => ut.UserId == userId)?.UnmuteAt;
-            }
-        }
-
-        public DateTime? GetMuteTime(IGuildUser user) 
-            => GetMuteTime(user.GuildId, user.Id);
-
-        private void RemoveUnmuteTimerFromDb(ulong guildId, ulong userId)
-        {
-            using (var uow = _db.UnitOfWork)
-            {
-                var config = uow.GuildConfigs.For(guildId, set => set.Include(x => x.UnmuteTimers));
-                config.UnmuteTimers.RemoveWhere(x => x.UserId == userId);
-                uow.Complete();
-            }
-        }
-    }
+		private void RemoveUnmuteTimerFromDb(ulong guildId, ulong userId) {
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guildId, set => set.Include(x => x.UnmuteTimers));
+			gc.UnmuteTimers.RemoveWhere(x => x.UserId == userId);
+			uow.Complete();
+		}
+	}
 }
