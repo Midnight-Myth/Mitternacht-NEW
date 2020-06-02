@@ -150,7 +150,7 @@ namespace Mitternacht.Modules.Verification.Common {
 				if(!await ReceiveAbort(msg).ConfigureAwait(false)) {
 					if(_fs.LoggedIn) {
 						var conversations = await _fs.Forum.GetConversations(startPage: 1, pageCount: 2).ConfigureAwait(false);
-						var conversation = conversations.FirstOrDefault(c => c.Author.Id == ForumUserId);
+						var conversation = conversations.Where(c => c.Author is UserInfo).FirstOrDefault(c => (c.Author as UserInfo).Id == ForumUserId);
 
 						if(conversation is null) {
 							await ErrorAsync("no_message_by_author");
