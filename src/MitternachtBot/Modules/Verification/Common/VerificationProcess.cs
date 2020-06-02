@@ -159,7 +159,7 @@ namespace Mitternacht.Modules.Verification.Common {
 						await conversation.DownloadMessagesAsync().ConfigureAwait(false);
 						using var uow = _db.UnitOfWork;
 						var verifystring = uow.GuildConfigs.For(GuildUser.GuildId).VerifyString;
-						if(!string.IsNullOrWhiteSpace(verifystring) && !conversation.Title.Equals(verifystring, StringComparison.OrdinalIgnoreCase)) {
+						if(!string.IsNullOrWhiteSpace(verifystring) && !conversation.Title.Contains(verifystring, StringComparison.OrdinalIgnoreCase)) {
 							await ErrorAsync("message_wrong_title_try_again").ConfigureAwait(false);
 							return;
 						}
