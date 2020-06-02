@@ -255,6 +255,12 @@
 				<input class="form-check-input" asp-for="WarningsInitialized" /> @Html.DisplayNameFor(model => model.WarningsInitialized)
 			</label>
 		</div>
+		<div class="form-group">
+			<label asp-for="ForumNotificationChannelId" class="control-label"></label>
+			<input asp-for="ForumNotificationChannelId" class="form-control" />
+			<span asp-validation-for="ForumNotificationChannelId" class="text-danger"></span>
+		</div>
+
 		<input type="hidden" asp-for="GuildId" />
 		<div class="form-group">
 			<input type="submit" value="Save" class="btn btn-primary" />
