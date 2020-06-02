@@ -2406,3 +2406,8 @@
   -        msgxprclean
   desc:    Entfernt gelöschte Kanäle aus den Kanälen ohne Nachrichten-XP.
   usage:   "`{0}msgxprestrictionsclean`"
+- name:    forumnotificationchannel
+  cmd:     forumnotificationchannel
+  aliases: []
+  desc:    Setzt den Kanal für Forumbenachrichtigungen.
+  usage:   "`{0}forumnotificationchannel [Textkanal|null]`"
