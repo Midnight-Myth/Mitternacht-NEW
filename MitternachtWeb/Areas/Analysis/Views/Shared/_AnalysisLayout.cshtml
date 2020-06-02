@@ -1,0 +1,17 @@
+﻿@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Analysen";
+}
+
+<div class="row">
+	<nav class="col-md-3 col-xl-2">
+		<ul class="nav">
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Analysis" asp-controller="UnknownKeyRequests" asp-action="Index">Unbekannte Translationkeys</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">
+		@RenderBody()
+	</div>
+</div>
