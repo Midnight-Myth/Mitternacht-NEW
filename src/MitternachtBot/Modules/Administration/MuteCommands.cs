@@ -36,7 +36,6 @@ namespace Mitternacht.Modules.Administration
                 {
                     var config = uow.GuildConfigs.For(Context.Guild.Id, set => set);
                     config.MuteRoleName = name;
-                    Service.GuildMuteRoles.AddOrUpdate(Context.Guild.Id, name, (id, old) => name);
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
                 await ReplyConfirmLocalized("mute_role_set").ConfigureAwait(false);
@@ -58,7 +57,7 @@ namespace Mitternacht.Modules.Administration
             {
                 try
                 {
-                    await Service.MuteUser(user, MuteType.Chat).ConfigureAwait(false);
+                    await Service.MuteUser(user).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_muted", Format.Bold(user.ToString())).ConfigureAwait(false);
                 }
                 catch(Exception e)
@@ -102,7 +101,7 @@ namespace Mitternacht.Modules.Administration
                 var muteTime = days * 24 * 60 + hours * 60 + minutes;
                 try
                 {
-                    await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime), MuteType.Chat).ConfigureAwait(false);
+                    await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
                     await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
                 }
                 catch (Exception e)
@@ -148,70 +147,6 @@ namespace Mitternacht.Modules.Administration
                 catch (Exception e)
                 {
                     _log.Warn(e);
-                    await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
-                }
-            }
-
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.KickMembers)]
-            public async Task ChatMute(IGuildUser user)
-            {
-                try
-                {
-                    await Service.MuteUser(user, MuteType.Chat).ConfigureAwait(false);
-                    await ReplyConfirmLocalized("user_chat_mute", Format.Bold(user.ToString())).ConfigureAwait(false);
-                }
-                catch
-                {
-                    await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
-                }
-            }
-
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.KickMembers)]
-            public async Task ChatUnmute(IGuildUser user)
-            {
-                try
-                {
-                    await Service.UnmuteUser(user, MuteType.Chat).ConfigureAwait(false);
-                    await ReplyConfirmLocalized("user_chat_unmute", Format.Bold(user.ToString())).ConfigureAwait(false);
-                }
-                catch
-                {
-                    await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
-                }
-            }
-
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.MuteMembers)]
-            public async Task VoiceMute([Remainder] IGuildUser user)
-            {
-                try
-                {
-                    await Service.MuteUser(user, MuteType.Voice).ConfigureAwait(false);
-                    await ReplyConfirmLocalized("user_voice_mute", Format.Bold(user.ToString())).ConfigureAwait(false);
-                }
-                catch
-                {
-                    await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
-                }
-            }
-
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.MuteMembers)]
-            public async Task VoiceUnmute([Remainder] IGuildUser user)
-            {
-                try
-                {
-                    await Service.UnmuteUser(user, MuteType.Voice).ConfigureAwait(false);
-                    await ReplyConfirmLocalized("user_voice_unmute", Format.Bold(user.ToString())).ConfigureAwait(false);
-                }
-                catch
-                {
                     await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
                 }
             }
