@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Mute>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.UserId)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Muted)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UnmuteAt)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var mute in Model) {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => mute.UserId)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => mute.Muted)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => mute.MutedUntil)
+				</td>
+				<td>
+					@if(ViewBag.PermissionWriteMutes) {
+						<a asp-area="Moderation" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.UserId">Löschen</a>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
