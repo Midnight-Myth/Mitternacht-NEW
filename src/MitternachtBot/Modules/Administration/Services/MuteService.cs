@@ -74,6 +74,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 		public async Task UnmuteUser(IGuildUser guildUser) {
 			StopUnmuteTimer(guildUser.GuildId, guildUser.Id);
+			RemoveUnmuteTimerFromDb(guildUser.GuildId, guildUser.Id);
 
 			//Remove muted role from user.
 			var muteRole = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
