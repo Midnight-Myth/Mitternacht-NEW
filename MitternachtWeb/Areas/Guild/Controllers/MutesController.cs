@@ -20,22 +20,25 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			_db = db;
 			_muteService = ms;
 		}
-		
+
 		public IActionResult Index() {
 			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(GuildId, set => set.Include(g => g.MutedUsers).Include(g => g.UnmuteTimers));
 			var mutedUsers = gc.MutedUsers;
 			var unmuteTimers = gc.UnmuteTimers;
-			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => {
+			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Distinct().Select(userId => {
 				var user = Guild.GetUser(userId);
-				var userUnmuteTimers = unmuteTimers.Where(ut => ut.UserId == userId).Select(ut => ut.UnmuteAt).OrderBy(d => d).ToArray();
+				var unmuteTimer = unmuteTimers.Where(ut => ut.UserId == userId).OrderBy(ut => ut.UnmuteAt).FirstOrDefault();
+				var mutedUser = mutedUsers.Where(mu => mu.UserId == userId).OrderBy(mu => mu.DateAdded).FirstOrDefault();
+				var mutedSince = mutedUser.DateAdded.HasValue ? unmuteTimer.DateAdded.HasValue ? new []{ mutedUser.DateAdded.Value, unmuteTimer.DateAdded.Value }.Min() : mutedUser.DateAdded : unmuteTimer.DateAdded.HasValue ? unmuteTimer.DateAdded : null;
 
 				return new Mute {
-					UserId    = userId,
-					Muted     = mutedUsers.Any(mu => mu.UserId == userId),
-					UnmuteAt  = userUnmuteTimers.Any() ? (DateTime?)userUnmuteTimers.First() : null,
-					Username  = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
-					AvatarUrl = user?.GetAvatarUrl(),
+					UserId     = userId,
+					Muted      = mutedUser != null,
+					MutedSince = mutedSince,
+					UnmuteAt   = unmuteTimer?.UnmuteAt,
+					Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
+					AvatarUrl  = user?.GetAvatarUrl(),
 				};
 			}).ToList();
 
@@ -47,7 +50,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				throw new NoPermissionsException();
 
 			var user = Guild.GetUser(id);
-			
+
 			if(user != null) {
 				await _muteService.UnmuteUser(user);
 			} else {

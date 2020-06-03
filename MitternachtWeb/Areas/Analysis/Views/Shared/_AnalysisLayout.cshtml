@@ -1,4 +1,6 @@
-﻿@{
+﻿@using System.Linq
+@inject MitternachtWeb.Areas.Analysis.Services.UnknownKeyRequestsService UnknownKeyRequestsService
+@{
 	Layout = "_Layout";
 	ViewData["Title"] = "Analysen";
 }
@@ -7,7 +9,10 @@
 	<nav class="col-md-3 col-xl-2">
 		<ul class="nav">
 			<li class="nav-item">
-				<a class="nav-link text-dark" asp-area="Analysis" asp-controller="UnknownKeyRequests" asp-action="Index">Unbekannte Translationkeys</a>
+				<a class="nav-link text-dark d-flex justify-content-between align-items-center" asp-area="Analysis" asp-controller="UnknownKeyRequests" asp-action="Index">
+					Unbekannte Translationkeys
+					<span class="badge badge-danger badge-pill">@UnknownKeyRequestsService.UnknownKeyRequests.Values.Aggregate(0ul, (r, i) => r+i)</span>
+				</a>
 			</li>
 		</ul>
 	</nav>

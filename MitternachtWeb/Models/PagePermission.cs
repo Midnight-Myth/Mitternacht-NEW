@@ -21,6 +21,8 @@ namespace MitternachtWeb.Models {
 		WriteGuildConfig = 0b_0000_0011,
 		ReadModeration   = 0b_0000_0100,
 		WriteMutes       = 0b_0000_1100,
+		ReadAll          = ReadGuildConfig | ReadModeration,
+		All              = 0b_1111_1111,
 	}
 
 	public static class PagePermissionExtensions {
@@ -28,11 +30,15 @@ namespace MitternachtWeb.Models {
 			var perms = GuildLevelPermission.None;
 
 			if(guildPerms.ViewAuditLog) {
-				perms |= GuildLevelPermission.ReadGuildConfig | GuildLevelPermission.ReadModeration;
+				perms |= GuildLevelPermission.ReadAll;
+			}
+
+			if(guildPerms.ManageMessages) {
+				perms |= GuildLevelPermission.WriteMutes;
 			}
 			
 			if(guildPerms.Administrator) {
-				perms |= GuildLevelPermission.WriteGuildConfig | GuildLevelPermission.WriteMutes;
+				perms |= GuildLevelPermission.All;
 			}
 
 			return perms;
