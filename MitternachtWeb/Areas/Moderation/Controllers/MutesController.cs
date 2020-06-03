@@ -26,7 +26,7 @@ namespace MitternachtWeb.Areas.Moderation.Controllers {
 			var gc = uow.GuildConfigs.For(GuildId, set => set.Include(g => g.MutedUsers).Include(g => g.UnmuteTimers));
 			var mutedUsers = gc.MutedUsers;
 			var unmuteTimers = gc.UnmuteTimers;
-			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => new Mute{UserId = userId, Muted = mutedUsers.Any(mu => mu.UserId == userId), UnmuteAt = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Min(ut => ut.UnmuteAt) : null}).ToList();
+			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => new Mute{UserId = userId, Muted = mutedUsers.Any(mu => mu.UserId == userId), UnmuteAt = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Where(ut => ut.UserId == userId).Min(ut => ut.UnmuteAt) : null}).ToList();
 
 			return View(mutes);
 		}
