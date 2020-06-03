@@ -1,54 +1,38 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using MitternachtWeb.Controllers;
-using MitternachtWeb.Models;
 
-namespace MitternachtWeb.Areas.Settings.Controllers {
-	[Area("Settings")]
-	public class GuildConfigsController : DiscordUserController {
+namespace MitternachtWeb.Areas.Guild.Controllers {
+	[Area("Guild")]
+	public class GuildConfigController : GuildBaseController {
 		private readonly DbService _db;
 
-		public GuildConfigsController(DbService db) {
+		public GuildConfigController(DbService db) {
 			_db = db;
 		}
 
-		public IActionResult Index(ulong? id) {
-			using var uow = _db.UnitOfWork;
+		public IActionResult Index() {
+			if(PermissionReadGuildConfig) {
+				using var uow = _db.UnitOfWork;
 
-			if(id == null) {
-				var guildConfigs         = DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllGuildConfigs) ? uow.GuildConfigs.GetAll() : uow.GuildConfigs.GetAllGuildConfigs(DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ReadGuildConfig)).Select(kv => kv.Key).ToList());
-				var guildConfigWithNames = guildConfigs.Select(gc => (gc, Program.MitternachtBot.Client.GetGuild(gc.GuildId)?.Name ?? ""));
+				var guildConfig = uow.GuildConfigs.For(GuildId);
+				var viewName    = PermissionWriteGuildConfig ? "Edit" : "Details";
 
-				return guildConfigWithNames.Any() ? View(guildConfigWithNames) : (IActionResult)Unauthorized();
+				return View(viewName, guildConfig);
 			} else {
-				if(HasReadPermission(id.Value)) {
-					var guildConfig = uow.GuildConfigs.For(id.Value);
-					if(guildConfig != null) {
-						ViewBag.GuildName = Program.MitternachtBot.Client.GetGuild(id.Value).Name;
-
-						var viewName = HasWritePermission(id.Value) ? "Edit" : "Details";
-
-						return View(viewName, guildConfig);
-					} else {
-						return NotFound();
-					}
-				} else {
-					return Unauthorized();
-				}
+				return Unauthorized();
 			}
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(ulong id, [Bind("GuildId,Prefix,DeleteMessageOnCommand,AutoAssignRoleId,AutoDeleteGreetMessagesTimer,AutoDeleteByeMessagesTimer,GreetMessageChannelId,ByeMessageChannelId,SendDmGreetMessage,DmGreetMessageText,SendChannelGreetMessage,ChannelGreetMessageText,SendChannelByeMessage,ChannelByeMessageText,ExclusiveSelfAssignedRoles,AutoDeleteSelfAssignedRoleMessages,DefaultMusicVolume,VoicePlusTextEnabled,CleverbotEnabled,MuteRoleName,Locale,TimeZoneId,GameVoiceChannel,VerboseErrors,VerifiedRoleId,VerifyString,VerificationTutorialText,AdditionalVerificationUsers,VerificationPasswordChannelId,TurnToXpMultiplier,MessageXpTimeDifference,MessageXpCharCountMin,MessageXpCharCountMax,LogUsernameHistory,BirthdayRoleId,BirthdayMessage,BirthdayMessageChannelId,BirthdaysEnabled,BirthdayMoney,GommeTeamMemberRoleId,VipRoleId,TeamUpdateChannelId,TeamUpdateMessagePrefix,CountToNumberChannelId,CountToNumberMessageChance,VerbosePermissions,PermissionRole,FilterInvites,FilterWords,FilterZalgo,WarningsInitialized,ForumNotificationChannelId")] GuildConfig guildConfig) {
-			if(HasWritePermission(id)) {
-				if(id == guildConfig.GuildId) {
+		public async Task<IActionResult> Edit([Bind("GuildId,Prefix,DeleteMessageOnCommand,AutoAssignRoleId,AutoDeleteGreetMessagesTimer,AutoDeleteByeMessagesTimer,GreetMessageChannelId,ByeMessageChannelId,SendDmGreetMessage,DmGreetMessageText,SendChannelGreetMessage,ChannelGreetMessageText,SendChannelByeMessage,ChannelByeMessageText,ExclusiveSelfAssignedRoles,AutoDeleteSelfAssignedRoleMessages,DefaultMusicVolume,VoicePlusTextEnabled,CleverbotEnabled,MuteRoleName,Locale,TimeZoneId,GameVoiceChannel,VerboseErrors,VerifiedRoleId,VerifyString,VerificationTutorialText,AdditionalVerificationUsers,VerificationPasswordChannelId,TurnToXpMultiplier,MessageXpTimeDifference,MessageXpCharCountMin,MessageXpCharCountMax,LogUsernameHistory,BirthdayRoleId,BirthdayMessage,BirthdayMessageChannelId,BirthdaysEnabled,BirthdayMoney,GommeTeamMemberRoleId,VipRoleId,TeamUpdateChannelId,TeamUpdateMessagePrefix,CountToNumberChannelId,CountToNumberMessageChance,VerbosePermissions,PermissionRole,FilterInvites,FilterWords,FilterZalgo,WarningsInitialized,ForumNotificationChannelId")] GuildConfig guildConfig) {
+			if(PermissionWriteGuildConfig) {
+				if(GuildId == guildConfig.GuildId) {
 					if(ModelState.IsValid) {
 						using var uow = _db.UnitOfWork;
-						var gc        = uow.GuildConfigs.For(id);
+						var gc        = uow.GuildConfigs.For(GuildId);
 
 						if(gc != null) {
 							gc.Prefix                             = guildConfig.Prefix;
@@ -120,11 +104,5 @@ namespace MitternachtWeb.Areas.Settings.Controllers {
 				return Unauthorized();
 			}
 		}
-
-		private bool HasReadPermission(ulong guildId)
-			=> DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildLevelPermission.ReadGuildConfig);
-
-		private bool HasWritePermission(ulong guildId)
-			=> DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildLevelPermission.WriteGuildConfig);
 	}
 }

@@ -7,16 +7,21 @@ using MitternachtWeb.Models;
 using System;
 using System.Linq;
 
-namespace MitternachtWeb.Areas.Moderation.Controllers {
-	public abstract class GuildModerationController : DiscordUserController {
+namespace MitternachtWeb.Areas.Guild.Controllers {
+	public abstract class GuildBaseController : DiscordUserController {
 		[ViewData]
 		public ulong       GuildId { get; private set; }
 		[ViewData]
 		public SocketGuild Guild   { get; private set; }
 
-		public bool PermissionReadModeration => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.ReadModeration);
 		[ViewData]
-		public bool PermissionWriteMutes     => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllMutes) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.WriteMutes);
+		public bool PermissionReadModeration   => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.ReadModeration);
+		[ViewData]
+		public bool PermissionWriteMutes       => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllMutes) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.WriteMutes);
+		[ViewData]
+		public bool PermissionReadGuildConfig  => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllGuildConfigs) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.ReadGuildConfig);
+		[ViewData]
+		public bool PermissionWriteGuildConfig => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllGuildConfigs) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.WriteGuildConfig);
 
 		protected ulong[] ReadableGuilds => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) ? DiscordUser.GuildPagePermissions.Select(kv => kv.Key).ToArray() : DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ReadModeration)).Select(kv => kv.Key).ToArray();
 

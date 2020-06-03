@@ -35,7 +35,7 @@
 				</td>
 				<td>
 					@if(ViewBag.PermissionWriteMutes) {
-						<a asp-area="Moderation" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.UserId">Löschen</a>
+						<a asp-area="Guild" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.UserId">Löschen</a>
 					}
 				</td>
 			</tr>

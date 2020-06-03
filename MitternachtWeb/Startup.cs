@@ -106,17 +106,13 @@ namespace MitternachtWeb {
 
 			app.UseEndpoints(endpoints => {
 				endpoints.MapAreaControllerRoute(
-					name: "settings",
-					areaName: "Settings",
-					pattern: "settings/{controller=Settings}/{action=Index}/{id?}");
-				endpoints.MapAreaControllerRoute(
 					name: "analysis",
 					areaName: "Analysis",
 					pattern: "analysis/{controller=Analysis}/{action=Index}/{id?}");
 				endpoints.MapAreaControllerRoute(
-					name: "moderation",
-					areaName: "Moderation",
-					pattern: "moderation/{guildId}/{controller=Stats}/{action=Index}/{id?}");
+					name: "guild",
+					areaName: "Guild",
+					pattern: "guild/{guildId}/{controller=Stats}/{action=Index}/{id?}");
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");

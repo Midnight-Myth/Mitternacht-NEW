@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
-using MitternachtWeb.Areas.Moderation.Models;
+using MitternachtWeb.Areas.Guild.Models;
 using MitternachtWeb.Exceptions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MitternachtWeb.Areas.Moderation.Controllers {
+namespace MitternachtWeb.Areas.Guild.Controllers {
 	[Authorize]
-	[Area("Moderation")]
-	public class MutesController : GuildModerationController {
+	[Area("Guild")]
+	public class MutesController : GuildBaseController {
 		private readonly DbService _db;
 		private readonly MuteService _muteService;
 

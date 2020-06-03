@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MitternachtWeb.Areas.Moderation.Models {
+namespace MitternachtWeb.Areas.Guild.Models {
 	public class Mute {
 		public ulong     UserId   { get; set; }
 		public bool      Muted    { get; set; }

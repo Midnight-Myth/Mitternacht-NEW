@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
-using MitternachtWeb.Controllers;
 using MitternachtWeb.Models;
 
-namespace MitternachtWeb.Areas.Settings.Controllers {
-	[Area("Settings")]
+namespace MitternachtWeb.Controllers {
 	[Authorize("ReadBotConfig")]
 	public class BotConfigController : DiscordUserController {
 		private readonly DbService          _db;

@@ -1,9 +1,9 @@
 ﻿@model Mitternacht.Services.Database.Models.GuildConfig
 
-<h4>GuildConfig for server "@ViewBag.GuildName" (GuildId @Model.GuildId)</h4>
+<h4>GuildConfig for server "@ViewBag.Guild.Name" (GuildId @Model.GuildId)</h4>
 <hr />
 <div class="container-fluid">
-	<form asp-action="Edit" asp-route-id="@Model.GuildId">
+	<form asp-action="Edit">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="form-group">
 			<label asp-for="Prefix" class="control-label"></label>

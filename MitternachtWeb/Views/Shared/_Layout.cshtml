@@ -22,11 +22,13 @@
 						</li>
 						@if(ViewBag.DiscordUser != null) {
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="ModeratableGuilds" asp-action="Index">Moderation</a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="GuildList" asp-action="Index">Serverliste</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="Settings" asp-controller="Settings" asp-action="Index">Einstellungen</a>
-							</li>
+							@if(ViewBag.DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadBotConfig)) {
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="BotConfig" asp-action="Index">BotConfig</a>
+								</li>
+							}
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="Analysis" asp-controller="Analysis" asp-action="Index">Analysen</a>
 							</li>
