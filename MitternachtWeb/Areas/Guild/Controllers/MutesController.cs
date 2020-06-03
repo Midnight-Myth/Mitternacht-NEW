@@ -26,12 +26,17 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			var gc = uow.GuildConfigs.For(GuildId, set => set.Include(g => g.MutedUsers).Include(g => g.UnmuteTimers));
 			var mutedUsers = gc.MutedUsers;
 			var unmuteTimers = gc.UnmuteTimers;
-			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => new Mute{
-				UserId    = userId,
-				Muted     = mutedUsers.Any(mu => mu.UserId == userId),
-				UnmuteAt  = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Where(ut => ut.UserId == userId).Min(ut => ut.UnmuteAt) : null,
-				Username  = Guild.GetUser(userId)?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
-				AvatarUrl = Guild.GetUser(userId)?.GetAvatarUrl(),
+			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => {
+				var user = Guild.GetUser(userId);
+				var userUnmuteTimers = unmuteTimers.Where(ut => ut.UserId == userId).Select(ut => ut.UnmuteAt).OrderBy(d => d).ToArray();
+
+				return new Mute {
+					UserId    = userId,
+					Muted     = mutedUsers.Any(mu => mu.UserId == userId),
+					UnmuteAt  = userUnmuteTimers.Any() ? (DateTime?)userUnmuteTimers.First() : null,
+					Username  = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
+					AvatarUrl = user?.GetAvatarUrl(),
+				};
 			}).ToList();
 
 			return View(mutes);
