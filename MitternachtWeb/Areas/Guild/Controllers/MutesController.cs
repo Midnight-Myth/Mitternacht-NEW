@@ -27,10 +27,11 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			var mutedUsers = gc.MutedUsers;
 			var unmuteTimers = gc.UnmuteTimers;
 			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => new Mute{
-				UserId   = userId,
-				Muted    = mutedUsers.Any(mu => mu.UserId == userId),
-				UnmuteAt = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Where(ut => ut.UserId == userId).Min(ut => ut.UnmuteAt) : null,
-				Username = Guild.GetUser(userId)?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
+				UserId    = userId,
+				Muted     = mutedUsers.Any(mu => mu.UserId == userId),
+				UnmuteAt  = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Where(ut => ut.UserId == userId).Min(ut => ut.UnmuteAt) : null,
+				Username  = Guild.GetUser(userId)?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
+				AvatarUrl = Guild.GetUser(userId)?.GetAvatarUrl(),
 			}).ToList();
 
 			return View(mutes);
