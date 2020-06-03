@@ -14,6 +14,10 @@ namespace MitternachtWeb.Areas.Moderation.Controllers {
 		[ViewData]
 		public SocketGuild Guild   { get; private set; }
 
+		public bool PermissionReadModeration => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.ReadModeration);
+		[ViewData]
+		public bool PermissionWriteMutes     => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllMutes) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(GuildLevelPermission.WriteMutes);
+
 		protected ulong[] ReadableGuilds => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) ? DiscordUser.GuildPagePermissions.Select(kv => kv.Key).ToArray() : DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ReadModeration)).Select(kv => kv.Key).ToArray();
 
 		public override void OnActionExecuting(ActionExecutingContext context) {
@@ -35,11 +39,5 @@ namespace MitternachtWeb.Areas.Moderation.Controllers {
 
 			base.OnActionExecuting(context);
 		}
-
-		protected bool HasReadPermission(ulong guildId)
-			=> DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildLevelPermission.ReadModeration);
-
-		protected bool HasWritePermission(ulong guildId)
-			=> DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.WriteAllGuildConfigs) || DiscordUser.GuildPagePermissions[guildId].HasFlag(GuildLevelPermission.WriteModeration);
 	}
 }
