@@ -30,6 +30,10 @@ namespace MitternachtWeb.Models {
 			if(guildPerms.ViewAuditLog) {
 				perms |= GuildLevelPermission.ReadGuildConfig | GuildLevelPermission.ReadModeration;
 			}
+
+			if(guildPerms.ManageMessages) {
+				perms |= GuildLevelPermission.WriteMutes;
+			}
 			
 			if(guildPerms.Administrator) {
 				perms |= GuildLevelPermission.WriteGuildConfig | GuildLevelPermission.WriteMutes;
