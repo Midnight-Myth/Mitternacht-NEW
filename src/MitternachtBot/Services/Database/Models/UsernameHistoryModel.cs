@@ -9,7 +9,10 @@ namespace Mitternacht.Services.Database.Models
         public ushort DiscordDiscriminator { get; set; }
         public DateTime DateSet { get; set; }
         public DateTime? DateReplaced { get; set; }
-    }
+
+		public override string ToString()
+			=> $"{Name}#{DiscordDiscriminator}";
+	}
 
     public class NicknameHistoryModel : UsernameHistoryModel
     {

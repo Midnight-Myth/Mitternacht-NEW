@@ -1,0 +1,31 @@
+﻿@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Guild";
+}
+
+<div class="row">
+	<nav class="col-md-3 col-xl-2">
+		<ul class="nav">
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Stats" asp-action="Index">Statistiken</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Guild" asp-controller="GuildConfig" asp-action="Index">GuildConfig</a>
+			</li>
+		</ul>
+	</nav>
+	
+	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">
+		<div>
+			<h3>
+				Server "@ViewBag.Guild.Name" (ID @ViewBag.GuildId)
+			</h3>
+		</div>
+		<div>
+			@RenderBody()
+		</div>
+	</div>
+</div>

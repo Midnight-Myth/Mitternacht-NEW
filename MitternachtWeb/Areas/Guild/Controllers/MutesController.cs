@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
-using MitternachtWeb.Areas.Moderation.Models;
+using MitternachtWeb.Areas.Guild.Models;
 using MitternachtWeb.Exceptions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MitternachtWeb.Areas.Moderation.Controllers {
+namespace MitternachtWeb.Areas.Guild.Controllers {
 	[Authorize]
-	[Area("Moderation")]
-	public class MutesController : GuildModerationController {
+	[Area("Guild")]
+	public class MutesController : GuildBaseController {
 		private readonly DbService _db;
 		private readonly MuteService _muteService;
 
@@ -26,7 +26,13 @@ namespace MitternachtWeb.Areas.Moderation.Controllers {
 			var gc = uow.GuildConfigs.For(GuildId, set => set.Include(g => g.MutedUsers).Include(g => g.UnmuteTimers));
 			var mutedUsers = gc.MutedUsers;
 			var unmuteTimers = gc.UnmuteTimers;
-			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => new Mute{UserId = userId, Muted = mutedUsers.Any(mu => mu.UserId == userId), UnmuteAt = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Min(ut => ut.UnmuteAt) : null}).ToList();
+			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => new Mute{
+				UserId    = userId,
+				Muted     = mutedUsers.Any(mu => mu.UserId == userId),
+				UnmuteAt  = unmuteTimers.Any() ? (DateTime?)unmuteTimers.Where(ut => ut.UserId == userId).Min(ut => ut.UnmuteAt) : null,
+				Username  = Guild.GetUser(userId)?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
+				AvatarUrl = Guild.GetUser(userId)?.GetAvatarUrl(),
+			}).ToList();
 
 			return View(mutes);
 		}

@@ -22,7 +22,7 @@
 					@Html.DisplayFor(modelItem => guild.Name)
 				</td>
 				<td>
-					<a asp-area="Moderation" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">Details</a>
+					<a asp-area="Guild" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">Details</a>
 				</td>
 			</tr>
 		}
