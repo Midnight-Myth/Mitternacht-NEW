@@ -20,7 +20,15 @@
 			</li>
 		</ul>
 	</nav>
+	
 	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">
-		@RenderBody()
+		<div>
+			<h3>
+				Server "@ViewBag.Guild.Name" (ID @ViewBag.GuildId)
+			</h3>
+		</div>
+		<div>
+			@RenderBody()
+		</div>
 	</div>
 </div>
