@@ -34,7 +34,11 @@
 					@Html.DisplayFor(modelItem => mute.UserId)
 				</td>
 				<td>
-					@Html.DisplayFor(modelItem => mute.Muted)
+					@if(mute.Muted) {
+						@Html.Raw("✅")
+					} else {
+						@Html.Raw("❌")
+					}
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => mute.MutedUntil)
