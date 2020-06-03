@@ -9,17 +9,15 @@
 			<li class="nav-item">
 				<a class="nav-link text-dark" asp-area="" asp-controller="GuildList" asp-action="Index">Übersicht</a>
 			</li>
-			@if(ViewBag.Guild != null) {
-				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Stats" asp-action="Index">Statistiken</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="GuildConfig" asp-action="Index">GuildConfig</a>
-				</li>
-			}
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Stats" asp-action="Index">Statistiken</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="Guild" asp-controller="GuildConfig" asp-action="Index">GuildConfig</a>
+			</li>
 		</ul>
 	</nav>
 	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">
