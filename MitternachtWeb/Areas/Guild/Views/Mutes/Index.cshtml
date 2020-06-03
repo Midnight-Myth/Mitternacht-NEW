@@ -14,6 +14,9 @@
 				@Html.DisplayNameFor(model => model.Muted)
 			</th>
 			<th>
+				@Html.DisplayNameFor(model => model.MuteDuration)
+			</th>
+			<th>
 				@Html.DisplayNameFor(model => model.UnmuteAt)
 			</th>
 			<th></th>
@@ -39,6 +42,9 @@
 					} else {
 						@Html.Raw("❌")
 					}
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => mute.MuteDuration)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => mute.MutedUntil)
