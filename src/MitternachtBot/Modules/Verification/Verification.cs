@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task AddVerification(IGuildUser user, long forumUserId) {
 			using var uow = _db.UnitOfWork;
 			var forumUserName = forumUserId.ToString();
@@ -76,7 +76,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task RemoveVerificationDiscord(IGuildUser guildUser) {
 			using var uow = _db.UnitOfWork;
 			if(uow.VerifiedUsers.RemoveVerification(guildUser.GuildId, guildUser.Id))
@@ -88,7 +88,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task RemoveVerificationDiscord(ulong userId) {
 			var guildUser = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 
@@ -107,7 +107,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task RemoveVerificationForum(long forumUserId) {
 			using var uow = _db.UnitOfWork;
 			if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, forumUserId))
@@ -119,7 +119,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task RemoveVerificationForum(string forumUsername) {
 			UserInfo uinfo = null;
 			try {
@@ -139,7 +139,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifiedRole() {
 			var roleid = Service.GetVerifiedRoleId(Context.Guild.Id);
 
@@ -156,7 +156,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifiedRole(IRole role) {
 			var roleid = Service.GetVerifiedRoleId(Context.Guild.Id);
 			if(roleid == role.Id) {
@@ -169,7 +169,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifiedRoleDelete() {
 			Service.SetVerifiedRole(Context.Guild.Id, null);
 			await ConfirmLocalized("role_deleted").ConfigureAwait(false);
@@ -178,7 +178,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifyPassword() {
 			if(string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)))
 				await ConfirmLocalized("verifypassword_not_checked").ConfigureAwait(false);
@@ -189,7 +189,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifyPassword([Remainder]string password) {
 			var oldPassword = Service.GetVerifyString(Context.Guild.Id);
 			password = password.Equals("null", StringComparison.OrdinalIgnoreCase) ? null : password.Trim();
@@ -202,7 +202,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.ManageMessages)]
 		public async Task VerificationKeys(int page = 1) {
 			if(page < 1)
 				page = 1;
@@ -212,7 +212,7 @@ namespace Mitternacht.Modules.Verification {
 			}
 
 			const int keycount = 10;
-			var pagecount = (int)Math.Ceiling(VerificationKeyManager.VerificationKeys.Count / (keycount * 1d));
+			var pagecount = (int)Math.Ceiling(VerificationKeyManager.VerificationKeys.Where(k => k.GuildId == Context.Guild.Id).Count() / (keycount * 1d));
 			if(page > pagecount)
 				page = pagecount;
 
@@ -271,7 +271,7 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifyTutorialText() {
 			var text = Service.GetVerificationTutorialText(Context.Guild.Id);
 			await ConfirmLocalized("tutorial_current_text", text).ConfigureAwait(false);
@@ -280,14 +280,14 @@ namespace Mitternacht.Modules.Verification {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifyTutorialText([Remainder] string text) {
 			Service.SetVerificationTutorialText(Context.Guild.Id, text);
 			await ConfirmLocalized("tutorial_now_set").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task AdditionalVerificationUsers() {
 			var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
 			if(users.Any())
@@ -297,7 +297,7 @@ namespace Mitternacht.Modules.Verification {
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task SetAdditionalVerificationUsers([Remainder] string names = null) {
 			var namesarray = string.IsNullOrWhiteSpace(names) ? new string[0] : names.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 			Service.SetAdditionalVerificationUsers(Context.Guild.Id, namesarray);
@@ -318,7 +318,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerificationPasswordChannel() {
 			using var uow = _db.UnitOfWork;
 			var channelId = uow.GuildConfigs.For(Context.Guild.Id).VerificationPasswordChannelId;
@@ -332,7 +332,7 @@ namespace Mitternacht.Modules.Verification {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerificationPasswordChannel(ITextChannel channel) {
 			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
