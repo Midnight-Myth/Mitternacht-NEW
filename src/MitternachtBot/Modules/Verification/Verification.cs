@@ -212,7 +212,7 @@ namespace Mitternacht.Modules.Verification {
 			}
 
 			const int keycount = 10;
-			var pagecount = (int)Math.Ceiling(VerificationKeyManager.VerificationKeys.Count / (keycount * 1d));
+			var pagecount = (int)Math.Ceiling(VerificationKeyManager.VerificationKeys.Where(k => k.GuildId == Context.Guild.Id).Count() / (keycount * 1d));
 			if(page > pagecount)
 				page = pagecount;
 
