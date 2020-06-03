@@ -26,7 +26,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			var gc = uow.GuildConfigs.For(GuildId, set => set.Include(g => g.MutedUsers).Include(g => g.UnmuteTimers));
 			var mutedUsers = gc.MutedUsers;
 			var unmuteTimers = gc.UnmuteTimers;
-			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Select(userId => {
+			var mutes = mutedUsers.Select(mu => mu.UserId).Concat(unmuteTimers.Select(ut => ut.UserId)).Distinct().Select(userId => {
 				var user = Guild.GetUser(userId);
 				var userUnmuteTimers = unmuteTimers.Where(ut => ut.UserId == userId).Select(ut => ut.UnmuteAt).OrderBy(d => d).ToArray();
 
