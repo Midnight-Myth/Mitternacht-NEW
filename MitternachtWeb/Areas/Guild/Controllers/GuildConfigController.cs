@@ -17,9 +17,8 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				using var uow = _db.UnitOfWork;
 
 				var guildConfig = uow.GuildConfigs.For(GuildId);
-				var viewName    = PermissionWriteGuildConfig ? "Edit" : "Details";
 
-				return View(viewName, guildConfig);
+				return View(guildConfig);
 			} else {
 				return Unauthorized();
 			}
