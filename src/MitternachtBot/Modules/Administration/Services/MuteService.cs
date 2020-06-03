@@ -133,10 +133,10 @@ namespace Mitternacht.Modules.Administration.Services {
 				try {
 					var guild     = _client.GetGuild(guildId);
 					var guildUser = guild?.GetUser(userId);
+					
+					RemoveUnmuteTimerFromDb(guildId, userId);
 
-					if(guild == null) {
-						RemoveUnmuteTimerFromDb(guildId, userId);
-					} else {
+					if(guild != null) {
 						await UnmuteUser(guildUser).ConfigureAwait(false);
 					}
 				} catch(Exception ex) {
