@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Discord.WebSocket.SocketGuild>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayName("GuildId")
+			</th>
+			<th>
+				@Html.DisplayName("GuildName")
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var guild in Model) {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => guild.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => guild.Name)
+				</td>
+				<td>
+					<a asp-area="Moderation" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">Details</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

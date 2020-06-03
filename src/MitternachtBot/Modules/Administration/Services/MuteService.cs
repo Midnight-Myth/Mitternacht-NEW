@@ -55,7 +55,8 @@ namespace Mitternacht.Modules.Administration.Services {
 
 			//Add muted role to user.
 			var muteRole = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
-			if(!guildUser.RoleIds.Contains(muteRole.Id))
+			var alreadyMuted = guildUser.RoleIds.Contains(muteRole.Id);
+			if(!alreadyMuted)
 				await guildUser.AddRoleAsync(muteRole).ConfigureAwait(false);
 
 			//Save mute to database.
@@ -67,7 +68,8 @@ namespace Mitternacht.Modules.Administration.Services {
 				await uow.CompleteAsync().ConfigureAwait(false);
 			}
 
-			UserMuted(guildUser);
+			if(!alreadyMuted || mutedUser == null)
+				UserMuted(guildUser);
 		}
 
 		public async Task UnmuteUser(IGuildUser guildUser) {

@@ -1,0 +1,22 @@
+﻿@{
+	Layout = "_Layout";
+	ViewData["Title"] = "Moderation";
+}
+
+<div class="row">
+	<nav class="col-md-3 col-xl-2">
+		<ul class="nav">
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="" asp-controller="ModeratableGuilds" asp-action="Index">Übersicht</a>
+			</li>
+			@if(ViewBag.Guild != null){
+				<li class="nav-item">
+					<a class="nav-link text-dark" asp-area="Moderation" asp-controller="Stats" asp-action="Index">Statistiken</a>
+				</li>
+			}
+		</ul>
+	</nav>
+	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">
+		@RenderBody()
+	</div>
+</div>
