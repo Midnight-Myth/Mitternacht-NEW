@@ -26,7 +26,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					Id         = w.Id,
 					UserId     = w.UserId,
 					Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
-					AvatarUrl  = user?.GetAvatarUrl(),
+					AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
 					Forgiven   = w.Forgiven,
 					ForgivenBy = w.ForgivenBy,
 					WarnedBy   = w.Moderator,
