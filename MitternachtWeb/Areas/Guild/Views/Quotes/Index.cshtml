@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Quote>
+
+<h4>Quotes</h4>
+<hr />
+<table class="table">
+	<thead>
+		<tr>
+			<th></th>
+			<th>
+				@Html.DisplayNameFor(model => model.Authorname)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Keyword)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Text)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AddedAt)
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var quote in Model) {
+			<tr>
+				<td>
+					@if(!string.IsNullOrWhiteSpace(quote.AvatarUrl)) {
+						<img class="discord-avatar" src="@quote.AvatarUrl" alt="Avatar" />
+					}
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => quote.Authorname)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => quote.Keyword)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => quote.Text)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => quote.AddedAt)
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
