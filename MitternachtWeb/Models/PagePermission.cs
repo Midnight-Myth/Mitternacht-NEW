@@ -11,6 +11,8 @@ namespace MitternachtWeb.Models {
 		WriteAllGuildConfigs = 0b_0000_1100,
 		ReadAllModerations   = 0b_0001_0000,
 		WriteAllMutes        = 0b_0011_0000,
+		ForgiveAllWarns      = 0b_0101_0000,
+		WriteAllWarns        = 0b_1101_0000,
 		All                  = 0b_1111_1111,
 	}
 
@@ -21,6 +23,8 @@ namespace MitternachtWeb.Models {
 		WriteGuildConfig = 0b_0000_0011,
 		ReadModeration   = 0b_0000_0100,
 		WriteMutes       = 0b_0000_1100,
+		ForgiveWarns     = 0b_0001_0100,
+		WriteWarns       = 0b_0011_0100,
 		ReadAll          = ReadGuildConfig | ReadModeration,
 		All              = 0b_1111_1111,
 	}
@@ -34,7 +38,11 @@ namespace MitternachtWeb.Models {
 			}
 
 			if(guildPerms.ManageMessages) {
-				perms |= GuildLevelPermission.WriteMutes;
+				perms |= GuildLevelPermission.WriteMutes | GuildLevelPermission.ForgiveWarns;
+			}
+
+			if(guildPerms.BanMembers) {
+				perms |= GuildLevelPermission.WriteWarns;
 			}
 			
 			if(guildPerms.Administrator) {

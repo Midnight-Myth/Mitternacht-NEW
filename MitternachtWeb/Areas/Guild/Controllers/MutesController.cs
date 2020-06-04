@@ -38,7 +38,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					MutedSince = mutedSince,
 					UnmuteAt   = unmuteTimer?.UnmuteAt,
 					Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
-					AvatarUrl  = user?.GetAvatarUrl(),
+					AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
 				};
 			}).ToList();
 

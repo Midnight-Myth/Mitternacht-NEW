@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Warn>
+
+<h4>Warns</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reason)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Forgiven)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WarnedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WarnedBy)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var warn in Model) {
+            <tr>
+				<td>
+					@if(!string.IsNullOrWhiteSpace(warn.AvatarUrl)) {
+						<img class="discord-avatar" src="@warn.AvatarUrl" alt="Avatar" />
+					}
+				</td>
+                <td>
+                    @Html.DisplayFor(modelItem => warn.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => warn.Reason)
+                </td>
+				<td>
+					@{
+						var forgivenString = warn.Forgiven ? Html.Raw("✅") : Html.Raw("❌");
+					}
+					@if(ViewBag.PermissionForgiveWarns) {
+						<a asp-area="Guild" asp-controller="Warns" asp-action="ToggleForgive" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@warn.Id">@forgivenString</a>
+					} else {
+                        @forgivenString
+					}
+				</td>
+                <td>
+                    @Html.DisplayFor(modelItem => warn.WarnedAtString)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => warn.WarnedBy)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

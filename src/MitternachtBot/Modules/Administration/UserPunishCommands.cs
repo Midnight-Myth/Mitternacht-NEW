@@ -74,10 +74,8 @@ namespace Mitternacht.Modules.Administration {
 				if(page < 0) return;
 
 				const int warnsPerPage = 9;
-				Warning[] allWarnings;
-				using(var uow = _db.UnitOfWork) {
-					allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
-				}
+				using var uow = _db.UnitOfWork;
+				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => {
 																	var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
@@ -95,7 +93,7 @@ namespace Mitternacht.Modules.Administration {
 																		}
 
 																	return embed;
-																}, allWarnings.Length / warnsPerPage, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
+																}, allWarnings.Count() / warnsPerPage, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -104,10 +102,8 @@ namespace Mitternacht.Modules.Administration {
 			public async Task WarnlogAll(int page = 1) {
 				if(--page < 0) return;
 
-				IGrouping<ulong, Warning>[] warnings;
-				using(var uow = _db.UnitOfWork) {
-					warnings = uow.Warnings.GetForGuild(Context.Guild.Id).GroupBy(x => x.UserId).ToArray();
-				}
+				using var uow = _db.UnitOfWork;
+				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).GroupBy(x => x.UserId);
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async curPage => {
 																	var ws = await Task.WhenAll(warnings.Skip(curPage * 15)
@@ -121,7 +117,7 @@ namespace Mitternacht.Modules.Administration {
 																										}));
 
 																	return new EmbedBuilder().WithTitle(GetText("warnings_list")).WithDescription(string.Join("\n", ws));
-																}, warnings.Length / 15, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
+																}, warnings.Count() / 15, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
 
