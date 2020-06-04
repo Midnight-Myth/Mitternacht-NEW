@@ -9,8 +9,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 	public class WarningsRepository : Repository<Warning>, IWarningsRepository {
 		public WarningsRepository(DbContext context) : base(context) { }
 
-		public Warning[] For(ulong guildId, ulong userId)
-			=> _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId)).OrderByDescending(x => x.DateAdded).ToArray();
+		public IQueryable<Warning> For(ulong guildId, ulong userId)
+			=> _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId)).OrderByDescending(x => x.DateAdded);
 
 		public async Task ForgiveAll(ulong guildId, ulong userId, string mod) {
 			await _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId))
@@ -23,7 +23,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 				.ConfigureAwait(false);
 		}
 
-		public Warning[] GetForGuild(ulong id)
-			=> _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == id)).ToArray();
+		public IQueryable<Warning> GetForGuild(ulong id)
+			=> _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == id)).OrderByDescending(x => x.DateAdded);
 	}
 }
