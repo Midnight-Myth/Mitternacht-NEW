@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Administration {
 				if(--page < 0) return;
 
 				using var uow = _db.UnitOfWork;
-				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).GroupBy(x => x.UserId);
+				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).ToList().GroupBy(x => x.UserId);
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async curPage => {
 																	var ws = await Task.WhenAll(warnings.Skip(curPage * 15)
@@ -142,44 +142,27 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.BanMembers)]
-			public async Task Warnremove(IGuildUser user, string hexid) {
-				var id = hexid.FromHexToInt();
-				if(id == null) {
-					await ReplyErrorLocalized("warn_hexid_parsefail", hexid).ConfigureAwait(false);
-					return;
-				}
-
+			public async Task Warnremove(int id) {
 				using var uow = _db.UnitOfWork;
-				var warning = uow.Warnings.Get(id.Value);
+				var warning = uow.Warnings.Get(id);
 				if(warning == null) {
-					await ReplyErrorLocalized("warn_hexid_no_entry", hexid).ConfigureAwait(false);
-					return;
-				}
-
-				if(warning.UserId != user.Id) {
-					await ReplyErrorLocalized("warning_remove_other_user", Format.Bold(hexid)).ConfigureAwait(false);
+					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
 					return;
 				}
 
 				uow.Warnings.Remove(warning);
-				await ReplyConfirmLocalized("warning_removed", Format.Bold(hexid), Format.Bold(user.ToString())).ConfigureAwait(false);
+				await ReplyConfirmLocalized("warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
 				await uow.CompleteAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
-			public async Task Warnid(string hexid) {
-				var id = hexid.FromHexToInt();
-				if(id == null) {
-					await ReplyErrorLocalized("warn_hexid_parsefail", hexid).ConfigureAwait(false);
-					return;
-				}
-
+			public async Task Warndetails(int id) {
 				using var uow = _db.UnitOfWork;
-				var w = uow.Warnings.Get(id.Value);
+				var w = uow.Warnings.Get(id);
 				if(w == null) {
-					await ReplyErrorLocalized("warn_hexid_no_entry", hexid).ConfigureAwait(false);
+					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
 					return;
 				}
 
@@ -201,26 +184,20 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			[Priority(0)]
-			public async Task WarnEdit(string hexid, [Remainder] string reason = null) {
-				var id = hexid.FromHexToInt();
-				if(id == null) {
-					await ReplyErrorLocalized("warn_hexid_parsefail", hexid).ConfigureAwait(false);
-					return;
-				}
-
+			public async Task WarnEdit(int id, [Remainder] string reason = null) {
 				using var uow = _db.UnitOfWork;
-				var w    = uow.Warnings.Get(id.Value);
+				var w    = uow.Warnings.Get(id);
 				var user = Context.User as IGuildUser;
 				if(!_bc.IsOwner(Context.User)) {
 					if(user == null) return;
 					if(w.GuildId != user.GuildId) {
-						await ReplyErrorLocalized("warn_edit_perms", hexid).ConfigureAwait(false);
+						await ReplyErrorLocalized("warn_edit_perms", id).ConfigureAwait(false);
 						return;
 					}
 				}
 
 				if(w == null) {
-					await ReplyErrorLocalized("warn_hexid_no_entry", hexid).ConfigureAwait(false);
+					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
 					return;
 				}
 
@@ -228,7 +205,7 @@ namespace Mitternacht.Modules.Administration {
 				w.Reason = reason;
 				uow.Warnings.Update(w);
 				await uow.CompleteAsync();
-				await ReplyConfirmLocalized("warn_edit", hexid, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
+				await ReplyConfirmLocalized("warn_edit", id, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

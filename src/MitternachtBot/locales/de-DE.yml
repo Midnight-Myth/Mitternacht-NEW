@@ -250,15 +250,13 @@ administration:
   warn_cleared_by:                               Gelöscht von {0}
   warn_edit:                                     Der Grund der Verwarnung `{0}` von `{1}` wurde von `{2}` auf `{3}` gesetzt.
   warn_edit_perms:                               Zum Ändern der Verwarnung `{0}` musst du als Botowner eingetragen sein oder Solche fragen!
-  warn_hexid_no_entry:                           Zur HexId **`{0}`** konnte keine Verwarnung gefunden werden!
-  warn_hexid_parsefail:                          Der String **`{0}`** konnte nicht in eine HexId konvertiert werden!
+  warn_id_not_found:                             Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
   warn_punish_list:                              Verwarnungsstrafliste
   warn_punish_rem:                               "{0} Verwarnungen werden keine Bestrafung mehr auslösen."
   warn_punish_set:                               Ich werde die Bestrafung {0} an Benutzern mit {1} Verwarnungen ausführen.
   warned_by:                                     Verwarnt von {0}
   warned_on:                                     Verwarnt auf dem Server {0}
   warned_on_by:                                  Am {0} um {1} von {2}
-  warning_remove_other_user:                     Der angegebene Nutzer stimmt nicht mit der Verwarnung {0} überein!
   warning_removed:                               Die Verwarnung {0} des Nutzers {1} wurde entfernt.
   warnings_cleared:                              Alle Warnungen für {0} bereinigt.
   warnings_list:                                 Liste aller verwarnten Benutzer auf diesem Server
