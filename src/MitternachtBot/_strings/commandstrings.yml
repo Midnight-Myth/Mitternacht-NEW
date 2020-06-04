@@ -2,13 +2,13 @@
 - name:    warnremove
   cmd:     warnremove
   aliases: []
-  desc:    Entfernt eine Verwarnung mit der gegebenen HexId aus der Datenbank.
-  usage:   "`{0}warnremove <user> <hexid>`"
-- name:    warnid
-  cmd:     warnid
+  desc:    Entfernt eine Verwarnung mit der gegebenen Id aus der Datenbank.
+  usage:   "`{0}warnremove <id>`"
+- name:    warndetails
+  cmd:     warndetails
   aliases: []
-  desc:    Zeigt die Verwarnung mit der angegebenen HexId an.
-  usage:   "`{0}warnid <hexid>`"
+  desc:    Zeigt die Verwarnung mit der angegebenen Id an.
+  usage:   "`{0}warndetails <id>`"
 - name:    hashtag
   cmd:     "#"
   aliases: []
@@ -2193,8 +2193,8 @@
 - name:    warnedit
   cmd:     warnedit
   aliases: []
-  desc:    Ändert den Verwarngrund der Verwarnung mit der angegebenen HexId
-  usage:   "`{0}warnedit <hexid> [grund]`"
+  desc:    Ändert den Verwarngrund der Verwarnung mit der angegebenen Id.
+  usage:   "`{0}warnedit <id> [grund]`"
 - name:    birthdayrole
   cmd:     birthdayrole
   aliases: []
