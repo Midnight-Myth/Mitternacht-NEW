@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using MitternachtWeb.Areas.Guild.Models;
+using MitternachtWeb.Exceptions;
 using System;
 using System.Linq;
 
@@ -22,6 +23,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				var user = Guild.GetUser(w.UserId);
 
 				return new Warn {
+					Id         = w.Id,
 					UserId     = w.UserId,
 					Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
 					AvatarUrl  = user?.GetAvatarUrl(),
@@ -34,6 +36,23 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			})).ToList();
 
 			return View(warns);
+		}
+
+		public IActionResult ToggleForgive(int id) {
+			if(!PermissionForgiveWarns)
+				throw new NoPermissionsException();
+
+			using var uow = _db.UnitOfWork;
+			var warning = uow.Warnings.Get(id);
+			if(warning != null && warning.GuildId == GuildId) {
+				warning.Forgiven = !warning.Forgiven;
+
+				uow.Complete();
+
+				return RedirectToAction("Index");
+			} else {
+				return NotFound();
+			}
 		}
 	}
 }

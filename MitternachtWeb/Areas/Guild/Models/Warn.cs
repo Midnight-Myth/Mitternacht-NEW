@@ -2,6 +2,7 @@
 
 namespace MitternachtWeb.Areas.Guild.Models {
 	public class Warn {
+		public int       Id         { get; set; }
 		public ulong     UserId     { get; set; }
 		public string    Username   { get; set; }
 		public DateTime? WarnedAt   { get; set; }

@@ -38,10 +38,13 @@
                     @Html.DisplayFor(modelItem => warn.Reason)
                 </td>
 				<td>
-					@if(warn.Forgiven) {
-						@Html.Raw("✅")
+					@{
+						var forgivenString = warn.Forgiven ? Html.Raw("✅") : Html.Raw("❌");
+					}
+					@if(ViewBag.PermissionForgiveWarns) {
+						<a asp-area="Guild" asp-controller="Warns" asp-action="ToggleForgive" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@warn.Id">@forgivenString</a>
 					} else {
-						@Html.Raw("❌")
+                        @forgivenString
 					}
 				</td>
                 <td>
