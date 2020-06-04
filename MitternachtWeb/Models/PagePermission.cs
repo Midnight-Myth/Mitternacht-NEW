@@ -4,16 +4,17 @@ using System;
 namespace MitternachtWeb.Models {
 	[Flags]
 	public enum BotLevelPermission {
-		None                 = 0b_0000_0000,
-		ReadBotConfig        = 0b_0000_0001,
-		WriteBotConfig       = 0b_0000_0011,
-		ReadAllGuildConfigs  = 0b_0000_0100,
-		WriteAllGuildConfigs = 0b_0000_1100,
-		ReadAllModerations   = 0b_0001_0000,
-		WriteAllMutes        = 0b_0011_0000,
-		ForgiveAllWarns      = 0b_0101_0000,
-		WriteAllWarns        = 0b_1101_0000,
-		All                  = 0b_1111_1111,
+		None                 = 0b_0000_0000_0000,
+		ReadBotConfig        = 0b_0000_0000_0001,
+		WriteBotConfig       = 0b_0000_0000_0011,
+		ReadAllGuildConfigs  = 0b_0000_0000_0100,
+		WriteAllGuildConfigs = 0b_0000_0000_1100,
+		ReadAllModerations   = 0b_0000_0001_0000,
+		WriteAllMutes        = 0b_0000_0011_0000,
+		ForgiveAllWarns      = 0b_0000_0101_0000,
+		WriteAllWarns        = 0b_0000_1101_0000,
+		WriteAllQuotes       = 0b_0001_0001_0000,
+		All                  = 0b_1111_1111_1111,
 	}
 
 	[Flags]
@@ -25,6 +26,7 @@ namespace MitternachtWeb.Models {
 		WriteMutes       = 0b_0000_1100,
 		ForgiveWarns     = 0b_0001_0100,
 		WriteWarns       = 0b_0011_0100,
+		WriteQuotes      = 0b_0100_0100,
 		ReadAll          = ReadGuildConfig | ReadModeration,
 		All              = 0b_1111_1111,
 	}
@@ -38,7 +40,7 @@ namespace MitternachtWeb.Models {
 			}
 
 			if(guildPerms.ManageMessages) {
-				perms |= GuildLevelPermission.WriteMutes | GuildLevelPermission.ForgiveWarns;
+				perms |= GuildLevelPermission.WriteMutes | GuildLevelPermission.ForgiveWarns | GuildLevelPermission.WriteQuotes;
 			}
 
 			if(guildPerms.BanMembers) {

@@ -18,6 +18,7 @@
 			<th>
 				@Html.DisplayNameFor(model => model.AddedAt)
 			</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -39,6 +40,11 @@
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => quote.AddedAt)
+				</td>
+				<td>
+					@if(ViewBag.PermissionWriteQuotes) {
+						<a asp-area="Guild" asp-controller="Quotes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Löschen</a>
+					}
 				</td>
 			</tr>
 		}

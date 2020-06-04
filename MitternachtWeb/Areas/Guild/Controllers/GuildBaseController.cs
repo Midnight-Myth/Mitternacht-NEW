@@ -29,6 +29,8 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		public bool PermissionForgiveWarns     => HasPermission(BotLevelPermission.ForgiveAllWarns, GuildLevelPermission.ForgiveWarns);
 		[ViewData]
 		public bool PermissionWriteWarns       => HasPermission(BotLevelPermission.WriteAllWarns, GuildLevelPermission.WriteWarns);
+		[ViewData]
+		public bool PermissionWriteQuotes      => HasPermission(BotLevelPermission.WriteAllQuotes, GuildLevelPermission.WriteQuotes);
 
 		protected ulong[] ReadableGuilds => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) ? DiscordUser.GuildPagePermissions.Select(kv => kv.Key).ToArray() : DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ReadModeration)).Select(kv => kv.Key).ToArray();
 

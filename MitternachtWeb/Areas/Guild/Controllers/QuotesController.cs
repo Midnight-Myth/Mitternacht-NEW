@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
 using MitternachtWeb.Areas.Guild.Models;
+using MitternachtWeb.Exceptions;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
@@ -31,6 +32,23 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			}).ToList();
 
 			return View(quotes);
+		}
+
+		public IActionResult Delete(int id) {
+			if(!PermissionWriteQuotes)
+				throw new NoPermissionsException();
+
+			using var uow = _db.UnitOfWork;
+			var quote = uow.Quotes.Get(id);
+
+			if(quote != null && quote.GuildId == GuildId) {
+				uow.Quotes.Remove(quote);
+				uow.Complete();
+
+				return RedirectToAction("Index");
+			} else {
+				return NotFound();
+			}
 		}
 	}
 }
