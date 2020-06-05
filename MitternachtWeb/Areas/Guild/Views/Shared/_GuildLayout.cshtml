@@ -9,15 +9,26 @@
 			<li class="nav-item">
 				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Stats" asp-action="Index">Statistiken</a>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Warns" asp-action="Index">Warns</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link text-dark" asp-area="Guild" asp-controller="GuildConfig" asp-action="Index">GuildConfig</a>
-			</li>
+			@if(ViewBag.PermissionReadQuotes) {
+				<li class="nav-item">
+					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Quotes" asp-action="Index">Quotes</a>
+				</li>
+			}
+			@if(ViewBag.PermissionReadMutes) {
+				<li class="nav-item">
+					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
+				</li>
+			}
+			@if(ViewBag.PermissionReadWarns) {
+				<li class="nav-item">
+					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Warns" asp-action="Index">Warns</a>
+				</li>
+			}
+			@if(ViewBag.PermissionReadGuildConfig) {
+				<li class="nav-item">
+					<a class="nav-link text-dark" asp-area="Guild" asp-controller="GuildConfig" asp-action="Index">GuildConfig</a>
+				</li>
+			}
 		</ul>
 	</nav>
 	
