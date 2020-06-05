@@ -5,30 +5,47 @@ namespace MitternachtWeb.Models {
 	[Flags]
 	public enum BotLevelPermission {
 		None                 = 0b_0000_0000_0000,
+
 		ReadBotConfig        = 0b_0000_0000_0001,
 		WriteBotConfig       = 0b_0000_0000_0011,
+		
 		ReadAllGuildConfigs  = 0b_0000_0000_0100,
 		WriteAllGuildConfigs = 0b_0000_0000_1100,
-		ReadAllModerations   = 0b_0000_0001_0000,
+		
+		ReadAllMutes         = 0b_0000_0001_0000,
 		WriteAllMutes        = 0b_0000_0011_0000,
-		ForgiveAllWarns      = 0b_0000_0101_0000,
-		WriteAllWarns        = 0b_0000_1101_0000,
-		WriteAllQuotes       = 0b_0001_0001_0000,
+		
+		ReadAllWarns         = 0b_0000_0100_0000,
+		ForgiveAllWarns      = 0b_0000_1100_0000,
+		WriteAllWarns        = 0b_0001_1100_0000,
+		
+		ReadAllQuotes        = 0b_0010_0000_0000,
+		WriteAllQuotes       = 0b_0110_0001_0000,
+
+		ReadAllGuilds        = ReadAllGuildConfigs | ReadAllMutes | ReadAllWarns | ReadAllQuotes,
+		ReadAll              = ReadBotConfig | ReadAllGuilds,
 		All                  = 0b_1111_1111_1111,
 	}
 
 	[Flags]
 	public enum GuildLevelPermission {
-		None             = 0b_0000_0000,
-		ReadGuildConfig  = 0b_0000_0001,
-		WriteGuildConfig = 0b_0000_0011,
-		ReadModeration   = 0b_0000_0100,
-		WriteMutes       = 0b_0000_1100,
-		ForgiveWarns     = 0b_0001_0100,
-		WriteWarns       = 0b_0011_0100,
-		WriteQuotes      = 0b_0100_0100,
-		ReadAll          = ReadGuildConfig | ReadModeration,
-		All              = 0b_1111_1111,
+		None             = 0b_0000_0000_0000,
+
+		ReadGuildConfig  = 0b_0000_0000_0001,
+		WriteGuildConfig = 0b_0000_0000_0011,
+		
+		ReadMutes        = 0b_0000_0000_0100,
+		WriteMutes       = 0b_0000_0000_1100,
+
+		ReadWarns        = 0b_0000_0001_0000,
+		ForgiveWarns     = 0b_0000_0011_0000,
+		WriteWarns       = 0b_0000_0111_0000,
+
+		ReadQuotes       = 0b_0000_1000_0000,
+		WriteQuotes      = 0b_0001_1000_0100,
+		
+		ReadAll          = ReadGuildConfig | ReadMutes | ReadWarns | ReadQuotes,
+		All              = 0b_1111_1111_1111,
 	}
 
 	public static class PagePermissionExtensions {

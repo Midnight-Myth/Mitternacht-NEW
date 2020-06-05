@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
 using MitternachtWeb.Areas.Guild.Models;
-using MitternachtWeb.Exceptions;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
@@ -16,38 +15,43 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		}
 		
 		public IActionResult Index() {
-			using var uow = _db.UnitOfWork;
-			var quotes = uow.Quotes.GetAllForGuild(GuildId).Select(q => {
-				var user = Guild.GetUser(q.AuthorId);
+			if(PermissionReadQuotes) {
+				using var uow = _db.UnitOfWork;
+				var quotes = uow.Quotes.GetAllForGuild(GuildId).Select(q => {
+					var user = Guild.GetUser(q.AuthorId);
 
-				return new Quote {
-					Id         = q.Id,
-					AuthorId   = q.AuthorId,
-					Authorname = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(q.AuthorId).FirstOrDefault()?.ToString() ?? q.AuthorName ?? "-",
-					AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
-					Keyword    = q.Keyword,
-					Text       = q.Text,
-					AddedAt    = q.DateAdded,
-				};
-			}).ToList();
+					return new Quote {
+						Id         = q.Id,
+						AuthorId   = q.AuthorId,
+						Authorname = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(q.AuthorId).FirstOrDefault()?.ToString() ?? q.AuthorName ?? "-",
+						AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+						Keyword    = q.Keyword,
+						Text       = q.Text,
+						AddedAt    = q.DateAdded,
+					};
+				}).ToList();
 
-			return View(quotes);
+				return View(quotes);
+			} else {
+				return Unauthorized();
+			}
 		}
 
 		public IActionResult Delete(int id) {
-			if(!PermissionWriteQuotes)
-				throw new NoPermissionsException();
+			if(PermissionWriteQuotes) {
+				using var uow = _db.UnitOfWork;
+				var quote = uow.Quotes.Get(id);
 
-			using var uow = _db.UnitOfWork;
-			var quote = uow.Quotes.Get(id);
+				if(quote != null && quote.GuildId == GuildId) {
+					uow.Quotes.Remove(quote);
+					uow.Complete();
 
-			if(quote != null && quote.GuildId == GuildId) {
-				uow.Quotes.Remove(quote);
-				uow.Complete();
-
-				return RedirectToAction("Index");
+					return RedirectToAction("Index");
+				} else {
+					return NotFound();
+				}
 			} else {
-				return NotFound();
+				return Unauthorized();
 			}
 		}
 	}

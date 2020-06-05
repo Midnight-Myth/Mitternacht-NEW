@@ -16,23 +16,25 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 		private bool HasPermission(BotLevelPermission botLevelPermission, GuildLevelPermission guildLevelPermission)
 			=> DiscordUser.BotPagePermissions.HasFlag(botLevelPermission) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(guildLevelPermission);
-
-		[ViewData]
-		public bool PermissionReadModeration   => HasPermission(BotLevelPermission.ReadAllModerations, GuildLevelPermission.ReadModeration);
-		[ViewData]
-		public bool PermissionWriteMutes       => HasPermission(BotLevelPermission.WriteAllMutes, GuildLevelPermission.WriteMutes);
+		
 		[ViewData]
 		public bool PermissionReadGuildConfig  => HasPermission(BotLevelPermission.ReadAllGuildConfigs, GuildLevelPermission.ReadGuildConfig);
 		[ViewData]
 		public bool PermissionWriteGuildConfig => HasPermission(BotLevelPermission.WriteAllGuildConfigs, GuildLevelPermission.WriteGuildConfig);
 		[ViewData]
+		public bool PermissionReadMutes        => HasPermission(BotLevelPermission.ReadAllMutes, GuildLevelPermission.ReadMutes);
+		[ViewData]
+		public bool PermissionWriteMutes       => HasPermission(BotLevelPermission.WriteAllMutes, GuildLevelPermission.WriteMutes);
+		[ViewData]
+		public bool PermissionReadWarns        => HasPermission(BotLevelPermission.ReadAllWarns, GuildLevelPermission.ReadWarns);
+		[ViewData]
 		public bool PermissionForgiveWarns     => HasPermission(BotLevelPermission.ForgiveAllWarns, GuildLevelPermission.ForgiveWarns);
 		[ViewData]
 		public bool PermissionWriteWarns       => HasPermission(BotLevelPermission.WriteAllWarns, GuildLevelPermission.WriteWarns);
 		[ViewData]
+		public bool PermissionReadQuotes       => HasPermission(BotLevelPermission.ReadAllQuotes, GuildLevelPermission.ReadQuotes);
+		[ViewData]
 		public bool PermissionWriteQuotes      => HasPermission(BotLevelPermission.WriteAllQuotes, GuildLevelPermission.WriteQuotes);
-
-		protected ulong[] ReadableGuilds => DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllModerations) ? DiscordUser.GuildPagePermissions.Select(kv => kv.Key).ToArray() : DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ReadModeration)).Select(kv => kv.Key).ToArray();
 
 		public override void OnActionExecuting(ActionExecutingContext context) {
 			if(RouteData.Values.TryGetValue("guildId", out var guildIdString)) {
@@ -40,7 +42,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 				if(!ReadableGuilds.Contains(GuildId)) {
 					if(Program.MitternachtBot.Client.Guilds.Any(sg => sg.Id == GuildId)) {
-						throw new NoPermissionsException();
+						context.Result = Unauthorized();
 					} else {
 						throw new GuildNotFoundException(GuildId);
 					}
