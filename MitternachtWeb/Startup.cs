@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Analysis.Services;
 using MitternachtWeb.Authorization;
+using MitternachtWeb.Helpers;
 using MitternachtWeb.Models;
 using System.Linq;
 using System.Net.Http;
@@ -69,9 +70,14 @@ namespace MitternachtWeb {
 
 						var response = await context.Backchannel.SendAsync(request);
 						response.EnsureSuccessStatusCode();
-
+						
 						var content = JsonSerializer.Deserialize<JsonElement>(await response.Content.ReadAsStringAsync());
 						context.RunClaimActions(content);
+
+						var property = content.GetProperty("id");
+						if(ulong.TryParse(property.GetString(), out var userId)) {
+							UserHelper.RemoveCache(userId);
+						}
 					}
 				};
 			});
