@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mitternacht.Common.Collections;
@@ -21,7 +20,7 @@ namespace Mitternacht.Resources {
 			try {
 				var yml          = File.ReadAllText(CmdStringPath);
 				var deserializer = new Deserializer();
-				_commandStrings  = new ConcurrentHashSet<CommandStringsModel>(deserializer.Deserialize<Dictionary<string, CommandStringsModel[]>>(yml).SelectMany(kv => kv.Value));
+				_commandStrings = deserializer.Deserialize<ConcurrentHashSet<CommandStringsModel>>(yml);
 			} catch(Exception e) {
 				Log.Error(e);
 			}
