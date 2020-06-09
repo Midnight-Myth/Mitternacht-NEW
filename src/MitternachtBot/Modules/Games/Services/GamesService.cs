@@ -33,8 +33,6 @@ namespace Mitternacht.Modules.Games.Services
         public readonly string TypingArticlesPath = "data/typing_articles2.json";
         private readonly CommandHandler _cmdHandler;
 
-        public List<TypingArticle> TypingArticles { get; }
-
         public GamesService(DiscordSocketClient client, IBotConfigProvider bc, IEnumerable<GuildConfig> gcs, 
             StringService strings, IImagesService images, CommandHandler cmdHandler)
         {
@@ -57,27 +55,6 @@ namespace Mitternacht.Modules.Games.Services
             //plantpick
             client.MessageReceived += PotentialFlowerGeneration;
             GenerationChannels = new ConcurrentHashSet<ulong>(gcs.SelectMany(c => c.GenerateCurrencyChannelIds.Select(obj => obj.ChannelId)));
-
-            try
-            {
-                TypingArticles = JsonConvert.DeserializeObject<List<TypingArticle>>(File.ReadAllText(TypingArticlesPath));
-            }
-            catch (Exception ex)
-            {
-                log.Warn(ex, "Error while loading typing articles {0}");
-                TypingArticles = new List<TypingArticle>();
-            }
-        }
-
-        public void AddTypingArticle(IUser user, string text)
-        {
-            TypingArticles.Add(new TypingArticle
-            {
-                Title = $"Text added on {DateTime.UtcNow} by {user}",
-                Text = text.SanitizeMentions(),
-            });
-
-            File.WriteAllText(TypingArticlesPath, JsonConvert.SerializeObject(TypingArticles));
         }
 
         public ConcurrentHashSet<ulong> GenerationChannels { get; }
