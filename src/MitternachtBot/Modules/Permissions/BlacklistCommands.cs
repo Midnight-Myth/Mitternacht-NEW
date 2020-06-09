@@ -1,18 +1,15 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Common.Collections;
 using Mitternacht.Common.TypeReaders;
-using Mitternacht.Modules.Games.Common.Trivia;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Modules.Permissions
-{
-    public partial class Permissions
+namespace Mitternacht.Modules.Permissions {
+	public partial class Permissions
     {
         [Group]
         public class BlacklistCommands : MitternachtSubmodule
@@ -98,31 +95,6 @@ namespace Mitternacht.Modules.Permissions
                         }
                     }
                     await uow.CompleteAsync().ConfigureAwait(false);
-                }
-                if (action == AddRemove.Add)
-                {
-                    TriviaGame tg;
-                    switch (type)
-                    {
-                        case BlacklistType.Server:
-                            Games.Games.TriviaCommands.RunningTrivias.TryRemove(id, out tg);
-                            if (tg != null)
-                            {
-                                await tg.StopGame().ConfigureAwait(false);
-                            }
-                            break;
-                        case BlacklistType.Channel:
-                            var item = Games.Games.TriviaCommands.RunningTrivias.FirstOrDefault(kvp => kvp.Value.Channel.Id == id);
-                            Games.Games.TriviaCommands.RunningTrivias.TryRemove(item.Key, out tg);
-                            if (tg != null)
-                            {
-                                await tg.StopGame().ConfigureAwait(false);
-                            }
-                            break;
-                        case BlacklistType.User:
-                            break;
-                    }
-
                 }
 
                 if(action == AddRemove.Add)
