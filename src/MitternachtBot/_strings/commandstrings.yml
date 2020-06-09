@@ -2411,3 +2411,8 @@
   aliases: []
   desc:    Setzt den Kanal für Forumbenachrichtigungen.
   usage:   "`{0}forumnotificationchannel [Textkanal|null]`"
+- name:    generatecommandslist
+  cmd:     generatecommandslist
+  aliases: []
+  desc:    Generiert eine aktuelle Liste mit CommandStrings.
+  usage:   "`{0}generatecommandslist`"

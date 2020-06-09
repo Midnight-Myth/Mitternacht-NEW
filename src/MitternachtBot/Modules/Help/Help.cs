@@ -10,7 +10,9 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Help.Services;
 using Mitternacht.Modules.Permissions.Services;
+using Mitternacht.Resources;
 using Mitternacht.Services;
+using YamlDotNet.Serialization;
 
 namespace Mitternacht.Modules.Help {
 	public partial class Help : MitternachtTopLevelModule<HelpService> {
@@ -99,7 +101,6 @@ namespace Mitternacht.Modules.Help {
 			await ConfirmLocalized("commands_instr", Prefix).ConfigureAwait(false);
 		}
 
-
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(0)]
 		public async Task H([Remainder] string fail) {
@@ -156,6 +157,17 @@ namespace Mitternacht.Modules.Help {
 			Directory.CreateDirectory("./docs/");
 			File.WriteAllText("./docs/CommandsList.md", helpstr.ToString());
 			await ReplyConfirmLocalized("commandlist_regen").ConfigureAwait(false);
+		}
+
+		[MitternachtCommand, Usage, Description, Aliases]
+		[OwnerOnly]
+		public Task GenerateCommandsList() {
+			var cmds = _cmds.Commands.Select(c => (model: CommandStrings.GetCommandStringModel(c.Name), cmd: c)).GroupBy(m => m.cmd.Module.IsSubmodule ? m.cmd.Module.Parent : m.cmd.Module).OrderBy(g => g.Key.Name).ToDictionary(k => k.Key.Name.ToLower(), k => k.Select(c => c.model).Distinct().OrderBy(c => c.Name).ToArray());
+
+			Directory.CreateDirectory("./docs/");
+			var serializer = new SerializerBuilder().DisableAliases().Build();
+			File.WriteAllText("./docs/commandstrings.yaml", serializer.Serialize(cmds));
+			return Task.CompletedTask;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
