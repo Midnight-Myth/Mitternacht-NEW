@@ -22,8 +22,9 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					var user = Guild.GetUser(v.UserId);
 
 					return new Verification {
-						Username = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(v.UserId).FirstOrDefault()?.ToString() ?? "-",
-						AvatarUrl = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+						UserId          = v.UserId,
+						Username        = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(v.UserId).FirstOrDefault()?.ToString() ?? "-",
+						AvatarUrl       = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
 						ForumProfileUrl = $"{ForumPaths.MembersUrl}{v.ForumUserId}",
 					};
 				}).ToList();
