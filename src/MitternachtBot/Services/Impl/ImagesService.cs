@@ -16,7 +16,6 @@ namespace Mitternacht.Services.Impl
         private const string TailsPath = BasePath + "coins/tails.png";
 
         private const string CurrencyImagesPath = BasePath + "currency";
-        private const string DiceImagesPath = BasePath + "dice";
 
         private const string WifeMatrixPath = BasePath + "rategirl/wifematrix.png";
         private const string RategirlDotPath = BasePath + "rategirl/dot.png";
@@ -26,8 +25,6 @@ namespace Mitternacht.Services.Impl
         public ImmutableArray<byte> Tails { get; private set; }
         
         public ImmutableArray<(string, ImmutableArray<byte>)> Currency { get; private set; }
-
-        public ImmutableArray<ImmutableArray<byte>> Dice { get; private set; }
 
         public ImmutableArray<byte> WifeMatrix { get; private set; }
         public ImmutableArray<byte> RategirlDot { get; private set; }
@@ -48,11 +45,6 @@ namespace Mitternacht.Services.Impl
                 Currency = Directory.GetFiles(CurrencyImagesPath)
                     .Select(x => (Path.GetFileName(x), File.ReadAllBytes(x).ToImmutableArray()))
                     .ToImmutableArray();
-
-                Dice = Directory.GetFiles(DiceImagesPath)
-                                .OrderBy(x => int.Parse(Path.GetFileNameWithoutExtension(x)))
-                                .Select(x => File.ReadAllBytes(x).ToImmutableArray())
-                                .ToImmutableArray();
 
                 WifeMatrix = File.ReadAllBytes(WifeMatrixPath).ToImmutableArray();
                 RategirlDot = File.ReadAllBytes(RategirlDotPath).ToImmutableArray();
