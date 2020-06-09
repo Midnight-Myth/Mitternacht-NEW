@@ -14,6 +14,11 @@
 					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Quotes" asp-action="Index">Quotes</a>
 				</li>
 			}
+			@if(ViewBag.PermissionReadVerifications) {
+				<li class="nav-item">
+					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Verifications" asp-action="Index">Verifications</a>
+				</li>
+			}
 			@if(ViewBag.PermissionReadMutes) {
 				<li class="nav-item">
 					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
