@@ -10,25 +10,31 @@
 				@Html.DisplayNameFor(model => model.Username)
 			</th>
 			<th>
+				@Html.DisplayNameFor(model => model.UserId)
+			</th>
+			<th>
 				@Html.DisplayNameFor(model => model.ForumProfileUrl)
 			</th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach(var verification in Model) {
-			<tr>
-				<td>
-					@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
-						<img class="discord-avatar" src="@verification.AvatarUrl" alt="Avatar" />
-					}
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => verification.Username)
-				</td>
-				<td>
-					<a href="@verification.ForumProfileUrl">@Html.DisplayFor(modelItem => verification.ForumProfileUrl)</a>
-				</td>
-			</tr>
+		<tr>
+			<td>
+				@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
+					<img class="discord-avatar" src="@verification.AvatarUrl" alt="Avatar" />
+				}
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => verification.Username)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => verification.UserId)
+			</td>
+			<td>
+				<a href="@verification.ForumProfileUrl">@Html.DisplayFor(modelItem => verification.ForumProfileUrl)</a>
+			</td>
+		</tr>
 		}
 	</tbody>
 </table>
