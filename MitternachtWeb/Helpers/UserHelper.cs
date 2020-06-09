@@ -77,5 +77,10 @@ namespace MitternachtWeb.Helpers {
 				return null;
 			}
 		}
+
+		public static void RemoveCache(ulong userId) {
+			discordUsers.Remove(userId);
+			userGuilds.Remove(userId);
+		}
 	}
 }

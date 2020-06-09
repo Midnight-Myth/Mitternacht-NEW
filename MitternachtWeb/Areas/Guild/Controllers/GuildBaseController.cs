@@ -18,23 +18,27 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			=> DiscordUser.BotPagePermissions.HasFlag(botLevelPermission) || DiscordUser.GuildPagePermissions[GuildId].HasFlag(guildLevelPermission);
 		
 		[ViewData]
-		public bool PermissionReadGuildConfig  => HasPermission(BotLevelPermission.ReadAllGuildConfigs, GuildLevelPermission.ReadGuildConfig);
+		public bool PermissionReadGuildConfig    => HasPermission(BotLevelPermission.ReadAllGuildConfigs, GuildLevelPermission.ReadGuildConfig);
 		[ViewData]
-		public bool PermissionWriteGuildConfig => HasPermission(BotLevelPermission.WriteAllGuildConfigs, GuildLevelPermission.WriteGuildConfig);
+		public bool PermissionWriteGuildConfig   => HasPermission(BotLevelPermission.WriteAllGuildConfigs, GuildLevelPermission.WriteGuildConfig);
 		[ViewData]
-		public bool PermissionReadMutes        => HasPermission(BotLevelPermission.ReadAllMutes, GuildLevelPermission.ReadMutes);
+		public bool PermissionReadMutes          => HasPermission(BotLevelPermission.ReadAllMutes, GuildLevelPermission.ReadMutes);
 		[ViewData]
-		public bool PermissionWriteMutes       => HasPermission(BotLevelPermission.WriteAllMutes, GuildLevelPermission.WriteMutes);
+		public bool PermissionWriteMutes         => HasPermission(BotLevelPermission.WriteAllMutes, GuildLevelPermission.WriteMutes);
 		[ViewData]
-		public bool PermissionReadWarns        => HasPermission(BotLevelPermission.ReadAllWarns, GuildLevelPermission.ReadWarns);
+		public bool PermissionReadWarns          => HasPermission(BotLevelPermission.ReadAllWarns, GuildLevelPermission.ReadWarns);
 		[ViewData]
-		public bool PermissionForgiveWarns     => HasPermission(BotLevelPermission.ForgiveAllWarns, GuildLevelPermission.ForgiveWarns);
+		public bool PermissionForgiveWarns       => HasPermission(BotLevelPermission.ForgiveAllWarns, GuildLevelPermission.ForgiveWarns);
 		[ViewData]
-		public bool PermissionWriteWarns       => HasPermission(BotLevelPermission.WriteAllWarns, GuildLevelPermission.WriteWarns);
+		public bool PermissionWriteWarns         => HasPermission(BotLevelPermission.WriteAllWarns, GuildLevelPermission.WriteWarns);
 		[ViewData]
-		public bool PermissionReadQuotes       => HasPermission(BotLevelPermission.ReadAllQuotes, GuildLevelPermission.ReadQuotes);
+		public bool PermissionReadQuotes         => HasPermission(BotLevelPermission.ReadAllQuotes, GuildLevelPermission.ReadQuotes);
 		[ViewData]
-		public bool PermissionWriteQuotes      => HasPermission(BotLevelPermission.WriteAllQuotes, GuildLevelPermission.WriteQuotes);
+		public bool PermissionWriteQuotes        => HasPermission(BotLevelPermission.WriteAllQuotes, GuildLevelPermission.WriteQuotes);
+		[ViewData]
+		public bool PermissionReadVerifications  => HasPermission(BotLevelPermission.ReadAllVerifications, GuildLevelPermission.ReadVerifications);
+		[ViewData]
+		public bool PermissionWriteVerifications => HasPermission(BotLevelPermission.WriteAllVerifications, GuildLevelPermission.WriteVerifications);
 
 		public override void OnActionExecuting(ActionExecutingContext context) {
 			if(RouteData.Values.TryGetValue("guildId", out var guildIdString)) {
