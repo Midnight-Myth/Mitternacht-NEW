@@ -33,5 +33,26 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				return Unauthorized();
 			}
 		}
+
+		public IActionResult UnverifiedUsers() {
+			if(PermissionReadVerifications) {
+				using var uow = _db.UnitOfWork;
+				var verificationRoleId = uow.GuildConfigs.For(GuildId, set => set).VerifiedRoleId;
+				var verificationRole = verificationRoleId.HasValue ? Guild.GetRole(verificationRoleId.Value) : Guild.EveryoneRole;
+				var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(GuildId).Select(vu => vu.UserId).ToList();
+
+				var unverifiedUsers = verificationRole.Members.Where(gu => !verifiedUsers.Contains(gu.Id)).Select(gu => {
+					return new Verification {
+						UserId    = gu.Id,
+						Username  = gu.ToString(),
+						AvatarUrl = gu.GetAvatarUrl() ?? gu.GetDefaultAvatarUrl(),
+					};
+				}).ToList();
+
+				return View(unverifiedUsers);
+			} else {
+				return Unauthorized();
+			}
+		}
 	}
 }
