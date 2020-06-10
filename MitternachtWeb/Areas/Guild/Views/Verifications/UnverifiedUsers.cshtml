@@ -2,33 +2,35 @@
 
 <h4>Nicht-verifizierte Nutzer</h4>
 <hr />
-<table class="table">
-	<thead>
-		<tr>
-			<th></th>
-			<th>
-				@Html.DisplayNameFor(model => model.Username)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.UserId)
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach(var verification in Model) {
-		<tr>
-			<td>
-				@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
-					<img class="discord-avatar" src="@verification.AvatarUrl" alt="Avatar" />
-				}
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => verification.Username)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => verification.UserId)
-			</td>
-		</tr>
-		}
-	</tbody>
-</table>
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>
+					@Html.DisplayNameFor(model => model.Username)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.UserId)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var verification in Model) {
+				<tr>
+					<td>
+						@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
+							<img class="discord-avatar" src="@verification.AvatarUrl" alt="Avatar" />
+						}
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => verification.Username)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => verification.UserId)
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

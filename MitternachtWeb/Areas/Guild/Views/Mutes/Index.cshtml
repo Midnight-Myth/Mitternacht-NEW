@@ -1,60 +1,62 @@
 ﻿@model IEnumerable<Mute>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th></th>
-			<th>
-				@Html.DisplayNameFor(model => model.Username)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.UserId)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Muted)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.MuteDuration)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.UnmuteAt)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach(var mute in Model) {
+<div class="table-responsive">
+	<table class="table">
+		<thead>
 			<tr>
-				<td>
-					@if(!string.IsNullOrWhiteSpace(mute.AvatarUrl)) {
-						<img class="discord-avatar" src="@mute.AvatarUrl" alt="Avatar" />
-					}
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => mute.Username)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => mute.UserId)
-				</td>
-				<td>
-					@if(mute.Muted) {
-						@Html.Raw("✅")
-					} else {
-						@Html.Raw("❌")
-					}
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => mute.MuteDuration)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => mute.MutedUntil)
-				</td>
-				<td>
-					@if(ViewBag.PermissionWriteMutes) {
-						<a asp-area="Guild" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.UserId">Löschen</a>
-					}
-				</td>
+				<th></th>
+				<th>
+					@Html.DisplayNameFor(model => model.Username)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.UserId)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Muted)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.MuteDuration)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.UnmuteAt)
+				</th>
+				<th></th>
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach(var mute in Model) {
+				<tr>
+					<td>
+						@if(!string.IsNullOrWhiteSpace(mute.AvatarUrl)) {
+							<img class="discord-avatar" src="@mute.AvatarUrl" alt="Avatar" />
+						}
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => mute.Username)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => mute.UserId)
+					</td>
+					<td>
+						@if(mute.Muted) {
+							@Html.Raw("✅")
+						} else {
+							@Html.Raw("❌")
+						}
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => mute.MuteDuration)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => mute.MutedUntil)
+					</td>
+					<td>
+						@if(ViewBag.PermissionWriteMutes) {
+							<a asp-area="Guild" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.UserId">Löschen</a>
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
