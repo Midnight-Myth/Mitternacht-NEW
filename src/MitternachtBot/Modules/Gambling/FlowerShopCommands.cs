@@ -214,7 +214,7 @@ namespace Mitternacht.Modules.Gambling
                     {
                         entry
                     };
-                    uow.GuildConfigs.For(Context.Guild.Id, set => set).ShopEntries = entries;
+                    uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
                     uow.Complete();
                 }
                 await Context.Channel.EmbedAsync(EntryToEmbed(entry)
@@ -242,7 +242,7 @@ namespace Mitternacht.Modules.Gambling
                     {
                         entry
                     };
-                    uow.GuildConfigs.For(Context.Guild.Id, set => set).ShopEntries = entries;
+                    uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
                     uow.Complete();
                 }
                 await Context.Channel.EmbedAsync(EntryToEmbed(entry)

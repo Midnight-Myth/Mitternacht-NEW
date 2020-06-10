@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Utility {
 
 				using(var uow = _db.UnitOfWork) {
 					var globalLogging = uow.BotConfig.GetOrCreate().LogUsernames;
-					var gc            = uow.GuildConfigs.For(guild.Id, set => set);
+					var gc            = uow.GuildConfigs.For(guild.Id);
 					var loggingBefore = gc.LogUsernameHistory;
 					if(loggingBefore == toggle) {
 						await ErrorLocalized("unh_guild_log_equals", guild.Name, GetActiveText(toggle)).ConfigureAwait(false);

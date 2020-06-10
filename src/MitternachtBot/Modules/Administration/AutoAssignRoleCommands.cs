@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Administration
 
                 using (var uow = _db.UnitOfWork)
                 {
-                    var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+                    var conf = uow.GuildConfigs.For(Context.Guild.Id);
                     if (role == null)
                     {
                         conf.AutoAssignRoleId = 0;

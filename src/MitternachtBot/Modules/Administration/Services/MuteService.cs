@@ -95,7 +95,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			const string defaultMuteRoleName = "Muted";
 
 			using var uow = _db.UnitOfWork;
-			var gc = uow.GuildConfigs.For(guild.Id, set => set);
+			var gc = uow.GuildConfigs.For(guild.Id);
 			if(string.IsNullOrWhiteSpace(gc.MuteRoleName)) {
 				gc.MuteRoleName = defaultMuteRoleName;
 				await uow.CompleteAsync().ConfigureAwait(false);

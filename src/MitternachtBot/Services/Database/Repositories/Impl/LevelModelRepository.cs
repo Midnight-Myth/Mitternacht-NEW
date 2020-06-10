@@ -59,7 +59,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
         public bool CanGetMessageXP(ulong guildId, ulong userId, DateTime time) {
             var lm = Get(guildId, userId);
-			return lm == null ? true : (time - lm.timestamp).TotalSeconds >= _uow.GuildConfigs.For(guildId, set => set).MessageXpTimeDifference;
+			return lm == null ? true : (time - lm.timestamp).TotalSeconds >= _uow.GuildConfigs.For(guildId).MessageXpTimeDifference;
 		}
 
 		public void ReplaceTimestampOfLastMessageXP(ulong guildId, ulong userId, DateTime timestamp) {

@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Permissions
                 bool enabled;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var config = uow.GuildConfigs.For(channel.Guild.Id, set => set);
+                    var config = uow.GuildConfigs.For(channel.Guild.Id);
                     enabled = config.FilterInvites = !config.FilterInvites;
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
@@ -96,7 +96,7 @@ namespace Mitternacht.Modules.Permissions
                 bool enabled;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var config = uow.GuildConfigs.For(channel.Guild.Id, set => set);
+                    var config = uow.GuildConfigs.For(channel.Guild.Id);
                     enabled = config.FilterWords = !config.FilterWords;
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }
@@ -221,7 +221,7 @@ namespace Mitternacht.Modules.Permissions
                 bool enabled;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var gc = uow.GuildConfigs.For(channel.Guild.Id, set => set);
+                    var gc = uow.GuildConfigs.For(channel.Guild.Id);
                     enabled = gc.FilterZalgo = !gc.FilterZalgo;
                     await uow.CompleteAsync().ConfigureAwait(false);
                 }

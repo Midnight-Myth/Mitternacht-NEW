@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Administration {
 			public async Task AdSarm() {
 				bool newval;
 				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+					var config = uow.GuildConfigs.For(Context.Guild.Id);
 					newval = config.AutoDeleteSelfAssignedRoleMessages = !config.AutoDeleteSelfAssignedRoleMessages;
 					await uow.CompleteAsync().ConfigureAwait(false);
 				}
@@ -140,7 +140,7 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Tesar() {
 				bool areExclusive;
 				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+					var config = uow.GuildConfigs.For(Context.Guild.Id);
 
 					areExclusive = config.ExclusiveSelfAssignedRoles = !config.ExclusiveSelfAssignedRoles;
 					await uow.CompleteAsync();
@@ -159,7 +159,7 @@ namespace Mitternacht.Modules.Administration {
 				GuildConfig conf;
 				SelfAssignedRole[] roles;
 				using(var uow = _db.UnitOfWork) {
-					conf = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+					conf = uow.GuildConfigs.For(Context.Guild.Id);
 					roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToArray();
 				}
 				if(roles.FirstOrDefault(r => r.RoleId == role.Id) == null) {
@@ -210,7 +210,7 @@ namespace Mitternacht.Modules.Administration {
 				bool autoDeleteSelfAssignedRoleMessages;
 				IEnumerable<SelfAssignedRole> roles;
 				using(var uow = _db.UnitOfWork) {
-					autoDeleteSelfAssignedRoleMessages = uow.GuildConfigs.For(Context.Guild.Id, set => set).AutoDeleteSelfAssignedRoleMessages;
+					autoDeleteSelfAssignedRoleMessages = uow.GuildConfigs.For(Context.Guild.Id).AutoDeleteSelfAssignedRoleMessages;
 					roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
 				}
 				if(roles.FirstOrDefault(r => r.RoleId == role.Id) == null) {

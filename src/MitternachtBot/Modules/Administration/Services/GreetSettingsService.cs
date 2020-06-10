@@ -188,7 +188,7 @@ namespace Mitternacht.Modules.Administration.Services
 
             using (var uow = _db.UnitOfWork)
             {
-                var gc = uow.GuildConfigs.For(guildId, set => set);
+                var gc = uow.GuildConfigs.For(guildId);
                 settings = GreetSettings.Create(gc);
             }
 
@@ -208,7 +208,7 @@ namespace Mitternacht.Modules.Administration.Services
 
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 conf.DmGreetMessageText = settings.DmGreetMessageText?.SanitizeMentions();
                 conf.ChannelGreetMessageText = settings.ChannelGreetMessageText?.SanitizeMentions();
                 conf.ChannelByeMessageText = settings.ChannelByeMessageText?.SanitizeMentions();
@@ -236,7 +236,7 @@ namespace Mitternacht.Modules.Administration.Services
             bool enabled;
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 enabled = conf.SendChannelGreetMessage = value ?? !conf.SendChannelGreetMessage;
                 conf.GreetMessageChannelId = channelId;
 
@@ -258,7 +258,7 @@ namespace Mitternacht.Modules.Administration.Services
             bool greetMsgEnabled;
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 conf.ChannelGreetMessageText = message;
                 greetMsgEnabled = conf.SendChannelGreetMessage;
 
@@ -275,7 +275,7 @@ namespace Mitternacht.Modules.Administration.Services
             bool enabled;
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 enabled = conf.SendDmGreetMessage = value ?? !conf.SendDmGreetMessage;
 
                 var toAdd = GreetSettings.Create(conf);
@@ -313,7 +313,7 @@ namespace Mitternacht.Modules.Administration.Services
             bool enabled;
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 enabled = conf.SendChannelByeMessage = value ?? !conf.SendChannelByeMessage;
                 conf.ByeMessageChannelId = channelId;
 
@@ -335,7 +335,7 @@ namespace Mitternacht.Modules.Administration.Services
             bool byeMsgEnabled;
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 conf.ChannelByeMessageText = message;
                 byeMsgEnabled = conf.SendChannelByeMessage;
 
@@ -354,7 +354,7 @@ namespace Mitternacht.Modules.Administration.Services
 
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(guildId, set => set);
+                var conf = uow.GuildConfigs.For(guildId);
                 conf.AutoDeleteByeMessagesTimer = timer;
 
                 var toAdd = GreetSettings.Create(conf);
@@ -371,7 +371,7 @@ namespace Mitternacht.Modules.Administration.Services
 
             using (var uow = _db.UnitOfWork)
             {
-                var conf = uow.GuildConfigs.For(id, set => set);
+                var conf = uow.GuildConfigs.For(id);
                 conf.AutoDeleteGreetMessagesTimer = timer;
 
                 var toAdd = GreetSettings.Create(conf);

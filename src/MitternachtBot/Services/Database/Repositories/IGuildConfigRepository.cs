@@ -8,7 +8,8 @@ namespace Mitternacht.Services.Database.Repositories
 {
     public interface IGuildConfigRepository : IRepository<GuildConfig>
     {
-        GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null);
+        GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes);
+        GuildConfig For(ulong guildId, bool preloaded = false);
         GuildConfig LogSettingsFor(ulong guildId);
         IEnumerable<GuildConfig> OldPermissionsForAll();
         IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds);

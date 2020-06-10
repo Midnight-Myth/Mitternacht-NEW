@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Administration.Services
                         }
                         using (var uow = _db.UnitOfWork)
                         {
-                            uow.GuildConfigs.For(guild.Id, set => set).VoicePlusTextEnabled = false;
+                            uow.GuildConfigs.For(guild.Id).VoicePlusTextEnabled = false;
                             VoicePlusTextCache.TryRemove(guild.Id);
                             await uow.CompleteAsync().ConfigureAwait(false);
                         }

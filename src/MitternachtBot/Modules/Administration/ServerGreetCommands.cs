@@ -60,7 +60,7 @@ namespace Mitternacht.Modules.Administration
                     string channelGreetMessageText;
                     using (var uow = _db.UnitOfWork)
                     {
-                        channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id, set => set).ChannelGreetMessageText;
+                        channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelGreetMessageText;
                     }
                     await ReplyConfirmLocalized("greetmsg_cur", channelGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
                     return;
@@ -132,7 +132,7 @@ namespace Mitternacht.Modules.Administration
                     string byeMessageText;
                     using (var uow = _db.UnitOfWork)
                     {
-                        byeMessageText = uow.GuildConfigs.For(Context.Guild.Id, set => set).ChannelByeMessageText;
+                        byeMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelByeMessageText;
                     }
                     await ReplyConfirmLocalized("byemsg_cur", byeMessageText?.SanitizeMentions()).ConfigureAwait(false);
                     return;

@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 		public void SetTimeZone(ulong guildId, TimeZoneInfo tz) {
 			using var uow = _db.UnitOfWork;
-			var gc = uow.GuildConfigs.For(guildId, set => set);
+			var gc = uow.GuildConfigs.For(guildId);
 
 			gc.TimeZoneId = tz?.Id;
 			uow.Complete();
