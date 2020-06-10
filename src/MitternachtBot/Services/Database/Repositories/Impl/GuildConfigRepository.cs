@@ -5,28 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
 using System.Linq.Expressions;
 
-namespace Mitternacht.Services.Database.Repositories.Impl
-{
-    public class GuildConfigRepository : Repository<GuildConfig>, IGuildConfigRepository
-    {
-        public GuildConfigRepository(DbContext context) : base(context)
-        {
-        }
+namespace Mitternacht.Services.Database.Repositories.Impl {
+	public class GuildConfigRepository : Repository<GuildConfig>, IGuildConfigRepository {
+		public GuildConfigRepository(DbContext context) : base(context) { }
 
-        private static List<WarningPunishment> DefaultWarnPunishments =>
-            new List<WarningPunishment>
-            {
-                new WarningPunishment
-                {
-                    Count = 3,
-                    Punishment = PunishmentAction.Kick
-                },
-                new WarningPunishment
-                {
-                    Count = 5,
-                    Punishment = PunishmentAction.Ban
-                }
-            };
+		private static List<WarningPunishment> DefaultWarnPunishments
+			=> new List<WarningPunishment> {
+				new WarningPunishment {
+					Count = 3,
+					Punishment = PunishmentAction.Kick
+				},
+				new WarningPunishment {
+					Count = 5,
+					Punishment = PunishmentAction.Ban
+				}
+			};
 
 		public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds) {
 			var guildConfigs = _set.Where((Expression<Func<GuildConfig, bool>>)(gc => availableGuilds.Contains(gc.GuildId))).ToList();
@@ -63,120 +56,100 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 		/// <param name="guildId">For which guild</param>
 		/// <param name="includes">Use to manipulate the set however you want</param>
 		/// <returns>Config for the guild</returns>
-		public GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null)
-        {
-            GuildConfig config;
+		public GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null) {
+			GuildConfig config;
 
-            if (includes == null)
-            {
-                config = _set
-                    .Include(gc => gc.FollowedStreams)
-                    .Include(gc => gc.LogSetting)
-                        .ThenInclude(ls => ls.IgnoredChannels)
-                    .Include(gc => gc.FilterInvitesChannelIds)
-                    .Include(gc => gc.FilterWordsChannelIds)
-                    .Include(gc => gc.FilteredWords)
-                    .Include(gc => gc.FilterZalgoChannelIds)
-                    .Include(gc => gc.GenerateCurrencyChannelIds)
-                    .Include(gc => gc.CommandCooldowns)
-                    .FirstOrDefault(c => c.GuildId == guildId);
-            }
-            else
-            {
-                var set = includes(_set);
-                config = set.FirstOrDefault(c => c.GuildId == guildId);
-            }
+			if(includes == null) {
+				config = _set
+					.Include(gc => gc.FollowedStreams)
+					.Include(gc => gc.LogSetting)
+						.ThenInclude(ls => ls.IgnoredChannels)
+					.Include(gc => gc.FilterInvitesChannelIds)
+					.Include(gc => gc.FilterWordsChannelIds)
+					.Include(gc => gc.FilteredWords)
+					.Include(gc => gc.FilterZalgoChannelIds)
+					.Include(gc => gc.GenerateCurrencyChannelIds)
+					.Include(gc => gc.CommandCooldowns)
+					.FirstOrDefault(c => c.GuildId == guildId);
+			} else {
+				var set = includes(_set);
+				config = set.FirstOrDefault(c => c.GuildId == guildId);
+			}
 
-            if (config == null)
-            {
-                _set.Add(config = new GuildConfig
-                {
-                    GuildId = guildId,
-                    Permissions = Permissionv2.GetDefaultPermlist,
-                    WarningsInitialized = true,
-                    WarnPunishments = DefaultWarnPunishments,
-                });
-                _context.SaveChanges();
-            }
+			if(config == null) {
+				_set.Add(config = new GuildConfig {
+					GuildId = guildId,
+					Permissions = Permissionv2.GetDefaultPermlist,
+					WarningsInitialized = true,
+					WarnPunishments = DefaultWarnPunishments,
+				});
+				_context.SaveChanges();
+			}
 
-            if (config.WarningsInitialized) return config;
-            config.WarningsInitialized = true;
-            config.WarnPunishments = DefaultWarnPunishments;
+			if(!config.WarningsInitialized) {
+				config.WarningsInitialized = true;
+				config.WarnPunishments = DefaultWarnPunishments;
+			}
 
-            return config;
-        }
+			return config;
+		}
 
-        public GuildConfig LogSettingsFor(ulong guildId)
-        {
-            var config = _set.Include(gc => gc.LogSetting)
-                            .ThenInclude(gc => gc.IgnoredChannels)
-               .FirstOrDefault(x => x.GuildId == guildId);
+		public GuildConfig LogSettingsFor(ulong guildId) {
+			var config = _set.Include(gc => gc.LogSetting)
+							.ThenInclude(gc => gc.IgnoredChannels)
+			   .FirstOrDefault(x => x.GuildId == guildId);
 
-            if (config == null)
-            {
-                _set.Add(config = new GuildConfig
-                {
-                    GuildId = guildId,
-                    Permissions = Permissionv2.GetDefaultPermlist,
-                    WarningsInitialized = true,
-                    WarnPunishments = DefaultWarnPunishments,
-                });
-                _context.SaveChanges();
-            }
+			if(config == null) {
+				_set.Add(config = new GuildConfig {
+					GuildId = guildId,
+					Permissions = Permissionv2.GetDefaultPermlist,
+					WarningsInitialized = true,
+					WarnPunishments = DefaultWarnPunishments,
+				});
+				_context.SaveChanges();
+			}
 
-            if (config.WarningsInitialized) return config;
-            config.WarningsInitialized = true;
-            config.WarnPunishments = DefaultWarnPunishments;
-            return config;
-        }
+			if(config.WarningsInitialized)
+				return config;
+			config.WarningsInitialized = true;
+			config.WarnPunishments = DefaultWarnPunishments;
+			return config;
+		}
 
-        public IEnumerable<GuildConfig> OldPermissionsForAll()
-        {
-            var query = _set
-                .Where((Expression<Func<GuildConfig, bool>>)(gc => gc.RootPermission != null))
-                .Include(gc => gc.RootPermission);
+		public IEnumerable<GuildConfig> OldPermissionsForAll() {
+			var query = _set
+				.Where((Expression<Func<GuildConfig, bool>>)(gc => gc.RootPermission != null))
+				.Include(gc => gc.RootPermission);
 
-            for (var i = 0; i < 60; i++)
-            {
-                query = query.ThenInclude(gc => gc.Next);
-            }
+			for(var i = 0; i < 60; i++) {
+				query = query.ThenInclude(gc => gc.Next);
+			}
 
-            return query.ToList();
-        }
+			return query.ToList();
+		}
 
-        public IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include)
-        {
-            var query = _set
-                .Where((Expression<Func<GuildConfig, bool>>)(x => include.Contains(x.GuildId)))
-                .Include(gc => gc.Permissions);
+		public IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include) {
+			var query = _set.Where((Expression<Func<GuildConfig, bool>>)(x => include.Contains(x.GuildId))).Include(gc => gc.Permissions);
 
-            return query.ToList();
-        }
+			return query.ToList();
+		}
 
-        public GuildConfig GcWithPermissionsv2For(ulong guildId)
-        {
-            var config = _set
-                .Where((Expression<Func<GuildConfig, bool>>)(gc => gc.GuildId == guildId))
-                .Include(gc => gc.Permissions)
-                .FirstOrDefault();
+		public GuildConfig GcWithPermissionsv2For(ulong guildId) {
+			var config = _set.Where((Expression<Func<GuildConfig, bool>>)(gc => gc.GuildId == guildId)).Include(gc => gc.Permissions).FirstOrDefault();
 
-            if (config == null) // if there is no guildconfig, create new one
-            {
-                _set.Add(config = new GuildConfig
-                {
-                    GuildId = guildId,
-                    Permissions = Permissionv2.GetDefaultPermlist
-                });
-                _context.SaveChanges();
-            }
-            else if (config.Permissions == null || !config.Permissions.Any()) // if no perms, add default ones
-            {
-                config.Permissions = Permissionv2.GetDefaultPermlist;
-                _context.SaveChanges();
-            }
+			if(config == null) {
+				_set.Add(config = new GuildConfig {
+					GuildId = guildId,
+					Permissions = Permissionv2.GetDefaultPermlist
+				});
+				_context.SaveChanges();
+			} else if(config.Permissions == null || !config.Permissions.Any()) {
+				config.Permissions = Permissionv2.GetDefaultPermlist;
+				_context.SaveChanges();
+			}
 
-            return config;
-        }
+			return config;
+		}
 
 		public IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included)
 			=> _set.Where((Expression<Func<GuildConfig, bool>>)(gc => included.Contains(gc.GuildId)))
@@ -185,14 +158,11 @@ namespace Mitternacht.Services.Database.Repositories.Impl
 				.SelectMany(gc => gc.FollowedStreams)
 				.ToList();
 
-		public void SetCleverbotEnabled(ulong id, bool cleverbotEnabled)
-        {
-            var conf = _set.FirstOrDefault(gc => gc.GuildId == id);
+		public void SetCleverbotEnabled(ulong id, bool cleverbotEnabled) {
+			var conf = _set.FirstOrDefault(gc => gc.GuildId == id);
 
-            if (conf == null)
-                return;
-
-            conf.CleverbotEnabled = cleverbotEnabled;
-        }
-    }
+			if(conf != null)
+				conf.CleverbotEnabled = cleverbotEnabled;
+		}
+	}
 }
