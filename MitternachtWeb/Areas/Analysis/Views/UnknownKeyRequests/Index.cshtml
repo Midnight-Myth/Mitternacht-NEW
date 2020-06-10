@@ -1,38 +1,40 @@
 ﻿@model IEnumerable<(string moduleName, string key, string cultureName, ulong occurences)>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayName("ModuleName")
-			</th>
-			<th>
-				@Html.DisplayName("Key")
-			</th>
-			<th>
-				@Html.DisplayName("CultureName")
-			</th>
-			<th>
-				@Html.DisplayName("Occurences")
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach(var (moduleName, key, cultureName, occurences) in Model.OrderByDescending(m => m.occurences)) {
+<div class="table-responsive">
+	<table class="table">
+		<thead>
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => moduleName)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => key)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => cultureName)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => occurences)
-				</td>
+				<th>
+					@Html.DisplayName("ModuleName")
+				</th>
+				<th>
+					@Html.DisplayName("Key")
+				</th>
+				<th>
+					@Html.DisplayName("CultureName")
+				</th>
+				<th>
+					@Html.DisplayName("Occurences")
+				</th>
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach(var (moduleName, key, cultureName, occurences) in Model.OrderByDescending(m => m.occurences)) {
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => moduleName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => key)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => cultureName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => occurences)
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
