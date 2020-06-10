@@ -66,7 +66,7 @@ namespace Mitternacht.Services.Impl
 
             using (var uow = _db.UnitOfWork)
             {
-                var gc = uow.GuildConfigs.For(guildId, set => set);
+                var gc = uow.GuildConfigs.For(guildId);
                 gc.Locale = ci.Name;
                 uow.Complete();
             }
@@ -82,7 +82,7 @@ namespace Mitternacht.Services.Impl
             if (!GuildCultureInfos.TryRemove(guildId, out var _)) return;
             using (var uow = _db.UnitOfWork)
             {
-                var gc = uow.GuildConfigs.For(guildId, set => set);
+                var gc = uow.GuildConfigs.For(guildId);
                 gc.Locale = null;
                 uow.Complete();
             }

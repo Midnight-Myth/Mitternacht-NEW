@@ -16,7 +16,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			if(PermissionReadGuildConfig) {
 				using var uow = _db.UnitOfWork;
 
-				var guildConfig = uow.GuildConfigs.For(GuildId, set => set);
+				var guildConfig = uow.GuildConfigs.For(GuildId);
 
 				return View(guildConfig);
 			} else {

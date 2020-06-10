@@ -194,7 +194,7 @@ namespace Mitternacht.Modules.Level {
 				return;
 			}
 
-			var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id, set => set).TurnToXpMultiplier);
+			var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id).TurnToXpMultiplier);
 			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			if(user == Context.User)
 				await ReplyConfirmLocalized("ttxp_turned_self", moneyToSpend, CurrencySign, xp)

@@ -35,7 +35,7 @@ namespace Mitternacht.Modules.Administration
                 ulong? id;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
 
                     if (gc.GameVoiceChannel == vch.Id)
                     {

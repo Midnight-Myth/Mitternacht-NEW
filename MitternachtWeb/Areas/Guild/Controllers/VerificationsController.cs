@@ -38,7 +38,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		public IActionResult UnverifiedUsers() {
 			if(PermissionReadVerifications) {
 				using var uow = _db.UnitOfWork;
-				var verificationRoleId = uow.GuildConfigs.For(GuildId, set => set).VerifiedRoleId;
+				var verificationRoleId = uow.GuildConfigs.For(GuildId).VerifiedRoleId;
 				var verificationRole = verificationRoleId.HasValue ? Guild.GetRole(verificationRoleId.Value) : Guild.EveryoneRole;
 				var verifiedUsers = uow.VerifiedUsers.GetVerifiedUsers(GuildId).Select(vu => vu.UserId).ToList();
 

@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Administration {
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		public async Task Delmsgoncmd() {
 			using var uow = _db.UnitOfWork;
-			var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+			var conf = uow.GuildConfigs.For(Context.Guild.Id);
 			var enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
 
 			await uow.CompleteAsync();

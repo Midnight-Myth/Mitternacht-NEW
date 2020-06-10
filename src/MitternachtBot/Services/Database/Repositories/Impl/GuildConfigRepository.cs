@@ -56,11 +56,33 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		/// <param name="guildId">For which guild</param>
 		/// <param name="includes">Use to manipulate the set however you want</param>
 		/// <returns>Config for the guild</returns>
-		public GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes = null) {
-			GuildConfig config;
+		public GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes) {
+			includes ??= set => set;
 
-			if(includes == null) {
-				config = _set
+			var set = includes(_set);
+			var config = set.FirstOrDefault(c => c.GuildId == guildId);
+
+			if(config == null) {
+				_set.Add(config = new GuildConfig {
+					GuildId = guildId,
+					Permissions = Permissionv2.GetDefaultPermlist,
+					WarningsInitialized = true,
+					WarnPunishments = DefaultWarnPunishments,
+				});
+				_context.SaveChanges();
+			}
+
+			if(!config.WarningsInitialized) {
+				config.WarningsInitialized = true;
+				config.WarnPunishments = DefaultWarnPunishments;
+			}
+
+			return config;
+		}
+
+		public GuildConfig For(ulong guildId, bool preloaded = false) {
+			var config = preloaded
+				? _set
 					.Include(gc => gc.FollowedStreams)
 					.Include(gc => gc.LogSetting)
 						.ThenInclude(ls => ls.IgnoredChannels)
@@ -70,11 +92,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					.Include(gc => gc.FilterZalgoChannelIds)
 					.Include(gc => gc.GenerateCurrencyChannelIds)
 					.Include(gc => gc.CommandCooldowns)
-					.FirstOrDefault(c => c.GuildId == guildId);
-			} else {
-				var set = includes(_set);
-				config = set.FirstOrDefault(c => c.GuildId == guildId);
-			}
+					.FirstOrDefault(c => c.GuildId == guildId)
+				: _set.FirstOrDefault(c => c.GuildId == guildId);
 
 			if(config == null) {
 				_set.Add(config = new GuildConfig {

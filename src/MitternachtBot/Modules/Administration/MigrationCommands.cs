@@ -98,7 +98,7 @@ namespace Mitternacht.Modules.Administration
                         var bye = (long)reader["Bye"] == 1;
                         var byeChannel = (ulong)(long)reader["ByeChannelId"];
                         var byeMsg = (string)reader["ByeText"];
-                        var gc = uow.GuildConfigs.For(gid, set => set);
+                        var gc = uow.GuildConfigs.For(gid);
 
                         if (greetDm)
                             gc.SendDmGreetMessage = greet;
@@ -177,7 +177,7 @@ namespace Mitternacht.Modules.Administration
                 var i = 0;
                 var selfAssRoles = new ConcurrentHashSet<SelfAssignedRole>();
                 configs
-                    .Select(p => new { data = p.Value, gconfig = uow.GuildConfigs.For(p.Key) })
+                    .Select(p => new { data = p.Value, gconfig = uow.GuildConfigs.For(p.Key, true) })
                     .AsParallel()
                     .ForAll(config =>
                     {
@@ -259,7 +259,7 @@ namespace Mitternacht.Modules.Administration
                 }
                 var i = 0;
                 permissionsDict
-                    .Select(p => new { data = p.Value, gconfig = uow.GuildConfigs.For(p.Key) })
+                    .Select(p => new { data = p.Value, gconfig = uow.GuildConfigs.For(p.Key, true) })
                     .AsParallel()
                     .ForAll(perms =>
                     {

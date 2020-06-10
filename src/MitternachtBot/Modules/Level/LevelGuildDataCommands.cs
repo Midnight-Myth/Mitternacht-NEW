@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Level
                 var previous = 0d;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
                     switch (data)
                     {
                         case Common.LevelGuildData.TurnToXpMultiplier:
@@ -67,7 +67,7 @@ namespace Mitternacht.Modules.Level
                 var value = 0d;
                 using (var uow = _db.UnitOfWork)
                 {
-                    var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
                     switch (data)
                     {
                         case Common.LevelGuildData.TurnToXpMultiplier:

@@ -29,7 +29,7 @@ namespace Mitternacht.Modules.Administration {
 					return;
 
 				using var uow = _db.UnitOfWork;
-				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
 				gc.MuteRoleName = name;
 				await uow.CompleteAsync().ConfigureAwait(false);
 				await ReplyConfirmLocalized("mute_role_set").ConfigureAwait(false);

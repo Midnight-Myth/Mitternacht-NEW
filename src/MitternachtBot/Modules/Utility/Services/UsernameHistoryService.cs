@@ -96,7 +96,7 @@ namespace Mitternacht.Modules.Utility.Services
             {
                 globalLogging = uow.BotConfig.GetOrCreate().LogUsernames;
                 if (guildId != 0)
-                    guildLogging = uow.GuildConfigs.For(guildId, set => set)?.LogUsernameHistory;
+                    guildLogging = uow.GuildConfigs.For(guildId)?.LogUsernameHistory;
             }
 
             return guildLogging ?? globalLogging;

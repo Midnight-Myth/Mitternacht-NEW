@@ -91,7 +91,7 @@ namespace Mitternacht.Services {
 			prefix = prefix.ToLowerInvariant();
 
 			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(guild.Id, set => set);
+				var gc = uow.GuildConfigs.For(guild.Id);
 				gc.Prefix = prefix;
 				uow.Complete();
 			}
