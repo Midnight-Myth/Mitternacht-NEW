@@ -25,13 +25,12 @@ namespace Mitternacht.Modules.Administration {
 		[RequireUserPermission(GuildPermission.Administrator)]
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		public async Task Delmsgoncmd() {
-			bool enabled;
-			using(var uow = _db.UnitOfWork) {
-				var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set);
-				enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
+			using var uow = _db.UnitOfWork;
+			var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set);
+			var enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
 
-				await uow.CompleteAsync();
-			}
+			await uow.CompleteAsync();
+
 			if(enabled) {
 				Service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
 				await ReplyConfirmLocalized("delmsg_on").ConfigureAwait(false);
@@ -48,7 +47,7 @@ namespace Mitternacht.Modules.Administration {
 		public async Task Setrole(IGuildUser usr, [Remainder] IRole role) {
 			var guser = (IGuildUser)Context.User;
 			var maxRole = guser.GetRoles().Max(x => x.Position);
-			if((Context.User.Id != Context.Guild.OwnerId) && (maxRole <= role.Position || maxRole <= usr.GetRoles().Max(x => x.Position)))
+			if(Context.User.Id != Context.Guild.OwnerId && (maxRole <= role.Position || maxRole <= usr.GetRoles().Max(x => x.Position)))
 				return;
 			try {
 				await usr.AddRoleAsync(role).ConfigureAwait(false);
@@ -282,7 +281,7 @@ namespace Mitternacht.Modules.Administration {
 		[RequireBotPermission(GuildPermission.ManageChannels)]
 		public async Task SetTopic([Remainder] string topic = null) {
 			var channel = (ITextChannel)Context.Channel;
-			topic = topic ?? "";
+			topic ??= "";
 			await channel.ModifyAsync(c => c.Topic = topic);
 			await ReplyConfirmLocalized("set_topic").ConfigureAwait(false);
 
@@ -334,11 +333,9 @@ namespace Mitternacht.Modules.Administration {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[OwnerOnly]
 		public async Task Donadd(IUser donator, int amount) {
-			Donator don;
-			using(var uow = _db.UnitOfWork) {
-				don = uow.Donators.AddOrUpdateDonator(donator.Id, donator.Username, amount);
-				await uow.CompleteAsync();
-			}
+			using var uow = _db.UnitOfWork;
+			var don = uow.Donators.AddOrUpdateDonator(donator.Id, donator.Username, amount);
+			await uow.CompleteAsync();
 			await ReplyConfirmLocalized("donadd", don.Amount).ConfigureAwait(false);
 		}
 
