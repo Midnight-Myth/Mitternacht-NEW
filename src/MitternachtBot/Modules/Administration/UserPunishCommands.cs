@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.Administration {
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
 					.WithTitle(GetText("warnlog_for_user", username));
-				var showMods    = guildUser.GuildPermissions.ViewAuditLog;
+				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var textKey     = showMods ? "warned_on_by" : "warned_on";
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => {
