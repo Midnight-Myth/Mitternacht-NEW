@@ -60,7 +60,6 @@ administration:
   greetmsg_new:                                  Neue Begrüßungsnachricht wurde gesetzt.
   gvc_disabled:                                  Spiel-Sprachkanal-Feature ist auf diesem Server nicht eingeschaltet.
   gvc_enabled:                                   "{0} ist nun ein Spiel-Sprachkanal."
-  hierarchy:                                     Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
   images_loaded:                                 Bilder wurden nach {0}s geladen!
   invalid_format:                                Ungültiges Eingabeformat.
   invalid_params:                                Ungültige Parameter.
@@ -232,8 +231,6 @@ administration:
   user_vmoved:                                   "{0} ging vom Sprachkanal {1} zu {2}."
   user_voice_mute:                               "{0} wurde im Sprachchat **stummgeschaltet**."
   user_voice_unmute:                             "{0} ist im Sprachchat nicht länger **stummgeschaltet**."
-  user_warned:                                   Benutzer {0} wurde verwarnt.
-  user_warned_and_punished:                      Benutzer {0} wurde verwarnt und Strafe {1} ausgeführt.
   username:                                      Benutzername
   username_changed:                              Benutzername geändert
   users:                                         Benutzer
@@ -250,10 +247,13 @@ administration:
   warn_cleared_by:                               Gelöscht von {0}
   warn_edit:                                     Der Grund der Verwarnung `{0}` von `{1}` wurde von `{2}` auf `{3}` gesetzt.
   warn_edit_perms:                               Zum Ändern der Verwarnung `{0}` musst du als Botowner eingetragen sein oder Solche fragen!
+  warn_hierarchy:                                Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
   warn_id_not_found:                             Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
   warn_punish_list:                              Verwarnungsstrafliste
   warn_punish_rem:                               "{0} Verwarnungen werden keine Bestrafung mehr auslösen."
   warn_punish_set:                               Ich werde die Bestrafung {0} an Benutzern mit {1} Verwarnungen ausführen.
+  warn_user_warned:                              Benutzer {0} wurde verwarnt.
+  warn_user_warned_and_punished:                 Benutzer {0} wurde verwarnt und Strafe {1} ausgeführt.
   warned_by:                                     Verwarnt von {0}
   warned_on_server:                              Verwarnt auf dem Server {0}
   warned_on:                                     Am {0:dd.MM.yyyy} um {0:HH:mm}

@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
 				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).MaxOr(int.MinValue) >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).MaxOr(int.MinValue)) {
-					await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ReplyErrorLocalized("warn_hierarchy").ConfigureAwait(false);
 					return;
 				}
 
@@ -39,9 +39,9 @@ namespace Mitternacht.Modules.Administration {
 				var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
 
 				if(punishment == null) {
-					await ReplyConfirmLocalized("user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
+					await ReplyConfirmLocalized("warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
 				} else {
-					await ReplyConfirmLocalized("user_warned_and_punished", Format.Bold(user.ToString()), Format.Bold(punishment.ToString())).ConfigureAwait(false);
+					await ReplyConfirmLocalized("warn_user_warned_and_punished", Format.Bold(user.ToString()), Format.Bold(punishment.ToString())).ConfigureAwait(false);
 				}
 			}
 
