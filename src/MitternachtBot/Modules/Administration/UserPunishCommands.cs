@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Administration {
 				}
 
 				try {
-					await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("warned_on", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString())).AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
+					await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString())).AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 				} catch { /*ignored*/
 				}
 
@@ -74,26 +74,36 @@ namespace Mitternacht.Modules.Administration {
 				if(page < 0) return;
 
 				const int warnsPerPage = 9;
-				using var uow = _db.UnitOfWork;
+
+				using var uow   = _db.UnitOfWork;
+				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
+				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
 				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
+				var embed       = new EmbedBuilder()
+					.WithOkColor()
+					.WithTitle(GetText("warnlog_for_user", username));
+				var showMods    = guildUser.GuildPermissions.ViewAuditLog;
+				var textKey     = showMods ? "warned_on_by" : "warned_on";
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => {
-																	var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
-																	var embed    = new EmbedBuilder().WithOkColor().WithTitle(GetText("warnlog_for", (Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString()));
+					var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
 
-																	if(!warnings.Any())
-																		embed.WithDescription(GetText("warnings_none"));
-																	else
-																		foreach(var w in warnings) {
-																			var name = GetText("warned_on_by", w.DateAdded?.ToString("dd.MM.yyy"), w.DateAdded?.ToString("HH:mm"), w.Moderator);
+					if(!warnings.Any()) {
+						embed.WithDescription(GetText("warnings_none"));
+					} else {
+						foreach(var w in warnings) {
+							var warnText = GetText(textKey, w.DateAdded, w.Moderator);
 
-																			if(w.Forgiven) name = $"{Format.Strikethrough(name)} {GetText("warn_cleared_by", w.ForgivenBy)}";
-																			name += $" ({w.Id.ToHex()})";
-																			embed.AddField(x => x.WithName(name).WithValue(w.Reason));
-																		}
+							if(w.Forgiven)
+								warnText = $"{Format.Strikethrough(warnText)} {(showMods ? GetText("warn_cleared_by", w.ForgivenBy) : "")}".Trim();
+							warnText = $"({w.Id}) {warnText}";
 
-																	return embed;
-																}, allWarnings.Count() / warnsPerPage, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
+							embed.AddField(x => x.WithName(warnText).WithValue(w.Reason));
+						}
+					}
+
+					return embed;
+				}, allWarnings.Count() / warnsPerPage, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

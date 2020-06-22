@@ -255,13 +255,14 @@ administration:
   warn_punish_rem:                               "{0} Verwarnungen werden keine Bestrafung mehr auslösen."
   warn_punish_set:                               Ich werde die Bestrafung {0} an Benutzern mit {1} Verwarnungen ausführen.
   warned_by:                                     Verwarnt von {0}
-  warned_on:                                     Verwarnt auf dem Server {0}
-  warned_on_by:                                  Am {0} um {1} von {2}
+  warned_on_server:                              Verwarnt auf dem Server {0}
+  warned_on:                                     Am {0:dd.MM.yyyy} um {0:HH:mm}
+  warned_on_by:                                  Am {0:dd.MM.yyyy} um {0:HH:mm} von {1}
   warning_removed:                               Die Verwarnung {0} des Nutzers {1} wurde entfernt.
   warnings_cleared:                              Alle Warnungen für {0} bereinigt.
   warnings_list:                                 Liste aller verwarnten Benutzer auf diesem Server
   warnings_none:                                 Keine Warnungen auf dieser Seite.
-  warnlog_for:                                   Warnlog für {0}
+  warnlog_for_user:                              Warnlog für {0}
   warnpl_none:                                   Keine Bestrafungen gesetzt.
   xmuted_text:                                   Benutzer {0} vom Textchat
   xmuted_text_and_voice:                         Benutzer {0} vom Text- und Sprachchat
