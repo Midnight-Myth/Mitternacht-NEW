@@ -45,9 +45,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			if(PermissionForgiveWarns) {
 				using var uow = _db.UnitOfWork;
 				var warning = uow.Warnings.Get(id);
-				if(warning != null && warning.GuildId == GuildId) {
-					warning.Forgiven = !warning.Forgiven;
-
+				if(uow.Warnings.ToggleForgiven(GuildId, id, DiscordUser.User.ToString())) {
 					uow.Complete();
 
 					return RedirectToAction("Index");
