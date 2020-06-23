@@ -1,32 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Mitternacht.Common.Collections;
 
 namespace Mitternacht.Modules.Verification.Common {
 	public class VerificationKeyManager {
-		private static readonly Random _random = new Random();
+		private static readonly RandomNumberGenerator _random = RandomNumberGenerator.Create();
 		private static readonly ConcurrentHashSet<VerificationKey> _verificationKeys = new ConcurrentHashSet<VerificationKey>();
 
 		public static List<VerificationKey> VerificationKeys => _verificationKeys.ToList();
 
 		private static string GenerateKey() {
 			var bytes = new byte[8];
-			_random.NextBytes(bytes);
+			_random.GetBytes(bytes);
 			return Convert.ToBase64String(bytes, Base64FormattingOptions.None);
 		}
 
 		public static VerificationKey GenerateVerificationKey(ulong guildid, ulong userid, long forumuserid, VerificationKeyScope keyscope) {
-			string key;
-			while(HasKey(key = GenerateKey())) { }
-			var vkey = new VerificationKey(key, keyscope, forumuserid, userid, guildid);
+			var vkey = new VerificationKey(GenerateKey(), keyscope, forumuserid, userid, guildid);
 
 			_verificationKeys.Add(vkey);
 			return vkey;
 		}
-
-		public static bool HasKey(string key)
-			=> _verificationKeys.Any(vkey => vkey.Key.Equals(key, StringComparison.Ordinal));
 
 		public static bool HasVerificationKey(VerificationKey key, bool ignoreKey = false)
 			=> _verificationKeys.Any(vkey => vkey.Equals(key, ignoreKey));
