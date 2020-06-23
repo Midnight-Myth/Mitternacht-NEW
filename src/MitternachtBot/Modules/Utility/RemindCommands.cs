@@ -16,7 +16,7 @@ namespace Mitternacht.Modules.Utility {
 	public partial class Utility {
 		[Group]
 		public class RemindCommands : MitternachtSubmodule<RemindService> {
-			private readonly Regex timeIntervalRegex = new Regex(@"^(?:(?<days>\d+)d)?(?:(?<hours>\d+)h)?(?:(?<minutes>\d+)(?:m|min))?(?:(?<seconds>\d+)s)$", RegexOptions.Compiled | RegexOptions.Multiline);
+			private readonly Regex timeIntervalRegex = new Regex(@"^(?:(?<days>\d+)d)?(?:(?<hours>\d+)h)?(?:(?<minutes>\d+)(?:m|min))?(?:(?<seconds>\d+)s)?$", RegexOptions.Compiled | RegexOptions.Multiline);
 			
 			private readonly DbService _db;
 			private readonly GuildTimezoneService _tz;
