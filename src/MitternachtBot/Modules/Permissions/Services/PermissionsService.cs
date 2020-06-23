@@ -155,7 +155,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 
 		public async Task<bool> TryBlockLate(DiscordSocketClient client, IUserMessage msg, IGuild guild, IMessageChannel channel, IUser user, string moduleName, string commandName) {
 			await Task.Yield();
-			if(guild == null)
+			if(!(guild is SocketGuild socketGuild))
 				return false;
 			var resetCommand = commandName == "resetperms";
 
@@ -163,7 +163,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 			if(!resetCommand && !pc.Permissions.CheckPermissions(msg, commandName, moduleName, out var index)) {
 				if(!pc.Verbose)
 					return true;
-				try { await channel.SendErrorAsync(_strings.GetText("permissions", "trigger", guild.Id, index + 1, pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), (SocketGuild)guild))).ConfigureAwait(false); } catch { }
+				try { await channel.SendErrorAsync(_strings.GetText("permissions", "trigger", guild.Id, index + 1, pc.Permissions[index].GetCommand(_cmd.GetPrefix(guild), socketGuild))).ConfigureAwait(false); } catch { }
 				return true;
 			}
 
