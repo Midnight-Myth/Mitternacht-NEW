@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -15,8 +14,6 @@ using NLog;
 
 namespace Mitternacht.Modules.Utility.Services {
 	public class RemindService : IMService {
-		public readonly Regex Regex = new Regex(@"^(?:(?<months>\d)mo)?(?:(?<weeks>\d)w)?(?:(?<days>\d{1,2})d)?(?:(?<hours>\d{1,2})h)?(?:(?<minutes>\d{1,2})m)?$", RegexOptions.Compiled | RegexOptions.Multiline);
-
 		private readonly Logger              _log;
 		private readonly CancellationToken   _cancelAllToken;
 		private readonly DiscordSocketClient _client;
