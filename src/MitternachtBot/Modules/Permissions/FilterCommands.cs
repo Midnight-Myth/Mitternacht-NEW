@@ -5,7 +5,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
-using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
@@ -14,146 +13,89 @@ using Mitternacht.Services.Database.Models;
 namespace Mitternacht.Modules.Permissions {
 	public partial class Permissions {
 		[Group]
-		public class FilterCommands : MitternachtSubmodule {
+		public class FilterCommands : MitternachtSubmodule<FilterService> {
 			private readonly DbService _db;
-			private readonly FilterService _service;
 
-			public FilterCommands(FilterService service, DbService db) {
-				_service = service;
+			public FilterCommands(DbService db) {
 				_db = db;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task SrvrFilterInv() {
-				var channel = (ITextChannel) Context.Channel;
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
+				var enabled   = gc.FilterInvites = !gc.FilterInvites;
+				await uow.CompleteAsync().ConfigureAwait(false);
 
-				bool enabled;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(channel.Guild.Id);
-					enabled = config.FilterInvites = !config.FilterInvites;
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
-				if(enabled) {
-					_service.InviteFilteringServers.Add(channel.Guild.Id);
-					await ReplyConfirmLocalized("invite_filter_server_on").ConfigureAwait(false);
-				} else {
-					_service.InviteFilteringServers.TryRemove(channel.Guild.Id);
-					await ReplyConfirmLocalized("invite_filter_server_off").ConfigureAwait(false);
-				}
+				await ReplyConfirmLocalized(enabled ? "invite_filter_server_on" : "invite_filter_server_off").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task ChnlFilterInv() {
-				var channel = (ITextChannel) Context.Channel;
-
-				int removed;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(channel.Guild.Id,
-						set => set.Include(gc => gc.FilterInvitesChannelIds));
-					removed = config.FilterInvitesChannelIds.RemoveWhere(fc => fc.ChannelId == channel.Id);
-					if(removed == 0) {
-						config.FilterInvitesChannelIds.Add(new FilterChannelId {
-							ChannelId = channel.Id
-						});
-					}
-
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilterInvitesChannelIds));
+				var removed   = gc.FilterInvitesChannelIds.RemoveWhere(fc => fc.ChannelId == Context.Channel.Id);
 				if(removed == 0) {
-					_service.InviteFilteringChannels.Add(channel.Id);
-					await ReplyConfirmLocalized("invite_filter_channel_on").ConfigureAwait(false);
-				} else {
-					await ReplyConfirmLocalized("invite_filter_channel_off").ConfigureAwait(false);
+					gc.FilterInvitesChannelIds.Add(new FilterChannelId {
+						ChannelId = Context.Channel.Id
+					});
 				}
+
+				await uow.CompleteAsync().ConfigureAwait(false);
+
+				await ReplyConfirmLocalized(removed == 0 ? "invite_filter_channel_on" : "invite_filter_channel_off").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task SrvrFilterWords() {
-				var channel = (ITextChannel) Context.Channel;
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
+				var enabled   = gc.FilterWords = !gc.FilterWords;
+				await uow.CompleteAsync().ConfigureAwait(false);
 
-				bool enabled;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(channel.Guild.Id);
-					enabled = config.FilterWords = !config.FilterWords;
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
-				if(enabled) {
-					_service.WordFilteringServers.Add(channel.Guild.Id);
-					await ReplyConfirmLocalized("word_filter_server_on").ConfigureAwait(false);
-				} else {
-					_service.WordFilteringServers.TryRemove(channel.Guild.Id);
-					await ReplyConfirmLocalized("word_filter_server_off").ConfigureAwait(false);
-				}
+				await ReplyConfirmLocalized(enabled ? "word_filter_server_on" : "word_filter_server_off").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task ChnlFilterWords() {
-				var channel = (ITextChannel) Context.Channel;
-
-				int removed;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(channel.Guild.Id,
-						set => set.Include(gc => gc.FilterWordsChannelIds));
-					removed = config.FilterWordsChannelIds.RemoveWhere(fc => fc.ChannelId == channel.Id);
-					if(removed == 0) {
-						config.FilterWordsChannelIds.Add(new FilterChannelId {
-							ChannelId = channel.Id
-						});
-					}
-
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilterWordsChannelIds));
+				var removed   = gc.FilterWordsChannelIds.RemoveWhere(fc => fc.ChannelId == Context.Channel.Id);
 				if(removed == 0) {
-					_service.WordFilteringChannels.Add(channel.Id);
-					await ReplyConfirmLocalized("word_filter_channel_on").ConfigureAwait(false);
-				} else {
-					_service.WordFilteringChannels.TryRemove(channel.Id);
-					await ReplyConfirmLocalized("word_filter_channel_off").ConfigureAwait(false);
+					gc.FilterWordsChannelIds.Add(new FilterChannelId {
+						ChannelId = Context.Channel.Id
+					});
 				}
+
+				await uow.CompleteAsync().ConfigureAwait(false);
+
+				await ReplyConfirmLocalized(removed == 0 ? "word_filter_channel_on" : "word_filter_channel_off").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterWord([Remainder] string word) {
-				var channel = (ITextChannel) Context.Channel;
-
-				word = word?.Trim().ToLowerInvariant();
-
 				if(string.IsNullOrWhiteSpace(word))
 					return;
 
-				int removed;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(channel.Guild.Id, set => set.Include(gc => gc.FilteredWords));
-
-					removed = config.FilteredWords.RemoveWhere(fw => fw.Word.Trim().ToLowerInvariant() == word);
-
-					if(removed == 0)
-						config.FilteredWords.Add(new FilteredWord {
-							Word = word
-						});
-
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
-				var filteredWords =
-					_service.ServerFilteredWords.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<string>());
-
+				word = word.Trim();
+				
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilteredWords));
+				int removed   = gc.FilteredWords.RemoveWhere(fw => fw.Word.Equals(word, System.StringComparison.OrdinalIgnoreCase));
 				if(removed == 0) {
-					filteredWords.Add(word);
-					await ReplyConfirmLocalized("filter_word_add", Format.Code(word)).ConfigureAwait(false);
-				} else {
-					filteredWords.TryRemove(word);
-					await ReplyConfirmLocalized("filter_word_remove", Format.Code(word)).ConfigureAwait(false);
+					gc.FilteredWords.Add(new FilteredWord {
+						Word = word
+					});
 				}
+
+				await uow.CompleteAsync().ConfigureAwait(false);
+
+				await ReplyConfirmLocalized(removed == 0 ? "filter_word_add" : "filter_word_remove", Format.Code(word)).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -163,68 +105,41 @@ namespace Mitternacht.Modules.Permissions {
 				if(page < 0)
 					return;
 
-				var channel = (ITextChannel) Context.Channel;
+				const int WordsPerPage = 10;
 
-				_service.ServerFilteredWords.TryGetValue(channel.Guild.Id, out var fwHash);
-				if(fwHash is null)
-					return;
-				var fws = fwHash.ToArray();
+				using var uow = _db.UnitOfWork;
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilteredWords));
+				var filteredWords = gc.FilteredWords.Select(fw => fw.Word).ToArray();
 
-				await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient,
-						page,
-						curPage => new EmbedBuilder()
-							.WithTitle(GetText("filter_word_list"))
-							.WithDescription(string.Join("\n", fws.Skip(curPage * 10).Take(10))), fws.Length / 10, hasPerms: gp => true)
-					.ConfigureAwait(false);
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("filter_word_list")).WithDescription(string.Join("\n", filteredWords.Skip(currentPage * WordsPerPage).Take(WordsPerPage))), filteredWords.Length / WordsPerPage, hasPerms: gp => true).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task SrvrFilterZalgo() {
-				var channel = (ITextChannel) Context.Channel;
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
+				var enabled   = gc.FilterZalgo = !gc.FilterZalgo;
+				await uow.CompleteAsync().ConfigureAwait(false);
 
-				bool enabled;
-				using(var uow = _db.UnitOfWork) {
-					var gc = uow.GuildConfigs.For(channel.Guild.Id);
-					enabled = gc.FilterZalgo = !gc.FilterZalgo;
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
-				if(enabled) {
-					_service.ZalgoFilteringServers.Add(channel.Guild.Id);
-					await ReplyConfirmLocalized("zalgo_filter_server_on").ConfigureAwait(false);
-				} else {
-					_service.ZalgoFilteringServers.TryRemove(channel.Guild.Id);
-					await ReplyConfirmLocalized("zalgo_filter_server_off").ConfigureAwait(false);
-				}
+				await ReplyConfirmLocalized(enabled ? "zalgo_filter_server_on" : "zalgo_filter_server_off").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task ChnlFilterZalgo() {
-				var channel = (ITextChannel) Context.Channel;
-
-				int removed;
-				using(var uow = _db.UnitOfWork) {
-					var gc = uow.GuildConfigs.For(channel.Guild.Id,
-						set => set.Include(tgc => tgc.FilterZalgoChannelIds));
-					removed = gc.FilterZalgoChannelIds.RemoveWhere(zfc => zfc.ChannelId == channel.Id);
-					if(removed == 0) {
-						gc.FilterZalgoChannelIds.Add(new ZalgoFilterChannel {
-							ChannelId = channel.Id
-						});
-					}
-
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
-
+				using var uow = _db.UnitOfWork;
+				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(fzc => fzc.FilterZalgoChannelIds));
+				var removed   = gc.FilterZalgoChannelIds.RemoveWhere(zfc => zfc.ChannelId == Context.Channel.Id);
 				if(removed == 0) {
-					_service.ZalgoFilteringChannels.Add(channel.Id);
-					await ReplyConfirmLocalized("zalgo_filter_channel_on").ConfigureAwait(false);
-				} else {
-					_service.ZalgoFilteringChannels.TryRemove(channel.Id);
-					await ReplyConfirmLocalized("zalgo_filter_channel_off").ConfigureAwait(false);
+					gc.FilterZalgoChannelIds.Add(new ZalgoFilterChannel {
+						ChannelId = Context.Channel.Id
+					});
 				}
+
+				await uow.CompleteAsync().ConfigureAwait(false);
+
+				await ReplyConfirmLocalized(removed == 0 ? "zalgo_filter_channel_on" : "zalgo_filter_channel_off").ConfigureAwait(false);
 			}
 		}
 	}
