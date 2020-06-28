@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task SrvrFilterInv() {
+			public async Task FilterInvitesServer() {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterInvites = !gc.FilterInvites;
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task ChnlFilterInv() {
+			public async Task FilterInvitesChannel() {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilterInvitesChannelIds));
 				var removed   = gc.FilterInvitesChannelIds.RemoveWhere(fc => fc.ChannelId == Context.Channel.Id);
@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task SrvrFilterWords() {
+			public async Task FilterWordsServer() {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterWords = !gc.FilterWords;
@@ -61,7 +61,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task ChnlFilterWords() {
+			public async Task FilterWordsChannel() {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilterWordsChannelIds));
 				var removed   = gc.FilterWordsChannelIds.RemoveWhere(fc => fc.ChannelId == Context.Channel.Id);
@@ -100,7 +100,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task LstFilterWords(int page = 1) {
+			public async Task FilteredWords(int page = 1) {
 				page--;
 				if(page < 0)
 					return;
@@ -116,7 +116,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task SrvrFilterZalgo() {
+			public async Task FilterZalgoServer() {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterZalgo = !gc.FilterZalgo;
@@ -127,7 +127,7 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			public async Task ChnlFilterZalgo() {
+			public async Task FilterZalgoChannel() {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(fzc => fzc.FilterZalgoChannelIds));
 				var removed   = gc.FilterZalgoChannelIds.RemoveWhere(zfc => zfc.ChannelId == Context.Channel.Id);
