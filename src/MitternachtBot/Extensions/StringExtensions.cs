@@ -92,7 +92,7 @@ namespace Mitternacht.Extensions {
 		}
 
 		private static readonly Regex FilterRegex = new Regex(@"(?:discord(?:\.gg|.me|\.com\/invite|app\.com\/invite)\/(?<id>([\w]{16}|(?:[\w]+-?){3})))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-		public static bool IsDiscordInvite(this string str)
+		public static bool ContainsDiscordInvite(this string str)
 			=> FilterRegex.IsMatch(str);
 
 		public static string Unmention(this string str)

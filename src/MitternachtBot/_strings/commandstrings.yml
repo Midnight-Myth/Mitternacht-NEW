@@ -143,12 +143,10 @@
   aliases: []
   desc:    Lists servers the bot is on with some basic info. 15 per page.
   usage:   "`{0}listservers 3`"
-- name:    srvrfilterwords
-  cmd:     srvrfilterwords
-  aliases:
-  -        sfw
+- name:    filterwordsserver
+  cmd:     filterwordsserver
   desc:    Toggles automatic deletion of messages containing filtered words on the server. Does not affect the Bot Owner.
-  usage:   "`{0}sfw`"
+  usage:   "`{0}filterwordsserver`"
 - name:    removerolemoney
   cmd:     removerolemoney
   aliases:
@@ -422,12 +420,10 @@
   -        smdls
   desc:    Zeigt alle Submodule des Bots an.
   usage:   "`{0}submodules`"
-- name:    srvrfilterinv
-  cmd:     srvrfilterinv
-  aliases:
-  -        sfi
+- name:    filterinvitesserver
+  cmd:     filterinvitesserver
   desc:    Toggles automatic deletion of invites posted in the server. Does not affect the Bot Owner.
-  usage:   "`{0}sfi`"
+  usage:   "`{0}filterinvitesserver`"
 - name:    nunchi
   cmd:     nunchi
   aliases: []
@@ -730,12 +726,10 @@
   aliases: []
   desc:    Weise einer Rolle einen anderen Betrag an täglichem Geld zu.
   usage:   "`{0}setrolemoney <role> <money> [priority]`"
-- name:    lstfilterwords
-  cmd:     lstfilterwords
-  aliases:
-  -        lfw
+- name:    filteredwords
+  cmd:     filteredwords
   desc:    Shows a list of filtered words.
-  usage:   "`{0}lfw`"
+  usage:   "`{0}filteredwords`"
 - name:    roll
   cmd:     roll
   aliases: []
@@ -1564,12 +1558,10 @@
   -        msgxpradd
   desc:    Fügt einen Textkanal zur MessageXP Blacklist hinzu
   usage:   "`{0}msgxprestrictionadd <textchannel>`"
-- name:    chnlfilterwords
-  cmd:     chnlfilterwords
-  aliases:
-  -        cfw
-  desc:    Toggles automatic deletion of messages containing filtered words on the channel. Does not negate the `{0}srvrfilterwords` enabled setting. Does not affect the Bot Owner.
-  usage:   "`{0}cfw`"
+- name:    filterwordschannel
+  cmd:     filterwordschannel
+  desc:    Toggles automatic deletion of messages containing filtered words on the channel. Does not negate the `{0}filterwordsserver` enabled setting. Does not affect the Bot Owner.
+  usage:   "`{0}filterwordschannel`"
 - name:    take
   cmd:     take
   aliases: []
@@ -1727,12 +1719,10 @@
   aliases: []
   desc:    Checks your user-specific permissions on this channel.
   usage:   "`{0}checkmyperms`"
-- name:    chnlfilterinv
-  cmd:     chnlfilterinv
-  aliases:
-  -        cfi
-  desc:    Toggles automatic deletion of invites posted in the channel. Does not negate the `{0}srvrfilterinv` enabled setting. Does not affect the Bot Owner.
-  usage:   "`{0}cfi`"
+- name:    filterinviteschannel
+  cmd:     filterinviteschannel
+  desc:    Toggles automatic deletion of invites posted in the channel. Does not negate the `{0}filterinvitesserver` enabled setting. Does not affect the Bot Owner.
+  usage:   "`{0}filterinviteschannel`"
 - name:    deltxtchanl
   cmd:     deltxtchanl
   aliases:
@@ -2111,18 +2101,14 @@
   aliases: []
   desc:    Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück.
   usage:   "`{0}setguildconfigleveldefaults [guildId1] ... [guildIdX]`"
-- name:    chnlfilterzalgo
-  cmd:     channelfilterzalgo
-  aliases:
-  -        chnlfilterzalgo
+- name:    filterzalgochannel
+  cmd:     filterzalgochannel
   desc:    Schaltet das Filtern von Zalgo in einem Kanal an oder ab.
-  usage:   "`{0}channelfilterzalgo`"
-- name:    srvrfilterzalgo
-  cmd:     serverfilterzalgo
-  aliases:
-  -        srvrfilterzalgo
+  usage:   "`{0}filterzalgochannel`"
+- name:    filterzalgoserver
+  cmd:     filterzalgoserver
   desc:    Schaltet das Filtern von Zalgo in einem Server an oder ab.
-  usage:   "`{0}serverfilterzalgo`"
+  usage:   "`{0}filterzalgoserver`"
 - name:    toggleusernamehistory
   cmd:     toggleusernamehistory
   aliases:
