@@ -19,32 +19,32 @@ namespace Mitternacht.Modules.Permissions {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public Task UserBlacklist(AddRemove action, ulong id)
+			public Task BlacklistUser(AddRemove action, ulong id)
 				=> Blacklist(action, id, BlacklistType.User);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public Task UserBlacklist(AddRemove action, IUser user)
+			public Task BlacklistUser(AddRemove action, IUser user)
 				=> Blacklist(action, user.Id, BlacklistType.User);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public Task ChannelBlacklist(AddRemove action, ulong id)
+			public Task BlacklistChannel(AddRemove action, ulong id)
 				=> Blacklist(action, id, BlacklistType.Channel);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public Task ChannelBlacklist(AddRemove action, IChannel channel)
+			public Task BlacklistChannel(AddRemove action, IChannel channel)
 				=> Blacklist(action, channel.Id, BlacklistType.Channel);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public Task ServerBlacklist(AddRemove action, ulong id)
+			public Task BlacklistServer(AddRemove action, ulong id)
 				=> Blacklist(action, id, BlacklistType.Server);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public Task ServerBlacklist(AddRemove action, IGuild guild)
+			public Task BlacklistServer(AddRemove action, IGuild guild)
 				=> Blacklist(action, guild.Id, BlacklistType.Server);
 
 			private async Task Blacklist(AddRemove action, ulong id, BlacklistType type) {
