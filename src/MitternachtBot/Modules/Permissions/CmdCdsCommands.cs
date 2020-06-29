@@ -11,84 +11,72 @@ using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Modules.Permissions
-{
-    public partial class Permissions
-    {
-        [Group]
-        public class CmdCdsCommands : MitternachtSubmodule
-        {
-            private readonly DbService _db;
-            private readonly CmdCdService _service;
+namespace Mitternacht.Modules.Permissions {
+	public partial class Permissions {
+		[Group]
+		public class CmdCdsCommands : MitternachtSubmodule {
+			private readonly DbService _db;
+			private readonly CmdCdService _service;
 
-            private ConcurrentDictionary<ulong, ConcurrentHashSet<CommandCooldown>> CommandCooldowns 
-                => _service.CommandCooldowns;
-            private ConcurrentDictionary<ulong, ConcurrentHashSet<ActiveCooldown>> ActiveCooldowns
-                => _service.ActiveCooldowns;
+			private ConcurrentDictionary<ulong, ConcurrentHashSet<CommandCooldown>> CommandCooldowns
+				=> _service.CommandCooldowns;
+			private ConcurrentDictionary<ulong, ConcurrentHashSet<ActiveCooldown>> ActiveCooldowns
+				=> _service.ActiveCooldowns;
 
-            public CmdCdsCommands(CmdCdService service, DbService db)
-            {
-                _service = service;
-                _db = db;
-            }
-            
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            public async Task CmdCooldown(CommandInfo command, int secs)
-            {
-                var channel = (ITextChannel)Context.Channel;
-                if (secs < 0 || secs > 3600)
-                {
-                    await ReplyErrorLocalized("invalid_second_param_between", 0, 3600).ConfigureAwait(false);
-                    return;
-                }
+			public CmdCdsCommands(CmdCdService service, DbService db) {
+				_service = service;
+				_db = db;
+			}
 
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.GuildConfigs.For(channel.Guild.Id, set => set.Include(gc => gc.CommandCooldowns));
-                    var localSet = CommandCooldowns.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<CommandCooldown>());
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			public async Task CmdCooldown(CommandInfo command, int secs) {
+				var channel = (ITextChannel)Context.Channel;
+				if(secs < 0 || secs > 3600) {
+					await ReplyErrorLocalized("invalid_second_param_between", 0, 3600).ConfigureAwait(false);
+					return;
+				}
 
-                    config.CommandCooldowns.RemoveWhere(cc => cc.CommandName == command.Aliases.First().ToLowerInvariant());
-                    localSet.RemoveWhere(cc => cc.CommandName == command.Aliases.First().ToLowerInvariant());
-                    if (secs != 0)
-                    {
-                        var cc = new CommandCooldown()
-                        {
-                            CommandName = command.Aliases.First().ToLowerInvariant(),
-                            Seconds = secs,
-                        };
-                        config.CommandCooldowns.Add(cc);
-                        localSet.Add(cc);
-                    }
-                    await uow.CompleteAsync().ConfigureAwait(false);
-                }
-                if (secs == 0)
-                {
-                    var activeCds = ActiveCooldowns.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<ActiveCooldown>());
-                    activeCds.RemoveWhere(ac => ac.Command == command.Aliases.First().ToLowerInvariant());
-                    await ReplyConfirmLocalized("cmdcd_cleared", 
-                        Format.Bold(command.Aliases.First())).ConfigureAwait(false);
-                }
-                else
-                {
-                    await ReplyConfirmLocalized("cmdcd_add", 
-                        Format.Bold(command.Aliases.First()), 
-                        Format.Bold(secs.ToString())).ConfigureAwait(false);
-                }
-            }
+				using(var uow = _db.UnitOfWork) {
+					var config = uow.GuildConfigs.For(channel.Guild.Id, set => set.Include(gc => gc.CommandCooldowns));
+					var localSet = CommandCooldowns.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<CommandCooldown>());
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            public async Task AllCmdCooldowns()
-            {
-                var channel = (ITextChannel)Context.Channel;
-                var localSet = CommandCooldowns.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<CommandCooldown>());
+					config.CommandCooldowns.RemoveWhere(cc => cc.CommandName == command.Aliases.First().ToLowerInvariant());
+					localSet.RemoveWhere(cc => cc.CommandName == command.Aliases.First().ToLowerInvariant());
+					if(secs != 0) {
+						var cc = new CommandCooldown()
+						{
+							CommandName = command.Aliases.First().ToLowerInvariant(),
+							Seconds = secs,
+						};
+						config.CommandCooldowns.Add(cc);
+						localSet.Add(cc);
+					}
+					await uow.CompleteAsync().ConfigureAwait(false);
+				}
+				if(secs == 0) {
+					var activeCds = ActiveCooldowns.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<ActiveCooldown>());
+					activeCds.RemoveWhere(ac => ac.Command == command.Aliases.First().ToLowerInvariant());
+					await ReplyConfirmLocalized("cmdcd_cleared",
+						Format.Bold(command.Aliases.First())).ConfigureAwait(false);
+				} else {
+					await ReplyConfirmLocalized("cmdcd_add",
+						Format.Bold(command.Aliases.First()),
+						Format.Bold(secs.ToString())).ConfigureAwait(false);
+				}
+			}
 
-                if (!localSet.Any())
-                    await ReplyConfirmLocalized("cmdcd_none").ConfigureAwait(false);
-                else
-                    await channel.SendTableAsync("", localSet.Select(c => c.CommandName + ": " + c.Seconds + GetText("sec")), s => $"{s,-30}", 2).ConfigureAwait(false);
-            }
-        }
-    }
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			public async Task AllCmdCooldowns() {
+				var channel = (ITextChannel)Context.Channel;
+				var localSet = CommandCooldowns.GetOrAdd(channel.Guild.Id, new ConcurrentHashSet<CommandCooldown>());
+
+				if(!localSet.Any())
+					await ReplyConfirmLocalized("cmdcd_none").ConfigureAwait(false);
+				else
+					await channel.SendTableAsync("", localSet.Select(c => c.CommandName + ": " + c.Seconds + GetText("sec")), s => $"{s,-30}", 2).ConfigureAwait(false);
+			}
+		}
+	}
 }
