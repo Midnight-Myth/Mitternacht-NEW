@@ -25,8 +25,10 @@ namespace Mitternacht.Extensions {
 
 		public static Task<IUserMessage> SendConfirmAsync(this IMessageChannel ch, string title, string text, string url = null, string footer = null) {
 			var eb = new EmbedBuilder().WithOkColor().WithDescription(text).WithTitle(title);
-			if(url != null && Uri.IsWellFormedUriString(url, UriKind.Absolute)) eb.WithUrl(url);
-			if(!string.IsNullOrWhiteSpace(footer)) eb.WithFooter(efb => efb.WithText(footer));
+			if(url != null && Uri.IsWellFormedUriString(url, UriKind.Absolute))
+				eb.WithUrl(url);
+			if(!string.IsNullOrWhiteSpace(footer))
+				eb.WithFooter(efb => efb.WithText(footer));
 			return ch.SendMessageAsync("", embed: eb.Build());
 		}
 
@@ -45,7 +47,7 @@ namespace Mitternacht.Extensions {
 		private static readonly IEmote ArrowRight         = new Emoji("➡");
 		private const           int    ReactionStartDelay = 500;
 		private const           int    ReactionTime       = 30000;
-		
+
 		/// <summary>
 		/// Creates a paginated confirm embed.
 		/// </summary>
@@ -74,8 +76,9 @@ namespace Mitternacht.Extensions {
 		/// <param name="hasPerms">overturn reactUsers if certain permission is available</param>
 		/// <returns></returns>
 		public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) {
-			reactUsers??=new IGuildUser[0];
-			if(hasPerms == null) hasPerms = gp => !reactUsers.Any();
+			reactUsers ??= new IGuildUser[0];
+			if(hasPerms == null)
+				hasPerms = gp => !reactUsers.Any();
 
 			var embed = await pageFunc(currentPage).ConfigureAwait(false);
 
@@ -84,7 +87,8 @@ namespace Mitternacht.Extensions {
 
 			var msg = await channel.EmbedAsync(embed);
 
-			if(lastPage == 0) return;
+			if(lastPage == 0)
+				return;
 
 			var _ = Task.Run(async () => {
 				await msg.AddReactionAsync(ArrowLeft).ConfigureAwait(false);
@@ -94,7 +98,8 @@ namespace Mitternacht.Extensions {
 
 				async void ChangePage(SocketReaction r) {
 					try {
-						if(!r.User.IsSpecified || r.User.Value is IGuildUser gu && reactUsers.All(u => u.Id != r.UserId) && !hasPerms.Invoke(gu.GuildPermissions) && !gu.GuildPermissions.Administrator) return;
+						if(!r.User.IsSpecified || r.User.Value is IGuildUser gu && reactUsers.All(u => u.Id != r.UserId) && !hasPerms.Invoke(gu.GuildPermissions) && !gu.GuildPermissions.Administrator)
+							return;
 
 						if(r.Emote.Name == ArrowLeft.Name) {
 							if(currentPage == 0)
@@ -104,7 +109,8 @@ namespace Mitternacht.Extensions {
 								toSend.AddPaginatedFooter(currentPage, lastPage);
 							await msg.ModifyAsync(x => x.Embed = toSend.Build()).ConfigureAwait(false);
 						} else if(r.Emote.Name == ArrowRight.Name) {
-							if(lastPage != null && !(lastPage > currentPage)) return;
+							if(lastPage != null && !(lastPage > currentPage))
+								return;
 							var toSend = await pageFunc(++currentPage).ConfigureAwait(false);
 							if(addPaginatedFooter)
 								toSend.AddPaginatedFooter(currentPage, lastPage);
@@ -133,7 +139,8 @@ namespace Mitternacht.Extensions {
 				text = text.Replace("{page}", lastPage == null ? currentPage.ToString() : $"{currentPage}/{lastPage}");
 
 			var msg = await channel.SendMessageAsync(text);
-			if(lastPage == 0) return;
+			if(lastPage == 0)
+				return;
 
 			var _ = Task.Run(async () => {
 				await msg.AddReactionAsync(ArrowLeft);
@@ -144,13 +151,15 @@ namespace Mitternacht.Extensions {
 				async void ChangePage(SocketReaction r) {
 					try {
 						if(r.Emote.Name == ArrowLeft.Name) {
-							if(currentPage == 0) return;
+							if(currentPage == 0)
+								return;
 							var modtext = await pageFunc(--currentPage);
 							if(addPaginatedFooter)
 								modtext += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
 							await msg.ModifyAsync(mp => mp.Content = modtext);
 						} else if(r.Emote.Name == ArrowRight.Name) {
-							if(lastPage != null && !(lastPage > currentPage)) return;
+							if(lastPage != null && !(lastPage > currentPage))
+								return;
 							var modtext = await pageFunc(++currentPage);
 							if(addPaginatedFooter)
 								modtext += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";

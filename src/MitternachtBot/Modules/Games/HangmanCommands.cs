@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -37,7 +38,7 @@ namespace Mitternacht.Modules.Games {
 				if(winner == null) {
 					var loseEmbed = new EmbedBuilder().WithTitle($"Hangman Game ({game.TermType}) - Ended")
 													.WithDescription(Format.Bold("You lose."))
-													.AddField(efb => efb.WithName("It was").WithValue(game.Term.Word.ToTitleCase()))
+													.AddField(efb => efb.WithName("It was").WithValue(CultureInfo.InvariantCulture.TextInfo.ToTitleCase(game.Term.Word)))
 													.WithFooter(efb => efb.WithText(string.Join(" ", game.PreviousGuesses)))
 													.WithErrorColor();
 
@@ -49,7 +50,7 @@ namespace Mitternacht.Modules.Games {
 
 				var winEmbed = new EmbedBuilder().WithTitle($"Hangman Game ({game.TermType}) - Ended")
 												.WithDescription(Format.Bold($"{winner} Won."))
-												.AddField(efb => efb.WithName("It was").WithValue(game.Term.Word.ToTitleCase()))
+												.AddField(efb => efb.WithName("It was").WithValue(CultureInfo.InvariantCulture.TextInfo.ToTitleCase(game.Term.Word)))
 												.WithFooter(efb => efb.WithText(string.Join(" ", game.PreviousGuesses)))
 												.WithOkColor();
 

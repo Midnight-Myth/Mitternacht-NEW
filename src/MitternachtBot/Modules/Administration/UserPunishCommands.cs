@@ -177,7 +177,7 @@ namespace Mitternacht.Modules.Administration {
 
 				var title            = GetText("warned_by", w.Moderator);
 				if(w.Forgiven) title = $"{Format.Strikethrough(title)} {GetText("warn_cleared_by", w.ForgivenBy)}";
-				title += $" ({w.Id.ToHex()})";
+				title += $" ({w.Id:X})";
 				var embed = new EmbedBuilder().WithOkColor().WithTitle(title).WithDescription(w.Reason);
 				var user  = await Context.Guild.GetUserAsync(w.UserId);
 				if(user == null)

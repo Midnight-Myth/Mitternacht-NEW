@@ -108,7 +108,7 @@ namespace Mitternacht.Modules.Utility
                     .AddField(GetText("joined_discord"), $"{user.CreatedAt:dd.MM.yyyy HH:mm}", true)
                     .AddField(GetText("roles_count", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions(), true);
 
-                if (user.AvatarId != null) embed.WithThumbnailUrl(user.RealAvatarUrl());
+                if (user.AvatarId != null) embed.WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl());
                 using (var uow = _db.UnitOfWork) {
                     var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
                     if (forumId != null) {

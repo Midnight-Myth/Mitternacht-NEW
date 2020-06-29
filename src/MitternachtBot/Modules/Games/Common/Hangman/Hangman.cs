@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace Mitternacht.Modules.Games.Common.Hangman {
 		public Task EndedTask => _endingCompletionSource.Task;
 
 		public Hangman(TermType type) {
-			this.TermType = type.ToString().Replace('_', ' ').ToTitleCase();
+			this.TermType = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(type.ToString().Replace('_', ' '));
 			this.Term     = TermPool.GetTerm(type);
 		}
 

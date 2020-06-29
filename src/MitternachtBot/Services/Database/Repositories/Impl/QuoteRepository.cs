@@ -20,7 +20,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
 
 		public Quote SearchQuoteKeywordText(ulong guildId, string keyword, string text)
-			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).AsEnumerable().Where(q => q.Text.ContainsNoCase(text, StringComparison.OrdinalIgnoreCase) && q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
+			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).AsEnumerable().Where(q => q.Text.Contains(text, StringComparison.OrdinalIgnoreCase) && q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
 
 		public void RemoveAllByKeyword(ulong guildId, string keyword)
 			=> _set.RemoveRange(_set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)));

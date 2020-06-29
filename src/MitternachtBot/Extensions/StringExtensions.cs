@@ -1,46 +1,18 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Extensions {
 	public static class StringExtensions {
-		/// <summary>
-		/// Easy use of fast, efficient case-insensitive Contains check with StringComparison Member Types 
-		/// CurrentCulture, CurrentCultureIgnoreCase, InvariantCulture, InvariantCultureIgnoreCase, Ordinal, OrdinalIgnoreCase
-		/// </summary>    
-		public static bool ContainsNoCase(this string str, string contains, StringComparison compare) {
-			return str.IndexOf(contains, compare) >= 0;
-		}
-
 		public static string TrimTo(this string str, int maxLength, bool hideDots = false) {
 			if(maxLength < 0)
-				throw new ArgumentOutOfRangeException(nameof(maxLength), $"Argument {nameof(maxLength)} can't be negative.");
-			return maxLength == 0
-				? string.Empty
-				: maxLength <= 3
-					? string.Concat(str.Select(c => '.'))
-					: str.Length < maxLength ? str : string.Concat(str.Take(maxLength - 3)) + (hideDots ? "" : "...");
-		}
+				throw new ArgumentOutOfRangeException(nameof(maxLength), $"Argument {nameof(maxLength)} must not be negative.");
 
-		public static string ToTitleCase(this string str)
-			=> string.Join(" ", str.Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(s => s.Substring(0, 1).ToUpper() + s.Substring(1)));
-
-		/// <summary>
-		/// Removes trailing S or ES (if specified) on the given string if the num is 1
-		/// </summary>
-		/// <param name="str"></param>
-		/// <param name="num"></param>
-		/// <param name="es"></param>
-		/// <returns>String with the correct singular/plural form</returns>
-		public static string SnPl(this string str, int? num, bool es = false) {
-			if(str == null)
-				throw new ArgumentNullException(nameof(str));
-			if(num == null)
-				throw new ArgumentNullException(nameof(num));
-			return num == 1 ? str.Remove(str.Length - 1, es ? 2 : 1) : str;
+			return maxLength <= 3
+				? string.Join("", Enumerable.Repeat(".", maxLength))
+				: str.Length <= maxLength ? str : $"{str[0..(maxLength-1 - (hideDots ? 0 : 3))]}{(hideDots ? "" : "...")}";
 		}
 
 		//http://www.dotnetperls.com/levenshtein
@@ -95,14 +67,8 @@ namespace Mitternacht.Extensions {
 		public static bool ContainsDiscordInvite(this string str)
 			=> FilterRegex.IsMatch(str);
 
-		public static string Unmention(this string str)
-			=> str.Replace("@", "ම");
-
 		public static string SanitizeMentions(this string str)
 			=> str.Replace("@everyone", "@everyοne").Replace("@here", "@һere");
-
-		public static string ToBase64(this string plainText)
-			=> Convert.ToBase64String(Encoding.UTF8.GetBytes(plainText));
 
 		public static string GetInitials(this string txt, string glue = "")
 			=> string.Join(glue, txt.Split(' ').Select(x => x.FirstOrDefault()));

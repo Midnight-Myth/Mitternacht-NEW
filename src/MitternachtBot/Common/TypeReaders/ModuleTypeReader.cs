@@ -2,52 +2,41 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.Commands;
-using Mitternacht.Extensions;
 
-namespace Mitternacht.Common.TypeReaders
-{
-    public class ModuleTypeReader : TypeReader
-    {
-        private readonly CommandService _cmds;
+namespace Mitternacht.Common.TypeReaders {
+	public class ModuleTypeReader : TypeReader {
+		private readonly CommandService _cmds;
 
-        public ModuleTypeReader(CommandService cmds)
-        {
-            _cmds = cmds;
-        }
+		public ModuleTypeReader(CommandService cmds) {
+			_cmds = cmds;
+		}
 
-        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider _)
-        {
-            input = input.ToUpperInvariant();
-            var module = _cmds.Modules.GroupBy(m => m.GetTopLevelModule()).FirstOrDefault(m => m.Key.Name.ToUpperInvariant() == input)?.Key;
-            return Task.FromResult(module == null ? TypeReaderResult.FromError(CommandError.ParseFailed, "No such module found.") : TypeReaderResult.FromSuccess(module));
-        }
-    }
+		public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services) {
+			var module = _cmds.Modules.Where(m => !m.IsSubmodule).FirstOrDefault(m => m.Name.Equals(input,StringComparison.OrdinalIgnoreCase));
 
-    public class ModuleOrCrTypeReader : TypeReader
-    {
-        private readonly CommandService _cmds;
+			return Task.FromResult(module != null ? TypeReaderResult.FromSuccess(module) : TypeReaderResult.FromError(CommandError.ParseFailed, "No such module found."));
+		}
+	}
 
-        public ModuleOrCrTypeReader(CommandService cmds)
-        {
-            _cmds = cmds;
-        }
+	public class ModuleOrCrTypeReader : TypeReader {
+		private readonly CommandService _cmds;
 
-        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider _)
-        {
-            input = input.ToLowerInvariant();
-            var module = _cmds.Modules.GroupBy(m => m.GetTopLevelModule()).FirstOrDefault(m => m.Key.Name.ToLowerInvariant() == input)?.Key;
-            if (module == null && input != "actualcustomreactions")
-                return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "No such module found."));
+		public ModuleOrCrTypeReader(CommandService cmds) {
+			_cmds = cmds;
+		}
 
-            return Task.FromResult(TypeReaderResult.FromSuccess(new ModuleOrCrInfo
-            {
-                Name = input,
-            }));
-        }
-    }
+		public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider _) {
+			var module = _cmds.Modules.Where(m => !m.IsSubmodule).FirstOrDefault(m => m.Name.Equals(input,StringComparison.OrdinalIgnoreCase));
 
-    public class ModuleOrCrInfo
-    {
-        public string Name { get; set; }
-    }
+			return module != null || input.Equals("actualcustomreactions", StringComparison.OrdinalIgnoreCase)
+				? Task.FromResult(TypeReaderResult.FromSuccess(new ModuleOrCrInfo {
+					Name = input,
+				}))
+				: Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "No such module found."));
+		}
+	}
+
+	public class ModuleOrCrInfo {
+		public string Name { get; set; }
+	}
 }
