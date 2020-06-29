@@ -15,12 +15,14 @@ namespace Mitternacht.Common {
 		}
 
 		public static bool TryParse(string s, out HexColor hcolor) {
-			s      = s.Trim().ToLowerInvariant();
+			s = s.Trim().ToLowerInvariant();
 			hcolor = null;
-			if(string.IsNullOrWhiteSpace(s)) return false;
+			if(string.IsNullOrWhiteSpace(s))
+				return false;
 
 			var regex = new Regex("#?([a-f\\d]{2})([a-f\\d]{2})([a-f\\d]{2})");
-			if(!regex.IsMatch(s)) return false;
+			if(!regex.IsMatch(s))
+				return false;
 
 			var match = regex.Match(s);
 			if(!byte.TryParse(match.Groups[1].Value, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out var red)
