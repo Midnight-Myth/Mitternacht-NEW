@@ -12,12 +12,14 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Services {
 	public class CommandCooldownService : ILateBlocker, IMService {
-		private readonly DbService _db;
+		private readonly DbService       _db;
+		private readonly IBotCredentials _creds;
 
 		public ConcurrentDictionary<ulong, ConcurrentHashSet<ActiveCooldown>> ActiveCooldowns { get; } = new ConcurrentDictionary<ulong, ConcurrentHashSet<ActiveCooldown>>();
 
-		public CommandCooldownService(DbService db) {
-			_db = db;
+		public CommandCooldownService(DbService db, IBotCredentials creds) {
+			_db    = db;
+			_creds = creds;
 		}
 
 		private CommandCooldown[] CommandCooldowns(ulong guildId) {
@@ -26,7 +28,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 		}
 
 		public Task<bool> TryBlockLate(DiscordSocketClient client, IUserMessage message, IGuild guild, IMessageChannel channel, IUser user, string moduleName, string commandName) {
-			if(guild == null)
+			if(guild == null || _creds.IsOwner(user))
 				return Task.FromResult(false);
 
 			var commandCooldowns = CommandCooldowns(guild.Id);
