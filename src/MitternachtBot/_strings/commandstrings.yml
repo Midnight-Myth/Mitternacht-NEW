@@ -783,12 +783,10 @@
   aliases: []
   desc:    Flips coin(s) - heads or tails, and shows an image.
   usage:   "`{0}flip` or `{0}flip 3`"
-- name:    allcmdcooldowns
-  cmd:     allcmdcooldowns
-  aliases:
-  -        acmdcds
+- name:    commandcooldowns
+  cmd:     commandcooldowns
   desc:    Shows a list of all commands and their respective cooldowns.
-  usage:   "`{0}acmdcds`"
+  usage:   "`{0}commandcooldowns`"
 - name:    addcustreact
   cmd:     addcustreact
   aliases:
@@ -1624,12 +1622,10 @@
   -        cc
   desc:    Sets a command's permission at the channel level.
   usage:   '`{0}cc "command name" enable SomeChannel`'
-- name:    cmdcooldown
-  cmd:     cmdcooldown
-  aliases:
-  -        cmdcd
+- name:    commandcooldown
+  cmd:     commandcooldown
   desc:    Sets a cooldown per user for a command. Set it to 0 to remove the cooldown.
-  usage:   '`{0}cmdcd "some cmd" 5`'
+  usage:   '`{0}commandcooldown <befehl> <zeit in s>`'
 - name:    translate
   cmd:     translate
   aliases:
