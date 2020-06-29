@@ -53,9 +53,10 @@ namespace Mitternacht.Modules.Games.Common
                         {
                             img.SaveAsPng(imgStream);
                             var byteContent = new ByteArrayContent(imgStream.ToArray());
-                            http.AddFakeHeaders();
+							http.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.202 Safari/535.1");
+							http.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
-                            var reponse = await http.PutAsync("https://transfer.sh/img.png", byteContent);
+							var reponse = await http.PutAsync("https://transfer.sh/img.png", byteContent);
                             url = await reponse.Content.ReadAsStringAsync();
                         }
                         return url;

@@ -42,7 +42,7 @@ namespace Mitternacht.Modules.Administration.Services
 
             try
             {
-                if (!(usrMsg?.Channel is SocketTextChannel channel) || usrMsg.IsAuthor(_client))
+                if (!(usrMsg?.Channel is SocketTextChannel channel) || usrMsg.Author.Id == _client.CurrentUser.Id)
                     return false;
                 if (!RatelimitingChannels.TryGetValue(channel.Id, out var limiter))
                     return false;

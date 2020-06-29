@@ -9,6 +9,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.CustomReactions.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.CustomReactions
 {
@@ -136,11 +137,10 @@ namespace Mitternacht.Modules.CustomReactions
                 return;
             }
 
-            var txtStream = await customReactions.GroupBy(cr => cr.Trigger)
+            var txtStream = await JsonConvert.SerializeObject(customReactions.GroupBy(cr => cr.Trigger)
                                                         .OrderBy(cr => cr.Key)
-                                                        .Select(cr => new { Trigger = cr.Key, Responses = cr.Select(y => new { id = y.Id, text = y.Response }).ToList() })
-                                                        .ToJson()
-                                                        .ToStream()
+                                                        .Select(cr => new { Trigger = cr.Key, Responses = cr.Select(y => new { id = y.Id, text = y.Response }).ToList() }), Formatting.Indented)
+														.ToStream()
                                                         .ConfigureAwait(false);
 
             if (Context.Guild == null) // its a private one, just send back

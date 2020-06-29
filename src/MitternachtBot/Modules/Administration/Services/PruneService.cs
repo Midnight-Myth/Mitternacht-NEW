@@ -4,12 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Mitternacht.Common.Collections;
-using Mitternacht.Extensions;
 using Mitternacht.Services;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public class PruneService : IMService
+namespace Mitternacht.Modules.Administration.Services {
+	public class PruneService : IMService
     {
         //channelids where prunes are currently occuring
         private readonly ConcurrentHashSet<ulong> _pruningGuilds = new ConcurrentHashSet<ulong>();
@@ -17,7 +15,6 @@ namespace Mitternacht.Modules.Administration.Services
 
         public async Task PruneWhere(ITextChannel channel, int amount, Func<IMessage, bool> predicate)
         {
-            channel.ThrowIfNull(nameof(channel));
             if (amount <= 0)
                 throw new ArgumentOutOfRangeException(nameof(amount));
 
