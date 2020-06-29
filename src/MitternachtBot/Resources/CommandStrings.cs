@@ -27,6 +27,6 @@ namespace Mitternacht.Resources {
 		}
 
 		public static CommandStringsModel GetCommandStringModel(string name)
-			=> _commandStrings.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) ?? new CommandStringsModel { Name = name, Command = $"{name}_cmd" };
+			=> _commandStrings.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) ?? throw new Exception($"CommandStringsModel for command '{name}' not found.");
 	}
 }
