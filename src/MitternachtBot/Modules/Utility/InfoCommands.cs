@@ -68,8 +68,8 @@ namespace Mitternacht.Modules.Utility
                 {
                     embed.AddField(fb => 
                         fb.WithName($"{GetText("custom_emojis")}({guild.Emotes.Count})")
-                            .WithValue(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e.ToString()}"))));
-                    _log.Info(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e.ToString()}")));
+                            .WithValue(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e}"))));
+                    _log.Info(string.Join(" ", guild.Emotes.Shuffle().Take(20).Select(e => $"{e.Name} {e}")));
                 }
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
