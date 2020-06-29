@@ -51,11 +51,10 @@
   -        rj
   desc:    Shows a random joke from <http://tambal.azurewebsites.net/joke/random>
   usage:   "`{0}rj`"
-- name:    serverblacklist
-  cmd:     sbl
-  aliases: []
+- name:    blacklistserver
+  cmd:     blacklistserver
   desc:    Either [add]s or [rem]oves a server specified by a Name or an ID from a blacklist.
-  usage:   "`{0}sbl add 12312321312` or `{0}sbl rem SomeTrashServer`"
+  usage:   "`{0}blacklistserver <add|rem> <Guild>`"
 - name:    rolecolor
   cmd:     rolecolor
   aliases:
@@ -704,11 +703,10 @@
   -        v+t
   desc:    Creates a text channel for each voice channel only users in that voice channel can see. If you are server owner, keep in mind you will see them all the time regardless.
   usage:   "`{0}v+t`"
-- name:    channelblacklist
-  cmd:     cbl
-  aliases: []
+- name:    blacklistchannel
+  cmd:     blacklistchannel
   desc:    Either [add]s or [rem]oves a channel specified by an ID from a blacklist.
-  usage:   "`{0}cbl rem 12312312312`"
+  usage:   "`{0}blacklistchannel <add|rem> <Kanal>`"
 - name:    userinfo
   cmd:     userinfo
   aliases:
@@ -785,12 +783,10 @@
   aliases: []
   desc:    Flips coin(s) - heads or tails, and shows an image.
   usage:   "`{0}flip` or `{0}flip 3`"
-- name:    allcmdcooldowns
-  cmd:     allcmdcooldowns
-  aliases:
-  -        acmdcds
+- name:    commandcooldowns
+  cmd:     commandcooldowns
   desc:    Shows a list of all commands and their respective cooldowns.
-  usage:   "`{0}acmdcds`"
+  usage:   "`{0}commandcooldowns`"
 - name:    addcustreact
   cmd:     addcustreact
   aliases:
@@ -982,11 +978,10 @@
   -        srkw
   desc:    Sets keyword which is required in the stream's title in order for the streamrole to apply. Provide no keyword in order to reset.
   usage:   "`{0}srkw` or `{0}srkw PUBG`"
-- name:    userblacklist
-  cmd:     ubl
-  aliases: []
+- name:    blacklistuser
+  cmd:     blacklistuser
   desc:    Either [add]s or [rem]oves a user specified by a Mention or an ID from a blacklist.
-  usage:   "`{0}ubl add @SomeUser` or `{0}ubl rem 12312312313`"
+  usage:   "`{0}blacklistuser <add|rem> <User>`"
 - name:    activity
   cmd:     activity
   aliases: []
@@ -1627,12 +1622,10 @@
   -        cc
   desc:    Sets a command's permission at the channel level.
   usage:   '`{0}cc "command name" enable SomeChannel`'
-- name:    cmdcooldown
-  cmd:     cmdcooldown
-  aliases:
-  -        cmdcd
+- name:    commandcooldown
+  cmd:     commandcooldown
   desc:    Sets a cooldown per user for a command. Set it to 0 to remove the cooldown.
-  usage:   '`{0}cmdcd "some cmd" 5`'
+  usage:   '`{0}commandcooldown <befehl> <zeit in s>`'
 - name:    translate
   cmd:     translate
   aliases:

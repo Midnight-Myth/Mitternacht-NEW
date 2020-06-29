@@ -663,7 +663,7 @@ permissions:
   global_perms_reset:                            ''
   gmod_add:                                      Das Modul {0} wurde auf allen Servern ausgeschaltet.
   gmod_remove:                                   Das Modul {0} wurde auf allen Servern eingeschaltet.
-  invalid_second_param_between:                  Ungültiger zweiter Parameter. (Muss eine Nummer zwischen {0} und {1} sein)
+  commandcooldown_invalid_time:                  Die Cooldownzeit muss mindestens 0 sein.
   invite_filter_channel_off:                     Filterung von Einladungen auf diesem Kanal deaktiviert.
   invite_filter_channel_on:                      Filterung von Einladungen auf diesem Kanal aktiviert.
   invite_filter_server_off:                      Filterung von Einladungen auf diesem Server deaktiviert.
