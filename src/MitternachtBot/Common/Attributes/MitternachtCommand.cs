@@ -4,7 +4,7 @@ using Mitternacht.Resources;
 
 namespace Mitternacht.Common.Attributes {
 	public class MitternachtCommand : CommandAttribute {
-		public MitternachtCommand([CallerMemberName] string memberName = "") : base(CommandStrings.GetCommandStringModel(memberName.ToLowerInvariant()).Command) {
+		public MitternachtCommand([CallerMemberName] string memberName = "") : base(CommandStrings.GetCommandStringModel(memberName).Command) {
 
 		}
 	}

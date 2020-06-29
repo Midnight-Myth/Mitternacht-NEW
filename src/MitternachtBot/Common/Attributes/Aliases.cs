@@ -4,7 +4,7 @@ using Mitternacht.Resources;
 
 namespace Mitternacht.Common.Attributes {
 	public class Aliases : AliasAttribute {
-		public Aliases([CallerMemberName] string memberName = "") : base(CommandStrings.GetCommandStringModel(memberName.ToLowerInvariant()).Aliases) {
+		public Aliases([CallerMemberName] string memberName = "") : base(CommandStrings.GetCommandStringModel(memberName).Aliases) {
 
 		}
 	}
