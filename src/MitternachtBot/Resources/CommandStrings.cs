@@ -7,12 +7,12 @@ using YamlDotNet.Serialization;
 
 namespace Mitternacht.Resources {
 	public class CommandStrings {
-		private static readonly Logger Log;
+		private static readonly Logger _logger;
 		private const string CmdStringPath = @"./_strings/commandstrings.yml";
 		private static ConcurrentHashSet<CommandStringsModel> _commandStrings;
 
 		static CommandStrings() {
-			Log = LogManager.GetCurrentClassLogger();
+			_logger = LogManager.GetCurrentClassLogger();
 			LoadCommandStrings();
 		}
 
@@ -22,7 +22,7 @@ namespace Mitternacht.Resources {
 				var deserializer = new Deserializer();
 				_commandStrings = deserializer.Deserialize<ConcurrentHashSet<CommandStringsModel>>(yml);
 			} catch(Exception e) {
-				Log.Error(e);
+				_logger.Error(e);
 			}
 		}
 
