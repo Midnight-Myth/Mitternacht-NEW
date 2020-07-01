@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,80 +5,35 @@ using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
+using Mitternacht.Modules.Gambling.Common;
 using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
 		[Group]
-		public class SlotCommands : MitternachtSubmodule {
+		public partial class SlotCommands : MitternachtSubmodule {
 			private static int _totalBet;
 			private static int _totalPaidOut;
 
 			private static readonly HashSet<ulong> RunningUsers = new HashSet<ulong>();
 			private readonly IBotConfigProvider _bc;
+			private readonly CurrencyService    _cs;
 
 			private readonly string[] _emojis = { ":butterfly:", ":heart:", ":dolphin:", ":sun_with_face:", ":green_apple:", ":cherry_blossom:" };
 
-			//here is a payout chart
-			//https://lh6.googleusercontent.com/-i1hjAJy_kN4/UswKxmhrbPI/AAAAAAAAB1U/82wq_4ZZc-Y/DE6B0895-6FC1-48BE-AC4F-14D1B91AB75B.jpg
-			//thanks to judge for helping me with this
-
-			private readonly CurrencyService _cs;
 
 			public SlotCommands(IBotConfigProvider bc, CurrencyService cs) {
 				_bc = bc;
 				_cs = cs;
 			}
 
-			public class SlotMachine {
-				public const int MaxValue = 5;
-
-				static readonly List<Func<int[], int>> WinningCombos = new List<Func<int[], int>>
-				{
-                    //three flowers
-                    arr => arr.All(a=>a==MaxValue) ? 30 : 0,
-                    //three of the same
-                    arr => !arr.Any(a => a != arr[0]) ? 10 : 0,
-                    //two flowers
-                    arr => arr.Count(a => a == MaxValue) == 2 ? 4 : 0,
-                    //one flower
-                    arr => arr.Any(a => a == MaxValue) ? 1 : 0
-				};
-
-				public static SlotResult Pull() {
-					var numbers = new int[3];
-					for(var i = 0; i < numbers.Length; i++) {
-						numbers[i] = new NadekoRandom().Next(0, MaxValue + 1);
-					}
-					var multi = 0;
-					foreach(var t in WinningCombos) {
-						multi = t(numbers);
-						if(multi != 0)
-							break;
-					}
-
-					return new SlotResult(numbers, multi);
-				}
-
-				public struct SlotResult {
-					public int[] Numbers { get; }
-					public int Multiplier { get; }
-					public SlotResult(int[] nums, int multi) {
-						Numbers = nums;
-						Multiplier = multi;
-					}
-				}
-			}
-
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
 			public async Task SlotStats() {
-				//i remembered to not be a moron
 				var paid = _totalPaidOut;
-				var bet = _totalBet;
+				var bet  = _totalBet;
 
 				if(bet <= 0)
 					bet = 1;
@@ -102,11 +56,11 @@ namespace Mitternacht.Modules.Gambling {
 				//multi vs how many times it occured
 				var dict = new Dictionary<int, int>();
 				for(var i = 0; i < tests; i++) {
-					var res = SlotMachine.Pull();
-					if(dict.ContainsKey(res.Multiplier))
-						dict[res.Multiplier] += 1;
+					var result = SlotMachineResult.Pull();
+					if(dict.ContainsKey(result.Multiplier))
+						dict[result.Multiplier] += 1;
 					else
-						dict.Add(res.Multiplier, 1);
+						dict.Add(result.Multiplier, 1);
 				}
 
 				var sb = new StringBuilder();
@@ -116,8 +70,7 @@ namespace Mitternacht.Modules.Gambling {
 					sb.AppendLine($"x{key} occured {dict[key]} times. {dict[key] * 1.0f / tests * 100}%");
 					payout += key * dict[key];
 				}
-				await Context.Channel.SendConfirmAsync(sb.ToString(), "Slot Test Results",
-					footer: $"Total Bet: {tests * bet} | Payout: {payout * bet} | {payout * 1.0f / tests * 100}%");
+				await Context.Channel.SendConfirmAsync(sb.ToString(), "Slot Test Results", footer: $"Total Bet: {tests * bet} | Payout: {payout * bet} | {payout * 1.0f / tests * 100}%");
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -127,13 +80,13 @@ namespace Mitternacht.Modules.Gambling {
 
 				try {
 					if(amount < 1) {
-						await ReplyErrorLocalized("min_bet_limit", 1 + _bc.BotConfig.CurrencySign).ConfigureAwait(false);
+						await ReplyErrorLocalized("min_bet_limit", $"{1}{_bc.BotConfig.CurrencySign}").ConfigureAwait(false);
 						return;
 					}
 					const int maxAmount = 9999;
 					if(amount > maxAmount) {
-						GetText("slot_maxbet", maxAmount + _bc.BotConfig.CurrencySign);
-						await ReplyErrorLocalized("max_bet_limit", maxAmount + _bc.BotConfig.CurrencySign).ConfigureAwait(false);
+						GetText("slot_maxbet", $"{maxAmount}{_bc.BotConfig.CurrencySign}");
+						await ReplyErrorLocalized("max_bet_limit", $"{maxAmount}{_bc.BotConfig.CurrencySign}").ConfigureAwait(false);
 						return;
 					}
 
@@ -143,7 +96,7 @@ namespace Mitternacht.Modules.Gambling {
 					}
 
 					Interlocked.Add(ref _totalBet, amount);
-					var result = SlotMachine.Pull();
+					var result = SlotMachineResult.Pull();
 					var numbers = result.Numbers;
 					var won = amount * result.Multiplier;
 
@@ -169,8 +122,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					await Context.Channel.SendMessageAsync($"{Context.User.Mention} {msg}\n`{GetText("slot_bet")}:`{amount} `{GetText("slot_won")}:` {won}{_bc.BotConfig.CurrencySign}\n{_emojis[numbers[0]] + _emojis[numbers[1]] + _emojis[numbers[2]]}").ConfigureAwait(false);
 				} finally {
-					var _ = Task.Run(async () =>
-					{
+					var _ = Task.Run(async () => {
 						await Task.Delay(1500);
 						RunningUsers.Remove(Context.User.Id);
 					});
