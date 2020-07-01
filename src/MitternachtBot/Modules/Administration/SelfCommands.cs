@@ -92,16 +92,15 @@ namespace Mitternacht.Modules.Administration {
                 }
                 else
                 {
-                    await Context.Channel.SendConfirmAsync("", string.Join("\n", scmds.Select(x =>
-                    {
-                        var str = $"```css\n[{GetText("server") + "]: " + (x.GuildId == null ? "-" : x.GuildName + " #" + x.GuildId)}";
+                    await Context.Channel.SendConfirmAsync(string.Join("\n", scmds.Select(x => {
+						var str = $"```css\n[{GetText("server") + "]: " + (x.GuildId == null ? "-" : x.GuildName + " #" + x.GuildId)}";
 
-                        str += $@"
+						str += $@"
 [{GetText("channel")}]: {x.ChannelName} #{x.ChannelId}
 [{GetText("command_text")}]: {x.CommandText}```";
-                        return str;
-                    })), footer: GetText("page", page + 1))
-                         .ConfigureAwait(false);
+						return str;
+					})), "", footer: GetText("page", page + 1))
+						 .ConfigureAwait(false);
                 }
             }
 
@@ -418,7 +417,7 @@ namespace Mitternacht.Modules.Administration {
             public async Task Announce([Remainder] string message)
             {
                 var channels = _client.Guilds.Select(g => g.DefaultChannel).ToArray();
-                await Task.WhenAll(channels.Where(c => c != null).Select(c => c.SendConfirmAsync(GetText("message_from_bo", Context.User.ToString()), message))).ConfigureAwait(false);
+                await Task.WhenAll(channels.Where(c => c != null).Select(c => c.SendConfirmAsync(message, GetText("message_from_bo", Context.User.ToString())))).ConfigureAwait(false);
                 await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
             }
 

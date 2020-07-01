@@ -185,7 +185,7 @@ namespace Mitternacht.Modules.Utility
             if (string.IsNullOrWhiteSpace(topic))
                 await ReplyErrorLocalized("no_topic_set").ConfigureAwait(false);
             else
-                await Context.Channel.SendConfirmAsync(GetText("channel_topic"), topic).ConfigureAwait(false);
+                await Context.Channel.SendConfirmAsync(topic, GetText("channel_topic")).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

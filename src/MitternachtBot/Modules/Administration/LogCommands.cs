@@ -190,7 +190,7 @@ namespace Mitternacht.Modules.Administration
 			public async Task LogList() {
 				var logChannels = Service.GetLogChannelList(Context.Guild);
 				var logChannelString = string.Join("\n", logChannels.Select(kv => $"{kv.Key.ToString()}: {kv.Value?.Mention ?? "--"}").ToList());
-				await Context.Channel.SendConfirmAsync(GetText("log_list_title"), logChannelString).ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync(logChannelString, GetText("log_list_title")).ConfigureAwait(false);
 			}
         }
     }

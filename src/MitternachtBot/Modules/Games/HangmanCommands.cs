@@ -61,13 +61,13 @@ namespace Mitternacht.Modules.Games {
 			}
 
 			private Task Hm_OnLetterAlreadyUsed(Hangman game, string user, char guess)
-				=> Context.Channel.SendErrorAsync($"Hangman Game ({game.TermType})", $"{user} Letter `{guess}` has already been used. You can guess again in 3 seconds.\n{game.ScrambledWordCode}\n{game.GetHangman()}", footer: string.Join(" ", game.PreviousGuesses));
+				=> Context.Channel.SendErrorAsync($"{user} Letter `{guess}` has already been used. You can guess again in 3 seconds.\n{game.ScrambledWordCode}\n{game.GetHangman()}", $"Hangman Game ({game.TermType})", footer: string.Join(" ", game.PreviousGuesses));
 
 			private Task Hm_OnGuessSucceeded(Hangman game, string user, char guess)
-				=> Context.Channel.SendConfirmAsync($"Hangman Game ({game.TermType})", $"{user} guessed a letter `{guess}`!\n{game.ScrambledWordCode}\n{game.GetHangman()}");
+				=> Context.Channel.SendConfirmAsync($"{user} guessed a letter `{guess}`!\n{game.ScrambledWordCode}\n{game.GetHangman()}", $"Hangman Game ({game.TermType})");
 
 			private Task Hm_OnGuessFailed(Hangman game, string user, char guess)
-				=> Context.Channel.SendErrorAsync($"Hangman Game ({game.TermType})", $"{user} Letter `{guess}` does not exist. You can guess again in 3 seconds.\n{game.ScrambledWordCode}\n{game.GetHangman()}", footer: string.Join(" ", game.PreviousGuesses));
+				=> Context.Channel.SendErrorAsync($"{user} Letter `{guess}` does not exist. You can guess again in 3 seconds.\n{game.ScrambledWordCode}\n{game.GetHangman()}", $"Hangman Game ({game.TermType})", footer: string.Join(" ", game.PreviousGuesses));
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
@@ -94,7 +94,7 @@ namespace Mitternacht.Modules.Games {
 					_client.MessageReceived += _client_MessageReceived;
 
 					try {
-						await Context.Channel.SendConfirmAsync($"{GetText("hangman_game_started")} ({hm.TermType})", $"{hm.ScrambledWordCode}\n{hm.GetHangman()}").ConfigureAwait(false);
+						await Context.Channel.SendConfirmAsync($"{hm.ScrambledWordCode}\n{hm.GetHangman()}", $"{GetText("hangman_game_started")} ({hm.TermType})").ConfigureAwait(false);
 					} catch { }
 
 					await hm.EndedTask.ConfigureAwait(false);

@@ -29,7 +29,7 @@ namespace Mitternacht.Modules.Games
             if (listArr.Length < 2)
                 return;
             var rng = new NadekoRandom();
-            await Context.Channel.SendConfirmAsync("🤔", listArr[rng.Next(0, listArr.Length)]).ConfigureAwait(false);
+            await Context.Channel.SendConfirmAsync(listArr[rng.Next(0, listArr.Length)], "🤔").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

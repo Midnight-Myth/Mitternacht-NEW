@@ -35,9 +35,9 @@ namespace Mitternacht.Modules.Utility {
                 expr.EvaluateFunction += Expr_EvaluateFunction;
                 var result = expr.Evaluate();
                 if (expr.Error == null)
-                    await Context.Channel.SendConfirmAsync("⚙ " + GetText("result"), expression.Replace("*", "\\*").Replace("_", "\\_").Trim() + "\n" + result);
+                    await Context.Channel.SendConfirmAsync(expression.Replace("*", "\\*").Replace("_", "\\_").Trim() + "\n" + result, "⚙ " + GetText("result"));
                 else
-                    await Context.Channel.SendErrorAsync("⚙ " + GetText("error"), expr.Error);
+                    await Context.Channel.SendErrorAsync(expr.Error, "⚙ " + GetText("error"));
             }
 
             private static void Expr_EvaluateParameter(string name, ParameterArgs args)

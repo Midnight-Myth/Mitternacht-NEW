@@ -265,7 +265,7 @@ namespace Mitternacht.Modules.Verification {
 				return;
 			}
 			var ch = dm ? await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false) : Context.Channel;
-			await ch.SendConfirmAsync(GetText("tutorial"), text).ConfigureAwait(false);
+			await ch.SendConfirmAsync(text, GetText("tutorial")).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -291,7 +291,7 @@ namespace Mitternacht.Modules.Verification {
 		public async Task AdditionalVerificationUsers() {
 			var users = Service.GetAdditionalVerificationUsers(Context.Guild.Id);
 			if(users.Any())
-				await Context.Channel.SendConfirmAsync(GetText("additional_verification_users_title"), users.Aggregate("", (s, u) => $"{s}- {u}\n", s => s.Substring(0, s.Length - 1))).ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync(users.Aggregate("", (s, u) => $"{s}- {u}\n", s => s.Substring(0, s.Length - 1)), GetText("additional_verification_users_title")).ConfigureAwait(false);
 			else
 				await ConfirmLocalized("additional_verification_users_not_set").ConfigureAwait(false);
 		}

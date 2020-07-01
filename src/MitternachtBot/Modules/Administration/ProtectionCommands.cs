@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Administration {
 				gc.AntiRaidSetting = stats.AntiRaidSettings;
 				await uow.CompleteAsync().ConfigureAwait(false);
 
-				await Context.Channel.SendConfirmAsync(GetText("prot_enable", "Anti-Raid"), $"{Context.User.Mention} {GetAntiRaidString(stats)}").ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiRaidString(stats)}", GetText("prot_enable", "Anti-Raid")).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -145,7 +145,7 @@ namespace Mitternacht.Modules.Administration {
 				gc.AntiSpamSetting = stats.AntiSpamSettings;
 				await uow.CompleteAsync().ConfigureAwait(false);
 
-				await Context.Channel.SendConfirmAsync(GetText("prot_enable", "Anti-Spam"), $"{Context.User.Mention} {GetAntiSpamString(stats)}").ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiSpamString(stats)}", GetText("prot_enable", "Anti-Spam")).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

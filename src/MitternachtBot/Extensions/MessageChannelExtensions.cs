@@ -10,30 +10,31 @@ namespace Mitternacht.Extensions {
 		public static Task<IUserMessage> EmbedAsync(this IMessageChannel ch, EmbedBuilder embed, string msg = "")
 			=> ch.SendMessageAsync(msg, embed: embed.Build());
 
-		public static Task<IUserMessage> SendErrorAsync(this IMessageChannel ch, string title, string error, string url = null, string footer = null) {
-			var eb = new EmbedBuilder().WithErrorColor().WithDescription(error)
-										.WithTitle(title);
+		public static Task<IUserMessage> SendErrorAsync(this IMessageChannel ch, string error, string title = null, string url = null, string footer = null) {
+			var eb = new EmbedBuilder().WithErrorColor().WithDescription(error);
+			
+			if(!string.IsNullOrWhiteSpace(title))
+				eb.WithTitle(title);
 			if(url != null && Uri.IsWellFormedUriString(url, UriKind.Absolute))
 				eb.WithUrl(url);
 			if(!string.IsNullOrWhiteSpace(footer))
 				eb.WithFooter(efb => efb.WithText(footer));
-			return ch.SendMessageAsync("", embed: eb.Build());
+			
+			return ch.EmbedAsync(eb);
 		}
 
-		public static Task<IUserMessage> SendErrorAsync(this IMessageChannel ch, string error)
-			=> ch.SendMessageAsync("", embed: new EmbedBuilder().WithErrorColor().WithDescription(error).Build());
+		public static Task<IUserMessage> SendConfirmAsync(this IMessageChannel ch, string text, string title = null, string url = null, string footer = null) {
+			var eb = new EmbedBuilder().WithOkColor().WithDescription(text);
 
-		public static Task<IUserMessage> SendConfirmAsync(this IMessageChannel ch, string title, string text, string url = null, string footer = null) {
-			var eb = new EmbedBuilder().WithOkColor().WithDescription(text).WithTitle(title);
+			if(!string.IsNullOrWhiteSpace(title))
+				eb.WithTitle(title);
 			if(url != null && Uri.IsWellFormedUriString(url, UriKind.Absolute))
 				eb.WithUrl(url);
 			if(!string.IsNullOrWhiteSpace(footer))
 				eb.WithFooter(efb => efb.WithText(footer));
-			return ch.SendMessageAsync("", embed: eb.Build());
-		}
 
-		public static Task<IUserMessage> SendConfirmAsync(this IMessageChannel ch, string text)
-			=> ch.SendMessageAsync("", embed: new EmbedBuilder().WithOkColor().WithDescription(text).Build());
+			return ch.EmbedAsync(eb);
+		}
 
 		public static Task<IUserMessage> SendTableAsync<T>(this IMessageChannel ch, string seed, IEnumerable<T> items, Func<T, string> howToPrint, int columns = 3) {
 			var i = 0;

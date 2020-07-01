@@ -263,7 +263,7 @@ namespace Mitternacht.Modules.Administration {
 				}
 
 				var list = ps.Any() ? string.Join("\n", ps.Select(x => $"{x.Count} -> {x.Punishment}")) : GetText("warnpl_none");
-				await Context.Channel.SendConfirmAsync(GetText("warn_punish_list"), list).ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync(list, GetText("warn_punish_list")).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

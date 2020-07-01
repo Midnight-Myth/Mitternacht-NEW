@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Administration.Services
                         if (!PresenceUpdates.TryRemove(key, out var msgs)) return Task.CompletedTask;
                         var title = GetText(key.Guild, "presence_updates");
                         var desc = string.Join(Environment.NewLine, msgs);
-                        return key.SendConfirmAsync(title, desc.TrimTo(2048));
+                        return key.SendConfirmAsync(desc.TrimTo(2048), title);
                     }));
                 }
                 catch (Exception ex)
