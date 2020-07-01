@@ -35,10 +35,10 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 			}
 		};
 
-		private static string ResolveTriggerString(this string str, IUserMessage ctx, DiscordSocketClient client) {
+		private static string ResolveTriggerString(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client) {
 			var rep = new ReplacementBuilder().WithUser(ctx.Author).WithClient(client).Build();
 
-			str = rep.Replace(str.ToLowerInvariant());
+			var str = rep.Replace(cr.Trigger.ToLowerInvariant());
 
 			return str;
 		}
@@ -69,10 +69,10 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 		}
 
 		public static string TriggerWithContext(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client)
-			=> cr.Trigger.ResolveTriggerString(ctx, client);
+			=> cr.ResolveTriggerString(ctx, client);
 
 		public static Task<string> ResponseWithContextAsync(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client, bool containsAnywhere)
-			=> cr.Response.ResolveResponseStringAsync(ctx, client, cr.Trigger.ResolveTriggerString(ctx, client), containsAnywhere);
+			=> cr.Response.ResolveResponseStringAsync(ctx, client, cr.ResolveTriggerString(ctx, client), containsAnywhere);
 
 		public static async Task<IUserMessage> Send(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client, CustomReactionsService crs) {
 			var channel = cr.DmResponse ? await ctx.Author.GetOrCreateDMChannelAsync() : ctx.Channel;
@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 
 			if(!CREmbed.TryParse(cr.Response, out var crembed))
 				return await channel.SendMessageAsync((await cr.ResponseWithContextAsync(ctx, client, cr.ContainsAnywhere)).SanitizeMentions());
-			var trigger = cr.Trigger.ResolveTriggerString(ctx, client);
+			var trigger = cr.ResolveTriggerString(ctx, client);
 			var substringIndex = trigger.Length;
 			if(cr.ContainsAnywhere) {
 				var pos = ctx.Content.GetWordPosition(trigger);
