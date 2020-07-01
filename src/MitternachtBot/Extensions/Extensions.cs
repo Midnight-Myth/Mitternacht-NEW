@@ -43,11 +43,11 @@ namespace Mitternacht.Extensions {
 			return lastPage != null ? embed.WithFooter(efb => efb.WithText($"{curPage + 1} / {lastPage + 1}")) : embed.WithFooter(efb => efb.WithText(curPage.ToString()));
 		}
 
-		public static EmbedBuilder WithOkColor(this EmbedBuilder eb) =>
-			eb.WithColor(MitternachtBot.OkColor);
+		public static EmbedBuilder WithOkColor(this EmbedBuilder eb)
+			=> eb.WithColor(MitternachtBot.OkColor);
 
-		public static EmbedBuilder WithErrorColor(this EmbedBuilder eb) =>
-			eb.WithColor(MitternachtBot.ErrorColor);
+		public static EmbedBuilder WithErrorColor(this EmbedBuilder eb)
+			=> eb.WithColor(MitternachtBot.ErrorColor);
 
 		public static ReactionEventWrapper OnReaction(this IUserMessage msg, DiscordSocketClient client, Action<SocketReaction> reactionAdded, Action<SocketReaction> reactionRemoved = null) {
 			if(reactionRemoved == null)
@@ -86,7 +86,8 @@ namespace Mitternacht.Extensions {
 			}
 		}
 
-		public static double UnixTimestamp(this DateTime dt) => dt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
+		public static double ToUnixTimestamp(this DateTime dt)
+			=> dt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
 
 		public static async Task<IEnumerable<IGuildUser>> GetMembersAsync(this IRole role)
 			=> (await role.Guild.GetUsersAsync()).Where(u => u.RoleIds.Contains(role.Id));
