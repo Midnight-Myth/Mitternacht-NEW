@@ -34,9 +34,6 @@ namespace Mitternacht.Extensions {
 			return ch.SendMessageAsync($"{seed}```css\n{string.Join("\n", items.GroupBy(item => i++ / columns).Select(ig => string.Concat(ig.Select(howToPrint))))}```");
 		}
 
-		public static Task<IUserMessage> SendTableAsync<T>(this IMessageChannel ch, IEnumerable<T> items, Func<T, string> howToPrint, int columns = 3)
-			=> ch.SendTableAsync("", items, howToPrint, columns);
-
 		private static readonly IEmote ArrowLeft          = new Emoji("⬅");
 		private static readonly IEmote ArrowRight         = new Emoji("➡");
 		private const           int    ReactionStartDelay = 500;
@@ -120,55 +117,6 @@ namespace Mitternacht.Extensions {
 				}
 
 				await msg.RemoveAllReactionsAsync().ConfigureAwait(false);
-			});
-		}
-
-		public static Task SendPaginatedMessageAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, string> pageFunc, int? lastPage = null, bool addPaginatedFooter = true)
-			=> channel.SendPaginatedMessageAsync(client, currentPage, p => Task.FromResult(pageFunc(p)), lastPage, addPaginatedFooter);
-
-		public static async Task SendPaginatedMessageAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<string>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true) {
-			var text = await pageFunc(currentPage);
-
-			if(addPaginatedFooter)
-				text = text.Replace("{page}", lastPage == null ? currentPage.ToString() : $"{currentPage}/{lastPage}");
-
-			var msg = await channel.SendMessageAsync(text);
-			if(lastPage == 0)
-				return;
-
-			var _ = Task.Run(async () => {
-				await msg.AddReactionAsync(ArrowLeft);
-				await msg.AddReactionAsync(ArrowRight);
-
-				await Task.Delay(ReactionStartDelay);
-
-				async void ChangePage(SocketReaction r) {
-					try {
-						if(r.Emote.Name == ArrowLeft.Name) {
-							if(currentPage == 0)
-								return;
-							var modtext = await pageFunc(--currentPage);
-							if(addPaginatedFooter)
-								modtext += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
-							await msg.ModifyAsync(mp => mp.Content = modtext);
-						} else if(r.Emote.Name == ArrowRight.Name) {
-							if(lastPage != null && !(lastPage > currentPage))
-								return;
-							var modtext = await pageFunc(++currentPage);
-							if(addPaginatedFooter)
-								modtext += lastPage == null ? $"\n{currentPage}" : $"\n{currentPage}/{lastPage}";
-							await msg.ModifyAsync(mp => mp.Content = modtext);
-						}
-					} catch(Exception) {
-						//who needs exception handling?
-					}
-				}
-
-				using(msg.OnReaction(client, ChangePage, ChangePage)) {
-					await Task.Delay(ReactionTime);
-				}
-
-				await msg.RemoveAllReactionsAsync();
 			});
 		}
 	}
