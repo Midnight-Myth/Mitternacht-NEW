@@ -47,7 +47,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="Discord.Net" Version="2.3.0-dev-20200417.1" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
