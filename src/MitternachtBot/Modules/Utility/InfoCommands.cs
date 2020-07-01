@@ -9,6 +9,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
+using MoreLinq;
 
 namespace Mitternacht.Modules.Utility
 {
