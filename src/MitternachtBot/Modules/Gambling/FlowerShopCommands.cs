@@ -31,9 +31,9 @@ namespace Mitternacht.Modules.Gambling {
 			}
 
 			public FlowerShopCommands(IBotConfigProvider bc, DbService db, CurrencyService cs, DiscordSocketClient client) {
-				_db = db;
-				_bc = bc;
-				_cs = cs;
+				_db     = db;
+				_bc     = bc;
+				_cs     = cs;
 				_client = client;
 			}
 
@@ -42,12 +42,9 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task Shop(int page = 1) {
 				if(--page < 0)
 					return;
-				List<ShopEntry> entries;
-				using(var uow = _db.UnitOfWork) {
-					entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id,
-						set => set.Include(x => x.ShopEntries)
-								  .ThenInclude(x => x.Items)).ShopEntries);
-				}
+
+				using var uow = _db.UnitOfWork;
+				var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items)).ShopEntries);
 
 				await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage => {
 					var theseEntries = entries.Skip(curPage * 9).Take(9).ToArray();
@@ -72,15 +69,10 @@ namespace Mitternacht.Modules.Gambling {
 				index -= 1;
 				if(index < 0)
 					return;
-				ShopEntry entry;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id, set => set
-						.Include(x => x.ShopEntries)
-						.ThenInclude(x => x.Items));
-					var entries = new IndexedCollection<ShopEntry>(config.ShopEntries);
-					entry = entries.ElementAtOrDefault(index);
-					uow.Complete();
-				}
+				using var uow = _db.UnitOfWork;
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items));
+				var entries = new IndexedCollection<ShopEntry>(gc.ShopEntries);
+				var entry = entries.ElementAtOrDefault(index);
 
 				if(entry == null) {
 					await ReplyErrorLocalized("shop_item_not_found").ConfigureAwait(false);
@@ -88,7 +80,7 @@ namespace Mitternacht.Modules.Gambling {
 				}
 
 				if(entry.Type == ShopEntryType.Role) {
-					var guser = (IGuildUser)Context.User;
+					var guildUser = (IGuildUser)Context.User;
 					var role = Context.Guild.GetRole(entry.RoleId);
 
 					if(role == null) {
@@ -96,16 +88,17 @@ namespace Mitternacht.Modules.Gambling {
 						return;
 					}
 
-					if(await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price)) {
+					if(await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price).ConfigureAwait(false)) {
 						try {
-							await guser.AddRoleAsync(role).ConfigureAwait(false);
+							await guildUser.AddRoleAsync(role).ConfigureAwait(false);
 						} catch(Exception ex) {
 							_log.Warn(ex);
 							await _cs.AddAsync(Context.User.Id, "Shop error refund", entry.Price);
 							await ReplyErrorLocalized("shop_role_purchase_error").ConfigureAwait(false);
 							return;
 						}
-						await _cs.AddAsync(entry.AuthorId, $"Shop sell item - {entry.Type}", GetProfitAmount(entry.Price));
+						await _cs.AddAsync(entry.AuthorId, $"Shop sell item - {entry.Type}", GetProfitAmount(entry.Price), uow).ConfigureAwait(false);
+
 						await ReplyConfirmLocalized("shop_role_purchase", Format.Bold(role.Name)).ConfigureAwait(false);
 					} else {
 						await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
@@ -119,10 +112,8 @@ namespace Mitternacht.Modules.Gambling {
 					var item = entry.Items.ToArray()[new NadekoRandom().Next(0, entry.Items.Count)];
 
 					if(await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price)) {
-						using(var uow = _db.UnitOfWork) {
-							uow.Context.Set<ShopEntryItem>().Remove(item);
-							uow.Complete();
-						}
+						uow.Context.Set<ShopEntryItem>().Remove(item);
+						await uow.CompleteAsync().ConfigureAwait(false);
 						try {
 							await (await Context.User.GetOrCreateDMChannelAsync())
 								.EmbedAsync(new EmbedBuilder().WithOkColor()
@@ -136,15 +127,10 @@ namespace Mitternacht.Modules.Gambling {
 									$"Shop sell item - {entry.Name}",
 									GetProfitAmount(entry.Price)).ConfigureAwait(false);
 						} catch {
-							using(var uow = _db.UnitOfWork) {
-								uow.Context.Set<ShopEntryItem>().Add(item);
-								uow.Complete();
+							uow.Context.Set<ShopEntryItem>().Add(item);
+							await uow.CompleteAsync().ConfigureAwait(false);
 
-								await _cs.AddAsync(Context.User.Id,
-									$"Shop error refund - {entry.Name}",
-									entry.Price,
-									uow).ConfigureAwait(false);
-							}
+							await _cs.AddAsync(Context.User.Id, $"Shop error refund - {entry.Name}", entry.Price, uow).ConfigureAwait(false);
 							await ReplyErrorLocalized("shop_buy_error").ConfigureAwait(false);
 							return;
 						}
@@ -153,64 +139,55 @@ namespace Mitternacht.Modules.Gambling {
 						await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 					}
 				}
-
 			}
 
-			private long GetProfitAmount(int price) =>
-				(int)Math.Ceiling(0.90 * price);
+			private long GetProfitAmount(int price)
+				=> (int)Math.Ceiling(0.90 * price);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.Administrator)]
 			[RequireBotPermission(GuildPermission.ManageRoles)]
 			public async Task ShopAdd(Role _, int price, [Remainder] IRole role) {
-				var entry = new ShopEntry
-				{
-					Name = "-",
-					Price = price,
-					Type = ShopEntryType.Role,
+				var entry = new ShopEntry {
+					Name     = "-",
+					Price    = price,
+					Type     = ShopEntryType.Role,
 					AuthorId = Context.User.Id,
-					RoleId = role.Id,
+					RoleId   = role.Id,
 					RoleName = role.Name
 				};
-				using(var uow = _db.UnitOfWork) {
-					var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id,
-						set => set.Include(x => x.ShopEntries)
-								  .ThenInclude(x => x.Items)).ShopEntries)
-					{
-						entry
-					};
-					uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
-					uow.Complete();
-				}
-				await Context.Channel.EmbedAsync(EntryToEmbed(entry)
-					.WithTitle(GetText("shop_item_add")));
+
+				using var uow = _db.UnitOfWork;
+				var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items)).ShopEntries) {
+					entry
+				};
+				uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
+				await uow.CompleteAsync().ConfigureAwait(false);
+
+				await Context.Channel.EmbedAsync(EntryToEmbed(entry).WithTitle(GetText("shop_item_add")));
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.Administrator)]
 			public async Task ShopAdd(List _, int price, [Remainder] string name) {
-				var entry = new ShopEntry
-				{
-					Name = name.TrimTo(100),
-					Price = price,
-					Type = ShopEntryType.List,
+				var entry = new ShopEntry {
+					Name     = name.TrimTo(100),
+					Price    = price,
+					Type     = ShopEntryType.List,
 					AuthorId = Context.User.Id,
-					Items = new HashSet<ShopEntryItem>(),
+					Items    = new HashSet<ShopEntryItem>(),
 				};
-				using(var uow = _db.UnitOfWork) {
-					var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id,
-						set => set.Include(x => x.ShopEntries)
-								  .ThenInclude(x => x.Items)).ShopEntries)
-					{
-						entry
-					};
-					uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
-					uow.Complete();
-				}
-				await Context.Channel.EmbedAsync(EntryToEmbed(entry)
-					.WithTitle(GetText("shop_item_add")));
+
+				using var uow = _db.UnitOfWork;
+				var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items)).ShopEntries) {
+					entry
+				};
+				uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
+				await uow.CompleteAsync().ConfigureAwait(false);
+
+				await Context.Channel.EmbedAsync(EntryToEmbed(entry).WithTitle(GetText("shop_item_add")));
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -220,32 +197,29 @@ namespace Mitternacht.Modules.Gambling {
 				index -= 1;
 				if(index < 0)
 					return;
-				var item = new ShopEntryItem
-				{
+
+				var item = new ShopEntryItem {
 					Text = itemText
 				};
-				ShopEntry entry;
-				var rightType = false;
-				var added = false;
-				using(var uow = _db.UnitOfWork) {
-					var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id,
-						set => set.Include(x => x.ShopEntries)
-								  .ThenInclude(x => x.Items)).ShopEntries);
-					entry = entries.ElementAtOrDefault(index);
-					if(entry != null && (rightType = entry.Type == ShopEntryType.List)) {
-						if(added = entry.Items.Add(item)) {
-							uow.Complete();
+				using var uow = _db.UnitOfWork;
+				var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items)).ShopEntries);
+				var entry   = entries.ElementAtOrDefault(index);
+
+				if(entry != null) {
+					if(entry.Type == ShopEntryType.List) {
+						if(entry.Items.Add(item)) {
+							await uow.CompleteAsync().ConfigureAwait(false);
+
+							await ReplyConfirmLocalized("shop_list_item_added").ConfigureAwait(false);
+						} else {
+							await ReplyErrorLocalized("shop_list_item_not_unique").ConfigureAwait(false);
 						}
+					} else {
+						await ReplyErrorLocalized("shop_item_wrong_type").ConfigureAwait(false);
 					}
-				}
-				if(entry == null)
+				} else {
 					await ReplyErrorLocalized("shop_item_not_found").ConfigureAwait(false);
-				else if(!rightType)
-					await ReplyErrorLocalized("shop_item_wrong_type").ConfigureAwait(false);
-				else if(added == false)
-					await ReplyErrorLocalized("shop_list_item_not_unique").ConfigureAwait(false);
-				else
-					await ReplyConfirmLocalized("shop_list_item_added").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -255,39 +229,34 @@ namespace Mitternacht.Modules.Gambling {
 				index -= 1;
 				if(index < 0)
 					return;
-				ShopEntry removed;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id, set => set
-						.Include(x => x.ShopEntries)
-						.ThenInclude(x => x.Items));
 
-					var entries = new IndexedCollection<ShopEntry>(config.ShopEntries);
-					removed = entries.ElementAtOrDefault(index);
-					if(removed != null) {
-						entries.Remove(removed);
+				using var uow = _db.UnitOfWork;
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items));
 
-						config.ShopEntries = entries;
-						uow.Complete();
-					}
-				}
+				var entries = new IndexedCollection<ShopEntry>(gc.ShopEntries);
+				var entryToRemove = entries.ElementAtOrDefault(index);
+				if(entryToRemove != null) {
+					entries.Remove(entryToRemove);
 
-				if(removed == null)
+					gc.ShopEntries = entries;
+					await uow.CompleteAsync().ConfigureAwait(false);
+
+					await Context.Channel.EmbedAsync(EntryToEmbed(entryToRemove).WithTitle(GetText("shop_item_rm")));
+				} else {
 					await ReplyErrorLocalized("shop_item_not_found").ConfigureAwait(false);
-				else
-					await Context.Channel.EmbedAsync(EntryToEmbed(removed)
-						.WithTitle(GetText("shop_item_rm")));
+				}
 			}
 
 			public EmbedBuilder EntryToEmbed(ShopEntry entry) {
-				var embed = new EmbedBuilder().WithOkColor();
+				var eb = new EmbedBuilder().WithOkColor();
 
 				switch(entry.Type) {
 					case ShopEntryType.Role:
-						return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(GetText("shop_role", Format.Bold(entry.RoleName))).WithIsInline(true))
+						return eb.AddField(efb => efb.WithName(GetText("name")).WithValue(GetText("shop_role", Format.Bold(entry.RoleName))).WithIsInline(true))
 							.AddField(efb => efb.WithName(GetText("price")).WithValue(entry.Price.ToString()).WithIsInline(true))
 							.AddField(efb => efb.WithName(GetText("type")).WithValue(entry.Type.ToString()).WithIsInline(true));
 					case ShopEntryType.List:
-						return embed.AddField(efb => efb.WithName(GetText("name")).WithValue(entry.Name).WithIsInline(true))
+						return eb.AddField(efb => efb.WithName(GetText("name")).WithValue(entry.Name).WithIsInline(true))
 							.AddField(efb => efb.WithName(GetText("price")).WithValue(entry.Price.ToString()).WithIsInline(true))
 							.AddField(efb => efb.WithName(GetText("type")).WithValue(GetText("random_unique_item")).WithIsInline(true));
 					default:
@@ -295,15 +264,12 @@ namespace Mitternacht.Modules.Gambling {
 				}
 			}
 
-			public string EntryToString(ShopEntry entry) {
-				switch(entry.Type) {
-					case ShopEntryType.Role:
-						return GetText("shop_role", Format.Bold(entry.RoleName));
-					case ShopEntryType.List:
-						return GetText("unique_items_left", entry.Items.Count) + "\n" + entry.Name;
-				}
-				return "";
-			}
+			public string EntryToString(ShopEntry entry)
+				=> entry.Type switch {
+					ShopEntryType.Role => GetText("shop_role", Format.Bold(entry.RoleName)),
+					ShopEntryType.List => $"{GetText("unique_items_left", entry.Items.Count)}\n{entry.Name}",
+					_                  => "",
+				};
 		}
 	}
 }
