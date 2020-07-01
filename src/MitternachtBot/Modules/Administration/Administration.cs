@@ -325,7 +325,7 @@ namespace Mitternacht.Modules.Administration {
 			using(var uow = _db.UnitOfWork) {
 				donatorsOrdered = uow.Donators.GetDonatorsOrdered();
 			}
-			await Context.Channel.SendConfirmAsync(GetText("donators"), string.Join("⭐", donatorsOrdered.Select(d => d.Name))).ConfigureAwait(false);
+			await Context.Channel.SendConfirmAsync(string.Join("⭐", donatorsOrdered.Select(d => d.Name)), GetText("donators")).ConfigureAwait(false);
 			//await Context.Channel.SendConfirmAsync("Patreon supporters", string.Join("⭐", usrs.Select(d => d.Username))).ConfigureAwait(false);
 		}
 

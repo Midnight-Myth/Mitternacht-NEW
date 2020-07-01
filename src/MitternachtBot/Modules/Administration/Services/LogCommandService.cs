@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Administration.Services
                         if (!PresenceUpdates.TryRemove(key, out var msgs)) return Task.CompletedTask;
                         var title = GetText(key.Guild, "presence_updates");
                         var desc = string.Join(Environment.NewLine, msgs);
-                        return key.SendConfirmAsync(title, desc.TrimTo(2048));
+                        return key.SendConfirmAsync(desc.TrimTo(2048), title);
                     }));
                 }
                 catch (Exception ex)
@@ -794,7 +794,7 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!((optMsg.HasValue ? optMsg.Value : null) is IUserMessage msg) || msg.IsAuthor(_client))
+                    if (!((optMsg.HasValue ? optMsg.Value : null) is IUserMessage msg) || msg.Author.Id == _client.CurrentUser.Id)
                         return;
 
                     if (!(ch is ITextChannel channel))
@@ -835,7 +835,7 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 try
                 {
-                    if (!(imsg2 is IUserMessage after) || after.IsAuthor(_client))
+                    if (!(imsg2 is IUserMessage after) || after.Author.Id == _client.CurrentUser.Id)
                         return;
 
                     if (!((optmsg.HasValue ? optmsg.Value : null) is IUserMessage before))

@@ -10,6 +10,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using MoreLinq;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
@@ -27,7 +28,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
-				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).MaxOr(int.MinValue) >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).MaxOr(int.MinValue)) {
+				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
 					await ReplyErrorLocalized("warn_hierarchy").ConfigureAwait(false);
 					return;
 				}
@@ -263,7 +264,7 @@ namespace Mitternacht.Modules.Administration {
 				}
 
 				var list = ps.Any() ? string.Join("\n", ps.Select(x => $"{x.Count} -> {x.Punishment}")) : GetText("warnpl_none");
-				await Context.Channel.SendConfirmAsync(GetText("warn_punish_list"), list).ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync(list, GetText("warn_punish_list")).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

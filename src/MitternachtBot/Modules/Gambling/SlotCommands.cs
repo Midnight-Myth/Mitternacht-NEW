@@ -130,8 +130,8 @@ namespace Mitternacht.Modules.Gambling
                     sb.AppendLine($"x{key} occured {dict[key]} times. {dict[key] * 1.0f / tests * 100}%");
                     payout += key * dict[key];
                 }
-                await Context.Channel.SendConfirmAsync("Slot Test Results", sb.ToString(),
-                    footer: $"Total Bet: {tests * bet} | Payout: {payout * bet} | {payout * 1.0f / tests * 100}%");
+                await Context.Channel.SendConfirmAsync(sb.ToString(), "Slot Test Results",
+					footer: $"Total Bet: {tests * bet} | Payout: {payout * bet} | {payout * 1.0f / tests * 100}%");
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

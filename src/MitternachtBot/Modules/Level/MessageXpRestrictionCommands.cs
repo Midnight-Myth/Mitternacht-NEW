@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Level {
 				var blacklistedChannelsString = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id).Aggregate("", (s, channelId) => $"{s}{MentionUtils.MentionChannel(channelId)}, ", s => s[0..^2]);
 
 				if(blacklistedChannelsString.Length > 0) {
-					await Context.Channel.SendConfirmAsync(GetText("msgxpr_title"), blacklistedChannelsString).ConfigureAwait(false);
+					await Context.Channel.SendConfirmAsync(blacklistedChannelsString, GetText("msgxpr_title")).ConfigureAwait(false);
 				} else {
 					await ErrorLocalized("msgxpr_none").ConfigureAwait(false);
 				}

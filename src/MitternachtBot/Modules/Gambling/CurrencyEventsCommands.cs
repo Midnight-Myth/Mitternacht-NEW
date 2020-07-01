@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Gambling {
 				try {
 					var title = GetText("sneakygamestatus_title");
 					var desc = GetText("sneakygamestatus_desc", Format.Bold(100.ToString()) + _bc.BotConfig.CurrencySign, Format.Bold(num.ToString()));
-					await context.Channel.SendConfirmAsync(title, desc).ConfigureAwait(false);
+					await context.Channel.SendConfirmAsync(desc, title).ConfigureAwait(false);
 				} catch {
 					// ignored
 				}
@@ -116,7 +116,7 @@ namespace Mitternacht.Modules.Gambling {
 				var title = GetText("reaction_title");
 				var desc = GetText("reaction_desc", _bc.BotConfig.CurrencySign, Format.Bold(amount.ToString()) + _bc.BotConfig.CurrencySign);
 				var footer = GetText("reaction_footer", 24);
-				var msg = await context.Channel.SendConfirmAsync(title, desc, footer: footer).ConfigureAwait(false);
+				var msg = await context.Channel.SendConfirmAsync(desc, title, footer: footer).ConfigureAwait(false);
 
 				await new ReactionEvent(_bc.BotConfig, _client, _cs, amount).Start(msg, context);
 			}

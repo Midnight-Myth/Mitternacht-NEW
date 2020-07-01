@@ -17,7 +17,7 @@ namespace Mitternacht.Modules.Games
             text = text.Trim();
             if (string.IsNullOrWhiteSpace(text))
                 return;
-            await Context.Channel.SendConfirmAsync("L33t", ToLeet(text, level).SanitizeMentions()).ConfigureAwait(false);
+            await Context.Channel.SendConfirmAsync(ToLeet(text, level).SanitizeMentions(), "L33t").ConfigureAwait(false);
         }
 
 

@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Administration.Services
                     {
                         try
                         {
-                            await ownerCh.SendConfirmAsync(title, toSend).ConfigureAwait(false);
+                            await ownerCh.SendConfirmAsync(toSend, title).ConfigureAwait(false);
                         }
                         catch
                         {
@@ -148,7 +148,7 @@ namespace Mitternacht.Modules.Administration.Services
                     {
                         try
                         {
-                            await firstOwnerChannel.SendConfirmAsync(title, toSend).ConfigureAwait(false);
+                            await firstOwnerChannel.SendConfirmAsync(toSend, title).ConfigureAwait(false);
                         }
                         catch
                         {

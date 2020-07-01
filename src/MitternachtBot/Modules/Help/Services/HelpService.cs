@@ -26,8 +26,8 @@ namespace Mitternacht.Modules.Help.Services {
 
             var str = Format.Bold(string.Join("/", com.Aliases.Select(alias => $" `{prefix}{alias}` ").ToArray()).Trim());
             return new EmbedBuilder()
-                .AddField(str, $"{com.RealSummary(prefix)} {GetCommandRequirements(com, guild)}", true)
-                .AddField(GetText("usage", guild), com.RealRemarks(prefix), true)
+                .AddField(str, $"{com.FormattedSummary(prefix)} {GetCommandRequirements(com, guild)}", true)
+                .AddField(GetText("usage", guild), com.FormattedRemarks(prefix), true)
                 .WithFooter(GetText("module", guild, $"{com.Module.GetTopLevelModule().GetModuleName()}{(com.Module == com.Module.GetTopLevelModule() ? "" : $" ({com.Module.GetModuleName()})")}"))
                 .WithOkColor();
         }

@@ -216,7 +216,7 @@ namespace Mitternacht.Modules.Gambling
                     var stats = uow.DailyMoneyStats
                         .GetAllUser(users.Select(gu => gu.Id).ToArray())
                         .GroupBy(dms => dms.UserId)
-                        .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.UnixTimestamp(), money = dms.MoneyReceived}).ToArray());
+                        .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
                     await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_dailymoney-stats.json").ConfigureAwait(false);
                 }
             }
@@ -231,7 +231,7 @@ namespace Mitternacht.Modules.Gambling
                     var stats = uow.DailyMoneyStats
                         .GetAll()
                         .GroupBy(dms => dms.UserId)
-                        .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.UnixTimestamp(), money = dms.MoneyReceived}).ToArray());
+                        .ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
                     await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_dailymoney-stats.json").ConfigureAwait(false);
                 }
             }

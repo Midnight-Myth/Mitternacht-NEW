@@ -49,7 +49,7 @@ namespace Mitternacht.Modules.Administration
                     }
                     catch (ArgumentException e)
                     {
-                        await Context.Channel.SendErrorAsync(GetText("invalid_params"), e.Message).ConfigureAwait(false);
+                        await Context.Channel.SendErrorAsync(e.Message, GetText("invalid_params")).ConfigureAwait(false);
                     }
                 }
             }
@@ -87,9 +87,9 @@ namespace Mitternacht.Modules.Administration
                 };
                 if (Service.RatelimitingChannels.TryAdd(Context.Channel.Id, toAdd))
                 {
-                    await Context.Channel.SendConfirmAsync(GetText("slowmode_enabled"),
-                            GetText("slowmode_desc", Format.Bold(toAdd.MaxMessages.ToString()), Format.Bold(toAdd.PerSeconds.ToString())))
-                                                .ConfigureAwait(false);
+                    await Context.Channel.SendConfirmAsync(GetText("slowmode_desc", Format.Bold(toAdd.MaxMessages.ToString()), Format.Bold(toAdd.PerSeconds.ToString())),
+						GetText("slowmode_enabled"))
+												.ConfigureAwait(false);
                 }
             }
 

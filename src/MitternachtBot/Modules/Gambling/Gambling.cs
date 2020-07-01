@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Gambling
 
             }
             var usr = membersArray[new NadekoRandom().Next(0, membersArray.Length)];
-            await Context.Channel.SendConfirmAsync("🎟 "+ GetText("raffled_user"), $"**{usr.Username}#{usr.Discriminator}**", footer: $"ID: {usr.Id}").ConfigureAwait(false);
+            await Context.Channel.SendConfirmAsync($"**{usr.Username}#{usr.Discriminator}**", "🎟 " + GetText("raffled_user"), footer: $"ID: {usr.Id}").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
-using Mitternacht.Extensions;
 using Mitternacht.Modules.Level.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
@@ -41,7 +40,7 @@ namespace Mitternacht.Modules.Level {
 			var lm        = uow.LevelModel.Get(Context.Guild.Id, userId);
 
 			if(lm != null) {
-				var guildUserIds = await Context.Guild.GetUserIdsAsync();
+				var guildUserIds = (await Context.Guild.GetUsersAsync()).Select(gu => gu.Id).ToArray();
 				var levelModels  = uow.LevelModel.GetAllSortedForRanks(Context.Guild.Id, guildUserIds);
 
 				var rank         = levelModels.ToList().IndexOf(lm) + 1;
@@ -65,7 +64,7 @@ namespace Mitternacht.Modules.Level {
 		public async Task Ranks(int count = 20, int position = 1) {
 			using var uow = _db.UnitOfWork;
 			
-			var guildUserIds = await Context.Guild.GetUserIdsAsync();
+			var guildUserIds = (await Context.Guild.GetUsersAsync()).Select(gu => gu.Id).ToArray();
 			
 			var levelModels = uow.LevelModel
 				.GetAllSortedForRanks(Context.Guild.Id, guildUserIds)

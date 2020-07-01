@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Extensions;
 using Mitternacht.Services.Database.Models;
 using System.Linq.Expressions;
+using MoreLinq;
 
 namespace Mitternacht.Services.Database.Repositories.Impl {
 	public class QuoteRepository : Repository<Quote>, IQuoteRepository {
