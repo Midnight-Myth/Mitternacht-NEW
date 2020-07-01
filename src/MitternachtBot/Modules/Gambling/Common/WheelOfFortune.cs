@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using Mitternacht.Common;
 
-namespace Mitternacht.Modules.Gambling.Common.WheelOfFortune {
+namespace Mitternacht.Modules.Gambling.Common {
 	public class WheelOfFortune {
 		private static readonly NadekoRandom _rng = new NadekoRandom();
 
