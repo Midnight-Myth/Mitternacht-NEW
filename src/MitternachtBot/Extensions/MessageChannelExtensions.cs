@@ -36,7 +36,7 @@ namespace Mitternacht.Extensions {
 
 		private static readonly IEmote ArrowLeft          = new Emoji("⬅");
 		private static readonly IEmote ArrowRight         = new Emoji("➡");
-		private const           int    ReactionStartDelay = 500;
+		private const           int    ReactionStartDelay = 200;
 		private const           int    ReactionTime       = 30000;
 
 		/// <summary>
