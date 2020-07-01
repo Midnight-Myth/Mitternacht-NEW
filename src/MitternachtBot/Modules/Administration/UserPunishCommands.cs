@@ -10,6 +10,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using MoreLinq;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
@@ -27,7 +28,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
-				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).MaxOr(int.MinValue) >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).MaxOr(int.MinValue)) {
+				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
 					await ReplyErrorLocalized("warn_hierarchy").ConfigureAwait(false);
 					return;
 				}
