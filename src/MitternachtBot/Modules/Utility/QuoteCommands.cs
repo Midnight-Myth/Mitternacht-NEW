@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Utility {
 
 					if(CREmbed.TryParse(quote.Text, out var crembed)) {
 						replacer.Replace(crembed);
-						await Context.Channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+						await Context.Channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
 					} else {
 						await Context.Channel.SendMessageAsync($"`#{quote.Id}` 📣 {quote.Keyword.SanitizeMentions()}: {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
 					}
@@ -121,7 +121,7 @@ namespace Mitternacht.Modules.Utility {
 					await Context.Channel.SendErrorAsync(GetText("quotes_notfound", id));
 				} else if(CREmbed.TryParse(quote.Text, out var crembed)) {
 					replacer.Replace(crembed);
-					await Context.Channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+					await Context.Channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
 				} else
 					await Context.Channel.SendMessageAsync($"`#{quote.Id}` 🗯️ {quote.Keyword.ToLowerInvariant().SanitizeMentions()}:  {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
 			}

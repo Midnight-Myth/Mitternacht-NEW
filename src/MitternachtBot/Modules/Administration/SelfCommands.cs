@@ -381,7 +381,7 @@ namespace Mitternacht.Modules.Administration {
                     if (CREmbed.TryParse(msg, out var crembed))
                      {
                          rep.Replace(crembed);
-                         await ch.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+                         await ch.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
                          return;
                      }
                      await ch.SendMessageAsync($"{rep.Replace(msg)?.SanitizeMentions() ?? ""}");
@@ -397,7 +397,7 @@ namespace Mitternacht.Modules.Administration {
                      if (CREmbed.TryParse(msg, out var crembed))
                      {
                          rep.Replace(crembed);
-                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "")
+                         await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "")
                              .ConfigureAwait(false);
                          return;
                      }

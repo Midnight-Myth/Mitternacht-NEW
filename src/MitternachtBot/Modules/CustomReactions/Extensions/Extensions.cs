@@ -72,7 +72,7 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 
 			rep.Replace(crembed);
 
-			return await channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "");
+			return await channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "");
 		}
 
 		public static WordPosition GetWordPosition(this string str, string word)

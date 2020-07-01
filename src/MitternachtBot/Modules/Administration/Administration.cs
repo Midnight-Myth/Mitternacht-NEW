@@ -359,7 +359,7 @@ namespace Mitternacht.Modules.Administration {
 			if(CREmbed.TryParse(text, out var crembed)) {
 				rep.Replace(crembed);
 				await msg.ModifyAsync(x => {
-					x.Embed = crembed.ToEmbed().Build();
+					x.Embed = crembed.ToEmbedBuilder().Build();
 					x.Content = crembed.PlainText?.SanitizeMentions() ?? "";
 				}).ConfigureAwait(false);
 			} else {
