@@ -34,7 +34,7 @@ namespace Mitternacht.Common.TypeReaders {
 
 			if(!crs.GlobalReactions.Any(x => x.Trigger.Equals(input, StringComparison.OrdinalIgnoreCase))) {
 				var guild = context.Guild;
-				if(guild != null && crs.GuildReactions.TryGetValue(guild.Id, out var crs2) && crs2.Concat(crs.GlobalReactions).Any(x => x.Trigger.Equals(input, StringComparison.OrdinalIgnoreCase))) {
+				if(guild != null && crs.ReactionsForGuild(guild.Id).Concat(crs.GlobalReactions).Any(x => x.Trigger.Equals(input, StringComparison.OrdinalIgnoreCase))) {
 					return TypeReaderResult.FromSuccess(new CommandOrCrInfo(input));
 				} else {
 					var cmd = await base.ReadAsync(context, input, services);

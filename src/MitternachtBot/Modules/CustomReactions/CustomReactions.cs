@@ -30,46 +30,30 @@ namespace Mitternacht.Modules.CustomReactions {
 			if(string.IsNullOrWhiteSpace(message) || string.IsNullOrWhiteSpace(key))
 				return;
 
-			key = key.ToLowerInvariant();
-
-			if((channel == null && !_creds.IsOwner(Context.User)) || (channel != null && !((IGuildUser)Context.User).GuildPermissions.Administrator)) {
+			if(channel == null && !_creds.IsOwner(Context.User) || channel != null && !((IGuildUser)Context.User).GuildPermissions.Administrator) {
 				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
 				return;
 			}
 
-			var cr = new CustomReaction()
-			{
-				GuildId = channel?.Guild.Id,
-				IsRegex = false,
-				Trigger = key,
+			var cr = new CustomReaction() {
+				GuildId  = channel?.Guild.Id,
+				IsRegex  = false,
+				Trigger  = key,
 				Response = message,
 			};
 
-			using(var uow = _db.UnitOfWork) {
-				uow.CustomReactions.Add(cr);
+			using var uow = _db.UnitOfWork;
+			uow.CustomReactions.Add(cr);
 
-				await uow.CompleteAsync().ConfigureAwait(false);
-			}
+			await uow.CompleteAsync().ConfigureAwait(false);
 
-			if(channel == null) {
-				Array.Resize(ref Service.GlobalReactions, Service.GlobalReactions.Length + 1);
-				Service.GlobalReactions[Service.GlobalReactions.Length - 1] = cr;
-			} else {
-				Service.GuildReactions.AddOrUpdate(Context.Guild.Id,
-					new[] { cr },
-					(k, old) => {
-						Array.Resize(ref old, old.Length + 1);
-						old[old.Length - 1] = cr;
-						return old;
-					});
-			}
-
-			await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
+			var eb = new EmbedBuilder().WithOkColor()
 				.WithTitle(GetText("new_cust_react"))
 				.WithDescription($"#{cr.Id}")
 				.AddField(efb => efb.WithName(GetText("trigger")).WithValue(key))
-				.AddField(efb => efb.WithName(GetText("response")).WithValue(message.Length > 1024 ? GetText("redacted_too_long") : message))
-				).ConfigureAwait(false);
+				.AddField(efb => efb.WithName(GetText("response")).WithValue(message.Length > 1024 ? GetText("redacted_too_long") : message));
+
+			await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -78,9 +62,8 @@ namespace Mitternacht.Modules.CustomReactions {
 			if(--page < 0 || page > 999)
 				return;
 			var customReactions = Context.Guild == null
-				? Service.GlobalReactions.Where(cr => cr != null).ToArray()
-				: Service.GuildReactions.GetOrAdd(Context.Guild.Id, Array.Empty<CustomReaction>())
-					.Where(cr => cr != null).ToArray();
+				? Service.GlobalReactions
+				: Service.ReactionsForGuild(Context.Guild.Id);
 
 			if(!customReactions.Any()) {
 				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
@@ -110,9 +93,8 @@ namespace Mitternacht.Modules.CustomReactions {
 		[Priority(0)]
 		public async Task ListCustReact(All x) {
 			var customReactions = Context.Guild == null
-				? Service.GlobalReactions.Where(cr => cr != null).ToArray()
-				: Service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null)
-					.ToArray();
+				? Service.GlobalReactions
+				: Service.ReactionsForGuild(Context.Guild.Id);
 
 			if(!customReactions.Any()) {
 				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
@@ -125,10 +107,9 @@ namespace Mitternacht.Modules.CustomReactions {
 														.ToStream()
 														.ConfigureAwait(false);
 
-			if(Context.Guild == null) // its a private one, just send back
-				await Context.Channel.SendFileAsync(txtStream, "customreactions.txt", GetText("list_all")).ConfigureAwait(false);
-			else
-				await ((IGuildUser)Context.User).SendFileAsync(txtStream, "customreactions.txt", GetText("list_all")).ConfigureAwait(false);
+			var channel = Context.Guild == null ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+			
+			await channel.SendFileAsync(txtStream, "customreactions.txt", GetText("list_all")).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -136,9 +117,8 @@ namespace Mitternacht.Modules.CustomReactions {
 			if(--page < 0 || page > 9999)
 				return;
 			var customReactions = Context.Guild == null
-				? Service.GlobalReactions.Where(cr => cr != null).ToArray()
-				: Service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { }).Where(cr => cr != null)
-					.ToArray();
+				? Service.GlobalReactions
+				: Service.ReactionsForGuild(Context.Guild.Id);
 
 			if(!customReactions.Any()) {
 				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
@@ -164,7 +144,7 @@ namespace Mitternacht.Modules.CustomReactions {
 		public async Task ShowCustReact(int id) {
 			var customReactions = Context.Guild == null
 				? Service.GlobalReactions
-				: Service.GuildReactions.GetOrAdd(Context.Guild.Id, new CustomReaction[] { });
+				: Service.ReactionsForGuild(Context.Guild.Id);
 
 			var found = customReactions.FirstOrDefault(cr => cr?.Id == id);
 
@@ -186,33 +166,15 @@ namespace Mitternacht.Modules.CustomReactions {
 				return;
 			}
 
-			var success = false;
-			CustomReaction toDelete;
-			using(var uow = _db.UnitOfWork) {
-				toDelete = uow.CustomReactions.Get(id);
-				if(toDelete != null) {
-					if((toDelete.GuildId == null || toDelete.GuildId == 0) && Context.Guild == null) {
-						uow.CustomReactions.Remove(toDelete);
-						//todo 91 i can dramatically improve performance of this, if Ids are ordered.
-						Service.GlobalReactions = Service.GlobalReactions.Where(cr => cr?.Id != toDelete.Id)
-							.ToArray();
-						success = true;
-					} else if((toDelete.GuildId != null && toDelete.GuildId != 0) &&
-							   Context.Guild.Id == toDelete.GuildId) {
-						uow.CustomReactions.Remove(toDelete);
-						Service.GuildReactions.AddOrUpdate(Context.Guild.Id, new CustomReaction[] { },
-							(key, old) => old.Where(cr => cr?.Id != toDelete.Id).ToArray());
-						success = true;
-					}
-					if(success)
-						await uow.CompleteAsync().ConfigureAwait(false);
-				}
-			}
+			using var uow = _db.UnitOfWork;
+			var toDelete = uow.CustomReactions.Get(id);
+			if(toDelete != null && ((toDelete.GuildId == null || toDelete.GuildId == 0) && Context.Guild == null || toDelete.GuildId != null && toDelete.GuildId != 0 && Context.Guild.Id == toDelete.GuildId)) {
+				uow.CustomReactions.Remove(toDelete);
+				await uow.CompleteAsync().ConfigureAwait(false);
 
-			if(success) {
 				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
 					.WithTitle(GetText("deleted"))
-					.WithDescription("#" + toDelete.Id)
+					.WithDescription($"#{toDelete.Id}")
 					.AddField(efb => efb.WithName(GetText("trigger")).WithValue(toDelete.Trigger))
 					.AddField(efb => efb.WithName(GetText("response")).WithValue(toDelete.Response)));
 			} else {
@@ -222,38 +184,24 @@ namespace Mitternacht.Modules.CustomReactions {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task CrCa(int id) {
-			if((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
-				(Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator)) {
+			if(Context.Guild == null && !_creds.IsOwner(Context.User) || Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator) {
 				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
 				return;
 			}
 
-			CustomReaction[] reactions;
-
-			if(Context.Guild == null)
-				reactions = Service.GlobalReactions;
-			else {
-				Service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
-			}
+			var reactions = Context.Guild == null ? Service.GlobalReactions : Service.ReactionsForGuild(Context.Guild.Id);
+			
 			if(reactions.Any()) {
 				var reaction = reactions.FirstOrDefault(x => x.Id == id);
 
-				if(reaction == null) {
-					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
-					return;
-				}
+				if(reaction != null) {
+					using var uow = _db.UnitOfWork;
+					uow.CustomReactions.Get(id).ContainsAnywhere = !reaction.ContainsAnywhere;
+					await uow.CompleteAsync().ConfigureAwait(false);
 
-				var setValue = reaction.ContainsAnywhere = !reaction.ContainsAnywhere;
-
-				using(var uow = _db.UnitOfWork) {
-					uow.CustomReactions.Get(id).ContainsAnywhere = setValue;
-					uow.Complete();
-				}
-
-				if(setValue) {
-					await ReplyConfirmLocalized("crca_enabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
+					await ReplyConfirmLocalized(!reaction.ContainsAnywhere ? "crca_enabled" : "crca_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 				} else {
-					await ReplyConfirmLocalized("crca_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
+					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
 				}
 			} else {
 				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
@@ -262,38 +210,24 @@ namespace Mitternacht.Modules.CustomReactions {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task CrDm(int id) {
-			if((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
-				(Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator)) {
+			if(Context.Guild == null && !_creds.IsOwner(Context.User) || Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator) {
 				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
 				return;
 			}
 
-			CustomReaction[] reactions;
-
-			if(Context.Guild == null)
-				reactions = Service.GlobalReactions;
-			else {
-				Service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
-			}
+			var reactions = Context.Guild == null ? Service.GlobalReactions : Service.ReactionsForGuild(Context.Guild.Id);
+			
 			if(reactions.Any()) {
 				var reaction = reactions.FirstOrDefault(x => x.Id == id);
 
-				if(reaction == null) {
-					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
-					return;
-				}
+				if(reaction != null) {
+					using var uow = _db.UnitOfWork;
+					uow.CustomReactions.Get(id).DmResponse = !reaction.DmResponse;
+					await uow.CompleteAsync().ConfigureAwait(false);
 
-				var setValue = reaction.DmResponse = !reaction.DmResponse;
-
-				using(var uow = _db.UnitOfWork) {
-					uow.CustomReactions.Get(id).DmResponse = setValue;
-					uow.Complete();
-				}
-
-				if(setValue) {
-					await ReplyConfirmLocalized("crdm_enabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
+					await ReplyConfirmLocalized(!reaction.DmResponse ? "crdm_enabled" : "crdm_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 				} else {
-					await ReplyConfirmLocalized("crdm_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
+					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
 				}
 			} else {
 				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
@@ -302,38 +236,24 @@ namespace Mitternacht.Modules.CustomReactions {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task CrAd(int id) {
-			if((Context.Guild == null && !_creds.IsOwner(Context.User)) ||
-				(Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator)) {
+			if(Context.Guild == null && !_creds.IsOwner(Context.User) || (Context.Guild != null && !((IGuildUser)Context.User).GuildPermissions.Administrator)) {
 				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
 				return;
 			}
 
-			CustomReaction[] reactions;
-
-			if(Context.Guild == null)
-				reactions = Service.GlobalReactions;
-			else {
-				Service.GuildReactions.TryGetValue(Context.Guild.Id, out reactions);
-			}
+			var reactions = Context.Guild == null ? Service.GlobalReactions : Service.ReactionsForGuild(Context.Guild.Id);
+			
 			if(reactions.Any()) {
 				var reaction = reactions.FirstOrDefault(x => x.Id == id);
 
-				if(reaction == null) {
-					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
-					return;
-				}
+				if(reaction != null) {
+					using var uow = _db.UnitOfWork;
+					uow.CustomReactions.Get(id).AutoDeleteTrigger = !reaction.AutoDeleteTrigger;
+					await uow.CompleteAsync().ConfigureAwait(false);
 
-				var setValue = reaction.AutoDeleteTrigger = !reaction.AutoDeleteTrigger;
-
-				using(var uow = _db.UnitOfWork) {
-					uow.CustomReactions.Get(id).AutoDeleteTrigger = setValue;
-					uow.Complete();
-				}
-
-				if(setValue) {
-					await ReplyConfirmLocalized("crad_enabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
+					await ReplyConfirmLocalized(!reaction.AutoDeleteTrigger ? "crad_enabled" : "crad_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 				} else {
-					await ReplyConfirmLocalized("crad_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
+					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
 				}
 			} else {
 				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
@@ -343,11 +263,11 @@ namespace Mitternacht.Modules.CustomReactions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[OwnerOnly]
 		public async Task CrStatsClear(string trigger = null) {
+			var success = Service.ClearStats(trigger);
 			if(string.IsNullOrWhiteSpace(trigger)) {
-				Service.ClearStats();
 				await ReplyConfirmLocalized("all_stats_cleared").ConfigureAwait(false);
 			} else {
-				if(Service.ReactionStats.TryRemove(trigger, out _)) {
+				if(success) {
 					await ReplyErrorLocalized("stats_cleared", Format.Bold(trigger)).ConfigureAwait(false);
 				} else {
 					await ReplyErrorLocalized("stats_not_found").ConfigureAwait(false);
