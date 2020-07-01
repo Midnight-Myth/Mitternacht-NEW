@@ -112,10 +112,11 @@
   desc:    "`{0}prune` removes all Mitternacht's messages in the last 100 messages. `{0}prune X` removes last `X` number of messages from the channel (up to 100). `{0}prune @Someone` removes all Someone's messages in the last 100 messages. `{0}prune @Someone X` removes last `X` number of 'Someone's' messages in the channel."
   usage:   "`{0}prune` or `{0}prune 5` or `{0}prune @Someone` or `{0}prune @Someone X`"
 - name:    filterword
-  cmd:     fw
-  aliases: []
-  desc:    Adds or removes (if it exists) a word from the list of filtered words. Use`{0}sfw` or `{0}cfw` to toggle filtering.
-  usage:   "`{0}fw poop`"
+  cmd:     filterword
+  aliases:
+  -        fw
+  desc:    Adds or removes (if it exists) a word from the list of filtered words. Use`{0}filterwordsserver` or `{0}filterwordschannel` to toggle filtering.
+  usage:   "`{0}filterword poop`"
 - name:    safebooru
   cmd:     safebooru
   aliases: []
