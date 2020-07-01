@@ -99,13 +99,6 @@ namespace Mitternacht.Extensions {
 			return imageStream;
 		}
 
-		public static IEnumerable<T> ForEach<T>(this IEnumerable<T> elems, Action<T> exec) {
-			foreach(var elem in elems) {
-				exec(elem);
-			}
-			return elems;
-		}
-
 		public static Stream ToStream(this IEnumerable<byte> bytes, bool canWrite = false) {
 			var ms = new MemoryStream(bytes as byte[] ?? bytes.ToArray(), canWrite);
 			ms.Seek(0, SeekOrigin.Begin);

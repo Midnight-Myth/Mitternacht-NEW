@@ -1,6 +1,7 @@
 using System;
 using Discord;
 using Mitternacht.Extensions;
+using MoreLinq;
 using Newtonsoft.Json;
 
 namespace Mitternacht.Common {
@@ -45,10 +46,10 @@ namespace Mitternacht.Common {
 
 			if(Fields == null)
 				return embed;
-			Fields.ForEach(f => {
+			foreach(var f in Fields) {
 				if(!string.IsNullOrWhiteSpace(f.Name) && !string.IsNullOrWhiteSpace(f.Value))
 					embed.AddField(efb => efb.WithName(f.Name).WithValue(f.Value).WithIsInline(f.Inline));
-			});
+			}
 			return embed;
 		}
 

@@ -92,7 +92,9 @@ namespace Mitternacht.Modules.Administration {
 			[Priority(1)]
 			public async Task AntiSpam() {
 				if(Service.AntiSpamGuilds.TryRemove(Context.Guild.Id, out var removed)) {
-					removed.UserStats.ForEach(x => x.Value.Dispose());
+					foreach(var userSpamStats in removed.UserStats) {
+						userSpamStats.Value.Dispose();
+					}
 					using var uow = _db.UnitOfWork;
 					var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
 
