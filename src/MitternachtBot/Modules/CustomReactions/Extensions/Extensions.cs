@@ -10,13 +10,8 @@ using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.CustomReactions.Extensions {
 	public static class Extensions {
-		private static string ResolveTriggerString(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client) {
-			var rep = new ReplacementBuilder().WithUser(ctx.Author).WithClient(client).Build();
-
-			var str = rep.Replace(cr.Trigger.ToLowerInvariant());
-
-			return str;
-		}
+		private static string ResolveTriggerString(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client)
+			=> new ReplacementBuilder().WithUser(ctx.Author).WithClient(client).Build().Replace(cr.Trigger);
 
 		private static string ResolveResponseString(this string str, IUserMessage ctx, DiscordSocketClient client, string resolvedTrigger, bool containsAnywhere) {
 			var substringIndex = resolvedTrigger.Length;

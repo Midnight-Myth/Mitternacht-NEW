@@ -19,7 +19,7 @@ namespace Mitternacht.Common.Replacements {
 			
 			foreach(var (key, text) in _replacements)
 				if(input.Contains(key))
-					input = input.Replace(key, text());
+					input = input.Replace(key, text(), StringComparison.OrdinalIgnoreCase);
 			return _regex.Aggregate(input, (current, item) => item.Regex.Replace(current, m => item.Replacement(m)));
 		}
 
