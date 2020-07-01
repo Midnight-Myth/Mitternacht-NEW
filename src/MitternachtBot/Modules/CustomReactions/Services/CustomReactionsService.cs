@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
-using Mitternacht.Common;
 using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.CustomReactions.Extensions;
