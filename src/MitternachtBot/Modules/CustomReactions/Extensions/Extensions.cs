@@ -12,12 +12,11 @@ using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.CustomReactions.Services;
 using Mitternacht.Services.Database.Models;
+using MoreLinq;
 
 namespace Mitternacht.Modules.CustomReactions.Extensions {
 	public static class Extensions {
 		private static readonly Regex ImgRegex = new Regex("%(img|image):(?<tag>.*?)%", RegexOptions.Compiled);
-
-		private static readonly NadekoRandom Rng = new NadekoRandom();
 
 		public static Dictionary<Regex, Func<Match, Task<string>>> RegexPlaceholders = new Dictionary<Regex, Func<Match, Task<string>>>() {
 			{
@@ -26,22 +25,13 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 					if(string.IsNullOrWhiteSpace(tag))
 						return "";
 
-					var fullQueryLink = $"http://imgur.com/search?q={ tag }";
+					var fullQueryLink = $"http://imgur.com/search?q={tag}";
 					var config = Configuration.Default.WithDefaultLoader();
 					var document = await BrowsingContext.New(config).OpenAsync(fullQueryLink);
 
 					var elems = document.QuerySelectorAll("a.image-list-link").ToArray();
 
-					if (!elems.Any())
-						return "";
-
-					var img = elems.ElementAtOrDefault(Rng.Next(0, elems.Length))?.Children?.FirstOrDefault() as IHtmlImageElement;
-
-					if (img?.Source == null)
-						return "";
-
-					return " " + img.Source.Replace("b.", ".") + " ";
-				}
+					return !elems.Any() ? "" : elems.RandomSubset(1).FirstOrDefault().Children?.FirstOrDefault() is IHtmlImageElement img && img.Source != null ? $" {img.Source.Replace("b.", ".")} " : ""; }
 			}
 		};
 
@@ -114,13 +104,14 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 			return await channel.EmbedAsync(crembed.ToEmbed(), crembed.PlainText?.SanitizeMentions() ?? "");
 		}
 
-		public static WordPosition GetWordPosition(this string str, string word) {
-			if(str.StartsWith(word + " "))
-				return WordPosition.Start;
-			if(str.EndsWith(" " + word))
-				return WordPosition.End;
-			return str.Contains(" " + word + " ") ? WordPosition.Middle : WordPosition.None;
-		}
+		public static WordPosition GetWordPosition(this string str, string word)
+			=> str.StartsWith($"{word} ")
+				? WordPosition.Start
+				: str.EndsWith($" {word}")
+				? WordPosition.End
+				: str.Contains($" {word} ")
+				? WordPosition.Middle
+				: WordPosition.None;
 	}
 
 	public enum WordPosition {
