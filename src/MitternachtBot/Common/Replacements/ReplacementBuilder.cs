@@ -11,66 +11,61 @@ using Mitternacht.Modules.Administration.Services;
 namespace Mitternacht.Common.Replacements {
 	public class ReplacementBuilder {
 		private static readonly Regex RngRegex = new Regex("%rng(?:(?<from>(?:-)?\\d+)-(?<to>(?:-)?\\d+))?%", RegexOptions.Compiled);
-		private readonly ConcurrentDictionary<string, Func<string>> _reps = new ConcurrentDictionary<string, Func<string>>();
+
+		private readonly ConcurrentDictionary<string, Func<string>>       _reps  = new ConcurrentDictionary<string, Func<string>>();
 		private readonly ConcurrentDictionary<Regex, Func<Match, string>> _regex = new ConcurrentDictionary<Regex, Func<Match, string>>();
 
 		public ReplacementBuilder() {
 			WithRngRegex();
 		}
 
-		public ReplacementBuilder WithDefault(IUser usr, IMessageChannel ch, IGuild g, DiscordSocketClient client) {
-			return this.WithUser(usr)
-				.WithChannel(ch)
-				.WithServer(client, g)
+		public ReplacementBuilder WithDefault(IUser user, IMessageChannel channel, IGuild guild, DiscordSocketClient client)
+			=> WithUser(user)
+				.WithChannel(channel)
+				.WithServer(client, guild)
 				.WithClient(client);
-		}
 
-		public ReplacementBuilder WithDefault(ICommandContext ctx) =>
-			WithDefault(ctx.User, ctx.Channel, ctx.Guild, (DiscordSocketClient)ctx.Client);
+		public ReplacementBuilder WithDefault(ICommandContext context)
+			=> WithDefault(context.User, context.Channel, context.Guild, (DiscordSocketClient)context.Client);
 
 		public ReplacementBuilder WithClient(DiscordSocketClient client) {
-			_reps.TryAdd("%mention%", () => $"<@{client.CurrentUser.Id}>");
+			_reps.TryAdd("%mention%", () => client.CurrentUser.Mention);
 			_reps.TryAdd("%shardid%", () => client.ShardId.ToString());
-			_reps.TryAdd("%time%", () => DateTime.Now.ToString("HH:mm " + TimeZoneInfo.Local.StandardName.GetInitials()));
+			_reps.TryAdd("%time%", () => DateTime.Now.ToString($"HH:mm {TimeZoneInfo.Local.StandardName.GetInitials()}"));
 			return this;
 		}
 
-		public ReplacementBuilder WithServer(DiscordSocketClient client, IGuild g) {
-
-			_reps.TryAdd("%sid%", () => g == null ? "DM" : g.Id.ToString());
-			_reps.TryAdd("%server%", () => g == null ? "DM" : g.Name);
+		public ReplacementBuilder WithServer(DiscordSocketClient client, IGuild guild) {
+			_reps.TryAdd("%sid%",         () => guild == null ? "DM" : guild.Id.ToString());
+			_reps.TryAdd("%server%",      () => guild == null ? "DM" : guild.Name);
 			_reps.TryAdd("%server_time%", () => {
-				var to = TimeZoneInfo.Local;
-				if(g == null)
-					return TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, to).ToString("HH:mm ") + to.StandardName.GetInitials();
-				if(GuildTimezoneService.AllServices.TryGetValue(client.CurrentUser.Id, out var tz))
-					to = tz.GetTimeZoneOrDefault(g.Id) ?? TimeZoneInfo.Local;
+				var to = (guild != null && GuildTimezoneService.AllServices.TryGetValue(client.CurrentUser.Id, out var tz) ? tz.GetTimeZoneOrDefault(guild.Id) : null) ?? TimeZoneInfo.Local;
 
-				return TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, to).ToString("HH:mm ") + to.StandardName.GetInitials();
+				return $"{TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, to):HH:mm} {to.StandardName.GetInitials()}";
 			});
 			return this;
 		}
 
-		public ReplacementBuilder WithChannel(IMessageChannel ch) {
-			_reps.TryAdd("%channel%", () => (ch as ITextChannel)?.Mention ?? "#" + ch.Name);
-			_reps.TryAdd("%chname%", () => ch.Name);
-			_reps.TryAdd("%cid%", () => ch?.Id.ToString());
+		public ReplacementBuilder WithChannel(IMessageChannel channel) {
+			_reps.TryAdd("%channel%", () => (channel as ITextChannel)?.Mention ?? "#" + channel.Name);
+			_reps.TryAdd("%chname%",  () => channel.Name);
+			_reps.TryAdd("%cid%",     () => channel.Id.ToString());
 			return this;
 		}
 
 		public ReplacementBuilder WithUser(IUser user) {
-			_reps.TryAdd("%user%", () => user.Mention);
-			_reps.TryAdd("%userfull%", () => Format.Sanitize(user.ToString()));
-			_reps.TryAdd("%username%", () => Format.Sanitize(user.Username));
+			_reps.TryAdd("%user%",        () => user.Mention);
+			_reps.TryAdd("%userfull%",    () => Format.Sanitize(user.ToString()));
+			_reps.TryAdd("%username%",    () => Format.Sanitize(user.Username));
 			_reps.TryAdd("%userdiscrim%", () => user.Discriminator);
-			_reps.TryAdd("%id%", () => user.Id.ToString());
-			_reps.TryAdd("%uid%", () => user.Id.ToString());
+			_reps.TryAdd("%id%",          () => user.Id.ToString());
+			_reps.TryAdd("%uid%",         () => user.Id.ToString());
 			return this;
 		}
 
-		public ReplacementBuilder WithStats(DiscordSocketClient c) {
-			_reps.TryAdd("%servers%", () => c.Guilds.Count.ToString());
-			_reps.TryAdd("%users%", () => c.Guilds.Sum(s => s.Users.Count).ToString());
+		public ReplacementBuilder WithStats(DiscordSocketClient client) {
+			_reps.TryAdd("%servers%", () => client.Guilds.Count.ToString());
+			_reps.TryAdd("%users%",   () => client.Guilds.Sum(s => s.Users.Count).ToString());
 			return this;
 		}
 
@@ -78,12 +73,9 @@ namespace Mitternacht.Common.Replacements {
 			var rng = new NadekoRandom();
 			_regex.TryAdd(RngRegex, match => {
 				int.TryParse(match.Groups["from"].ToString(), out var from);
-				int.TryParse(match.Groups["to"].ToString(), out var to);
+				int.TryParse(match.Groups["to"  ].ToString(), out var to);
 
-				if(from == 0 && to == 0)
-					return rng.Next(0, 11).ToString();
-
-				return from >= to ? string.Empty : rng.Next(from, to + 1).ToString();
+				return from == 0 && to == 0 ? rng.Next(0, 11).ToString() : from >= to ? string.Empty : rng.Next(from, to + 1).ToString();
 			});
 			return this;
 		}
@@ -93,8 +85,7 @@ namespace Mitternacht.Common.Replacements {
 			return this;
 		}
 
-		public Replacer Build() {
-			return new Replacer(_reps.Select(x => (x.Key, x.Value)).ToArray(), _regex.Select(x => (x.Key, x.Value)).ToArray());
-		}
+		public Replacer Build()
+			=> new Replacer(_reps.Select(x => (x.Key, x.Value)).ToArray(), _regex.Select(x => (x.Key, x.Value)).ToArray());
 	}
 }

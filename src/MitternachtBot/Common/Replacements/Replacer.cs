@@ -5,17 +5,18 @@ using System.Text.RegularExpressions;
 
 namespace Mitternacht.Common.Replacements {
 	public class Replacer {
-		private readonly IEnumerable<(string Key, Func<string> Text)> _replacements;
+		private readonly IEnumerable<(string Key, Func<string> Text)>                _replacements;
 		private readonly IEnumerable<(Regex Regex, Func<Match, string> Replacement)> _regex;
 
 		public Replacer(IEnumerable<(string, Func<string>)> replacements, IEnumerable<(Regex, Func<Match, string>)> regex) {
 			_replacements = replacements;
-			_regex = regex;
+			_regex        = regex;
 		}
 
 		public string Replace(string input) {
 			if(string.IsNullOrWhiteSpace(input))
 				return input;
+			
 			foreach(var (key, text) in _replacements)
 				if(input.Contains(key))
 					input = input.Replace(key, text());
@@ -29,7 +30,7 @@ namespace Mitternacht.Common.Replacements {
 
 			if(embedData.Fields != null)
 				foreach(var f in embedData.Fields) {
-					f.Name = Replace(f.Name);
+					f.Name  = Replace(f.Name);
 					f.Value = Replace(f.Value);
 				}
 
