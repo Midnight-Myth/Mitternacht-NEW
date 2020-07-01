@@ -1,7 +1,6 @@
 using System;
 using Discord;
 using Mitternacht.Extensions;
-using MoreLinq;
 using Newtonsoft.Json;
 
 namespace Mitternacht.Common {
@@ -24,33 +23,38 @@ namespace Mitternacht.Common {
 			|| !string.IsNullOrWhiteSpace(Footer.IconUrl))
 			|| Fields != null && Fields.Length > 0;
 
-		public EmbedBuilder ToEmbed() {
-			var embed = new EmbedBuilder();
+		public EmbedBuilder ToEmbedBuilder() {
+			var eb = new EmbedBuilder();
 
 			if(!string.IsNullOrWhiteSpace(Title))
-				embed.WithTitle(Title);
+				eb.WithTitle(Title);
+
 			if(!string.IsNullOrWhiteSpace(Description))
-				embed.WithDescription(Description);
-			embed.WithColor(new Color(Color));
+				eb.WithDescription(Description);
+
+			eb.WithColor(new Color(Color));
+			
 			if(Footer != null)
-				embed.WithFooter(efb => {
+				eb.WithFooter(efb => {
 					efb.WithText(Footer.Text);
 					if(Uri.IsWellFormedUriString(Footer.IconUrl, UriKind.Absolute))
 						efb.WithIconUrl(Footer.IconUrl);
 				});
 
 			if(Thumbnail != null && Uri.IsWellFormedUriString(Thumbnail, UriKind.Absolute))
-				embed.WithThumbnailUrl(Thumbnail);
-			if(Image != null && Uri.IsWellFormedUriString(Image, UriKind.Absolute))
-				embed.WithImageUrl(Image);
+				eb.WithThumbnailUrl(Thumbnail);
 
-			if(Fields == null)
-				return embed;
-			foreach(var f in Fields) {
-				if(!string.IsNullOrWhiteSpace(f.Name) && !string.IsNullOrWhiteSpace(f.Value))
-					embed.AddField(efb => efb.WithName(f.Name).WithValue(f.Value).WithIsInline(f.Inline));
+			if(Image != null && Uri.IsWellFormedUriString(Image, UriKind.Absolute))
+				eb.WithImageUrl(Image);
+
+			if(Fields != null) {
+				foreach(var f in Fields) {
+					if(!string.IsNullOrWhiteSpace(f.Name) && !string.IsNullOrWhiteSpace(f.Value))
+						eb.AddField(efb => efb.WithName(f.Name).WithValue(f.Value).WithIsInline(f.Inline));
+				}
 			}
-			return embed;
+
+			return eb;
 		}
 
 		public static bool TryParse(string input, out CREmbed embed) {
@@ -63,7 +67,7 @@ namespace Mitternacht.Common {
 
 				if(crembed.Fields != null && crembed.Fields.Length > 0)
 					foreach(var f in crembed.Fields) {
-						f.Name = f.Name.TrimTo(256);
+						f.Name  = f.Name.TrimTo(256);
 						f.Value = f.Value.TrimTo(1024);
 					}
 				if(!crembed.IsValid)

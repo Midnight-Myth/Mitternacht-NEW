@@ -98,7 +98,7 @@ namespace Mitternacht.Modules.Gambling {
 						await _cs.AddAsync(arg.Author, "Sneaky Game Event", 100, false)
 							.ConfigureAwait(false);
 
-						try { 
+						try {
 							await arg.DeleteAsync(new RequestOptions { RetryMode = RetryMode.AlwaysFail }).ConfigureAwait(false);
 						} catch {
                             // ignored

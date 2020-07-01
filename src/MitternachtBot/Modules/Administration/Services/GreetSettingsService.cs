@@ -57,7 +57,7 @@ namespace Mitternacht.Modules.Administration.Services
                         rep.Replace(embedData);
                         try
                         {
-                            var toDelete = await channel.EmbedAsync(embedData.ToEmbed(), embedData.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+                            var toDelete = await channel.EmbedAsync(embedData.ToEmbedBuilder(), embedData.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
                             if (conf.AutoDeleteByeMessagesTimer > 0)
                             {
                                 toDelete.DeleteAfter(conf.AutoDeleteByeMessagesTimer);
@@ -111,7 +111,7 @@ namespace Mitternacht.Modules.Administration.Services
                                 rep.Replace(embedData);
                                 try
                                 {
-                                    var toDelete = await channel.EmbedAsync(embedData.ToEmbed(), embedData.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+                                    var toDelete = await channel.EmbedAsync(embedData.ToEmbedBuilder(), embedData.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
                                     if (conf.AutoDeleteGreetMessagesTimer > 0)
                                     {
                                         toDelete.DeleteAfter(conf.AutoDeleteGreetMessagesTimer);
@@ -153,7 +153,7 @@ namespace Mitternacht.Modules.Administration.Services
                                 rep.Replace(embedData);
                                 try
                                 {
-                                    await channel.EmbedAsync(embedData.ToEmbed(), embedData.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+                                    await channel.EmbedAsync(embedData.ToEmbedBuilder(), embedData.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
                                 }
                                 catch (Exception ex)
                                 {
