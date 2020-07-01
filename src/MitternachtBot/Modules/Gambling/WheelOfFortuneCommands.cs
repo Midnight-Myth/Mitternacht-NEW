@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Gambling {
 					await _cs.AddAsync(Context.User.Id, "Wheel Of Fortune - won", amount).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync(
-Format.Bold($@"{Context.User.ToString()} won: {amount + _bc.BotConfig.CurrencySign}
+Format.Bold($@"{Context.User} won: {amount + _bc.BotConfig.CurrencySign}
 
    『{Wof.Multipliers[1]}』   『{Wof.Multipliers[0]}』   『{Wof.Multipliers[7]}』
 
