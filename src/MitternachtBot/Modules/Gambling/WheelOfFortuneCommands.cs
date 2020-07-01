@@ -47,27 +47,6 @@ Format.Bold($@"{Context.User.ToString()} won: {amount + _bc.BotConfig.CurrencySi
 
      『{Wof.Multipliers[3]}』   『{Wof.Multipliers[4]}』   『{Wof.Multipliers[5]}』")).ConfigureAwait(false);
 			}
-
-			//[MitternachtCommand, Usage, Description, Aliases]
-			//[RequireContext(ContextType.Guild)]
-			//public async Task WofTest(int length = 1000)
-			//{
-			//    var mults = new Dictionary<float, int>();
-			//    for (int i = 0; i < length; i++)
-			//    {
-			//        var x = new Wof();
-			//        if (mults.ContainsKey(x.Multiplier))
-			//            ++mults[x.Multiplier];
-			//        else
-			//            mults.Add(x.Multiplier, 1);
-			//    }
-
-			//    var payout = mults.Sum(x => x.Key * x.Value);
-			//    await Context.Channel.SendMessageAsync($"Total bet: {length}\n" +
-			//        $"Paid out: {payout}\n" +
-			//        $"Total Payout: {payout / length:F3}x")
-			//        .ConfigureAwait(false);
-			//}
 		}
 	}
 }
