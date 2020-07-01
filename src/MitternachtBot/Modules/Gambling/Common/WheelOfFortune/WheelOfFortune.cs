@@ -26,12 +26,8 @@ namespace Mitternacht.Modules.Gambling.Common.WheelOfFortune {
 			2.4f,
 		}.ToImmutableArray();
 
-		public int Result { get; }
-		public string Emoji => _emojis[Result];
-		public float Multiplier => Multipliers[Result];
-
-		public WheelOfFortune() {
-			this.Result = _rng.Next(0, 8);
-		}
+		public readonly int    Result     =  _rng.Next(0, 8);
+		public          string Emoji      => _emojis[Result];
+		public          float  Multiplier => Multipliers[Result];
 	}
 }
