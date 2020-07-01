@@ -47,7 +47,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="2.3.0-dev-20200417.1" />
+    <PackageReference Include="Discord.Net" Version="2.3.0-dev-20200627.3" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.80" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
