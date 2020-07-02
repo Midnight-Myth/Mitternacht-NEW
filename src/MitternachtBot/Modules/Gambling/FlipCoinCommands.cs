@@ -31,13 +31,11 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task Flip(int count = 1) {
 				if(count == 1) {
 					if(rng.Next(0, 2) == 1) {
-						using(var heads = _images.Heads.ToStream()) {
-							await Context.Channel.SendFileAsync(heads, "heads.jpg", Context.User.Mention + " " + GetText("flipped", Format.Bold(GetText("heads")))).ConfigureAwait(false);
-						}
+						using var heads = _images.Heads.ToStream();
+						await Context.Channel.SendFileAsync(heads, "heads.jpg", $"{Context.User.Mention} {GetText("flipped", Format.Bold(GetText("heads")))}").ConfigureAwait(false);
 					} else {
-						using(var tails = _images.Tails.ToStream()) {
-							await Context.Channel.SendFileAsync(tails, "tails.jpg", Context.User.Mention + " " + GetText("flipped", Format.Bold(GetText("tails")))).ConfigureAwait(false);
-						}
+						using var tails = _images.Tails.ToStream();
+						await Context.Channel.SendFileAsync(tails, "tails.jpg", $"{Context.User.Mention} {GetText("flipped", Format.Bold(GetText("tails")))}").ConfigureAwait(false);
 					}
 					return;
 				}
@@ -47,14 +45,9 @@ namespace Mitternacht.Modules.Gambling {
 				}
 				var imgs = new Image<Rgba32>[count];
 				for(var i = 0; i < count; i++) {
-					using(var heads = _images.Heads.ToStream())
-					using(var tails = _images.Tails.ToStream()) {
-						if(rng.Next(0, 10) < 5) {
-							imgs[i] = Image.Load<Rgba32>(heads);
-						} else {
-							imgs[i] = Image.Load<Rgba32>(tails);
-						}
-					}
+					using var heads = _images.Heads.ToStream();
+					using var tails = _images.Tails.ToStream();
+					imgs[i] = rng.Next(0, 10) < 5 ? Image.Load<Rgba32>(heads) : Image.Load<Rgba32>(tails);
 				}
 				await Context.Channel.SendFileAsync(imgs.Merge().ToStream(), $"{count} coins.png").ConfigureAwait(false);
 			}
@@ -71,7 +64,7 @@ namespace Mitternacht.Modules.Gambling {
 			[MitternachtCommand, Usage, Description, Aliases]
 			public async Task Betflip(int amount, BetFlipGuess guess) {
 				if(amount < _bc.BotConfig.MinimumBetAmount) {
-					await ReplyErrorLocalized("min_bet_limit", _bc.BotConfig.MinimumBetAmount + _bc.BotConfig.CurrencySign).ConfigureAwait(false);
+					await ReplyErrorLocalized("min_bet_limit", $"{_bc.BotConfig.MinimumBetAmount}{_bc.BotConfig.CurrencySign}").ConfigureAwait(false);
 					return;
 				}
 				var removed = await _cs.RemoveAsync(Context.User, "Betflip Gamble", amount, false).ConfigureAwait(false);
@@ -79,27 +72,20 @@ namespace Mitternacht.Modules.Gambling {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencyPluralName).ConfigureAwait(false);
 					return;
 				}
-				BetFlipGuess result;
-				IEnumerable<byte> imageToSend;
-				if(rng.Next(0, 2) == 1) {
-					imageToSend = _images.Heads;
-					result = BetFlipGuess.Heads;
-				} else {
-					imageToSend = _images.Tails;
-					result = BetFlipGuess.Tails;
-				}
+				
+				(IEnumerable<byte> imageToSend, var result) = rng.Next(0, 2) == 1 ? (_images.Heads, BetFlipGuess.Heads) : (_images.Tails, BetFlipGuess.Tails);
 
 				string str;
 				if(guess == result) {
 					var toWin = (int)Math.Round(amount * _bc.BotConfig.BetflipMultiplier);
-					str = Context.User.Mention + " " + GetText("flip_guess", toWin + _bc.BotConfig.CurrencySign);
+					str = $"{Context.User.Mention} {GetText("flip_guess", $"{toWin}{_bc.BotConfig.CurrencySign}")}";
 					await _cs.AddAsync(Context.User, "Betflip Gamble", toWin, false).ConfigureAwait(false);
 				} else {
-					str = Context.User.Mention + " " + GetText("better_luck");
+					str = $"{Context.User.Mention} {GetText("better_luck")}";
 				}
-				using(var toSend = imageToSend.ToStream()) {
-					await Context.Channel.SendFileAsync(toSend, "result.png", str).ConfigureAwait(false);
-				}
+
+				using var toSend = imageToSend.ToStream();
+				await Context.Channel.SendFileAsync(toSend, "result.png", str).ConfigureAwait(false);
 			}
 		}
 	}
