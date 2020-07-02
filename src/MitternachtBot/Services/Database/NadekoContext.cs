@@ -34,7 +34,6 @@ namespace Mitternacht.Services.Database
         public DbSet<SelfAssignedRole> SelfAssignableRoles { get; set; }
         public DbSet<BotConfig> BotConfig { get; set; }
         public DbSet<Currency> Currency { get; set; }
-        public DbSet<ConvertUnit> ConversionUnits { get; set; }
         public DbSet<CustomReaction> CustomReactions { get; set; }
         public DbSet<CurrencyTransaction> CurrencyTransactions { get; set; }
         public DbSet<WaifuUpdate> WaifuUpdates { get; set; }
