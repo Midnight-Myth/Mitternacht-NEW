@@ -25,10 +25,6 @@ namespace Mitternacht.Services.Database {
 		public  ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ??= new CurrencyTransactionsRepository(Context);
 		private ICustomReactionRepository       _customReactions;
 		public  ICustomReactionRepository       CustomReactions => _customReactions ??= new CustomReactionsRepository(Context);
-		private IWaifuRepository                _waifus;
-		public  IWaifuRepository                Waifus => _waifus ??= new WaifuRepository(Context);
-		private IDiscordUserRepository          _discordUsers;
-		public  IDiscordUserRepository          DiscordUsers => _discordUsers ??= new DiscordUserRepository(Context);
 		private IWarningsRepository             _warnings;
 		public  IWarningsRepository             Warnings => _warnings ??= new WarningsRepository(Context);
 		private ILevelModelRepository           _levelmodel;
