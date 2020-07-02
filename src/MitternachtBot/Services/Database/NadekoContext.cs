@@ -30,16 +30,12 @@ namespace Mitternacht.Services.Database
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Donator> Donators { get; set; }
         public DbSet<GuildConfig> GuildConfigs { get; set; }
-        public DbSet<ClashWar> ClashOfClans { get; set; }
-        public DbSet<ClashCaller> ClashCallers { get; set; }
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<SelfAssignedRole> SelfAssignableRoles { get; set; }
         public DbSet<BotConfig> BotConfig { get; set; }
         public DbSet<Currency> Currency { get; set; }
-        public DbSet<ConvertUnit> ConversionUnits { get; set; }
         public DbSet<CustomReaction> CustomReactions { get; set; }
         public DbSet<CurrencyTransaction> CurrencyTransactions { get; set; }
-        public DbSet<WaifuUpdate> WaifuUpdates { get; set; }
         public DbSet<Warning> Warnings { get; set; }
         public DbSet<DailyMoney> DailyMoney { get; set; }
         public DbSet<LevelModel> LevelModel { get; set; }
@@ -191,15 +187,6 @@ namespace Mitternacht.Services.Database
 
             #endregion
 
-            #region ClashOfClans
-
-            var callersEntity = modelBuilder.Entity<ClashCaller>();
-            callersEntity
-                .HasOne(c => c.ClashWar)
-                .WithMany(c => c.Bases);
-
-            #endregion
-
             #region Self Assignable Roles
 
             var selfassignableRolesEntity = modelBuilder.Entity<SelfAssignedRole>();
@@ -249,24 +236,6 @@ namespace Mitternacht.Services.Database
             //modelBuilder.Entity<CommandCost>()
             //    .HasIndex(cp => cp.CommandName)
             //    .IsUnique();
-            #endregion
-
-            #region Waifus
-
-            var wi = modelBuilder.Entity<WaifuInfo>();
-            wi.HasOne(x => x.Waifu)
-                .WithOne();
-            //    //.HasForeignKey<WaifuInfo>(w => w.WaifuId)
-            //    //.IsRequired(true);
-
-            //wi.HasOne(x => x.Claimer)
-            //    .WithOne();
-            //    //.HasForeignKey<WaifuInfo>(w => w.ClaimerId)
-            //    //.IsRequired(false);
-
-            var du = modelBuilder.Entity<DiscordUser>();
-            du.HasAlternateKey(w => w.UserId);
-
             #endregion
 
             #region Warnings

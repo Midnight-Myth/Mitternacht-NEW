@@ -11,16 +11,12 @@ namespace Mitternacht.Services.Database
         IQuoteRepository Quotes { get; }
         IGuildConfigRepository GuildConfigs { get; }
         IDonatorsRepository Donators { get; }
-        IClashOfClansRepository ClashOfClans { get; }
         IReminderRepository Reminders { get; }
         ISelfAssignedRolesRepository SelfAssignedRoles { get; }
         IBotConfigRepository BotConfig { get; }
-        IUnitConverterRepository ConverterUnits { get; }
         ICustomReactionRepository CustomReactions { get; }
         ICurrencyRepository Currency { get; }
         ICurrencyTransactionsRepository CurrencyTransactions { get; }
-        IWaifuRepository Waifus { get; }
-        IDiscordUserRepository DiscordUsers { get; }
         IWarningsRepository Warnings { get; }
         ILevelModelRepository LevelModel { get; }
         IDailyMoneyRepository DailyMoney { get; }

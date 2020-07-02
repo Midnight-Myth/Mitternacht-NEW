@@ -13,8 +13,6 @@ namespace Mitternacht.Services.Database {
 		public  IGuildConfigRepository          GuildConfigs => _guildConfigs ??= new GuildConfigRepository(Context);
 		private IDonatorsRepository             _donators;
 		public  IDonatorsRepository             Donators => _donators ??= new DonatorsRepository(Context);
-		private IClashOfClansRepository         _clashOfClans;
-		public  IClashOfClansRepository         ClashOfClans => _clashOfClans ??= new ClashOfClansRepository(Context);
 		private IReminderRepository             _reminders;
 		public  IReminderRepository             Reminders => _reminders ??= new ReminderRepository(Context);
 		private ISelfAssignedRolesRepository    _selfAssignedRoles;
@@ -25,14 +23,8 @@ namespace Mitternacht.Services.Database {
 		public  ICurrencyRepository             Currency => _currency ??= new CurrencyRepository(Context);
 		private ICurrencyTransactionsRepository _currencyTransactions;
 		public  ICurrencyTransactionsRepository CurrencyTransactions => _currencyTransactions ??= new CurrencyTransactionsRepository(Context);
-		private IUnitConverterRepository        _conUnits;
-		public  IUnitConverterRepository        ConverterUnits => _conUnits ??= new UnitConverterRepository(Context);
 		private ICustomReactionRepository       _customReactions;
 		public  ICustomReactionRepository       CustomReactions => _customReactions ??= new CustomReactionsRepository(Context);
-		private IWaifuRepository                _waifus;
-		public  IWaifuRepository                Waifus => _waifus ??= new WaifuRepository(Context);
-		private IDiscordUserRepository          _discordUsers;
-		public  IDiscordUserRepository          DiscordUsers => _discordUsers ??= new DiscordUserRepository(Context);
 		private IWarningsRepository             _warnings;
 		public  IWarningsRepository             Warnings => _warnings ??= new WarningsRepository(Context);
 		private ILevelModelRepository           _levelmodel;

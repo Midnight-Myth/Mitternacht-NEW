@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mitternacht.Services.Database;
 
 namespace Mitternacht.Migrations
 {
     [DbContext(typeof(NadekoContext))]
-    partial class NadekoSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20200702103101_RemoveColumnConvertUnit")]
+    partial class RemoveColumnConvertUnit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -493,6 +495,34 @@ namespace Mitternacht.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DailyMoneyStats");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.DiscordUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AvatarId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Discriminator")
+                        .HasColumnType("TEXT");
+
+                    b.Property<ulong>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("UserId");
+
+                    b.ToTable("DiscordUser");
                 });
 
             modelBuilder.Entity("Mitternacht.Services.Database.Models.Donator", b =>
@@ -1830,6 +1860,99 @@ namespace Mitternacht.Migrations
                     b.ToTable("VoiceChannelStats");
                 });
 
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.WaifuInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AffinityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClaimerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WaifuId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AffinityId");
+
+                    b.HasIndex("ClaimerId");
+
+                    b.HasIndex("WaifuId")
+                        .IsUnique();
+
+                    b.ToTable("WaifuInfo");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.WaifuItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Item")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemEmoji")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("WaifuInfoId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WaifuInfoId");
+
+                    b.ToTable("WaifuItem");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.WaifuUpdate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("NewId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("OldId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UpdateType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NewId");
+
+                    b.HasIndex("OldId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WaifuUpdates");
+                });
+
             modelBuilder.Entity("Mitternacht.Services.Database.Models.Warning", b =>
                 {
                     b.Property<int>("Id")
@@ -2176,6 +2299,47 @@ namespace Mitternacht.Migrations
                     b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
                         .WithMany("VcRoleInfos")
                         .HasForeignKey("GuildConfigId");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.WaifuInfo", b =>
+                {
+                    b.HasOne("Mitternacht.Services.Database.Models.DiscordUser", "Affinity")
+                        .WithMany()
+                        .HasForeignKey("AffinityId");
+
+                    b.HasOne("Mitternacht.Services.Database.Models.DiscordUser", "Claimer")
+                        .WithMany()
+                        .HasForeignKey("ClaimerId");
+
+                    b.HasOne("Mitternacht.Services.Database.Models.DiscordUser", "Waifu")
+                        .WithOne()
+                        .HasForeignKey("Mitternacht.Services.Database.Models.WaifuInfo", "WaifuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.WaifuItem", b =>
+                {
+                    b.HasOne("Mitternacht.Services.Database.Models.WaifuInfo", null)
+                        .WithMany("Items")
+                        .HasForeignKey("WaifuInfoId");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.WaifuUpdate", b =>
+                {
+                    b.HasOne("Mitternacht.Services.Database.Models.DiscordUser", "New")
+                        .WithMany()
+                        .HasForeignKey("NewId");
+
+                    b.HasOne("Mitternacht.Services.Database.Models.DiscordUser", "Old")
+                        .WithMany()
+                        .HasForeignKey("OldId");
+
+                    b.HasOne("Mitternacht.Services.Database.Models.DiscordUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Mitternacht.Services.Database.Models.WarningPunishment", b =>
