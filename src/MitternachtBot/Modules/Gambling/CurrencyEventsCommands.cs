@@ -23,7 +23,7 @@ namespace Mitternacht.Modules.Gambling {
 				Reaction,
 				SneakyGameStatus
 			}
-			//flower reaction event
+			
 			private static readonly ConcurrentHashSet<ulong> SneakyGameAwardedUsers = new ConcurrentHashSet<ulong>();
 
 			private static readonly char[] SneakyGameStatusChars = Enumerable.Range(48, 10)
@@ -71,14 +71,12 @@ namespace Mitternacht.Modules.Gambling {
 					_secretCode += SneakyGameStatusChars[rng.Next(0, SneakyGameStatusChars.Length)];
 				}
 
-				await _client.SetGameAsync($"type {_secretCode} for " + _bc.BotConfig.CurrencyPluralName).ConfigureAwait(false);
+				await _client.SetGameAsync($"{$"type {_secretCode} for "}{_bc.BotConfig.CurrencyPluralName}").ConfigureAwait(false);
 				try {
 					var title = GetText("sneakygamestatus_title");
-					var desc = GetText("sneakygamestatus_desc", Format.Bold(100.ToString()) + _bc.BotConfig.CurrencySign, Format.Bold(num.ToString()));
+					var desc = GetText("sneakygamestatus_desc", $"{Format.Bold(100.ToString())}{_bc.BotConfig.CurrencySign}", Format.Bold(num.ToString()));
 					await context.Channel.SendConfirmAsync(desc, title).ConfigureAwait(false);
-				} catch {
-					// ignored
-				}
+				} catch { }
 
 
 				_client.MessageReceived += SneakyGameMessageReceivedEventHandler;
@@ -95,14 +93,11 @@ namespace Mitternacht.Modules.Gambling {
 			private Task SneakyGameMessageReceivedEventHandler(SocketMessage arg) {
 				if(arg.Content == _secretCode && SneakyGameAwardedUsers.Add(arg.Author.Id)) {
 					var _ = Task.Run(async () => {
-						await _cs.AddAsync(arg.Author, "Sneaky Game Event", 100, false)
-							.ConfigureAwait(false);
+						await _cs.AddAsync(arg.Author, "Sneaky Game Event", 100, false).ConfigureAwait(false);
 
 						try {
 							await arg.DeleteAsync(new RequestOptions { RetryMode = RetryMode.AlwaysFail }).ConfigureAwait(false);
-						} catch {
-                            // ignored
-                        }
+						} catch { }
 					});
 				}
 
@@ -114,7 +109,7 @@ namespace Mitternacht.Modules.Gambling {
 					amount = 100;
 
 				var title = GetText("reaction_title");
-				var desc = GetText("reaction_desc", _bc.BotConfig.CurrencySign, Format.Bold(amount.ToString()) + _bc.BotConfig.CurrencySign);
+				var desc = GetText("reaction_desc", _bc.BotConfig.CurrencySign, $"{Format.Bold(amount.ToString())}{_bc.BotConfig.CurrencySign}");
 				var footer = GetText("reaction_footer", 24);
 				var msg = await context.Channel.SendConfirmAsync(desc, title, footer: footer).ConfigureAwait(false);
 
@@ -195,7 +190,7 @@ namespace Mitternacht.Modules.Gambling {
 				await StartingMessage.AddReactionAsync(iemote).ConfigureAwait(false);
 			} catch {
 				try {
-					await StartingMessage.AddReactionAsync(new Emoji("🌸")).ConfigureAwait(false);
+					await StartingMessage.AddReactionAsync(iemote = new Emoji("🌸")).ConfigureAwait(false);
 				} catch {
 					try {
 						await StartingMessage.DeleteAsync().ConfigureAwait(false);
@@ -213,9 +208,7 @@ namespace Mitternacht.Modules.Gambling {
 					if(string.Equals(r.Emote.Name, iemote.Name, StringComparison.Ordinal) && r.User.IsSpecified && (DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5 && _reactionAwardedUsers.Add(r.User.Value.Id)) {
 						_toGiveTo.Enqueue(r.UserId);
 					}
-				} catch {
-					// ignored
-				}
+				} catch { }
 			})) {
 				try {
 					await Task.Delay(TimeSpan.FromHours(24), CancelToken).ConfigureAwait(false);
