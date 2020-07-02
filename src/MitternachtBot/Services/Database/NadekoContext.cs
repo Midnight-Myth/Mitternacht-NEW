@@ -30,8 +30,6 @@ namespace Mitternacht.Services.Database
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Donator> Donators { get; set; }
         public DbSet<GuildConfig> GuildConfigs { get; set; }
-        public DbSet<ClashWar> ClashOfClans { get; set; }
-        public DbSet<ClashCaller> ClashCallers { get; set; }
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<SelfAssignedRole> SelfAssignableRoles { get; set; }
         public DbSet<BotConfig> BotConfig { get; set; }
@@ -188,15 +186,6 @@ namespace Mitternacht.Services.Database
             //    .HasMany(c => c.ModulePrefixes)
             //    .WithOne(mp => mp.BotConfig)
             //    .HasForeignKey(mp => mp.BotConfigId);
-
-            #endregion
-
-            #region ClashOfClans
-
-            var callersEntity = modelBuilder.Entity<ClashCaller>();
-            callersEntity
-                .HasOne(c => c.ClashWar)
-                .WithMany(c => c.Bases);
 
             #endregion
 

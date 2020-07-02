@@ -11,7 +11,6 @@ namespace Mitternacht.Services.Database
         IQuoteRepository Quotes { get; }
         IGuildConfigRepository GuildConfigs { get; }
         IDonatorsRepository Donators { get; }
-        IClashOfClansRepository ClashOfClans { get; }
         IReminderRepository Reminders { get; }
         ISelfAssignedRolesRepository SelfAssignedRoles { get; }
         IBotConfigRepository BotConfig { get; }

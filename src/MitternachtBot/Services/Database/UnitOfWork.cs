@@ -13,8 +13,6 @@ namespace Mitternacht.Services.Database {
 		public  IGuildConfigRepository          GuildConfigs => _guildConfigs ??= new GuildConfigRepository(Context);
 		private IDonatorsRepository             _donators;
 		public  IDonatorsRepository             Donators => _donators ??= new DonatorsRepository(Context);
-		private IClashOfClansRepository         _clashOfClans;
-		public  IClashOfClansRepository         ClashOfClans => _clashOfClans ??= new ClashOfClansRepository(Context);
 		private IReminderRepository             _reminders;
 		public  IReminderRepository             Reminders => _reminders ??= new ReminderRepository(Context);
 		private ISelfAssignedRolesRepository    _selfAssignedRoles;
