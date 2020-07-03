@@ -18,7 +18,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		public IActionResult Index() {
 			if(PermissionReadVerifications) {
 				using var uow = _db.UnitOfWork;
-				var verifications = uow.VerifiedUsers.GetVerifiedUsers(GuildId).Select(v => {
+				var verifications = uow.VerifiedUsers.GetVerifiedUsers(GuildId).ToList().Select(v => {
 					var user = Guild.GetUser(v.UserId);
 
 					return new Verification {

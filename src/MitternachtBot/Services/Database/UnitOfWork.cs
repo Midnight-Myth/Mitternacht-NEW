@@ -5,7 +5,7 @@ using Mitternacht.Services.Database.Repositories.Impl;
 
 namespace Mitternacht.Services.Database {
 	public class UnitOfWork : IUnitOfWork {
-		public NadekoContext Context { get; }
+		public MitternachtContext Context { get; }
 
 		private IQuoteRepository                _quotes;
 		public  IQuoteRepository                Quotes => _quotes ??= new QuoteRepository(Context);
@@ -52,7 +52,7 @@ namespace Mitternacht.Services.Database {
 		private ITeamUpdateRankRepository       _teamUpdateRank;
 		public  ITeamUpdateRankRepository       TeamUpdateRank => _teamUpdateRank ??= new TeamUpdateRankRepository(Context);
 
-		public UnitOfWork(NadekoContext context) {
+		public UnitOfWork(MitternachtContext context) {
 			Context = context;
 		}
 
