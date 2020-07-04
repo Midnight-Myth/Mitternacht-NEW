@@ -19,7 +19,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		public IActionResult Index() {
 			if(PermissionReadWarns) {
 				using var uow = _db.UnitOfWork;
-				var warns = uow.Warnings.GetForGuild(GuildId).Select((Func<Warning, Warn>)(w => {
+				var warns = uow.Warnings.GetForGuild(GuildId).ToList().Select((Func<Warning, Warn>)(w => {
 					var user = Guild.GetUser(w.UserId);
 
 					return new Warn {

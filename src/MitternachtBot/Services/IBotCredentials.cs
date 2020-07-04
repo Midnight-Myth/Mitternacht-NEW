@@ -7,7 +7,8 @@ namespace Mitternacht.Services {
 		string                Token              { get; }
 		ImmutableArray<ulong> OwnerIds           { get; }
 		string                DbConnectionString { get; }
-		
+		string                DbConnection       { get; }
+
 		string                GoogleApiKey       { get; }
 		string                MashapeKey         { get; }
 		string                LoLApiKey          { get; }

@@ -11,6 +11,7 @@ namespace Mitternacht.Services.Impl {
 		public ulong  ClientId                { get; set; } = 0;
 		public string Token                   { get; set; } = "";
 		public string DbConnectionString      { get; set; } = "Filename=./data/MitternachtBot.db";
+		public string DbConnection            { get; set; } = "Host=127.0.0.1;Port=5432;Database=mitternachtbot;Username=mitternachtbot;Password=mitternachtbotpassword;";
 
 		public ImmutableArray<ulong> OwnerIds { get; set; } = new ulong[1].ToImmutableArray();
 		

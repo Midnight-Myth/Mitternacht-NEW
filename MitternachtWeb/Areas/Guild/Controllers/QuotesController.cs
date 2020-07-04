@@ -17,7 +17,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		public IActionResult Index() {
 			if(PermissionReadQuotes) {
 				using var uow = _db.UnitOfWork;
-				var quotes = uow.Quotes.GetAllForGuild(GuildId).Select(q => {
+				var quotes = uow.Quotes.GetAllForGuild(GuildId).ToList().Select(q => {
 					var user = Guild.GetUser(q.AuthorId);
 
 					return new Quote {
