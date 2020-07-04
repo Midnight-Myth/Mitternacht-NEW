@@ -77,7 +77,7 @@ namespace Mitternacht.Services {
 
 			using var uow = _db.UnitOfWork;
 			uow.BotConfig.GetOrCreate().DefaultPrefix = prefix;
-			uow.Complete();
+			uow.SaveChanges();
 
 			_bcp.Reload();
 
@@ -93,7 +93,7 @@ namespace Mitternacht.Services {
 			using(var uow = _db.UnitOfWork) {
 				var gc = uow.GuildConfigs.For(guild.Id);
 				gc.Prefix = prefix;
-				uow.Complete();
+				uow.SaveChanges();
 			}
 
 			Prefixes.AddOrUpdate(guild.Id, prefix, (key, old) => prefix);

@@ -122,7 +122,7 @@ namespace Mitternacht.Modules.Level {
 			using var uow = _db.UnitOfWork;
 			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, user.ToString()).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -139,7 +139,7 @@ namespace Mitternacht.Modules.Level {
 			using var uow = _db.UnitOfWork;
 			uow.LevelModel.AddXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, userId.ToString()).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -151,7 +151,7 @@ namespace Mitternacht.Modules.Level {
 			using var uow = _db.UnitOfWork;
 			uow.LevelModel.SetXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", user.ToString(), xp).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -168,7 +168,7 @@ namespace Mitternacht.Modules.Level {
 			using var uow = _db.UnitOfWork;
 			uow.LevelModel.SetXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", userId, xp).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -201,7 +201,7 @@ namespace Mitternacht.Modules.Level {
 			else
 				await ReplyConfirmLocalized("ttxp_turned_other", user.ToString(), moneyToSpend, CurrencySign, xp)
 					.ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 	}
 }

@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Permissions {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterInvites = !gc.FilterInvites;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(enabled ? "invite_filter_server_on" : "invite_filter_server_off").ConfigureAwait(false);
 			}
@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "invite_filter_channel_on" : "invite_filter_channel_off").ConfigureAwait(false);
 			}
@@ -54,7 +54,7 @@ namespace Mitternacht.Modules.Permissions {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterWords = !gc.FilterWords;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(enabled ? "word_filter_server_on" : "word_filter_server_off").ConfigureAwait(false);
 			}
@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "word_filter_channel_on" : "word_filter_channel_off").ConfigureAwait(false);
 			}
@@ -93,7 +93,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "filter_word_add" : "filter_word_remove", Format.Code(word)).ConfigureAwait(false);
 			}
@@ -120,7 +120,7 @@ namespace Mitternacht.Modules.Permissions {
 				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterZalgo = !gc.FilterZalgo;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(enabled ? "zalgo_filter_server_on" : "zalgo_filter_server_off").ConfigureAwait(false);
 			}
@@ -137,7 +137,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "zalgo_filter_channel_on" : "zalgo_filter_channel_off").ConfigureAwait(false);
 			}

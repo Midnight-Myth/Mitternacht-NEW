@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Utility
                 {
                     uow.VoiceChannelStats.Reset(user.Id, user.GuildId);
                     await ConfirmLocalized("voicestats_reset", user.ToString()).ConfigureAwait(false);
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
             }
         }

@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Administration
                         id = gc.GameVoiceChannel = vch.Id;
                     }
 
-                    uow.Complete();
+                    uow.SaveChanges();
                 }
 
                 if (id == null)

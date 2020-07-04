@@ -127,7 +127,7 @@ namespace Mitternacht.Modules.Games
                         _games.GenerationChannels.TryRemove(channel.Id);
                         enabled = false;
                     }
-                    await uow.CompleteAsync();
+                    await uow.SaveChangesAsync();
                 }
                 if (enabled)
                 {

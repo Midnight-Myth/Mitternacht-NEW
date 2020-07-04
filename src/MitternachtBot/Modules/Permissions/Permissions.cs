@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Permissions {
 			using(var uow = _db.UnitOfWork) {
 				var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
 				config.VerbosePermissions = action.Value;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 				Service.UpdateCache(config);
 			}
 			if(action.Value) {
@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Permissions {
 					return;
 				}
 				config.PermissionRole = role.Name.Trim();
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 				Service.UpdateCache(config);
 			}
 
@@ -96,7 +96,7 @@ namespace Mitternacht.Modules.Permissions {
 					p = permsCol[index];
 					permsCol.RemoveAt(index);
 					uow.Context.Remove(p);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 					Service.UpdateCache(config);
 				}
 				await ReplyConfirmLocalized("removed", index + 1, Format.Code(p.GetCommand(Prefix, (SocketGuild)Context.Guild))).ConfigureAwait(false);
@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Permissions {
 
 						permsCol.RemoveAt(from);
 						permsCol.Insert(to, fromPerm);
-						await uow.CompleteAsync().ConfigureAwait(false);
+						await uow.SaveChangesAsync().ConfigureAwait(false);
 						Service.UpdateCache(config);
 					}
 					await ReplyConfirmLocalized("moved_permission",

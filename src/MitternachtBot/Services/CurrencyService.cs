@@ -37,7 +37,7 @@ namespace Mitternacht.Services
             using (uow = _db.UnitOfWork)
             {
                 var toReturn = InternalRemoveCurrency(authorId, reason, amount, uow);
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
                 return toReturn;
             }
         }
@@ -72,7 +72,7 @@ namespace Mitternacht.Services
                     uow.CurrencyTransactions.Add(transaction);
                 }
 
-                await uow.CompleteAsync();
+                await uow.SaveChangesAsync();
             }
         }
 
@@ -101,7 +101,7 @@ namespace Mitternacht.Services
                 {
                     uow.Currency.TryUpdateState(receiverId, amount);
                     uow.CurrencyTransactions.Add(transaction);
-                    await uow.CompleteAsync();
+                    await uow.SaveChangesAsync();
                 }
             else
             {

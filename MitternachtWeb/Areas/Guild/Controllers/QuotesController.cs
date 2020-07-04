@@ -44,7 +44,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 				if(quote != null && quote.GuildId == GuildId) {
 					uow.Quotes.Remove(quote);
-					uow.Complete();
+					uow.SaveChanges();
 
 					return RedirectToAction("Index");
 				} else {

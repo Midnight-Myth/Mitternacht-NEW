@@ -65,7 +65,7 @@ namespace Mitternacht.Modules.Administration
 
                     //NOW save it
                     _log.Warn("Writing to disc");
-                    uow.Complete();
+                    uow.SaveChanges();
                     botConfig.MigrationVersion = 1;
                 }
             }
@@ -393,7 +393,7 @@ namespace Mitternacht.Modules.Administration
                         counter++;
                         uow.LevelModel.Update(lm);
                     }
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
                 await ConfirmLocalized("replacedefaultlevelmodelguild", counter).ConfigureAwait(false);
             }
@@ -413,7 +413,7 @@ namespace Mitternacht.Modules.Administration
                         gc.MessageXpCharCountMax = 25;
                     });
                     uow.GuildConfigs.UpdateRange(gcs.ToArray());
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
                 await ConfirmLocalized("setguildconfigleveldefaults", count).ConfigureAwait(false);
             }

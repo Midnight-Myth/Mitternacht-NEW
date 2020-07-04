@@ -56,7 +56,7 @@ namespace Mitternacht.Modules.Administration
                     {
                         var conf = uow.GuildConfigs.For(guild.Id);
                         isEnabled = conf.VoicePlusTextEnabled = !conf.VoicePlusTextEnabled;
-                        await uow.CompleteAsync().ConfigureAwait(false);
+                        await uow.SaveChangesAsync().ConfigureAwait(false);
                     }
                     if (!isEnabled)
                     {

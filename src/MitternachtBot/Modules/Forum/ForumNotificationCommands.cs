@@ -44,7 +44,7 @@ namespace Mitternacht.Modules.Forum {
 					}
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 		}
 	}

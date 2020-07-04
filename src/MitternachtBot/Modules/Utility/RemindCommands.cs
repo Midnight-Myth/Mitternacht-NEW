@@ -79,7 +79,7 @@ namespace Mitternacht.Modules.Utility {
 
 					using var uow = _db.UnitOfWork;
 					uow.Reminders.Add(rem);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					var gTime = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(Context.Guild.Id));
 					_ = Task.Run(() => Service.StartReminder(rem));
@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Utility {
 
 				using var uow = _db.UnitOfWork;
 				uow.BotConfig.GetOrCreate().RemindMessageFormat = arg.Trim();
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized("remind_template").ConfigureAwait(false);
 			}

@@ -54,7 +54,7 @@ namespace Mitternacht.Modules.Administration
                         {
                             var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos));
                             conf.VcRoleInfos.RemoveWhere(x => x.VoiceChannelId == vc.Id);
-                            uow.Complete();
+                            uow.SaveChanges();
                         }
                     }
                 }
@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Administration
                             VoiceChannelId = vc.Id,
                             RoleId = role.Id,
                         }); // add new one
-                        uow.Complete();
+                        uow.SaveChanges();
                     }
                     await ReplyConfirmLocalized("vcrole_added", Format.Bold(vc.Name), Format.Bold(role.Name)).ConfigureAwait(false);
                 }

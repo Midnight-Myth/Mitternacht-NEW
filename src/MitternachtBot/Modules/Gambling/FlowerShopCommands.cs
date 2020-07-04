@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					if(await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price)) {
 						uow.Context.Set<ShopEntryItem>().Remove(item);
-						await uow.CompleteAsync().ConfigureAwait(false);
+						await uow.SaveChangesAsync().ConfigureAwait(false);
 						try {
 							await (await Context.User.GetOrCreateDMChannelAsync())
 								.EmbedAsync(new EmbedBuilder().WithOkColor()
@@ -128,7 +128,7 @@ namespace Mitternacht.Modules.Gambling {
 									GetProfitAmount(entry.Price)).ConfigureAwait(false);
 						} catch {
 							uow.Context.Set<ShopEntryItem>().Add(item);
-							await uow.CompleteAsync().ConfigureAwait(false);
+							await uow.SaveChangesAsync().ConfigureAwait(false);
 
 							await _cs.AddAsync(Context.User.Id, $"Shop error refund - {entry.Name}", entry.Price, uow).ConfigureAwait(false);
 							await ReplyErrorLocalized("shop_buy_error").ConfigureAwait(false);
@@ -163,7 +163,7 @@ namespace Mitternacht.Modules.Gambling {
 					entry
 				};
 				uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await Context.Channel.EmbedAsync(EntryToEmbed(entry).WithTitle(GetText("shop_item_add")));
 			}
@@ -185,7 +185,7 @@ namespace Mitternacht.Modules.Gambling {
 					entry
 				};
 				uow.GuildConfigs.For(Context.Guild.Id).ShopEntries = entries;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await Context.Channel.EmbedAsync(EntryToEmbed(entry).WithTitle(GetText("shop_item_add")));
 			}
@@ -208,7 +208,7 @@ namespace Mitternacht.Modules.Gambling {
 				if(entry != null) {
 					if(entry.Type == ShopEntryType.List) {
 						if(entry.Items.Add(item)) {
-							await uow.CompleteAsync().ConfigureAwait(false);
+							await uow.SaveChangesAsync().ConfigureAwait(false);
 
 							await ReplyConfirmLocalized("shop_list_item_added").ConfigureAwait(false);
 						} else {
@@ -239,7 +239,7 @@ namespace Mitternacht.Modules.Gambling {
 					entries.Remove(entryToRemove);
 
 					gc.ShopEntries = entries;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await Context.Channel.EmbedAsync(EntryToEmbed(entryToRemove).WithTitle(GetText("shop_item_rm")));
 				} else {

@@ -29,7 +29,7 @@ namespace Mitternacht.Modules.Administration {
 				using(var uow = _db.UnitOfWork) {
 					var config = uow.GuildConfigs.For(Context.Guild.Id);
 					newval = config.AutoDeleteSelfAssignedRoleMessages = !config.AutoDeleteSelfAssignedRoleMessages;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 				}
 
 				await Context.Channel.SendConfirmAsync($"ℹ️ Automatic deleting of `iam` and `iamn` confirmations has been {(newval ? "**enabled**" : "**disabled**")}.")
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Administration {
 							RoleId = role.Id,
 							GuildId = role.Guild.Id
 						});
-						await uow.CompleteAsync();
+						await uow.SaveChangesAsync();
 						msg = GetText("role_added", Format.Bold(role.Name));
 					}
 				}
@@ -79,7 +79,7 @@ namespace Mitternacht.Modules.Administration {
 				bool success;
 				using(var uow = _db.UnitOfWork) {
 					success = uow.SelfAssignedRoles.DeleteByGuildAndRoleId(role.Guild.Id, role.Id);
-					await uow.CompleteAsync();
+					await uow.SaveChangesAsync();
 				}
 				if(!success) {
 					await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
@@ -102,7 +102,7 @@ namespace Mitternacht.Modules.Administration {
 							   select role).ToList();
 
 						uow.SelfAssignedRoles.RemoveRange(roleModels.Where(rm => rms.All(r => r.Id != rm.RoleId)).ToArray());
-						await uow.CompleteAsync();
+						await uow.SaveChangesAsync();
 					}
 					await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithTitle(GetText("self_assign_list", rms.Count)).WithDescription(rms.Aggregate("", (s, r) => s + Format.Bold(r.Name) + ", ", s => s.Substring(0, s.Length - 2))).WithOkColor().Build());
 					return;
@@ -125,7 +125,7 @@ namespace Mitternacht.Modules.Administration {
 						}
 					}
 					roles.AddRange(toRemove.Select(role => GetText("role_clean", role.RoleId)));
-					await uow.CompleteAsync();
+					await uow.SaveChangesAsync();
 				}
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, curPage => new EmbedBuilder()
@@ -143,7 +143,7 @@ namespace Mitternacht.Modules.Administration {
 					var config = uow.GuildConfigs.For(Context.Guild.Id);
 
 					areExclusive = config.ExclusiveSelfAssignedRoles = !config.ExclusiveSelfAssignedRoles;
-					await uow.CompleteAsync();
+					await uow.SaveChangesAsync();
 				}
 				if(areExclusive)
 					await ReplyConfirmLocalized("self_assign_excl").ConfigureAwait(false);

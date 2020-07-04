@@ -55,7 +55,7 @@ namespace Mitternacht.Modules.Administration {
                 using (var uow = _db.UnitOfWork)
                 {
                     uow.BotConfig.GetOrCreate().StartupCommands.Add(cmd);
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
@@ -136,7 +136,7 @@ namespace Mitternacht.Modules.Administration {
                     if (cmd != null)
                     {
                         cmds.Remove(cmd);
-                        await uow.CompleteAsync().ConfigureAwait(false);
+                        await uow.SaveChangesAsync().ConfigureAwait(false);
                     }
                 }
 
@@ -154,7 +154,7 @@ namespace Mitternacht.Modules.Administration {
                 using (var uow = _db.UnitOfWork)
                 {
                     uow.BotConfig.GetOrCreate().StartupCommands.Clear();
-                    uow.Complete();
+                    uow.SaveChanges();
                 }
 
                 await ReplyConfirmLocalized("startcmds_cleared").ConfigureAwait(false);
@@ -168,7 +168,7 @@ namespace Mitternacht.Modules.Administration {
                 {
                     var config = uow.BotConfig.GetOrCreate();
                     config.ForwardMessages = !config.ForwardMessages;
-                    uow.Complete();
+                    uow.SaveChanges();
                 }
                 _bc.Reload();
                 
@@ -187,7 +187,7 @@ namespace Mitternacht.Modules.Administration {
                     var config = uow.BotConfig.GetOrCreate();
                     lock (Locker)
                         config.ForwardToAllOwners = !config.ForwardToAllOwners;
-                    uow.Complete();
+                    uow.SaveChanges();
                 }
                 _bc.Reload();
 

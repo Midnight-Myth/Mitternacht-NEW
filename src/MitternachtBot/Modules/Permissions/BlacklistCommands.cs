@@ -57,7 +57,7 @@ namespace Mitternacht.Modules.Permissions {
 				} else {
 					uow.BotConfig.GetOrCreate().Blacklist.RemoveWhere(bi => bi.ItemId == id && bi.Type == type);
 				}
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(action == AddRemove.Add ? "blacklisted" : "unblacklisted", Format.Code(type.ToString()), Format.Code(id.ToString())).ConfigureAwait(false);
 			}

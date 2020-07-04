@@ -344,7 +344,7 @@ namespace Mitternacht.Modules.Verification {
 				gc.VerificationPasswordChannelId = channel.Id;
 
 				uow.GuildConfigs.Update(gc);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 				await ConfirmLocalized("passwordchannel_new", oldPasswordChannelId.HasValue ? MentionUtils.MentionChannel(oldPasswordChannelId.Value) : "null", channel.Mention).ConfigureAwait(false);
 			}
 		}

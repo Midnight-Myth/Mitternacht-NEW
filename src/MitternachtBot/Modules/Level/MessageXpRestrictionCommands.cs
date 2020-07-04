@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Level {
 			public async Task MsgXpRestrictionAdd(ITextChannel channel) {
 				using var uow = _db.UnitOfWork;
 				var success = uow.MessageXpBlacklist.CreateRestriction(channel);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				if(success)
 					await ConfirmLocalized("msgxpr_add_success", channel.Mention).ConfigureAwait(false);
@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Level {
 			public async Task MsgXpRestrictionRemove(ITextChannel channel) {
 				using var uow = _db.UnitOfWork;
 				var success = uow.MessageXpBlacklist.RemoveRestriction(channel);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				if(success)
 					await ConfirmLocalized("msgxpr_remove_success", channel.Mention).ConfigureAwait(false);
@@ -69,7 +69,7 @@ namespace Mitternacht.Modules.Level {
 						uow.MessageXpBlacklist.RemoveRestriction(Context.Guild.Id, cid);
 					}
 				}
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 		}
 	}

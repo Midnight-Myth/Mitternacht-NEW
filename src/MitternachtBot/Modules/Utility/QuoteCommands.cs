@@ -140,7 +140,7 @@ namespace Mitternacht.Modules.Utility {
 						Keyword = keyword.SanitizeMentions(),
 						Text = text
 					});
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 				}
 				await ReplyConfirmLocalized("quote_added").ConfigureAwait(false);
 			}
@@ -157,7 +157,7 @@ namespace Mitternacht.Modules.Utility {
 					await ErrorLocalized("quotes_remove_none").ConfigureAwait(false);
 				} else {
 					uow.Quotes.Remove(q);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 					await ConfirmLocalized("quote_deleted", id).ConfigureAwait(false);
 				}
 			}
@@ -171,7 +171,7 @@ namespace Mitternacht.Modules.Utility {
 
 				using(var uow = _db.UnitOfWork) {
 					uow.Quotes.RemoveAllByKeyword(Context.Guild.Id, keyword);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 				}
 
 				await ReplyConfirmLocalized("quotes_deleted", Format.Bold(keyword.SanitizeMentions())).ConfigureAwait(false);

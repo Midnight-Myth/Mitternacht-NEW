@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Forum {
 							await ReplyConfirmLocalized("teamupdate_prefix_changed", tump, prefix).ConfigureAwait(false);
 					}
 				}
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Forum {
 					}
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -90,7 +90,7 @@ namespace Mitternacht.Modules.Forum {
 					await ReplyConfirmLocalized("teamupdate_rank_added", rank).ConfigureAwait(false);
 				else
 					await ReplyErrorLocalized("teamupdate_rank_already_added", rank).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Forum {
 					await ReplyConfirmLocalized("teamupdate_rank_removed", rank).ConfigureAwait(false);
 				else
 					await ReplyErrorLocalized("teamupdate_rank_not_existing", rank).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

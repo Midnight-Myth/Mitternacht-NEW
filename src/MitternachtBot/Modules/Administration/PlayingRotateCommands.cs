@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Administration
                     var config = uow.BotConfig.GetOrCreate();
 
                     enabled = config.RotatingStatuses = !config.RotatingStatuses;
-                    uow.Complete();
+                    uow.SaveChanges();
                 }
                 if (enabled)
                     await ReplyConfirmLocalized("ropl_enabled").ConfigureAwait(false);
@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Administration
                     var config = uow.BotConfig.GetOrCreate();
                     var toAdd = new PlayingStatus { Status = status };
                     config.RotatingStatusMessages.Add(toAdd);
-                    await uow.CompleteAsync();
+                    await uow.SaveChangesAsync();
                 }
 
                 await ReplyConfirmLocalized("ropl_added").ConfigureAwait(false);
@@ -85,7 +85,7 @@ namespace Mitternacht.Modules.Administration
                         return;
                     msg = config.RotatingStatusMessages[index].Status;
                     config.RotatingStatusMessages.RemoveAt(index);
-                    await uow.CompleteAsync();
+                    await uow.SaveChangesAsync();
                 }
                 await ReplyConfirmLocalized("reprm", msg).ConfigureAwait(false);
             }

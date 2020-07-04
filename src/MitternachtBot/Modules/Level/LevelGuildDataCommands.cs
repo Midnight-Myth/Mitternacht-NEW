@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Level
                     }
 
                     uow.GuildConfigs.Update(gc);
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 var round = data == Common.LevelGuildData.MessageXpCharCountMax ||

@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Permissions {
 						};
 						gc.CommandCooldowns.Add(cc);
 					}
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					if(secs == 0) {
 						var activeCds = Service.ActiveCooldowns.GetOrAdd(Context.Guild.Id, new ConcurrentHashSet<ActiveCooldown>());

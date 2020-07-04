@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.CustomReactions {
 			using var uow = _db.UnitOfWork;
 			uow.CustomReactions.Add(cr);
 
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			var eb = new EmbedBuilder().WithOkColor()
 				.WithTitle(GetText("new_cust_react"))
@@ -170,7 +170,7 @@ namespace Mitternacht.Modules.CustomReactions {
 			var toDelete = uow.CustomReactions.Get(id);
 			if(toDelete != null && ((toDelete.GuildId == null || toDelete.GuildId == 0) && Context.Guild == null || toDelete.GuildId != null && toDelete.GuildId != 0 && Context.Guild.Id == toDelete.GuildId)) {
 				uow.CustomReactions.Remove(toDelete);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
 					.WithTitle(GetText("deleted"))
@@ -197,7 +197,7 @@ namespace Mitternacht.Modules.CustomReactions {
 				if(reaction != null) {
 					using var uow = _db.UnitOfWork;
 					uow.CustomReactions.Get(id).ContainsAnywhere = !reaction.ContainsAnywhere;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await ReplyConfirmLocalized(!reaction.ContainsAnywhere ? "crca_enabled" : "crca_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 				} else {
@@ -223,7 +223,7 @@ namespace Mitternacht.Modules.CustomReactions {
 				if(reaction != null) {
 					using var uow = _db.UnitOfWork;
 					uow.CustomReactions.Get(id).DmResponse = !reaction.DmResponse;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await ReplyConfirmLocalized(!reaction.DmResponse ? "crdm_enabled" : "crdm_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 				} else {
@@ -249,7 +249,7 @@ namespace Mitternacht.Modules.CustomReactions {
 				if(reaction != null) {
 					using var uow = _db.UnitOfWork;
 					uow.CustomReactions.Get(id).AutoDeleteTrigger = !reaction.AutoDeleteTrigger;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await ReplyConfirmLocalized(!reaction.AutoDeleteTrigger ? "crad_enabled" : "crad_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 				} else {

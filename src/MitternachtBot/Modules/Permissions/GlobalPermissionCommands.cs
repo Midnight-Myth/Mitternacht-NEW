@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Permissions {
 						bc.BlockedModules.Add(new BlockedCmdOrMdl {
 							Name = moduleName,
 						});
-						uow.Complete();
+						uow.SaveChanges();
 					}
 					await ReplyConfirmLocalized("gmod_add", Format.Bold(module.Name)).ConfigureAwait(false);
 					return;
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Permissions {
 					using(var uow = _db.UnitOfWork) {
 						var bc = uow.BotConfig.GetOrCreate();
 						bc.BlockedModules.RemoveWhere(x => x.Name == moduleName);
-						uow.Complete();
+						uow.SaveChanges();
 					}
 					await ReplyConfirmLocalized("gmod_remove", Format.Bold(module.Name)).ConfigureAwait(false);
 					return;
@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Permissions {
 						bc.BlockedCommands.Add(new BlockedCmdOrMdl {
 							Name = commandName,
 						});
-						uow.Complete();
+						uow.SaveChanges();
 					}
 					await ReplyConfirmLocalized("gcmd_add", Format.Bold(cmd.Name)).ConfigureAwait(false);
 					return;
@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Permissions {
 					using(var uow = _db.UnitOfWork) {
 						var bc = uow.BotConfig.GetOrCreate();
 						bc.BlockedCommands.RemoveWhere(x => x.Name == commandName);
-						uow.Complete();
+						uow.SaveChanges();
 					}
 					await ReplyConfirmLocalized("gcmd_remove", Format.Bold(cmd.Name)).ConfigureAwait(false);
 					return;

@@ -67,7 +67,7 @@ namespace MitternachtWeb.Controllers {
 					bc.DmCommandsOwnerOnly        = botConfig.DmCommandsOwnerOnly;
 
 					uow.BotConfig.Update(bc);
-					await uow.CompleteAsync();
+					await uow.SaveChangesAsync();
 
 					_bcp.Reload();
 

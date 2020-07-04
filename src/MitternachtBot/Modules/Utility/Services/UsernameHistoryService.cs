@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Utility.Services
             {
                 usernameupdates += usernames.Count(u => uow.UsernameHistory.AddUsername(u.Id, u.Username, u.DiscriminatorValue));
                 nickupdates += usernicks.Sum(nicks => nicks.Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
             }
 
             var ts = DateTime.UtcNow - time1;
@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Utility.Services
                     if (IsGuildLoggingUsernames())
                         uow.UsernameHistory.AddUsername(user.Id, user.Username, user.DiscriminatorValue);
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
             });
             return Task.CompletedTask;
@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Utility.Services
                     if (IsGuildLoggingUsernames())
                         uow.UsernameHistory.AddUsername(a.Id, a.Username, a.DiscriminatorValue);
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
             });
             return Task.CompletedTask;

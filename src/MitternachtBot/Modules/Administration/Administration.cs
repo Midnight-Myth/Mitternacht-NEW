@@ -29,7 +29,7 @@ namespace Mitternacht.Modules.Administration {
 			var conf = uow.GuildConfigs.For(Context.Guild.Id);
 			var enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
 
-			await uow.CompleteAsync();
+			await uow.SaveChangesAsync();
 
 			if(enabled) {
 				Service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
@@ -335,7 +335,7 @@ namespace Mitternacht.Modules.Administration {
 		public async Task Donadd(IUser donator, int amount) {
 			using var uow = _db.UnitOfWork;
 			var don = uow.Donators.AddOrUpdateDonator(donator.Id, donator.Username, amount);
-			await uow.CompleteAsync();
+			await uow.SaveChangesAsync();
 			await ReplyConfirmLocalized("donadd", don.Amount).ConfigureAwait(false);
 		}
 

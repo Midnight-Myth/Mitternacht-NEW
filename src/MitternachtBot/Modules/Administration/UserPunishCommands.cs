@@ -143,7 +143,7 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Warnclear(ulong userId) {
 				using(var uow = _db.UnitOfWork) {
 					await uow.Warnings.ForgiveAll(Context.Guild.Id, userId, Context.User.ToString()).ConfigureAwait(false);
-					uow.Complete();
+					uow.SaveChanges();
 				}
 
 				await ReplyConfirmLocalized("warnings_cleared", Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
@@ -162,7 +162,7 @@ namespace Mitternacht.Modules.Administration {
 
 				uow.Warnings.Remove(warning);
 				await ReplyConfirmLocalized("warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -187,7 +187,7 @@ namespace Mitternacht.Modules.Administration {
 					embed.WithAuthor(user);
 				if(w.DateAdded != null) embed.WithTimestamp(w.DateAdded.Value);
 				await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -214,7 +214,7 @@ namespace Mitternacht.Modules.Administration {
 				var oldreason = w.Reason;
 				w.Reason = reason;
 				uow.Warnings.Update(w);
-				await uow.CompleteAsync();
+				await uow.SaveChangesAsync();
 				await ReplyConfirmLocalized("warn_edit", id, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
 			}
 
@@ -230,7 +230,7 @@ namespace Mitternacht.Modules.Administration {
 					ps.RemoveAll(x => x.Count == number);
 
 					ps.Add(new WarningPunishment {Count = number, Punishment = punish, Time = time});
-					uow.Complete();
+					uow.SaveChanges();
 				}
 
 				await ReplyConfirmLocalized("warn_punish_set", Format.Bold(punish.ToString()), Format.Bold(number.ToString())).ConfigureAwait(false);
@@ -248,7 +248,7 @@ namespace Mitternacht.Modules.Administration {
 
 					if(p != null) {
 						uow.Context.Remove(p);
-						uow.Complete();
+						uow.SaveChanges();
 					}
 				}
 

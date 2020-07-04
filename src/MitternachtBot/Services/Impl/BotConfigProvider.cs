@@ -121,7 +121,7 @@ namespace Mitternacht.Services.Impl {
 			}
 
 			BotConfig = bc;
-			uow.Complete();
+			uow.SaveChanges();
 
 			BotConfigChanged?.Invoke(BotConfig);
 			

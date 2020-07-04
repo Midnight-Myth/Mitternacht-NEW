@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Level
                 using (var uow = _db.UnitOfWork)
                 {
                     uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 await ConfirmLocalized("rlb_set", role.Name, minlevel);
@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Level
                 using (var uow = _db.UnitOfWork)
                 {
                     wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 if (wasRemoved) await ConfirmLocalized("rlb_removed", role.Name).ConfigureAwait(false);

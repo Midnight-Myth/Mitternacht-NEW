@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Utility {
 					var bc      = uow.BotConfig.GetOrCreate();
 					var logging = bc.LogUsernames = !bc.LogUsernames;
 					uow.BotConfig.Update(bc);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await ConfirmLocalized("unh_log_global", GetActiveText(logging)).ConfigureAwait(false);
 				}
@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Utility {
 					}
 
 					gc.LogUsernameHistory = toggle;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await Context.Channel.SendConfirmAsync(GetText("unh_log_guild", guild.Name, GetActiveText(loggingBefore), GetActiveText(toggle)).Trim() + " " + GetText("unh_log_global_append", GetActiveText(globalLogging)).Trim()).ConfigureAwait(false);
 				}

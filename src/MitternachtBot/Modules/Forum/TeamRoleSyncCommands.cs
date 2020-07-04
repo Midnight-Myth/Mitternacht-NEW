@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.Forum {
 				var oldRole = oldRoleId == null ? null : Context.Guild.GetRole(oldRoleId.Value);
 				gc.GommeTeamMemberRoleId = role?.Id;
 				uow.GuildConfigs.Update(gc);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 				await ReplyConfirmLocalized("gtr_set", Format.Bold(oldRole?.Name ?? oldRoleId?.ToString() ?? GetText("gtr_not_set")), Format.Bold(role?.Name ?? GetText("gtr_not_set"))).ConfigureAwait(false);
 			}
 
@@ -65,7 +65,7 @@ namespace Mitternacht.Modules.Forum {
 				var oldRole = oldRoleId == null ? null : Context.Guild.GetRole(oldRoleId.Value);
 				gc.VipRoleId = role?.Id;
 				uow.GuildConfigs.Update(gc);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 				await ReplyConfirmLocalized("viprole_set", Format.Bold(oldRole?.Name ?? oldRoleId?.ToString() ?? GetText("viprole_not_set")), Format.Bold(role?.Name ?? GetText("viprole_not_set"))).ConfigureAwait(false);
 			}
 

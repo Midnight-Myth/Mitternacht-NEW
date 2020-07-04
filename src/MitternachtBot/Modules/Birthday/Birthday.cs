@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Birthday {
 			}
 
 			uow.BirthDates.SetBirthDate(Context.User.Id, bd);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			await ReplyConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
 
@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdaySet(IBirthDate bd, IUser user) {
 			using var uow = _db.UnitOfWork;
 			uow.BirthDates.SetBirthDate(user.Id, bd);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			if(user == Context.User)
 				await ConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.Birthday {
 				await ConfirmLocalized("removed", user.ToString()).ConfigureAwait(false);
 			else
 				await ErrorLocalized("remove_failed", user.ToString()).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -171,7 +171,7 @@ namespace Mitternacht.Modules.Birthday {
 			var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
 			gc.BirthdayRoleId = role.Id;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), role.Name).ConfigureAwait(false);
 		}
 
@@ -185,7 +185,7 @@ namespace Mitternacht.Modules.Birthday {
 			var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
 			gc.BirthdayRoleId = null;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
 		}
 
@@ -214,7 +214,7 @@ namespace Mitternacht.Modules.Birthday {
 			var oldch = oldChId.HasValue ? await Context.Guild.GetTextChannelAsync(oldChId.Value).ConfigureAwait(false) : null;
 			gc.BirthdayMessageChannelId = channel.Id;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await ConfirmLocalized("msgch_set", oldch?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), channel.Name).ConfigureAwait(false);
 		}
 
@@ -228,7 +228,7 @@ namespace Mitternacht.Modules.Birthday {
 			var oldCh = oldChId.HasValue ? await Context.Guild.GetTextChannelAsync(oldChId.Value).ConfigureAwait(false) : null;
 			gc.BirthdayMessageChannelId = null;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await ConfirmLocalized("msgch_set", oldCh?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
 		}
 
@@ -239,7 +239,7 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdayMessage() {
 			using var uow = _db.UnitOfWork;
 			await ConfirmLocalized("msg", uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessage).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -252,7 +252,7 @@ namespace Mitternacht.Modules.Birthday {
 			var oldmsg = gc.BirthdayMessage;
 			gc.BirthdayMessage = msg;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await ConfirmLocalized("msg_changed", oldmsg ?? "null", msg);
 		}
 
@@ -269,7 +269,7 @@ namespace Mitternacht.Modules.Birthday {
 
 			gc.BirthdaysEnabled = enable;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await ConfirmLocalized("enable", GetEnabledText(enable)).ConfigureAwait(false);
 		}
 
@@ -288,7 +288,7 @@ namespace Mitternacht.Modules.Birthday {
 			uow.GuildConfigs.Update(gc);
 			await ReplyConfirmLocalized("money_set", _botConf.BotConfig.CurrencySign, oldMoney, money).ConfigureAwait(false);
 
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -319,7 +319,7 @@ namespace Mitternacht.Modules.Birthday {
 				else {
 					bdm.BirthdayMessageEnabled = enable.Value;
 					uow.BirthDates.Update(bdm);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 					await ReplyConfirmLocalized($"messageevent_changed", GetEnabledText(enable.Value)).ConfigureAwait(false);
 				}
 			}

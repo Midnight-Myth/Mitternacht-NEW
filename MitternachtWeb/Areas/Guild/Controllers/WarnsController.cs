@@ -46,7 +46,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				using var uow = _db.UnitOfWork;
 				var warning = uow.Warnings.Get(id);
 				if(uow.Warnings.ToggleForgiven(GuildId, id, DiscordUser.User.ToString())) {
-					uow.Complete();
+					uow.SaveChanges();
 
 					return RedirectToAction("Index");
 				} else {

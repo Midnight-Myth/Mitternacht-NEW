@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Utility
                             Trigger = trigger
                         };
                         config.CommandAliases.RemoveWhere(x => x.Trigger == trigger);
-                        uow.Complete();
+                        uow.SaveChanges();
                     }
 
                     await ReplyConfirmLocalized("alias_removed", Format.Code(trigger)).ConfigureAwait(false);
@@ -74,7 +74,7 @@ namespace Mitternacht.Modules.Utility
                             Mapping = mapping,
                             Trigger = trigger
                         });
-                        uow.Complete();
+                        uow.SaveChanges();
                     }
                     return new ConcurrentDictionary<string, string>(new Dictionary<string, string>() {
                         {trigger.Trim().ToLowerInvariant(), mapping.ToLowerInvariant() },
@@ -91,7 +91,7 @@ namespace Mitternacht.Modules.Utility
                         };
                         config.CommandAliases.RemoveWhere(x => x.Trigger == trigger);
                         config.CommandAliases.Add(toAdd);
-                        uow.Complete();
+                        uow.SaveChanges();
                     }
                     map.AddOrUpdate(trigger, mapping, (key, old) => mapping);
                     return map;

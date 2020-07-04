@@ -59,7 +59,7 @@ namespace Mitternacht.Modules.Administration
                     logSetting.UserMutedId =
                     logSetting.LogVoicePresenceTTSId = (action.Value ? channel.Id : (ulong?)null);
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
                 if (action.Value)
                     await ReplyConfirmLocalized("log_all").ConfigureAwait(false);
@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Administration
                         logSetting.IgnoredChannels.Add(toAdd);
                         config.LogSetting.IgnoredChannels.Add(toAdd);
                     }
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 if (removed == 0)
@@ -174,7 +174,7 @@ namespace Mitternacht.Modules.Administration
 							break;
 					}
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 if (channelId != null)

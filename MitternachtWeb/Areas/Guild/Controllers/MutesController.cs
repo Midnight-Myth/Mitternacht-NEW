@@ -58,7 +58,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					var gc = uow.GuildConfigs.For(GuildId, set => set.Include(g => g.MutedUsers).Include(g => g.UnmuteTimers));
 					gc.MutedUsers.RemoveWhere(mu => mu.UserId == id);
 					gc.UnmuteTimers.RemoveWhere(ut => ut.UserId == id);
-					await uow.CompleteAsync();
+					await uow.SaveChangesAsync();
 
 					_muteService.StopUnmuteTimer(GuildId, id);
 				}

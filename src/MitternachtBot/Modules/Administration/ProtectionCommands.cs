@@ -56,7 +56,7 @@ namespace Mitternacht.Modules.Administration {
 
 				if(Service.AntiRaidGuilds.TryRemove(Context.Guild.Id, out _)) {
 					gc.AntiRaidSetting = null;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("prot_disable", "Anti-Raid").ConfigureAwait(false);
 					return;
@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.Administration {
 				Service.AntiRaidGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) => stats);
 
 				gc.AntiRaidSetting = stats.AntiRaidSettings;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiRaidString(stats)}", GetText("prot_enable", "Anti-Raid")).ConfigureAwait(false);
 			}
@@ -99,7 +99,7 @@ namespace Mitternacht.Modules.Administration {
 					var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
 
 					gc.AntiSpamSetting = null;
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 					await ReplyConfirmLocalized("prot_disable", "Anti-Spam").ConfigureAwait(false);
 					return;
 				}
@@ -145,7 +145,7 @@ namespace Mitternacht.Modules.Administration {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting));
 
 				gc.AntiSpamSetting = stats.AntiSpamSettings;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiSpamString(stats)}", GetText("prot_enable", "Anti-Spam")).ConfigureAwait(false);
 			}
@@ -179,7 +179,7 @@ namespace Mitternacht.Modules.Administration {
 					added = false;
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 
 				if(added)
 					await ReplyConfirmLocalized("spam_ignore", "Anti-Spam").ConfigureAwait(false);

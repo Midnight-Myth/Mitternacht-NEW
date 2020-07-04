@@ -114,7 +114,7 @@ namespace Mitternacht.Modules.Administration
                     if (!(removed = usrs.Remove(siu)))
                         usrs.Add(siu);
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 Service.IgnoredUsers.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(usrs.Select(x => x.UserId)), (key, old) => new HashSet<ulong>(usrs.Select(x => x.UserId)));
@@ -146,7 +146,7 @@ namespace Mitternacht.Modules.Administration
                     if (!(removed = roles.Remove(sir)))
                         roles.Add(sir);
 
-                    await uow.CompleteAsync().ConfigureAwait(false);
+                    await uow.SaveChangesAsync().ConfigureAwait(false);
                 }
 
                 Service.IgnoredRoles.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(roles.Select(x => x.RoleId)), (key, old) => new HashSet<ulong>(roles.Select(x => x.RoleId)));
