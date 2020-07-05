@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,8 +27,7 @@ namespace Mitternacht {
 		public DiscordSocketClient Client         { get; }
 		public CommandService      CommandService { get; }
 
-		private readonly DbService                   _db;
-		public           ImmutableArray<GuildConfig> AllGuildConfigs { get; private set; }
+		private readonly DbService _db;
 
 		public static Color OkColor    { get; private set; }
 		public static Color ErrorColor { get; private set; }
@@ -111,11 +107,8 @@ namespace Mitternacht {
 		}
 
 		private void AddServices() {
-			var startingGuildIdList = Client.Guilds.Select(x => x.Id).ToList();
-
 			// This UnitOfWork will be used for building Modules in Discord.Commands.CommandService. Do not use it in anything else.
 			using var uow = _db.UnitOfWork;
-			AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
 
 			IBotConfigProvider botConfigProvider = new BotConfigProvider(_db);
 			botConfigProvider.BotConfigChanged  += OnBotConfigChanged;
@@ -126,7 +119,6 @@ namespace Mitternacht {
 						.AddManual(Client)
 						.AddManual(CommandService)
 						.AddManual(botConfigProvider)
-						.AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
 						.AddManual(this)
 						.AddManual(uow)
 						.AddManual(new MojangApi())
