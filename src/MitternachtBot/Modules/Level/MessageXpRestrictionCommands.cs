@@ -5,24 +5,24 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Level {
 	public partial class Level {
 		[Group]
 		public class MessageXpRestrictionCommands : MitternachtSubmodule {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public MessageXpRestrictionCommands(DbService db) {
-				_db = db;
+			public MessageXpRestrictionCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task MsgXpRestrictionAdd(ITextChannel channel) {
-				using var uow = _db.UnitOfWork;
 				var success = uow.MessageXpBlacklist.CreateRestriction(channel);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(success)
 					await ConfirmLocalized("msgxpr_add_success", channel.Mention).ConfigureAwait(false);
@@ -34,9 +34,8 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task MsgXpRestrictionRemove(ITextChannel channel) {
-				using var uow = _db.UnitOfWork;
 				var success = uow.MessageXpBlacklist.RemoveRestriction(channel);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(success)
 					await ConfirmLocalized("msgxpr_remove_success", channel.Mention).ConfigureAwait(false);
@@ -47,7 +46,6 @@ namespace Mitternacht.Modules.Level {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task MsgXpRestrictions() {
-				using var uow = _db.UnitOfWork;
 				var blacklistedChannelsString = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id).Aggregate("", (s, channelId) => $"{s}{MentionUtils.MentionChannel(channelId)}, ", s => s[0..^2]);
 
 				if(blacklistedChannelsString.Length > 0) {
@@ -61,7 +59,6 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.BanMembers)]
 			public async Task MsgXpRestrictionsClean() {
-				using var uow = _db.UnitOfWork;
 				var channelIds = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id);
 				foreach(var cid in channelIds) {
 					var channel = await Context.Guild.GetChannelAsync(cid).ConfigureAwait(false);
@@ -69,7 +66,7 @@ namespace Mitternacht.Modules.Level {
 						uow.MessageXpBlacklist.RemoveRestriction(Context.Guild.Id, cid);
 					}
 				}
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 		}
 	}

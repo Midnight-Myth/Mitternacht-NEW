@@ -10,16 +10,17 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Utility {
 	public partial class Utility {
 		[Group]
 		public class QuoteCommands : MitternachtSubmodule {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public QuoteCommands(DbService db) {
-				_db = db;
+			public QuoteCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -36,15 +37,12 @@ namespace Mitternacht.Modules.Utility {
 				var isUserNull = user == null;
 				const int elementsPerPage = 16;
 
-				ImmutableList<Quote> quotes;
-				using(var uow = _db.UnitOfWork) {
-					var qs = uow.Quotes.GetAllForGuild(Context.Guild.Id);
-					if(!isUserNull) {
-						var uid = user.Id;
-						qs = qs.Where(q => q.AuthorId == uid);
-					}
-					quotes = qs.OrderBy(q => q.Id).ToImmutableList();
+				var qs = uow.Quotes.GetAllForGuild(Context.Guild.Id);
+				if(!isUserNull) {
+					var uid = user.Id;
+					qs = qs.Where(q => q.AuthorId == uid);
 				}
+				var quotes = qs.OrderBy(q => q.Id).ToImmutableList();
 
 				if(!quotes.Any()) {
 					await ReplyErrorLocalized("quotes_page_none").ConfigureAwait(false);
@@ -75,7 +73,6 @@ namespace Mitternacht.Modules.Utility {
 				if(string.IsNullOrWhiteSpace(keyword))
 					return;
 
-				using var uow = _db.UnitOfWork;
 				var quote = uow.Quotes.GetRandomQuoteByKeyword(Context.Guild.Id, keyword);
 
 				if(quote != null) {
@@ -99,7 +96,6 @@ namespace Mitternacht.Modules.Utility {
 				if(string.IsNullOrWhiteSpace(keyword) || string.IsNullOrWhiteSpace(text))
 					return;
 
-				using var uow = _db.UnitOfWork;
 				var keywordquote= uow.Quotes.SearchQuoteKeywordText(Context.Guild.Id, keyword, text);
 
 				if(keywordquote != null) {
@@ -112,7 +108,6 @@ namespace Mitternacht.Modules.Utility {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task QuoteId(ushort id) {
-				using var uow = _db.UnitOfWork;
 				var quote = uow.Quotes.Get(id);
 
 				var replacer = new ReplacementBuilder().WithDefault(Context).Build();
@@ -132,16 +127,15 @@ namespace Mitternacht.Modules.Utility {
 				if(string.IsNullOrWhiteSpace(keyword) || string.IsNullOrWhiteSpace(text))
 					return;
 
-				using(var uow = _db.UnitOfWork) {
-					uow.Quotes.Add(new Quote {
-						AuthorId = Context.User.Id,
-						AuthorName = Context.User.Username,
-						GuildId = Context.Guild.Id,
-						Keyword = keyword.SanitizeMentions(),
-						Text = text
-					});
-					await uow.SaveChangesAsync().ConfigureAwait(false);
-				}
+				uow.Quotes.Add(new Quote {
+					AuthorId = Context.User.Id,
+					AuthorName = Context.User.Username,
+					GuildId = Context.Guild.Id,
+					Keyword = keyword.SanitizeMentions(),
+					Text = text
+				});
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
 				await ReplyConfirmLocalized("quote_added").ConfigureAwait(false);
 			}
 
@@ -150,14 +144,13 @@ namespace Mitternacht.Modules.Utility {
 			public async Task QuoteDelete(ushort id) {
 				var isAdmin = ((IGuildUser) Context.User).GuildPermissions.Administrator;
 
-				using var uow = _db.UnitOfWork;
 				var q = uow.Quotes.Get(id);
 
 				if(q == null || !isAdmin && q.AuthorId != Context.User.Id) {
 					await ErrorLocalized("quotes_remove_none").ConfigureAwait(false);
 				} else {
 					uow.Quotes.Remove(q);
-					await uow.SaveChangesAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 					await ConfirmLocalized("quote_deleted", id).ConfigureAwait(false);
 				}
 			}
@@ -169,10 +162,8 @@ namespace Mitternacht.Modules.Utility {
 				if(string.IsNullOrWhiteSpace(keyword))
 					return;
 
-				using(var uow = _db.UnitOfWork) {
-					uow.Quotes.RemoveAllByKeyword(Context.Guild.Id, keyword);
-					await uow.SaveChangesAsync().ConfigureAwait(false);
-				}
+				uow.Quotes.RemoveAllByKeyword(Context.Guild.Id, keyword);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized("quotes_deleted", Format.Bold(keyword.SanitizeMentions())).ConfigureAwait(false);
 			}

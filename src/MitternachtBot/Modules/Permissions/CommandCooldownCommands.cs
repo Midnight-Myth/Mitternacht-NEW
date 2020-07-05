@@ -9,23 +9,23 @@ using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions {
 	public partial class Permissions {
 		[Group]
 		public class CommandCooldownCommands : MitternachtSubmodule<CommandCooldownService> {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public CommandCooldownCommands(DbService db) {
-				_db = db;
+			public CommandCooldownCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task CommandCooldown(CommandInfo command, int secs) {
 				if(secs >= 0) {
-					using var uow = _db.UnitOfWork;
 					var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.CommandCooldowns));
 					gc.CommandCooldowns.RemoveWhere(cc => cc.CommandName.Equals(command.Aliases.First(), StringComparison.OrdinalIgnoreCase));
 
@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Permissions {
 						};
 						gc.CommandCooldowns.Add(cc);
 					}
-					await uow.SaveChangesAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					if(secs == 0) {
 						var activeCds = Service.ActiveCooldowns.GetOrAdd(Context.Guild.Id, new ConcurrentHashSet<ActiveCooldown>());
@@ -54,7 +54,6 @@ namespace Mitternacht.Modules.Permissions {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task CommandCooldowns() {
-				using var uow = _db.UnitOfWork;
 				var commandCooldowns = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.CommandCooldowns)).CommandCooldowns;
 
 				if(commandCooldowns.Any()) {

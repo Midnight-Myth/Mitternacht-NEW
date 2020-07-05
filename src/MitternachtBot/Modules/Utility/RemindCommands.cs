@@ -10,6 +10,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Modules.Utility.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Utility {
@@ -18,11 +19,11 @@ namespace Mitternacht.Modules.Utility {
 		public class RemindCommands : MitternachtSubmodule<RemindService> {
 			private readonly Regex timeIntervalRegex = new Regex(@"^(?:(?<days>\d+)d)?(?:(?<hours>\d+)h)?(?:(?<minutes>\d+)(?:m|min))?(?:(?<seconds>\d+)s)?$", RegexOptions.Compiled | RegexOptions.Multiline);
 			
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 			private readonly GuildTimezoneService _tz;
 
-			public RemindCommands(DbService db, GuildTimezoneService tz) {
-				_db = db;
+			public RemindCommands(IUnitOfWork uow, GuildTimezoneService tz) {
+				this.uow = uow;
 				_tz = tz;
 			}
 
@@ -77,9 +78,8 @@ namespace Mitternacht.Modules.Utility {
 						ServerId  = Context.Guild.Id
 					};
 
-					using var uow = _db.UnitOfWork;
 					uow.Reminders.Add(rem);
-					await uow.SaveChangesAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					var gTime = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(Context.Guild.Id));
 					_ = Task.Run(() => Service.StartReminder(rem));
@@ -95,9 +95,8 @@ namespace Mitternacht.Modules.Utility {
 				if(string.IsNullOrWhiteSpace(arg))
 					return;
 
-				using var uow = _db.UnitOfWork;
 				uow.BotConfig.GetOrCreate().RemindMessageFormat = arg.Trim();
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized("remind_template").ConfigureAwait(false);
 			}

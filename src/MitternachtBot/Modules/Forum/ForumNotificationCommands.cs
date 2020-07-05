@@ -3,23 +3,23 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Forum {
 	public partial class Forum {
 		[Group]
 		public class ForumNotificationCommands : MitternachtSubmodule<ForumNotificationService> {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public ForumNotificationCommands(DbService db) {
-				_db = db;
+			public ForumNotificationCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task ForumNotificationChannel(ITextChannel channel = null) {
-				using var uow = _db.UnitOfWork;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
 				var channelId = gc.ForumNotificationChannelId;
 				if(channel == null) {
@@ -44,7 +44,7 @@ namespace Mitternacht.Modules.Forum {
 					}
 				}
 
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 		}
 	}

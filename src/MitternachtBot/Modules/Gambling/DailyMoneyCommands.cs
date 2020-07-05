@@ -9,6 +9,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.Gambling {
@@ -16,15 +17,15 @@ namespace Mitternacht.Modules.Gambling {
 		[Group]
 		public class DailyMoneyCommands : MitternachtSubmodule {
 			private readonly IBotConfigProvider _bc;
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 			private readonly CurrencyService _currency;
 
 			private string CurrencyName => _bc.BotConfig.CurrencyName;
 			private string CurrencySign => _bc.BotConfig.CurrencySign;
 
-			public DailyMoneyCommands(IBotConfigProvider bc, DbService db, CurrencyService currency) {
+			public DailyMoneyCommands(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService currency) {
 				_bc = bc;
-				_db = db;
+				this.uow = uow;
 				_currency = currency;
 			}
 
@@ -33,7 +34,6 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task DailyMoney() {
 				var guildUser = (IGuildUser)Context.User;
 
-				using var uow = _db.UnitOfWork;
 				var canReceiveDailyMoney = uow.DailyMoney.CanReceive(guildUser.Id);
 
 				if(canReceiveDailyMoney) {
@@ -51,10 +51,10 @@ namespace Mitternacht.Modules.Gambling {
 								.First();
 						var role = userRoles.First(r => r.Id == rm.RoleId);
 						uow.DailyMoney.TryUpdateState(guildUser.Id);
-						await _currency.AddAsync(guildUser, $"Daily Reward ({role.Name})", rm.Money, false).ConfigureAwait(false);
+						await _currency.AddAsync(guildUser, $"Daily Reward ({role.Name})", rm.Money, false, uow).ConfigureAwait(false);
 						uow.DailyMoneyStats.Add(guildUser.Id, uow.DailyMoney.GetUserDate(guildUser.Id), rm.Money);
 
-						await uow.SaveChangesAsync().ConfigureAwait(false);
+						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 						await ReplyLocalized("dm_received", role.Name, rm.Money, CurrencySign).ConfigureAwait(false);
 					}
@@ -66,10 +66,9 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task SetRoleMoney(IRole role, long money, int priority) {
-				using var uow = _db.UnitOfWork;
 				uow.RoleMoney.SetMoney(role.Id, money);
 				uow.RoleMoney.SetPriority(role.Id, priority);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				
 				await MessageLocalized("dm_role_set", role.Name, money, CurrencySign, priority).ConfigureAwait(false);
 			}
@@ -85,9 +84,8 @@ namespace Mitternacht.Modules.Gambling {
 			[OwnerOnly]
 			public async Task ResetDailyMoney([Remainder] IGuildUser user = null) {
 				user ??= (IGuildUser)Context.User;
-				using var uow = _db.UnitOfWork;
 				var wasReset = uow.DailyMoney.TryResetReceived(user.Id);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized(wasReset ? "dm_again" : "dm_not_received", user.ToString()).ConfigureAwait(false);
 			}
@@ -96,9 +94,8 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task RemoveRoleMoney(IRole role) {
-				using var uow = _db.UnitOfWork;
 				var removed = uow.RoleMoney.Remove(role.Id);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized(removed ? "dm_role_removed" : "dm_role_not_set", role.Name).ConfigureAwait(false);
 			}
@@ -107,11 +104,10 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task SetRoleMoneyPriority(IRole role, int priority) {
-				using var uow = _db.UnitOfWork;
 				var exists = uow.RoleMoney.Exists(role.Id);
 				if(exists)
 					uow.RoleMoney.SetPriority(role.Id, priority);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority).ConfigureAwait(false);
 			}
@@ -121,7 +117,6 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task Payroll(int count = 20, int position = 1) {
 				const int elementsPerList = 20;
 				
-				using var uow = _db.UnitOfWork;
 				var roleMoneys = uow.RoleMoney
 					.GetAll()
 					.OrderByDescending(rm => rm.Priority)
@@ -129,7 +124,7 @@ namespace Mitternacht.Modules.Gambling {
 					.Skip(position - 1 <= 0 ? 0 : position - 1)
 					.Take(count)
 					.ToList();
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(!roleMoneys.Any())
 					return;
@@ -182,7 +177,6 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task DailyMoneyStats(params IGuildUser[] users) {
 				users = users.Any() ? users : new[] { (IGuildUser)Context.User };
 
-				using var uow = _db.UnitOfWork;
 				var stats = uow.DailyMoneyStats
 						.GetAllUser(users.Select(gu => gu.Id).ToArray())
 						.GroupBy(dms => dms.UserId)
@@ -195,7 +189,6 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task DailyMoneyStatsAll() {
-				using var uow = _db.UnitOfWork;
 				var stats = uow.DailyMoneyStats
 						.GetAll()
 						.GroupBy(dms => dms.UserId)

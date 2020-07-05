@@ -9,6 +9,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using MoreLinq;
 
 namespace Mitternacht.Modules.Utility
@@ -20,14 +21,14 @@ namespace Mitternacht.Modules.Utility
         {
             private readonly DiscordSocketClient _client;
             private readonly IStatsService _stats;
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
             private readonly ForumService _fs;
 
-            public InfoCommands(DiscordSocketClient client, IStatsService stats, DbService db, ForumService fs)
+            public InfoCommands(DiscordSocketClient client, IStatsService stats, IUnitOfWork uow, ForumService fs)
             {
                 _client = client;
                 _stats = stats;
-                _db = db;
+                this.uow = uow;
                 _fs = fs;
             }
 
@@ -44,10 +45,7 @@ namespace Mitternacht.Modules.Utility
                 var voicechn = (await guild.GetVoiceChannelsAsync()).Count;
                 var users = await guild.GetUsersAsync().ConfigureAwait(false);
                 var features = guild.Features.Any() ? string.Join("\n", guild.Features) : "-";
-                int verified;
-                using (var uow = _db.UnitOfWork) {
-                    verified = uow.VerifiedUsers.GetCount(Context.Guild.Id);
-                }
+                var verified = uow.VerifiedUsers.GetCount(Context.Guild.Id);
 
                 var embed = new EmbedBuilder()
                     .WithOkColor()
@@ -110,17 +108,17 @@ namespace Mitternacht.Modules.Utility
                     .AddField(GetText("roles_count", user.RoleIds.Count - 1), string.Join("\n", user.GetRoles().OrderByDescending(r => r.Position).Where(r => r.Id != r.Guild.EveryoneRole.Id).Take(10).Select(r => r.Name)).SanitizeMentions(), true);
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl());
-                using (var uow = _db.UnitOfWork) {
-                    var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
-                    if (forumId != null) {
-                        var username = string.Empty;
-                        try {
-                            username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
-                        }
-                        catch (Exception) { /*ignored*/ }
-                        embed.AddField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})", true);
+
+                var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+                if (forumId != null) {
+                    var username = string.Empty;
+                    try {
+                        username = _fs.LoggedIn ? (await _fs.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false))?.Username : null;
                     }
+                    catch (Exception) { /*ignored*/ }
+                    embed.AddField(GetText(string.IsNullOrWhiteSpace(username) ? "forum_id" : "forum_name"), $"[{(string.IsNullOrWhiteSpace(username) ? forumId.Value.ToString() : username)}](https://gommehd.net/forum/members/{forumId})", true);
                 }
+
                 await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
             }
 

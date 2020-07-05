@@ -21,7 +21,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                     GuildId = guildId,
                     TimeInVoiceChannel = 0
                 });
-                _context.SaveChanges();
             }
             return vcs;
         }
@@ -31,7 +30,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             var vcs = GetOrCreate(userId, guildId);
             vcs.TimeInVoiceChannel += time;
             _set.Update(vcs);
-            _context.SaveChanges();
         }
 
         public bool RemoveTime(ulong userId, ulong guildId, double time)
@@ -41,7 +39,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             if (vcs.TimeInVoiceChannel < time) return false;
             vcs.TimeInVoiceChannel -= time;
             _set.Update(vcs);
-            _context.SaveChanges();
+
             return true;
         }
 
@@ -51,7 +49,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             var vcs = GetOrCreate(userId, guildId);
             vcs.TimeInVoiceChannel = 0;
             _set.Update(vcs);
-            _context.SaveChanges();
         }
 
         public bool TryGetTime(ulong userId, ulong guildId, out double time)

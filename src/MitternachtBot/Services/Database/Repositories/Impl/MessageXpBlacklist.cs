@@ -20,7 +20,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 ChannelId = channelId,
                 GuildId = guildId
             });
-            _context.SaveChanges();
+
             return true;
         }
 

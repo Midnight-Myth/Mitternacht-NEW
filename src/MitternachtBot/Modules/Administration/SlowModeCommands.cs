@@ -10,6 +10,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Common;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration
@@ -19,11 +20,11 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class SlowModeCommands : MitternachtSubmodule<SlowmodeService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public SlowModeCommands(DbService db)
+            public SlowModeCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -104,18 +105,14 @@ namespace Mitternacht.Modules.Administration
                     UserId = user.Id
                 };
 
-                HashSet<SlowmodeIgnoredUser> usrs;
                 bool removed;
-                using (var uow = _db.UnitOfWork)
-                {
-                    usrs = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.SlowmodeIgnoredUsers))
-                        .SlowmodeIgnoredUsers;
+                var usrs = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.SlowmodeIgnoredUsers))
+                    .SlowmodeIgnoredUsers;
 
-                    if (!(removed = usrs.Remove(siu)))
-                        usrs.Add(siu);
+                if (!(removed = usrs.Remove(siu)))
+                    usrs.Add(siu);
 
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
-                }
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 Service.IgnoredUsers.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(usrs.Select(x => x.UserId)), (key, old) => new HashSet<ulong>(usrs.Select(x => x.UserId)));
 
@@ -136,18 +133,14 @@ namespace Mitternacht.Modules.Administration
                     RoleId = role.Id
                 };
 
-                HashSet<SlowmodeIgnoredRole> roles;
                 bool removed;
-                using (var uow = _db.UnitOfWork)
-                {
-                    roles = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.SlowmodeIgnoredRoles))
-                        .SlowmodeIgnoredRoles;
+                var roles = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.SlowmodeIgnoredRoles))
+                    .SlowmodeIgnoredRoles;
 
-                    if (!(removed = roles.Remove(sir)))
-                        roles.Add(sir);
+                if (!(removed = roles.Remove(sir)))
+                    roles.Add(sir);
 
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
-                }
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 Service.IgnoredRoles.AddOrUpdate(Context.Guild.Id, new HashSet<ulong>(roles.Select(x => x.RoleId)), (key, old) => new HashSet<ulong>(roles.Select(x => x.RoleId)));
 

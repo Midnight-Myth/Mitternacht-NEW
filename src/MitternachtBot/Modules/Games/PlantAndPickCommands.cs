@@ -8,6 +8,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Games.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Games
@@ -27,15 +28,15 @@ namespace Mitternacht.Modules.Games
             private readonly CurrencyService _cs;
             private readonly IBotConfigProvider _bc;
             private readonly GamesService _games;
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
             public PlantPickCommands(IBotConfigProvider bc, CurrencyService cs, GamesService games,
-                DbService db)
+                IUnitOfWork uow)
             {
                 _bc = bc;
                 _cs = cs;
                 _games = games;
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -110,25 +111,23 @@ namespace Mitternacht.Modules.Games
                 var channel = (ITextChannel)Context.Channel;
 
                 bool enabled;
-                using (var uow = _db.UnitOfWork)
-                {
-                    var guildConfig = uow.GuildConfigs.For(channel.Guild.Id, set => set.Include(gc => gc.GenerateCurrencyChannelIds));
+                var guildConfig = uow.GuildConfigs.For(channel.Guild.Id, set => set.Include(gc => gc.GenerateCurrencyChannelIds));
 
-                    var toAdd = new GCChannelId() { ChannelId = channel.Id };
-                    if (!guildConfig.GenerateCurrencyChannelIds.Contains(toAdd))
-                    {
-                        guildConfig.GenerateCurrencyChannelIds.Add(toAdd);
-                        _games.GenerationChannels.Add(channel.Id);
-                        enabled = true;
-                    }
-                    else
-                    {
-                        guildConfig.GenerateCurrencyChannelIds.Remove(toAdd);
-                        _games.GenerationChannels.TryRemove(channel.Id);
-                        enabled = false;
-                    }
-                    await uow.SaveChangesAsync();
+                var toAdd = new GCChannelId() { ChannelId = channel.Id };
+                if (!guildConfig.GenerateCurrencyChannelIds.Contains(toAdd))
+                {
+                    guildConfig.GenerateCurrencyChannelIds.Add(toAdd);
+                    _games.GenerationChannels.Add(channel.Id);
+                    enabled = true;
                 }
+                else
+                {
+                    guildConfig.GenerateCurrencyChannelIds.Remove(toAdd);
+                    _games.GenerationChannels.TryRemove(channel.Id);
+                    enabled = false;
+                }
+                await uow.SaveChangesAsync(false);
+
                 if (enabled)
                 {
                     await ReplyConfirmLocalized("curgen_enabled").ConfigureAwait(false);

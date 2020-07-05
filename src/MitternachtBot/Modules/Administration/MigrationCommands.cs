@@ -23,22 +23,19 @@ namespace Mitternacht.Modules.Administration
         public class MigrationCommands : MitternachtSubmodule
         {
             private const int CurrentVersion = 1;
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public MigrationCommands(DbService db)
+            public MigrationCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task MigrateData()
             {
-                int version;
-                using (var uow = _db.UnitOfWork)
-                {
-                    version = uow.BotConfig.GetOrCreate().MigrationVersion;
-                }
+                var version = uow.BotConfig.GetOrCreate().MigrationVersion;
+
                 try
                 {
                     for (var i = version; i < CurrentVersion; i++) {
@@ -55,19 +52,16 @@ namespace Mitternacht.Modules.Administration
 
             private void Migrate0_9To1_0()
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    var botConfig = uow.BotConfig.GetOrCreate();
-                    MigrateConfig0_9(uow, botConfig);
-                    MigratePermissions0_9(uow);
-                    MigrateServerSpecificConfigs0_9(uow);
-                    MigrateDb0_9(uow);
+                var botConfig = uow.BotConfig.GetOrCreate();
+                MigrateConfig0_9(uow, botConfig);
+                MigratePermissions0_9(uow);
+                MigrateServerSpecificConfigs0_9(uow);
+                MigrateDb0_9(uow);
 
-                    //NOW save it
-                    _log.Warn("Writing to disc");
-                    uow.SaveChanges();
-                    botConfig.MigrationVersion = 1;
-                }
+                //NOW save it
+                _log.Warn("Writing to disc");
+                uow.SaveChanges(false);
+                botConfig.MigrationVersion = 1;
             }
 
             private void MigrateDb0_9(IUnitOfWork uow)
@@ -372,49 +366,46 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task ReplaceDefaultLevelModelGuild(ulong guildId) {
                 var counter = 0;
-                using (var uow = _db.UnitOfWork) {
-                    var lms = uow.LevelModel.GetAll().ToList();
-                    var overlapping = lms.Where(lm => lm.GuildId == 0)
-                        .Concat(lms.Where(lm => lm.GuildId == guildId))
-                        .GroupBy(lm => lm.UserId)
-                        .Where(g => g.Any(lm => lm.GuildId == 0) && g.Any(lm => lm.GuildId == guildId));
+                var lms = uow.LevelModel.GetAll().ToList();
+                var overlapping = lms.Where(lm => lm.GuildId == 0)
+                    .Concat(lms.Where(lm => lm.GuildId == guildId))
+                    .GroupBy(lm => lm.UserId)
+                    .Where(g => g.Any(lm => lm.GuildId == 0) && g.Any(lm => lm.GuildId == guildId));
 
-                    foreach (var ol in overlapping) {
-                        var given = ol.First(lm => lm.GuildId == guildId);
-                        var zero = ol.First(lm => lm.GuildId == 0);
-                        zero.TotalXP += given.TotalXP;
-                        uow.LevelModel.Update(zero);
-                        uow.LevelModel.Remove(given);
-                    }
-
-                    foreach (var lm in uow.LevelModel.GetAll()) {
-                        if (lm.GuildId != 0) continue;
-                        lm.GuildId = guildId;
-                        counter++;
-                        uow.LevelModel.Update(lm);
-                    }
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
+                foreach (var ol in overlapping) {
+                    var given = ol.First(lm => lm.GuildId == guildId);
+                    var zero = ol.First(lm => lm.GuildId == 0);
+                    zero.TotalXP += given.TotalXP;
+                    uow.LevelModel.Update(zero);
+                    uow.LevelModel.Remove(given);
                 }
+
+                foreach (var lm in uow.LevelModel.GetAll()) {
+                    if (lm.GuildId != 0) continue;
+                    lm.GuildId = guildId;
+                    counter++;
+                    uow.LevelModel.Update(lm);
+                }
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
                 await ConfirmLocalized("replacedefaultlevelmodelguild", counter).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task SetGuildConfigLevelDefaults(params ulong[] guildIds) {
-                int count;
-                using (var uow = _db.UnitOfWork) {
-                    var gcs = uow.GuildConfigs.GetAll().ToList();
-                    if (guildIds.Length > 0) gcs = gcs.Where(gc => guildIds.Contains(gc.GuildId)).ToList();
-                    count = gcs.Count;
-                    gcs.ForEach(gc => {
-                        gc.TurnToXpMultiplier = 5;
-                        gc.MessageXpTimeDifference = 60;
-                        gc.MessageXpCharCountMin = 10;
-                        gc.MessageXpCharCountMax = 25;
-                    });
-                    uow.GuildConfigs.UpdateRange(gcs.ToArray());
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
-                }
+                var gcs = uow.GuildConfigs.GetAll().ToList();
+                if (guildIds.Length > 0) gcs = gcs.Where(gc => guildIds.Contains(gc.GuildId)).ToList();
+                var count = gcs.Count;
+                gcs.ForEach(gc => {
+                    gc.TurnToXpMultiplier = 5;
+                    gc.MessageXpTimeDifference = 60;
+                    gc.MessageXpCharCountMin = 10;
+                    gc.MessageXpCharCountMax = 25;
+                });
+                uow.GuildConfigs.UpdateRange(gcs.ToArray());
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
                 await ConfirmLocalized("setguildconfigleveldefaults", count).ConfigureAwait(false);
             }
         }

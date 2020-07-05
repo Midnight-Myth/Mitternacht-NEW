@@ -4,6 +4,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -12,11 +13,11 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class GameChannelCommands : MitternachtSubmodule<GameVoiceChannelService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public GameChannelCommands(DbService db)
+            public GameChannelCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -33,25 +34,22 @@ namespace Mitternacht.Modules.Administration
                     return;
                 }
                 ulong? id;
-                using (var uow = _db.UnitOfWork)
+                var gc = uow.GuildConfigs.For(Context.Guild.Id);
+
+                if (gc.GameVoiceChannel == vch.Id)
                 {
-                    var gc = uow.GuildConfigs.For(Context.Guild.Id);
-
-                    if (gc.GameVoiceChannel == vch.Id)
-                    {
-                        Service.GameVoiceChannels.TryRemove(vch.Id);
-                        id = gc.GameVoiceChannel = null;
-                    }
-                    else
-                    {
-                        if(gc.GameVoiceChannel != null)
-                            Service.GameVoiceChannels.TryRemove(gc.GameVoiceChannel.Value);
-                        Service.GameVoiceChannels.Add(vch.Id);
-                        id = gc.GameVoiceChannel = vch.Id;
-                    }
-
-                    uow.SaveChanges();
+                    Service.GameVoiceChannels.TryRemove(vch.Id);
+                    id = gc.GameVoiceChannel = null;
                 }
+                else
+                {
+                    if(gc.GameVoiceChannel != null)
+                        Service.GameVoiceChannels.TryRemove(gc.GameVoiceChannel.Value);
+                    Service.GameVoiceChannels.Add(vch.Id);
+                    id = gc.GameVoiceChannel = vch.Id;
+                }
+
+                uow.SaveChanges(false);
 
                 if (id == null)
                 {

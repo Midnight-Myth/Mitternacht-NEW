@@ -10,6 +10,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Utility.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Utility
@@ -19,12 +20,12 @@ namespace Mitternacht.Modules.Utility
         [Group]
         public class CommandMapCommands : MitternachtSubmodule<CommandMapService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
             private readonly DiscordSocketClient _client;
 
-            public CommandMapCommands(DbService db, DiscordSocketClient client)
+            public CommandMapCommands(IUnitOfWork uow, DiscordSocketClient client)
             {
-                _db = db;
+                this.uow = uow;
                 _client = client;
             }
 
@@ -49,50 +50,43 @@ namespace Mitternacht.Modules.Utility
                         return;
                     }
 
-                    using (var uow = _db.UnitOfWork)
+                    var config = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases));
+                    var toAdd = new CommandAlias()
                     {
-                        var config = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases));
-                        var toAdd = new CommandAlias()
-                        {
-                            Mapping = mapping,
-                            Trigger = trigger
-                        };
-                        config.CommandAliases.RemoveWhere(x => x.Trigger == trigger);
-                        uow.SaveChanges();
-                    }
+                        Mapping = mapping,
+                        Trigger = trigger
+                    };
+                    config.CommandAliases.RemoveWhere(x => x.Trigger == trigger);
+                    uow.SaveChanges(false);
 
                     await ReplyConfirmLocalized("alias_removed", Format.Code(trigger)).ConfigureAwait(false);
                     return;
                 }
                 Service.AliasMaps.AddOrUpdate(Context.Guild.Id, (_) =>
                 {
-                    using (var uow = _db.UnitOfWork)
+                    var config = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases));
+                    config.CommandAliases.Add(new CommandAlias()
                     {
-                        var config = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases));
-                        config.CommandAliases.Add(new CommandAlias()
-                        {
-                            Mapping = mapping,
-                            Trigger = trigger
-                        });
-                        uow.SaveChanges();
-                    }
+                        Mapping = mapping,
+                        Trigger = trigger
+                    });
+                    uow.SaveChanges(false);
+
                     return new ConcurrentDictionary<string, string>(new Dictionary<string, string>() {
                         {trigger.Trim().ToLowerInvariant(), mapping.ToLowerInvariant() },
                     });
                 }, (_, map) =>
                 {
-                    using (var uow = _db.UnitOfWork)
+                    var config = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases));
+                    var toAdd = new CommandAlias()
                     {
-                        var config = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases));
-                        var toAdd = new CommandAlias()
-                        {
-                            Mapping = mapping,
-                            Trigger = trigger
-                        };
-                        config.CommandAliases.RemoveWhere(x => x.Trigger == trigger);
-                        config.CommandAliases.Add(toAdd);
-                        uow.SaveChanges();
-                    }
+                        Mapping = mapping,
+                        Trigger = trigger
+                    };
+                    config.CommandAliases.RemoveWhere(x => x.Trigger == trigger);
+                    config.CommandAliases.Add(toAdd);
+                    uow.SaveChanges(false);
+
                     map.AddOrUpdate(trigger, mapping, (key, old) => mapping);
                     return map;
                 });

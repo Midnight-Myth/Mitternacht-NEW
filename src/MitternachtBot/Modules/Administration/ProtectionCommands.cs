@@ -9,6 +9,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Common;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration {
@@ -16,11 +17,11 @@ namespace Mitternacht.Modules.Administration {
 		[Group]
 		public class ProtectionCommands : MitternachtSubmodule<ProtectionService> {
 			private readonly MuteService _mute;
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public ProtectionCommands(MuteService mute, DbService db) {
+			public ProtectionCommands(MuteService mute, IUnitOfWork uow) {
 				_mute = mute;
-				_db = db;
+				this.uow = uow;
 			}
 
 			private string GetAntiSpamString(AntiSpamStats stats) {
@@ -51,12 +52,11 @@ namespace Mitternacht.Modules.Administration {
 					return;
 				}
 
-				using var uow = _db.UnitOfWork;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiRaidSetting));
 
 				if(Service.AntiRaidGuilds.TryRemove(Context.Guild.Id, out _)) {
 					gc.AntiRaidSetting = null;
-					await uow.SaveChangesAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("prot_disable", "Anti-Raid").ConfigureAwait(false);
 					return;
@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.Administration {
 				Service.AntiRaidGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) => stats);
 
 				gc.AntiRaidSetting = stats.AntiRaidSettings;
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiRaidString(stats)}", GetText("prot_enable", "Anti-Raid")).ConfigureAwait(false);
 			}
@@ -95,11 +95,10 @@ namespace Mitternacht.Modules.Administration {
 					foreach(var userSpamStats in removed.UserStats) {
 						userSpamStats.Value.Dispose();
 					}
-					using var uow = _db.UnitOfWork;
 					var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
 
 					gc.AntiSpamSetting = null;
-					await uow.SaveChangesAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 					await ReplyConfirmLocalized("prot_disable", "Anti-Spam").ConfigureAwait(false);
 					return;
 				}
@@ -141,11 +140,10 @@ namespace Mitternacht.Modules.Administration {
 					return stats;
 				});
 
-				using var uow = _db.UnitOfWork;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting));
 
 				gc.AntiSpamSetting = stats.AntiSpamSettings;
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiSpamString(stats)}", GetText("prot_enable", "Anti-Spam")).ConfigureAwait(false);
 			}
@@ -160,7 +158,6 @@ namespace Mitternacht.Modules.Administration {
 					ChannelId = channel.Id
 				};
 
-				using var uow = _db.UnitOfWork;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
 				var spam = gc.AntiSpamSetting;
 				if(spam == null) {
@@ -179,7 +176,7 @@ namespace Mitternacht.Modules.Administration {
 					added = false;
 				}
 
-				await uow.SaveChangesAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(added)
 					await ReplyConfirmLocalized("spam_ignore", "Anti-Spam").ConfigureAwait(false);

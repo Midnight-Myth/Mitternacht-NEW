@@ -6,6 +6,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -14,11 +15,11 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class AutoAssignRoleCommands : MitternachtSubmodule<AutoAssignRoleService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public AutoAssignRoleCommands(DbService db)
+            public AutoAssignRoleCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -31,22 +32,19 @@ namespace Mitternacht.Modules.Administration
                     if (Context.User.Id != guser.Guild.OwnerId && guser.GetRoles().Max(x => x.Position) <= role.Position)
                         return;
 
-                using (var uow = _db.UnitOfWork)
+                var conf = uow.GuildConfigs.For(Context.Guild.Id);
+                if (role == null)
                 {
-                    var conf = uow.GuildConfigs.For(Context.Guild.Id);
-                    if (role == null)
-                    {
-                        conf.AutoAssignRoleId = 0;
-                        Service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
-                    }
-                    else
-                    {
-                        conf.AutoAssignRoleId = role.Id;
-                        Service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
-                    }
-
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
+                    conf.AutoAssignRoleId = 0;
+                    Service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
                 }
+                else
+                {
+                    conf.AutoAssignRoleId = role.Id;
+                    Service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
+                }
+
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 if (role == null)
                 {

@@ -2,21 +2,20 @@ using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Utility.Services;
-using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using System;
 using System.Threading.Tasks;
 
-namespace Mitternacht.Modules.Utility
-{
-    public partial class Utility
+namespace Mitternacht.Modules.Utility {
+	public partial class Utility
     {
         public class VoiceStatsCommands : MitternachtSubmodule<VoiceStatsService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public VoiceStatsCommands(DbService db)
+            public VoiceStatsCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Description, Usage, Aliases]
@@ -25,14 +24,11 @@ namespace Mitternacht.Modules.Utility
             {
                 user = user ?? Context.User as IGuildUser;
 
-                using(var uow = _db.UnitOfWork)
-                {
-					if (uow.VoiceChannelStats.TryGetTime(user.Id, user.GuildId, out var time)) {
-						var timespan = TimeSpan.FromSeconds(time);
-						await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan:dd}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
-					} else
-                        await ConfirmLocalized("voicestats_untracked", user.ToString()).ConfigureAwait(false);
-                }
+				if (uow.VoiceChannelStats.TryGetTime(user.Id, user.GuildId, out var time)) {
+					var timespan = TimeSpan.FromSeconds(time);
+					await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan:dd}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
+				} else
+                    await ConfirmLocalized("voicestats_untracked", user.ToString()).ConfigureAwait(false);
             }
 
             [MitternachtCommand, Description, Usage, Aliases]
@@ -41,12 +37,10 @@ namespace Mitternacht.Modules.Utility
             public async Task VoiceStatsReset(IGuildUser user)
             {
                 if (user == null) return;
-                using(var uow = _db.UnitOfWork)
-                {
-                    uow.VoiceChannelStats.Reset(user.Id, user.GuildId);
-                    await ConfirmLocalized("voicestats_reset", user.ToString()).ConfigureAwait(false);
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
-                }
+                uow.VoiceChannelStats.Reset(user.Id, user.GuildId);
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+                await ConfirmLocalized("voicestats_reset", user.ToString()).ConfigureAwait(false);
             }
         }
     }

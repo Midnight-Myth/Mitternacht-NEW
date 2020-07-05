@@ -26,7 +26,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
                 TotalXP = 0,
                 timestamp = DateTime.MinValue
             });
-            _context.SaveChanges();
+
             return lm;
         }
 
@@ -39,7 +39,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
             if (lm.TotalXP + xp < 0) xp = -lm.TotalXP;
             lm.TotalXP += xp;
             _set.Update(lm);
-            _context.SaveChanges();
+
             var newLevel = lm.CurrentLevel;
             if(oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
@@ -49,7 +49,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
             var oldLevel = lm.CurrentLevel;
             lm.TotalXP = xp;
             _set.Update(lm);
-            _context.SaveChanges();
+
             var newLevel = lm.CurrentLevel;
             if (oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
@@ -67,7 +67,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
             if (lm == null) return;
             lm.timestamp = timestamp;
             _set.Update(lm);
-            _context.SaveChanges();
         }
 
 		public IOrderedQueryable<LevelModel> GetAllSortedForRanks(ulong guildId, ulong[] guildUserIds)

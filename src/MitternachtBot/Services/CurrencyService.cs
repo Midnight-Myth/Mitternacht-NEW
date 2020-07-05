@@ -76,9 +76,9 @@ namespace Mitternacht.Services
             }
         }
 
-        public async Task AddAsync(IUser author, string reason, long amount, bool sendMessage)
+        public async Task AddAsync(IUser author, string reason, long amount, bool sendMessage, IUnitOfWork uow = null)
         {
-            await AddAsync(author.Id, reason, amount);
+            await AddAsync(author.Id, reason, amount, uow);
 
             if (sendMessage)
                 try { await author.SendConfirmAsync($"`You received:` {amount} {_config.BotConfig.CurrencySign}\n`Reason:` {reason}").ConfigureAwait(false); } catch { }

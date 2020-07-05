@@ -10,14 +10,15 @@ using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration : MitternachtTopLevelModule<AdministrationService> {
-		private readonly DbService _db;
+		private readonly IUnitOfWork uow;
 
-		public Administration(DbService db) {
-			_db = db;
+		public Administration(IUnitOfWork uow) {
+			this.uow = uow;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -25,11 +26,10 @@ namespace Mitternacht.Modules.Administration {
 		[RequireUserPermission(GuildPermission.Administrator)]
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		public async Task Delmsgoncmd() {
-			using var uow = _db.UnitOfWork;
 			var conf = uow.GuildConfigs.For(Context.Guild.Id);
 			var enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
 
-			await uow.SaveChangesAsync();
+			await uow.SaveChangesAsync(false);
 
 			if(enabled) {
 				Service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
@@ -320,11 +320,8 @@ namespace Mitternacht.Modules.Administration {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task Donators() {
-			IEnumerable<Donator> donatorsOrdered;
+			var donatorsOrdered = uow.Donators.GetDonatorsOrdered();
 
-			using(var uow = _db.UnitOfWork) {
-				donatorsOrdered = uow.Donators.GetDonatorsOrdered();
-			}
 			await Context.Channel.SendConfirmAsync(string.Join("⭐", donatorsOrdered.Select(d => d.Name)), GetText("donators")).ConfigureAwait(false);
 			//await Context.Channel.SendConfirmAsync("Patreon supporters", string.Join("⭐", usrs.Select(d => d.Username))).ConfigureAwait(false);
 		}
@@ -333,9 +330,8 @@ namespace Mitternacht.Modules.Administration {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[OwnerOnly]
 		public async Task Donadd(IUser donator, int amount) {
-			using var uow = _db.UnitOfWork;
 			var don = uow.Donators.AddOrUpdateDonator(donator.Id, donator.Username, amount);
-			await uow.SaveChangesAsync();
+			await uow.SaveChangesAsync(false);
 			await ReplyConfirmLocalized("donadd", don.Amount).ConfigureAwait(false);
 		}
 

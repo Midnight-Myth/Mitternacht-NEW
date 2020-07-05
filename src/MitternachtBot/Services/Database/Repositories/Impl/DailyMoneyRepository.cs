@@ -21,7 +21,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 UserId = userId,
                 LastTimeGotten = DateTime.MinValue
             });
-            _context.SaveChanges();
             return cur;
         }
 

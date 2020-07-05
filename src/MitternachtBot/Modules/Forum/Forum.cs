@@ -8,13 +8,14 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Forum {
 	public partial class Forum : MitternachtTopLevelModule<ForumService> {
-		private readonly DbService _db;
+		private readonly IUnitOfWork uow;
 
-		public Forum(DbService db) {
-			_db = db;
+		public Forum(IUnitOfWork uow) {
+			this.uow = uow;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases, OwnerOnly]
@@ -30,19 +31,17 @@ namespace Mitternacht.Modules.Forum {
 				return;
 
 			UserInfo uinfo = null;
-			using(var uow = _db.UnitOfWork) {
-				var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
-				if(forumId != null) {
-					try {
-						uinfo = await Service.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false);
-					} catch(UserNotFoundException) {
-						(await ReplyErrorLocalized("forum_user_not_existing", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
-						return;
-					} catch(UserProfileAccessException) {
-						(await ReplyErrorLocalized("forum_user_not_seeable", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
-						return;
-					} catch(Exception) { /*ignore other exceptions*/ }
-				}
+			var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+			if(forumId != null) {
+				try {
+					uinfo = await Service.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false);
+				} catch(UserNotFoundException) {
+					(await ReplyErrorLocalized("forum_user_not_existing", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
+					return;
+				} catch(UserProfileAccessException) {
+					(await ReplyErrorLocalized("forum_user_not_seeable", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
+					return;
+				} catch(Exception) { /*ignore other exceptions*/ }
 			}
 
 			if(uinfo == null) {
@@ -87,12 +86,10 @@ namespace Mitternacht.Modules.Forum {
 			}
 
 			var embed = ForumUserInfoBuilder(uinfo);
-			using(var uow = _db.UnitOfWork) {
-				var verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(Context.Guild.Id, uinfo.Id);
-				if(verifiedUserId != null) {
-					var verifiedUser = await Context.Guild.GetUserAsync(verifiedUserId.Value);
-					embed.WithTitle(GetText("forumuserinfo_title", verifiedUser?.ToString() ?? verifiedUserId.ToString()));
-				}
+			var verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(Context.Guild.Id, uinfo.Id);
+			if(verifiedUserId != null) {
+				var verifiedUser = await Context.Guild.GetUserAsync(verifiedUserId.Value);
+				embed.WithTitle(GetText("forumuserinfo_title", verifiedUser?.ToString() ?? verifiedUserId.ToString()));
 			}
 
 			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);

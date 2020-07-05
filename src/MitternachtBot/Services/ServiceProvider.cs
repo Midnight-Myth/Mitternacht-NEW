@@ -24,8 +24,13 @@ namespace Mitternacht.Services {
 				_log = LogManager.GetCurrentClassLogger();
 			}
 
-			public ServiceProviderBuilder AddManual<T>(T obj) {
-				_typeInstances.TryAdd(typeof(T), obj);
+			public ServiceProviderBuilder AddManual<T>(T obj, bool update = false) {
+				if(update) {
+					_typeInstances.AddOrUpdate(typeof(T), obj, (t, o) => obj);
+				} else {
+					_typeInstances.TryAdd(typeof(T), obj);
+				}
+
 				return this;
 			}
 
@@ -80,6 +85,14 @@ namespace Mitternacht.Services {
 				sw.Stop();
 				_log.Info($"All services loaded in {sw.Elapsed.TotalSeconds:F2}s");
 
+				return this;
+			}
+
+			public ServiceProviderBuilder FromServiceProvider(INServiceProvider provider) {
+				foreach(var service in provider.Services) {
+					_typeInstances.TryAdd(service.Key, service.Value);
+				}
+				
 				return this;
 			}
 		}

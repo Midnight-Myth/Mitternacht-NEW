@@ -8,6 +8,7 @@ using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Level
@@ -16,11 +17,11 @@ namespace Mitternacht.Modules.Level
     {
         public class RoleLevelBindingsCommands : MitternachtSubmodule
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public RoleLevelBindingsCommands(DbService db)
+            public RoleLevelBindingsCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -34,11 +35,8 @@ namespace Mitternacht.Modules.Level
                     return;
                 }
 
-                using (var uow = _db.UnitOfWork)
-                {
-                    uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
-                }
+                uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 await ConfirmLocalized("rlb_set", role.Name, minlevel);
             }
@@ -48,12 +46,8 @@ namespace Mitternacht.Modules.Level
             [OwnerOnly]
             public async Task RemoveRoleLevelBinding(IRole role)
             {
-                bool wasRemoved;
-                using (var uow = _db.UnitOfWork)
-                {
-                    wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
-                    await uow.SaveChangesAsync().ConfigureAwait(false);
-                }
+                var wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 if (wasRemoved) await ConfirmLocalized("rlb_removed", role.Name).ConfigureAwait(false);
                 else await ErrorLocalized("rlb_already_independent", role.Name).ConfigureAwait(false);
@@ -65,11 +59,7 @@ namespace Mitternacht.Modules.Level
             {
                 const int elementsPerPage = 9;
 
-                List<RoleLevelBinding> roleLevelBindings;
-                using (var uow = _db.UnitOfWork)
-                {
-                    roleLevelBindings = uow.RoleLevelBinding.GetAll().OrderByDescending(r => r.MinimumLevel).ToList();
-                }
+                var roleLevelBindings = uow.RoleLevelBinding.GetAll().OrderByDescending(r => r.MinimumLevel).ToList();
 
                 if (!roleLevelBindings.Any())
                 {
