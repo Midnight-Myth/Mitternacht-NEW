@@ -111,27 +111,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			return config;
 		}
 
-		public GuildConfig LogSettingsFor(ulong guildId) {
-			var config = _set.Include(gc => gc.LogSetting)
-							.ThenInclude(gc => gc.IgnoredChannels)
-			   .FirstOrDefault(x => x.GuildId == guildId);
-
-			if(config == null) {
-				_set.Add(config = new GuildConfig {
-					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist,
-					WarningsInitialized = true,
-					WarnPunishments = DefaultWarnPunishments,
-				});
-			}
-
-			if(config.WarningsInitialized)
-				return config;
-			config.WarningsInitialized = true;
-			config.WarnPunishments = DefaultWarnPunishments;
-			return config;
-		}
-
 		public IEnumerable<GuildConfig> OldPermissionsForAll() {
 			var query = _set
 				.Where((Expression<Func<GuildConfig, bool>>)(gc => gc.RootPermission != null))

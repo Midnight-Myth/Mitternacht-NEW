@@ -889,11 +889,6 @@
   -        replst
   desc:    Shows currently repeating messages and their indexes.
   usage:   "`{0}repeatlist`"
-- name:    slowmodewhitelist
-  cmd:     slowmodewl
-  aliases: []
-  desc:    Ignores a role or a user from the slowmode feature.
-  usage:   "`{0}slowmodewl SomeRole` or `{0}slowmodewl AdminDude`"
 - name:    pollend
   cmd:     pollend
   aliases: []
@@ -1644,11 +1639,6 @@
   -        srbl
   desc:    Adds or removes a blacklisted user. Blacklisted users will never receive the stream role.
   usage:   "`{0}srbl add @b1nzy#1234` or `{0}srbl rem @b1nzy#1234`"
-- name:    slowmode
-  cmd:     slowmode
-  aliases: []
-  desc:    Toggles slowmode. Disable by specifying no parameters. To enable, specify a number of messages each user can send, and an interval in seconds. For example 1 message every 5 seconds.
-  usage:   "`{0}slowmode 1 5` or `{0}slowmode`"
 - name:    shoplistadd
   cmd:     shoplistadd
   aliases: []
@@ -2286,12 +2276,10 @@
   aliases: []
   desc:    Generiert eine zufällige Zahl im angegebenen Intervall.
   usage:   "`{0}rng [minimum=0] [maximum = 1]`"
-- name:    slowmodenative
-  cmd:     slowmodenative
-  aliases:
-  -        slowmoden
-  desc:    "**Native-Slowmode-Beta** Aktiviert den Slowmode mit 1 Nachricht pro Intervallzeit (in Sekunden). Deaktiviert den Slowmode mit Intervall 0 (default)."
-  usage:   "`{0}slowmodenative [interval = 0]`"
+- name:    slowmode
+  cmd:     slowmode
+  desc:    "Aktiviert/deaktiviert den Discord-Slowmode mit der angegebenen Zeit."
+  usage:   "`{0}slowmode [Zeit=0]`"
 - name:    voicestats
   cmd:     voicestats
   aliases:

@@ -6,9 +6,7 @@ using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Modules.Administration.Common;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
@@ -24,19 +22,19 @@ namespace Mitternacht.Modules.Administration {
 				this.uow = uow;
 			}
 
-			private string GetAntiSpamString(AntiSpamStats stats) {
-				var ignoredString = string.Join(", ", stats.AntiSpamSettings.IgnoredChannels.Select(c => $"<#{c.ChannelId}>"));
+			private string GetAntiSpamString(AntiSpamSetting antiSpamSettings) {
+				var ignoredString = string.Join(", ", antiSpamSettings.IgnoredChannels.Select(c => $"<#{c.ChannelId}>"));
 
 				if(string.IsNullOrWhiteSpace(ignoredString))
 					ignoredString = "none";
 
-				var add = stats.AntiSpamSettings.Action == PunishmentAction.Mute && stats.AntiSpamSettings.MuteTime > 0 ? $" ({stats.AntiSpamSettings.MuteTime}s)" : "";
+				var add = antiSpamSettings.Action == PunishmentAction.Mute && antiSpamSettings.MuteTime > 0 ? $" ({antiSpamSettings.MuteTime}s)" : "";
 
-				return GetText("spam_stats", Format.Bold(stats.AntiSpamSettings.MessageThreshold.ToString()), Format.Bold($"{stats.AntiSpamSettings.Action}{add}"), ignoredString);
+				return GetText("spam_stats", Format.Bold(antiSpamSettings.MessageThreshold.ToString()), Format.Bold($"{antiSpamSettings.Action}{add}"), ignoredString);
 			}
 
-			private string GetAntiRaidString(AntiRaidStats stats)
-				=> GetText("raid_stats", Format.Bold(stats.AntiRaidSettings.UserThreshold.ToString()), Format.Bold(stats.AntiRaidSettings.Seconds.ToString()), Format.Bold(stats.AntiRaidSettings.Action.ToString()));
+			private string GetAntiRaidString(AntiRaidSetting antiRaidSettings)
+				=> GetText("raid_stats", Format.Bold(antiRaidSettings.UserThreshold.ToString()), Format.Bold(antiRaidSettings.Seconds.ToString()), Format.Bold(antiRaidSettings.Action.ToString()));
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
@@ -54,36 +52,29 @@ namespace Mitternacht.Modules.Administration {
 
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiRaidSetting));
 
-				if(Service.AntiRaidGuilds.TryRemove(Context.Guild.Id, out _)) {
+				if(gc.AntiRaidSetting != null) {
 					gc.AntiRaidSetting = null;
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("prot_disable", "Anti-Raid").ConfigureAwait(false);
-					return;
-				}
+				} else {
+					try {
+						await _mute.GetMuteRole(Context.Guild).ConfigureAwait(false);
+					} catch(Exception ex) {
+						_log.Warn(ex);
+						await ReplyErrorLocalized("prot_error").ConfigureAwait(false);
+						return;
+					}
 
-				try {
-					await _mute.GetMuteRole(Context.Guild).ConfigureAwait(false);
-				} catch(Exception ex) {
-					_log.Warn(ex);
-					await ReplyErrorLocalized("prot_error").ConfigureAwait(false);
-					return;
-				}
-
-				var stats = new AntiRaidStats {
-					AntiRaidSettings = new AntiRaidSetting {
+					gc.AntiRaidSetting = new AntiRaidSetting {
 						Action = action,
 						Seconds = seconds,
 						UserThreshold = userThreshold,
-					}
-				};
+					};
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				Service.AntiRaidGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) => stats);
-
-				gc.AntiRaidSetting = stats.AntiRaidSettings;
-				await uow.SaveChangesAsync(false).ConfigureAwait(false);
-
-				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiRaidString(stats)}", GetText("prot_enable", "Anti-Raid")).ConfigureAwait(false);
+					await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiRaidString(gc.AntiRaidSetting)}", GetText("prot_enable", "Anti-Raid")).ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -91,19 +82,19 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.Administrator)]
 			[Priority(1)]
 			public async Task AntiSpam() {
-				if(Service.AntiSpamGuilds.TryRemove(Context.Guild.Id, out var removed)) {
-					foreach(var userSpamStats in removed.UserStats) {
-						userSpamStats.Value.Dispose();
-					}
-					var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
+
+				if(gc.AntiSpamSetting != null) {
+					Service.ResetSpamForGuild(Context.Guild.Id);
 
 					gc.AntiSpamSetting = null;
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
 					await ReplyConfirmLocalized("prot_disable", "Anti-Spam").ConfigureAwait(false);
 					return;
+				} else {
+					await AntiSpam(3).ConfigureAwait(false);
 				}
-
-				await AntiSpam(3).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -125,87 +116,66 @@ namespace Mitternacht.Modules.Administration {
 					return;
 				}
 
-				var stats = new AntiSpamStats {
-					AntiSpamSettings = new AntiSpamSetting {
-						Action = action,
-						MessageThreshold = messageCount,
-						MuteTime = time,
-					}
-				};
-
-				Service.AntiSpamGuilds.AddOrUpdate(Context.Guild.Id, stats, (key, old) => {
-					stats.AntiSpamSettings.MessageThreshold = messageCount;
-					stats.AntiSpamSettings.Action = action;
-					stats.AntiSpamSettings.MuteTime = time;
-					return stats;
-				});
-
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting));
 
-				gc.AntiSpamSetting = stats.AntiSpamSettings;
+				gc.AntiSpamSetting = new AntiSpamSetting {
+					Action = action,
+					MessageThreshold = messageCount,
+					MuteTime = time,
+				};
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiSpamString(stats)}", GetText("prot_enable", "Anti-Spam")).ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiSpamString(gc.AntiSpamSetting)}", GetText("prot_enable", "Anti-Spam")).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.Administrator)]
 			public async Task AntispamIgnore() {
-				var channel = (ITextChannel)Context.Channel;
-
-				var obj = new AntiSpamIgnore {
-					ChannelId = channel.Id
-				};
-
-				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
-				var spam = gc.AntiSpamSetting;
-				if(spam == null) {
+				var antiSpamSetting = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels)).AntiSpamSetting;
+				
+				if(antiSpamSetting == null) {
 					return;
 				}
 
-				bool added;
-				if(spam.IgnoredChannels.Add(obj)) {
-					if(Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out var temp))
-						temp.AntiSpamSettings.IgnoredChannels.Add(obj);
-					added = true;
-				} else {
-					spam.IgnoredChannels.Remove(obj);
-					if(Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out var temp))
-						temp.AntiSpamSettings.IgnoredChannels.Remove(obj);
-					added = false;
-				}
+				if(antiSpamSetting.IgnoredChannels.Any(c => c.ChannelId == Context.Channel.Id)) {
+					antiSpamSetting.IgnoredChannels.Add(new AntiSpamIgnore {
+						ChannelId = Context.Channel.Id
+					});
 
-				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				if(added)
 					await ReplyConfirmLocalized("spam_ignore", "Anti-Spam").ConfigureAwait(false);
-				else
-					await ReplyConfirmLocalized("spam_not_ignore", "Anti-Spam").ConfigureAwait(false);
+				} else {
+					antiSpamSetting.IgnoredChannels.RemoveWhere(x => x.ChannelId == Context.Channel.Id);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
+					await ReplyConfirmLocalized("spam_not_ignore", "Anti-Spam").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task AntiList() {
-				Service.AntiSpamGuilds.TryGetValue(Context.Guild.Id, out var spam);
-				Service.AntiRaidGuilds.TryGetValue(Context.Guild.Id, out var raid);
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiRaidSetting).Include(x => x.AntiSpamSetting));
+				var antiSpamSetting = gc.AntiSpamSetting;
+				var antiRaidSetting = gc.AntiRaidSetting;
 
-				if(spam == null && raid == null) {
+				if(antiSpamSetting == null && antiRaidSetting == null) {
 					await ReplyConfirmLocalized("prot_none").ConfigureAwait(false);
 					return;
 				}
 
 				var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("prot_active"));
 
-				if(spam != null)
+				if(antiSpamSetting != null)
 					embed.AddField(efb => efb.WithName("Anti-Spam")
-						.WithValue(GetAntiSpamString(spam))
+						.WithValue(GetAntiSpamString(antiSpamSetting))
 						.WithIsInline(true));
 
-				if(raid != null)
+				if(antiRaidSetting != null)
 					embed.AddField(efb => efb.WithName("Anti-Raid")
-						.WithValue(GetAntiRaidString(raid))
+						.WithValue(GetAntiRaidString(antiRaidSetting))
 						.WithIsInline(true));
 
 				await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);

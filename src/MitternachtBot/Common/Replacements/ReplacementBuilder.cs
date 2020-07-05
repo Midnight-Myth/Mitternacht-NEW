@@ -39,9 +39,9 @@ namespace Mitternacht.Common.Replacements {
 			_reps.TryAdd("%sid%",         () => guild == null ? "DM" : guild.Id.ToString());
 			_reps.TryAdd("%server%",      () => guild == null ? "DM" : guild.Name);
 			_reps.TryAdd("%server_time%", () => {
-				var to = (guild != null && GuildTimezoneService.AllServices.TryGetValue(client.CurrentUser.Id, out var tz) ? tz.GetTimeZoneOrDefault(guild.Id) : null) ?? TimeZoneInfo.Local;
+				var timeZone = GuildTimezoneService.AllGuildTimezoneServices.TryGetValue(client.CurrentUser.Id, out var tzs) ? tzs.GetTimeZoneOrUtc(guild.Id) : TimeZoneInfo.Utc;
 
-				return $"{TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, to):HH:mm} {to.StandardName.GetInitials()}";
+				return $"{TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, timeZone):HH:mm} {StringExtensions.GetInitials(timeZone.StandardName)}";
 			});
 			return this;
 		}

@@ -1,21 +1,15 @@
-using System.Collections.Concurrent;
 using System.Globalization;
 using Discord;
 
-namespace Mitternacht.Services
-{
-    public interface ILocalization : IMService
-    {
-        CultureInfo DefaultCultureInfo { get; }
-        ConcurrentDictionary<ulong, CultureInfo> GuildCultureInfos { get; }
+namespace Mitternacht.Services {
+	public interface ILocalization : IMService {
+		CultureInfo DefaultCultureInfo { get; }
 
-        CultureInfo GetCultureInfo(IGuild guild);
-        CultureInfo GetCultureInfo(ulong? guildId);
-        void RemoveGuildCulture(IGuild guild);
-        void RemoveGuildCulture(ulong guildId);
-        void ResetDefaultCulture();
-        void SetDefaultCulture(CultureInfo ci);
-        void SetGuildCulture(IGuild guild, CultureInfo ci);
-        void SetGuildCulture(ulong guildId, CultureInfo ci);
-    }
+		CultureInfo GetCultureInfo(IGuild guild);
+		CultureInfo GetCultureInfo(ulong? guildId);
+		void RemoveGuildCulture(IGuild guild);
+		void ResetDefaultCulture();
+		void SetDefaultCulture(CultureInfo ci);
+		void SetGuildCulture(IGuild guild, CultureInfo ci);
+	}
 }

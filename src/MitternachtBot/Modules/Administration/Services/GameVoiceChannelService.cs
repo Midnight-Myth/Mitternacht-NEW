@@ -1,69 +1,52 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
-using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public class GameVoiceChannelService : IMService
-    {
-        public readonly ConcurrentHashSet<ulong> GameVoiceChannels;
+namespace Mitternacht.Modules.Administration.Services {
+	public class GameVoiceChannelService : IMService {
+		private readonly DbService _db;
+		private readonly Logger _log;
 
-        private readonly Logger _log;
+		public GameVoiceChannelService(DiscordSocketClient client, DbService db) {
+			_db = db;
+			_log = LogManager.GetCurrentClassLogger();
 
-        public GameVoiceChannelService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs)
-        {
-            _log = LogManager.GetCurrentClassLogger();
+			client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
+		}
 
-            GameVoiceChannels = new ConcurrentHashSet<ulong>(
-                gcs.Where(gc => gc.GameVoiceChannel != null)
-                                         .Select(gc => gc.GameVoiceChannel.Value));
+		private Task Client_UserVoiceStateUpdated(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState) {
+			var _ = Task.Run(async () => {
+				try {
+					if (!(user is SocketGuildUser guildUser))
+						return;
 
-            client.UserVoiceStateUpdated += Client_UserVoiceStateUpdated;
+					var game = guildUser.Activity?.Name?.TrimTo(50);
 
-        }
+					if (oldState.VoiceChannel == newState.VoiceChannel || newState.VoiceChannel == null)
+						return;
 
-        private Task Client_UserVoiceStateUpdated(SocketUser usr, SocketVoiceState oldState, SocketVoiceState newState)
-        {
-            var _ = Task.Run(async () =>
-            {
-                try
-                {
-                    if (!(usr is SocketGuildUser gUser))
-                        return;
+					using var uow = _db.UnitOfWork;
 
-                    var game = gUser.Activity?.Name?.TrimTo(50).ToLowerInvariant();
+					if (uow.GuildConfigs.For(guildUser.Guild.Id).GameVoiceChannel == newState.VoiceChannel.Id || string.IsNullOrWhiteSpace(game))
+						return;
 
-                    if (oldState.VoiceChannel == newState.VoiceChannel ||
-                        newState.VoiceChannel == null)
-                        return;
+					var vch = guildUser.Guild.VoiceChannels.FirstOrDefault(x => x.Name.Equals(game, StringComparison.OrdinalIgnoreCase));
 
-                    if (!GameVoiceChannels.Contains(newState.VoiceChannel.Id) ||
-                        string.IsNullOrWhiteSpace(game))
-                        return;
+					if (vch == null)
+						return;
 
-                    var vch = gUser.Guild.VoiceChannels
-                        .FirstOrDefault(x => x.Name.ToLowerInvariant() == game);
+					await Task.Delay(1000).ConfigureAwait(false);
+					await guildUser.ModifyAsync(gu => gu.Channel = vch).ConfigureAwait(false);
+				} catch (Exception ex) {
+					_log.Warn(ex);
+				}
+			});
 
-                    if (vch == null)
-                        return;
-
-                    await Task.Delay(1000).ConfigureAwait(false);
-                    await gUser.ModifyAsync(gu => gu.Channel = vch).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    _log.Warn(ex);
-                }
-            });
-
-            return Task.CompletedTask;
-        }
-    }
+			return Task.CompletedTask;
+		}
+	}
 }

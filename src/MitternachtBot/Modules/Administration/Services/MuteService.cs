@@ -22,11 +22,13 @@ namespace Mitternacht.Modules.Administration.Services {
 		private readonly DiscordSocketClient _client;
 		private readonly DbService _db;
 
-		public MuteService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, DbService db) {
+		public MuteService(DiscordSocketClient client, DbService db) {
 			_client = client;
 			_db = db;
 
-			foreach(var gc in gcs) {
+			using var uow = _db.UnitOfWork;
+
+			foreach(var gc in uow.GuildConfigs.GetAllGuildConfigs(client.Guilds.Select(g => g.Id).ToList())) {
 				foreach(var ut in gc.UnmuteTimers) {
 					var after = ut.UnmuteAt - TimeSpan.FromMinutes(2) <= DateTime.UtcNow ? TimeSpan.FromMinutes(2) : ut.UnmuteAt - DateTime.UtcNow;
 					StartUnmuteTimer(gc.GuildId, ut.UserId, after);

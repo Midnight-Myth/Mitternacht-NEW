@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
+using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
@@ -12,83 +13,82 @@ using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class ProtectionService : IMService {
-		public readonly ConcurrentDictionary<ulong, AntiRaidStats> AntiRaidGuilds = new ConcurrentDictionary<ulong, AntiRaidStats>();
-		public readonly ConcurrentDictionary<ulong, AntiSpamStats> AntiSpamGuilds = new ConcurrentDictionary<ulong, AntiSpamStats>();
+		private readonly DbService _db;
+		private readonly MuteService _mute;
+		private readonly Logger _log;
+		
+		private readonly ConcurrentDictionary<ulong, AntiRaidStats> _antiRaidGuilds = new ConcurrentDictionary<ulong, AntiRaidStats>();
+		private readonly ConcurrentDictionary<ulong, AntiSpamStats> _antiSpamGuilds = new ConcurrentDictionary<ulong, AntiSpamStats>();
 
 		public event Func<PunishmentAction, ProtectionType, IGuildUser[], Task> OnAntiProtectionTriggered = delegate { return Task.CompletedTask; };
 
-		private readonly Logger _log;
-		private readonly MuteService _mute;
-
-		public ProtectionService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, MuteService mute) {
-			_log = LogManager.GetCurrentClassLogger();
+		public ProtectionService(DiscordSocketClient client, DbService db, MuteService mute) {
+			_db = db;
 			_mute = mute;
+			_log = LogManager.GetCurrentClassLogger();
 
-			foreach(var gc in gcs) {
-				var raid = gc.AntiRaidSetting;
-				var spam = gc.AntiSpamSetting;
+			client.UserJoined += UserJoinedAntiRaidHandler;
+			client.MessageReceived += MessageReceivedAntiSpamHandler;
+		}
 
-				if(raid != null) {
-					var raidStats = new AntiRaidStats { AntiRaidSettings = raid };
-					AntiRaidGuilds.TryAdd(gc.GuildId, raidStats);
+		public void ResetSpamForGuild(ulong guildId) {
+			if(_antiSpamGuilds.TryGetValue(guildId, out var antiSpamStats)) {
+				foreach(var userSpamStats in antiSpamStats.UserStats) {
+					userSpamStats.Value.Dispose();
 				}
-
-				if(spam != null)
-					AntiSpamGuilds.TryAdd(gc.GuildId, new AntiSpamStats { AntiSpamSettings = spam });
 			}
+		}
 
-			client.MessageReceived += imsg => {
-				if(!(imsg is IUserMessage msg) || msg.Author.IsBot)
-					return Task.CompletedTask;
-
-				if(!(msg.Channel is ITextChannel channel))
-					return Task.CompletedTask;
-				var _ = Task.Run(async () => {
-					try {
-						if(!AntiSpamGuilds.TryGetValue(channel.Guild.Id, out var spamSettings) || spamSettings.AntiSpamSettings.IgnoredChannels.Contains(new AntiSpamIgnore{ChannelId = channel.Id}))
-							return;
-
-						var stats = spamSettings.UserStats.AddOrUpdate(msg.Author.Id, (id) => new UserSpamStats(msg), (id, old) => {
-							old.ApplyNextMessage(msg);
-							return old;
-						});
-
-						if(stats.Count >= spamSettings.AntiSpamSettings.MessageThreshold && spamSettings.UserStats.TryRemove(msg.Author.Id, out stats)) {
-							stats.Dispose();
-							await PunishUsers(spamSettings.AntiSpamSettings.Action, ProtectionType.Spamming, spamSettings.AntiSpamSettings.MuteTime, (IGuildUser)msg.Author).ConfigureAwait(false);
-						}
-					} catch {
-                        // ignored
-                    }
-				});
+		private Task UserJoinedAntiRaidHandler(SocketGuildUser user) {
+			if(user.IsBot || !_antiRaidGuilds.TryGetOrCreate(user.Guild.Id, out var antiRaidStats, new AntiRaidStats()) || !antiRaidStats.RaidUsers.Add(user))
 				return Task.CompletedTask;
-			};
 
-			client.UserJoined += usr => {
-				if(usr.IsBot || !AntiRaidGuilds.TryGetValue(usr.Guild.Id, out var settings) || !settings.RaidUsers.Add(usr))
-					return Task.CompletedTask;
+			var _ = Task.Run(async () => {
+				try {
+					using var uow = _db.UnitOfWork;
+					var settings = uow.GuildConfigs.For(user.Guild.Id, set => set.Include(x => x.AntiRaidSetting)).AntiRaidSetting;
 
-				var _ = Task.Run(async () => {
-					try {
-						++settings.UsersCount;
+					++antiRaidStats.UsersCount;
 
-						if(settings.UsersCount >= settings.AntiRaidSettings.UserThreshold) {
-							var users = settings.RaidUsers.ToArray();
-							settings.RaidUsers.Clear();
+					if(antiRaidStats.UsersCount >= settings.UserThreshold) {
+						var users = antiRaidStats.RaidUsers.ToArray();
+						antiRaidStats.RaidUsers.Clear();
 
-							await PunishUsers(settings.AntiRaidSettings.Action, ProtectionType.Raiding, 0, users).ConfigureAwait(false);
-						}
-						await Task.Delay(1000 * settings.AntiRaidSettings.Seconds).ConfigureAwait(false);
+						await PunishUsers(settings.Action, ProtectionType.Raiding, 0, users).ConfigureAwait(false);
+					}
+					await Task.Delay(1000 * settings.Seconds).ConfigureAwait(false);
 
-						settings.RaidUsers.TryRemove(usr);
-						--settings.UsersCount;
+					antiRaidStats.RaidUsers.TryRemove(user);
+					--antiRaidStats.UsersCount;
+				} catch { }
+			});
+			return Task.CompletedTask;
+		}
 
-					} catch {
-                        // ignored
-                    }
-				});
+		private Task MessageReceivedAntiSpamHandler(SocketMessage message) {
+			if(!(message is IUserMessage userMessage) || userMessage.Author.IsBot || !(userMessage.Channel is ITextChannel channel) || !_antiSpamGuilds.TryGetValue(channel.Guild.Id, out var antiSpamStats))
 				return Task.CompletedTask;
-			};
+
+			var _ = Task.Run(async () => {
+				try {
+					using var uow = _db.UnitOfWork;
+					var settings = uow.GuildConfigs.For(channel.GuildId, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels)).AntiSpamSetting;
+
+					if(settings.IgnoredChannels.Any(x => x.ChannelId == channel.Id))
+						return;
+
+					var stats = antiSpamStats.UserStats.AddOrUpdate(userMessage.Author.Id, (id) => new UserSpamStats(userMessage), (id, old) => {
+						old.ApplyNextMessage(userMessage);
+						return old;
+					});
+
+					if(stats.Count >= settings.MessageThreshold && antiSpamStats.UserStats.TryRemove(userMessage.Author.Id, out stats)) {
+						stats.Dispose();
+						await PunishUsers(settings.Action, ProtectionType.Spamming, settings.MuteTime, (IGuildUser)userMessage.Author).ConfigureAwait(false);
+					}
+				} catch { }
+			});
+			return Task.CompletedTask;
 		}
 
 
@@ -116,8 +116,6 @@ namespace Mitternacht.Modules.Administration.Services {
 								await gu.Guild.RemoveBanAsync(gu).ConfigureAwait(false);
 							} catch {
 								await gu.Guild.RemoveBanAsync(gu).ConfigureAwait(false);
-								// try it twice, really don't want to ban user if 
-								// only kick has been specified as the punishement
 							}
 						} catch(Exception ex) { _log.Warn(ex, "I can't apply punishment"); }
 						break;
@@ -128,6 +126,7 @@ namespace Mitternacht.Modules.Administration.Services {
 						break;
 				}
 			}
+
 			await OnAntiProtectionTriggered(action, pt, gus).ConfigureAwait(false);
 		}
 	}

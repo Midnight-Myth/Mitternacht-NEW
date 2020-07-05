@@ -8,148 +8,154 @@ using Mitternacht.Services;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Modules.Administration
-{
-    public partial class Administration
-    {
-        [Group]
-        public class ServerGreetCommands : MitternachtSubmodule<GreetSettingsService>
-        {
-            private readonly IUnitOfWork uow;
+namespace Mitternacht.Modules.Administration {
+	public partial class Administration {
+		[Group]
+		public class ServerGreetCommands : MitternachtSubmodule<GreetSettingsService> {
+			private readonly IUnitOfWork uow;
 
-            public ServerGreetCommands(IUnitOfWork uow)
-            {
-                this.uow = uow;
-            }
+			public ServerGreetCommands(IUnitOfWork uow) {
+				this.uow = uow;
+			}
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task GreetDel(int timer = 30)
-            {
-                if (timer < 0 || timer > 600)
-                    return;
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task GreetDel(int timer = 30) {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.AutoDeleteGreetMessagesTimer = timer;
 
-                await Service.SetGreetDel(Context.Guild.Id, timer).ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-                if (timer > 0)
-                    await ReplyConfirmLocalized("greetdel_on", timer).ConfigureAwait(false);
-                else
-                    await ReplyConfirmLocalized("greetdel_off").ConfigureAwait(false);
-            }
+				if(timer > 0)
+					await ReplyConfirmLocalized("greetdel_on", timer).ConfigureAwait(false);
+				else
+					await ReplyConfirmLocalized("greetdel_off").ConfigureAwait(false);
+			}
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task Greet()
-            {
-                var enabled = await Service.SetGreet(Context.Guild.Id, Context.Channel.Id).ConfigureAwait(false);
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task Greet() {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.SendChannelGreetMessage = !gc.SendChannelGreetMessage;
+				gc.GreetMessageChannelId = Context.Channel.Id;
 
-                if (enabled)
-                    await ReplyConfirmLocalized("greet_on").ConfigureAwait(false);
-                else
-                    await ReplyConfirmLocalized("greet_off").ConfigureAwait(false);
-            }
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task GreetMsg([Remainder] string text = null)
-            {
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    var channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelGreetMessageText;
+				if(gc.SendChannelGreetMessage)
+					await ReplyConfirmLocalized("greet_on").ConfigureAwait(false);
+				else
+					await ReplyConfirmLocalized("greet_off").ConfigureAwait(false);
+			}
 
-                    await ReplyConfirmLocalized("greetmsg_cur", channelGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
-                    return;
-                }
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task GreetMsg([Remainder] string text = null) {
+				if(string.IsNullOrWhiteSpace(text)) {
+					var channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelGreetMessageText;
 
-                var sendGreetEnabled = Service.SetGreetMessage(Context.Guild.Id, ref text);
+					await ReplyConfirmLocalized("greetmsg_cur", channelGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
+					return;
+				} else {
+					var gc = uow.GuildConfigs.For(Context.Guild.Id);
+					gc.ChannelGreetMessageText = text.SanitizeMentions();
 
-                await ReplyConfirmLocalized("greetmsg_new").ConfigureAwait(false);
-                if (!sendGreetEnabled)
-                    await ReplyConfirmLocalized("greetmsg_enable", $"`{Prefix}greet`").ConfigureAwait(false);
-            }
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task GreetDm()
-            {
-                var enabled = await Service.SetGreetDm(Context.Guild.Id).ConfigureAwait(false);
+					await ReplyConfirmLocalized("greetmsg_new").ConfigureAwait(false);
+					if(!gc.SendChannelGreetMessage)
+						await ReplyConfirmLocalized("greetmsg_enable", $"`{Prefix}greet`").ConfigureAwait(false);
+				}
+			}
 
-                if (enabled)
-                    await ReplyConfirmLocalized("greetdm_on").ConfigureAwait(false);
-                else
-                    await ReplyConfirmLocalized("greetdm_off").ConfigureAwait(false);
-            }
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task GreetDm() {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.SendDmGreetMessage = !gc.SendDmGreetMessage;
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task GreetDmMsg([Remainder] string text = null)
-            {
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    var config = uow.GuildConfigs.For(Context.Guild.Id);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-                    await ReplyConfirmLocalized("greetdmmsg_cur", config.DmGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
-                    return;
-                }
+				if(gc.SendDmGreetMessage)
+					await ReplyConfirmLocalized("greetdm_on").ConfigureAwait(false);
+				else
+					await ReplyConfirmLocalized("greetdm_off").ConfigureAwait(false);
+			}
 
-                var sendGreetEnabled = Service.SetGreetDmMessage(Context.Guild.Id, ref text);
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task GreetDmMsg([Remainder] string text = null) {
+				if(string.IsNullOrWhiteSpace(text)) {
+					var config = uow.GuildConfigs.For(Context.Guild.Id);
 
-                await ReplyConfirmLocalized("greetdmmsg_new").ConfigureAwait(false);
-                if (!sendGreetEnabled)
-                    await ReplyConfirmLocalized("greetdmmsg_enable", $"`{Prefix}greetdm`").ConfigureAwait(false);
-            }
+					await ReplyConfirmLocalized("greetdmmsg_cur", config.DmGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
+					return;
+				} else {
+					var gc = uow.GuildConfigs.For(Context.Guild.Id);
+					gc.DmGreetMessageText = text.SanitizeMentions();
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task Bye()
-            {
-                var enabled = await Service.SetBye(Context.Guild.Id, Context.Channel.Id).ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-                if (enabled)
-                    await ReplyConfirmLocalized("bye_on").ConfigureAwait(false);
-                else
-                    await ReplyConfirmLocalized("bye_off").ConfigureAwait(false);
-            }
+					await ReplyConfirmLocalized("greetdmmsg_new").ConfigureAwait(false);
+					if(!gc.SendDmGreetMessage)
+						await ReplyConfirmLocalized("greetdmmsg_enable", $"`{Prefix}greetdm`").ConfigureAwait(false);
+				}
+			}
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task ByeMsg([Remainder] string text = null)
-            {
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    var byeMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelByeMessageText;
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task Bye() {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.SendChannelByeMessage = !gc.SendChannelByeMessage;
+				gc.ByeMessageChannelId = Context.Channel.Id;
 
-                    await ReplyConfirmLocalized("byemsg_cur", byeMessageText?.SanitizeMentions()).ConfigureAwait(false);
-                    return;
-                }
+				if(gc.SendChannelByeMessage)
+					await ReplyConfirmLocalized("bye_on").ConfigureAwait(false);
+				else
+					await ReplyConfirmLocalized("bye_off").ConfigureAwait(false);
+			}
 
-                var sendByeEnabled = Service.SetByeMessage(Context.Guild.Id, ref text);
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task ByeMsg([Remainder] string text = null) {
+				if(string.IsNullOrWhiteSpace(text)) {
+					var byeMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelByeMessageText;
 
-                await ReplyConfirmLocalized("byemsg_new").ConfigureAwait(false);
-                if (!sendByeEnabled)
-                    await ReplyConfirmLocalized("byemsg_enable", $"`{Prefix}bye`").ConfigureAwait(false);
-            }
+					await ReplyConfirmLocalized("byemsg_cur", byeMessageText?.SanitizeMentions()).ConfigureAwait(false);
+					return;
+				} else {
+					var gc = uow.GuildConfigs.For(Context.Guild.Id);
+					gc.ChannelByeMessageText = text.SanitizeMentions();
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageGuild)]
-            public async Task ByeDel(int timer = 30)
-            {
-                await Service.SetByeDel(Context.Guild.Id, timer).ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-                if (timer > 0)
-                    await ReplyConfirmLocalized("byedel_on", timer).ConfigureAwait(false);
-                else
-                    await ReplyConfirmLocalized("byedel_off").ConfigureAwait(false);
-            }
+					await ReplyConfirmLocalized("byemsg_new").ConfigureAwait(false);
+					if(!gc.SendChannelByeMessage)
+						await ReplyConfirmLocalized("byemsg_enable", $"`{Prefix}bye`").ConfigureAwait(false);
+				}
+			}
 
-        }
-    }
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageGuild)]
+			public async Task ByeDel(int timer = 30) {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.AutoDeleteByeMessagesTimer = timer;
+
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+				if(timer > 0)
+					await ReplyConfirmLocalized("byedel_on", timer).ConfigureAwait(false);
+				else
+					await ReplyConfirmLocalized("byedel_off").ConfigureAwait(false);
+			}
+
+		}
+	}
 }

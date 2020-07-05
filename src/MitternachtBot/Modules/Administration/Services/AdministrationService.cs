@@ -1,49 +1,37 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Mitternacht.Common.Collections;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public class AdministrationService : IMService
-    {
-        public readonly ConcurrentHashSet<ulong> DeleteMessagesOnCommand;
-        private readonly Logger _log;
+namespace Mitternacht.Modules.Administration.Services {
+	public class AdministrationService : IMService {
+		private readonly DbService _db;
+		private readonly Logger _log;
 
-        public AdministrationService(IEnumerable<GuildConfig> gcs, CommandHandler cmdHandler)
-        {
-            _log = LogManager.GetCurrentClassLogger();
+		public AdministrationService(DbService db, CommandHandler cmdHandler) {
+			_db = db;
+			_log = LogManager.GetCurrentClassLogger();
 
-            DeleteMessagesOnCommand = new ConcurrentHashSet<ulong>(gcs.Where(g => g.DeleteMessageOnCommand).Select(g => g.GuildId));
-            cmdHandler.CommandExecuted += DelMsgOnCmd_Handler;
-        }
+			cmdHandler.CommandExecuted += DeleteMessageAfterCommandExecution;
+		}
 
-        private Task DelMsgOnCmd_Handler(IUserMessage msg, CommandInfo cmd)
-        {
-            var _ = Task.Run(async () =>
-            {
-                try
-                {
-                    var channel = msg.Channel as SocketTextChannel;
-                    if (channel == null)
-                        return;
-                    if (DeleteMessagesOnCommand.Contains(channel.Guild.Id) && cmd.Name != "prune" && cmd.Name != "pick")
-                        await msg.DeleteAsync().ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    _log.Warn("Delmsgoncmd errored...");
-                    _log.Warn(ex);
-                }
-            });
-            return Task.CompletedTask;
-        }
-    }
+		private Task DeleteMessageAfterCommandExecution(IUserMessage msg, CommandInfo cmd) {
+			var _ = Task.Run(async () => {
+				try {
+					if(msg.Channel is SocketTextChannel channel) {
+						using var uow = _db.UnitOfWork;
+						if(uow.GuildConfigs.For(channel.Guild.Id).DeleteMessageOnCommand)
+							await msg.DeleteAsync().ConfigureAwait(false);
+					}
+				} catch (Exception ex) {
+					_log.Warn("Failed to delete message after command.");
+					_log.Warn(ex);
+				}
+			});
+			return Task.CompletedTask;
+		}
+	}
 }

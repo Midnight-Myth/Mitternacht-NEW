@@ -11,12 +11,9 @@ using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Mitternacht.Common.Collections;
 using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
 using NLog;
 using Npgsql;
 
@@ -40,7 +37,6 @@ namespace Mitternacht.Services {
 		private readonly IBotCredentials                     _bc;
 		private          INServiceProvider                   _services;
 		public           string                              DefaultPrefix => _bcp.BotConfig.DefaultPrefix;
-		private          ConcurrentDictionary<ulong, string> Prefixes      { get; }
 
 		public event Func<SocketUserMessage, Task>                 OnValidMessage     = delegate { return Task.CompletedTask; };
 		public event Func<IUserMessage, CommandInfo, Task>         CommandExecuted    = delegate { return Task.CompletedTask; };
@@ -53,7 +49,7 @@ namespace Mitternacht.Services {
 
 		private readonly Timer _clearUsersOnShortCooldown;
 
-		public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bcp, IEnumerable<GuildConfig> gcs, CommandService commandService, MitternachtBot bot, IBotCredentials bc) {
+		public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bcp, CommandService commandService, MitternachtBot bot, IBotCredentials bc) {
 			_client         = client;
 			_commandService = commandService;
 			_bot            = bot;
@@ -64,15 +60,19 @@ namespace Mitternacht.Services {
 			_log = LogManager.GetCurrentClassLogger();
 
 			_clearUsersOnShortCooldown = new Timer(_ => { UsersOnShortCooldown.Clear(); }, null, GlobalCommandsCooldown, GlobalCommandsCooldown);
-
-			Prefixes = gcs.Where(x => x.Prefix != null).ToDictionary(x => x.GuildId, x => x.Prefix).ToConcurrent();
 		}
 
 		public string GetPrefix(IGuild guild)
 			=> GetPrefix(guild?.Id);
 
-		public string GetPrefix(ulong? id)
-			=> id == null || !Prefixes.TryGetValue(id.Value, out var prefix) ? DefaultPrefix : prefix;
+		public string GetPrefix(ulong? guildId) {
+			if(!guildId.HasValue)
+				return DefaultPrefix;
+
+			using var uow = _db.UnitOfWork;
+			var prefix = uow.GuildConfigs.For(guildId.Value).Prefix;
+			return string.IsNullOrWhiteSpace(prefix) ? DefaultPrefix : prefix;
+		}
 
 		public string SetDefaultPrefix(string prefix) {
 			if(string.IsNullOrWhiteSpace(prefix)) throw new ArgumentNullException(nameof(prefix));
@@ -92,15 +92,10 @@ namespace Mitternacht.Services {
 			if(string.IsNullOrWhiteSpace(prefix)) throw new ArgumentNullException(nameof(prefix));
 			if(guild == null) throw new ArgumentNullException(nameof(guild));
 
-			prefix = prefix.ToLowerInvariant();
-
-			using(var uow = _db.UnitOfWork) {
-				var gc = uow.GuildConfigs.For(guild.Id);
-				gc.Prefix = prefix;
-				uow.SaveChanges();
-			}
-
-			Prefixes.AddOrUpdate(guild.Id, prefix, (key, old) => prefix);
+			using var uow = _db.UnitOfWork;
+			var gc = uow.GuildConfigs.For(guild.Id);
+			gc.Prefix = prefix;
+			uow.SaveChanges();
 
 			return prefix;
 		}
@@ -201,9 +196,9 @@ namespace Mitternacht.Services {
 			}
 
 			var prefix          = GetPrefix(guild?.Id);
-			var isPrefixCommand = messageContent.StartsWith(".prefix");
+			var isPrefixCommand = messageContent.StartsWith(".prefix", StringComparison.OrdinalIgnoreCase);
 			// execute the command and measure the time it took
-			if(messageContent.StartsWith(prefix) || isPrefixCommand) {
+			if(messageContent.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) || isPrefixCommand) {
 				var (success, error, info) = await ExecuteCommandAsync(new CommandContext(_client, userMsg), messageContent, isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
 				
 				startTickCount = Environment.TickCount - startTickCount;
@@ -366,7 +361,7 @@ namespace Mitternacht.Services {
 				}
 
 				var prefix          = GetPrefix(guild?.Id);
-				var isPrefixCommand = messageContent.StartsWith(".prefix");
+				var isPrefixCommand = messageContent.StartsWith(".prefix", StringComparison.OrdinalIgnoreCase);
 
 				return messageContent.StartsWith(prefix) || isPrefixCommand;
 			} catch(Exception) {

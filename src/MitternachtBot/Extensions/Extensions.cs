@@ -160,5 +160,8 @@ namespace Mitternacht.Extensions {
 		/// <returns>Module name</returns>
 		public static string GetModuleName(this ModuleInfo mi)
 			=> !mi.IsSubmodule ? mi.Name : (mi.Name.EndsWith("commands", StringComparison.OrdinalIgnoreCase) && mi.Name.Length > 8 ? mi.Name[0..^8] : mi.Name);
+
+		public static bool TryGetOrCreate<T, U>(this ConcurrentDictionary<T, U> dictionary, T key, out U value, U defaultValue)
+			=> dictionary.TryGetValue(key, out value) || dictionary.TryAdd(key, value = defaultValue);
 	}
 }

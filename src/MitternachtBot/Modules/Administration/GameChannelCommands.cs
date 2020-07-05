@@ -38,14 +38,10 @@ namespace Mitternacht.Modules.Administration
 
                 if (gc.GameVoiceChannel == vch.Id)
                 {
-                    Service.GameVoiceChannels.TryRemove(vch.Id);
                     id = gc.GameVoiceChannel = null;
                 }
                 else
                 {
-                    if(gc.GameVoiceChannel != null)
-                        Service.GameVoiceChannels.TryRemove(gc.GameVoiceChannel.Value);
-                    Service.GameVoiceChannels.Add(vch.Id);
                     id = gc.GameVoiceChannel = vch.Id;
                 }
 
@@ -57,7 +53,6 @@ namespace Mitternacht.Modules.Administration
                 }
                 else
                 {
-                    Service.GameVoiceChannels.Add(vch.Id);
                     await ReplyConfirmLocalized("gvc_enabled", Format.Bold(vch.Name)).ConfigureAwait(false);
                 }
             }
