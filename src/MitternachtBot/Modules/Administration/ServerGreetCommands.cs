@@ -5,6 +5,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration
@@ -14,11 +15,11 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class ServerGreetCommands : MitternachtSubmodule<GreetSettingsService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public ServerGreetCommands(DbService db)
+            public ServerGreetCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -57,11 +58,8 @@ namespace Mitternacht.Modules.Administration
             {
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    string channelGreetMessageText;
-                    using (var uow = _db.UnitOfWork)
-                    {
-                        channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelGreetMessageText;
-                    }
+                    var channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelGreetMessageText;
+
                     await ReplyConfirmLocalized("greetmsg_cur", channelGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
                     return;
                 }
@@ -93,11 +91,8 @@ namespace Mitternacht.Modules.Administration
             {
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    GuildConfig config;
-                    using (var uow = _db.UnitOfWork)
-                    {
-                        config = uow.GuildConfigs.For(Context.Guild.Id);
-                    }
+                    var config = uow.GuildConfigs.For(Context.Guild.Id);
+
                     await ReplyConfirmLocalized("greetdmmsg_cur", config.DmGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
                     return;
                 }
@@ -129,11 +124,8 @@ namespace Mitternacht.Modules.Administration
             {
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    string byeMessageText;
-                    using (var uow = _db.UnitOfWork)
-                    {
-                        byeMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelByeMessageText;
-                    }
+                    var byeMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelByeMessageText;
+
                     await ReplyConfirmLocalized("byemsg_cur", byeMessageText?.SanitizeMentions()).ConfigureAwait(false);
                     return;
                 }

@@ -9,20 +9,21 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Level.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Level {
 	[Group]
 	public partial class Level : MitternachtTopLevelModule<LevelService> {
 		private readonly IBotConfigProvider _bc;
-		private readonly DbService          _db;
+		private readonly IUnitOfWork uow;
 		private readonly IBotCredentials    _creds;
 
 		private string CurrencySign => _bc.BotConfig.CurrencySign;
 
-		public Level(IBotConfigProvider bc, IBotCredentials creds, DbService db) {
+		public Level(IBotConfigProvider bc, IBotCredentials creds, IUnitOfWork uow) {
 			_bc    = bc;
-			_db    = db;
+			this.uow    = uow;
 			_creds = creds;
 		}
 
@@ -36,7 +37,6 @@ namespace Mitternacht.Modules.Level {
 		public async Task Rank(ulong userId = 0) {
 			userId        = userId != 0 ? userId : Context.User.Id;
 
-			using var uow = _db.UnitOfWork;
 			var lm        = uow.LevelModel.Get(Context.Guild.Id, userId);
 
 			if(lm != null) {
@@ -62,7 +62,6 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task Ranks(int count = 20, int position = 1) {
-			using var uow = _db.UnitOfWork;
 			
 			var guildUserIds = (await Context.Guild.GetUsersAsync()).Select(gu => gu.Id).ToArray();
 			
@@ -84,7 +83,6 @@ namespace Mitternacht.Modules.Level {
 
 			if(!levelModels.Any()) return;
 
-			using var uow                = _db.UnitOfWork;
 			var       groupedLevelModels = levelModels.GroupBy(lm => (int) Math.Floor(levelModels.IndexOf(lm) * 1d / elementsPerList));
 			var       rankStrings        = new List<string>();
 			var       sb                 = new StringBuilder();
@@ -119,10 +117,9 @@ namespace Mitternacht.Modules.Level {
 		public async Task AddXp(int xp, [Remainder] IUser user = null) {
 			user??=Context.User;
 
-			using var uow = _db.UnitOfWork;
 			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, user.ToString()).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -136,10 +133,9 @@ namespace Mitternacht.Modules.Level {
 				return;
 			}
 
-			using var uow = _db.UnitOfWork;
 			uow.LevelModel.AddXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("addxp", xp, userId.ToString()).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -148,10 +144,9 @@ namespace Mitternacht.Modules.Level {
 		[OwnerOnly]
 		public async Task SetXp(int xp, [Remainder] IUser user = null) {
 			user??=Context.User;
-			using var uow = _db.UnitOfWork;
 			uow.LevelModel.SetXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", user.ToString(), xp).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -165,10 +160,9 @@ namespace Mitternacht.Modules.Level {
 				return;
 			}
 
-			using var uow = _db.UnitOfWork;
 			uow.LevelModel.SetXP(Context.Guild.Id, userId, xp, Context.Channel.Id);
 			await ConfirmLocalized("setxp", userId, xp).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -185,7 +179,6 @@ namespace Mitternacht.Modules.Level {
 				return;
 			}
 
-			using var uow = _db.UnitOfWork;
 			if(!uow.Currency.TryUpdateState(user.Id, -moneyToSpend)) {
 				if(user == Context.User)
 					await ReplyErrorLocalized("ttxp_error_no_money_self").ConfigureAwait(false);
@@ -201,7 +194,7 @@ namespace Mitternacht.Modules.Level {
 			else
 				await ReplyConfirmLocalized("ttxp_turned_other", user.ToString(), moneyToSpend, CurrencySign, xp)
 					.ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 	}
 }

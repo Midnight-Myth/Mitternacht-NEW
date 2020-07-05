@@ -15,6 +15,7 @@ using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
 using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration
@@ -22,16 +23,16 @@ namespace Mitternacht.Modules.Administration {
         [Group]
         public class SelfCommands : MitternachtSubmodule<SelfService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
             private static readonly object Locker = new object();
             private readonly DiscordSocketClient _client;
             private readonly IImagesService _images;
             private readonly IBotConfigProvider _bc;
 
-            public SelfCommands(DbService db, DiscordSocketClient client, IImagesService images, IBotConfigProvider bc)
+            public SelfCommands(IUnitOfWork uow, DiscordSocketClient client, IImagesService images, IBotConfigProvider bc)
             {
-                _db = db;
+                this.uow = uow;
                 _client = client;
                 _images = images;
                 _bc = bc;
@@ -52,11 +53,9 @@ namespace Mitternacht.Modules.Administration {
                     VoiceChannelId = guser.VoiceChannel?.Id,
                     VoiceChannelName = guser.VoiceChannel?.Name,
                 };
-                using (var uow = _db.UnitOfWork)
-                {
-                    uow.BotConfig.GetOrCreate().StartupCommands.Add(cmd);
-                    await uow.CompleteAsync().ConfigureAwait(false);
-                }
+
+                uow.BotConfig.GetOrCreate().StartupCommands.Add(cmd);
+                await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
                     .WithTitle(GetText("scadd"))
@@ -76,16 +75,13 @@ namespace Mitternacht.Modules.Administration {
                 if (page < 1)
                     return;
                 page -= 1;
-                IEnumerable<StartupCommand> scmds;
-                using (var uow = _db.UnitOfWork)
-                {
-                    scmds = uow.BotConfig
-                       .GetOrCreate()
-                       .StartupCommands
-                       .OrderBy(x => x.Id)
-                       .ToArray();
-                }
-                scmds = scmds.Skip(page * 5).Take(5);
+                var scmds = uow.BotConfig
+                    .GetOrCreate()
+                    .StartupCommands
+                    .OrderBy(x => x.Id)
+                    .ToArray();
+
+                scmds = scmds.Skip(page * 5).Take(5).ToArray();
                 if (!scmds.Any())
                 {
                     await ReplyErrorLocalized("startcmdlist_none").ConfigureAwait(false);
@@ -126,18 +122,14 @@ namespace Mitternacht.Modules.Administration {
             [OwnerOnly]
             public async Task StartupCommandRemove([Remainder] string cmdText)
             {
-                StartupCommand cmd;
-                using (var uow = _db.UnitOfWork)
-                {
-                    var cmds = uow.BotConfig.GetOrCreate().StartupCommands;
-                    cmd = cmds
-                       .FirstOrDefault(x => x.CommandText.ToLowerInvariant() == cmdText.ToLowerInvariant());
+                var cmds = uow.BotConfig.GetOrCreate().StartupCommands;
+                var cmd = cmds
+                    .FirstOrDefault(x => x.CommandText.ToLowerInvariant() == cmdText.ToLowerInvariant());
 
-                    if (cmd != null)
-                    {
-                        cmds.Remove(cmd);
-                        await uow.CompleteAsync().ConfigureAwait(false);
-                    }
+                if (cmd != null)
+                {
+                    cmds.Remove(cmd);
+                    await uow.SaveChangesAsync(false).ConfigureAwait(false);
                 }
 
                 if (cmd == null)
@@ -151,11 +143,8 @@ namespace Mitternacht.Modules.Administration {
             [OwnerOnly]
             public async Task StartupCommandsClear()
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    uow.BotConfig.GetOrCreate().StartupCommands.Clear();
-                    uow.Complete();
-                }
+                uow.BotConfig.GetOrCreate().StartupCommands.Clear();
+                uow.SaveChanges(false);
 
                 await ReplyConfirmLocalized("startcmds_cleared").ConfigureAwait(false);
             }
@@ -164,12 +153,10 @@ namespace Mitternacht.Modules.Administration {
             [OwnerOnly]
             public async Task ForwardMessages()
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.BotConfig.GetOrCreate();
-                    config.ForwardMessages = !config.ForwardMessages;
-                    uow.Complete();
-                }
+                var config = uow.BotConfig.GetOrCreate();
+                config.ForwardMessages = !config.ForwardMessages;
+                uow.SaveChanges(false);
+
                 _bc.Reload();
                 
                 if (Service.ForwardDMs)
@@ -182,13 +169,11 @@ namespace Mitternacht.Modules.Administration {
             [OwnerOnly]
             public async Task ForwardToAll()
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.BotConfig.GetOrCreate();
-                    lock (Locker)
-                        config.ForwardToAllOwners = !config.ForwardToAllOwners;
-                    uow.Complete();
-                }
+                var config = uow.BotConfig.GetOrCreate();
+                lock (Locker)
+                    config.ForwardToAllOwners = !config.ForwardToAllOwners;
+                uow.SaveChanges(false);
+
                 _bc.Reload();
 
                 if (Service.ForwardDMsToAllOwners)

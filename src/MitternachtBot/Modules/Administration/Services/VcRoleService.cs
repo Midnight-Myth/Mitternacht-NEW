@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Administration.Services
             {
                 _log.Warn($"Removing {missingRoles.Count} missing roles from {nameof(VcRoleService)}");
                 uow.Context.RemoveRange(missingRoles);
-                uow.Complete();
+                uow.SaveChanges();
             }
         }
 

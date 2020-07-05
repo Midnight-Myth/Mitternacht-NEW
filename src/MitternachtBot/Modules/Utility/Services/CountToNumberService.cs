@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Utility.Services {
 				var gc = uow.GuildConfigs.For(guild.Id);
 				gc.CountToNumberChannelId = channel?.Id;
 				uow.GuildConfigs.Update(gc);
-				uow.Complete();
+				uow.SaveChanges();
 			}
 			_countChannelIds[guild.Id] = (channel?.Id, _countChannelIds[guild.Id].MessageChance);
 			return true;
@@ -55,7 +55,7 @@ namespace Mitternacht.Modules.Utility.Services {
 				var gc = uow.GuildConfigs.For(guildId);
 				gc.CountToNumberMessageChance = chance;
 				uow.GuildConfigs.Update(gc);
-				uow.Complete();
+				uow.SaveChanges();
 			}
 			_countChannelIds[guildId] = (_countChannelIds[guildId].ChannelId, chance);
 			return true;

@@ -18,7 +18,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
 			if(config == null) {
 				_set.Add(config = new BotConfig());
-				_context.SaveChanges();
+				_context.SaveChanges(false);
 			}
 
 			return config;

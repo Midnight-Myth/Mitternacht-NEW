@@ -4,6 +4,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration
@@ -14,25 +15,22 @@ namespace Mitternacht.Modules.Administration
         public class PlayingRotateCommands : MitternachtSubmodule<PlayingRotateService>
         {
             private static readonly object _locker = new object();
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public PlayingRotateCommands(DbService db)
+            public PlayingRotateCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
             [OwnerOnly]
             public async Task RotatePlaying()
             {
-                bool enabled;
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.BotConfig.GetOrCreate();
+                var config = uow.BotConfig.GetOrCreate();
 
-                    enabled = config.RotatingStatuses = !config.RotatingStatuses;
-                    uow.Complete();
-                }
+                var enabled = config.RotatingStatuses = !config.RotatingStatuses;
+                uow.SaveChanges(false);
+
                 if (enabled)
                     await ReplyConfirmLocalized("ropl_enabled").ConfigureAwait(false);
                 else
@@ -43,13 +41,10 @@ namespace Mitternacht.Modules.Administration
             [OwnerOnly]
             public async Task AddPlaying([Remainder] string status)
             {
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.BotConfig.GetOrCreate();
-                    var toAdd = new PlayingStatus { Status = status };
-                    config.RotatingStatusMessages.Add(toAdd);
-                    await uow.CompleteAsync();
-                }
+                var config = uow.BotConfig.GetOrCreate();
+                var toAdd = new PlayingStatus { Status = status };
+                config.RotatingStatusMessages.Add(toAdd);
+                await uow.SaveChangesAsync(false);
 
                 await ReplyConfirmLocalized("ropl_added").ConfigureAwait(false);
             }
@@ -76,17 +71,14 @@ namespace Mitternacht.Modules.Administration
             {
                 index -= 1;
 
-                string msg;
-                using (var uow = _db.UnitOfWork)
-                {
-                    var config = uow.BotConfig.GetOrCreate();
+                var config = uow.BotConfig.GetOrCreate();
 
-                    if (index >= config.RotatingStatusMessages.Count)
-                        return;
-                    msg = config.RotatingStatusMessages[index].Status;
-                    config.RotatingStatusMessages.RemoveAt(index);
-                    await uow.CompleteAsync();
-                }
+                if (index >= config.RotatingStatusMessages.Count)
+                    return;
+                var msg = config.RotatingStatusMessages[index].Status;
+                config.RotatingStatusMessages.RemoveAt(index);
+                await uow.SaveChangesAsync(false);
+
                 await ReplyConfirmLocalized("reprm", msg).ConfigureAwait(false);
             }
         }

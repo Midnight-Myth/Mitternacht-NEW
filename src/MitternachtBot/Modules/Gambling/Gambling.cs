@@ -7,26 +7,22 @@ using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using MoreLinq;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling : MitternachtTopLevelModule {
 		private readonly IBotConfigProvider _bc;
-		private readonly DbService _db;
+		private readonly IUnitOfWork uow;
 		private readonly CurrencyService _currency;
 
 		private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
 		private string CurrencySign => _bc.BotConfig.CurrencySign;
 
-		public Gambling(IBotConfigProvider bc, DbService db, CurrencyService currency) {
+		public Gambling(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService currency) {
 			_bc = bc;
-			_db = db;
+			this.uow = uow;
 			_currency = currency;
-		}
-
-		public long GetCurrency(ulong id) {
-			using var uow = _db.UnitOfWork;
-			return uow.Currency.GetUserCurrency(id);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -45,15 +41,15 @@ namespace Mitternacht.Modules.Gambling {
 		[Priority(1)]
 		public async Task Cash([Remainder] IUser user = null) {
 			if(user == null)
-				await ConfirmLocalized("has", Format.Bold(Context.User.ToString()), $"{GetCurrency(Context.User.Id)} {CurrencySign}").ConfigureAwait(false);
+				await ConfirmLocalized("has", Format.Bold(Context.User.ToString()), $"{uow.Currency.GetUserCurrency(Context.User.Id)} {CurrencySign}").ConfigureAwait(false);
 			else
-				await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{GetCurrency(user.Id)} {CurrencySign}").ConfigureAwait(false);
+				await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{uow.Currency.GetUserCurrency(user.Id)} {CurrencySign}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(0)]
 		public async Task Cash(ulong userId) {
-			await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{GetCurrency(userId)} {CurrencySign}").ConfigureAwait(false);
+			await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{uow.Currency.GetUserCurrency(userId)} {CurrencySign}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -158,13 +154,11 @@ namespace Mitternacht.Modules.Gambling {
 		public async Task Leaderboard(int page = 1) {
 			if(page >= 1) {
 				const int elementsPerPage = 9;
-				using var uow = _db.UnitOfWork;
 				var currencyCount = uow.Currency.GetAll().Count();
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
 					var embed = new EmbedBuilder().WithOkColor().WithTitle($"{CurrencySign} {GetText("leaderboard")}");
 
-					using var uow = _db.UnitOfWork;
 					var richest = uow.Currency.GetTopRichest(elementsPerPage, elementsPerPage * p).ToList();
 
 					if(richest.Any()) {

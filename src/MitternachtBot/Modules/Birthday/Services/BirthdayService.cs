@@ -49,7 +49,7 @@ namespace Mitternacht.Modules.Birthday.Services {
 			var newDay = bc.LastTimeBirthdaysChecked.IsOtherDate(time);
 			bc.LastTimeBirthdaysChecked = time;
 			uow.BotConfig.Update(bc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			//event logic
 			var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.BirthdaysEnabled).ToList();
@@ -125,7 +125,7 @@ namespace Mitternacht.Modules.Birthday.Services {
 						_log.Warn($"Failed to add BirthdayMoney to {guildUser.Username} on guild {guildUser.Guild.Name}");
 				}
 			}
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		//private int _customTimeAccessCount = 0;

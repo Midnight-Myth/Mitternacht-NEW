@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 					}
 
 					bc.PermissionVersion = 2;
-					uow.Complete();
+					uow.SaveChanges();
 				}
 				if(bc.PermissionVersion > 2)
 					return;
@@ -122,7 +122,7 @@ namespace Mitternacht.Modules.Permissions.Services {
                     secondaryTargetName LIKE '-%' OR
                     secondaryTargetName LIKE '!%';");
 				bc.PermissionVersion = 3;
-				uow.Complete();
+				uow.SaveChanges();
 			}
 		}
 
@@ -135,7 +135,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 					perm.Index = ++max;
 					config.Permissions.Add(perm);
 				}
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 				UpdateCache(config);
 			}
 		}

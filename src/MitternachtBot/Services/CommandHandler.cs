@@ -10,11 +10,15 @@ using Discord;
 using Discord.Commands;
 using Discord.Net;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Mitternacht.Common.Collections;
 using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 using NLog;
+using Npgsql;
 
 namespace Mitternacht.Services {
 	public class GuildUserComparer : IEqualityComparer<IGuildUser> {
@@ -77,7 +81,7 @@ namespace Mitternacht.Services {
 
 			using var uow = _db.UnitOfWork;
 			uow.BotConfig.GetOrCreate().DefaultPrefix = prefix;
-			uow.Complete();
+			uow.SaveChanges();
 
 			_bcp.Reload();
 
@@ -93,7 +97,7 @@ namespace Mitternacht.Services {
 			using(var uow = _db.UnitOfWork) {
 				var gc = uow.GuildConfigs.For(guild.Id);
 				gc.Prefix = prefix;
-				uow.Complete();
+				uow.SaveChanges();
 			}
 
 			Prefixes.AddOrUpdate(guild.Id, prefix, (key, old) => prefix);
@@ -201,6 +205,7 @@ namespace Mitternacht.Services {
 			// execute the command and measure the time it took
 			if(messageContent.StartsWith(prefix) || isPrefixCommand) {
 				var (success, error, info) = await ExecuteCommandAsync(new CommandContext(_client, userMsg), messageContent, isPrefixCommand ? 1 : prefix.Length, _services, MultiMatchHandling.Best);
+				
 				startTickCount = Environment.TickCount - startTickCount;
 
 				if(success) {
@@ -227,7 +232,8 @@ namespace Mitternacht.Services {
 		public async Task<(bool Success, string Error, CommandInfo Info)> ExecuteCommandAsync(CommandContext context, string message, int argPos, IServiceProvider services, MultiMatchHandling multiMatchHandling = MultiMatchHandling.Exception) {
 			var input        = message.Substring(argPos);
 			var searchResult = _commandService.Search(context, input);
-			if(!searchResult.IsSuccess) return (false, null, null);
+			if(!searchResult.IsSuccess)
+				return (false, null, null);
 
 			var commands            = searchResult.Commands;
 			var preconditionResults = new Dictionary<CommandMatch, PreconditionResult>();
@@ -267,7 +273,7 @@ namespace Mitternacht.Services {
 					var argValuesSum   = parseResult.ArgValues?.Sum(x => x.Values.OrderByDescending(y => y.Score).FirstOrDefault().Score) ?? 0;
 					var paramValuesSum = parseResult.ParamValues?.Sum(x => x.Values.OrderByDescending(y => y.Score).FirstOrDefault().Score) ?? 0;
 
-					argValuesScore   = argValuesSum / match.Command.Parameters.Count;
+					argValuesScore = argValuesSum / match.Command.Parameters.Count;
 					paramValuesScore = paramValuesSum / match.Command.Parameters.Count;
 				}
 
@@ -290,25 +296,46 @@ namespace Mitternacht.Services {
 
 			// Bot will ignore commands which are ran more often than what specified by
 			// GlobalCommandsCooldown constant (milliseconds)
-			if(!UsersOnShortCooldown.Add(context.Message.Author.Id)) return (false, null, cmd);
+			if(!UsersOnShortCooldown.Add(context.Message.Author.Id))
+				return (false, null, cmd);
 
 			var commandName = cmd.Aliases.First();
 			foreach(var svc in _services) {
-				if(!(svc is ILateBlocker exec) || !await exec.TryBlockLate(_client, context.Message, context.Guild, context.Channel, context.User, cmd.Module.GetTopLevelModule().Name, commandName).ConfigureAwait(false)) continue;
+				if(!(svc is ILateBlocker exec) || !await exec.TryBlockLate(_client, context.Message, context.Guild, context.Channel, context.User, cmd.Module.GetTopLevelModule().Name, commandName).ConfigureAwait(false))
+					continue;
 				_log.Info("Late blocking User [{0}] Command: [{1}] in [{2}]", context.User, commandName, svc.GetType().Name);
 				return (false, null, cmd);
 			}
 
 			//If we get this far, at least one parse was successful. Execute the most likely overload.
 			var chosenOverload = successfulParses[0];
-			var execResult     = (ExecuteResult)await chosenOverload.Key.ExecuteAsync(context, chosenOverload.Value, services).ConfigureAwait(false);
 
-			if(execResult.Exception == null || execResult.Exception is HttpException he && he.DiscordCode == 50013) return (true, null, cmd);
-			lock(_errorLogLock) {
-				var now = DateTime.Now;
-				File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt", $"[{now:HH:mm-yyyy-MM-dd}]{Environment.NewLine}{execResult.Exception}{Environment.NewLine}------{Environment.NewLine}");
-				_log.Warn(execResult.Exception);
+			var uow = _services.GetService<DbService>().UnitOfWork;
+			uow.Context.Database.BeginTransaction();
+			var scopedServices = new NServiceProvider.ServiceProviderBuilder().FromServiceProvider(_services).AddManual(uow, true).Build();
+
+			var execResult     = (ExecuteResult)await chosenOverload.Key.ExecuteAsync(context, chosenOverload.Value, scopedServices);
+
+			if(execResult.Exception != null && (!(execResult.Exception is HttpException he) || he.DiscordCode != 50013)) {
+				lock(_errorLogLock) {
+					var now = DateTime.Now;
+					File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt", $"[{now:HH:mm-yyyy-MM-dd}]{Environment.NewLine}{execResult.Exception}{Environment.NewLine}------{Environment.NewLine}");
+					_log.Warn(execResult.Exception);
+				}
+
+				if(execResult.Exception is PostgresException || execResult.Exception is AggregateException ae && ae.InnerExceptions.Any(e => e is PostgresException) || execResult.Exception is DbUpdateException) {
+					uow.Context.Database.RollbackTransaction();
+
+					_log.Warn("Transaction was rolled back.");
+					await context.Channel.SendErrorAsync("Command execution failed, please contact the bot author.").ConfigureAwait(false);
+				} else {
+					uow.Context.Database.CommitTransaction();
+				}
+			} else {
+				uow.Context.Database.CommitTransaction();
 			}
+
+			uow.Dispose();
 
 			return (true, null, cmd);
 		}

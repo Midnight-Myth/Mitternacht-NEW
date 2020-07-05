@@ -56,11 +56,11 @@ namespace Mitternacht.Services.Database {
 			Context = context;
 		}
 
-		public int Complete()
-			=> Context.SaveChanges();
+		public int SaveChanges(bool acceptAllChanges = true)
+			=> Context.SaveChanges(acceptAllChanges);
 
-		public Task<int> CompleteAsync()
-			=> Context.SaveChangesAsync();
+		public Task<int> SaveChangesAsync(bool acceptAllChanges = true)
+			=> Context.SaveChangesAsync(acceptAllChanges);
 
 		private bool _disposed;
 

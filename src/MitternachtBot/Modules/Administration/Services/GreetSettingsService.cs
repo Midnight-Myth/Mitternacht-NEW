@@ -222,7 +222,7 @@ namespace Mitternacht.Modules.Administration.Services
                 conf.SendChannelGreetMessage = settings.SendChannelGreetMessage;
                 conf.SendChannelByeMessage = settings.SendChannelByeMessage;
 
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
 
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
@@ -243,7 +243,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
             }
             return enabled;
         }
@@ -265,7 +265,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                uow.Complete();
+                uow.SaveChanges();
             }
             return greetMsgEnabled;
         }
@@ -281,7 +281,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
             }
             return enabled;
         }
@@ -303,7 +303,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                uow.Complete();
+                uow.SaveChanges();
             }
             return greetMsgEnabled;
         }
@@ -320,7 +320,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                await uow.CompleteAsync();
+                await uow.SaveChangesAsync();
             }
             return enabled;
         }
@@ -342,7 +342,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                uow.Complete();
+                uow.SaveChanges();
             }
             return byeMsgEnabled;
         }
@@ -360,7 +360,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(guildId, toAdd, (key, old) => toAdd);
 
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -377,7 +377,7 @@ namespace Mitternacht.Modules.Administration.Services
                 var toAdd = GreetSettings.Create(conf);
                 GuildConfigsCache.AddOrUpdate(id, toAdd, (key, old) => toAdd);
 
-                await uow.CompleteAsync().ConfigureAwait(false);
+                await uow.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

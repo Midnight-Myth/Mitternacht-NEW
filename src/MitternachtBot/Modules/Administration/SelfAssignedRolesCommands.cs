@@ -9,28 +9,26 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
 		[Group]
 		public class SelfAssignedRolesCommands : MitternachtSubmodule {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public SelfAssignedRolesCommands(DbService db) {
-				_db = db;
+			public SelfAssignedRolesCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageMessages)]
 			public async Task AdSarm() {
-				bool newval;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id);
-					newval = config.AutoDeleteSelfAssignedRoleMessages = !config.AutoDeleteSelfAssignedRoleMessages;
-					await uow.CompleteAsync().ConfigureAwait(false);
-				}
+				var config = uow.GuildConfigs.For(Context.Guild.Id);
+				var newval = config.AutoDeleteSelfAssignedRoleMessages = !config.AutoDeleteSelfAssignedRoleMessages;
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync($"ℹ️ Automatic deleting of `iam` and `iamn` confirmations has been {(newval ? "**enabled**" : "**disabled**")}.")
 							 .ConfigureAwait(false);
@@ -40,28 +38,26 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageRoles)]
 			public async Task Asar([Remainder] IRole role) {
-				IEnumerable<SelfAssignedRole> roles;
-
 				var guser = (IGuildUser)Context.User;
 				if(Context.User.Id != guser.Guild.OwnerId && guser.GetRoles().Max(x => x.Position) <= role.Position)
 					return;
 
 				string msg;
 				var error = false;
-				using(var uow = _db.UnitOfWork) {
-					roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
-					if(roles.Any(s => s.RoleId == role.Id && s.GuildId == role.Guild.Id)) {
-						msg = GetText("role_in_list", Format.Bold(role.Name));
-						error = true;
-					} else {
-						uow.SelfAssignedRoles.Add(new SelfAssignedRole {
-							RoleId = role.Id,
-							GuildId = role.Guild.Id
-						});
-						await uow.CompleteAsync();
-						msg = GetText("role_added", Format.Bold(role.Name));
-					}
+
+				var roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
+				if(roles.Any(s => s.RoleId == role.Id && s.GuildId == role.Guild.Id)) {
+					msg = GetText("role_in_list", Format.Bold(role.Name));
+					error = true;
+				} else {
+					uow.SelfAssignedRoles.Add(new SelfAssignedRole {
+						RoleId = role.Id,
+						GuildId = role.Guild.Id
+					});
+					await uow.SaveChangesAsync(false);
+					msg = GetText("role_added", Format.Bold(role.Name));
 				}
+
 				if(error)
 					await Context.Channel.SendErrorAsync(msg).ConfigureAwait(false);
 				else
@@ -76,11 +72,9 @@ namespace Mitternacht.Modules.Administration {
 				if(Context.User.Id != guser.Guild.OwnerId && guser.GetRoles().Max(x => x.Position) <= role.Position)
 					return;
 
-				bool success;
-				using(var uow = _db.UnitOfWork) {
-					success = uow.SelfAssignedRoles.DeleteByGuildAndRoleId(role.Guild.Id, role.Id);
-					await uow.CompleteAsync();
-				}
+				var success = uow.SelfAssignedRoles.DeleteByGuildAndRoleId(role.Guild.Id, role.Id);
+				await uow.SaveChangesAsync(false);
+
 				if(!success) {
 					await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
 					return;
@@ -91,19 +85,18 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task Lsar(int page = 1) {
+				var roleModels = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToList();
+
 				if(--page < 0) {
-					List<IRole> rms;
-					using(var uow = _db.UnitOfWork) {
-						var roleModels = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToList();
 
-						rms = (from rm in roleModels
-							   let role = Context.Guild.Roles.FirstOrDefault(r => r.Id == rm.RoleId)
-							   where role != null
-							   select role).ToList();
+					var rms = (from rm in roleModels
+							let role = Context.Guild.Roles.FirstOrDefault(r => r.Id == rm.RoleId)
+							where role != null
+							select role).ToList();
 
-						uow.SelfAssignedRoles.RemoveRange(roleModels.Where(rm => rms.All(r => r.Id != rm.RoleId)).ToArray());
-						await uow.CompleteAsync();
-					}
+					uow.SelfAssignedRoles.RemoveRange(roleModels.Where(rm => rms.All(r => r.Id != rm.RoleId)).ToArray());
+					await uow.SaveChangesAsync(false);
+
 					await Context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithTitle(GetText("self_assign_list", rms.Count)).WithDescription(rms.Aggregate("", (s, r) => s + Format.Bold(r.Name) + ", ", s => s.Substring(0, s.Length - 2))).WithOkColor().Build());
 					return;
 				}
@@ -111,22 +104,19 @@ namespace Mitternacht.Modules.Administration {
 				var toRemove = new ConcurrentHashSet<SelfAssignedRole>();
 				var roles = new List<string>();
 				var roleCnt = 0;
-				using(var uow = _db.UnitOfWork) {
-					var roleModels = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToList();
 
-					foreach(var roleModel in roleModels) {
-						var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == roleModel.RoleId);
-						if(role == null) {
-							toRemove.Add(roleModel);
-							uow.SelfAssignedRoles.Remove(roleModel);
-						} else {
-							roles.Add(Format.Bold(role.Name));
-							roleCnt++;
-						}
+				foreach(var roleModel in roleModels) {
+					var role = Context.Guild.Roles.FirstOrDefault(r => r.Id == roleModel.RoleId);
+					if(role == null) {
+						toRemove.Add(roleModel);
+						uow.SelfAssignedRoles.Remove(roleModel);
+					} else {
+						roles.Add(Format.Bold(role.Name));
+						roleCnt++;
 					}
-					roles.AddRange(toRemove.Select(role => GetText("role_clean", role.RoleId)));
-					await uow.CompleteAsync();
 				}
+				roles.AddRange(toRemove.Select(role => GetText("role_clean", role.RoleId)));
+				await uow.SaveChangesAsync(false);
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, curPage => new EmbedBuilder()
 					.WithTitle(GetText("self_assign_list", roleCnt))
@@ -138,13 +128,11 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageRoles)]
 			public async Task Tesar() {
-				bool areExclusive;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.For(Context.Guild.Id);
+				var config = uow.GuildConfigs.For(Context.Guild.Id);
 
-					areExclusive = config.ExclusiveSelfAssignedRoles = !config.ExclusiveSelfAssignedRoles;
-					await uow.CompleteAsync();
-				}
+				var areExclusive = config.ExclusiveSelfAssignedRoles = !config.ExclusiveSelfAssignedRoles;
+				await uow.SaveChangesAsync(false);
+
 				if(areExclusive)
 					await ReplyConfirmLocalized("self_assign_excl").ConfigureAwait(false);
 				else
@@ -156,12 +144,9 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Iam([Remainder] IRole role) {
 				var guildUser = (IGuildUser)Context.User;
 
-				GuildConfig conf;
-				SelfAssignedRole[] roles;
-				using(var uow = _db.UnitOfWork) {
-					conf = uow.GuildConfigs.For(Context.Guild.Id);
-					roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToArray();
-				}
+				var conf = uow.GuildConfigs.For(Context.Guild.Id);
+				var roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToArray();
+
 				if(roles.FirstOrDefault(r => r.RoleId == role.Id) == null) {
 					await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
 					return;
@@ -207,12 +192,9 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Iamnot([Remainder] IRole role) {
 				var guildUser = (IGuildUser)Context.User;
 
-				bool autoDeleteSelfAssignedRoleMessages;
-				IEnumerable<SelfAssignedRole> roles;
-				using(var uow = _db.UnitOfWork) {
-					autoDeleteSelfAssignedRoleMessages = uow.GuildConfigs.For(Context.Guild.Id).AutoDeleteSelfAssignedRoleMessages;
-					roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
-				}
+				var autoDeleteSelfAssignedRoleMessages = uow.GuildConfigs.For(Context.Guild.Id).AutoDeleteSelfAssignedRoleMessages;
+				var roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
+
 				if(roles.FirstOrDefault(r => r.RoleId == role.Id) == null) {
 					await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
 					return;

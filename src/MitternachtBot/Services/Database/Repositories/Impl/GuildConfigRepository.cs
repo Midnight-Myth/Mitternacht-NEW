@@ -69,7 +69,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
-				_context.SaveChanges();
 			}
 
 			if(!config.WarningsInitialized) {
@@ -102,7 +101,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
-				_context.SaveChanges();
 			}
 
 			if(!config.WarningsInitialized) {
@@ -125,7 +123,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
-				_context.SaveChanges();
 			}
 
 			if(config.WarningsInitialized)
@@ -161,10 +158,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					GuildId = guildId,
 					Permissions = Permissionv2.GetDefaultPermlist
 				});
-				_context.SaveChanges();
 			} else if(config.Permissions == null || !config.Permissions.Any()) {
 				config.Permissions = Permissionv2.GetDefaultPermlist;
-				_context.SaveChanges();
 			}
 
 			return config;

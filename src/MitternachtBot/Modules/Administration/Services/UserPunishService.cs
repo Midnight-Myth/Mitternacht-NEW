@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 				uow.Warnings.Add(warn);
 
-				uow.Complete();
+				uow.SaveChanges();
 			}
 
 			var p = ps.FirstOrDefault(x => x.Count == warnings);

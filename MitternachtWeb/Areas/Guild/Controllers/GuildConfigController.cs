@@ -88,7 +88,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 							uow.GuildConfigs.Update(gc);
 
-							await uow.CompleteAsync();
+							await uow.SaveChangesAsync();
 							return RedirectToAction(nameof(Index));
 						} else {
 							return NotFound();

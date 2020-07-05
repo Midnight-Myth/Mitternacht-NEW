@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			var gc = uow.GuildConfigs.For(guildId);
 
 			gc.TimeZoneId = tz?.Id;
-			uow.Complete();
+			uow.SaveChanges();
 
 			if(tz == null)
 				_timezones.TryRemove(guildId, out tz);

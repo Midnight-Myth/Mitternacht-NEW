@@ -79,7 +79,7 @@ namespace Mitternacht.Modules.Administration.Services
                         {
                             uow.GuildConfigs.For(guild.Id).VoicePlusTextEnabled = false;
                             VoicePlusTextCache.TryRemove(guild.Id);
-                            await uow.CompleteAsync().ConfigureAwait(false);
+                            await uow.SaveChangesAsync().ConfigureAwait(false);
                         }
                         return;
                     }

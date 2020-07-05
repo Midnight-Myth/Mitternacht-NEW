@@ -66,7 +66,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			var mutedUser = gc.MutedUsers.FirstOrDefault(mu => mu.UserId == guildUser.Id);
 			if(mutedUser == null) {
 				gc.MutedUsers.Add(new MutedUserId { UserId = guildUser.Id });
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			if(!alreadyMuted || mutedUser == null)
@@ -86,7 +86,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
 			gc.MutedUsers.RemoveWhere(mu => mu.UserId == guildUser.Id);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			UserUnmuted(guildUser);
 		}
@@ -98,7 +98,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			var gc = uow.GuildConfigs.For(guild.Id);
 			if(string.IsNullOrWhiteSpace(gc.MuteRoleName)) {
 				gc.MuteRoleName = defaultMuteRoleName;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
 
 			var muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName);
@@ -123,7 +123,7 @@ namespace Mitternacht.Modules.Administration.Services {
 				UserId = guildUser.Id,
 				UnmuteAt = DateTime.UtcNow + after,
 			});
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			StartUnmuteTimer(guildUser.GuildId, guildUser.Id, after);
 		}
@@ -169,7 +169,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(guildId, set => set.Include(x => x.UnmuteTimers));
 			gc.UnmuteTimers.RemoveWhere(x => x.UserId == userId);
-			uow.Complete();
+			uow.SaveChanges();
 		}
 	}
 }

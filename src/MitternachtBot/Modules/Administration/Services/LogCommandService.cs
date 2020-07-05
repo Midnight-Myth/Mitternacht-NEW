@@ -1026,7 +1026,7 @@ namespace Mitternacht.Modules.Administration.Services
 						break;
 				}
                 GuildLogSettings.AddOrUpdate(guildId, newLogSetting, (gid, old) => newLogSetting);
-                uow.Complete();
+                uow.SaveChanges();
             }
         }
 

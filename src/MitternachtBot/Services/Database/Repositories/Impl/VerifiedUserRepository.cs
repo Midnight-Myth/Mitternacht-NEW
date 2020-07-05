@@ -28,7 +28,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 vu.ForumUserId = forumUserId;
                 _set.Update(vu);
             }
-            _context.SaveChanges();
+
             return true;
         }
 
@@ -49,7 +49,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             var vu = _set.FirstOrDefault(v => v.GuildId == guildId && v.UserId == userId);
             if (vu == null) return false;
             _set.Remove(vu);
-            _context.SaveChanges();
+
             return true;
         }
 
@@ -57,7 +57,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             var vu = _set.FirstOrDefault(v => v.GuildId == guildId && v.ForumUserId == forumUserId);
             if (vu == null) return false;
             _set.Remove(vu);
-            _context.SaveChanges();
+
             return true;
         }
 

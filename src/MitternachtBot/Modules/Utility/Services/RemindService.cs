@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			} catch(Exception ex) { _log.Warn(ex); } finally {
 				using var uow = _db.UnitOfWork;
 				uow.Reminders.Remove(r);
-				await uow.CompleteAsync();
+				await uow.SaveChangesAsync();
 			}
 		}
 	}

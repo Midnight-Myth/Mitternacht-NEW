@@ -70,7 +70,7 @@ namespace Mitternacht.Modules.Verification.Services {
 		public void SetVerifiedRole(ulong guildId, ulong? roleId) {
 			using var uow = _db.UnitOfWork;
 			uow.GuildConfigs.For(guildId).VerifiedRoleId = roleId;
-			uow.Complete();
+			uow.SaveChanges();
 		}
 
 		public ulong? GetVerifiedRoleId(ulong guildId) {
@@ -81,7 +81,7 @@ namespace Mitternacht.Modules.Verification.Services {
 		public void SetVerifyString(ulong guildId, string verifystring) {
 			using var uow = _db.UnitOfWork;
 			uow.GuildConfigs.For(guildId).VerifyString = verifystring;
-			uow.Complete();
+			uow.SaveChanges();
 		}
 
 		public string GetVerifyString(ulong guildId) {
@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Verification.Services {
 		public void SetVerificationTutorialText(ulong guildId, string text) {
 			using var uow = _db.UnitOfWork;
 			uow.GuildConfigs.For(guildId).VerificationTutorialText = text;
-			uow.Complete();
+			uow.SaveChanges();
 		}
 
 		public async Task SetVerified(IGuildUser guildUser, long forumUserId) {
@@ -109,7 +109,7 @@ namespace Mitternacht.Modules.Verification.Services {
 			var role = roleid != null ? guildUser.Guild.GetRole(roleid.Value) : null;
 			if(role != null)
 				await guildUser.AddRoleAsync(role).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 
 			await UserVerified.Invoke(guildUser, forumUserId).ConfigureAwait(false);
 		}
@@ -128,7 +128,7 @@ namespace Mitternacht.Modules.Verification.Services {
 			var gc = uow.GuildConfigs.For(guildId);
 			gc.AdditionalVerificationUsers = string.Join(',', users);
 			uow.GuildConfigs.Update(gc);
-			uow.Complete();
+			uow.SaveChanges();
 		}
 
 		public async Task InvokeVerificationStep(VerificationProcess process, VerificationStep step)

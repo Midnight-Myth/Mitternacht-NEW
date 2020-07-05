@@ -44,7 +44,7 @@ namespace Mitternacht.Modules.Utility.Services
                             {
                                 uow.VoiceChannelStats.AddTime(ut.Key.UserId, ut.Key.GuildId, ut.Value);
                             }
-                            await uow.CompleteAsync().ConfigureAwait(false);
+                            await uow.SaveChangesAsync().ConfigureAwait(false);
                         }
                     }
                     catch { /* ignored */ }

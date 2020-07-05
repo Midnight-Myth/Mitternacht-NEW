@@ -8,6 +8,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 using NCalc;
 
@@ -17,13 +18,13 @@ namespace Mitternacht.Modules.Utility {
         [Group]
         public class CalcCommands : MitternachtSubmodule
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
             private readonly Random _rnd;
 
-            public CalcCommands(DbService db)
+            public CalcCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
                 _rnd = new Random();
             }
 
@@ -57,16 +58,16 @@ namespace Mitternacht.Modules.Utility {
             {
                 name = name.ToLowerInvariant();
                 // All methods have to be in CustomNCalcEvaluations and match the following template:
-                // public static object calcfunctionname(ICommandContext context, DbService db, FunctionArgs args){ ... }
+                // public static object calcfunctionname(ICommandContext context, IUnitOfWork uow, FunctionArgs args){ ... }
                 var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
                                 where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
                                       m.GetParameters().Length == 3 &&
                                       m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
-                                      m.GetParameters()[1].ParameterType == typeof(DbService) &&
+                                      m.GetParameters()[1].ParameterType == typeof(IUnitOfWork) &&
                                       m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
                                 select m;
                 var method = functions.FirstOrDefault(m => m.Name.ToLowerInvariant().Equals(name));
-                var result = method?.Invoke(null, new object[] {Context, _db, args});
+                var result = method?.Invoke(null, new object[] {Context, uow, args});
                 if (result != null) args.Result = result;
             }
 
@@ -115,7 +116,7 @@ namespace Mitternacht.Modules.Utility {
         private class CustomNCalcEvaluations
         {
             //ulevel(user): level of a given user
-            public static object ULevel(ICommandContext context, DbService db, FunctionArgs args)
+            public static object ULevel(ICommandContext context, IUnitOfWork uow, FunctionArgs args)
             {
                 //if (args.Parameters.Length > 0) context.Channel.SendMessageAsync($"args: {args.Parameters.Aggregate("", (s, p) => $"{s}{p.ParsedExpression.ToString()}, ", s => s.Substring(0, s.Length - 2))}")
                 //    .GetAwaiter().GetResult();
@@ -132,12 +133,11 @@ namespace Mitternacht.Modules.Utility {
                 //context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}").GetAwaiter().GetResult();
                 if (user == null) return null;
 
-				using var uow = db.UnitOfWork;
 				return uow.LevelModel.Get(context.Guild.Id, user.Id).CurrentLevel;
 			}
 
 			//money(user): money of a given user
-			public static object UMoney(ICommandContext context, DbService db, FunctionArgs args) {
+			public static object UMoney(ICommandContext context, IUnitOfWork uow, FunctionArgs args) {
 				if(args.Parameters.Length > 1)
 					return null;
 				var user = context.User as IGuildUser;
@@ -151,12 +151,11 @@ namespace Mitternacht.Modules.Utility {
 				if(user == null)
 					return null;
 
-				using var uow = db.UnitOfWork;
 				return uow.Currency.GetUserCurrency(user.Id);
 			}
 
 			//xp(user): xp of a given user
-			public static object UXp(ICommandContext context, DbService db, FunctionArgs args) {
+			public static object UXp(ICommandContext context, IUnitOfWork uow, FunctionArgs args) {
 				if(args.Parameters.Length > 1)
 					return null;
 				var user = context.User as IGuildUser;
@@ -170,13 +169,12 @@ namespace Mitternacht.Modules.Utility {
 				if(user == null)
 					return null;
 
-				using var uow = db.UnitOfWork;
 				return uow.LevelModel.Get(context.Guild.Id, user.Id).TotalXP;
 			}
 
 			//levelxp(lvl): xp needed to reach the given level beginning at level 0
 			//levelxp(lvl1, lvl2): xp needed to get to lvl2 from lvl1
-			public static object LevelXp(ICommandContext context, DbService db, FunctionArgs args) {
+			public static object LevelXp(ICommandContext context, IUnitOfWork uow, FunctionArgs args) {
 				if(args.Parameters.Length < 1 || args.Parameters.Length > 2)
 					return null;
 				var arg1 = args.Parameters[0];

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -14,11 +15,11 @@ namespace Mitternacht.Modules.Administration
 		[Group]
 		public class SqlCommands : MitternachtSubmodule
 		{
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public SqlCommands(DbService db)
+			public SqlCommands(IUnitOfWork uow)
 			{
-				_db = db;
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -41,11 +42,9 @@ namespace Mitternacht.Modules.Administration
 					}
 
 					await msg.DeleteAsync().ConfigureAwait(false);
-					using (var uow = _db.UnitOfWork)
-					{
-						var res = await uow.Context.Database.ExecuteSqlRawAsync(sql);
-						await Context.Channel.SendConfirmAsync(res.ToString());
-					}
+
+					var res = await uow.Context.Database.ExecuteSqlRawAsync(sql);
+					await Context.Channel.SendConfirmAsync(res.ToString());
 				}
 				catch (Exception e)
 				{

@@ -7,6 +7,7 @@ using Mitternacht.Common.TypeReaders;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions {
@@ -14,11 +15,11 @@ namespace Mitternacht.Modules.Permissions {
 		[Group]
 		public class GlobalPermissionCommands : MitternachtSubmodule {
 			private GlobalPermissionService _service;
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public GlobalPermissionCommands(GlobalPermissionService service, DbService db) {
+			public GlobalPermissionCommands(GlobalPermissionService service, IUnitOfWork uow) {
 				_service = service;
-				_db = db;
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -45,21 +46,19 @@ namespace Mitternacht.Modules.Permissions {
 			public async Task Gmod(ModuleOrCrInfo module) {
 				var moduleName = module.Name.ToLowerInvariant();
 				if(_service.BlockedModules.Add(moduleName)) {
-					using(var uow = _db.UnitOfWork) {
-						var bc = uow.BotConfig.GetOrCreate();
-						bc.BlockedModules.Add(new BlockedCmdOrMdl {
-							Name = moduleName,
-						});
-						uow.Complete();
-					}
+					var bc = uow.BotConfig.GetOrCreate();
+					bc.BlockedModules.Add(new BlockedCmdOrMdl {
+						Name = moduleName,
+					});
+					uow.SaveChanges(false);
+
 					await ReplyConfirmLocalized("gmod_add", Format.Bold(module.Name)).ConfigureAwait(false);
 					return;
 				} else if(_service.BlockedModules.TryRemove(moduleName)) {
-					using(var uow = _db.UnitOfWork) {
-						var bc = uow.BotConfig.GetOrCreate();
-						bc.BlockedModules.RemoveWhere(x => x.Name == moduleName);
-						uow.Complete();
-					}
+					var bc = uow.BotConfig.GetOrCreate();
+					bc.BlockedModules.RemoveWhere(x => x.Name == moduleName);
+					uow.SaveChanges(false);
+
 					await ReplyConfirmLocalized("gmod_remove", Format.Bold(module.Name)).ConfigureAwait(false);
 					return;
 				}
@@ -70,21 +69,19 @@ namespace Mitternacht.Modules.Permissions {
 			public async Task Gcmd(CommandOrCrInfo cmd) {
 				var commandName = cmd.Name.ToLowerInvariant();
 				if(_service.BlockedCommands.Add(commandName)) {
-					using(var uow = _db.UnitOfWork) {
-						var bc = uow.BotConfig.GetOrCreate();
-						bc.BlockedCommands.Add(new BlockedCmdOrMdl {
-							Name = commandName,
-						});
-						uow.Complete();
-					}
+					var bc = uow.BotConfig.GetOrCreate();
+					bc.BlockedCommands.Add(new BlockedCmdOrMdl {
+						Name = commandName,
+					});
+					uow.SaveChanges(false);
+
 					await ReplyConfirmLocalized("gcmd_add", Format.Bold(cmd.Name)).ConfigureAwait(false);
 					return;
 				} else if(_service.BlockedCommands.TryRemove(commandName)) {
-					using(var uow = _db.UnitOfWork) {
-						var bc = uow.BotConfig.GetOrCreate();
-						bc.BlockedCommands.RemoveWhere(x => x.Name == commandName);
-						uow.Complete();
-					}
+					var bc = uow.BotConfig.GetOrCreate();
+					bc.BlockedCommands.RemoveWhere(x => x.Name == commandName);
+					uow.SaveChanges(false);
+
 					await ReplyConfirmLocalized("gcmd_remove", Format.Bold(cmd.Name)).ConfigureAwait(false);
 					return;
 				}

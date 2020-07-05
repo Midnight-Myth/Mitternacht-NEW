@@ -12,25 +12,25 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Common;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions {
 	public partial class Permissions : MitternachtTopLevelModule<PermissionService> {
-		private readonly DbService _db;
+		private readonly IUnitOfWork uow;
 
-		public Permissions(DbService db) {
-			_db = db;
+		public Permissions(IUnitOfWork uow) {
+			this.uow = uow;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task Verbose(PermissionAction action) {
-			using(var uow = _db.UnitOfWork) {
-				var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-				config.VerbosePermissions = action.Value;
-				await uow.CompleteAsync().ConfigureAwait(false);
-				Service.UpdateCache(config);
-			}
+			var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
+			config.VerbosePermissions = action.Value;
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
+			Service.UpdateCache(config);
+
 			if(action.Value) {
 				await ReplyConfirmLocalized("verbose_true").ConfigureAwait(false);
 			} else {
@@ -44,16 +44,14 @@ namespace Mitternacht.Modules.Permissions {
 			if(role != null && role == role.Guild.EveryoneRole)
 				return;
 
-			using(var uow = _db.UnitOfWork) {
-				var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-				if(role == null) {
-					await ReplyConfirmLocalized("permrole", Format.Bold(config.PermissionRole)).ConfigureAwait(false);
-					return;
-				}
-				config.PermissionRole = role.Name.Trim();
-				await uow.CompleteAsync().ConfigureAwait(false);
-				Service.UpdateCache(config);
+			var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
+			if(role == null) {
+				await ReplyConfirmLocalized("permrole", Format.Bold(config.PermissionRole)).ConfigureAwait(false);
+				return;
 			}
+			config.PermissionRole = role.Name.Trim();
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
+			Service.UpdateCache(config);
 
 			await ReplyConfirmLocalized("permrole_changed", Format.Bold(role.Name)).ConfigureAwait(false);
 		}
@@ -89,16 +87,14 @@ namespace Mitternacht.Modules.Permissions {
 			if(index < 0)
 				return;
 			try {
-				Permissionv2 p;
-				using(var uow = _db.UnitOfWork) {
-					var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-					var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
-					p = permsCol[index];
-					permsCol.RemoveAt(index);
-					uow.Context.Remove(p);
-					await uow.CompleteAsync().ConfigureAwait(false);
-					Service.UpdateCache(config);
-				}
+				var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
+				var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
+				var p = permsCol[index];
+				permsCol.RemoveAt(index);
+				uow.Context.Remove(p);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+				Service.UpdateCache(config);
+
 				await ReplyConfirmLocalized("removed", index + 1, Format.Code(p.GetCommand(Prefix, (SocketGuild)Context.Guild))).ConfigureAwait(false);
 			} catch(IndexOutOfRangeException) {
 				await ReplyErrorLocalized("perm_out_of_range").ConfigureAwait(false);
@@ -112,30 +108,28 @@ namespace Mitternacht.Modules.Permissions {
 			to -= 1;
 			if(!(from == to || from < 0 || to < 0)) {
 				try {
-					Permissionv2 fromPerm;
-					using(var uow = _db.UnitOfWork) {
-						var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-						var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
+					var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
+					var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
 
-						var fromFound = from < permsCol.Count;
-						var toFound = to < permsCol.Count;
+					var fromFound = from < permsCol.Count;
+					var toFound = to < permsCol.Count;
 
-						if(!fromFound) {
-							await ReplyErrorLocalized("not_found", ++from).ConfigureAwait(false);
-							return;
-						}
-
-						if(!toFound) {
-							await ReplyErrorLocalized("not_found", ++to).ConfigureAwait(false);
-							return;
-						}
-						fromPerm = permsCol[from];
-
-						permsCol.RemoveAt(from);
-						permsCol.Insert(to, fromPerm);
-						await uow.CompleteAsync().ConfigureAwait(false);
-						Service.UpdateCache(config);
+					if(!fromFound) {
+						await ReplyErrorLocalized("not_found", ++from).ConfigureAwait(false);
+						return;
 					}
+
+					if(!toFound) {
+						await ReplyErrorLocalized("not_found", ++to).ConfigureAwait(false);
+						return;
+					}
+					var fromPerm = permsCol[from];
+
+					permsCol.RemoveAt(from);
+					permsCol.Insert(to, fromPerm);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
+					Service.UpdateCache(config);
+
 					await ReplyConfirmLocalized("moved_permission",
 							Format.Code(fromPerm.GetCommand(Prefix, (SocketGuild)Context.Guild)),
 							++from,

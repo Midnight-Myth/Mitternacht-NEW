@@ -9,6 +9,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Administration
@@ -18,11 +19,11 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class VcRoleCommands : MitternachtSubmodule<VcRoleService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public VcRoleCommands(DbService db)
+            public VcRoleCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -50,28 +51,25 @@ namespace Mitternacht.Modules.Administration
                     if (guildVcRoles.TryRemove(vc.Id, out role))
                     {
                         await ReplyConfirmLocalized("vcrole_removed", Format.Bold(vc.Name)).ConfigureAwait(false);
-                        using (var uow = _db.UnitOfWork)
-                        {
-                            var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos));
-                            conf.VcRoleInfos.RemoveWhere(x => x.VoiceChannelId == vc.Id);
-                            uow.Complete();
-                        }
+                        
+						var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos));
+                        conf.VcRoleInfos.RemoveWhere(x => x.VoiceChannelId == vc.Id);
+                        uow.SaveChanges(false);
                     }
                 }
                 else
                 {
                     guildVcRoles.AddOrUpdate(vc.Id, role, (key, old) => role);
-                    using (var uow = _db.UnitOfWork)
+                    
+					var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos));
+                    conf.VcRoleInfos.RemoveWhere(x => x.VoiceChannelId == vc.Id); // remove old one
+                    conf.VcRoleInfos.Add(new VcRoleInfo() 
                     {
-                        var conf = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos));
-                        conf.VcRoleInfos.RemoveWhere(x => x.VoiceChannelId == vc.Id); // remove old one
-                        conf.VcRoleInfos.Add(new VcRoleInfo() 
-                        {
-                            VoiceChannelId = vc.Id,
-                            RoleId = role.Id,
-                        }); // add new one
-                        uow.Complete();
-                    }
+                        VoiceChannelId = vc.Id,
+                        RoleId = role.Id,
+                    }); // add new one
+                    uow.SaveChanges(false);
+
                     await ReplyConfirmLocalized("vcrole_added", Format.Bold(vc.Name), Format.Bold(role.Name)).ConfigureAwait(false);
                 }
             }

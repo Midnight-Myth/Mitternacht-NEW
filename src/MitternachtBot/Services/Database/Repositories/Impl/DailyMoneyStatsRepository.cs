@@ -19,7 +19,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 TimeReceived = timeReceived,
                 MoneyReceived = amount
             });
-            _context.SaveChanges();
         }
 
         public List<DailyMoneyStats> GetAllUser(params ulong[] userIds)
@@ -28,7 +27,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
         public void RemoveAll(ulong userId)
         {
             _set.RemoveRange(GetAllUser(userId));
-            _context.SaveChanges();
         }
     }
 }

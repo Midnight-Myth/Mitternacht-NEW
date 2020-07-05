@@ -9,29 +9,28 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Utility.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Utility {
 	public partial class Utility {
 		[Group]
 		public class UsernameHistoryCommands : MitternachtSubmodule<UsernameHistoryService> {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public UsernameHistoryCommands(DbService db) {
-				_db = db;
+			public UsernameHistoryCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Description, Usage, Aliases]
 			[OwnerOnly]
 			public async Task ToggleUsernameHistory() {
-				using(var uow = _db.UnitOfWork) {
-					var bc      = uow.BotConfig.GetOrCreate();
-					var logging = bc.LogUsernames = !bc.LogUsernames;
-					uow.BotConfig.Update(bc);
-					await uow.CompleteAsync().ConfigureAwait(false);
+				var bc      = uow.BotConfig.GetOrCreate();
+				var logging = bc.LogUsernames = !bc.LogUsernames;
+				uow.BotConfig.Update(bc);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-					await ConfirmLocalized("unh_log_global", GetActiveText(logging)).ConfigureAwait(false);
-				}
+				await ConfirmLocalized("unh_log_global", GetActiveText(logging)).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Description, Usage, Aliases]
@@ -43,20 +42,18 @@ namespace Mitternacht.Modules.Utility {
 					return;
 				}
 
-				using(var uow = _db.UnitOfWork) {
-					var globalLogging = uow.BotConfig.GetOrCreate().LogUsernames;
-					var gc            = uow.GuildConfigs.For(guild.Id);
-					var loggingBefore = gc.LogUsernameHistory;
-					if(loggingBefore == toggle) {
-						await ErrorLocalized("unh_guild_log_equals", guild.Name, GetActiveText(toggle)).ConfigureAwait(false);
-						return;
-					}
-
-					gc.LogUsernameHistory = toggle;
-					await uow.CompleteAsync().ConfigureAwait(false);
-
-					await Context.Channel.SendConfirmAsync(GetText("unh_log_guild", guild.Name, GetActiveText(loggingBefore), GetActiveText(toggle)).Trim() + " " + GetText("unh_log_global_append", GetActiveText(globalLogging)).Trim()).ConfigureAwait(false);
+				var globalLogging = uow.BotConfig.GetOrCreate().LogUsernames;
+				var gc            = uow.GuildConfigs.For(guild.Id);
+				var loggingBefore = gc.LogUsernameHistory;
+				if(loggingBefore == toggle) {
+					await ErrorLocalized("unh_guild_log_equals", guild.Name, GetActiveText(toggle)).ConfigureAwait(false);
+					return;
 				}
+
+				gc.LogUsernameHistory = toggle;
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+				await Context.Channel.SendConfirmAsync(GetText("unh_log_guild", guild.Name, GetActiveText(loggingBefore), GetActiveText(toggle)).Trim() + " " + GetText("unh_log_global_append", GetActiveText(globalLogging)).Trim()).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Description, Usage, Aliases]
@@ -71,12 +68,9 @@ namespace Mitternacht.Modules.Utility {
 			public async Task UsernameHistory(ulong userId, int page = 1) {
 				var username = (await Context.Guild.GetUserAsync(userId))?.ToString() ?? userId.ToString();
 
-				List<UsernameHistoryModel> usernicknames;
-				using(var uow = _db.UnitOfWork) {
-					var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId);
-					var usernames = uow.UsernameHistory.GetUsernamesDescending(userId);
-					usernicknames = usernames.Concat(nicknames).OrderByDescending(u => u.DateSet).ToList();
-				}
+				var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId);
+				var usernames = uow.UsernameHistory.GetUsernamesDescending(userId);
+				var usernicknames = usernames.Concat(nicknames).OrderByDescending(u => u.DateSet).ToList();
 
 				if(!usernicknames.Any()) {
 					await ErrorLocalized("unh_no_names", username).ConfigureAwait(false);
@@ -105,10 +99,7 @@ namespace Mitternacht.Modules.Utility {
 			public async Task UsernameHistoryGlobal(ulong userId, int page = 1) {
 				var username = (await Context.Client.GetUserAsync(userId))?.ToString() ?? userId.ToString();
 
-				List<UsernameHistoryModel> usernames;
-				using(var uow = _db.UnitOfWork) {
-					usernames = uow.UsernameHistory.GetUsernamesDescending(userId).OrderByDescending(u => u.DateSet).ToList();
-				}
+				var usernames = uow.UsernameHistory.GetUsernamesDescending(userId).OrderByDescending(u => u.DateSet).ToList();
 
 				if(!usernames.Any()) {
 					await ErrorLocalized("unh_no_names", username).ConfigureAwait(false);
@@ -139,10 +130,7 @@ namespace Mitternacht.Modules.Utility {
 			public async Task UsernameHistoryGuild(ulong userId, int page = 1) {
 				var username = (await Context.Guild.GetUserAsync(userId))?.ToString() ?? userId.ToString();
 
-				List<NicknameHistoryModel> nicknames;
-				using(var uow = _db.UnitOfWork) {
-					nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId).OrderByDescending(u => u.DateSet).ToList();
-				}
+				var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId).OrderByDescending(u => u.DateSet).ToList();
 
 				if(!nicknames.Any()) {
 					await ErrorLocalized("unh_no_names", username).ConfigureAwait(false);

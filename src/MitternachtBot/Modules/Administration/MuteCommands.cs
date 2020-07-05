@@ -8,15 +8,16 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
 		[Group]
 		public class MuteCommands : MitternachtSubmodule<MuteService> {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public MuteCommands(DbService db) {
-				_db = db;
+			public MuteCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -28,10 +29,9 @@ namespace Mitternacht.Modules.Administration {
 				if(string.IsNullOrWhiteSpace(name))
 					return;
 
-				using var uow = _db.UnitOfWork;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
 				gc.MuteRoleName = name;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				await ReplyConfirmLocalized("mute_role_set").ConfigureAwait(false);
 			}
 

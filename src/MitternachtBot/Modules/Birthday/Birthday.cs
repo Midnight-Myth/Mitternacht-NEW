@@ -9,16 +9,17 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Birthday.Models;
 using Mitternacht.Modules.Birthday.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Birthday {
 	public class Birthday : MitternachtTopLevelModule<BirthdayService> {
-		private readonly DbService _db;
+		private readonly IUnitOfWork uow;
 		private readonly IBotCredentials _botCreds;
 		private readonly IBotConfigProvider _botConf;
 
-		public Birthday(DbService db, IBotCredentials botCreds, IBotConfigProvider botConf) {
-			_db = db;
+		public Birthday(IUnitOfWork uow, IBotCredentials botCreds, IBotConfigProvider botConf) {
+			this.uow = uow;
 			_botCreds = botCreds;
 			_botConf = botConf;
 		}
@@ -26,7 +27,6 @@ namespace Mitternacht.Modules.Birthday {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task BirthdaySet(IBirthDate bd) {
-			using var uow = _db.UnitOfWork;
 			var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
 			if(!_botCreds.IsOwner(Context.User) && (bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month))) {
 				await ReplyErrorLocalized("set_before").ConfigureAwait(false);
@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Birthday {
 			}
 
 			uow.BirthDates.SetBirthDate(Context.User.Id, bd);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 			await ReplyConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
 
@@ -62,9 +62,8 @@ namespace Mitternacht.Modules.Birthday {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[OwnerOnly]
 		public async Task BirthdaySet(IBirthDate bd, IUser user) {
-			using var uow = _db.UnitOfWork;
 			uow.BirthDates.SetBirthDate(user.Id, bd);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 			if(user == Context.User)
 				await ConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
@@ -75,20 +74,18 @@ namespace Mitternacht.Modules.Birthday {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[OwnerOnly]
 		public async Task BirthdayRemove(IUser user) {
-			using var uow = _db.UnitOfWork;
 			var success = uow.BirthDates.DeleteBirthDate(user.Id);
 			if(success)
 				await ConfirmLocalized("removed", user.ToString()).ConfigureAwait(false);
 			else
 				await ErrorLocalized("remove_failed", user.ToString()).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task BirthdayGet(IUser user = null) {
 			user ??= Context.User;
-			using var uow = _db.UnitOfWork;
 			var bdm = uow.BirthDates.GetUserBirthDate(user.Id);
 			var age = bdm?.Year != null ? (int)Math.Floor((DateTime.Now - new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)).TotalDays / 365.25) : 0;
 			if(user == Context.User)
@@ -110,7 +107,6 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		public async Task Birthdays(IBirthDate bd = null) {
 			bd ??= BirthDate.TodayWithoutYear;
-			using var uow = _db.UnitOfWork;
 			var birthdates = uow.BirthDates.GetBirthdays(bd, bd.Year.HasValue).ToList();
 
 			if(!birthdates.Any())
@@ -129,7 +125,6 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdaysAll(int page = 1) {
 			if(page < 1)
 				page = 1;
-			using var uow = _db.UnitOfWork;
 			var birthdates = uow.BirthDates.GetAll().OrderBy(bdm => bdm.Month).ThenBy(bdm => bdm.Day).ToList();
 
 			if(!birthdates.Any()) {
@@ -150,7 +145,6 @@ namespace Mitternacht.Modules.Birthday {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task BirthdayRole() {
-			using var uow = _db.UnitOfWork;
 			var bdayroleid = uow.GuildConfigs.For(Context.Guild.Id).BirthdayRoleId;
 			var bdayrole = bdayroleid.HasValue ? Context.Guild.GetRole(bdayroleid.Value) : null;
 			if(!bdayroleid.HasValue)
@@ -165,13 +159,12 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task BirthdayRole(IRole role) {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var oldroleid = gc.BirthdayRoleId;
 			var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
 			gc.BirthdayRoleId = role.Id;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), role.Name).ConfigureAwait(false);
 		}
 
@@ -179,13 +172,12 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task BirthdayRoleRemove() {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var oldroleid = gc.BirthdayRoleId;
 			var oldrole = oldroleid.HasValue ? Context.Guild.GetRole(oldroleid.Value) : null;
 			gc.BirthdayRoleId = null;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
 		}
 
@@ -193,7 +185,6 @@ namespace Mitternacht.Modules.Birthday {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task BirthdayMessageChannel() {
-			using var uow = _db.UnitOfWork;
 			var bdayMsgChId = uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessageChannelId;
 			var bdayMsgCh = bdayMsgChId.HasValue ? await Context.Guild.GetTextChannelAsync(bdayMsgChId.Value).ConfigureAwait(false) : null;
 			if(!bdayMsgChId.HasValue)
@@ -208,13 +199,12 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task BirthdayMessageChannel(ITextChannel channel) {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var oldChId = gc.BirthdayMessageChannelId;
 			var oldch = oldChId.HasValue ? await Context.Guild.GetTextChannelAsync(oldChId.Value).ConfigureAwait(false) : null;
 			gc.BirthdayMessageChannelId = channel.Id;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			await ConfirmLocalized("msgch_set", oldch?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), channel.Name).ConfigureAwait(false);
 		}
 
@@ -222,13 +212,12 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task BirthdayMessageChannelRemove() {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var oldChId = gc.BirthdayMessageChannelId;
 			var oldCh = oldChId.HasValue ? await Context.Guild.GetTextChannelAsync(oldChId.Value).ConfigureAwait(false) : null;
 			gc.BirthdayMessageChannelId = null;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			await ConfirmLocalized("msgch_set", oldCh?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
 		}
 
@@ -237,9 +226,8 @@ namespace Mitternacht.Modules.Birthday {
 		[OwnerOnly]
 		[Priority(1)]
 		public async Task BirthdayMessage() {
-			using var uow = _db.UnitOfWork;
 			await ConfirmLocalized("msg", uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessage).ConfigureAwait(false);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -247,12 +235,11 @@ namespace Mitternacht.Modules.Birthday {
 		[OwnerOnly]
 		[Priority(0)]
 		public async Task BirthdayMessage([Remainder] string msg) {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var oldmsg = gc.BirthdayMessage;
 			gc.BirthdayMessage = msg;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			await ConfirmLocalized("msg_changed", oldmsg ?? "null", msg);
 		}
 
@@ -260,7 +247,6 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task BirthdayReactions(bool enable) {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			if(gc.BirthdaysEnabled == enable) {
 				await ErrorLocalized("enable_same", GetEnabledText(enable)).ConfigureAwait(false);
@@ -269,7 +255,7 @@ namespace Mitternacht.Modules.Birthday {
 
 			gc.BirthdaysEnabled = enable;
 			uow.GuildConfigs.Update(gc);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			await ConfirmLocalized("enable", GetEnabledText(enable)).ConfigureAwait(false);
 		}
 
@@ -277,7 +263,6 @@ namespace Mitternacht.Modules.Birthday {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task BirthdayMoney(long money) {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			if(gc.BirthdayMoney == money) {
 				await ReplyErrorLocalized("money_already_set").ConfigureAwait(false);
@@ -288,13 +273,12 @@ namespace Mitternacht.Modules.Birthday {
 			uow.GuildConfigs.Update(gc);
 			await ReplyConfirmLocalized("money_set", _botConf.BotConfig.CurrencySign, oldMoney, money).ConfigureAwait(false);
 
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task BirthdayMoney() {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var money = gc.BirthdayMoney ?? 0;
 			await ReplyConfirmLocalized("money", _botConf.BotConfig.CurrencySign, money).ConfigureAwait(false);
@@ -303,7 +287,6 @@ namespace Mitternacht.Modules.Birthday {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task BirthdayMessageEvent(bool? enable = null) {
-			using var uow = _db.UnitOfWork;
 			var hasBirthdate = uow.BirthDates.HasBirthDate(Context.User.Id);
 			if(!hasBirthdate) {
 				await ReplyErrorLocalized("messageevent_birthday_not_set").ConfigureAwait(false);
@@ -319,7 +302,7 @@ namespace Mitternacht.Modules.Birthday {
 				else {
 					bdm.BirthdayMessageEnabled = enable.Value;
 					uow.BirthDates.Update(bdm);
-					await uow.CompleteAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 					await ReplyConfirmLocalized($"messageevent_changed", GetEnabledText(enable.Value)).ConfigureAwait(false);
 				}
 			}

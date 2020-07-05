@@ -13,16 +13,17 @@ using Mitternacht.Modules.Verification.Common;
 using Mitternacht.Modules.Verification.Exceptions;
 using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Verification {
 	public partial class Verification : MitternachtTopLevelModule<VerificationService> {
-		private readonly DbService _db;
+		private readonly IUnitOfWork uow;
 		private readonly IBotCredentials _creds;
 		private readonly CommandHandler _ch;
 		private readonly ForumService _fs;
 
-		public Verification(DbService db, IBotCredentials creds, CommandHandler ch, ForumService fs) {
-			_db = db;
+		public Verification(IUnitOfWork uow, IBotCredentials creds, CommandHandler ch, ForumService fs) {
+			this.uow = uow;
 			_creds = creds;
 			_ch = ch;
 			_fs = fs;
@@ -55,7 +56,6 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task AddVerification(IGuildUser user, long forumUserId) {
-			using var uow = _db.UnitOfWork;
 			var forumUserName = forumUserId.ToString();
 			try {
 				var forumUser = await _fs.Forum.GetUserInfo(forumUserId).ConfigureAwait(false);
@@ -78,11 +78,12 @@ namespace Mitternacht.Modules.Verification {
 		[Priority(1)]
 		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task RemoveVerificationDiscord(IGuildUser guildUser) {
-			using var uow = _db.UnitOfWork;
-			if(uow.VerifiedUsers.RemoveVerification(guildUser.GuildId, guildUser.Id))
+			if(uow.VerifiedUsers.RemoveVerification(guildUser.GuildId, guildUser.Id)) {
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				await ConfirmLocalized("removed_discord", guildUser.ToString()).ConfigureAwait(false);
-			else
+			} else {
 				await ErrorLocalized("removed_discord_error", guildUser.ToString()).ConfigureAwait(false);
+			}
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -93,11 +94,12 @@ namespace Mitternacht.Modules.Verification {
 			var guildUser = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 
 			if(guildUser is null) {
-				using var uow = _db.UnitOfWork;
-				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, userId))
+				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, userId)) {
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 					await ConfirmLocalized("removed_discord", userId.ToString()).ConfigureAwait(false);
-				else
+				} else {
 					await ErrorLocalized("removed_discord_error", userId.ToString()).ConfigureAwait(false);
+				}
 			} else {
 				await RemoveVerificationDiscord(guildUser).ConfigureAwait(false);
 			}
@@ -109,11 +111,12 @@ namespace Mitternacht.Modules.Verification {
 		[Priority(1)]
 		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task RemoveVerificationForum(long forumUserId) {
-			using var uow = _db.UnitOfWork;
-			if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, forumUserId))
+			if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, forumUserId)) {
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				await ConfirmLocalized("removed_forum", forumUserId).ConfigureAwait(false);
-			else
+			} else {
 				await ErrorLocalized("removed_forum_error", forumUserId).ConfigureAwait(false);
+			}
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -129,11 +132,12 @@ namespace Mitternacht.Modules.Verification {
 			if(uinfo == null) {
 				await ErrorLocalized("forumaccount_not_existing", forumUsername).ConfigureAwait(false);
 			} else {
-				using var uow = _db.UnitOfWork;
-				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, uinfo.Id))
+				if(uow.VerifiedUsers.RemoveVerification(Context.Guild.Id, uinfo.Id)) {
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 					await ConfirmLocalized("removed_forum", uinfo.Username).ConfigureAwait(false);
-				else
+				} else {
 					await ErrorLocalized("removed_forum_error", uinfo.Username).ConfigureAwait(false);
+				}
 			}
 		}
 
@@ -320,7 +324,6 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerificationPasswordChannel() {
-			using var uow = _db.UnitOfWork;
 			var channelId = uow.GuildConfigs.For(Context.Guild.Id).VerificationPasswordChannelId;
 
 			if(channelId.HasValue) {
@@ -334,7 +337,6 @@ namespace Mitternacht.Modules.Verification {
 		[RequireContext(ContextType.Guild)]
 		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerificationPasswordChannel(ITextChannel channel) {
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			if(channel.Id == gc.VerificationPasswordChannelId) {
 				await ErrorLocalized("passwordchannel_new_identical", channel.Mention).ConfigureAwait(false);
@@ -344,7 +346,7 @@ namespace Mitternacht.Modules.Verification {
 				gc.VerificationPasswordChannelId = channel.Id;
 
 				uow.GuildConfigs.Update(gc);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				await ConfirmLocalized("passwordchannel_new", oldPasswordChannelId.HasValue ? MentionUtils.MentionChannel(oldPasswordChannelId.Value) : "null", channel.Mention).ConfigureAwait(false);
 			}
 		}

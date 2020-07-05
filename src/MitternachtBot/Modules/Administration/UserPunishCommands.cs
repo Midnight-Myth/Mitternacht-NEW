@@ -9,6 +9,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 using MoreLinq;
 
@@ -16,11 +17,11 @@ namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
 		[Group]
 		public class UserPunishCommands : MitternachtSubmodule<UserPunishService> {
-			private readonly DbService       _db;
+			private readonly IUnitOfWork uow;
 			private readonly IBotCredentials _bc;
 
-			public UserPunishCommands(DbService db, IBotCredentials bc) {
-				_db = db;
+			public UserPunishCommands(IUnitOfWork uow, IBotCredentials bc) {
+				this.uow = uow;
 				_bc = bc;
 			}
 
@@ -75,7 +76,6 @@ namespace Mitternacht.Modules.Administration {
 
 				const int warnsPerPage = 9;
 
-				using var uow   = _db.UnitOfWork;
 				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
 				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
@@ -112,7 +112,6 @@ namespace Mitternacht.Modules.Administration {
 			public async Task WarnlogAll(int page = 1) {
 				if(--page < 0) return;
 
-				using var uow = _db.UnitOfWork;
 				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).ToList().GroupBy(x => x.UserId);
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async curPage => {
@@ -141,10 +140,8 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.BanMembers)]
 			public async Task Warnclear(ulong userId) {
-				using(var uow = _db.UnitOfWork) {
-					await uow.Warnings.ForgiveAll(Context.Guild.Id, userId, Context.User.ToString()).ConfigureAwait(false);
-					uow.Complete();
-				}
+				await uow.Warnings.ForgiveAll(Context.Guild.Id, userId, Context.User.ToString()).ConfigureAwait(false);
+				uow.SaveChanges(false);
 
 				await ReplyConfirmLocalized("warnings_cleared", Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
 			}
@@ -153,7 +150,6 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.BanMembers)]
 			public async Task Warnremove(int id) {
-				using var uow = _db.UnitOfWork;
 				var warning = uow.Warnings.Get(id);
 				if(warning == null) {
 					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
@@ -162,14 +158,13 @@ namespace Mitternacht.Modules.Administration {
 
 				uow.Warnings.Remove(warning);
 				await ReplyConfirmLocalized("warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			public async Task Warndetails(int id) {
-				using var uow = _db.UnitOfWork;
 				var w = uow.Warnings.Get(id);
 				if(w == null) {
 					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
@@ -187,7 +182,7 @@ namespace Mitternacht.Modules.Administration {
 					embed.WithAuthor(user);
 				if(w.DateAdded != null) embed.WithTimestamp(w.DateAdded.Value);
 				await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -195,7 +190,6 @@ namespace Mitternacht.Modules.Administration {
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			[Priority(0)]
 			public async Task WarnEdit(int id, [Remainder] string reason = null) {
-				using var uow = _db.UnitOfWork;
 				var w    = uow.Warnings.Get(id);
 				var user = Context.User as IGuildUser;
 				if(!_bc.IsOwner(Context.User)) {
@@ -214,7 +208,7 @@ namespace Mitternacht.Modules.Administration {
 				var oldreason = w.Reason;
 				w.Reason = reason;
 				uow.Warnings.Update(w);
-				await uow.CompleteAsync();
+				await uow.SaveChangesAsync(false);
 				await ReplyConfirmLocalized("warn_edit", id, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
 			}
 
@@ -225,13 +219,11 @@ namespace Mitternacht.Modules.Administration {
 				if(punish != PunishmentAction.Mute && time != 0) return;
 				if(number <= 0) return;
 
-				using(var uow = _db.UnitOfWork) {
-					var ps = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.WarnPunishments)).WarnPunishments;
-					ps.RemoveAll(x => x.Count == number);
+				var ps = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.WarnPunishments)).WarnPunishments;
+				ps.RemoveAll(x => x.Count == number);
 
-					ps.Add(new WarningPunishment {Count = number, Punishment = punish, Time = time});
-					uow.Complete();
-				}
+				ps.Add(new WarningPunishment {Count = number, Punishment = punish, Time = time});
+				uow.SaveChanges(false);
 
 				await ReplyConfirmLocalized("warn_punish_set", Format.Bold(punish.ToString()), Format.Bold(number.ToString())).ConfigureAwait(false);
 			}
@@ -242,14 +234,12 @@ namespace Mitternacht.Modules.Administration {
 			public async Task WarnPunish(int number) {
 				if(number <= 0) return;
 
-				using(var uow = _db.UnitOfWork) {
-					var ps = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.WarnPunishments)).WarnPunishments;
-					var p  = ps.FirstOrDefault(x => x.Count == number);
+				var ps = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.WarnPunishments)).WarnPunishments;
+				var p  = ps.FirstOrDefault(x => x.Count == number);
 
-					if(p != null) {
-						uow.Context.Remove(p);
-						uow.Complete();
-					}
+				if(p != null) {
+					uow.Context.Remove(p);
+					uow.SaveChanges(false);
 				}
 
 				await ReplyConfirmLocalized("warn_punish_rem", Format.Bold(number.ToString())).ConfigureAwait(false);
@@ -258,10 +248,7 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task WarnPunishList() {
-				WarningPunishment[] ps;
-				using(var uow = _db.UnitOfWork) {
-					ps = uow.GuildConfigs.For(Context.Guild.Id, gc => gc.Include(x => x.WarnPunishments)).WarnPunishments.OrderBy(x => x.Count).ToArray();
-				}
+				var ps = uow.GuildConfigs.For(Context.Guild.Id, gc => gc.Include(x => x.WarnPunishments)).WarnPunishments.OrderBy(x => x.Count).ToArray();
 
 				var list = ps.Any() ? string.Join("\n", ps.Select(x => $"{x.Count} -> {x.Punishment}")) : GetText("warnpl_none");
 				await Context.Channel.SendConfirmAsync(list, GetText("warn_punish_list")).ConfigureAwait(false);

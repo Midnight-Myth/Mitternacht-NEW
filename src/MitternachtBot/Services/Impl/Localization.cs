@@ -68,7 +68,7 @@ namespace Mitternacht.Services.Impl
             {
                 var gc = uow.GuildConfigs.For(guildId);
                 gc.Locale = ci.Name;
-                uow.Complete();
+                uow.SaveChanges();
             }
 
             GuildCultureInfos.AddOrUpdate(guildId, ci, (id, old) => ci);
@@ -84,7 +84,7 @@ namespace Mitternacht.Services.Impl
             {
                 var gc = uow.GuildConfigs.For(guildId);
                 gc.Locale = null;
-                uow.Complete();
+                uow.SaveChanges();
             }
         }
 
@@ -94,7 +94,7 @@ namespace Mitternacht.Services.Impl
             {
                 var bc = uow.BotConfig.GetOrCreate();
                 bc.Locale = ci.Name;
-                uow.Complete();
+                uow.SaveChanges();
             }
             DefaultCultureInfo = ci;
         }

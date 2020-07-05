@@ -24,7 +24,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                     UserId = userId,
                     Amount = 0
                 });
-                _context.SaveChanges();
             }
             return cur;
         }

@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Level.Services {
 					uow.LevelModel.ReplaceTimestampOfLastMessageXP(user.GuildId, user.Id, time);
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}).ConfigureAwait(false);
 		}
 
@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.Level.Services {
 			if(uow.MessageXpBlacklist.IsRestricted(channel as ITextChannel))
 				return;
 			uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMax, channel.Id);
-			await uow.CompleteAsync().ConfigureAwait(false);
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		private async Task SendLevelChangedMessage(LevelChangedArgs lc) {

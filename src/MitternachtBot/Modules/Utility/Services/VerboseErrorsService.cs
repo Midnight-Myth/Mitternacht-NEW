@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Utility.Services
 
                 enabled = gc.VerboseErrors = !gc.VerboseErrors;
 
-                uow.Complete();
+                uow.SaveChanges();
 
                 if (gc.VerboseErrors)
                     guildsEnabled.Add(guildId);

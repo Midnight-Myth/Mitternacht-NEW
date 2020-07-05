@@ -24,7 +24,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl
             var rl = _set.FirstOrDefault(r => r.RoleId == roleid);
             if (rl == null) return false;
             _set.Remove(rl);
-            _context.SaveChanges();
+
             return true;
         }
 
@@ -45,7 +45,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl
                 rl.MinimumLevel = level;
                 _set.Update(rl);
             }
-            _context.SaveChanges();
         }
     }
 }

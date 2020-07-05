@@ -8,6 +8,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration
 {
@@ -16,11 +17,11 @@ namespace Mitternacht.Modules.Administration
         [Group]
         public class VoicePlusTextCommands : MitternachtSubmodule<VplusTService>
         {
-            private readonly DbService _db;
+            private readonly IUnitOfWork uow;
 
-            public VoicePlusTextCommands(DbService db)
+            public VoicePlusTextCommands(IUnitOfWork uow)
             {
-                _db = db;
+                this.uow = uow;
             }
 
             [MitternachtCommand, Usage, Description, Aliases]
@@ -51,13 +52,10 @@ namespace Mitternacht.Modules.Administration
                 }
                 try
                 {
-                    bool isEnabled;
-                    using (var uow = _db.UnitOfWork)
-                    {
-                        var conf = uow.GuildConfigs.For(guild.Id);
-                        isEnabled = conf.VoicePlusTextEnabled = !conf.VoicePlusTextEnabled;
-                        await uow.CompleteAsync().ConfigureAwait(false);
-                    }
+                    var conf = uow.GuildConfigs.For(guild.Id);
+                    var isEnabled = conf.VoicePlusTextEnabled = !conf.VoicePlusTextEnabled;
+                    await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
                     if (!isEnabled)
                     {
                         Service.VoicePlusTextCache.TryRemove(guild.Id);

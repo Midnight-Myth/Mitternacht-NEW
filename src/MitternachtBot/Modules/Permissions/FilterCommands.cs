@@ -8,25 +8,25 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Modules.Permissions {
 	public partial class Permissions {
 		[Group]
 		public class FilterCommands : MitternachtSubmodule<FilterService> {
-			private readonly DbService _db;
+			private readonly IUnitOfWork uow;
 
-			public FilterCommands(DbService db) {
-				_db = db;
+			public FilterCommands(IUnitOfWork uow) {
+				this.uow = uow;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterInvitesServer() {
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterInvites = !gc.FilterInvites;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(enabled ? "invite_filter_server_on" : "invite_filter_server_off").ConfigureAwait(false);
 			}
@@ -34,7 +34,6 @@ namespace Mitternacht.Modules.Permissions {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterInvitesChannel() {
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilterInvitesChannelIds));
 				var removed   = gc.FilterInvitesChannelIds.RemoveWhere(fc => fc.ChannelId == Context.Channel.Id);
 				if(removed == 0) {
@@ -43,7 +42,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "invite_filter_channel_on" : "invite_filter_channel_off").ConfigureAwait(false);
 			}
@@ -51,10 +50,9 @@ namespace Mitternacht.Modules.Permissions {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterWordsServer() {
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterWords = !gc.FilterWords;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(enabled ? "word_filter_server_on" : "word_filter_server_off").ConfigureAwait(false);
 			}
@@ -62,7 +60,6 @@ namespace Mitternacht.Modules.Permissions {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterWordsChannel() {
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilterWordsChannelIds));
 				var removed   = gc.FilterWordsChannelIds.RemoveWhere(fc => fc.ChannelId == Context.Channel.Id);
 				if(removed == 0) {
@@ -71,7 +68,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "word_filter_channel_on" : "word_filter_channel_off").ConfigureAwait(false);
 			}
@@ -84,7 +81,6 @@ namespace Mitternacht.Modules.Permissions {
 
 				word = word.Trim();
 				
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilteredWords));
 				int removed   = gc.FilteredWords.RemoveWhere(fw => fw.Word.Equals(word, System.StringComparison.OrdinalIgnoreCase));
 				if(removed == 0) {
@@ -93,7 +89,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "filter_word_add" : "filter_word_remove", Format.Code(word)).ConfigureAwait(false);
 			}
@@ -107,7 +103,6 @@ namespace Mitternacht.Modules.Permissions {
 
 				const int WordsPerPage = 10;
 
-				using var uow = _db.UnitOfWork;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilteredWords));
 				var filteredWords = gc.FilteredWords.Select(fw => fw.Word).ToArray();
 
@@ -117,10 +112,9 @@ namespace Mitternacht.Modules.Permissions {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterZalgoServer() {
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id);
 				var enabled   = gc.FilterZalgo = !gc.FilterZalgo;
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(enabled ? "zalgo_filter_server_on" : "zalgo_filter_server_off").ConfigureAwait(false);
 			}
@@ -128,7 +122,6 @@ namespace Mitternacht.Modules.Permissions {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task FilterZalgoChannel() {
-				using var uow = _db.UnitOfWork;
 				var gc        = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(fzc => fzc.FilterZalgoChannelIds));
 				var removed   = gc.FilterZalgoChannelIds.RemoveWhere(zfc => zfc.ChannelId == Context.Channel.Id);
 				if(removed == 0) {
@@ -137,7 +130,7 @@ namespace Mitternacht.Modules.Permissions {
 					});
 				}
 
-				await uow.CompleteAsync().ConfigureAwait(false);
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized(removed == 0 ? "zalgo_filter_channel_on" : "zalgo_filter_channel_off").ConfigureAwait(false);
 			}
