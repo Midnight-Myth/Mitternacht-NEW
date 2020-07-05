@@ -10,7 +10,6 @@ namespace Mitternacht.Services.Database.Repositories
     {
         GuildConfig For(ulong guildId, Func<DbSet<GuildConfig>, IQueryable<GuildConfig>> includes);
         GuildConfig For(ulong guildId, bool preloaded = false);
-        GuildConfig LogSettingsFor(ulong guildId);
         IEnumerable<GuildConfig> OldPermissionsForAll();
         IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds);
         IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included);
