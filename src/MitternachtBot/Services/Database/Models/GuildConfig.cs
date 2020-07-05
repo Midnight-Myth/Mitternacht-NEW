@@ -70,7 +70,6 @@ namespace Mitternacht.Services.Database.Models {
 
 		public HashSet<MutedUserId>         MutedUsers                 { get; set; } = new HashSet<MutedUserId>();
 		public HashSet<GuildRepeater>       GuildRepeaters             { get; set; } = new HashSet<GuildRepeater>();
-		public HashSet<FollowedStream>      FollowedStreams            { get; set; } = new HashSet<FollowedStream>();
 		public HashSet<GCChannelId>         GenerateCurrencyChannelIds { get; set; } = new HashSet<GCChannelId>();
 		public HashSet<CommandCooldown>     CommandCooldowns           { get; set; } = new HashSet<CommandCooldown>();
 		public HashSet<UnmuteTimer>         UnmuteTimers               { get; set; } = new HashSet<UnmuteTimer>();
