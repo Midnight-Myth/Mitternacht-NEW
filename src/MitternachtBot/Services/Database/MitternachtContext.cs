@@ -52,16 +52,6 @@ namespace Mitternacht.Services.Database {
 				return;
 			var bc = new BotConfig();
 
-			bc.RaceAnimals.AddRange(new HashSet<RaceAnimal> {
-				new RaceAnimal { Icon = "🐼", Name = "Panda" },
-				new RaceAnimal { Icon = "🐻", Name = "Bear" },
-				new RaceAnimal { Icon = "🐧", Name = "Pengu" },
-				new RaceAnimal { Icon = "🐨", Name = "Koala" },
-				new RaceAnimal { Icon = "🐬", Name = "Dolphin" },
-				new RaceAnimal { Icon = "🐞", Name = "Ladybird" },
-				new RaceAnimal { Icon = "🦀", Name = "Crab" },
-				new RaceAnimal { Icon = "🦄", Name = "Unicorn" }
-			});
 			bc.EightBallResponses.AddRange(new HashSet<EightBallResponse> {
 				new EightBallResponse { Text = "Most definitely yes" },
 				new EightBallResponse { Text = "For sure" },

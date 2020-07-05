@@ -40,7 +40,6 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 		public HashSet<BlacklistItem>     Blacklist              { get; set; }
 		public List<PlayingStatus>        RotatingStatusMessages { get; set; } = new List<PlayingStatus>();
 		public HashSet<EightBallResponse> EightBallResponses     { get; set; } = new HashSet<EightBallResponse>();
-		public HashSet<RaceAnimal>        RaceAnimals            { get; set; } = new HashSet<RaceAnimal>();
 		public List<StartupCommand>       StartupCommands        { get; set; }
 		public HashSet<BlockedCmdOrMdl>   BlockedCommands        { get; set; }
 		public HashSet<BlockedCmdOrMdl>   BlockedModules         { get; set; }
@@ -93,16 +92,5 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 
 		public override bool Equals(object obj)
 			=> obj is EightBallResponse er ? er.Text.Equals(Text) : base.Equals(obj);
-	}
-
-	public class RaceAnimal : DbEntity {
-		public string Icon { get; set; }
-		public string Name { get; set; }
-
-		public override int GetHashCode()
-			=> HashCode.Combine(Icon);
-
-		public override bool Equals(object obj)
-			=> obj is RaceAnimal ra ? ra.Icon.Equals(Icon) : base.Equals(obj);
 	}
 }
