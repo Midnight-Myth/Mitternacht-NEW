@@ -100,7 +100,7 @@ namespace Mitternacht {
 								await Task.Delay(1000);
 								await Client.StartAsync();
 							}));
-						} catch { /* ignore exception */
+						} catch {
 							_log.Warn($"Shard {Client.ShardId} failed to reconnect, trying again in 10s.");
 						}
 					}
@@ -113,23 +113,19 @@ namespace Mitternacht {
 		private void AddServices() {
 			var startingGuildIdList = Client.Guilds.Select(x => x.Id).ToList();
 
-			//this unit of work will be used for initialization of all modules too, to prevent multiple queries from running
+			// This UnitOfWork will be used for building Modules in Discord.Commands.CommandService. Do not use it in anything else.
 			using var uow = _db.UnitOfWork;
 			AllGuildConfigs = uow.GuildConfigs.GetAllGuildConfigs(startingGuildIdList).ToImmutableArray();
 
 			IBotConfigProvider botConfigProvider = new BotConfigProvider(_db);
 			botConfigProvider.BotConfigChanged  += OnBotConfigChanged;
 
-			//var localization = new Localization(_botConfig.Locale, AllGuildConfigs.ToDictionary(x => x.GuildId, x => x.Locale), Db);
-
-			//initialize Services
 			Services = new NServiceProvider.ServiceProviderBuilder()
 						.AddManual<IBotCredentials>(Credentials)
 						.AddManual(_db)
 						.AddManual(Client)
 						.AddManual(CommandService)
 						.AddManual(botConfigProvider)
-						//.AddManual<ILocalization>(localization)
 						.AddManual<IEnumerable<GuildConfig>>(AllGuildConfigs)
 						.AddManual(this)
 						.AddManual(uow)
@@ -162,14 +158,11 @@ namespace Mitternacht {
 						foreach(var chan in await Client.GetDMChannelsAsync()) {
 							await chan.CloseAsync().ConfigureAwait(false);
 						}
-					} catch {
-						// ignored
-					}
+					} catch { }
 				});
 				return Task.CompletedTask;
 			}
 
-			//connect
 			_log.Info("Shard {0} logging in ...", Client.ShardId);
 			await Client.LoginAsync(TokenType.Bot, token).ConfigureAwait(false);
 			await Client.StartAsync().ConfigureAwait(false);
@@ -210,14 +203,12 @@ namespace Mitternacht {
 			var commandHandler = Services.GetService<CommandHandler>();
 			var commandService = Services.GetService<CommandService>();
 
-			// start handling messages received in commandhandler
 			commandHandler.StartHandling();
 
 			var _ = await commandService.AddModulesAsync(GetType().GetTypeInfo().Assembly, Services);
 
 			Ready.TrySetResult(true);
 			_log.Info($"Shard {Client.ShardId} ready.");
-			//_log.Info(await stats.Print().ConfigureAwait(false));
 
 			StartSendingData();
 			StayConnected();
@@ -244,7 +235,7 @@ namespace Mitternacht {
 				File.WriteAllText("test", "test");
 				File.Delete("test");
 			} catch {
-				_log.Error("I really like sudo. Try testing it out (I won't start without :P).");
+				_log.Error("Not enough filesystem permissions!");
 				Console.ReadKey();
 				Environment.Exit(2);
 			}
