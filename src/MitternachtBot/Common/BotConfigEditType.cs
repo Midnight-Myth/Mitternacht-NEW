@@ -14,7 +14,6 @@ namespace Mitternacht.Common {
 		CurrencyDropAmount,
 		CurrencyDropAmountMax,
 		MinimumBetAmount,
-		TriviaCurrencyReward,
 		HereChance,
 		DmCommandsOwnerOnly
 	}

@@ -74,12 +74,6 @@ namespace Mitternacht.Services.Impl {
 					else
 						return false;
 					break;
-				case BotConfigEditType.TriviaCurrencyReward:
-					if(int.TryParse(newValue, out var triviaReward) && triviaReward > 0)
-						bc.TriviaCurrencyReward = triviaReward;
-					else
-						return false;
-					break;
 				case BotConfigEditType.Betroll100Multiplier:
 					if(float.TryParse(newValue, out var br100) && br100 > 0)
 						bc.Betroll100Multiplier = br100;

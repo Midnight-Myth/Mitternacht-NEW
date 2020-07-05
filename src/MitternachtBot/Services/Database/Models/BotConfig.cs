@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Mitternacht.Services.Database.Models {
 	public class BotConfig : DbEntity {
-		public ulong    BufferSize                 { get; set; } = 4000000;
 		public bool     ForwardMessages            { get; set; } = true;
 		public bool     ForwardToAllOwners         { get; set; } = true;
 		public float    CurrencyGenerationChance   { get; set; } = 0.02f;
@@ -13,7 +12,6 @@ namespace Mitternacht.Services.Database.Models {
 		public string   CurrencySign               { get; set; } = "💶";
 		public string   CurrencyName               { get; set; } = "Money";
 		public string   CurrencyPluralName         { get; set; } = "Money";
-		public int      TriviaCurrencyReward       { get; set; } = 0;
 		public int      MinimumBetAmount           { get; set; } = 2;
 		public float    BetflipMultiplier          { get; set; } = 1.95f;
 		public int      CurrencyDropAmount         { get; set; } = 1;

@@ -30,7 +30,7 @@ namespace MitternachtWeb.Controllers {
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize("WriteBotConfig")]
-		public async Task<IActionResult> Index([Bind("ForwardMessages,ForwardToAllOwners,CurrencyGenerationChance,CurrencyGenerationCooldown,RotatingStatuses,RemindMessageFormat,CurrencySign,CurrencyName,CurrencyPluralName,TriviaCurrencyReward,MinimumBetAmount,BetflipMultiplier,CurrencyDropAmount,CurrencyDropAmountMax,Betroll67Multiplier,Betroll91Multiplier,Betroll100Multiplier,DMHelpString,HelpString,OkColor,ErrorColor,Locale,DefaultPrefix,CustomReactionsStartWith,LogUsernames,FirstAprilHereChance,DmCommandsOwnerOnly,Id")] BotConfig botConfig) {
+		public async Task<IActionResult> Index([Bind("ForwardMessages,ForwardToAllOwners,CurrencyGenerationChance,CurrencyGenerationCooldown,RotatingStatuses,RemindMessageFormat,CurrencySign,CurrencyName,CurrencyPluralName,MinimumBetAmount,BetflipMultiplier,CurrencyDropAmount,CurrencyDropAmountMax,Betroll67Multiplier,Betroll91Multiplier,Betroll100Multiplier,DMHelpString,HelpString,OkColor,ErrorColor,Locale,DefaultPrefix,CustomReactionsStartWith,LogUsernames,FirstAprilHereChance,DmCommandsOwnerOnly,Id")] BotConfig botConfig) {
 			if(ModelState.IsValid) {
 				using var uow = _db.UnitOfWork;
 				if(uow.BotConfig.GetOrCreate().Id != botConfig.Id) {
@@ -47,7 +47,6 @@ namespace MitternachtWeb.Controllers {
 					bc.CurrencySign               = botConfig.CurrencySign;
 					bc.CurrencyName               = botConfig.CurrencyName;
 					bc.CurrencyPluralName         = botConfig.CurrencyPluralName;
-					bc.TriviaCurrencyReward       = botConfig.TriviaCurrencyReward;
 					bc.MinimumBetAmount           = botConfig.MinimumBetAmount;
 					bc.BetflipMultiplier          = botConfig.BetflipMultiplier;
 					bc.CurrencyDropAmount         = botConfig.CurrencyDropAmount;
