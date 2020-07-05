@@ -19,7 +19,6 @@ namespace Mitternacht.Modules.Games.Services {
 			var timer = new Timer(_ => {
 				GirlRatings.Clear();
 			}, null, TimeSpan.FromDays(1), TimeSpan.FromDays(1));
-
 		}
 	}
 }
