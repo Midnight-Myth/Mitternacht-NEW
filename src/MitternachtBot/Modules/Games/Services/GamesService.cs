@@ -8,17 +8,17 @@ using Mitternacht.Services;
 
 namespace Mitternacht.Modules.Games.Services {
 	public class GamesService : IMService {
-		private readonly IBotConfigProvider _bc;
+		private readonly IBotConfigProvider _bcp;
 
 		public readonly ConcurrentDictionary<ulong, GirlRating> GirlRatings = new ConcurrentDictionary<ulong, GirlRating>();
 		public readonly ImmutableArray<string> EightBallResponses;
 
 		public readonly string TypingArticlesPath = "data/typing_articles2.json";
 
-		public GamesService(IBotConfigProvider bc) {
-			_bc = bc;
+		public GamesService(IBotConfigProvider bcp) {
+			_bcp = bcp;
 
-			EightBallResponses = _bc.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToImmutableArray();
+			EightBallResponses = _bcp.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToImmutableArray();
 
 			var timer = new Timer(_ => {
 				GirlRatings.Clear();
