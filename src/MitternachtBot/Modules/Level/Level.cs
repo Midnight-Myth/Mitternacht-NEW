@@ -48,11 +48,11 @@ namespace Mitternacht.Modules.Level {
 				var rankString   = lm.TotalXP > 0 && rank > 0 ? rank.ToString() : "-";
 
 				if(userId == Context.User.Id) {
-					await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, lm.CurrentLevel, lm.XP, LevelModel.GetXpToNextLevel(lm.CurrentLevel), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
+					await Context.Channel.SendMessageAsync(GetText("rank_self", Context.User.Mention, lm.Level, lm.XP, LevelModel.GetXpToNextLevel(lm.Level), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
 				} else {
 					var user       = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 					var namestring = user?.ToString() ?? uow.UsernameHistory.GetLastUsername(userId) ?? userId.ToString();
-					await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, lm.CurrentLevel, lm.XP, LevelModel.GetXpToNextLevel(lm.CurrentLevel), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
+					await Context.Channel.SendMessageAsync(GetText("rank_other", Context.User.Mention, namestring, lm.Level, lm.XP, LevelModel.GetXpToNextLevel(lm.Level), lm.TotalXP, rankString, totalRanks)).ConfigureAwait(false);
 				}
 			} else {
 				await ReplyErrorLocalized("rank_not_found").ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace Mitternacht.Modules.Level {
 				foreach(var lm in glm) {
 					var user = await Context.Guild.GetUserAsync(lm.UserId).ConfigureAwait(false);
 					var namestring = user?.ToString() ?? uow.UsernameHistory.GetLastUsername(lm.UserId) ?? lm.UserId.ToString();
-					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{namestring,-37}", $"{lm.CurrentLevel,3}", $"{lm.XP,6}", $"{LevelModel.GetXpToNextLevel(lm.CurrentLevel),6}", $"{lm.TotalXP,8}"));
+					sb.Append("\n" + GetText("ranks_list_row", $"{position + levelModels.IndexOf(lm),3}", $"{namestring,-37}", $"{lm.Level,3}", $"{lm.XP,6}", $"{LevelModel.GetXpToNextLevel(lm.Level),6}", $"{lm.TotalXP,8}"));
 				}
 
 				sb.Append("```");

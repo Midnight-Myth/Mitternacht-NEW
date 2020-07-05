@@ -38,13 +38,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 				_context.Entry(guildConfig).Collection(gc => gc.CommandCooldowns).Load();
 				_context.Entry(guildConfig).Collection(gc => gc.GuildRepeaters).Load();
 				_context.Entry(guildConfig).Reference(gc => gc.AntiRaidSetting).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.SlowmodeIgnoredRoles).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.SlowmodeIgnoredUsers).Load();
 				_context.Entry(guildConfig).Reference(gc => gc.AntiSpamSetting).Load();
 				if(guildConfig.AntiSpamSetting != null)
 					_context.Entry(guildConfig.AntiSpamSetting).Collection(x => x.IgnoredChannels).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.FollowedStreams).Load();
-				_context.Entry(guildConfig).Reference(gc => gc.StreamRole).Load();
 				_context.Entry(guildConfig).Collection(gc => gc.NsfwBlacklistedTags).Load();
 			}
 			return guildConfigs;
@@ -82,7 +78,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		public GuildConfig For(ulong guildId, bool preloaded = false) {
 			var config = preloaded
 				? _set
-					.Include(gc => gc.FollowedStreams)
 					.Include(gc => gc.LogSetting)
 						.ThenInclude(ls => ls.IgnoredChannels)
 					.Include(gc => gc.FilterInvitesChannelIds)
@@ -142,20 +137,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			}
 
 			return config;
-		}
-
-		public IEnumerable<FollowedStream> GetAllFollowedStreams(List<ulong> included)
-			=> _set.Where((Expression<Func<GuildConfig, bool>>)(gc => included.Contains(gc.GuildId)))
-				.Include(gc => gc.FollowedStreams)
-				.ToList()
-				.SelectMany(gc => gc.FollowedStreams)
-				.ToList();
-
-		public void SetCleverbotEnabled(ulong id, bool cleverbotEnabled) {
-			var conf = _set.FirstOrDefault(gc => gc.GuildId == id);
-
-			if(conf != null)
-				conf.CleverbotEnabled = cleverbotEnabled;
 		}
 	}
 }

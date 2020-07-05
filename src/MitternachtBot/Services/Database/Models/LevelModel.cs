@@ -1,21 +1,13 @@
 using System;
 
-namespace Mitternacht.Services.Database.Models
-{
-    //todo: change names when EF has a workaround for SQLite column renaming
-    public class LevelModel : DbEntity
-    {
-        public ulong GuildId { get; set; }
-        public ulong UserId { get; set; }
-        public int TotalXP { get; set; }
-        public DateTime timestamp { get; set; }
-        
-        [Obsolete]
-        public int CurrentXP { get; set; }
-        [Obsolete]
-        public int Level { get; set; }
-        
-		public int CurrentLevel {
+namespace Mitternacht.Services.Database.Models {
+	public class LevelModel : DbEntity {
+		public ulong    GuildId       { get; set; }
+		public ulong    UserId        { get; set; }
+		public int      TotalXP       { get; set; }
+		public DateTime LastMessageXp { get; set; }
+
+		public int Level {
 			get {
 				var lvl = 1;
 
@@ -26,7 +18,7 @@ namespace Mitternacht.Services.Database.Models
 			}
 		}
 
-		public int XP => TotalXP - GetXpForLevel(CurrentLevel);
+		public int XP => TotalXP - GetXpForLevel(Level);
 
 		public static int GetXpToNextLevel(int previous)
 			=> (int)(5 * Math.Pow(previous, 2) + 50 * previous + 100);

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mitternacht.Services.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mitternacht.Migrations.Mitternacht
 {
     [DbContext(typeof(MitternachtContext))]
-    partial class MitternachtContextModelSnapshot : ModelSnapshot
+    [Migration("20200705234204_RemoveUnusedColumnsFromBotConfig")]
+    partial class RemoveUnusedColumnsFromBotConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -579,6 +581,38 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("FilteredWord");
                 });
 
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.FollowedStream", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<decimal>("ChannelId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("GuildConfigId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("GuildId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuildConfigId");
+
+                    b.ToTable("FollowedStream");
+                });
+
             modelBuilder.Entity("Mitternacht.Services.Database.Models.GCChannelId", b =>
                 {
                     b.Property<int>("Id")
@@ -648,6 +682,9 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<string>("ChannelGreetMessageText")
                         .HasColumnType("text");
 
+                    b.Property<bool>("CleverbotEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal?>("CountToNumberChannelId")
                         .HasColumnType("numeric(20,0)");
 
@@ -656,6 +693,9 @@ namespace Mitternacht.Migrations.Mitternacht
 
                     b.Property<DateTime?>("DateAdded")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<float>("DefaultMusicVolume")
+                        .HasColumnType("real");
 
                     b.Property<bool>("DeleteMessageOnCommand")
                         .HasColumnType("boolean");
@@ -1359,6 +1399,52 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("ShopEntryItem");
                 });
 
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.SlowmodeIgnoredRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("GuildConfigId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("RoleId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuildConfigId");
+
+                    b.ToTable("SlowmodeIgnoredRole");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.SlowmodeIgnoredUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime?>("DateAdded")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("GuildConfigId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("UserId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuildConfigId");
+
+                    b.ToTable("SlowmodeIgnoredUser");
+                });
+
             modelBuilder.Entity("Mitternacht.Services.Database.Models.StartupCommand", b =>
                 {
                     b.Property<int>("Id")
@@ -1746,6 +1832,13 @@ namespace Mitternacht.Migrations.Mitternacht
                         .HasForeignKey("GuildConfigId");
                 });
 
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.FollowedStream", b =>
+                {
+                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                        .WithMany("FollowedStreams")
+                        .HasForeignKey("GuildConfigId");
+                });
+
             modelBuilder.Entity("Mitternacht.Services.Database.Models.GCChannelId", b =>
                 {
                     b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
@@ -1832,6 +1925,20 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.HasOne("Mitternacht.Services.Database.Models.ShopEntry", null)
                         .WithMany("Items")
                         .HasForeignKey("ShopEntryId");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.SlowmodeIgnoredRole", b =>
+                {
+                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                        .WithMany("SlowmodeIgnoredRoles")
+                        .HasForeignKey("GuildConfigId");
+                });
+
+            modelBuilder.Entity("Mitternacht.Services.Database.Models.SlowmodeIgnoredUser", b =>
+                {
+                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                        .WithMany("SlowmodeIgnoredUsers")
+                        .HasForeignKey("GuildConfigId");
                 });
 
             modelBuilder.Entity("Mitternacht.Services.Database.Models.StartupCommand", b =>

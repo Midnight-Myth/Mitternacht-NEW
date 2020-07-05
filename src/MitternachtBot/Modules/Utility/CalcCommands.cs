@@ -133,7 +133,7 @@ namespace Mitternacht.Modules.Utility {
                 //context.Channel.SendMessageAsync($"user: {(user == null ? "null" : "notnull")}, {user?.Username}").GetAwaiter().GetResult();
                 if (user == null) return null;
 
-				return uow.LevelModel.Get(context.Guild.Id, user.Id).CurrentLevel;
+				return uow.LevelModel.Get(context.Guild.Id, user.Id).Level;
 			}
 
 			//money(user): money of a given user

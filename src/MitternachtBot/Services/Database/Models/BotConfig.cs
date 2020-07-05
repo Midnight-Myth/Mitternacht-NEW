@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Mitternacht.Services.Database.Models {
 	public class BotConfig : DbEntity {
-		public ulong    BufferSize                 { get; set; } = 4000000;
 		public bool     ForwardMessages            { get; set; } = true;
 		public bool     ForwardToAllOwners         { get; set; } = true;
 		public float    CurrencyGenerationChance   { get; set; } = 0.02f;
@@ -13,7 +12,6 @@ namespace Mitternacht.Services.Database.Models {
 		public string   CurrencySign               { get; set; } = "💶";
 		public string   CurrencyName               { get; set; } = "Money";
 		public string   CurrencyPluralName         { get; set; } = "Money";
-		public int      TriviaCurrencyReward       { get; set; } = 0;
 		public int      MinimumBetAmount           { get; set; } = 2;
 		public float    BetflipMultiplier          { get; set; } = 1.95f;
 		public int      CurrencyDropAmount         { get; set; } = 1;
@@ -40,19 +38,12 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 		public HashSet<BlacklistItem>     Blacklist              { get; set; }
 		public List<PlayingStatus>        RotatingStatusMessages { get; set; } = new List<PlayingStatus>();
 		public HashSet<EightBallResponse> EightBallResponses     { get; set; } = new HashSet<EightBallResponse>();
-		public HashSet<RaceAnimal>        RaceAnimals            { get; set; } = new HashSet<RaceAnimal>();
 		public List<StartupCommand>       StartupCommands        { get; set; }
 		public HashSet<BlockedCmdOrMdl>   BlockedCommands        { get; set; }
 		public HashSet<BlockedCmdOrMdl>   BlockedModules         { get; set; }
 
 		public int PermissionVersion { get; set; }
 		public int MigrationVersion  { get; set; }
-
-
-		[Obsolete]
-		public HashSet<CommandPrice> CommandPrices  { get; set; } = new HashSet<CommandPrice>();
-		[Obsolete]
-		public HashSet<ModulePrefix> ModulePrefixes { get; set; } = new HashSet<ModulePrefix>();
 	}
 
 	public class BlockedCmdOrMdl : DbEntity {
@@ -99,27 +90,5 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 
 		public override bool Equals(object obj)
 			=> obj is EightBallResponse er ? er.Text.Equals(Text) : base.Equals(obj);
-	}
-
-	public class RaceAnimal : DbEntity {
-		public string Icon { get; set; }
-		public string Name { get; set; }
-
-		public override int GetHashCode()
-			=> HashCode.Combine(Icon);
-
-		public override bool Equals(object obj)
-			=> obj is RaceAnimal ra ? ra.Icon.Equals(Icon) : base.Equals(obj);
-	}
-
-	public class ModulePrefix : DbEntity {
-		public string ModuleName { get; set; }
-		public string Prefix     { get; set; }
-
-		public override int GetHashCode()
-			=> HashCode.Combine(ModuleName);
-
-		public override bool Equals(object obj)
-			=> obj is ModulePrefix mp ? mp.ModuleName.Equals(ModuleName) : base.Equals(obj);
 	}
 }

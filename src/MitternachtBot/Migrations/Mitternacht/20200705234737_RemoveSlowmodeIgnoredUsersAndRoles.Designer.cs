@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mitternacht.Services.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mitternacht.Migrations.Mitternacht
 {
     [DbContext(typeof(MitternachtContext))]
-    partial class MitternachtContextModelSnapshot : ModelSnapshot
+    [Migration("20200705234737_RemoveSlowmodeIgnoredUsersAndRoles")]
+    partial class RemoveSlowmodeIgnoredUsersAndRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -648,6 +650,9 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<string>("ChannelGreetMessageText")
                         .HasColumnType("text");
 
+                    b.Property<bool>("CleverbotEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<decimal?>("CountToNumberChannelId")
                         .HasColumnType("numeric(20,0)");
 
@@ -656,6 +661,9 @@ namespace Mitternacht.Migrations.Mitternacht
 
                     b.Property<DateTime?>("DateAdded")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<float>("DefaultMusicVolume")
+                        .HasColumnType("real");
 
                     b.Property<bool>("DeleteMessageOnCommand")
                         .HasColumnType("boolean");

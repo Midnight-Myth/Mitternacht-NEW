@@ -71,18 +71,9 @@
 				<input class="form-check-input" asp-for="AutoDeleteSelfAssignedRoleMessages" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.AutoDeleteSelfAssignedRoleMessages)
 			</label>
 		</div>
-		<div class="form-group">
-			<label asp-for="DefaultMusicVolume" class="control-label"></label>
-			<input asp-for="DefaultMusicVolume" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
-		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="VoicePlusTextEnabled" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.VoicePlusTextEnabled)
-			</label>
-		</div>
-		<div class="form-group form-check">
-			<label class="form-check-label">
-				<input class="form-check-input" asp-for="CleverbotEnabled" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.CleverbotEnabled)
 			</label>
 		</div>
 		<div class="form-group">

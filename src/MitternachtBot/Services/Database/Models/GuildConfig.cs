@@ -20,9 +20,7 @@ namespace Mitternacht.Services.Database.Models {
 		public string ChannelByeMessageText              { get; set; } = "%user% has left!";
 		public bool   ExclusiveSelfAssignedRoles         { get; set; }
 		public bool   AutoDeleteSelfAssignedRoleMessages { get; set; }
-		public float  DefaultMusicVolume                 { get; set; } = 1.0f;
 		public bool   VoicePlusTextEnabled               { get; set; }
-		public bool   CleverbotEnabled                   { get; set; }
 		public string MuteRoleName                       { get; set; }
 		public string Locale                             { get; set; } = null;
 		public string TimeZoneId                         { get; set; } = null;
@@ -67,11 +65,9 @@ namespace Mitternacht.Services.Database.Models {
 		public LogSetting         LogSetting      { get; set; } = new LogSetting();
 		public AntiRaidSetting    AntiRaidSetting { get; set; }
 		public AntiSpamSetting    AntiSpamSetting { get; set; }
-		public StreamRoleSettings StreamRole      { get; set; }
 
 		public HashSet<MutedUserId>         MutedUsers                 { get; set; } = new HashSet<MutedUserId>();
 		public HashSet<GuildRepeater>       GuildRepeaters             { get; set; } = new HashSet<GuildRepeater>();
-		public HashSet<FollowedStream>      FollowedStreams            { get; set; } = new HashSet<FollowedStream>();
 		public HashSet<GCChannelId>         GenerateCurrencyChannelIds { get; set; } = new HashSet<GCChannelId>();
 		public HashSet<CommandCooldown>     CommandCooldowns           { get; set; } = new HashSet<CommandCooldown>();
 		public HashSet<UnmuteTimer>         UnmuteTimers               { get; set; } = new HashSet<UnmuteTimer>();
@@ -79,17 +75,8 @@ namespace Mitternacht.Services.Database.Models {
 		public HashSet<CommandAlias>        CommandAliases             { get; set; } = new HashSet<CommandAlias>();
 		public List<WarningPunishment>      WarnPunishments            { get; set; } = new List<WarningPunishment>();
 		public bool                         WarningsInitialized        { get; set; }
-		public HashSet<SlowmodeIgnoredUser> SlowmodeIgnoredUsers       { get; set; }
-		public HashSet<SlowmodeIgnoredRole> SlowmodeIgnoredRoles       { get; set; }
 		public HashSet<NsfwBlacklitedTag>   NsfwBlacklistedTags        { get; set; } = new HashSet<NsfwBlacklitedTag>();
 		public List<ShopEntry>              ShopEntries                { get; set; }
-
-		[Obsolete]
-		public bool AutoDeleteGreetMessages { get; set; }
-		[Obsolete]
-		public bool AutoDeleteByeMessages { get; set; }
-		[Obsolete]
-		public ulong? SupportChannelId { get; set; }
 	}
 
 	public class NsfwBlacklitedTag : DbEntity {
@@ -100,26 +87,6 @@ namespace Mitternacht.Services.Database.Models {
 
 		public override int GetHashCode()
 			=> HashCode.Combine(Tag);
-	}
-
-	public class SlowmodeIgnoredUser : DbEntity {
-		public ulong UserId { get; set; }
-
-		public override bool Equals(object obj)
-			=> obj is SlowmodeIgnoredUser siu && siu.UserId == UserId;
-
-		public override int GetHashCode()
-			=> HashCode.Combine(UserId);
-	}
-
-	public class SlowmodeIgnoredRole : DbEntity {
-		public ulong RoleId { get; set; }
-
-		public override bool Equals(object obj)
-			=> obj is SlowmodeIgnoredRole sir && sir.RoleId == RoleId;
-
-		public override int GetHashCode()
-			=> HashCode.Combine(RoleId);
 	}
 
 	public class WarningPunishment : DbEntity {

@@ -24,7 +24,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
                 GuildId = guildId,
                 UserId = userId,
                 TotalXP = 0,
-                timestamp = DateTime.MinValue
+                LastMessageXp = DateTime.MinValue
             });
 
             return lm;
@@ -35,22 +35,22 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
         public void AddXP(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
             var lm = GetOrCreate(guildId, userId);
-            var oldLevel = lm.CurrentLevel;
+            var oldLevel = lm.Level;
             if (lm.TotalXP + xp < 0) xp = -lm.TotalXP;
             lm.TotalXP += xp;
             _set.Update(lm);
 
-            var newLevel = lm.CurrentLevel;
+            var newLevel = lm.Level;
             if(oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
 
         public void SetXP(ulong guildId, ulong userId, int xp, ulong? channelId = null) {
             var lm = GetOrCreate(guildId, userId);
-            var oldLevel = lm.CurrentLevel;
+            var oldLevel = lm.Level;
             lm.TotalXP = xp;
             _set.Update(lm);
 
-            var newLevel = lm.CurrentLevel;
+            var newLevel = lm.Level;
             if (oldLevel != newLevel) LevelChanged?.Invoke(new LevelChangedArgs(guildId, userId, oldLevel, newLevel, channelId));
         }
 
@@ -59,13 +59,13 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
         public bool CanGetMessageXP(ulong guildId, ulong userId, DateTime time) {
             var lm = Get(guildId, userId);
-			return lm == null ? true : (time - lm.timestamp).TotalSeconds >= _uow.GuildConfigs.For(guildId).MessageXpTimeDifference;
+			return lm == null ? true : (time - lm.LastMessageXp).TotalSeconds >= _uow.GuildConfigs.For(guildId).MessageXpTimeDifference;
 		}
 
 		public void ReplaceTimestampOfLastMessageXP(ulong guildId, ulong userId, DateTime timestamp) {
             var lm = Get(guildId, userId);
             if (lm == null) return;
-            lm.timestamp = timestamp;
+            lm.LastMessageXp = timestamp;
             _set.Update(lm);
         }
 

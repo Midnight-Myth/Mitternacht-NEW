@@ -52,16 +52,6 @@ namespace Mitternacht.Services.Database {
 				return;
 			var bc = new BotConfig();
 
-			bc.RaceAnimals.AddRange(new HashSet<RaceAnimal> {
-				new RaceAnimal { Icon = "🐼", Name = "Panda" },
-				new RaceAnimal { Icon = "🐻", Name = "Bear" },
-				new RaceAnimal { Icon = "🐧", Name = "Pengu" },
-				new RaceAnimal { Icon = "🐨", Name = "Koala" },
-				new RaceAnimal { Icon = "🐬", Name = "Dolphin" },
-				new RaceAnimal { Icon = "🐞", Name = "Ladybird" },
-				new RaceAnimal { Icon = "🦀", Name = "Crab" },
-				new RaceAnimal { Icon = "🦄", Name = "Unicorn" }
-			});
 			bc.EightBallResponses.AddRange(new HashSet<EightBallResponse> {
 				new EightBallResponse { Text = "Most definitely yes" },
 				new EightBallResponse { Text = "For sure" },
@@ -123,9 +113,6 @@ namespace Mitternacht.Services.Database {
 			modelBuilder.Entity<AntiRaidSetting>()
 				.HasOne(x => x.GuildConfig)
 				.WithOne(x => x.AntiRaidSetting);
-			modelBuilder.Entity<StreamRoleSettings>()
-				.HasOne(x => x.GuildConfig)
-				.WithOne(x => x.StreamRole);
 
 			modelBuilder.Entity<SelfAssignedRole>()
 				.HasIndex(s => (new { s.GuildId, s.RoleId }))
@@ -139,10 +126,6 @@ namespace Mitternacht.Services.Database {
 				.HasOne(p => p.Next)
 				.WithOne(p => p.Previous)
 				.IsRequired(false);
-
-			modelBuilder.Entity<CommandPrice>()
-				.HasIndex(cp => cp.Price)
-				.IsUnique();
 
 			modelBuilder.Entity<RewardedUser>()
 				.HasIndex(x => x.UserId)
