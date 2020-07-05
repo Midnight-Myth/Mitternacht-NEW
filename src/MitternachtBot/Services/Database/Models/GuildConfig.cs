@@ -77,8 +77,6 @@ namespace Mitternacht.Services.Database.Models {
 		public HashSet<CommandAlias>        CommandAliases             { get; set; } = new HashSet<CommandAlias>();
 		public List<WarningPunishment>      WarnPunishments            { get; set; } = new List<WarningPunishment>();
 		public bool                         WarningsInitialized        { get; set; }
-		public HashSet<SlowmodeIgnoredUser> SlowmodeIgnoredUsers       { get; set; }
-		public HashSet<SlowmodeIgnoredRole> SlowmodeIgnoredRoles       { get; set; }
 		public HashSet<NsfwBlacklitedTag>   NsfwBlacklistedTags        { get; set; } = new HashSet<NsfwBlacklitedTag>();
 		public List<ShopEntry>              ShopEntries                { get; set; }
 	}
@@ -91,26 +89,6 @@ namespace Mitternacht.Services.Database.Models {
 
 		public override int GetHashCode()
 			=> HashCode.Combine(Tag);
-	}
-
-	public class SlowmodeIgnoredUser : DbEntity {
-		public ulong UserId { get; set; }
-
-		public override bool Equals(object obj)
-			=> obj is SlowmodeIgnoredUser siu && siu.UserId == UserId;
-
-		public override int GetHashCode()
-			=> HashCode.Combine(UserId);
-	}
-
-	public class SlowmodeIgnoredRole : DbEntity {
-		public ulong RoleId { get; set; }
-
-		public override bool Equals(object obj)
-			=> obj is SlowmodeIgnoredRole sir && sir.RoleId == RoleId;
-
-		public override int GetHashCode()
-			=> HashCode.Combine(RoleId);
 	}
 
 	public class WarningPunishment : DbEntity {

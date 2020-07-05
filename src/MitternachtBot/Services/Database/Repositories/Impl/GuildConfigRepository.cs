@@ -38,8 +38,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 				_context.Entry(guildConfig).Collection(gc => gc.CommandCooldowns).Load();
 				_context.Entry(guildConfig).Collection(gc => gc.GuildRepeaters).Load();
 				_context.Entry(guildConfig).Reference(gc => gc.AntiRaidSetting).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.SlowmodeIgnoredRoles).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.SlowmodeIgnoredUsers).Load();
 				_context.Entry(guildConfig).Reference(gc => gc.AntiSpamSetting).Load();
 				if(guildConfig.AntiSpamSetting != null)
 					_context.Entry(guildConfig.AntiSpamSetting).Collection(x => x.IgnoredChannels).Load();
