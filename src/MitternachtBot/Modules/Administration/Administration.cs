@@ -26,16 +26,13 @@ namespace Mitternacht.Modules.Administration {
 		[RequireUserPermission(GuildPermission.Administrator)]
 		[RequireBotPermission(GuildPermission.ManageMessages)]
 		public async Task Delmsgoncmd() {
-			var conf = uow.GuildConfigs.For(Context.Guild.Id);
-			var enabled = conf.DeleteMessageOnCommand = !conf.DeleteMessageOnCommand;
-
+			var gc = uow.GuildConfigs.For(Context.Guild.Id);
+			gc.DeleteMessageOnCommand = !gc.DeleteMessageOnCommand;
 			await uow.SaveChangesAsync(false);
 
-			if(enabled) {
-				Service.DeleteMessagesOnCommand.Add(Context.Guild.Id);
+			if(gc.DeleteMessageOnCommand) {
 				await ReplyConfirmLocalized("delmsg_on").ConfigureAwait(false);
 			} else {
-				Service.DeleteMessagesOnCommand.TryRemove(Context.Guild.Id);
 				await ReplyConfirmLocalized("delmsg_off").ConfigureAwait(false);
 			}
 		}
