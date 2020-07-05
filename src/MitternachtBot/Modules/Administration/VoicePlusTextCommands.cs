@@ -11,7 +11,7 @@ using Mitternacht.Services.Database;
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
 		[Group]
-		public class VoicePlusTextCommands : MitternachtSubmodule<VplusTService> {
+		public class VoicePlusTextCommands : MitternachtSubmodule<VoicePlusTextService> {
 			private readonly IUnitOfWork uow;
 
 			public VoicePlusTextCommands(IUnitOfWork uow) {

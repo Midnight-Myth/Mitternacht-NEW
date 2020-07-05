@@ -11,7 +11,7 @@ using Mitternacht.Services.Database.Models;
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
 		[Group]
-		public class ServerGreetCommands : MitternachtSubmodule<GreetSettingsService> {
+		public class ServerGreetCommands : MitternachtSubmodule<ServerGreetService> {
 			private readonly IUnitOfWork uow;
 
 			public ServerGreetCommands(IUnitOfWork uow) {

@@ -3,19 +3,17 @@ using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 
-namespace Mitternacht.Modules.Administration
-{
-    public partial class Administration
+namespace Mitternacht.Modules.Administration {
+	public partial class Administration
     {
         [Group]
-        public class GameChannelCommands : MitternachtSubmodule<GameVoiceChannelService>
+        public class GameVoiceChannelCommands : MitternachtSubmodule<GameVoiceChannelService>
         {
             private readonly IUnitOfWork uow;
 
-            public GameChannelCommands(IUnitOfWork uow)
+            public GameVoiceChannelCommands(IUnitOfWork uow)
             {
                 this.uow = uow;
             }
