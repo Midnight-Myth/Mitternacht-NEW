@@ -64,7 +64,7 @@ namespace Mitternacht.Services {
 							typeInstantiationFailures[type]++;
 							if(typeInstantiationFailures[type] > 3) {
 								var missingArguments = constructorArguments.Where(kv => kv.Value == null).Select(kv => kv.Key.Name).ToArray();
-								_log.Warn($"{type.Name} wasn't instantiated in the first 3 attempts. Missing type(s) {string.Join(",", missingArguments)}.");
+								throw new TypeInitializationException(type.Name, new ArgumentException($"{type.Name} wasn't instantiated in the first 3 attempts. Missing type(s) {string.Join(",", missingArguments)}."));
 							}
 						} else
 							typeInstantiationFailures.Add(type, 1);
