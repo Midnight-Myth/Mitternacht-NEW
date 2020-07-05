@@ -47,12 +47,6 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 
 		public int PermissionVersion { get; set; }
 		public int MigrationVersion  { get; set; }
-
-
-		[Obsolete]
-		public HashSet<CommandPrice> CommandPrices  { get; set; } = new HashSet<CommandPrice>();
-		[Obsolete]
-		public HashSet<ModulePrefix> ModulePrefixes { get; set; } = new HashSet<ModulePrefix>();
 	}
 
 	public class BlockedCmdOrMdl : DbEntity {
@@ -110,16 +104,5 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 
 		public override bool Equals(object obj)
 			=> obj is RaceAnimal ra ? ra.Icon.Equals(Icon) : base.Equals(obj);
-	}
-
-	public class ModulePrefix : DbEntity {
-		public string ModuleName { get; set; }
-		public string Prefix     { get; set; }
-
-		public override int GetHashCode()
-			=> HashCode.Combine(ModuleName);
-
-		public override bool Equals(object obj)
-			=> obj is ModulePrefix mp ? mp.ModuleName.Equals(ModuleName) : base.Equals(obj);
 	}
 }

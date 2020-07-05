@@ -140,10 +140,6 @@ namespace Mitternacht.Services.Database {
 				.WithOne(p => p.Previous)
 				.IsRequired(false);
 
-			modelBuilder.Entity<CommandPrice>()
-				.HasIndex(cp => cp.Price)
-				.IsUnique();
-
 			modelBuilder.Entity<RewardedUser>()
 				.HasIndex(x => x.UserId)
 				.IsUnique();

@@ -10,11 +10,6 @@ namespace Mitternacht.Services.Database.Models
         public int TotalXP { get; set; }
         public DateTime timestamp { get; set; }
         
-        [Obsolete]
-        public int CurrentXP { get; set; }
-        [Obsolete]
-        public int Level { get; set; }
-        
 		public int CurrentLevel {
 			get {
 				var lvl = 1;

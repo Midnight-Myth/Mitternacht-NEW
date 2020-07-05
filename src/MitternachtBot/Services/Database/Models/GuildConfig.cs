@@ -83,13 +83,6 @@ namespace Mitternacht.Services.Database.Models {
 		public HashSet<SlowmodeIgnoredRole> SlowmodeIgnoredRoles       { get; set; }
 		public HashSet<NsfwBlacklitedTag>   NsfwBlacklistedTags        { get; set; } = new HashSet<NsfwBlacklitedTag>();
 		public List<ShopEntry>              ShopEntries                { get; set; }
-
-		[Obsolete]
-		public bool AutoDeleteGreetMessages { get; set; }
-		[Obsolete]
-		public bool AutoDeleteByeMessages { get; set; }
-		[Obsolete]
-		public ulong? SupportChannelId { get; set; }
 	}
 
 	public class NsfwBlacklitedTag : DbEntity {
