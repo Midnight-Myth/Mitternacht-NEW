@@ -14,16 +14,14 @@ using Mitternacht.Services.Database.Models;
 namespace Mitternacht.Modules.Games {
 	public partial class Games {
 		[Group]
-		public class PlantPickCommands : MitternachtSubmodule {
+		public class PlantPickCommands : MitternachtSubmodule<PlantAndPickService> {
 			private readonly CurrencyService _cs;
 			private readonly IBotConfigProvider _bc;
-			private readonly GamesService _games;
 			private readonly IUnitOfWork uow;
 
-			public PlantPickCommands(IBotConfigProvider bc, CurrencyService cs, GamesService games, IUnitOfWork uow) {
+			public PlantPickCommands(IBotConfigProvider bc, CurrencyService cs, IUnitOfWork uow) {
 				_bc = bc;
 				_cs = cs;
-				_games = games;
 				this.uow = uow;
 			}
 
@@ -37,7 +35,7 @@ namespace Mitternacht.Modules.Games {
 
 
 				try { await Context.Message.DeleteAsync().ConfigureAwait(false); } catch { }
-				if(!_games.PlantedFlowers.TryRemove(channel.Id, out List<IUserMessage> msgs))
+				if(!Service.PlantedFlowers.TryRemove(channel.Id, out List<IUserMessage> msgs))
 					return;
 
 				await Task.WhenAll(msgs.Where(m => m != null).Select(toDelete => toDelete.DeleteAsync())).ConfigureAwait(false);
@@ -60,7 +58,7 @@ namespace Mitternacht.Modules.Games {
 					return;
 				}
 
-				var imgData = _games.GetRandomCurrencyImage();
+				var imgData = Service.GetRandomCurrencyImage();
 
 				var msgToSend = GetText("planted",
 					Format.Bold(Context.User.ToString()),
@@ -80,7 +78,7 @@ namespace Mitternacht.Modules.Games {
 				var msgs = new IUserMessage[amount];
 				msgs[0] = msg;
 
-				_games.PlantedFlowers.AddOrUpdate(Context.Channel.Id, msgs.ToList(), (id, old) => {
+				Service.PlantedFlowers.AddOrUpdate(Context.Channel.Id, msgs.ToList(), (id, old) => {
 					old.AddRange(msgs);
 					return old;
 				});
