@@ -20,9 +20,7 @@ namespace Mitternacht.Services.Database.Models {
 		public string ChannelByeMessageText              { get; set; } = "%user% has left!";
 		public bool   ExclusiveSelfAssignedRoles         { get; set; }
 		public bool   AutoDeleteSelfAssignedRoleMessages { get; set; }
-		public float  DefaultMusicVolume                 { get; set; } = 1.0f;
 		public bool   VoicePlusTextEnabled               { get; set; }
-		public bool   CleverbotEnabled                   { get; set; }
 		public string MuteRoleName                       { get; set; }
 		public string Locale                             { get; set; } = null;
 		public string TimeZoneId                         { get; set; } = null;

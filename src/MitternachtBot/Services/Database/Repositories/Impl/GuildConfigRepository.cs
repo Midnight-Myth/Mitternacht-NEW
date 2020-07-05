@@ -138,12 +138,5 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
 			return config;
 		}
-
-		public void SetCleverbotEnabled(ulong id, bool cleverbotEnabled) {
-			var conf = _set.FirstOrDefault(gc => gc.GuildId == id);
-
-			if(conf != null)
-				conf.CleverbotEnabled = cleverbotEnabled;
-		}
 	}
 }

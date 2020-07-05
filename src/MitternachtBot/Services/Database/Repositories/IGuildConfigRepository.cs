@@ -12,7 +12,6 @@ namespace Mitternacht.Services.Database.Repositories
         GuildConfig For(ulong guildId, bool preloaded = false);
         IEnumerable<GuildConfig> OldPermissionsForAll();
         IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds);
-        void SetCleverbotEnabled(ulong id, bool cleverbotEnabled);
         IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include);
         GuildConfig GcWithPermissionsv2For(ulong guildId);
     }

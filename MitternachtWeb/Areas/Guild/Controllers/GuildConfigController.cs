@@ -49,9 +49,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 							gc.ChannelByeMessageText              = guildConfig.ChannelByeMessageText;
 							gc.ExclusiveSelfAssignedRoles         = guildConfig.ExclusiveSelfAssignedRoles;
 							gc.AutoDeleteSelfAssignedRoleMessages = guildConfig.AutoDeleteSelfAssignedRoleMessages;
-							gc.DefaultMusicVolume                 = guildConfig.DefaultMusicVolume;
 							gc.VoicePlusTextEnabled               = guildConfig.VoicePlusTextEnabled;
-							gc.CleverbotEnabled                   = guildConfig.CleverbotEnabled;
 							gc.MuteRoleName                       = guildConfig.MuteRoleName;
 							gc.Locale                             = guildConfig.Locale;
 							gc.TimeZoneId                         = guildConfig.TimeZoneId;
