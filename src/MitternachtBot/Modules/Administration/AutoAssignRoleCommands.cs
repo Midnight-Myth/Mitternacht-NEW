@@ -5,12 +5,10 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 
-namespace Mitternacht.Modules.Administration
-{
-    public partial class Administration
+namespace Mitternacht.Modules.Administration {
+	public partial class Administration
     {
         [Group]
         public class AutoAssignRoleCommands : MitternachtSubmodule<AutoAssignRoleService>
@@ -36,12 +34,10 @@ namespace Mitternacht.Modules.Administration
                 if (role == null)
                 {
                     conf.AutoAssignRoleId = 0;
-                    Service.AutoAssignedRoles.TryRemove(Context.Guild.Id, out _);
                 }
                 else
                 {
                     conf.AutoAssignRoleId = role.Id;
-                    Service.AutoAssignedRoles.AddOrUpdate(Context.Guild.Id, role.Id, (key, val) => role.Id);
                 }
 
                 await uow.SaveChangesAsync(false).ConfigureAwait(false);
