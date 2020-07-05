@@ -7,7 +7,7 @@ namespace Mitternacht.Services.Database.Models {
 		public int      TotalXP       { get; set; }
 		public DateTime LastMessageXp { get; set; }
 
-		public int CurrentLevel {
+		public int Level {
 			get {
 				var lvl = 1;
 
@@ -18,7 +18,7 @@ namespace Mitternacht.Services.Database.Models {
 			}
 		}
 
-		public int XP => TotalXP - GetXpForLevel(CurrentLevel);
+		public int XP => TotalXP - GetXpForLevel(Level);
 
 		public static int GetXpToNextLevel(int previous)
 			=> (int)(5 * Math.Pow(previous, 2) + 50 * previous + 100);
