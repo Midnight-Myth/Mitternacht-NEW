@@ -1,15 +1,12 @@
 using System;
 
-namespace Mitternacht.Services.Database.Models
-{
-    //todo: change names when EF has a workaround for SQLite column renaming
-    public class LevelModel : DbEntity
-    {
-        public ulong GuildId { get; set; }
-        public ulong UserId { get; set; }
-        public int TotalXP { get; set; }
-        public DateTime timestamp { get; set; }
-        
+namespace Mitternacht.Services.Database.Models {
+	public class LevelModel : DbEntity {
+		public ulong    GuildId   { get; set; }
+		public ulong    UserId    { get; set; }
+		public int      TotalXP   { get; set; }
+		public DateTime timestamp { get; set; }
+
 		public int CurrentLevel {
 			get {
 				var lvl = 1;
