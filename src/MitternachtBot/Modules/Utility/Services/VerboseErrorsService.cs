@@ -1,78 +1,39 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Help.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Modules.Utility.Services
-{
-    public class VerboseErrorsService : IMService
-    {
-        private readonly ConcurrentHashSet<ulong> guildsEnabled;
-        private readonly DbService _db;
-        private readonly CommandHandler _ch;
-        private readonly HelpService _hs;
+namespace Mitternacht.Modules.Utility.Services {
+	public class VerboseErrorsService : IMService {
+		private readonly DbService _db;
+		private readonly HelpService _hs;
 
-        public VerboseErrorsService(IEnumerable<GuildConfig> gcs, DbService db, CommandHandler ch, HelpService hs)
-        {
-            _db = db;
-            _ch = ch;
-            _hs = hs;
+		public VerboseErrorsService(DbService db, CommandHandler ch, HelpService hs) {
+			_db = db;
+			_hs = hs;
 
-            ch.CommandErrored += LogVerboseError;
+			ch.CommandErrored += LogVerboseError;
+		}
 
-            guildsEnabled = new ConcurrentHashSet<ulong>(gcs.Where(x => x.VerboseErrors).Select(x => x.GuildId));
-        }
+		private async Task LogVerboseError(CommandInfo cmd, ITextChannel channel, string reason) {
+			if(channel == null)
+				return;
 
-        private async Task LogVerboseError(CommandInfo cmd, ITextChannel channel, string reason)
-        {
-            if (channel == null || !guildsEnabled.Contains(channel.GuildId))
-                return;
+			using var uow = _db.UnitOfWork;
+			
+			if(!uow.GuildConfigs.For(channel.GuildId).VerboseErrors)
+				return;
 
-            try
-            {
-                var embed = _hs.GetCommandHelp(cmd, channel.Guild)
-                    .WithTitle("Command Error")
-                    .WithDescription(reason)
-                    .WithErrorColor();
+			try {
+				var embed = _hs.GetCommandHelp(cmd, channel.Guild)
+					.WithTitle("Command Error")
+					.WithDescription(reason)
+					.WithErrorColor();
 
-                await channel.EmbedAsync(embed).ConfigureAwait(false);
-            }
-            catch
-            {
-                //ignore
-            }
-        }
-
-        public bool ToggleVerboseErrors(ulong guildId)
-        {
-            bool enabled;
-            using (var uow = _db.UnitOfWork)
-            {
-                var gc = uow.GuildConfigs.For(guildId);
-
-                enabled = gc.VerboseErrors = !gc.VerboseErrors;
-
-                uow.SaveChanges();
-
-                if (gc.VerboseErrors)
-                    guildsEnabled.Add(guildId);
-                else
-                    guildsEnabled.TryRemove(guildId);
-            }
-
-            if (enabled)
-                guildsEnabled.Add(guildId);
-            else
-                guildsEnabled.TryRemove(guildId);
-
-            return enabled;            
-        }
-
-    }
+				await channel.EmbedAsync(embed).ConfigureAwait(false);
+			} catch { }
+		}
+	}
 }
