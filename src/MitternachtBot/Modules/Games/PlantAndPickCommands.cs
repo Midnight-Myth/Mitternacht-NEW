@@ -58,22 +58,17 @@ namespace Mitternacht.Modules.Games {
 					return;
 				}
 
-				var imgData = Service.GetRandomCurrencyImage();
+				var (Name, Data) = Service.GetRandomCurrencyImage();
 
-				var msgToSend = GetText("planted",
-					Format.Bold(Context.User.ToString()),
-					amount + _bc.BotConfig.CurrencySign,
-					Prefix);
+				var msgToSend = GetText("planted", Format.Bold(Context.User.ToString()), $"{amount}{_bc.BotConfig.CurrencySign}", Prefix);
 
 				if(amount > 1)
-					msgToSend += " " + GetText("pick_pl", Prefix);
+					msgToSend += $" {GetText("pick_pl", Prefix)}";
 				else
-					msgToSend += " " + GetText("pick_sn", Prefix);
+					msgToSend += $" {GetText("pick_sn", Prefix)}";
 
-				IUserMessage msg;
-				using(var toSend = imgData.Data.ToStream()) {
-					msg = await Context.Channel.SendFileAsync(toSend, imgData.Name, msgToSend).ConfigureAwait(false);
-				}
+				using var toSend = Data.ToStream();
+				var msg = await Context.Channel.SendFileAsync(toSend, Name, msgToSend).ConfigureAwait(false);
 
 				var msgs = new IUserMessage[amount];
 				msgs[0] = msg;
