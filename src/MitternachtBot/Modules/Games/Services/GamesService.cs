@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using Mitternacht.Modules.Games.Common;
@@ -11,14 +10,13 @@ namespace Mitternacht.Modules.Games.Services {
 		private readonly IBotConfigProvider _bcp;
 
 		public readonly ConcurrentDictionary<ulong, GirlRating> GirlRatings = new ConcurrentDictionary<ulong, GirlRating>();
-		public readonly ImmutableArray<string> EightBallResponses;
+		
+		public string[] EightBallResponses => _bcp.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToArray();
 
 		public readonly string TypingArticlesPath = "data/typing_articles2.json";
 
 		public GamesService(IBotConfigProvider bcp) {
 			_bcp = bcp;
-
-			EightBallResponses = _bcp.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToImmutableArray();
 
 			var timer = new Timer(_ => {
 				GirlRatings.Clear();
