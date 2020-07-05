@@ -1,110 +1,62 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
 using NLog;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public class VcRoleService : IMService
-    {
-        private readonly Logger _log;
+namespace Mitternacht.Modules.Administration.Services {
+	public class VcRoleService : IMService {
+		private readonly DbService _db;
+		private readonly Logger _log;
 
-        public ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, IRole>> VcRoles { get; }
+		public VcRoleService(DiscordSocketClient client, DbService db) {
+			_db = db;
+			_log = LogManager.GetCurrentClassLogger();
 
-        public VcRoleService(DiscordSocketClient client, IEnumerable<GuildConfig> gcs, DbService db)
-        {
-            _log = LogManager.GetCurrentClassLogger();
-            client.UserVoiceStateUpdated += ClientOnUserVoiceStateUpdated;
-            VcRoles = new ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, IRole>>();
-            var missingRoles = new List<VcRoleInfo>();
-            foreach (var gconf in gcs)
-            {
-                var g = client.GetGuild(gconf.GuildId);
-                if (g == null)
-                    continue;
+			client.UserVoiceStateUpdated += ClientOnUserVoiceStateUpdated;
+		}
 
-                var infos = new ConcurrentDictionary<ulong, IRole>();
-                VcRoles.TryAdd(gconf.GuildId, infos);
-                foreach (var ri in gconf.VcRoleInfos)
-                {
-                    var role = g.GetRole(ri.RoleId);
-                    if (role == null)
-                    {
-                        missingRoles.Add(ri);
-                        continue;
-                    }
+		private Task ClientOnUserVoiceStateUpdated(SocketUser user, SocketVoiceState oldState, SocketVoiceState newState) {
+			if(!(user is SocketGuildUser guildUser))
+				return Task.CompletedTask;
 
-                    infos.TryAdd(ri.VoiceChannelId, role);
-                }
-            }
-            if (!missingRoles.Any()) return;
-            using (var uow = db.UnitOfWork)
-            {
-                _log.Warn($"Removing {missingRoles.Count} missing roles from {nameof(VcRoleService)}");
-                uow.Context.RemoveRange(missingRoles);
-                uow.SaveChanges();
-            }
-        }
+			var oldVoiceChannel = oldState.VoiceChannel;
+			var newVoiceChannel = newState.VoiceChannel;
+			var _ = Task.Run(async () => {
+				try {
+					if(oldVoiceChannel != newVoiceChannel) {
+						using var uow = _db.UnitOfWork;
+						var voiceChannelRoleInfos = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(x => x.VcRoleInfos)).VcRoleInfos;
+						var oldVoiceChannelRoleInfo = voiceChannelRoleInfos.FirstOrDefault(vcri => vcri.VoiceChannelId == oldVoiceChannel?.Id);
+						var oldVoiceChannelRole = guildUser.Roles.FirstOrDefault(r => r.Id == oldVoiceChannelRoleInfo?.RoleId);
 
-        private Task ClientOnUserVoiceStateUpdated(SocketUser usr, SocketVoiceState oldState,
-            SocketVoiceState newState)
-        {
-            if (!(usr is SocketGuildUser gusr))
-                return Task.CompletedTask;
+						if(oldVoiceChannelRole != null) {
+							try {
+								await guildUser.RemoveRoleAsync(oldVoiceChannelRole).ConfigureAwait(false);
+								await Task.Delay(200).ConfigureAwait(false);
+							} catch {
+								await Task.Delay(200).ConfigureAwait(false);
+								await guildUser.RemoveRoleAsync(oldVoiceChannelRole).ConfigureAwait(false);
+								await Task.Delay(200).ConfigureAwait(false);
+							}
+						}
 
-            var oldVc = oldState.VoiceChannel;
-            var newVc = newState.VoiceChannel;
-            var _ = Task.Run(async () =>
-            {
-                try
-                {
-                    if (oldVc != newVc)
-                    {
-                        ulong guildId;
-                        guildId = newVc?.Guild.Id ?? oldVc.Guild.Id;
+						var newVoiceChannelRoleInfo = voiceChannelRoleInfos.FirstOrDefault(vcri => vcri.VoiceChannelId == newVoiceChannel?.Id);
+						if(newVoiceChannelRoleInfo != null){
+							var newVoiceChannelRole = guildUser.Guild.GetRole(newVoiceChannelRoleInfo.RoleId);
 
-                        if (VcRoles.TryGetValue(guildId, out var guildVcRoles))
-                        {
-                            //remove old
-                            if (oldVc != null && guildVcRoles.TryGetValue(oldVc.Id, out var role))
-                            {
-                                if (gusr.Roles.Contains(role))
-                                {
-                                    try
-                                    {
-                                        await gusr.RemoveRoleAsync(role).ConfigureAwait(false);
-                                        await Task.Delay(500).ConfigureAwait(false);
-                                    }
-                                    catch
-                                    {
-                                        await Task.Delay(200).ConfigureAwait(false);
-                                        await gusr.RemoveRoleAsync(role).ConfigureAwait(false);
-                                        await Task.Delay(500).ConfigureAwait(false);
-                                    }
-                                }
-                            }
-                            //add new
-                            if (newVc != null && guildVcRoles.TryGetValue(newVc.Id, out role))
-                            {
-                                if (!gusr.Roles.Contains(role))
-                                    await gusr.AddRoleAsync(role).ConfigureAwait(false);
-                            }
-
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _log.Warn(ex);
-                }
-            });
-            return Task.CompletedTask;
-        }
-    }
+							if(newVoiceChannelRole != null){
+								await guildUser.AddRoleAsync(newVoiceChannelRole).ConfigureAwait(false);
+							}
+						}
+					}
+				} catch (Exception ex) {
+					_log.Warn(ex);
+				}
+			});
+			return Task.CompletedTask;
+		}
+	}
 }
