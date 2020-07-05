@@ -123,9 +123,6 @@ namespace Mitternacht.Services.Database {
 			modelBuilder.Entity<AntiRaidSetting>()
 				.HasOne(x => x.GuildConfig)
 				.WithOne(x => x.AntiRaidSetting);
-			modelBuilder.Entity<StreamRoleSettings>()
-				.HasOne(x => x.GuildConfig)
-				.WithOne(x => x.StreamRole);
 
 			modelBuilder.Entity<SelfAssignedRole>()
 				.HasIndex(s => (new { s.GuildId, s.RoleId }))

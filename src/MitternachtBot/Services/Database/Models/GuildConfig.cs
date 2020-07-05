@@ -67,7 +67,6 @@ namespace Mitternacht.Services.Database.Models {
 		public LogSetting         LogSetting      { get; set; } = new LogSetting();
 		public AntiRaidSetting    AntiRaidSetting { get; set; }
 		public AntiSpamSetting    AntiSpamSetting { get; set; }
-		public StreamRoleSettings StreamRole      { get; set; }
 
 		public HashSet<MutedUserId>         MutedUsers                 { get; set; } = new HashSet<MutedUserId>();
 		public HashSet<GuildRepeater>       GuildRepeaters             { get; set; } = new HashSet<GuildRepeater>();

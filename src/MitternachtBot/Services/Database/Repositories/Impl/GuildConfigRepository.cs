@@ -44,7 +44,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 				if(guildConfig.AntiSpamSetting != null)
 					_context.Entry(guildConfig.AntiSpamSetting).Collection(x => x.IgnoredChannels).Load();
 				_context.Entry(guildConfig).Collection(gc => gc.FollowedStreams).Load();
-				_context.Entry(guildConfig).Reference(gc => gc.StreamRole).Load();
 				_context.Entry(guildConfig).Collection(gc => gc.NsfwBlacklistedTags).Load();
 			}
 			return guildConfigs;
