@@ -24,7 +24,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
                 GuildId = guildId,
                 UserId = userId,
                 TotalXP = 0,
-                timestamp = DateTime.MinValue
+                LastMessageXp = DateTime.MinValue
             });
 
             return lm;
@@ -59,13 +59,13 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
         public bool CanGetMessageXP(ulong guildId, ulong userId, DateTime time) {
             var lm = Get(guildId, userId);
-			return lm == null ? true : (time - lm.timestamp).TotalSeconds >= _uow.GuildConfigs.For(guildId).MessageXpTimeDifference;
+			return lm == null ? true : (time - lm.LastMessageXp).TotalSeconds >= _uow.GuildConfigs.For(guildId).MessageXpTimeDifference;
 		}
 
 		public void ReplaceTimestampOfLastMessageXP(ulong guildId, ulong userId, DateTime timestamp) {
             var lm = Get(guildId, userId);
             if (lm == null) return;
-            lm.timestamp = timestamp;
+            lm.LastMessageXp = timestamp;
             _set.Update(lm);
         }
 

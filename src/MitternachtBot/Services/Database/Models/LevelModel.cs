@@ -2,10 +2,10 @@ using System;
 
 namespace Mitternacht.Services.Database.Models {
 	public class LevelModel : DbEntity {
-		public ulong    GuildId   { get; set; }
-		public ulong    UserId    { get; set; }
-		public int      TotalXP   { get; set; }
-		public DateTime timestamp { get; set; }
+		public ulong    GuildId       { get; set; }
+		public ulong    UserId        { get; set; }
+		public int      TotalXP       { get; set; }
+		public DateTime LastMessageXp { get; set; }
 
 		public int CurrentLevel {
 			get {
