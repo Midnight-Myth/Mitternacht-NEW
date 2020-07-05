@@ -13,8 +13,6 @@ namespace Mitternacht.Modules.Games.Services {
 		
 		public string[] EightBallResponses => _bcp.BotConfig.EightBallResponses.Select(ebr => ebr.Text).ToArray();
 
-		public readonly string TypingArticlesPath = "data/typing_articles2.json";
-
 		public GamesService(IBotConfigProvider bcp) {
 			_bcp = bcp;
 
