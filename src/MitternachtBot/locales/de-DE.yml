@@ -94,8 +94,6 @@ administration:
   menrole:                                       "{0} hat eine Erwähnung von den folgenden Rollen aufgerufen"
   message_from_bo:                               'Nachricht von {0}  `[Besitzer des Bots]`:'
   message_sent:                                  Nachricht gesendet.
-  migration_done:                                Migration fertig!
-  migration_error:                               ''
   moderator:                                     Moderator
   moved:                                         "{0} wurde von {1} zu {2} verschoben."
   msg_del:                                       'Nachricht in #{0} gelöscht.'
@@ -144,7 +142,6 @@ administration:
   renrole:                                       Rolle umbenannt.
   renrole_err:                                   Umbenennen der Rolle fehlgeschlagen. Ich habe nicht die erforderlichen Rechte.
   renrole_perms:                                 Du kannst keine Rollen über deiner höchsten bearbeiten.
-  replacedefaultlevelmodelguild:                 "{0} Einträge aktualisiert!"
   reprm:                                         'Die Abspielnachricht wurde entfernt: {0}'
   rh:                                            Die Anzeige der Serverrolle {0} wurde auf {1} gesetzt.
   role_added:                                    Die Rolle {0} wurde zur Liste hinzugefügt.
@@ -181,7 +178,6 @@ administration:
   set_channel_name:                              Neuer Kanalname gesetzt.
   set_stream:                                    Neuer Stream gesetzt!
   set_topic:                                     Neues Kanalthema gesetzt.
-  setguildconfigleveldefaults:                   Alle levelbezogenen Werte von {0} GuildConfigs wurden auf die Standardwerte gesetzt.
   setrole:                                       Erfolgreich die Rolle {0} zum Benutzer {1} hinzugefügt
   setrole_err:                                   Hinzufügen der Rolle fehlgeschlagen. Ich habe nicht die nötigen Rechte.
   shard_reconnected:                             Verbindung zu Shard {0} wiederhergestellt.

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -9,12 +8,11 @@ using Discord;
 using Discord.WebSocket;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {
-	public class VplusTService : IMService {
+	public class VoicePlusTextService : IMService {
 		private readonly DiscordSocketClient _client;
 		private readonly StringService _strings;
 		private readonly DbService _db;
@@ -24,7 +22,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 		private readonly ConcurrentDictionary<ulong, SemaphoreSlim> _guildLockObjects = new ConcurrentDictionary<ulong, SemaphoreSlim>();
 
-		public VplusTService(DiscordSocketClient client, StringService strings, DbService db) {
+		public VoicePlusTextService(DiscordSocketClient client, StringService strings, DbService db) {
 			_client = client;
 			_strings = strings;
 			_db = db;

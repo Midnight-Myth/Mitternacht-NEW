@@ -9,12 +9,12 @@ using Mitternacht.Services;
 using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {
-	public class GreetSettingsService : IMService {
+	public class ServerGreetService : IMService {
 		private readonly DiscordSocketClient _client;
 		private readonly DbService _db;
 		private readonly Logger _log;
 
-		public GreetSettingsService(DiscordSocketClient client, DbService db) {
+		public ServerGreetService(DiscordSocketClient client, DbService db) {
 			_client = client;
 			_db = db;
 			_log = LogManager.GetCurrentClassLogger();

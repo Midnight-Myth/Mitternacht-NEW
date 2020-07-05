@@ -529,11 +529,6 @@
   -        ropl
   desc:    Toggles rotation of playing status of the dynamic strings you previously specified.
   usage:   "`{0}ropl`"
-- name:    migratedata
-  cmd:     migratedata
-  aliases: []
-  desc:    Migrate data from old bot configuration
-  usage:   "`{0}migratedata`"
 - name:    creatvoichanl
   cmd:     creatvoichanl
   aliases:
@@ -2065,11 +2060,6 @@
   -        fuinfo
   desc:    Zeigt Informationen zum angegebenen Forumaccount an
   usage:   "`{0}forumuserinfo <forumUsername>` oder `{0}forumuserinfo <forumUserId>`"
-- name:    replacedefaultlevelmodelguild
-  cmd:     replacedefaultlevelmodelguild
-  aliases: []
-  desc:    Ersetzt die Standardgilde der Id 0 für jeden Eintrag in der DB-Tabelle LevelModel mit der angegebenen Id.
-  usage:   "`{0}replacedefaultlevelmodelguild <guildId>`"
 - name:    levelguilddata
   cmd:     levelguilddata
   aliases: []
@@ -2080,11 +2070,6 @@
   aliases: []
   desc:    Zeigt die möglichen levelmodulrelevanten Gildenkonfigurationen an.
   usage:   "`{0}levelguilddatachoices`"
-- name:    setguildconfigleveldefaults
-  cmd:     setguildconfigleveldefaults
-  aliases: []
-  desc:    Setzt alle levelbezogenen Werte der GuildConfigs der gegebenen Gilden (oder allen) auf die Standardwerte zurück.
-  usage:   "`{0}setguildconfigleveldefaults [guildId1] ... [guildIdX]`"
 - name:    filterzalgochannel
   cmd:     filterzalgochannel
   desc:    Schaltet das Filtern von Zalgo in einem Kanal an oder ab.
