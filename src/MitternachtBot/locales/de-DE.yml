@@ -359,10 +359,11 @@ forum:
   teamupdate_prefix_changed:                     Der Teamupdatenachrichtenpräfix wurde von `{0}` zu `{1}` geändert.
   teamupdate_prefix_removed:                     Der Teamupdatenachrichtenpräfix wurde entfernt.
   teamupdate_prefix_set:                         Der Teamupdatenachrichtenpräfix wurde zu `{0}` geändert.
-  teamupdate_rank_added:                         Der Teamrang `{0}` bekommt nun Updates.
-  teamupdate_rank_already_added:                 Der Teamrang `{0}` bekommt schon Updates.
-  teamupdate_rank_not_existing:                  Der Teamrang `{0}` bekommt schon keine Updates.
-  teamupdate_rank_removed:                       Der Teamrang `{0}` wird keine Updates mehr bekommen.
+  teamupdate_rank_receives_updates:              Der Teamrang `{0}` bekommt nun Updates.
+  teamupdate_rank_receives_updates_with_prefix:  Der Teamrang `{0}` bekommt nun Updates mit Präfix `{1}`.
+  teamupdate_rank_already_receives_updates:      Der Teamrang `{0}` bekommt schon Updates.
+  teamupdate_rank_already_receives_no_updates:   Der Teamrang `{0}` bekommt schon keine Updates.
+  teamupdate_rank_receives_no_updates:           Der Teamrang `{0}` wird keine Updates mehr bekommen.
   teamupdate_ranks:                              Teamupdateränge
   teamupdate_removed_multi:                      "{0} sind nun kein **{1}** mehr."
   teamupdate_removed_single:                     "{0} ist nun kein **{1}** mehr."

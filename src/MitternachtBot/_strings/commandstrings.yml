@@ -2289,12 +2289,12 @@
   -        tuch
   desc:    Setzt oder löscht den Teamupdatenachrichtenkanal
   usage:   "`{0}tuch [Kanalmention]`"
-- name:    teamupdaterankadd
-  cmd:     teamupdaterankadd
+- name:    teamupdaterank
+  cmd:     teamupdaterank
   aliases:
   -        tura
-  desc:    Fügt einen Rang zu den Teamupdates hinzu.
-  usage:   "`{0}tura [Rangname]`"
+  desc:    Fügt einen Rang zu den Teamupdates hinzu oder ändert seinen Nachrichtenpräfix.
+  usage:   "`{0}tura [Rangname] [Präfix]`"
 - name:    teamupdaterankremove
   cmd:     teamupdaterankremove
   aliases:

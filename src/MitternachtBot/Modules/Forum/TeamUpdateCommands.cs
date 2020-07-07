@@ -3,7 +3,6 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 using System;
 using System.Linq;
@@ -82,12 +81,19 @@ namespace Mitternacht.Modules.Forum {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
-			public async Task TeamUpdateRankAdd(string rank) {
-				var success = uow.TeamUpdateRank.AddRank(Context.Guild.Id, rank);
-				if(success)
-					await ReplyConfirmLocalized("teamupdate_rank_added", rank).ConfigureAwait(false);
-				else
-					await ReplyErrorLocalized("teamupdate_rank_already_added", rank).ConfigureAwait(false);
+			public async Task TeamUpdateRank(string rank, string prefix = null) {
+				var success = uow.TeamUpdateRank.AddRank(Context.Guild.Id, rank, prefix) || uow.TeamUpdateRank.UpdateMessagePrefix(Context.Guild.Id, rank, prefix);
+
+				if(success) {
+					if(prefix == null) {
+						await ReplyConfirmLocalized("teamupdate_rank_receives_updates", rank).ConfigureAwait(false);
+					} else {
+						await ReplyConfirmLocalized("teamupdate_rank_receives_updates_with_prefix", rank, prefix).ConfigureAwait(false);
+					}
+				} else {
+					await ReplyErrorLocalized("teamupdate_rank_already_receives_updates", rank).ConfigureAwait(false);
+				}
+				
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 
@@ -96,10 +102,11 @@ namespace Mitternacht.Modules.Forum {
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task TeamUpdateRankRemove(string rank) {
 				var success = uow.TeamUpdateRank.DeleteRank(Context.Guild.Id, rank);
+				
 				if(success)
-					await ReplyConfirmLocalized("teamupdate_rank_removed", rank).ConfigureAwait(false);
+					await ReplyConfirmLocalized("teamupdate_rank_receives_no_updates", rank).ConfigureAwait(false);
 				else
-					await ReplyErrorLocalized("teamupdate_rank_not_existing", rank).ConfigureAwait(false);
+					await ReplyErrorLocalized("teamupdate_rank_already_receives_no_updates", rank).ConfigureAwait(false);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 
@@ -109,7 +116,7 @@ namespace Mitternacht.Modules.Forum {
 				var ranks = uow.TeamUpdateRank.GetGuildRanks(Context.Guild.Id);
 				var embed = new EmbedBuilder()
 						.WithOkColor()
-						.WithDescription(string.Join("\n", ranks.Select(r => $"- {r}")))
+						.WithDescription(string.Join("\n", ranks.Select(r => $"- {(r.MessagePrefix != null ? $"`{r.MessagePrefix}` " : "")}{r.Rankname}")))
 						.WithTitle(GetText("teamupdate_ranks"))
 						.Build();
 				await ReplyAsync(embed: embed).ConfigureAwait(false);
