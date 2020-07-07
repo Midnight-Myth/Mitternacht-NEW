@@ -2,6 +2,7 @@ using Discord.WebSocket;
 using GommeHDnetForumAPI.Models;
 using GommeHDnetForumAPI.Models.Collections;
 using GommeHDnetForumAPI.Models.Entities;
+using Microsoft.EntityFrameworkCore.Internal;
 using Mitternacht.Common;
 using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;
@@ -72,13 +73,9 @@ namespace Mitternacht.Modules.Forum.Services {
 			await TeamMemberRankChanged.Invoke(rankChanged).ConfigureAwait(false);
 			await TeamMemberRemoved.Invoke(rankRemoved).ConfigureAwait(false);
 
-
-			List<GuildConfig> guildConfigs;
-			List<IGrouping<ulong, TeamUpdateRank>> teamUpdateRanks;
-
 			using var uow = _db.UnitOfWork;
-			guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
-			teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
+			var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
+			var teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
 
 			foreach(var gc in guildConfigs) {
 				var guild = _client.GetGuild(gc.GuildId);
@@ -101,17 +98,26 @@ namespace Mitternacht.Modules.Forum.Services {
 		#region TeamUpdate Event Handler
 
 		private async Task MessageTeamMemberRankChanged(SocketTextChannel channel, RankUpdateItem[] rankUpdates) {
-			var announcingTeamRoles = GetForumRankUpdateRoles(channel.Guild.Id);
-			if(announcingTeamRoles.Length == 0)
-				return;
-			var announcingUsers = rankUpdates.Where(rui => announcingTeamRoles.Any(r => r.Equals(rui.NewRank, StringComparison.OrdinalIgnoreCase) || r.Equals(rui.OldRank, StringComparison.OrdinalIgnoreCase)))
-									   .GroupBy<RankUpdateItem, (string OldRank, string NewRank)>(rui => (rui.OldRank, rui.NewRank), new StringValueTupleComparer()).ToList();
-			var prefix = GetForumRankUpdateMessagePrefix(channel.Guild.Id);
+			var announcedTeamUpdateRanks = GetForumTeamUpdateRanks(channel.Guild.Id);
+			
+			if(announcedTeamUpdateRanks.Any()) {
+				var defaultPrefix = GetForumRankUpdateMessagePrefix(channel.Guild.Id);
 
-			foreach(var rank in announcingUsers) {
-				var key = $"teamupdate_changed_{(rank.Count() == 1 ? "single" : "multi")}";
-				var users = ConcatenateUsernames(channel.Guild, rank.Select(rui => rui.NewUserInfo).ToArray());
-				await channel.SendMessageAsync(prefix + GetText(key, channel.Guild.Id, users, rank.Key.OldRank, rank.Key.NewRank)).ConfigureAwait(false);
+				foreach(var rankUsers in rankUpdates.GroupBy(rui => (rui.OldRank, rui.NewRank), (IEqualityComparer<(string OldRank, string NewRank)>)new StringValueTupleComparer())) {
+					var oldRank = announcedTeamUpdateRanks.FirstOrDefault(r => rankUsers.Key.OldRank.Equals(r.Rankname, StringComparison.OrdinalIgnoreCase));
+					var newRank = announcedTeamUpdateRanks.FirstOrDefault(r => rankUsers.Key.NewRank.Equals(r.Rankname, StringComparison.OrdinalIgnoreCase));
+
+					if(oldRank != null || newRank != null) {
+						var rankPrefix = oldRank == null || newRank != null && !string.IsNullOrWhiteSpace(newRank.MessagePrefix)
+							? newRank.MessagePrefix
+							: oldRank.MessagePrefix;
+						
+						var key = $"teamupdate_changed_{(rankUsers.Count() == 1 ? "single" : "multi")}";
+						var usernameString = ConcatenateUsernames(channel.Guild, rankUsers.Select(rui => rui.NewUserInfo));
+
+						await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rankPrefix) ? defaultPrefix : rankPrefix)}{GetText(key, channel.Guild.Id, usernameString, rankUsers.Key.OldRank, rankUsers.Key.NewRank)}").ConfigureAwait(false);
+					}
+				}
 			}
 		}
 
@@ -122,22 +128,27 @@ namespace Mitternacht.Modules.Forum.Services {
 			=> await RankAddedRemovedUpdate(channel, userInfos, "removed");
 
 		private async Task RankAddedRemovedUpdate(SocketTextChannel channel, UserInfo[] userInfos, string keypart) {
-			var announcingTeamRoles = GetForumRankUpdateRoles(channel.Guild.Id);
-			if(announcingTeamRoles.Length == 0)
-				return;
-			var announcingUsers = userInfos.Where(ui => announcingTeamRoles.Any(r => r.Equals(ui.UserTitle, StringComparison.OrdinalIgnoreCase))).GroupBy(ui => ui.UserTitle, StringComparer.OrdinalIgnoreCase).ToList();
-			var prefix = GetForumRankUpdateMessagePrefix(channel.Guild.Id);
+			var announcedTeamUpdateRanks = GetForumTeamUpdateRanks(channel.Guild.Id);
+			
+			if(announcedTeamUpdateRanks.Any()) {
+				var defaultPrefix = GetForumRankUpdateMessagePrefix(channel.Guild.Id);
 
-			foreach(var rank in announcingUsers) {
-				var key = $"teamupdate_{keypart}_{(rank.Count() == 1 ? "single" : "multi")}";
-				var users = ConcatenateUsernames(channel.Guild, rank.ToArray());
-				await channel.SendMessageAsync(prefix + GetText(key, channel.Guild.Id, users, rank.Key)).ConfigureAwait(false);
+				foreach(var rankUsers in userInfos.GroupBy(ui => ui.UserTitle, StringComparer.OrdinalIgnoreCase)) {
+					var rank = announcedTeamUpdateRanks.FirstOrDefault(r => r.Rankname.Equals(rankUsers.Key, StringComparison.OrdinalIgnoreCase));
+
+					if(rank != null) {
+						var key = $"teamupdate_{keypart}_{(rankUsers.Count() == 1 ? "single" : "multi")}";
+						var usernameString = ConcatenateUsernames(channel.Guild, rankUsers);
+
+						await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rank.MessagePrefix) ? defaultPrefix : rank.MessagePrefix)}{GetText(key, channel.Guild.Id, usernameString, rank.Rankname)}").ConfigureAwait(false);
+					}
+				}
 			}
 		}
 
-		private string[] GetForumRankUpdateRoles(ulong guildId) {
+		private List<TeamUpdateRank> GetForumTeamUpdateRanks(ulong guildId) {
 			using var uow = _db.UnitOfWork;
-			return uow.TeamUpdateRank.GetGuildRanks(guildId).ToArray();
+			return uow.TeamUpdateRank.GetGuildRanks(guildId);
 		}
 
 		private string GetForumRankUpdateMessagePrefix(ulong guildId) {
@@ -146,7 +157,7 @@ namespace Mitternacht.Modules.Forum.Services {
 			return string.IsNullOrWhiteSpace(prefix) ? "" : $"{prefix.Trim()} ";
 		}
 
-		private string ConcatenateUsernames(SocketGuild guild, UserInfo[] userInfos) {
+		private string ConcatenateUsernames(SocketGuild guild, IEnumerable<UserInfo> userInfos) {
 			using var uow = _db.UnitOfWork;
 			var usernames = (from userInfo in userInfos
 							 let verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(guild.Id, userInfo.Id)
