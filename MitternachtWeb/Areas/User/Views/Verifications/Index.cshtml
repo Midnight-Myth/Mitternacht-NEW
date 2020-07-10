@@ -1,0 +1,36 @@
+﻿@model IEnumerable<(GommeHDnetForumAPI.Models.Entities.UserInfo UserInfo, Discord.WebSocket.SocketGuild Guild)>
+
+<h4>Verifizierungen</h4>
+
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>
+					@Html.DisplayNameFor(model => model.UserInfo.Username)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Guild.Name)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var (userInfo, guild) in Model) {
+				<tr>
+					<td>
+						@if(!string.IsNullOrWhiteSpace(userInfo.AvatarUrl)) {
+							<img class="gommehdnet-forum-avatar" src="@userInfo.AvatarUrl" alt="Avatar" />
+						}
+					</td>
+					<td>
+						<a href="@userInfo.UrlPath">@(string.IsNullOrWhiteSpace(userInfo.Username) ? userInfo.UrlPath : userInfo.Username)</a>
+					</td>
+					<td>
+						<a asp-area="Guild" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">@guild.Name</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
