@@ -45,7 +45,7 @@ namespace Mitternacht.Modules.Utility
                 var voicechn = (await guild.GetVoiceChannelsAsync()).Count;
                 var users = await guild.GetUsersAsync().ConfigureAwait(false);
                 var features = guild.Features.Any() ? string.Join("\n", guild.Features) : "-";
-                var verified = uow.VerifiedUsers.GetCount(Context.Guild.Id);
+                var verified = uow.VerifiedUsers.GetNumberOfVerificationsInGuild(Context.Guild.Id);
 
                 var embed = new EmbedBuilder()
                     .WithOkColor()
@@ -109,7 +109,7 @@ namespace Mitternacht.Modules.Utility
 
                 if (user.AvatarId != null) embed.WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl());
 
-                var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+                var forumId = uow.VerifiedUsers.GetVerifiedUser(Context.Guild.Id, user.Id)?.ForumUserId;
                 if (forumId != null) {
                     var username = string.Empty;
                     try {

@@ -160,7 +160,7 @@ namespace Mitternacht.Modules.Forum.Services {
 		private string ConcatenateUsernames(SocketGuild guild, IEnumerable<UserInfo> userInfos) {
 			using var uow = _db.UnitOfWork;
 			var usernames = (from userInfo in userInfos
-							 let verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(guild.Id, userInfo.Id)
+							 let verifiedUserId = uow.VerifiedUsers.GetVerifiedUser(guild.Id, userInfo.Id)?.UserId
 							 let user = verifiedUserId.HasValue ? guild.GetUser(verifiedUserId.Value) : null
 							 select user != null ? user.Mention : userInfo.Username).ToArray();
 

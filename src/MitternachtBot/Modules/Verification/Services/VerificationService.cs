@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Verification.Services {
 				throw new UserAlreadyVerifyingException();
 
 			using(var uow = _db.UnitOfWork) {
-				if(uow.VerifiedUsers.IsDiscordUserVerified(guildUser.GuildId, guildUser.Id))
+				if(uow.VerifiedUsers.IsVerified(guildUser.GuildId, guildUser.Id))
 					throw new UserAlreadyVerifiedException();
 			}
 
@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Verification.Services {
 
 		public int GetVerifiedUserCount(ulong guildId) {
 			using var uow = _db.UnitOfWork;
-			return uow.VerifiedUsers.GetCount(guildId);
+			return uow.VerifiedUsers.GetNumberOfVerificationsInGuild(guildId);
 		}
 
 		public void SetVerifiedRole(ulong guildId, ulong? roleId) {

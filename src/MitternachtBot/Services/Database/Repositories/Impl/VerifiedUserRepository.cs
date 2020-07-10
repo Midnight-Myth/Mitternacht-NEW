@@ -1,78 +1,81 @@
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
-using System;
-using System.Linq.Expressions;
 
-namespace Mitternacht.Services.Database.Repositories.Impl
-{
-    public class VerifiedUserRepository : Repository<VerifiedUser>, IVerifiedUserRepository
-    {
-        public VerifiedUserRepository(DbContext context) : base(context)
-        {
-        }
+namespace Mitternacht.Services.Database.Repositories.Impl {
+	public class VerifiedUserRepository : Repository<VerifiedUser>, IVerifiedUserRepository {
+		public VerifiedUserRepository(DbContext context) : base(context) { }
 
-        public bool SetVerified(ulong guildId, ulong userId, long forumUserId) {
-            if (!CanVerifyForumAccount(guildId, userId, forumUserId))
-                return false;
-            var vu = _set.FirstOrDefault(v => v.GuildId == guildId && v.UserId == userId);
-            if (vu == null) {
-                _set.Add(new VerifiedUser {
-                    GuildId = guildId,
-                    UserId = userId,
-                    ForumUserId = forumUserId
-                });
-            }
-            else {
-                vu.ForumUserId = forumUserId;
-                _set.Update(vu);
-            }
+		public VerifiedUser GetVerifiedUser(ulong guildId, ulong userId)
+			=> _set.FirstOrDefault(v => v.GuildId == guildId && v.UserId == userId);
 
-            return true;
-        }
+		public VerifiedUser GetVerifiedUser(ulong guildId, long forumUserId)
+			=> _set.FirstOrDefault(v => v.GuildId == guildId && v.ForumUserId == forumUserId);
 
-        public bool IsDiscordUserVerified(ulong guildId, ulong userId) 
-            => _set.Any(v => v.GuildId == guildId && v.UserId == userId);
+		public bool SetVerified(ulong guildId, ulong userId, long forumUserId) {
+			if(CanVerifyForumAccount(guildId, userId, forumUserId)) {
+				var vu = GetVerifiedUser(guildId, userId);
 
-        public bool IsForumUserVerified(ulong guildId, long forumUserId) 
-            => _set.Any(v => v.GuildId == guildId && v.ForumUserId == forumUserId);
+				if(vu == null) {
+					_set.Add(new VerifiedUser {
+						GuildId     = guildId,
+						UserId      = userId,
+						ForumUserId = forumUserId,
+					});
+				} else {
+					vu.ForumUserId = forumUserId;
+					_set.Update(vu);
+				}
 
-        public bool IsVerified(ulong guildId, ulong userId, long forumUserId)
-            => _set.Any(v => v.GuildId == guildId && v.UserId == userId && v.ForumUserId == forumUserId);
+				return true;
+			} else {
+				return false;
+			}
+		}
 
-        public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId) {
-            return !IsForumUserVerified(guildId, forumUserId) && !IsVerified(guildId, userId, forumUserId) || !IsDiscordUserVerified(guildId, userId);
-        }
+		public bool IsVerified(ulong guildId, ulong userId)
+			=> _set.Any(v => v.GuildId == guildId && v.UserId == userId);
 
-        public bool RemoveVerification(ulong guildId, ulong userId) {
-            var vu = _set.FirstOrDefault(v => v.GuildId == guildId && v.UserId == userId);
-            if (vu == null) return false;
-            _set.Remove(vu);
+		public bool IsVerified(ulong guildId, long forumUserId)
+			=> _set.Any(v => v.GuildId == guildId && v.ForumUserId == forumUserId);
 
-            return true;
-        }
+		public bool IsVerified(ulong guildId, ulong userId, long forumUserId)
+			=> _set.Any(v => v.GuildId == guildId && v.UserId == userId && v.ForumUserId == forumUserId);
 
-        public bool RemoveVerification(ulong guildId, long forumUserId) {
-            var vu = _set.FirstOrDefault(v => v.GuildId == guildId && v.ForumUserId == forumUserId);
-            if (vu == null) return false;
-            _set.Remove(vu);
 
-            return true;
-        }
+		public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId)
+			=> !IsVerified(guildId, forumUserId) && !IsVerified(guildId, userId, forumUserId) || !IsVerified(guildId, userId);
 
-        public IEnumerable<VerifiedUser> GetVerifiedUsers(ulong guildId) {
-            return _set.Where((Expression<Func<VerifiedUser, bool>>)(v => v.GuildId == guildId));
-        }
 
-        public long? GetVerifiedUserForumId(ulong guildId, ulong userId) 
-            => _set.FirstOrDefault(vu => vu.GuildId == guildId && vu.UserId == userId)?.ForumUserId;
+		public bool RemoveVerification(ulong guildId, ulong userId) {
+			var vu = GetVerifiedUser(guildId, userId);
+			
+			if(vu != null) {
+				_set.Remove(vu);
 
-        public ulong? GetVerifiedUserId(ulong guildId, long forumUserId)
-            => _set.FirstOrDefault(vu => vu.GuildId == guildId && vu.ForumUserId == forumUserId)?.UserId;
+				return true;
+			} else {
+				return false;
+			}
+		}
 
-        public int GetCount(ulong guildId) {
-            return _set.Count(v => v.GuildId == guildId);
-        }
-    }
+		public bool RemoveVerification(ulong guildId, long forumUserId) {
+			var vu = GetVerifiedUser(guildId, forumUserId);
+			
+			if(vu != null) {
+				_set.Remove(vu);
+
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+
+		public IQueryable<VerifiedUser> GetVerifiedUsers(ulong guildId)
+			=> _set.AsQueryable().Where(v => v.GuildId == guildId);
+
+		public int GetNumberOfVerificationsInGuild(ulong guildId)
+			=> _set.Count(v => v.GuildId == guildId);
+	}
 }

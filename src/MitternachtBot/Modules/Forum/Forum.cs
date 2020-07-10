@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Forum {
 				return;
 
 			UserInfo uinfo = null;
-			var forumId = uow.VerifiedUsers.GetVerifiedUserForumId(Context.Guild.Id, user.Id);
+			var forumId = uow.VerifiedUsers.GetVerifiedUser(Context.Guild.Id, user.Id)?.ForumUserId;
 			if(forumId != null) {
 				try {
 					uinfo = await Service.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false);
@@ -86,7 +86,7 @@ namespace Mitternacht.Modules.Forum {
 			}
 
 			var embed = ForumUserInfoBuilder(uinfo);
-			var verifiedUserId = uow.VerifiedUsers.GetVerifiedUserId(Context.Guild.Id, uinfo.Id);
+			var verifiedUserId = uow.VerifiedUsers.GetVerifiedUser(Context.Guild.Id, uinfo.Id)?.UserId;
 			if(verifiedUserId != null) {
 				var verifiedUser = await Context.Guild.GetUserAsync(verifiedUserId.Value);
 				embed.WithTitle(GetText("forumuserinfo_title", verifiedUser?.ToString() ?? verifiedUserId.ToString()));
