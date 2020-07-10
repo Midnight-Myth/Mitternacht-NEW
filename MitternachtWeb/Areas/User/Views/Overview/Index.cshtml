@@ -1,1 +1,9 @@
-﻿<h1>Startseite</h1>
+﻿@model Discord.WebSocket.SocketGuild[]
+
+<h4>Gemeinsame Server</h4>
+
+<div class="list-group">
+	@foreach(var guild in Model) {
+		<a class="list-group-item list-group-item-action" asp-area="Guild" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">@guild.Name</a>
+	}
+</div>
