@@ -10,9 +10,6 @@
 				<th>
 					@Html.DisplayNameFor(model => model.Username)
 				</th>
-				<th>
-					@Html.DisplayNameFor(model => model.UserId)
-				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -24,10 +21,9 @@
 						}
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => verification.Username)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => verification.UserId)
+						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@verification.UserId">
+							@verification.Username
+						</a>
 					</td>
 				</tr>
 			}
