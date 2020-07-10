@@ -77,5 +77,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
 		public int GetNumberOfVerificationsInGuild(ulong guildId)
 			=> _set.Count(v => v.GuildId == guildId);
+
+
+		public IQueryable<VerifiedUser> GetVerificationsOfUser(ulong userId)
+			=> _set.AsQueryable().Where(v => v.UserId == userId);
 	}
 }
