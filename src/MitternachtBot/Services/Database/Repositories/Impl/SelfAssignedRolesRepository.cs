@@ -1,30 +1,23 @@
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
-using System;
-using System.Linq.Expressions;
 
-namespace Mitternacht.Services.Database.Repositories.Impl
-{
-    public class SelfAssignedRolesRepository : Repository<SelfAssignedRole>, ISelfAssignedRolesRepository
-    {
-        public SelfAssignedRolesRepository(DbContext context) : base(context)
-        {
-        }
+namespace Mitternacht.Services.Database.Repositories.Impl {
+	public class SelfAssignedRolesRepository : Repository<SelfAssignedRole>, ISelfAssignedRolesRepository {
+		public SelfAssignedRolesRepository(DbContext context) : base(context) { }
 
-        public bool DeleteByGuildAndRoleId(ulong guildId, ulong roleId)
-        {
-            var role = _set.FirstOrDefault(s => s.GuildId == guildId && s.RoleId == roleId);
+		public bool DeleteByGuildAndRoleId(ulong guildId, ulong roleId) {
+			var role = _set.FirstOrDefault(s => s.GuildId == guildId && s.RoleId == roleId);
 
-            if (role == null)
-                return false;
+			if(role != null) {
+				_set.Remove(role);
+				return true;
+			} else {
+				return false;
+			}
+		}
 
-            _set.Remove(role);
-            return true;
-        }
-
-        public IEnumerable<SelfAssignedRole> GetFromGuild(ulong guildId) => 
-            _set.Where((Expression<Func<SelfAssignedRole, bool>>) (s => s.GuildId == guildId)).ToList();
-    }
+		public IQueryable<SelfAssignedRole> GetFromGuild(ulong guildId)
+			=> _set.AsQueryable().Where(s => s.GuildId == guildId);
+	}
 }
