@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			_cancelAllToken  = cancelSource.Token;
 
 			using var uow = _db.UnitOfWork;
-			var reminders = uow.Reminders.GetIncludedReminders(guilds).ToList();
+			var reminders = uow.Reminders.GetRemindersForGuilds(guilds.ToArray()).ToList();
 
 			foreach(var r in reminders) {
 				Task.Run(() => StartReminder(r));
