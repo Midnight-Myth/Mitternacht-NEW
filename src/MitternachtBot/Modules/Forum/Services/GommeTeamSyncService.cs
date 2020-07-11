@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Forum.Services {
 					continue;
 				var vipRole = gc.VipRoleId.HasValue ? guild.GetRole(gc.VipRoleId.Value) : null;
 
-				var verifiedUsers = userInfos.Select(ui => uow.VerifiedUsers.GetVerifiedUserId(guild.Id, ui.Id)).Select(uid => uid.HasValue ? guild.GetUser(uid.Value) : null).Where(gu => gu != null).ToList();
+				var verifiedUsers = userInfos.Select(ui => uow.VerifiedUsers.GetVerifiedUser(guild.Id, ui.Id)?.UserId).Select(uid => uid.HasValue ? guild.GetUser(uid.Value) : null).Where(gu => gu != null).ToList();
 				if(addGommeTeamRole) {
 					foreach(var user in verifiedUsers) {
 						await user.AddRoleAsync(gommeTeamRole).ConfigureAwait(false);

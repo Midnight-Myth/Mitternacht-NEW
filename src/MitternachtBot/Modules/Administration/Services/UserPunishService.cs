@@ -39,6 +39,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 				warnings += uow.Warnings
 								.For(guildId, userId)
+								.OrderByDescending(w => w.DateAdded)
 								.Count(w => !w.Forgiven && w.UserId == userId);
 
 				uow.Warnings.Add(warn);

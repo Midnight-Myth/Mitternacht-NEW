@@ -9,9 +9,6 @@
 					@Html.DisplayNameFor(model => model.Username)
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.UserId)
-				</th>
-				<th>
 					@Html.DisplayNameFor(model => model.Muted)
 				</th>
 				<th>
@@ -32,10 +29,9 @@
 						}
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => mute.Username)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => mute.UserId)
+						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@mute.UserId">
+							@mute.Username
+						</a>
 					</td>
 					<td>
 						@if(mute.Muted) {

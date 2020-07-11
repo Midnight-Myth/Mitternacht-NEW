@@ -31,7 +31,9 @@
 						}
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => quote.Authorname)
+						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@quote.AuthorId">
+							@quote.Authorname
+						</a>
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => quote.Keyword)

@@ -8,7 +8,7 @@
 			<tr>
 				<th></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Username)
+					@Html.DisplayNameFor(model => model.Guild)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Reason)
@@ -33,8 +33,8 @@
 						}
 					</td>
 					<td>
-						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@warn.UserId">
-							@warn.Username
+						<a asp-area="Guild" asp-controller="Warns" asp-action="Index" asp-route-guildId="@warn.GuildId">
+							@(warn.Guild == null ? warn.GuildId.ToString() : warn.Guild.Name)
 						</a>
 					</td>
 					<td>
@@ -44,11 +44,7 @@
 						@{
 							var forgivenString = warn.Forgiven ? Html.Raw("✅") : Html.Raw("❌");
 						}
-						@if(ViewBag.PermissionForgiveWarns) {
-							<a asp-area="Guild" asp-controller="Warns" asp-action="ToggleForgive" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@warn.Id">@forgivenString</a>
-						} else {
-							@forgivenString
-						}
+						@forgivenString
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => warn.WarnedAtString)

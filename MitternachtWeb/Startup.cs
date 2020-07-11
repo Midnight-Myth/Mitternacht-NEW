@@ -119,6 +119,10 @@ namespace MitternachtWeb {
 					name: "guild",
 					areaName: "Guild",
 					pattern: "guild/{guildId}/{controller=Stats}/{action=Index}/{id?}");
+				endpoints.MapAreaControllerRoute(
+					name: "user",
+					areaName: "User",
+					pattern: "user/{userId}/{controller=Overview}/{action=Index}/{id?}");
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");

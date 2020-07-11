@@ -63,9 +63,9 @@ namespace Mitternacht.Modules.Verification {
 					forumUserName = forumUser.Username;
 			} catch(Exception) { /* ignore, any exception here is irrelevant to the execution of this method */ }
 
-			if(uow.VerifiedUsers.IsDiscordUserVerified(user.GuildId, user.Id))
+			if(uow.VerifiedUsers.IsVerified(user.GuildId, user.Id))
 				await ErrorLocalized("already_verified_discord", user.ToString()).ConfigureAwait(false);
-			else if(uow.VerifiedUsers.IsForumUserVerified(user.GuildId, forumUserId))
+			else if(uow.VerifiedUsers.IsVerified(user.GuildId, forumUserId))
 				await ErrorLocalized("already_verified_forum", forumUserName).ConfigureAwait(false);
 			else {
 				await Service.SetVerified(user, forumUserId).ConfigureAwait(false);

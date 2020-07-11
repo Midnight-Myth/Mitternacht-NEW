@@ -1,0 +1,31 @@
+﻿@{
+	Layout = "_Layout";
+	ViewData["Title"] = "User";
+}
+
+<div class="row">
+	<nav class="col-md-3 col-xl-2">
+		<ul class="nav flex-column">
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="User" asp-controller="Overview" asp-action="Index">Startseite</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="User" asp-controller="Verifications" asp-action="Index">Verifizierungen</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="User" asp-controller="Warns" asp-action="Index">Warns</a>
+			</li>
+		</ul>
+	</nav>
+	
+	<div class="col-md-9 col-xl-10 py-md-3 pl-md-5">
+		<div>
+			<h3>
+				User "@ViewBag.RequestedSocketUser.ToString()" (ID @ViewBag.RequestedUserId)
+			</h3>
+		</div>
+		<div>
+			@RenderBody()
+		</div>
+	</div>
+</div>

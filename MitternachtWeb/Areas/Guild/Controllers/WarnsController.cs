@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
-using MitternachtWeb.Areas.Guild.Models;
-using System;
+using MitternachtWeb.Models;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
@@ -19,11 +17,13 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		public IActionResult Index() {
 			if(PermissionReadWarns) {
 				using var uow = _db.UnitOfWork;
-				var warns = uow.Warnings.GetForGuild(GuildId).ToList().Select((Func<Warning, Warn>)(w => {
+				var warns = uow.Warnings.GetForGuild(GuildId).OrderByDescending(w => w.DateAdded).ToList().Select(w => {
 					var user = Guild.GetUser(w.UserId);
 
 					return new Warn {
 						Id         = w.Id,
+						GuildId    = w.GuildId,
+						Guild      = Guild,
 						UserId     = w.UserId,
 						Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
 						AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
@@ -33,7 +33,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						WarnedAt   = w.DateAdded,
 						Reason     = w.Reason,
 					};
-				})).ToList();
+				}).ToList();
 
 				return View(warns);
 			} else {
