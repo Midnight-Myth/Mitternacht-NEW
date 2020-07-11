@@ -3,7 +3,7 @@ using Mitternacht.Services.Database.Models;
 using System.Linq;
 
 namespace Mitternacht.Services.Database.Repositories {
-	public interface IMessageXpBlacklist : IRepository<MessageXpRestriction> {
+	public interface IMessageXpRestrictionRepository : IRepository<MessageXpRestriction> {
 		bool CreateRestriction(ITextChannel channel);
 		bool CreateRestriction(ulong guildId, ulong channelId);
 		bool IsRestricted(ITextChannel channel);

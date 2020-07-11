@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services.Database.Repositories.Impl {
-	public class MessageXpBlacklist : Repository<MessageXpRestriction>, IMessageXpBlacklist {
-		public MessageXpBlacklist(DbContext context) : base(context) { }
+	public class MessageXpRestrictionRepository : Repository<MessageXpRestriction>, IMessageXpRestrictionRepository {
+		public MessageXpRestrictionRepository(DbContext context) : base(context) { }
 
 		public bool CreateRestriction(ITextChannel channel)
 			=> CreateRestriction(channel.GuildId, channel.Id);

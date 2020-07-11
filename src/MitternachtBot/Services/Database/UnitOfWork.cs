@@ -35,8 +35,8 @@ namespace Mitternacht.Services.Database {
 		public  IRoleMoneyRepository            RoleMoney => _rolemoney ??= new RoleMoneyRepository(Context);
 		private IRoleLevelBindingRepository     _rolelevelbinding;
 		public  IRoleLevelBindingRepository     RoleLevelBinding => _rolelevelbinding ??= new RoleLevelBindingRepository(Context);
-		private IMessageXpBlacklist             _messagexpblacklist;
-		public  IMessageXpBlacklist             MessageXpBlacklist => _messagexpblacklist ??= new MessageXpBlacklist(Context);
+		private IMessageXpRestrictionRepository _messagexprestriction;
+		public  IMessageXpRestrictionRepository MessageXpRestriction => _messagexprestriction ??= new MessageXpRestrictionRepository(Context);
 		private IVerifiedUserRepository         _verifiedusers;
 		public  IVerifiedUserRepository         VerifiedUsers => _verifiedusers ??= new VerifiedUserRepository(Context);
 		private IUsernameHistoryRepository      _usernamehistory;

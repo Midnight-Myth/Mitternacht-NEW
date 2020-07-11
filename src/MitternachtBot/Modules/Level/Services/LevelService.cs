@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Level.Services {
 				if(!(um.Author is IGuildUser user))
 					return;
 				using var uow = _db.UnitOfWork;
-				if(uow.MessageXpBlacklist.IsRestricted(um.Channel as ITextChannel) || um.Content.Length < uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMin)
+				if(uow.MessageXpRestriction.IsRestricted(um.Channel as ITextChannel) || um.Content.Length < uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMin)
 					return;
 
 				var time = DateTime.Now;
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Level.Services {
 				return;
 
 			using var uow = _db.UnitOfWork;
-			if(uow.MessageXpBlacklist.IsRestricted(channel as ITextChannel))
+			if(uow.MessageXpRestriction.IsRestricted(channel as ITextChannel))
 				return;
 			uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMax, channel.Id);
 			await uow.SaveChangesAsync().ConfigureAwait(false);

@@ -22,7 +22,7 @@ namespace Mitternacht.Services.Database
         IDailyMoneyRepository DailyMoney { get; }
         IRoleMoneyRepository RoleMoney { get; }
         IRoleLevelBindingRepository RoleLevelBinding { get; }
-        IMessageXpBlacklist MessageXpBlacklist { get; }
+        IMessageXpRestrictionRepository MessageXpRestriction { get; }
         IVerifiedUserRepository VerifiedUsers { get; }
         IUsernameHistoryRepository UsernameHistory { get; }
         INicknameHistoryRepository NicknameHistory { get; }
