@@ -35,7 +35,7 @@ namespace Mitternacht.Modules.Level
                     return;
                 }
 
-                uow.RoleLevelBinding.SetBinding(role.Id, minlevel);
+                uow.RoleLevelBindings.SetBinding(role.Id, minlevel);
                 await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 await ConfirmLocalized("rlb_set", role.Name, minlevel);
@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Level
             [OwnerOnly]
             public async Task RemoveRoleLevelBinding(IRole role)
             {
-                var wasRemoved = uow.RoleLevelBinding.Remove(role.Id);
+                var wasRemoved = uow.RoleLevelBindings.Remove(role.Id);
                 await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 if (wasRemoved) await ConfirmLocalized("rlb_removed", role.Name).ConfigureAwait(false);
@@ -59,7 +59,7 @@ namespace Mitternacht.Modules.Level
             {
                 const int elementsPerPage = 9;
 
-                var roleLevelBindings = uow.RoleLevelBinding.GetAll().OrderByDescending(r => r.MinimumLevel).ToList();
+                var roleLevelBindings = uow.RoleLevelBindings.GetAll().OrderByDescending(r => r.MinimumLevel).ToList();
 
                 if (!roleLevelBindings.Any())
                 {

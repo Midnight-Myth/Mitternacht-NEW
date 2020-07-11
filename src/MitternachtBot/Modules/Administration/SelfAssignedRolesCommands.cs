@@ -145,9 +145,9 @@ namespace Mitternacht.Modules.Administration {
 				var guildUser = (IGuildUser)Context.User;
 
 				var conf = uow.GuildConfigs.For(Context.Guild.Id);
-				var roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id).ToArray();
+				var roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
 
-				if(roles.FirstOrDefault(r => r.RoleId == role.Id) == null) {
+				if(!roles.Any(r => r.RoleId == role.Id)) {
 					await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
 					return;
 				}
@@ -195,7 +195,7 @@ namespace Mitternacht.Modules.Administration {
 				var autoDeleteSelfAssignedRoleMessages = uow.GuildConfigs.For(Context.Guild.Id).AutoDeleteSelfAssignedRoleMessages;
 				var roles = uow.SelfAssignedRoles.GetFromGuild(Context.Guild.Id);
 
-				if(roles.FirstOrDefault(r => r.RoleId == role.Id) == null) {
+				if(!roles.Any(r => r.RoleId == role.Id)) {
 					await ReplyErrorLocalized("self_assign_not", Format.Bold(role.Name)).ConfigureAwait(false);
 					return;
 				}

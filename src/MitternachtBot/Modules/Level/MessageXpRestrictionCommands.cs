@@ -21,7 +21,7 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task MsgXpRestrictionAdd(ITextChannel channel) {
-				var success = uow.MessageXpBlacklist.CreateRestriction(channel);
+				var success = uow.MessageXpRestrictions.CreateRestriction(channel);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(success)
@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task MsgXpRestrictionRemove(ITextChannel channel) {
-				var success = uow.MessageXpBlacklist.RemoveRestriction(channel);
+				var success = uow.MessageXpRestrictions.RemoveRestriction(channel);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(success)
@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Level {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task MsgXpRestrictions() {
-				var blacklistedChannelsString = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id).Aggregate("", (s, channelId) => $"{s}{MentionUtils.MentionChannel(channelId)}, ", s => s[0..^2]);
+				var blacklistedChannelsString = uow.MessageXpRestrictions.GetRestrictedChannelsForGuild(Context.Guild.Id).ToList().Aggregate("", (s, channelId) => $"{s}{MentionUtils.MentionChannel(channelId)}, ", s => s[0..^2]);
 
 				if(blacklistedChannelsString.Length > 0) {
 					await Context.Channel.SendConfirmAsync(blacklistedChannelsString, GetText("msgxpr_title")).ConfigureAwait(false);
@@ -59,13 +59,15 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.BanMembers)]
 			public async Task MsgXpRestrictionsClean() {
-				var channelIds = uow.MessageXpBlacklist.GetRestrictedChannelsForGuild(Context.Guild.Id);
+				var channelIds = uow.MessageXpRestrictions.GetRestrictedChannelsForGuild(Context.Guild.Id).ToList();
+
 				foreach(var cid in channelIds) {
 					var channel = await Context.Guild.GetChannelAsync(cid).ConfigureAwait(false);
 					if(channel == null) {
-						uow.MessageXpBlacklist.RemoveRestriction(Context.Guild.Id, cid);
+						uow.MessageXpRestrictions.RemoveRestriction(Context.Guild.Id, cid);
 					}
 				}
+				
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 		}

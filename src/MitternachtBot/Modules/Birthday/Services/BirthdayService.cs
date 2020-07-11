@@ -120,7 +120,7 @@ namespace Mitternacht.Modules.Birthday.Services {
 					continue;
 
 				foreach(var guildUser in group) {
-					var success = uow.Currency.TryUpdateState(guildUser.Id, birthdayMoney.Value);
+					var success = uow.Currency.TryAddCurrencyValue(guildUser.Id, birthdayMoney.Value);
 					if(!success)
 						_log.Warn($"Failed to add BirthdayMoney to {guildUser.Username} on guild {guildUser.Guild.Name}");
 				}

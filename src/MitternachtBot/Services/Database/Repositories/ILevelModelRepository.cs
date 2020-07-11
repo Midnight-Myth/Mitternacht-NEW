@@ -12,7 +12,7 @@ namespace Mitternacht.Services.Database.Repositories {
 		bool CanGetMessageXP(ulong guildId, ulong userId, DateTime time);
 		void ReplaceTimestampOfLastMessageXP(ulong guildId, ulong userId, DateTime timestamp);
 
-		IOrderedQueryable<LevelModel> GetAllSortedForRanks(ulong guildId, ulong[] guildUserIds);
+		IOrderedQueryable<LevelModel> ForGuildOrderedByTotalXP(ulong guildId, ulong[] guildUserIds);
 	}
 
 	public class LevelChangedArgs {

@@ -24,7 +24,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					if(string.IsNullOrWhiteSpace(nickname)) {
 						if(!current.DateReplaced.HasValue) {
 							current.DateReplaced = now;
-							_set.Update(current);
 							return true;
 						} else {
 							return false;
@@ -33,7 +32,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 						if(!string.Equals(current.Name, nickname, StringComparison.Ordinal) || current.DiscordDiscriminator != discriminator || current.DateReplaced.HasValue) {
 							if(!current.DateReplaced.HasValue) {
 								current.DateReplaced = now;
-								_set.Update(current);
 							}
 						} else {
 							return false;
@@ -41,11 +39,11 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					}
 				} else {
 					_set.Add(new NicknameHistoryModel {
-						UserId = userId,
-						GuildId = guildId,
-						Name = nickname,
+						UserId               = userId,
+						GuildId              = guildId,
+						Name                 = nickname,
 						DiscordDiscriminator = discriminator,
-						DateSet = now,
+						DateSet              = now,
 					});
 				}
 				
@@ -57,11 +55,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
 		public bool CloseNickname(ulong guildId, ulong userId) {
 			var current = GetUserNames(userId).OrderByDescending(u => u.DateSet).FirstOrDefault();
-			var now = DateTime.UtcNow;
-			
+
 			if(current != null && !current.DateReplaced.HasValue) {
-				current.DateReplaced = now;
-				_set.Update(current);
+				current.DateReplaced = DateTime.UtcNow;
 				return true;
 			} else {
 				return false;

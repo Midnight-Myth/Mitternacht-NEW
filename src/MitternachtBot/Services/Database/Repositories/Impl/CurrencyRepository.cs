@@ -1,58 +1,37 @@
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
-using System;
-using System.Linq.Expressions;
 
-namespace Mitternacht.Services.Database.Repositories.Impl
-{
-    public class CurrencyRepository : Repository<Currency>, ICurrencyRepository
-    {
-        public CurrencyRepository(DbContext context) : base(context)
-        {
-        }
+namespace Mitternacht.Services.Database.Repositories.Impl {
+	public class CurrencyRepository : Repository<Currency>, ICurrencyRepository {
+		public CurrencyRepository(DbContext context) : base(context) { }
 
-        public Currency GetOrCreate(ulong userId)
-        {
-            var cur = _set.FirstOrDefault(c => c.UserId == userId);
+		public Currency GetOrCreate(ulong userId) {
+			var currency = _set.FirstOrDefault(c => c.UserId == userId);
 
-            if (cur == null)
-            {
-                _set.Add(cur = new Currency()
-                {
-                    UserId = userId,
-                    Amount = 0
-                });
-            }
-            return cur;
-        }
+			if(currency == null) {
+				_set.Add(currency = new Currency() {
+					UserId = userId,
+					Amount = 0,
+				});
+			}
 
-        public IEnumerable<Currency> GetTopRichest(int count, int skip = 0) =>
-            _set.OrderByDescending((Expression<Func<Currency, long>>)(c => c.Amount)).Skip(skip).Take(count).ToList();
+			return currency;
+		}
 
-        public long GetUserCurrency(ulong userId) => 
-            GetOrCreate(userId).Amount;
+		public IQueryable<Currency> GetTopRichest(int count, int skip = 0)
+			=> _set.AsQueryable().OrderByDescending(c => c.Amount).Skip(skip).Take(count);
 
-        public bool TryUpdateState(ulong userId, long change)
-        {
-            var cur = GetOrCreate(userId);
+		public long GetUserCurrencyValue(ulong userId)
+			=> GetOrCreate(userId).Amount;
 
-            if (change == 0)
-                return true;
+		public bool TryAddCurrencyValue(ulong userId, long change) {
+			var currency = GetOrCreate(userId);
+			var canApplyChange = change != 0 || change > 0 || currency.Amount + change >= 0;
 
-            if (change > 0)
-            {
-                cur.Amount += change;
-                return true;
-            }
-            //change is negative
-            if (cur.Amount + change >= 0)
-            {
-                cur.Amount += change;
-                return true;
-            }
-            return false;
-        }
-    }
+			currency.Amount += canApplyChange ? change : 0;
+
+			return canApplyChange;
+		}
+	}
 }

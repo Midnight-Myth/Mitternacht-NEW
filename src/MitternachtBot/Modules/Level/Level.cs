@@ -41,9 +41,9 @@ namespace Mitternacht.Modules.Level {
 
 			if(lm != null) {
 				var guildUserIds = (await Context.Guild.GetUsersAsync()).Select(gu => gu.Id).ToArray();
-				var levelModels  = uow.LevelModel.GetAllSortedForRanks(Context.Guild.Id, guildUserIds);
+				var levelModels  = uow.LevelModel.ForGuildOrderedByTotalXP(Context.Guild.Id, guildUserIds).ToList();
 
-				var rank         = levelModels.ToList().IndexOf(lm) + 1;
+				var rank         = levelModels.IndexOf(lm) + 1;
 				var totalRanks   = levelModels.Count();
 				var rankString   = lm.TotalXP > 0 && rank > 0 ? rank.ToString() : "-";
 
@@ -66,7 +66,7 @@ namespace Mitternacht.Modules.Level {
 			var guildUserIds = (await Context.Guild.GetUsersAsync()).Select(gu => gu.Id).ToArray();
 			
 			var levelModels = uow.LevelModel
-				.GetAllSortedForRanks(Context.Guild.Id, guildUserIds)
+				.ForGuildOrderedByTotalXP(Context.Guild.Id, guildUserIds)
 				.Skip(position <= 1 ? 0 : position - 1)
 				.Take(count)
 				.ToList();
@@ -179,7 +179,7 @@ namespace Mitternacht.Modules.Level {
 				return;
 			}
 
-			if(!uow.Currency.TryUpdateState(user.Id, -moneyToSpend)) {
+			if(!uow.Currency.TryAddCurrencyValue(user.Id, -moneyToSpend)) {
 				if(user == Context.User)
 					await ReplyErrorLocalized("ttxp_error_no_money_self").ConfigureAwait(false);
 				else await ReplyErrorLocalized("ttxp_error_no_money_other", user.ToString()).ConfigureAwait(false);

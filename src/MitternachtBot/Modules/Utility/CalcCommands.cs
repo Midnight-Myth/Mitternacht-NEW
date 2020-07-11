@@ -151,7 +151,7 @@ namespace Mitternacht.Modules.Utility {
 				if(user == null)
 					return null;
 
-				return uow.Currency.GetUserCurrency(user.Id);
+				return uow.Currency.GetUserCurrencyValue(user.Id);
 			}
 
 			//xp(user): xp of a given user

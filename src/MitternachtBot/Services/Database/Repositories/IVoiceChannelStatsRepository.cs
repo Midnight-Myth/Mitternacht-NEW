@@ -1,13 +1,10 @@
 using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories
-{
-    public interface IVoiceChannelStatsRepository : IRepository<VoiceChannelStats>
-    {
-        void AddTime(ulong userId, ulong guildId, double time);
-        bool RemoveTime(ulong userId, ulong guildId, double time);
-        bool TryGetTime(ulong userId, ulong guildId, out double time);
-        void Reset(ulong userId, ulong guildId);
-        bool IsSaved(ulong userId, ulong guildId);
-    }
+namespace Mitternacht.Services.Database.Repositories {
+	public interface IVoiceChannelStatsRepository : IRepository<VoiceChannelStats> {
+		void AddTime(ulong guildId, ulong userId, double time);
+		bool TryGetTime(ulong guildId, ulong userId, out double time);
+		void Reset(ulong guildId, ulong userId);
+		bool HasTrackedTime(ulong guildId, ulong userId);
+	}
 }

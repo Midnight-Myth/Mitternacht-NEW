@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
-using System.Linq.Expressions;
 using MoreLinq;
 
 namespace Mitternacht.Services.Database.Repositories.Impl {
@@ -11,18 +10,18 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		public QuoteRepository(DbContext context) : base(context) { }
 
 		public IEnumerable<Quote> GetAllQuotesByKeyword(ulong guildId, string keyword)
-			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
+			=> _set.AsQueryable().Where(q => q.GuildId == guildId).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));
 
-		public IEnumerable<Quote> GetAllForGuild(ulong guildId)
-			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).ToList();
+		public IQueryable<Quote> GetAllForGuild(ulong guildId)
+			=> _set.AsQueryable().Where(q => q.GuildId == guildId);
 
 		public Quote GetRandomQuoteByKeyword(ulong guildId, string keyword)
-			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
+			=> _set.AsQueryable().Where(q => q.GuildId == guildId).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
 
 		public Quote SearchQuoteKeywordText(ulong guildId, string keyword, string text)
-			=> _set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).AsEnumerable().Where(q => q.Text.Contains(text, StringComparison.OrdinalIgnoreCase) && q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
+			=> _set.AsQueryable().Where(q => q.GuildId == guildId).AsEnumerable().Where(q => q.Text.Contains(text, StringComparison.OrdinalIgnoreCase) && q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)).Shuffle().FirstOrDefault();
 
 		public void RemoveAllByKeyword(ulong guildId, string keyword)
-			=> _set.RemoveRange(_set.Where((Expression<Func<Quote, bool>>)(q => q.GuildId == guildId)).Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)));
+			=> _set.RemoveRange(_set.AsQueryable().Where(q => q.GuildId == guildId).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase)));
 	}
 }

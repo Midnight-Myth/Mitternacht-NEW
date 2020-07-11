@@ -44,7 +44,7 @@ namespace Mitternacht.Services
 
         private bool InternalRemoveCurrency(ulong authorId, string reason, long amount, IUnitOfWork uow)
         {
-            var success = uow.Currency.TryUpdateState(authorId, -amount);
+            var success = uow.Currency.TryAddCurrencyValue(authorId, -amount);
             if (!success)
                 return false;
             uow.CurrencyTransactions.Add(new CurrencyTransaction()
@@ -68,7 +68,7 @@ namespace Mitternacht.Services
                         Reason = reason,
                         Amount = amount,
                     };
-                    uow.Currency.TryUpdateState(userId, amount);
+                    uow.Currency.TryAddCurrencyValue(userId, amount);
                     uow.CurrencyTransactions.Add(transaction);
                 }
 
@@ -99,13 +99,13 @@ namespace Mitternacht.Services
             if (uow == null)
                 using (uow = _db.UnitOfWork)
                 {
-                    uow.Currency.TryUpdateState(receiverId, amount);
+                    uow.Currency.TryAddCurrencyValue(receiverId, amount);
                     uow.CurrencyTransactions.Add(transaction);
                     await uow.SaveChangesAsync();
                 }
             else
             {
-                uow.Currency.TryUpdateState(receiverId, amount);
+                uow.Currency.TryAddCurrencyValue(receiverId, amount);
                 uow.CurrencyTransactions.Add(transaction);
             }
         }

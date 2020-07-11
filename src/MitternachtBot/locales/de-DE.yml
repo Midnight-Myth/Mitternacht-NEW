@@ -398,7 +398,6 @@ gambling:
   dm_again:                                      "`{0}` kann sich seinen täglichen Anteil nochmal abholen."
   dm_already_received:                           Du hast deinen täglichen Anteil heute bereits abgeholt.
   dm_no_role:                                    Deine Rollen erlauben kein DailyMoney, also bekommst du nichts.
-  dm_not_received:                               "`{0}` hat seinen täglichen Anteil noch nicht abgeholt."
   dm_received:                                   hat sich seinen täglichen "{0}"-Anteil von {1} {2} abgeholt.
   dm_role_not_set:                               Rolle "{0}" steht nicht auf der Gehaltsliste!
   dm_role_priority_set:                          Die Gehaltspriorität von Rolle "{0}" wurde auf {1} gesetzt.

@@ -317,10 +317,7 @@ namespace Mitternacht.Modules.Administration {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task Donators() {
-			var donatorsOrdered = uow.Donators.GetDonatorsOrdered();
-
-			await Context.Channel.SendConfirmAsync(string.Join("⭐", donatorsOrdered.Select(d => d.Name)), GetText("donators")).ConfigureAwait(false);
-			//await Context.Channel.SendConfirmAsync("Patreon supporters", string.Join("⭐", usrs.Select(d => d.Username))).ConfigureAwait(false);
+			await Context.Channel.SendConfirmAsync(string.Join("⭐", uow.Donators.GetDonatorsOrdered().Select(d => d.Name).ToList()), GetText("donators")).ConfigureAwait(false);
 		}
 
 

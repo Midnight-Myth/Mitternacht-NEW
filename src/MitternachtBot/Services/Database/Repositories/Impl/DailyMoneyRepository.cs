@@ -8,43 +8,38 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		public DailyMoneyRepository(DbContext context) : base(context) { }
 
 		public DailyMoney GetOrCreate(ulong userId) {
-			var cur = _set.FirstOrDefault(c => c.UserId == userId);
+			var dm = _set.FirstOrDefault(c => c.UserId == userId);
 
-			if(cur == null) {
-				_set.Add(cur = new DailyMoney {
+			if(dm == null) {
+				_set.Add(dm = new DailyMoney {
 					UserId = userId,
 					LastTimeGotten = DateTime.MinValue
 				});
 			}
 
-			return cur;
+			return dm;
 		}
 
-		public DateTime GetUserDate(ulong userId)
-			=> GetOrCreate(userId).LastTimeGotten;
+		public DateTime GetLastReceived(ulong userId)
+			=> _set.FirstOrDefault(c => c.UserId == userId)?.LastTimeGotten ?? DateTime.MinValue;
 
 		public bool CanReceive(ulong userId)
-			=> GetOrCreate(userId).LastTimeGotten.Date < DateTime.Today.Date;
+			=> GetLastReceived(userId).Date < DateTime.Today.Date;
 
-		public bool TryUpdateState(ulong userId) {
+		public DateTime UpdateState(ulong userId) {
 			var dm = GetOrCreate(userId);
-			
-			if(dm.LastTimeGotten.Date < DateTime.Today.Date) {
-				dm.LastTimeGotten = DateTime.Now;
-				return true;
-			} else {
-				return false;
-			}
+			dm.LastTimeGotten = DateTime.Now;
+
+			return dm.LastTimeGotten;
 		}
 
-		public bool TryResetReceived(ulong userId) {
-			var dm = GetOrCreate(userId);
+		public void ResetLastTimeReceived(ulong userId) {
+			if(!CanReceive(userId)) {
+				var dm = GetOrCreate(userId);
 
-			if(dm.LastTimeGotten.Date >= DateTime.Today.Date) {
-				dm.LastTimeGotten = DateTime.Today.AddDays(-1);
-				return true;
-			} else {
-				return false;
+				if(dm.LastTimeGotten.Date >= DateTime.Today.Date) {
+					dm.LastTimeGotten = DateTime.Today.AddDays(-1);
+				}
 			}
 		}
 	}

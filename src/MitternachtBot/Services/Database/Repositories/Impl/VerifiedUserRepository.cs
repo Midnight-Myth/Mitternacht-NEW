@@ -24,7 +24,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 					});
 				} else {
 					vu.ForumUserId = forumUserId;
-					_set.Update(vu);
 				}
 
 				return true;
