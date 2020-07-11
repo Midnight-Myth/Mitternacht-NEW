@@ -23,5 +23,13 @@ namespace MitternachtWeb.Areas.User.Controllers {
 
 			return View("Usernames", usernames);
 		}
+
+		public IActionResult Nicknames() {
+			using var uow = _db.UnitOfWork;
+
+			var nicknames = uow.NicknameHistory.GetUserNames(RequestedUserId).ToList();
+
+			return View("Nicknames", nicknames);
+		}
 	}
 }
