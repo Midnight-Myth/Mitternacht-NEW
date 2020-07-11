@@ -19,25 +19,46 @@ namespace MitternachtWeb.Areas.User.Controllers {
 
 			var allWarnings = uow.Warnings.GetForUser(RequestedUserId).OrderByDescending(w => w.DateAdded).ToList();
 			var filteredWarnings = DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ReadAllWarns) ? allWarnings : allWarnings.Where(w => DiscordUser.GuildPagePermissions.TryGetValue(w.GuildId, out var perm) && perm.HasFlag(GuildLevelPermission.ReadWarns)).ToList();
+			var guildsWhereUserCanForgiveWarns = DiscordUser.GuildPagePermissions.Where(kv => kv.Value.HasFlag(GuildLevelPermission.ForgiveWarns)).Select(kv => kv.Key).ToArray();
 			var warns = filteredWarnings.Select(w => {
 				var user = Program.MitternachtBot.Client.GetGuild(w.GuildId)?.GetUser(RequestedUserId);
 
 				return new Warn {
-					Id         = w.Id,
-					GuildId    = w.GuildId,
-					Guild      = user?.Guild,
-					UserId     = w.UserId,
-					Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
-					AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
-					Forgiven   = w.Forgiven,
-					ForgivenBy = w.ForgivenBy,
-					WarnedBy   = w.Moderator,
-					WarnedAt   = w.DateAdded,
-					Reason     = w.Reason,
+					Id            = w.Id,
+					GuildId       = w.GuildId,
+					Guild         = user?.Guild,
+					UserId        = w.UserId,
+					Username      = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
+					AvatarUrl     = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+					Forgiven      = w.Forgiven,
+					ForgivenBy    = w.ForgivenBy,
+					WarnedBy      = w.Moderator,
+					WarnedAt      = w.DateAdded,
+					Reason        = w.Reason,
+					CanBeForgiven = guildsWhereUserCanForgiveWarns.Contains(w.GuildId),
 				};
 			}).ToList();
 
+			
+
 			return View(warns);
+		}
+
+		public IActionResult ToggleForgive(int id) {
+			using var uow = _db.UnitOfWork;
+			var warning = uow.Warnings.Get(id);
+
+			if(warning != null && (DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ForgiveAllWarns) || DiscordUser.GuildPagePermissions.TryGetValue(warning.GuildId, out var perm) && perm.HasFlag(GuildLevelPermission.ForgiveWarns))) {
+				if(uow.Warnings.ToggleForgiven(warning.GuildId, id, DiscordUser.User.ToString())) {
+					uow.SaveChanges();
+
+					return RedirectToAction("Index");
+				} else {
+					return NotFound();
+				}
+			} else {
+				return Unauthorized();
+			}
 		}
 	}
 }
