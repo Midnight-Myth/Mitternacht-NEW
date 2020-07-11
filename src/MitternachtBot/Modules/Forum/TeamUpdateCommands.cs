@@ -113,10 +113,10 @@ namespace Mitternacht.Modules.Forum {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task TeamUpdateRanks() {
-				var ranks = uow.TeamUpdateRanks.GetGuildRanks(Context.Guild.Id);
+				var ranks = uow.TeamUpdateRanks.ForGuild(Context.Guild.Id).Select(r => $"- {(r.MessagePrefix != null ? $"`{r.MessagePrefix}` " : "")}{r.Rankname}").ToList();
 				var embed = new EmbedBuilder()
 						.WithOkColor()
-						.WithDescription(string.Join("\n", ranks.Select(r => $"- {(r.MessagePrefix != null ? $"`{r.MessagePrefix}` " : "")}{r.Rankname}")))
+						.WithDescription(string.Join("\n", ranks))
 						.WithTitle(GetText("teamupdate_ranks"))
 						.Build();
 				await ReplyAsync(embed: embed).ConfigureAwait(false);

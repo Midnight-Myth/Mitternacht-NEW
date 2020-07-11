@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Mitternacht.Services.Database.Repositories.Impl {
@@ -12,7 +11,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			if(rank == null)
 				throw new ArgumentNullException(nameof(rank));
 
-			if(!GetGuildRanks(guildId).Any(tur => tur.Rankname.Equals(rank, StringComparison.OrdinalIgnoreCase))) {
+			if(!ForGuild(guildId).AsEnumerable().Any(tur => tur.Rankname.Equals(rank, StringComparison.OrdinalIgnoreCase))) {
 				_set.Add(new TeamUpdateRank {
 					GuildId       = guildId,
 					Rankname      = rank,
@@ -29,7 +28,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			if(rank == null)
 				throw new ArgumentNullException(nameof(rank));
 
-			var teamUpdateRank = GetGuildRanks(guildId).FirstOrDefault(tur => tur.Rankname.Equals(rank, StringComparison.OrdinalIgnoreCase));
+			var teamUpdateRank = ForGuild(guildId).AsEnumerable().FirstOrDefault(tur => tur.Rankname.Equals(rank, StringComparison.OrdinalIgnoreCase));
 
 			if(teamUpdateRank != null && !string.Equals(teamUpdateRank.MessagePrefix, prefix, StringComparison.OrdinalIgnoreCase)) {
 				teamUpdateRank.MessagePrefix = prefix;
@@ -43,7 +42,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			if(rank == null)
 				throw new ArgumentNullException(nameof(rank));
 
-			var teamUpdateRank = GetGuildRanks(guildId).FirstOrDefault(tur => tur.Rankname.Equals(rank, StringComparison.OrdinalIgnoreCase));
+			var teamUpdateRank = ForGuild(guildId).AsEnumerable().FirstOrDefault(tur => tur.Rankname.Equals(rank, StringComparison.OrdinalIgnoreCase));
 
 			if(teamUpdateRank != null) {
 				_set.Remove(teamUpdateRank);
@@ -53,7 +52,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			}
 		}
 
-		public List<TeamUpdateRank> GetGuildRanks(ulong guildId)
-			=> _set.AsQueryable().Where(tur => tur.GuildId == guildId).ToList();
+		public IQueryable<TeamUpdateRank> ForGuild(ulong guildId)
+			=> _set.AsQueryable().Where(tur => tur.GuildId == guildId);
 	}
 }

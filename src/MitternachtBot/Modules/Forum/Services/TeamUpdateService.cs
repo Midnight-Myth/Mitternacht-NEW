@@ -148,7 +148,7 @@ namespace Mitternacht.Modules.Forum.Services {
 
 		private List<TeamUpdateRank> GetForumTeamUpdateRanks(ulong guildId) {
 			using var uow = _db.UnitOfWork;
-			return uow.TeamUpdateRanks.GetGuildRanks(guildId);
+			return uow.TeamUpdateRanks.ForGuild(guildId).ToList();
 		}
 
 		private string GetForumRankUpdateMessagePrefix(ulong guildId) {
