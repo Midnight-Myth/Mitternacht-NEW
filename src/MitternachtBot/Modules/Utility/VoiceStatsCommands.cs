@@ -24,7 +24,7 @@ namespace Mitternacht.Modules.Utility {
             {
                 user = user ?? Context.User as IGuildUser;
 
-				if (uow.VoiceChannelStats.TryGetTime(user.Id, user.GuildId, out var time)) {
+				if (uow.VoiceChannelStats.TryGetTime(user.GuildId, user.Id, out var time)) {
 					var timespan = TimeSpan.FromSeconds(time);
 					await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan:dd}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
 				} else
@@ -37,7 +37,7 @@ namespace Mitternacht.Modules.Utility {
             public async Task VoiceStatsReset(IGuildUser user)
             {
                 if (user == null) return;
-                uow.VoiceChannelStats.Reset(user.Id, user.GuildId);
+                uow.VoiceChannelStats.Reset(user.GuildId, user.Id);
                 await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
                 await ConfirmLocalized("voicestats_reset", user.ToString()).ConfigureAwait(false);
