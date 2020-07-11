@@ -178,7 +178,7 @@ namespace Mitternacht.Modules.Gambling {
 				users = users.Any() ? users : new[] { (IGuildUser)Context.User };
 
 				var stats = uow.DailyMoneyStats
-						.GetAllUser(users.Select(gu => gu.Id).ToArray())
+						.GetAllForUsers(users.Select(gu => gu.Id).ToArray()).ToList()
 						.GroupBy(dms => dms.UserId)
 						.ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
 				
