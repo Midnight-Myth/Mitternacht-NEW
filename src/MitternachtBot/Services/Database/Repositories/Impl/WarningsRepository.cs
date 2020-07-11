@@ -2,15 +2,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database.Models;
-using System;
-using System.Linq.Expressions;
 
 namespace Mitternacht.Services.Database.Repositories.Impl {
 	public class WarningsRepository : Repository<Warning>, IWarningsRepository {
 		public WarningsRepository(DbContext context) : base(context) { }
 
 		public IQueryable<Warning> For(ulong guildId, ulong userId)
-			=> _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId)).OrderByDescending(x => x.DateAdded);
+			=> _set.AsQueryable().Where(x => x.GuildId == guildId && x.UserId == userId);
 
 		public bool ToggleForgiven(ulong guildId, int warnId, string modName) {
 			var warn = _set.FirstOrDefault(w => w.GuildId == guildId && w.Id == warnId);
@@ -26,7 +24,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		}
 
 		public async Task ForgiveAll(ulong guildId, ulong userId, string mod) {
-			await _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == guildId && x.UserId == userId))
+			await _set.AsQueryable().Where(x => x.GuildId == guildId && x.UserId == userId)
 				.ForEachAsync(x => {
 					if(x.Forgiven)
 						return;
@@ -37,6 +35,9 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		}
 
 		public IQueryable<Warning> GetForGuild(ulong id)
-			=> _set.Where((Expression<Func<Warning, bool>>)(x => x.GuildId == id)).OrderByDescending(x => x.DateAdded);
+			=> _set.AsQueryable().Where(x => x.GuildId == id);
+
+		public IQueryable<Warning> GetForUser(ulong userId)
+			=> _set.AsQueryable().Where(w => w.UserId == userId);
 	}
 }

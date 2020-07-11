@@ -78,7 +78,7 @@ namespace Mitternacht.Modules.Administration {
 
 				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
-				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId);
+				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).OrderByDescending(w => w.DateAdded);
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
 					.WithTitle(GetText("warnlog_for_user", username));
@@ -112,7 +112,7 @@ namespace Mitternacht.Modules.Administration {
 			public async Task WarnlogAll(int page = 1) {
 				if(--page < 0) return;
 
-				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).ToList().GroupBy(x => x.UserId);
+				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).OrderByDescending(w => w.DateAdded).ToList().GroupBy(x => x.UserId);
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async curPage => {
 																	var ws = await Task.WhenAll(warnings.Skip(curPage * 15)
