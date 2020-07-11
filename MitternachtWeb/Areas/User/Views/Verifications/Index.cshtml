@@ -24,7 +24,7 @@
 						}
 					</td>
 					<td>
-						<a href="@userInfo.UrlPath">@(string.IsNullOrWhiteSpace(userInfo.Username) ? userInfo.UrlPath : userInfo.Username)</a>
+						<a href="@userInfo.Url">@(string.IsNullOrWhiteSpace(userInfo.Username) ? userInfo.Url : userInfo.Username)</a>
 					</td>
 					<td>
 						<a asp-area="Guild" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">@guild.Name</a>
