@@ -1,4 +1,4 @@
-﻿@model IEnumerable<(GommeHDnetForumAPI.Models.Entities.UserInfo UserInfo, Discord.WebSocket.SocketGuild Guild)>
+﻿@model IEnumerable<(Mitternacht.Services.Database.Models.VerifiedUser, GommeHDnetForumAPI.Models.Entities.UserInfo, Discord.WebSocket.SocketGuild)>
 
 <h4>Verifizierungen</h4>
 
@@ -8,15 +8,18 @@
 			<tr>
 				<th></th>
 				<th>
-					@Html.DisplayNameFor(model => model.UserInfo.Username)
+					Nutzername
 				</th>
 				<th>
-					@Html.DisplayNameFor(model => model.Guild.Name)
+					Verifizierung auf Server
+				</th>
+				<th>
+					Verifizierungszeitpunkt
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach(var (userInfo, guild) in Model) {
+			@foreach(var (verifiedUser, userInfo, guild) in Model) {
 				<tr>
 					<td>
 						@if(!string.IsNullOrWhiteSpace(userInfo.AvatarUrl)) {
@@ -28,6 +31,9 @@
 					</td>
 					<td>
 						<a asp-area="Guild" asp-controller="Stats" asp-action="Index" asp-route-guildId="@guild.Id">@guild.Name</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => verifiedUser.DateAdded)
 					</td>
 				</tr>
 			}

@@ -33,7 +33,7 @@ namespace MitternachtWeb.Areas.User.Controllers {
 						userInfo.DownloadDataAsync().GetAwaiter().GetResult();
 					} catch { }
 
-					return (userInfo, guild);
+					return (v, userInfo, guild);
 				}).ToList();
 
 				return View(verifications);
