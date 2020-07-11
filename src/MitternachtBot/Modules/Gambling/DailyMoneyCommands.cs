@@ -104,7 +104,7 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task SetRoleMoneyPriority(IRole role, int priority) {
-				var exists = uow.RoleMoney.Exists(role.Id);
+				var exists = uow.RoleMoney.MoneyForRoleIsDefined(role.Id);
 				if(exists)
 					uow.RoleMoney.SetPriority(role.Id, priority);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
