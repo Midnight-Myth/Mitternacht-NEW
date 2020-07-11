@@ -1,5 +1,6 @@
 using Discord;
 using Mitternacht.Services.Database.Models;
+using System.Linq;
 
 namespace Mitternacht.Services.Database.Repositories {
 	public interface IMessageXpBlacklist : IRepository<MessageXpRestriction> {
@@ -9,6 +10,6 @@ namespace Mitternacht.Services.Database.Repositories {
 		bool IsRestricted(ulong guildId, ulong channelId);
 		bool RemoveRestriction(ITextChannel channel);
 		bool RemoveRestriction(ulong guildId, ulong channelId);
-		ulong[] GetRestrictedChannelsForGuild(ulong guildId);
+		IQueryable<ulong> GetRestrictedChannelsForGuild(ulong guildId);
 	}
 }
