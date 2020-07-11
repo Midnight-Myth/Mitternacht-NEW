@@ -50,9 +50,9 @@ namespace Mitternacht.Modules.Gambling {
 								.OrderBy(m => -userRoles.First(r => r.Id == m.RoleId).Position)
 								.First();
 						var role = userRoles.First(r => r.Id == rm.RoleId);
-						uow.DailyMoney.TryUpdateState(guildUser.Id);
+						var time = uow.DailyMoney.UpdateState(guildUser.Id);
 						await _currency.AddAsync(guildUser, $"Daily Reward ({role.Name})", rm.Money, false, uow).ConfigureAwait(false);
-						uow.DailyMoneyStats.Add(guildUser.Id, uow.DailyMoney.GetUserDate(guildUser.Id), rm.Money);
+						uow.DailyMoneyStats.Add(guildUser.Id, time, rm.Money);
 
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
@@ -84,10 +84,11 @@ namespace Mitternacht.Modules.Gambling {
 			[OwnerOnly]
 			public async Task ResetDailyMoney([Remainder] IGuildUser user = null) {
 				user ??= (IGuildUser)Context.User;
-				var wasReset = uow.DailyMoney.TryResetReceived(user.Id);
+				uow.DailyMoney.ResetLastTimeReceived(user.Id);
+
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				await MessageLocalized(wasReset ? "dm_again" : "dm_not_received", user.ToString()).ConfigureAwait(false);
+				await MessageLocalized("dm_again", user.ToString()).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
