@@ -21,15 +21,15 @@ namespace Mitternacht.Services.Database
         ILevelModelRepository LevelModel { get; }
         IDailyMoneyRepository DailyMoney { get; }
         IRoleMoneyRepository RoleMoney { get; }
-        IRoleLevelBindingRepository RoleLevelBinding { get; }
-        IMessageXpRestrictionRepository MessageXpRestriction { get; }
+        IRoleLevelBindingRepository RoleLevelBindings { get; }
+        IMessageXpRestrictionRepository MessageXpRestrictions { get; }
         IVerifiedUserRepository VerifiedUsers { get; }
         IUsernameHistoryRepository UsernameHistory { get; }
         INicknameHistoryRepository NicknameHistory { get; }
         IBirthDateRepository BirthDates { get; }
         IDailyMoneyStatsRepository DailyMoneyStats { get; }
         IVoiceChannelStatsRepository VoiceChannelStats { get; }
-        ITeamUpdateRankRepository TeamUpdateRank { get; }
+        ITeamUpdateRankRepository TeamUpdateRanks { get; }
 
         int SaveChanges(bool acceptAllChanges = true);
         Task<int> SaveChangesAsync(bool acceptAllChanges = true);

@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Forum.Services {
 
 			using var uow = _db.UnitOfWork;
 			var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
-			var teamUpdateRanks = uow.TeamUpdateRank.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
+			var teamUpdateRanks = uow.TeamUpdateRanks.GetAll().GroupBy(tur => tur.GuildId).Where(turgroup => guildConfigs.Any(gc => gc.GuildId == turgroup.Key)).ToList();
 
 			foreach(var gc in guildConfigs) {
 				var guild = _client.GetGuild(gc.GuildId);
@@ -148,7 +148,7 @@ namespace Mitternacht.Modules.Forum.Services {
 
 		private List<TeamUpdateRank> GetForumTeamUpdateRanks(ulong guildId) {
 			using var uow = _db.UnitOfWork;
-			return uow.TeamUpdateRank.GetGuildRanks(guildId);
+			return uow.TeamUpdateRanks.GetGuildRanks(guildId);
 		}
 
 		private string GetForumRankUpdateMessagePrefix(ulong guildId) {

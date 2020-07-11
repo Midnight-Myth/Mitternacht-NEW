@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Forum {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task TeamUpdateRank(string rank, string prefix = null) {
-				var success = uow.TeamUpdateRank.AddRank(Context.Guild.Id, rank, prefix) || uow.TeamUpdateRank.UpdateMessagePrefix(Context.Guild.Id, rank, prefix);
+				var success = uow.TeamUpdateRanks.AddRank(Context.Guild.Id, rank, prefix) || uow.TeamUpdateRanks.UpdateMessagePrefix(Context.Guild.Id, rank, prefix);
 
 				if(success) {
 					if(prefix == null) {
@@ -101,7 +101,7 @@ namespace Mitternacht.Modules.Forum {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task TeamUpdateRankRemove(string rank) {
-				var success = uow.TeamUpdateRank.DeleteRank(Context.Guild.Id, rank);
+				var success = uow.TeamUpdateRanks.DeleteRank(Context.Guild.Id, rank);
 				
 				if(success)
 					await ReplyConfirmLocalized("teamupdate_rank_receives_no_updates", rank).ConfigureAwait(false);
@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Forum {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task TeamUpdateRanks() {
-				var ranks = uow.TeamUpdateRank.GetGuildRanks(Context.Guild.Id);
+				var ranks = uow.TeamUpdateRanks.GetGuildRanks(Context.Guild.Id);
 				var embed = new EmbedBuilder()
 						.WithOkColor()
 						.WithDescription(string.Join("\n", ranks.Select(r => $"- {(r.MessagePrefix != null ? $"`{r.MessagePrefix}` " : "")}{r.Rankname}")))

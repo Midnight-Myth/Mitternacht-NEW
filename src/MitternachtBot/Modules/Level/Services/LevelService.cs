@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Level.Services {
 				using var uow = _db.UnitOfWork;
 				var level     = uow.LevelModel.Get(user.GuildId, user.Id)?.Level ?? 0;
 				var userroles = user.GetRoles().ToList();
-				var rlb       = uow.RoleLevelBinding.GetAll().Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
+				var rlb       = uow.RoleLevelBindings.GetAll().Where(rl => rl.MinimumLevel <= level && userroles.All(ur => ur.Id != rl.RoleId)).ToList();
 				var rolesToAdd = user.Guild.Roles.Where(r => rlb.Any(rs => rs.RoleId == r.Id)).OrderBy(r => r.Position).ToList();
 
 				if(!rolesToAdd.Any())
@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Level.Services {
 				if(!(um.Author is IGuildUser user))
 					return;
 				using var uow = _db.UnitOfWork;
-				if(uow.MessageXpRestriction.IsRestricted(um.Channel as ITextChannel) || um.Content.Length < uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMin)
+				if(uow.MessageXpRestrictions.IsRestricted(um.Channel as ITextChannel) || um.Content.Length < uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMin)
 					return;
 
 				var time = DateTime.Now;
@@ -68,7 +68,7 @@ namespace Mitternacht.Modules.Level.Services {
 				return;
 
 			using var uow = _db.UnitOfWork;
-			if(uow.MessageXpRestriction.IsRestricted(channel as ITextChannel))
+			if(uow.MessageXpRestrictions.IsRestricted(channel as ITextChannel))
 				return;
 			uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMax, channel.Id);
 			await uow.SaveChangesAsync().ConfigureAwait(false);
