@@ -41,15 +41,15 @@ namespace Mitternacht.Modules.Gambling {
 		[Priority(1)]
 		public async Task Cash([Remainder] IUser user = null) {
 			if(user == null)
-				await ConfirmLocalized("has", Format.Bold(Context.User.ToString()), $"{uow.Currency.GetUserCurrency(Context.User.Id)} {CurrencySign}").ConfigureAwait(false);
+				await ConfirmLocalized("has", Format.Bold(Context.User.ToString()), $"{uow.Currency.GetUserCurrencyValue(Context.User.Id)} {CurrencySign}").ConfigureAwait(false);
 			else
-				await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{uow.Currency.GetUserCurrency(user.Id)} {CurrencySign}").ConfigureAwait(false);
+				await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{uow.Currency.GetUserCurrencyValue(user.Id)} {CurrencySign}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(0)]
 		public async Task Cash(ulong userId) {
-			await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{uow.Currency.GetUserCurrency(userId)} {CurrencySign}").ConfigureAwait(false);
+			await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{uow.Currency.GetUserCurrencyValue(userId)} {CurrencySign}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]

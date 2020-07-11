@@ -179,7 +179,7 @@ namespace Mitternacht.Modules.Level {
 				return;
 			}
 
-			if(!uow.Currency.TryUpdateState(user.Id, -moneyToSpend)) {
+			if(!uow.Currency.TryAddCurrencyValue(user.Id, -moneyToSpend)) {
 				if(user == Context.User)
 					await ReplyErrorLocalized("ttxp_error_no_money_self").ConfigureAwait(false);
 				else await ReplyErrorLocalized("ttxp_error_no_money_other", user.ToString()).ConfigureAwait(false);
