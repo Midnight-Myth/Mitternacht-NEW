@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using Mitternacht.Services.Database.Models;
+using System.Linq;
 
 namespace Mitternacht.Services.Database.Repositories {
 	public interface IRepository<T> where T : DbEntity {
 		T Get(int id);
-		IEnumerable<T> GetAll();
+		IQueryable<T> GetAll();
 
 		void Add(T obj);
 		void AddRange(params T[] objs);

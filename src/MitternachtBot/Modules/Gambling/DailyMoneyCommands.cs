@@ -37,10 +37,10 @@ namespace Mitternacht.Modules.Gambling {
 				var canReceiveDailyMoney = uow.DailyMoney.CanReceive(guildUser.Id);
 
 				if(canReceiveDailyMoney) {
-					var userRolesAll = guildUser.GetRoles().OrderBy(r => -r.Position).ToList();
+					var userRolesAll = guildUser.GetRoles().OrderBy(r => -r.Position);
 					var roleMoneysAll = uow.RoleMoney.GetAll();
-					var userRoles = userRolesAll.Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).OrderBy(r => -r.Position);
-					var roleMoneys = roleMoneysAll.Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).OrderByDescending(m => m.Priority).ToList();
+					var userRoles = userRolesAll.OrderBy(r => -r.Position).AsEnumerable().Where(r => roleMoneysAll.FirstOrDefault(m => m.RoleId == r.Id) != null).ToList();
+					var roleMoneys = roleMoneysAll.OrderByDescending(m => m.Priority).AsEnumerable().Where(m => userRolesAll.FirstOrDefault(r => r.Id == m.RoleId) != null).ToList();
 
 					if(!roleMoneys.Any())
 						await ReplyLocalized("dm_no_role").ConfigureAwait(false);
@@ -119,6 +119,7 @@ namespace Mitternacht.Modules.Gambling {
 				
 				var roleMoneys = uow.RoleMoney
 					.GetAll()
+					.ToList()
 					.OrderByDescending(rm => rm.Priority)
 					.ThenByDescending(rm => Context.Guild.GetRole(rm.RoleId)?.Position ?? 0)
 					.Skip(position - 1 <= 0 ? 0 : position - 1)
@@ -191,6 +192,7 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task DailyMoneyStatsAll() {
 				var stats = uow.DailyMoneyStats
 						.GetAll()
+						.ToList()
 						.GroupBy(dms => dms.UserId)
 						.ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
 
