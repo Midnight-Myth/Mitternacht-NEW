@@ -68,8 +68,8 @@ namespace Mitternacht.Modules.Utility {
 			public async Task UsernameHistory(ulong userId, int page = 1) {
 				var username = (await Context.Guild.GetUserAsync(userId))?.ToString() ?? userId.ToString();
 
-				var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId);
-				var usernames = uow.UsernameHistory.GetUsernamesDescending(userId);
+				var nicknames = uow.NicknameHistory.GetGuildUserNames(Context.Guild.Id, userId).ToList();
+				var usernames = uow.UsernameHistory.GetUsernamesDescending(userId).ToList();
 				var usernicknames = usernames.Concat(nicknames).OrderByDescending(u => u.DateSet).ToList();
 
 				if(!usernicknames.Any()) {

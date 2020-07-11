@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Mitternacht.Services.Database.Models.NicknameHistoryModel>
+
+<h4>UsernameHistory</h4>
+<hr />
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Server
+				</th>
+				<th>
+					Nickname
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.DateAdded)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.DateReplaced)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var nickname in Model) {
+				<tr>
+					<th>
+						<a asp-area="Guild" asp-controller="Stats" asp-action="Index" asp-route-guildId="@nickname.GuildId">@nickname.GuildId</a>
+					</th>
+					<td>
+						@nickname.ToString()
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => nickname.DateAdded)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => nickname.DateReplaced)
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

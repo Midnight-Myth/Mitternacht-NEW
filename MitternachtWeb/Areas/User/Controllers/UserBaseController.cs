@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MitternachtWeb.Controllers;
-using MitternachtWeb.Exceptions;
 using System;
 
 namespace MitternachtWeb.Areas.User.Controllers {
@@ -14,11 +13,11 @@ namespace MitternachtWeb.Areas.User.Controllers {
 
 		public override void OnActionExecuting(ActionExecutingContext context) {
 			if(RouteData.Values.TryGetValue("userId", out var userIdString)) {
-				RequestedUserId = ulong.Parse(userIdString.ToString());
-				RequestedSocketUser = Program.MitternachtBot.Client.GetUser(RequestedUserId);
-
-				if(RequestedSocketUser == null) {
-					throw new UserNotFoundException(RequestedUserId);
+				if(ulong.TryParse(userIdString.ToString(), out var userId)) {
+					RequestedUserId     = userId;
+					RequestedSocketUser = Program.MitternachtBot.Client.GetUser(RequestedUserId);
+				} else {
+					throw new ArgumentException("userId");
 				}
 			} else {
 				throw new ArgumentNullException("userId");

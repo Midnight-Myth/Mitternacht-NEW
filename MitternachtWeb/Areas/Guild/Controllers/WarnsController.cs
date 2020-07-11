@@ -21,17 +21,18 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					var user = Guild.GetUser(w.UserId);
 
 					return new Warn {
-						Id         = w.Id,
-						GuildId    = w.GuildId,
-						Guild      = Guild,
-						UserId     = w.UserId,
-						Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
-						AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
-						Forgiven   = w.Forgiven,
-						ForgivenBy = w.ForgivenBy,
-						WarnedBy   = w.Moderator,
-						WarnedAt   = w.DateAdded,
-						Reason     = w.Reason,
+						Id            = w.Id,
+						GuildId       = w.GuildId,
+						Guild         = Guild,
+						UserId        = w.UserId,
+						Username      = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
+						AvatarUrl     = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+						Forgiven      = w.Forgiven,
+						ForgivenBy    = w.ForgivenBy,
+						WarnedBy      = w.Moderator,
+						WarnedAt      = w.DateAdded,
+						Reason        = w.Reason,
+						CanBeForgiven = PermissionForgiveWarns,
 					};
 				}).ToList();
 
