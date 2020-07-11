@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Utility.Services {
 
 		public string RemindMessageFormat => _bcp.BotConfig.RemindMessageFormat;
 
-		public RemindService(DiscordSocketClient client, IBotConfigProvider bcp, DbService db, StartingGuildsService guilds) {
+		public RemindService(DiscordSocketClient client, IBotConfigProvider bcp, DbService db) {
 			_log    = LogManager.GetCurrentClassLogger();
 			_client = client;
 			_db     = db;
@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			_cancelAllToken  = cancelSource.Token;
 
 			using var uow = _db.UnitOfWork;
-			var reminders = uow.Reminders.GetRemindersForGuilds(guilds.ToArray()).ToList();
+			var reminders = uow.Reminders.GetRemindersForGuilds(client.Guilds.Select(g => g.Id).ToArray()).ToList();
 
 			foreach(var r in reminders) {
 				Task.Run(() => StartReminder(r));
