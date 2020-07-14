@@ -62,22 +62,31 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			[RequireUserPermission(GuildPermission.MuteMembers)]
 			[Priority(1)]
-			public async Task Mute(string time, IGuildUser user) {
+			public async Task Mute(IGuildUser user, string time) {
 				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?";
 				
 				var match = Regex.Match(time, timeRegex);
 
-				var days    = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
-				var hours   = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
-				var minutes = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
+				if(match.Success) {
+					var days    = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
+					var hours   = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
+					var minutes = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
 
-				var muteTime = days*24*60 + hours*60 + minutes;
-				try {
-					await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
-					await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
-				} catch(Exception e) {
-					_log.Warn(e);
-					await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
+					var muteTime = days*24*60 + hours*60 + minutes;
+					
+					if(muteTime == 0) {
+						await Mute(user).ConfigureAwait(false);
+					} else {
+						try {
+							await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
+							await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
+						} catch(Exception e) {
+							_log.Warn(e);
+							await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
+						}
+					}
+				} else {
+					await ReplyErrorLocalized("mute_error_timeformat", time).ConfigureAwait(false);
 				}
 			}
 
