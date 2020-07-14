@@ -171,7 +171,7 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task AntiList() {
-				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiRaidSetting).Include(x => x.AntiSpamSetting));
+				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiRaidSetting).Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels));
 				var antiSpamSetting = gc.AntiSpamSetting;
 				var antiRaidSetting = gc.AntiRaidSetting;
 
