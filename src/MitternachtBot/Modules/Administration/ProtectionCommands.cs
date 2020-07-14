@@ -53,7 +53,7 @@ namespace Mitternacht.Modules.Administration {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiRaidSetting));
 
 				if(gc.AntiRaidSetting != null) {
-					gc.AntiRaidSetting = null;
+					uow.Context.Remove(gc.AntiRaidSetting);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("prot_disable", "Anti-Raid").ConfigureAwait(false);
@@ -66,11 +66,18 @@ namespace Mitternacht.Modules.Administration {
 						return;
 					}
 
-					gc.AntiRaidSetting = new AntiRaidSetting {
-						Action = action,
-						Seconds = seconds,
-						UserThreshold = userThreshold,
-					};
+					if(gc.AntiRaidSetting != null) {
+						gc.AntiRaidSetting.Action = action;
+						gc.AntiRaidSetting.Seconds = seconds;
+						gc.AntiRaidSetting.UserThreshold = userThreshold;
+					} else {
+						gc.AntiRaidSetting = new AntiRaidSetting {
+							Action = action,
+							Seconds = seconds,
+							UserThreshold = userThreshold,
+						};
+					}
+					
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiRaidString(gc.AntiRaidSetting)}", GetText("prot_enable", "Anti-Raid")).ConfigureAwait(false);
@@ -87,7 +94,7 @@ namespace Mitternacht.Modules.Administration {
 				if(gc.AntiSpamSetting != null) {
 					Service.ResetSpamForGuild(Context.Guild.Id);
 
-					gc.AntiSpamSetting = null;
+					uow.Context.Remove(gc.AntiSpamSetting);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("prot_disable", "Anti-Spam").ConfigureAwait(false);
@@ -117,12 +124,19 @@ namespace Mitternacht.Modules.Administration {
 				}
 
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.AntiSpamSetting));
-
-				gc.AntiSpamSetting = new AntiSpamSetting {
-					Action = action,
-					MessageThreshold = messageCount,
-					MuteTime = time,
-				};
+				
+				if(gc.AntiSpamSetting != null) {
+					gc.AntiSpamSetting.Action = action;
+					gc.AntiSpamSetting.MessageThreshold = messageCount;
+					gc.AntiSpamSetting.MuteTime = time;
+				} else {
+					gc.AntiSpamSetting = new AntiSpamSetting {
+						Action = action,
+						MessageThreshold = messageCount,
+						MuteTime = time,
+					};
+				}
+				
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync($"{Context.User.Mention} {GetAntiSpamString(gc.AntiSpamSetting)}", GetText("prot_enable", "Anti-Spam")).ConfigureAwait(false);
