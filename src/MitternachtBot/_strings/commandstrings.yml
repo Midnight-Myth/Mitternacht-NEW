@@ -176,8 +176,9 @@
   -        money
   -        balance
   -        "$"
-  desc:    Check how much currency a person has. (Defaults to yourself)
-  usage:   "`{0}$` or `{0}$ @SomeGuy`"
+  -        "€"
+  desc:    Zeigt den eigenen oder jemand anderes Kontostand an.
+  usage:   "`{0}$ [Nutzer]`"
 - name:    greet
   cmd:     greet
   aliases: []
@@ -902,9 +903,8 @@
   usage:   "`{0}typestart`"
 - name:    mute
   cmd:     mute
-  aliases: []
-  desc:    Mutes a mentioned user both from speaking and chatting. You can also specify time in minutes (up to 1440) for how long the user should be muted.
-  usage:   "`{0}mute @Someone` or `{0}mute 30 @Someone`"
+  desc:    Mutet einen Nutzer auf (un-)bestimmte Zeit.
+  usage:   "`{0}mute @Til#4215` or `{0}mute @Til#4215 2d4h16min`"
 - name:    queue
   cmd:     queue
   aliases:

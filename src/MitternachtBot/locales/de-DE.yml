@@ -100,6 +100,7 @@ administration:
   msg_update:                                    'Nachricht in #{0} aktualisiert.'
   must_be_in_voice:                              Du musst auf diesem Server in einem Sprachkanal sein!
   mute_error:                                    Ich habe wahrscheinlich die benötigten Rechte nicht.
+  mute_error_timeformat:                         Das angegebene Zeitformat `{0}` ist falsch.
   mute_role_set:                                 Neue Mute-Rolle gesetzt.
   muted_pl:                                      wurden stummgeschaltet
   muted_sn:                                      wurde stummgeschaltet
