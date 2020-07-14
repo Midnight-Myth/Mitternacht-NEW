@@ -152,7 +152,7 @@ namespace Mitternacht.Modules.Administration {
 					return;
 				}
 
-				if(antiSpamSetting.IgnoredChannels.Any(c => c.ChannelId == Context.Channel.Id)) {
+				if(!antiSpamSetting.IgnoredChannels.Any(c => c.ChannelId == Context.Channel.Id)) {
 					antiSpamSetting.IgnoredChannels.Add(new AntiSpamIgnore {
 						ChannelId = Context.Channel.Id
 					});
@@ -161,7 +161,7 @@ namespace Mitternacht.Modules.Administration {
 
 					await ReplyConfirmLocalized("spam_ignore", "Anti-Spam").ConfigureAwait(false);
 				} else {
-					antiSpamSetting.IgnoredChannels.RemoveWhere(x => x.ChannelId == Context.Channel.Id);
+					uow.Context.RemoveRange(antiSpamSetting.IgnoredChannels.Where(x => x.ChannelId == Context.Channel.Id).ToArray());
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("spam_not_ignore", "Anti-Spam").ConfigureAwait(false);
