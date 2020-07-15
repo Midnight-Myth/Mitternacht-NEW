@@ -27,7 +27,7 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 
 		public bool TryAddCurrencyValue(ulong userId, long change) {
 			var currency = GetOrCreate(userId);
-			var canApplyChange = change != 0 || change > 0 || currency.Amount + change >= 0;
+			var canApplyChange = change != 0 && (change > 0 || currency.Amount + change >= 0);
 
 			currency.Amount += canApplyChange ? change : 0;
 
