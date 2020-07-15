@@ -169,32 +169,24 @@ namespace Mitternacht.Modules.Level {
 		[RequireContext(ContextType.Guild)]
 		public async Task TurnToXp(long moneyToSpend, [Remainder] IUser user = null) {
 			user = user != null && _creds.IsOwner(Context.User) ? user : Context.User;
-			if(moneyToSpend < 0) {
+			
+			if(moneyToSpend >= 0) {
+				if(moneyToSpend > 0) {
+					if(uow.Currency.TryAddCurrencyValue(user.Id, -moneyToSpend)) {
+						var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id).TurnToXpMultiplier);
+						uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
+						await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+						await ReplyConfirmLocalized(user == Context.User ? "ttxp_turned_self" : "ttxp_turned_other", moneyToSpend, CurrencySign, xp, user.ToString()).ConfigureAwait(false);
+					} else {
+						await ReplyErrorLocalized(user == Context.User ? "ttxp_error_no_money_self" : "ttxp_error_no_money_other", user.ToString()).ConfigureAwait(false);
+					}
+				} else {
+					await ReplyErrorLocalized("ttxp_error_zero_value", CurrencySign).ConfigureAwait(false);
+				}
+			} else {
 				await ReplyErrorLocalized("ttxp_error_negative_value").ConfigureAwait(false);
-				return;
 			}
-
-			if(moneyToSpend == 0) {
-				await ReplyErrorLocalized("ttxp_error_zero_value", CurrencySign).ConfigureAwait(false);
-				return;
-			}
-
-			if(!uow.Currency.TryAddCurrencyValue(user.Id, -moneyToSpend)) {
-				if(user == Context.User)
-					await ReplyErrorLocalized("ttxp_error_no_money_self").ConfigureAwait(false);
-				else await ReplyErrorLocalized("ttxp_error_no_money_other", user.ToString()).ConfigureAwait(false);
-				return;
-			}
-
-			var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id).TurnToXpMultiplier);
-			uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
-			if(user == Context.User)
-				await ReplyConfirmLocalized("ttxp_turned_self", moneyToSpend, CurrencySign, xp)
-					.ConfigureAwait(false);
-			else
-				await ReplyConfirmLocalized("ttxp_turned_other", user.ToString(), moneyToSpend, CurrencySign, xp)
-					.ConfigureAwait(false);
-			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 	}
 }

@@ -607,7 +607,7 @@ level:
   ttxp_error_no_money_other:                     "{0} hat nicht genug Geld."
   ttxp_error_no_money_self:                      Du hast nicht genug Geld.
   ttxp_error_zero_value:                         0 {0} sind 0 XP!
-  ttxp_turned_other:                             Dem Nutzer {0} wurden {1}{2} in {3} XP umgewandelt.
+  ttxp_turned_other:                             Dem Nutzer {3} wurden {0}{1} in {2} XP umgewandelt.
   ttxp_turned_self:                              "{0}{1} wurden in {2} XP umgewandelt."
 minecraft:                                       
   apistatus_title:                               Status der Mojang-APIs
