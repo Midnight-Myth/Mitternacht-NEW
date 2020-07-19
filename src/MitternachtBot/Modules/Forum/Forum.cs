@@ -7,7 +7,6 @@ using GommeHDnetForumAPI.Exceptions;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Forum {
@@ -18,13 +17,15 @@ namespace Mitternacht.Modules.Forum {
 			this.uow = uow;
 		}
 
-		[MitternachtCommand, Usage, Description, Aliases, OwnerOnly]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[OwnerOnly]
 		public async Task ReinitForum() {
 			Service.InitForumInstance();
 			await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
 		}
 
-		[MitternachtCommand, Usage, Description, Aliases, RequireContext(ContextType.Guild)]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		public async Task UserInfoForum(IGuildUser user = null) {
 			user ??= Context.User as IGuildUser;
 			if(user == null)
@@ -54,11 +55,15 @@ namespace Mitternacht.Modules.Forum {
 			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 		}
 
-		[MitternachtCommand, Usage, Description, Aliases, Priority(0), RequireContext(ContextType.Guild)]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[Priority(0)]
+		[RequireContext(ContextType.Guild)]
 		public async Task ForumUserInfo(string username)
 			=> await PrivateForumUserInfoHandler(username).ConfigureAwait(false);
 
-		[MitternachtCommand, Usage, Description, Aliases, Priority(1), RequireContext(ContextType.Guild)]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[Priority(1)]
+		[RequireContext(ContextType.Guild)]
 		public async Task ForumUserInfo(long userId)
 			=> await PrivateForumUserInfoHandler(userId: userId).ConfigureAwait(false);
 
