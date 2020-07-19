@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -7,7 +6,6 @@ using GommeHDnetForumAPI.Exceptions;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Forum {
@@ -18,17 +16,17 @@ namespace Mitternacht.Modules.Forum {
 			this.uow = uow;
 		}
 
-		[MitternachtCommand, Usage, Description, Aliases, OwnerOnly]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[OwnerOnly]
 		public async Task ReinitForum() {
 			Service.InitForumInstance();
 			await ConfirmLocalized("reinit_forum").ConfigureAwait(false);
 		}
 
-		[MitternachtCommand, Usage, Description, Aliases, RequireContext(ContextType.Guild)]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		public async Task UserInfoForum(IGuildUser user = null) {
-			user ??= Context.User as IGuildUser;
-			if(user == null)
-				return;
+			user ??= (IGuildUser)Context.User;
 
 			UserInfo uinfo = null;
 			var forumId = uow.VerifiedUsers.GetVerifiedUser(Context.Guild.Id, user.Id)?.ForumUserId;
@@ -36,70 +34,71 @@ namespace Mitternacht.Modules.Forum {
 				try {
 					uinfo = await Service.Forum.GetUserInfo(forumId.Value).ConfigureAwait(false);
 				} catch(UserNotFoundException) {
-					(await ReplyErrorLocalized("forum_user_not_existing", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
+					await ReplyErrorLocalized("forum_user_not_existing", user.ToString()).ConfigureAwait(false);
 					return;
 				} catch(UserProfileAccessException) {
-					(await ReplyErrorLocalized("forum_user_not_seeable", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
+					await ReplyErrorLocalized("forum_user_not_seeable", user.ToString()).ConfigureAwait(false);
 					return;
-				} catch(Exception) { /*ignore other exceptions*/ }
+				} catch { }
 			}
 
-			if(uinfo == null) {
-				(await ReplyErrorLocalized("forum_user_not_accessible", user.ToString()).ConfigureAwait(false)).DeleteAfter(60);
-				return;
+			if(uinfo != null) {
+				var embed = ForumUserInfoBuilder(uinfo).WithTitle(GetText("forumuserinfo_title", user.ToString()));
+
+				await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+			} else {
+				await ReplyErrorLocalized("forum_user_not_accessible", user.ToString()).ConfigureAwait(false);
 			}
-
-			var embed = ForumUserInfoBuilder(uinfo).WithTitle(GetText("forumuserinfo_title", user.ToString()));
-
-			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 		}
 
-		[MitternachtCommand, Usage, Description, Aliases, Priority(0), RequireContext(ContextType.Guild)]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[Priority(0)]
+		[RequireContext(ContextType.Guild)]
 		public async Task ForumUserInfo(string username)
 			=> await PrivateForumUserInfoHandler(username).ConfigureAwait(false);
 
-		[MitternachtCommand, Usage, Description, Aliases, Priority(1), RequireContext(ContextType.Guild)]
+		[MitternachtCommand, Usage, Description, Aliases]
+		[Priority(1)]
+		[RequireContext(ContextType.Guild)]
 		public async Task ForumUserInfo(long userId)
 			=> await PrivateForumUserInfoHandler(userId: userId).ConfigureAwait(false);
 
 		private async Task PrivateForumUserInfoHandler(string username = null, long? userId = null) {
-			if(username == null && !userId.HasValue) {
-				(await ReplyErrorLocalized("dev_failed").ConfigureAwait(false)).DeleteAfter(60);
-				return;
+			if(username != null || userId.HasValue) {
+				var      userText = userId != null ? userId.Value.ToString() : username;
+				UserInfo uinfo    = null;
+				try {
+					uinfo = userId.HasValue ? await Service.Forum.GetUserInfo(userId.Value).ConfigureAwait(false) : await Service.Forum.GetUserInfo(username).ConfigureAwait(false);
+				} catch(UserNotFoundException) {
+					await ReplyErrorLocalized("forum_user_not_existing", userText).ConfigureAwait(false);
+					return;
+				} catch(UserProfileAccessException) {
+					await ReplyErrorLocalized("forum_user_not_seeable", userText).ConfigureAwait(false);
+					return;
+				} catch { }
+
+				if(uinfo != null) {
+					var embed = ForumUserInfoBuilder(uinfo);
+					var verifiedUserId = uow.VerifiedUsers.GetVerifiedUser(Context.Guild.Id, uinfo.Id)?.UserId;
+					if(verifiedUserId != null) {
+						var verifiedUser = await Context.Guild.GetUserAsync(verifiedUserId.Value);
+						embed.WithTitle(GetText("forumuserinfo_title", verifiedUser?.ToString() ?? verifiedUserId.ToString()));
+					}
+
+					await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
+				} else {
+					await ReplyErrorLocalized("forum_user_not_accessible", userText).ConfigureAwait(false);
+				}
+			} else {
+				await ReplyErrorLocalized("dev_failed").ConfigureAwait(false);
 			}
-
-			var      userText = userId != null ? userId.Value.ToString() : username;
-			UserInfo uinfo    = null;
-			try {
-				uinfo = userId.HasValue ? await Service.Forum.GetUserInfo(userId.Value).ConfigureAwait(false) : await Service.Forum.GetUserInfo(username).ConfigureAwait(false);
-			} catch(UserNotFoundException) {
-				(await ReplyErrorLocalized("forum_user_not_existing", userText).ConfigureAwait(false)).DeleteAfter(60);
-				return;
-			} catch(UserProfileAccessException) {
-				(await ReplyErrorLocalized("forum_user_not_seeable", userText).ConfigureAwait(false)).DeleteAfter(60);
-				return;
-			} catch(Exception) { /*ignore other exceptions*/ }
-
-			if(uinfo == null) {
-				(await ReplyErrorLocalized("forum_user_not_accessible", userText).ConfigureAwait(false)).DeleteAfter(60);
-				return;
-			}
-
-			var embed = ForumUserInfoBuilder(uinfo);
-			var verifiedUserId = uow.VerifiedUsers.GetVerifiedUser(Context.Guild.Id, uinfo.Id)?.UserId;
-			if(verifiedUserId != null) {
-				var verifiedUser = await Context.Guild.GetUserAsync(verifiedUserId.Value);
-				embed.WithTitle(GetText("forumuserinfo_title", verifiedUser?.ToString() ?? verifiedUserId.ToString()));
-			}
-
-			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 		}
 
 		private EmbedBuilder ForumUserInfoBuilder(UserInfo uinfo) {
 			var embed = new EmbedBuilder()
 						.WithOkColor()
 						.WithThumbnailUrl(uinfo.AvatarUrl)
-						.AddField(GetText("name"), $"[{uinfo.Username}]({uinfo.UrlPath})", true)
+						.AddField(GetText("name"), $"[{uinfo.Username}]({uinfo.Url})", true)
 						.AddField(GetText("id"), uinfo.Id, true)
 						.AddField(GetText("gender"), uinfo.Gender.ToString(), true);
 
@@ -121,12 +120,13 @@ namespace Mitternacht.Modules.Forum {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task ForumInfo() {
-			if(Service.LoggedIn)
+			if(Service.LoggedIn) {
 				await ConfirmLocalized("foruminfo_logged_in", $"[{Service.Forum.SelfUser.Username}]({Service.Forum.SelfUser.UrlPath})").ConfigureAwait(false);
-			else if(Service.HasForumInstance)
+			} else if(Service.HasForumInstance) {
 				await ConfirmLocalized("foruminfo_instance").ConfigureAwait(false);
-			else
+			} else {
 				await ConfirmLocalized("foruminfo_no_instance").ConfigureAwait(false);
+			}
 		}
 	}
 }
