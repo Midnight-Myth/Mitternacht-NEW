@@ -7,7 +7,6 @@ using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 using NCalc;
@@ -38,35 +37,17 @@ namespace Mitternacht.Modules.Utility {
 				}
 			}
 
-			private static void Expr_EvaluateParameter(string name, ParameterArgs args) {
-				args.Result = name.Equals("pi", StringComparison.OrdinalIgnoreCase)
-					? Math.PI
-					: name.Equals("e", StringComparison.OrdinalIgnoreCase)
-					? Math.E
-					: args.Result;
-			}
+			private static readonly MethodInfo[] CustomEvaluatorFunctions = (from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
+																			 where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object)
+																				&& m.GetParameters().Length == 3
+																				&& m.GetParameters()[0].ParameterType == typeof(ICommandContext)
+																				&& m.GetParameters()[1].ParameterType == typeof(IUnitOfWork)
+																				&& m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
+																			 select m).ToArray();
 
-			private void Expr_EvaluateFunction(string name, FunctionArgs args) {
-				// All methods have to be in CustomNCalcEvaluations and match the following template:
-				// public static object calcfunctionname(ICommandContext context, IUnitOfWork uow, FunctionArgs args){ ... }
-				var functions = from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
-								where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object)
-									&& m.GetParameters().Length == 3
-									&& m.GetParameters()[0].ParameterType == typeof(ICommandContext)
-									&& m.GetParameters()[1].ParameterType == typeof(IUnitOfWork)
-									&& m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
-								select m;
-
-				var method = functions.FirstOrDefault(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-				var result = method?.Invoke(null, new object[] {Context, uow, args});
-
-				if(result != null)
-					args.Result = result;
-			}
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			public async Task CalcOps() {
-				var selection = typeof(Math).GetTypeInfo()
+			// All methods have to be in CustomNCalcEvaluations and match the following template:
+			// public static object calcfunctionname(ICommandContext context, IUnitOfWork uow, FunctionArgs args){ ... }
+			private static readonly string[] MathMethodsNames = typeof(Math).GetTypeInfo()
 					.GetMethods()
 					.Select(x => x.Name)
 					.Distinct(StringComparer.OrdinalIgnoreCase)
@@ -76,22 +57,32 @@ namespace Mitternacht.Modules.Utility {
 						"GetHashCode",
 						"GetType"
 					}).ToArray();
-				
-				var functions = (from m in typeof(CustomNCalcEvaluations).GetTypeInfo().GetMethods()
-								 where m.IsStatic && m.IsPublic && m.ReturnType == typeof(object) &&
-									   m.GetParameters().Length == 3 &&
-									   m.GetParameters()[0].ParameterType == typeof(ICommandContext) &&
-									   m.GetParameters()[1].ParameterType == typeof(DbService) &&
-									   m.GetParameters()[2].ParameterType == typeof(FunctionArgs)
-								 select m.Name).ToArray();
 
+			private static void Expr_EvaluateParameter(string name, ParameterArgs args) {
+				args.Result = name.Equals("pi", StringComparison.OrdinalIgnoreCase)
+					? Math.PI
+					: name.Equals("e", StringComparison.OrdinalIgnoreCase)
+					? Math.E
+					: args.Result;
+			}
+
+			private void Expr_EvaluateFunction(string name, FunctionArgs args) {
+				var method = CustomEvaluatorFunctions.FirstOrDefault(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+				var result = method?.Invoke(null, new object[] {Context, uow, args});
+
+				if(result != null) {
+					args.Result = result;
+				}
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			public async Task CalcOps() {
 				var eb = new EmbedBuilder().WithOkColor()
-					.WithTitle(GetText("calcops", Prefix));
-				if(selection.Any())
-					eb.AddField("Math", string.Join(", ", selection));
-				if(functions.Any())
-					eb.AddField("Custom", string.Join(", ", functions));
-				await Context.Channel.EmbedAsync(eb);
+					.WithTitle(GetText("calcops", Prefix))
+					.AddField("Math", string.Join(", ", MathMethodsNames))
+					.AddField("Custom", string.Join(", ", CustomEvaluatorFunctions.Select(m => m.Name).ToArray()));
+
+				await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -115,10 +106,10 @@ namespace Mitternacht.Modules.Utility {
 
 					if(args.Parameters.Length == 1) {
 						var parameter = args.Parameters[0];
-						
+
 						if(parameter.ParsedExpression == null)
 							parameter.Evaluate();
-						
+
 						var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
 						user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
 					}
@@ -133,7 +124,7 @@ namespace Mitternacht.Modules.Utility {
 			public static object UMoney(ICommandContext context, IUnitOfWork uow, FunctionArgs args) {
 				if(args.Parameters.Length <= 1) {
 					var user = context.User as IGuildUser;
-					
+
 					if(args.Parameters.Length == 1) {
 						var parameter = args.Parameters[0];
 
@@ -144,7 +135,7 @@ namespace Mitternacht.Modules.Utility {
 						var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
 						user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
 					}
-					
+
 					return user == null ? null : (object)uow.Currency.GetUserCurrencyValue(user.Id);
 				} else {
 					return null;
@@ -155,13 +146,13 @@ namespace Mitternacht.Modules.Utility {
 			public static object UXp(ICommandContext context, IUnitOfWork uow, FunctionArgs args) {
 				if(args.Parameters.Length <= 1) {
 					var user = context.User as IGuildUser;
-					
+
 					if(args.Parameters.Length == 1) {
 						var parameter = args.Parameters[0];
-						
+
 						if(parameter.ParsedExpression == null)
 							parameter.Evaluate();
-						
+
 						var expr = parameter.ParsedExpression.ToString().Trim('[', ']', '\'', ' ');
 						user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
 					}
@@ -177,10 +168,10 @@ namespace Mitternacht.Modules.Utility {
 			public static object LevelXp(ICommandContext context, IUnitOfWork uow, FunctionArgs args) {
 				if(args.Parameters.Length >= 1 && args.Parameters.Length <= 2) {
 					var arg1 = args.Parameters[0];
-					
+
 					if(arg1.ParsedExpression == null)
 						arg1.Evaluate();
-					
+
 					var expr = arg1.ParsedExpression.ToString();
 
 					if(int.TryParse(expr, out var lvl1)) {
