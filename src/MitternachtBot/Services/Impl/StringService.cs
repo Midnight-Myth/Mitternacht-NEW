@@ -49,28 +49,28 @@ namespace Mitternacht.Services.Impl {
 		}
 
 		private string GetString(string moduleName, string key, CultureInfo cultureInfo)
-			=> _responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var moduleStrings) && moduleStrings.TryGetValue(moduleName, out var strings) && strings.TryGetValue(key, out var val) ? val : null;
+			=> _responseStrings.TryGetValue(cultureInfo.Name.ToLowerInvariant(), out var moduleStrings) && moduleStrings.TryGetValue(moduleName.ToLowerInvariant(), out var strings) && strings.TryGetValue(key, out var val) ? val : null;
 
-		public string GetText(string lowerModuleTypeName, string key, ulong? guildId, params object[] replacements)
-			=> GetText(lowerModuleTypeName, key, _localization.GetCultureInfo(guildId), replacements);
+		public string GetText(string moduleTypeName, string key, ulong? guildId, params object[] replacements)
+			=> GetText(moduleTypeName, key, _localization.GetCultureInfo(guildId), replacements);
 
-		public string GetText(string lowerModuleTypeName, string key, CultureInfo cultureInfo) {
-			var text = GetString(lowerModuleTypeName, key, cultureInfo);
+		public string GetText(string moduleTypeName, string key, CultureInfo cultureInfo) {
+			var text = GetString(moduleTypeName, key, cultureInfo);
 
 			if(!string.IsNullOrWhiteSpace(text)) return text;
 			
-			_logger.Warn($"Key {lowerModuleTypeName}.{key} is missing from {cultureInfo} response strings. PLEASE REPORT THIS.");
-			UnknownKeyRequested(lowerModuleTypeName, key, cultureInfo);
+			_logger.Warn($"Key {moduleTypeName}.{key} is missing from {cultureInfo} response strings. PLEASE REPORT THIS.");
+			UnknownKeyRequested(moduleTypeName, key, cultureInfo);
 
-			text = GetString(lowerModuleTypeName, key, _fallbackCultureInfo) ?? $"Error: Key {lowerModuleTypeName}.{key} not found!";
-			return !string.IsNullOrWhiteSpace(text) ? text : $"I can't tell you if the command is executed, because there was an error printing out the response. Key '{lowerModuleTypeName}.{key}' is missing from resources. Please report this.";
+			text = GetString(moduleTypeName, key, _fallbackCultureInfo) ?? $"Error: Key {moduleTypeName}.{key} not found!";
+			return !string.IsNullOrWhiteSpace(text) ? text : $"I can't tell you if the command is executed, because there was an error printing out the response. Key '{moduleTypeName}.{key}' is missing from resources. Please report this.";
 		}
 
-		public string GetText(string lowerModuleTypeName, string key, CultureInfo cultureInfo, params object[] replacements) {
+		public string GetText(string moduleTypeName, string key, CultureInfo cultureInfo, params object[] replacements) {
 			try {
-				return string.Format(GetText(lowerModuleTypeName, key, cultureInfo), replacements);
+				return string.Format(GetText(moduleTypeName, key, cultureInfo), replacements);
 			} catch(FormatException) {
-				return $"I can't tell you if the command is executed, because there was an error printing out the response. Key '{lowerModuleTypeName}.{key}' is not properly formatted. Please report this.";
+				return $"I can't tell you if the command is executed, because there was an error printing out the response. Key '{moduleTypeName}.{key}' is not properly formatted. Please report this.";
 			}
 		}
 	}
