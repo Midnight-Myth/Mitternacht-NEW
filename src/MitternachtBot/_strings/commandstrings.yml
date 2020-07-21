@@ -490,6 +490,7 @@
   cmd:     msgxprestrictions
   aliases:
   -        msgxpr
+  -        noxpchannels
   desc:    Zeigt alle Textkanäle, die auf der MessageXP Blacklist stehen
   usage:   "`{0}msgxprestrictions`"
 - name:    setnick
