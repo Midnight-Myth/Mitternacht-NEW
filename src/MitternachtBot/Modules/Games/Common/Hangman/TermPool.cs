@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Games.Common.Hangman {
 				obj.Word = obj.Word.Trim().ToLowerInvariant();
 				return obj;
 			} else {
-				throw new TermNotFoundException();
+				throw new TermNotFoundException(type);
 			}
 		}
 	}
