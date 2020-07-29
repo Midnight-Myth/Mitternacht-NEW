@@ -11,7 +11,7 @@ namespace Mitternacht.Modules.Games.Common.Hangman
 {
     public class TermPool
     {
-        const string termsPath = "data/hangman3.json";
+        const string termsPath = "data/word_images.json";
         public static IReadOnlyDictionary<string, HangmanObject[]> Data { get; } = new Dictionary<string, HangmanObject[]>();
         static TermPool()
         {
