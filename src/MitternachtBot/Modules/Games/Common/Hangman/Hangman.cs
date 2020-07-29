@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Mitternacht.Extensions;
 
 namespace Mitternacht.Modules.Games.Common.Hangman {
 	public class Hangman : IDisposable {
