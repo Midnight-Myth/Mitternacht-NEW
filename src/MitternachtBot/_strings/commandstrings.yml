@@ -291,7 +291,8 @@
   usage:   "`{0}rar @User`"
 - name:    warnlog
   cmd:     warnlog
-  aliases: []
+  aliases:
+  -        wl
   desc:    See a list of warnings of a certain user.
   usage:   "`{0}warnlog @b1nzy`"
 - name:    patreonrewardsreload
@@ -490,6 +491,7 @@
   cmd:     msgxprestrictions
   aliases:
   -        msgxpr
+  -        noxpchannels
   desc:    Zeigt alle Textkanäle, die auf der MessageXP Blacklist stehen
   usage:   "`{0}msgxprestrictions`"
 - name:    setnick
@@ -2121,7 +2123,8 @@
   usage:   "`{0}birthdayset <dd.MM.yyyy oder dd.MM.>`"
 - name:    birthdayget
   cmd:     birthday
-  aliases: []
+  aliases:
+  -        bday
   desc:    Zeigt den Geburtstag eines Users an.
   usage:   "`{0}birthday [user]`"
 - name:    birthdayremove
