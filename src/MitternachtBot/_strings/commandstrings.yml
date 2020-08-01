@@ -2123,7 +2123,8 @@
   usage:   "`{0}birthdayset <dd.MM.yyyy oder dd.MM.>`"
 - name:    birthdayget
   cmd:     birthday
-  aliases: []
+  aliases:
+  -        bday
   desc:    Zeigt den Geburtstag eines Users an.
   usage:   "`{0}birthday [user]`"
 - name:    birthdayremove
