@@ -26,14 +26,9 @@ namespace Mitternacht.Modules.Games.Common.Hangman {
 				type = _termTypes[rng.Next(0, _termTypes.Length - 1)];
 			}
 
-			if(Data.TryGetValue(type.ToString(), out var termTypes) && termTypes.Length != 0) {
-				var obj = termTypes[rng.Next(0, termTypes.Length)];
-
-				obj.Word = obj.Word.Trim().ToLowerInvariant();
-				return obj;
-			} else {
-				throw new TermNotFoundException(type);
-			}
+			return Data.TryGetValue(type.ToString(), out var termTypes) && termTypes.Length != 0
+				? termTypes[rng.Next(0, termTypes.Length)]
+				: throw new TermNotFoundException(type);
 		}
 	}
 }
