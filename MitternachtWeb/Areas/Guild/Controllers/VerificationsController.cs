@@ -1,4 +1,5 @@
-﻿using GommeHDnetForumAPI;
+﻿using Discord;
+using GommeHDnetForumAPI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services;
@@ -26,8 +27,9 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						Username        = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(v.UserId).FirstOrDefault()?.ToString() ?? "-",
 						AvatarUrl       = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
 						ForumProfileUrl = $"{ForumPaths.MembersUrl}{v.ForumUserId}",
+						Roles           = user?.Roles.Where(r => !r.IsEveryone).OrderByDescending(r => r.Position).ToArray() ?? new IRole[0],
 					};
-				}).ToList();
+				}).OrderByDescending(m => m.Roles.FirstOrDefault(r => r.IsHoisted)?.Position ?? 0).ThenBy(m => m.Username).ToList();
 
 				return View(verifications);
 			} else {
@@ -47,9 +49,9 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						UserId    = gu.Id,
 						Username  = gu.ToString(),
 						AvatarUrl = gu.GetAvatarUrl() ?? gu.GetDefaultAvatarUrl(),
-						Roles     = gu.Roles.ToArray(),
+						Roles     = gu.Roles.Where(r => !r.IsEveryone).OrderByDescending(r => r.Position).ToArray(),
 					};
-				}).ToList();
+				}).OrderByDescending(m => m.Roles.FirstOrDefault(r => r.IsHoisted)?.Position ?? 0).ThenBy(m => m.Username).ToList();
 
 				return View(unverifiedUsers);
 			} else {
