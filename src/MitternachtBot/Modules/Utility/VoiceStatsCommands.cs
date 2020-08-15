@@ -18,7 +18,7 @@ namespace Mitternacht.Modules.Utility {
 			[MitternachtCommand, Description, Usage, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task VoiceStats(IGuildUser user = null) {
-				user = user ?? Context.User as IGuildUser;
+				user ??= Context.User as IGuildUser;
 
 				if(uow.VoiceChannelStats.TryGetTime(user.GuildId, user.Id, out var time)) {
 					var timespan = TimeSpan.FromSeconds(time);

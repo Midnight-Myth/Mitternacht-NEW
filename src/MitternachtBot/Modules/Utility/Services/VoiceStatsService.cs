@@ -8,7 +8,6 @@ namespace Mitternacht.Modules.Utility.Services {
 	public class VoiceStatsService : IMService {
 		private readonly DbService _db;
 		private readonly DiscordSocketClient _client;
-		private Task _writeStats;
 		private readonly VoiceStateTimeHelper _timeHelper;
 
 		public VoiceStatsService(DiscordSocketClient client, DbService db) {
@@ -27,7 +26,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			_client.JoinedGuild += ClientJoinedGuild;
 			_client.LeftGuild += ClientLeftGuild;
 
-			_writeStats = Task.Run(async () => {
+			_ = Task.Run(async () => {
 				while(true) {
 					try {
 						var usertimes = _timeHelper.GetUserTimes();
