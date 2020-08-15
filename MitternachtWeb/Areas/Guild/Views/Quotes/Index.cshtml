@@ -6,7 +6,7 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th></th>
+				<th class="discord-avatar"></th>
 				<th>
 					@Html.DisplayNameFor(model => model.Authorname)
 				</th>
@@ -25,9 +25,9 @@
 		<tbody>
 			@foreach(var quote in Model) {
 				<tr>
-					<td>
+					<td class="discord-avatar">
 						@if(!string.IsNullOrWhiteSpace(quote.AvatarUrl)) {
-							<img class="discord-avatar" src="@quote.AvatarUrl" alt="Avatar" />
+							<img src="@quote.AvatarUrl" alt="Avatar" />
 						}
 					</td>
 					<td>

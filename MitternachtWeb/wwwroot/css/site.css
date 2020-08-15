@@ -70,11 +70,13 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-img.discord-avatar {
+.discord-avatar {
     height:        1.5em;
-    border-radius: 50%;
+    width:         1.5em;
 }
 
-img.discord-avatar {
-    height: 1.5em;
+.discord-avatar img {
+    height:        1.5em;
+    width:         1.5em;
+    border-radius: 50%;
 }
