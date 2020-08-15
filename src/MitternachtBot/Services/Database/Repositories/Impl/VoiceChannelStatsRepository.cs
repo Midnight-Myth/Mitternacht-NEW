@@ -42,6 +42,6 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 		}
 
 		public bool HasTrackedTime(ulong guildId, ulong userId)
-			=> !_set.Any(v => v.UserId == userId && v.GuildId == guildId);
+			=> _set.Any(v => v.UserId == userId && v.GuildId == guildId);
 	}
 }
