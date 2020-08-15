@@ -16,7 +16,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach(var verification in Model.OrderByDescending(m => m.Roles.Length).ThenBy(m => m.Username)) {
+			@foreach(var verification in Model) {
 				<tr>
 					<td class="discord-avatar">
 						@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
