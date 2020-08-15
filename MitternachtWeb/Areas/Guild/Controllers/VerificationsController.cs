@@ -47,7 +47,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						UserId    = gu.Id,
 						Username  = gu.ToString(),
 						AvatarUrl = gu.GetAvatarUrl() ?? gu.GetDefaultAvatarUrl(),
-						Roles     = gu.Roles.ToArray(),
+						Roles     = gu.Roles.Where(r => !r.IsEveryone).ToArray(),
 					};
 				}).ToList();
 
