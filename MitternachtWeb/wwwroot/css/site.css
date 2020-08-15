@@ -80,3 +80,36 @@ body {
     width:         1.5em;
     border-radius: 50%;
 }
+
+.discord-roles {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.discord-roles .discord-role {
+    font-size:     12px;
+    font-weight:   500;
+    border:        1px solid;
+    border-radius: 11px;
+    height:        22px;
+    margin:        0 4px 4px 0;
+    padding:       4px;
+    align-items:   center;
+    display:       flex;
+}
+
+.discord-roles .discord-role .discord-role-circle {
+    border-radius: 50%;
+    width:         12px;
+    height:        12px;
+    padding:       0;
+    margin-right:  4px;
+}
+
+.discord-roles .discord-role .discord-role-name {
+    max-width:     200px;
+    white-space:   nowrap;
+    text-overflow: ellipsis;
+    overflow:      hidden;
+    margin-right:  4px;
+}

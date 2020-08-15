@@ -1,0 +1,14 @@
+﻿@model Discord.IRole[]
+
+<div style="flex: 1 1 auto; position: relative;">
+	<div class="discord-roles">
+		@foreach(var item in Model) {
+			<div class="discord-role" style="border-color: @($"rgba({item.Color.R}, {item.Color.G}, {item.Color.B}, 0.6)");">
+				<div class="discord-role-circle" style="background-color: @($"rgb({item.Color.R}, {item.Color.G}, {item.Color.B})")"></div>
+				<div class="discord-role-name">
+					@item.Name
+				</div>
+			</div>
+		}
+	</div>
+</div>
