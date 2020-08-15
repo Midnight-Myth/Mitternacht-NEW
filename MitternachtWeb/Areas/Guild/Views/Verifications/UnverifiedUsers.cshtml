@@ -6,24 +6,30 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th></th>
+				<th class="discord-avatar"></th>
 				<th>
 					@Html.DisplayNameFor(model => model.Username)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.Roles)
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach(var verification in Model) {
+			@foreach(var verification in Model.OrderByDescending(m => m.Roles.Length).ThenBy(m => m.Username)) {
 				<tr>
-					<td>
+					<td class="discord-avatar">
 						@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
-							<img class="discord-avatar" src="@verification.AvatarUrl" alt="Avatar" />
+							<img src="@verification.AvatarUrl" alt="Avatar" />
 						}
 					</td>
 					<td>
 						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@verification.UserId">
 							@verification.Username
 						</a>
+					</td>
+					<td>
+						@Html.DisplayFor(model => verification.Roles, "RolesArray")
 					</td>
 				</tr>
 			}
