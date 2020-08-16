@@ -47,13 +47,13 @@ namespace Mitternacht.Extensions {
 		/// <param name="client">DiscordSocketClient instance</param>
 		/// <param name="currentPage">current page from 0 to lastpage</param>
 		/// <param name="pageFunc">Func returning EmbedBuilder for each page</param>
-		/// <param name="lastPage">Last page number, 0 based.</param>
+		/// <param name="pageCount">Total number of pages.</param>
 		/// <param name="addPaginatedFooter">whether footer with current page numbers should be added or not</param>
 		/// <param name="reactUsers">additional users which can change pages</param>
 		/// <param name="hasPerms">overturn reactUsers if certain permission is available</param>
 		/// <returns></returns>
-		public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? lastPage = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null)
-			=> channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), lastPage, addPaginatedFooter, reactUsers, hasPerms);
+		public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null)
+			=> channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), pageCount, addPaginatedFooter, reactUsers, hasPerms);
 
 		/// <summary>
 		/// Creates a paginated confirm embed.
@@ -62,12 +62,12 @@ namespace Mitternacht.Extensions {
 		/// <param name="client">DiscordSocketClient instance</param>
 		/// <param name="currentPage">current page from 0 to lastpage</param>
 		/// <param name="pageFunc">Func returning EmbedBuilder for each page</param>
-		/// <param name="lastPage">Last page number, 0 based.</param>
+		/// <param name="pageCount">Total number of pages.</param>
 		/// <param name="addPaginatedFooter">whether footer with current page numbers should be added or not</param>
 		/// <param name="reactUsers">additional users which can change pages</param>
 		/// <param name="hasPerms">overturn reactUsers if certain permission is available</param>
 		/// <returns></returns>
-		public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? lastPage = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) {
+		public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) {
 			reactUsers ??= new IGuildUser[0];
 			if(hasPerms == null)
 				hasPerms = gp => !reactUsers.Any();
@@ -75,11 +75,11 @@ namespace Mitternacht.Extensions {
 			var embed = await pageFunc(currentPage).ConfigureAwait(false);
 
 			if(addPaginatedFooter)
-				embed.AddPaginatedFooter(currentPage, lastPage);
+				embed.AddPaginatedFooter(currentPage, pageCount);
 
 			var msg = await channel.EmbedAsync(embed);
 
-			if(lastPage == 0)
+			if(pageCount == 0)
 				return;
 
 			var _ = Task.Run(async () => {
@@ -94,19 +94,19 @@ namespace Mitternacht.Extensions {
 							return;
 
 						if(r.Emote.Name == ArrowLeft.Name) {
-							if(currentPage == 0)
-								return;
-							var toSend = await pageFunc(--currentPage).ConfigureAwait(false);
-							if(addPaginatedFooter)
-								toSend.AddPaginatedFooter(currentPage, lastPage);
-							await msg.ModifyAsync(x => x.Embed = toSend.Build()).ConfigureAwait(false);
+							if(currentPage != 0) {
+								var toSend = await pageFunc(--currentPage).ConfigureAwait(false);
+								if(addPaginatedFooter)
+									toSend.AddPaginatedFooter(currentPage, pageCount);
+								await msg.ModifyAsync(x => x.Embed = toSend.Build()).ConfigureAwait(false);
+							}
 						} else if(r.Emote.Name == ArrowRight.Name) {
-							if(lastPage != null && !(lastPage > currentPage))
-								return;
-							var toSend = await pageFunc(++currentPage).ConfigureAwait(false);
-							if(addPaginatedFooter)
-								toSend.AddPaginatedFooter(currentPage, lastPage);
-							await msg.ModifyAsync(x => x.Embed = toSend.Build()).ConfigureAwait(false);
+							if(pageCount == null || currentPage < pageCount-1) {
+								var toSend = await pageFunc(++currentPage).ConfigureAwait(false);
+								if(addPaginatedFooter)
+									toSend.AddPaginatedFooter(currentPage, pageCount);
+								await msg.ModifyAsync(x => x.Embed = toSend.Build()).ConfigureAwait(false);
+							}
 						}
 					} catch(InvalidOperationException e) {
 						LogManager.GetCurrentClassLogger().Error(e);

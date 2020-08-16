@@ -140,32 +140,29 @@ namespace Mitternacht.Modules.Utility
         [RequireContext(ContextType.Guild)]
         public async Task Roles(IGuildUser target, int page = 1)
         {
-            var channel = (ITextChannel)Context.Channel;
-            var guild = channel.Guild;
-
-            const int rolesPerPage = 20;
+			const int rolesPerPage = 20;
 
             if (--page < 0) return;
 
             if (target != null)
             {
-                var roles = target.GetRoles().Except(new[] { guild.EveryoneRole }).OrderBy(r => -r.Position).ToArray();
+                var roles = target.GetRoles().Except(new[] { Context.Guild.EveryoneRole }).OrderBy(r => -r.Position).ToArray();
                 if (!roles.Skip(page * rolesPerPage).Take(rolesPerPage).Any())
                     await ReplyErrorLocalized("no_roles_on_page").ConfigureAwait(false);
                 else
-                    await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => new EmbedBuilder().WithOkColor()
-                        .WithTitle(GetText("roles_page", p + 1, Format.Bold(target.ToString())))
-                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage, reactUsers: new[] { Context.User as IGuildUser });
+                    await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor()
+                        .WithTitle(GetText("roles_page", currentPage + 1, Format.Bold(target.ToString())))
+                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(currentPage * rolesPerPage).Take(rolesPerPage))), (int)Math.Ceiling(roles.Length * 1d / rolesPerPage), reactUsers: new[] { Context.User as IGuildUser });
             }
             else
             {
-                var roles = guild.Roles.Except(new[] { guild.EveryoneRole }).OrderBy(r => -r.Position).ToArray();
+                var roles = Context.Guild.Roles.Except(new[] { Context.Guild.EveryoneRole }).OrderBy(r => -r.Position).ToArray();
                 if (!roles.Skip(page * rolesPerPage).Take(rolesPerPage).Any())
                     await ReplyErrorLocalized("no_roles_on_page").ConfigureAwait(false);
                 else
-                    await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => new EmbedBuilder().WithOkColor()
-                        .WithTitle(GetText("roles_all_page", p + 1))
-                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(p * rolesPerPage).Take(rolesPerPage))), roles.Length / rolesPerPage, reactUsers: new[] { Context.User as IGuildUser });
+                    await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor()
+                        .WithTitle(GetText("roles_all_page", currentPage + 1))
+                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(currentPage * rolesPerPage).Take(rolesPerPage))), (int)Math.Ceiling(roles.Length * 1d / rolesPerPage), reactUsers: new[] { Context.User as IGuildUser });
             }
         }
 
@@ -224,10 +221,12 @@ namespace Mitternacht.Modules.Utility
                 })
                 .ToArray();
 
-            await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage =>
+			const int elementsPerPage = 25;
+
+            await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage =>
             {
 
-                var str = string.Join("\n", allShardStrings.Skip(25 * curPage).Take(25));
+                var str = string.Join("\n", allShardStrings.Skip(elementsPerPage * currentPage).Take(elementsPerPage));
 
                 if (string.IsNullOrWhiteSpace(str))
                     str = GetText("no_shards_on_page");
@@ -237,7 +236,7 @@ namespace Mitternacht.Modules.Utility
                     .WithTitle(status)
                     .WithOkColor()
                     .WithDescription(str);
-            }, allShardStrings.Length / 25, reactUsers: new[] { Context.User as IGuildUser });
+            }, (int)Math.Ceiling(allShardStrings.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser });
         }
 
         [MitternachtCommand, Usage, Description, Aliases]

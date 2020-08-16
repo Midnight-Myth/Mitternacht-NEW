@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -15,11 +16,9 @@ namespace Mitternacht.Modules.Utility {
 		[Group]
 		public class CommandMapCommands : MitternachtSubmodule<CommandMapService> {
 			private readonly IUnitOfWork uow;
-			private readonly DiscordSocketClient _client;
 
-			public CommandMapCommands(IUnitOfWork uow, DiscordSocketClient client) {
+			public CommandMapCommands(IUnitOfWork uow) {
 				this.uow = uow;
-				_client = client;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -62,11 +61,13 @@ namespace Mitternacht.Modules.Utility {
 				var commandAliases = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.CommandAliases)).CommandAliases.ToArray();
 
 				if(commandAliases.Any()) {
-					await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage => {
+					const int elementsPerPage = 10;
+
+					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
 						return new EmbedBuilder().WithOkColor()
 							.WithTitle(GetText("alias_list"))
-							.WithDescription(string.Join("\n", commandAliases.Skip(curPage * 10).Take(10).Select(x => $"`{x.Trigger}` => `{x.Mapping}`")));
-					}, commandAliases.Length / 10, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
+							.WithDescription(string.Join("\n", commandAliases.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(x => $"`{x.Trigger}` => `{x.Mapping}`")));
+					}, (int)Math.Ceiling(commandAliases.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 				} else {
 					await ReplyErrorLocalized("aliases_none").ConfigureAwait(false);
 				}

@@ -29,12 +29,11 @@ namespace Mitternacht.Modules.Minecraft {
 
 				const int namesPerPage = 20;
 
-				var pages = (int)Math.Ceiling(names.Count * 1d / namesPerPage);
 
-				await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, 0, p =>
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, 0, currentPage =>
 					new EmbedBuilder().WithOkColor().WithTitle(GetText("usernames_title", accountinfo.Name, names.Count))
-						.WithDescription(string.Join("\n", names.Skip(p * namesPerPage).Take(namesPerPage))),
-					pages - 1,
+						.WithDescription(string.Join("\n", names.Skip(currentPage * namesPerPage).Take(namesPerPage))),
+					(int)Math.Ceiling(names.Count * 1d / namesPerPage),
 					reactUsers: new[] { Context.User as IGuildUser });
 			} catch(Exception e) {
 				await ReplyErrorLocalized("error_names", e.Message).ConfigureAwait(false);

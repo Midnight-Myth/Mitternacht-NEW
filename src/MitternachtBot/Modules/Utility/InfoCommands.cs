@@ -127,22 +127,22 @@ namespace Mitternacht.Modules.Utility
             [OwnerOnly]
             public async Task Activity(int page = 1)
             {
-                const int activityPerPage = 15;
+                const int elementsPerPage = 15;
                 page -= 1;
 
                 if (page < 0)
                     return;
 
-                await Context.Channel.SendPaginatedConfirmAsync(_client, page, p => {
-                    var startCount = page * activityPerPage;
-                    var strng = from kvp in CmdHandler.UserMessagesSent.OrderByDescending(kvp => kvp.Value).Skip(page * activityPerPage).Take(activityPerPage)
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
+                    var startCount = page * elementsPerPage;
+                    var strng = from kvp in CmdHandler.UserMessagesSent.OrderByDescending(kvp => kvp.Value).Skip(page * elementsPerPage).Take(elementsPerPage)
                                 select GetText("activity_line", ++startCount, Format.Bold(kvp.Key.ToString()), kvp.Value, kvp.Value / _stats.Uptime.TotalSeconds);
                     return new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle(GetText("activity_page"))
                         .WithFooter(efb => efb.WithText(GetText("activity_users_total", CmdHandler.UserMessagesSent.Count)))
                         .WithDescription(new StringBuilder().AppendJoin('\n', strng).ToString());
-                }, CmdHandler.UserMessagesSent.Count / activityPerPage, hasPerms: gp => gp.Administrator);
+                }, (int)Math.Ceiling(CmdHandler.UserMessagesSent.Count * 1d / elementsPerPage), hasPerms: gp => gp.Administrator);
             }
         }
     }

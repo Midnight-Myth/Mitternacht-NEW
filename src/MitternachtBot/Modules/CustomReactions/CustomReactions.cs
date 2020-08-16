@@ -16,12 +16,10 @@ namespace Mitternacht.Modules.CustomReactions {
 	public class CustomReactions : MitternachtTopLevelModule<CustomReactionsService> {
 		private readonly IBotCredentials _creds;
 		private readonly IUnitOfWork uow;
-		private readonly DiscordSocketClient _client;
 
-		public CustomReactions(IBotCredentials creds, IUnitOfWork uow, DiscordSocketClient client) {
+		public CustomReactions(IBotCredentials creds, IUnitOfWork uow) {
 			_creds = creds;
 			this.uow = uow;
-			_client = client;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -69,10 +67,9 @@ namespace Mitternacht.Modules.CustomReactions {
 				return;
 			}
 
-			var lastPage = customReactions.Length / 20;
-			await Context.Channel.SendPaginatedConfirmAsync(_client, page,
-				curPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("name")).WithDescription(string.Join("\n",
-					customReactions.OrderBy(cr => cr.Trigger).Skip(curPage * 20).Take(20).Select(cr => {
+			const int elementsPerPage = 20;
+			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("name")).WithDescription(string.Join("\n",
+					customReactions.OrderBy(cr => cr.Trigger).Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(cr => {
 						var str = $"`#{cr.Id}` {cr.Trigger}";
 						if(cr.AutoDeleteTrigger) {
 							str = "🗑" + str;
@@ -81,7 +78,7 @@ namespace Mitternacht.Modules.CustomReactions {
 							str = "📪" + str;
 						}
 						return str;
-					}))), lastPage, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
+					}))), (int)Math.Ceiling(customReactions.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 		}
 
 		public enum All {
@@ -127,14 +124,14 @@ namespace Mitternacht.Modules.CustomReactions {
 					.OrderBy(cr => cr.Key)
 					.ToList();
 
-				var lastPage = ordered.Count / 20;
-				await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage =>
+				const int elementsPerPage = 20;
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage =>
 					new EmbedBuilder().WithOkColor()
 						.WithTitle(GetText("name"))
 						.WithDescription(string.Join("\r\n", ordered
-														 .Skip(curPage * 20)
-														 .Take(20)
-														 .Select(cr => $"**{cr.Key.Trim().ToLowerInvariant()}** `x{cr.Count()}`"))), lastPage, reactUsers: new[] { Context.User as IGuildUser })
+														 .Skip(currentPage * elementsPerPage)
+														 .Take(elementsPerPage)
+														 .Select(cr => $"**{cr.Key.Trim().ToLowerInvariant()}** `x{cr.Count()}`"))), (int)Math.Ceiling(ordered.Count * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser })
 							 .ConfigureAwait(false);
 			}
 		}
@@ -277,12 +274,9 @@ namespace Mitternacht.Modules.CustomReactions {
 			var ordered = Service.ReactionStats.OrderByDescending(x => x.Value).ToArray();
 			if(!ordered.Any())
 				return;
-			var lastPage = ordered.Length / 9;
-			await Context.Channel.SendPaginatedConfirmAsync(_client, page,
-				curPage => ordered.Skip(curPage * 9).Take(9)
-					.Aggregate(new EmbedBuilder().WithOkColor().WithTitle(GetText("stats")),
-						(agg, cur) => agg.AddField(efb => efb.WithName(cur.Key).WithValue(cur.Value.ToString())
-							.WithIsInline(true))), lastPage, reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
+
+			const int elementsPerPage = 9;
+			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => ordered.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Aggregate(new EmbedBuilder().WithOkColor().WithTitle(GetText("stats")), (agg, cur) => agg.AddField(efb => efb.WithName(cur.Key).WithValue(cur.Value.ToString()).WithIsInline(true))), (int)Math.Ceiling(ordered.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
 		}
 	}
 }

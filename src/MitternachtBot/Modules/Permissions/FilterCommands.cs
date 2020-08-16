@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -101,12 +102,12 @@ namespace Mitternacht.Modules.Permissions {
 				if(page < 0)
 					return;
 
-				const int WordsPerPage = 10;
+				const int elementsPerPage = 10;
 
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilteredWords));
 				var filteredWords = gc.FilteredWords.Select(fw => fw.Word).ToArray();
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("filter_word_list")).WithDescription(string.Join("\n", filteredWords.Skip(currentPage * WordsPerPage).Take(WordsPerPage))), filteredWords.Length / WordsPerPage, hasPerms: gp => true).ConfigureAwait(false);
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("filter_word_list")).WithDescription(string.Join("\n", filteredWords.Skip(currentPage * elementsPerPage).Take(elementsPerPage))), (int)Math.Ceiling(filteredWords.Length * 1d / elementsPerPage), hasPerms: gp => true).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

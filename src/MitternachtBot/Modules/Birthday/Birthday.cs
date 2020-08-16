@@ -132,14 +132,14 @@ namespace Mitternacht.Modules.Birthday {
 				return;
 			}
 
-			const int itemcount = 10;
-			var pagecount = (int)Math.Ceiling(birthdates.Count / (itemcount * 1d));
-			page = page > pagecount ? pagecount : page;
+			const int elementsPerPage = 10;
+			var pageCount = (int)Math.Ceiling(birthdates.Count * 1d / elementsPerPage);
+			page = page > pageCount ? pageCount : page;
 
 			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1,
-				p => new EmbedBuilder().WithOkColor().WithTitle(GetText("all_title")).WithDescription(string.Join("\n",
-					birthdates.Skip(itemcount * p).Take(itemcount).Select(BdmToString))),
-				pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
+				currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("all_title")).WithDescription(string.Join("\n",
+					birthdates.Skip(elementsPerPage * currentPage).Take(elementsPerPage).Select(BdmToString))),
+				pageCount, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]

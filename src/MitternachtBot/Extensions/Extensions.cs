@@ -38,8 +38,8 @@ namespace Mitternacht.Extensions {
 		public static string FormattedSummary(this CommandInfo cmd, string prefix) => string.Format(cmd.Summary, prefix);
 		public static string FormattedRemarks(this CommandInfo cmd, string prefix) => string.Format(cmd.Remarks, prefix);
 
-		public static EmbedBuilder AddPaginatedFooter(this EmbedBuilder embed, int curPage, int? lastPage) {
-			return lastPage != null ? embed.WithFooter(efb => efb.WithText($"{curPage + 1} / {lastPage + 1}")) : embed.WithFooter(efb => efb.WithText(curPage.ToString()));
+		public static EmbedBuilder AddPaginatedFooter(this EmbedBuilder embed, int curPage, int? pageCount) {
+			return pageCount != null ? embed.WithFooter(efb => efb.WithText($"{curPage + 1} / {pageCount}")) : embed.WithFooter(efb => efb.WithText(curPage.ToString()));
 		}
 
 		public static EmbedBuilder WithOkColor(this EmbedBuilder eb)

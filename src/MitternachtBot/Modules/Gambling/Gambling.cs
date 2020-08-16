@@ -160,17 +160,17 @@ namespace Mitternacht.Modules.Gambling {
 				const int elementsPerPage = 9;
 				var currencyCount = uow.Currency.GetAll().Count();
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async currentPage => {
 					var embedBuilder = new EmbedBuilder().WithOkColor().WithTitle($"{CurrencySign} {GetText("leaderboard")}");
 					using var unitOfWork = _db.UnitOfWork;
-					var leaderboardPage = unitOfWork.Currency.OrderByAmount().Skip(elementsPerPage * p).Take(elementsPerPage).ToList();
+					var leaderboardPage = unitOfWork.Currency.OrderByAmount().Skip(elementsPerPage * currentPage).Take(elementsPerPage).ToList();
 
 					if(leaderboardPage.Any()) {
 						foreach(var c in leaderboardPage) {
 							var user     = await Context.Guild.GetUserAsync(c.UserId).ConfigureAwait(false);
 							var username = user?.Username.TrimTo(20, true) ?? c.UserId.ToString();
 
-							embedBuilder.AddField($"#{elementsPerPage * p + leaderboardPage.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}", true);
+							embedBuilder.AddField($"#{elementsPerPage * currentPage + leaderboardPage.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}", true);
 						}
 					} else {
 						embedBuilder.WithDescription(GetText("no_users_found"));
