@@ -50,10 +50,10 @@ namespace Mitternacht.Extensions {
 		/// <param name="pageCount">Total number of pages.</param>
 		/// <param name="addPaginatedFooter">whether footer with current page numbers should be added or not</param>
 		/// <param name="reactUsers">additional users which can change pages</param>
-		/// <param name="hasPerms">overturn reactUsers if certain permission is available</param>
+		/// <param name="pageChangeAllowedWithPermissions">overturn reactUsers if certain permission is available</param>
 		/// <returns></returns>
-		public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null)
-			=> channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), pageCount, addPaginatedFooter, reactUsers, hasPerms);
+		public static Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, EmbedBuilder> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> pageChangeAllowedWithPermissions = null)
+			=> channel.SendPaginatedConfirmAsync(client, currentPage, x => Task.FromResult(pageFunc(x)), pageCount, addPaginatedFooter, reactUsers, pageChangeAllowedWithPermissions);
 
 		/// <summary>
 		/// Creates a paginated confirm embed.
@@ -65,12 +65,12 @@ namespace Mitternacht.Extensions {
 		/// <param name="pageCount">Total number of pages.</param>
 		/// <param name="addPaginatedFooter">whether footer with current page numbers should be added or not</param>
 		/// <param name="reactUsers">additional users which can change pages</param>
-		/// <param name="hasPerms">overturn reactUsers if certain permission is available</param>
+		/// <param name="pageChangeAllowedWithPermissions">overturn reactUsers if certain permission is available</param>
 		/// <returns></returns>
-		public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) {
+		public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> pageChangeAllowedWithPermissions = null) {
 			reactUsers ??= new IGuildUser[0];
-			if(hasPerms == null)
-				hasPerms = gp => gp.ManageMessages;
+			if(pageChangeAllowedWithPermissions == null)
+				pageChangeAllowedWithPermissions = gp => gp.ManageMessages;
 
 			var embed = await pageFunc(currentPage).ConfigureAwait(false);
 
@@ -90,7 +90,7 @@ namespace Mitternacht.Extensions {
 
 				async void ChangePage(SocketReaction r) {
 					try {
-						if(!r.User.IsSpecified || r.User.Value is IGuildUser gu && reactUsers.All(u => u.Id != r.UserId) && !hasPerms.Invoke(gu.GuildPermissions) && !gu.GuildPermissions.Administrator)
+						if(!r.User.IsSpecified || r.User.Value is IGuildUser gu && reactUsers.All(u => u.Id != r.UserId) && !pageChangeAllowedWithPermissions.Invoke(gu.GuildPermissions) && !gu.GuildPermissions.Administrator)
 							return;
 
 						if(r.Emote.Name == ArrowLeft.Name) {

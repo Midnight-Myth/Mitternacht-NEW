@@ -85,7 +85,7 @@ namespace Mitternacht.Modules.Utility {
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, currentPage => {
 																	var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("unh_title", username)).WithDescription(string.Join("\n", usernicknames.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(uhm => $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}`{(uhm is NicknameHistoryModel ? "" : " **(G)**")} - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
 																	return embed;
-																}, pageCount, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
+																}, pageCount, reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
 
@@ -114,7 +114,7 @@ namespace Mitternacht.Modules.Utility {
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, currentPage => {
 																	var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("unh_title_global", username)).WithDescription(string.Join("\n", usernames.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(uhm => $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
 																	return embed;
-																}, pageCount, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
+																}, pageCount, reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
 
@@ -145,7 +145,7 @@ namespace Mitternacht.Modules.Utility {
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, currentPage => {
 																	var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("unh_title_guild", username)).WithDescription(string.Join("\n", nicknames.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(uhm => $"- `{uhm.Name}#{uhm.DiscordDiscriminator:D4}` - {uhm.DateSet.ToLocalTime():dd.MM.yyyy HH:mm}{(uhm.DateReplaced.HasValue ? $" => {uhm.DateReplaced.Value.ToLocalTime():dd.MM.yyyy HH:mm}" : "")}")));
 																	return embed;
-																}, pageCount, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
+																}, pageCount, reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
 

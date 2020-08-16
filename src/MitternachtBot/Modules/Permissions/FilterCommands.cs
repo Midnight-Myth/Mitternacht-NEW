@@ -107,7 +107,7 @@ namespace Mitternacht.Modules.Permissions {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(gc => gc.FilteredWords));
 				var filteredWords = gc.FilteredWords.Select(fw => fw.Word).ToArray();
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("filter_word_list")).WithDescription(string.Join("\n", filteredWords.Skip(currentPage * elementsPerPage).Take(elementsPerPage))), (int)Math.Ceiling(filteredWords.Length * 1d / elementsPerPage), hasPerms: gp => true).ConfigureAwait(false);
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("filter_word_list")).WithDescription(string.Join("\n", filteredWords.Skip(currentPage * elementsPerPage).Take(elementsPerPage))), (int)Math.Ceiling(filteredWords.Length * 1d / elementsPerPage), pageChangeAllowedWithPermissions: gp => true).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

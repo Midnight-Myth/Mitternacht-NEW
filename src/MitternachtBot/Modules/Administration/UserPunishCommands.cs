@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Administration {
 					}
 
 					return embed;
-				}, (int)Math.Ceiling(allWarnings.Count() * 1d / warnsPerPage), reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
+				}, (int)Math.Ceiling(allWarnings.Count() * 1d / warnsPerPage), reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -127,7 +127,7 @@ namespace Mitternacht.Modules.Administration {
 																										}));
 
 																	return new EmbedBuilder().WithTitle(GetText("warnings_list")).WithDescription(string.Join("\n", ws));
-																}, (int)Math.Ceiling(warnings.Count() * 1d / elementsPerPage), reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
+																}, (int)Math.Ceiling(warnings.Count() * 1d / elementsPerPage), reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
 

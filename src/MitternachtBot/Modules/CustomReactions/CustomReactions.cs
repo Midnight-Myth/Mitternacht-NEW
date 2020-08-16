@@ -276,7 +276,7 @@ namespace Mitternacht.Modules.CustomReactions {
 				return;
 
 			const int elementsPerPage = 9;
-			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => ordered.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Aggregate(new EmbedBuilder().WithOkColor().WithTitle(GetText("stats")), (agg, cur) => agg.AddField(efb => efb.WithName(cur.Key).WithValue(cur.Value.ToString()).WithIsInline(true))), (int)Math.Ceiling(ordered.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
+			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => ordered.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Aggregate(new EmbedBuilder().WithOkColor().WithTitle(GetText("stats")), (agg, cur) => agg.AddField(efb => efb.WithName(cur.Key).WithValue(cur.Value.ToString()).WithIsInline(true))), (int)Math.Ceiling(ordered.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }, pageChangeAllowedWithPermissions: gp => gp.KickMembers).ConfigureAwait(false);
 		}
 	}
 }
