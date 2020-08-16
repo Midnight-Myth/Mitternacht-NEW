@@ -245,8 +245,8 @@ namespace Mitternacht.Modules.Verification {
 
 			const int elementsPerPage = 20;
 			var pageCount = (int)Math.Ceiling(Service.GetVerifiedUserCount(Context.Guild.Id) * 1d / elementsPerPage);
-			if(page > pageCount)
-				page = pageCount;
+			if(page >= pageCount)
+				page = pageCount - 1;
 
 			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async currentPage => {
 				var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(currentPage * elementsPerPage).Take(elementsPerPage).ToList();
