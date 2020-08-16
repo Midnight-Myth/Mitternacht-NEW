@@ -70,7 +70,7 @@ namespace Mitternacht.Extensions {
 		public static async Task SendPaginatedConfirmAsync(this IMessageChannel channel, DiscordSocketClient client, int currentPage, Func<int, Task<EmbedBuilder>> pageFunc, int? pageCount = null, bool addPaginatedFooter = true, IGuildUser[] reactUsers = null, Func<GuildPermissions, bool> hasPerms = null) {
 			reactUsers ??= new IGuildUser[0];
 			if(hasPerms == null)
-				hasPerms = gp => !reactUsers.Any();
+				hasPerms = gp => gp.ManageMessages;
 
 			var embed = await pageFunc(currentPage).ConfigureAwait(false);
 
