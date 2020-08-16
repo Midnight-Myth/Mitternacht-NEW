@@ -85,7 +85,7 @@ namespace Mitternacht.Modules.Administration {
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var textKey     = showMods ? "warned_on_by" : "warned_on";
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, p => {
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
 					var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
 
 					if(!warnings.Any()) {
@@ -103,7 +103,7 @@ namespace Mitternacht.Modules.Administration {
 					}
 
 					return embed;
-				}, allWarnings.Count() / warnsPerPage, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers);
+				}, (int)Math.Ceiling(allWarnings.Count() * 1d / warnsPerPage), reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -114,9 +114,10 @@ namespace Mitternacht.Modules.Administration {
 
 				var warnings = uow.Warnings.GetForGuild(Context.Guild.Id).OrderByDescending(w => w.DateAdded).ToList().GroupBy(x => x.UserId);
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async curPage => {
-																	var ws = await Task.WhenAll(warnings.Skip(curPage * 15)
-																										.Take(15)
+				const int elementsPerPage = 15;
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, async currentPage => {
+																	var ws = await Task.WhenAll(warnings.Skip(currentPage * elementsPerPage)
+																										.Take(elementsPerPage)
 																										.ToArray()
 																										.Select(async x => {
 																											var all      = x.Count();
@@ -126,7 +127,7 @@ namespace Mitternacht.Modules.Administration {
 																										}));
 
 																	return new EmbedBuilder().WithTitle(GetText("warnings_list")).WithDescription(string.Join("\n", ws));
-																}, warnings.Count() / 15, reactUsers: new[] {Context.User as IGuildUser}, hasPerms: gp => gp.KickMembers)
+																}, (int)Math.Ceiling(warnings.Count() * 1d / elementsPerPage), reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
 

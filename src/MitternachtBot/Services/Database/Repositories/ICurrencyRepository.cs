@@ -6,6 +6,6 @@ namespace Mitternacht.Services.Database.Repositories {
 		Currency GetOrCreate(ulong userId);
 		long GetUserCurrencyValue(ulong userId);
 		bool TryAddCurrencyValue(ulong userId, long change);
-		IQueryable<Currency> GetTopRichest(int count, int skip);
+		IQueryable<Currency> OrderByAmount();
 	}
 }

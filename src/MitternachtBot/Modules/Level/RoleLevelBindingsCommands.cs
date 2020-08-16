@@ -67,8 +67,8 @@ namespace Mitternacht.Modules.Level
                     return;
                 }
 
-                var pagecount = (int) Math.Ceiling(roleLevelBindings.Count * 1d / elementsPerPage);
-                if (page > pagecount)
+                var pageCount = (int) Math.Ceiling(roleLevelBindings.Count * 1d / elementsPerPage);
+                if (page > pageCount)
                 {
                     await ReplyErrorLocalized("rlb_page_too_high").ConfigureAwait(false);
                     return;
@@ -76,20 +76,19 @@ namespace Mitternacht.Modules.Level
 
                 if (page < 1) page = 1;
 
-                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p =>
-                    {
+                await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, currentPage => {
                         var embed = new EmbedBuilder()
                             .WithTitle(GetText("rlb_title"));
-                        var rlbs = roleLevelBindings.Skip(elementsPerPage * p).Take(elementsPerPage).ToList();
+                        var rlbs = roleLevelBindings.Skip(elementsPerPage * currentPage).Take(elementsPerPage).ToList();
                         foreach (var rlb in rlbs)
                         {
                             var rolename = Context.Guild.GetRole(rlb.RoleId)?.Name ?? rlb.RoleId.ToString();
-                            embed.AddField($"#{elementsPerPage * p + rlbs.IndexOf(rlb) + 1} - {rolename}",
+                            embed.AddField($"#{elementsPerPage * currentPage + rlbs.IndexOf(rlb) + 1} - {rolename}",
                                 rlb.MinimumLevel, true);
                         }
 
                         return embed;
-                    }, pagecount - 1, reactUsers: new[] { Context.User as IGuildUser }, hasPerms: gp => gp.KickMembers).ConfigureAwait(false);
+                    }, pageCount, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
             }
         }
     }

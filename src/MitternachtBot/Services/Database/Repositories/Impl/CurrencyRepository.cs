@@ -19,8 +19,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			return currency;
 		}
 
-		public IQueryable<Currency> GetTopRichest(int count, int skip = 0)
-			=> _set.AsQueryable().OrderByDescending(c => c.Amount).Skip(skip).Take(count);
+		public IQueryable<Currency> OrderByAmount()
+			=> _set.AsQueryable().OrderByDescending(c => c.Amount);
 
 		public long GetUserCurrencyValue(ulong userId)
 			=> GetOrCreate(userId).Amount;

@@ -71,6 +71,7 @@ namespace Mitternacht.Services.Impl {
 			}
 		}
 
-		public bool IsOwner(IUser u) => OwnerIds.Contains(u.Id);
+		public bool IsOwner(IUser u)
+			=> u != null && OwnerIds.Contains(u.Id);
 	}
 }

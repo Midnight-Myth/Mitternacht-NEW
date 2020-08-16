@@ -1,8 +1,10 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
@@ -15,14 +17,16 @@ namespace Mitternacht.Modules.Gambling {
 		private readonly IBotConfigProvider _bc;
 		private readonly IUnitOfWork uow;
 		private readonly CurrencyService _currency;
+		private readonly DbService _db;
 
 		private string CurrencyPluralName => _bc.BotConfig.CurrencyPluralName;
 		private string CurrencySign => _bc.BotConfig.CurrencySign;
 
-		public Gambling(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService currency) {
+		public Gambling(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService currency, DbService db) {
 			_bc = bc;
 			this.uow = uow;
 			_currency = currency;
+			_db = db;
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -156,22 +160,24 @@ namespace Mitternacht.Modules.Gambling {
 				const int elementsPerPage = 9;
 				var currencyCount = uow.Currency.GetAll().Count();
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p => {
-					var embed = new EmbedBuilder().WithOkColor().WithTitle($"{CurrencySign} {GetText("leaderboard")}");
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async currentPage => {
+					var embedBuilder = new EmbedBuilder().WithOkColor().WithTitle($"{CurrencySign} {GetText("leaderboard")}");
+					using var unitOfWork = _db.UnitOfWork;
+					var leaderboardPage = unitOfWork.Currency.OrderByAmount().Skip(elementsPerPage * currentPage).Take(elementsPerPage).ToList();
 
-					var richest = uow.Currency.GetTopRichest(elementsPerPage, elementsPerPage * p).ToList();
-
-					if(richest.Any()) {
-						foreach(var c in richest) {
-							var user = Context.Guild.GetUserAsync(c.UserId).GetAwaiter().GetResult();
+					if(leaderboardPage.Any()) {
+						foreach(var c in leaderboardPage) {
+							var user     = await Context.Guild.GetUserAsync(c.UserId).ConfigureAwait(false);
 							var username = user?.Username.TrimTo(20, true) ?? c.UserId.ToString();
-							embed.AddField($"#{elementsPerPage * p + richest.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}", true);
+
+							embedBuilder.AddField($"#{elementsPerPage * currentPage + leaderboardPage.IndexOf(c) + 1} {username}", $"{c.Amount} {CurrencySign}", true);
 						}
 					} else {
-						embed.WithDescription(GetText("no_users_found"));
+						embedBuilder.WithDescription(GetText("no_users_found"));
 					}
-					return embed;
-				}, currencyCount / elementsPerPage, reactUsers: new[] { Context.User as IGuildUser });
+
+					return embedBuilder;
+				}, (int)Math.Floor(currencyCount * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser });
 			}
 		}
 	}

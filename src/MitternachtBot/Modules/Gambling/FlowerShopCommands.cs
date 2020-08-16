@@ -21,7 +21,6 @@ namespace Mitternacht.Modules.Gambling {
 			private readonly IBotConfigProvider _bc;
 			private readonly IUnitOfWork uow;
 			private readonly CurrencyService _cs;
-			private readonly DiscordSocketClient _client;
 
 			public enum Role {
 				Role
@@ -31,11 +30,10 @@ namespace Mitternacht.Modules.Gambling {
 				List
 			}
 
-			public FlowerShopCommands(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService cs, DiscordSocketClient client) {
+			public FlowerShopCommands(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService cs) {
 				this.uow     = uow;
 				_bc     = bc;
 				_cs     = cs;
-				_client = client;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -46,8 +44,9 @@ namespace Mitternacht.Modules.Gambling {
 
 				var entries = new IndexedCollection<ShopEntry>(uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.ShopEntries).ThenInclude(x => x.Items)).ShopEntries);
 
-				await Context.Channel.SendPaginatedConfirmAsync(_client, page, curPage => {
-					var theseEntries = entries.Skip(curPage * 9).Take(9).ToArray();
+				const int elementsPerPage = 9;
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
+					var theseEntries = entries.Skip(currentPage * elementsPerPage).Take(elementsPerPage).ToArray();
 
 					if(!theseEntries.Any())
 						return new EmbedBuilder().WithErrorColor()
@@ -57,10 +56,10 @@ namespace Mitternacht.Modules.Gambling {
 
 					for(var i = 0; i < theseEntries.Length; i++) {
 						var entry = theseEntries[i];
-						embed.AddField(efb => efb.WithName($"#{curPage * 9 + i + 1} - {entry.Price}{_bc.BotConfig.CurrencySign}").WithValue(EntryToString(entry)).WithIsInline(true));
+						embed.AddField(efb => efb.WithName($"#{currentPage * elementsPerPage + i + 1} - {entry.Price}{_bc.BotConfig.CurrencySign}").WithValue(EntryToString(entry)).WithIsInline(true));
 					}
 					return embed;
-				}, entries.Count / 9, reactUsers: new[] { Context.User as IGuildUser });
+				}, (int)Math.Ceiling(entries.Count * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser });
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

@@ -118,10 +118,12 @@ namespace Mitternacht.Modules.Administration {
 				roles.AddRange(toRemove.Select(role => GetText("role_clean", role.RoleId)));
 				await uow.SaveChangesAsync(false);
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, curPage => new EmbedBuilder()
+				const int elementsPerPage = 10;
+
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder()
 					.WithTitle(GetText("self_assign_list", roleCnt))
-					.WithDescription(string.Join("\n", roles.Skip(curPage * 10).Take(10)))
-					.WithOkColor(), roles.Count / 10, reactUsers: new[] { Context.User as IGuildUser });
+					.WithDescription(string.Join("\n", roles.Skip(currentPage * elementsPerPage).Take(elementsPerPage)))
+					.WithOkColor(), (int)Math.Ceiling(roles.Count * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser });
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

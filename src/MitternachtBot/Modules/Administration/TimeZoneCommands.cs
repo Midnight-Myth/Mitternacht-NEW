@@ -30,11 +30,11 @@ namespace Mitternacht.Modules.Administration
                 const int timezonesPerPage = 20;
 
                 await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, 
-                    curPage => new EmbedBuilder()
+                    currentPage => new EmbedBuilder()
                         .WithOkColor()
                         .WithTitle(GetText("timezones_available"))
-                        .WithDescription(string.Join("\n", timezones.Skip(curPage * timezonesPerPage).Take(timezonesPerPage).Select(x => $"`{x.Id,-25}` {(x.BaseUtcOffset < TimeSpan.Zero? "-" : "+")}{x.BaseUtcOffset:hhmm}"))),
-                    timezones.Length / timezonesPerPage, reactUsers: new[] { Context.User as IGuildUser });
+                        .WithDescription(string.Join("\n", timezones.Skip(currentPage * timezonesPerPage).Take(timezonesPerPage).Select(x => $"`{x.Id,-25}` {(x.BaseUtcOffset < TimeSpan.Zero? "-" : "+")}{x.BaseUtcOffset:hhmm}"))),
+                    (int)Math.Ceiling(timezones.Length * 1d / timezonesPerPage), reactUsers: new[] { Context.User as IGuildUser });
             }
 
             [MitternachtCommand, Usage, Description, Aliases]

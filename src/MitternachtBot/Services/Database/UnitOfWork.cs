@@ -51,6 +51,8 @@ namespace Mitternacht.Services.Database {
 		public  IVoiceChannelStatsRepository    VoiceChannelStats => _voiceChannelStats ??= new VoiceChannelStatsRepository(Context);
 		private ITeamUpdateRankRepository       _teamUpdateRanks;
 		public  ITeamUpdateRankRepository       TeamUpdateRanks => _teamUpdateRanks ??= new TeamUpdateRankRepository(Context);
+		private IUserRoleColorBindingRepository _userRoleColorBindings;
+		public  IUserRoleColorBindingRepository UserRoleColorBindings => _userRoleColorBindings ??= new UserRoleColorBindingRepository(Context);
 
 		public UnitOfWork(MitternachtContext context) {
 			Context = context;

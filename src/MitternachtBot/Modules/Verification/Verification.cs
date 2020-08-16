@@ -215,13 +215,13 @@ namespace Mitternacht.Modules.Verification {
 				return;
 			}
 
-			const int keycount = 10;
-			var pagecount = (int)Math.Ceiling(VerificationKeyManager.VerificationKeys.Where(k => k.GuildId == Context.Guild.Id).Count() / (keycount * 1d));
-			if(page > pagecount)
-				page = pagecount;
+			const int elementsPerPage = 10;
+			var pageCount = (int)Math.Ceiling(VerificationKeyManager.VerificationKeys.Where(k => k.GuildId == Context.Guild.Id).Count() * 1d / elementsPerPage);
+			if(page >= pageCount)
+				page = pageCount - 1;
 
-			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
-				var keys = VerificationKeyManager.VerificationKeys.Where(k => k.GuildId == Context.Guild.Id).Skip(p * keycount).Take(keycount).ToList();
+			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async currentPage => {
+				var keys = VerificationKeyManager.VerificationKeys.Where(k => k.GuildId == Context.Guild.Id).Skip(currentPage * elementsPerPage).Take(elementsPerPage).ToList();
 				var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verification_keys"));
 				foreach(var key in keys) {
 					var user = await Context.Guild.GetUserAsync(key.DiscordUserId).ConfigureAwait(false);
@@ -229,7 +229,7 @@ namespace Mitternacht.Modules.Verification {
 					embed.AddField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope), true);
 				}
 				return embed;
-			}, pagecount - 1, true, null, gp => gp.Administrator).ConfigureAwait(false);
+			}, pageCount, true, new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 		}
 
 
@@ -243,20 +243,20 @@ namespace Mitternacht.Modules.Verification {
 				return;
 			}
 
-			const int usercount = 20;
-			var pagecount = (int)Math.Ceiling(Service.GetVerifiedUserCount(Context.Guild.Id) / (usercount * 1d));
-			if(page > pagecount)
-				page = pagecount;
+			const int elementsPerPage = 20;
+			var pageCount = (int)Math.Ceiling(Service.GetVerifiedUserCount(Context.Guild.Id) * 1d / elementsPerPage);
+			if(page >= pageCount)
+				page = pageCount - 1;
 
-			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async p => {
-				var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(p * usercount).Take(usercount).ToList();
+			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async currentPage => {
+				var vus = Service.GetVerifiedUsers(Context.Guild.Id).Skip(currentPage * elementsPerPage).Take(elementsPerPage).ToList();
 				var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("verified_users", Service.GetVerifiedUserCount(Context.Guild.Id)));
 				foreach(var vu in vus) {
 					var user = await Context.Guild.GetUserAsync(vu.UserId).ConfigureAwait(false);
 					embed.AddField((user?.ToString() ?? vu.UserId.ToString()).TrimTo(24, true), vu.ForumUserId, true);
 				}
 				return embed;
-			}, pagecount - 1, true, new[] { Context.User as IGuildUser }).ConfigureAwait(false);
+			}, pageCount, true, new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 		}
 
 

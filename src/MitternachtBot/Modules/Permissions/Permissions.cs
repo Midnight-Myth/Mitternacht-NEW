@@ -62,22 +62,22 @@ namespace Mitternacht.Modules.Permissions {
 			const int permsPerPage = 20;
 
 			IList<Permissionv2> perms = Service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
-			var maxPage = (int)Math.Ceiling(perms.Count * 1d / permsPerPage) - 1;
+			var pageCount = (int)Math.Ceiling(perms.Count * 1d / permsPerPage);
 			page--;
 			if(page < 0)
 				page = 0;
-			if(page > maxPage)
-				page = maxPage;
+			if(page >= pageCount)
+				page = pageCount-1;
 
-			await Context.Channel.SendPaginatedConfirmAsync((DiscordSocketClient)Context.Client, page, i =>
+			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage =>
 				   new EmbedBuilder()
 					   .WithOkColor()
 					   .WithTitle(GetText("page"))
 					   .WithDescription(string.Join("\n", perms.Reverse()
-						   .Skip(permsPerPage * i)
+						   .Skip(permsPerPage * currentPage)
 						   .Take(permsPerPage)
 						   .Select(p => $"`{p.Index + 1}.` {Format.Bold(p.GetCommand(Prefix, (SocketGuild)Context.Guild))}{(p.Index == 0 ? $" [{GetText("uneditable")}]" : "")}"))),
-				maxPage, reactUsers: new[] { (IGuildUser)Context.User }).ConfigureAwait(false);
+				pageCount, reactUsers: new[] { (IGuildUser)Context.User }).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]

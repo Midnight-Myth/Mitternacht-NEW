@@ -49,22 +49,22 @@ namespace Mitternacht.Modules.Utility {
 					return;
 				}
 
-				var pagecount = (int)Math.Ceiling(quotes.Count * 1.0 / elementsPerPage);
-				page = page > pagecount ? pagecount : page;
+				var pageCount = (int)Math.Ceiling(quotes.Count * 1d / elementsPerPage);
+				page = page > pageCount ? pageCount : page;
 
 				var title = isUserNull
 					? GetText("quotes_page", "{page}")
 					: GetText("quotes_user_page", "{page}", user.ToString());
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, p =>
+				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, currentPage =>
 						new EmbedBuilder()
 							.WithOkColor()
-							.WithTitle(title.Replace("{page}", $"{p + 1}"))
+							.WithTitle(title.Replace("{page}", $"{currentPage + 1}"))
 							.WithDescription(string.Join("\n",
-								quotes.Skip(p * elementsPerPage).Take(elementsPerPage).Select(q => isUserNull
+								quotes.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(q => isUserNull
 									? GetText("quotes_list_item_author", q.Id, Format.Bold(q.Keyword.SanitizeMentions()), q.AuthorName.SanitizeMentions())
 									: GetText("quotes_list_item", q.Id, Format.Bold(q.Keyword.SanitizeMentions()))))),
-					pagecount - 1, true, new[] { Context.User as IGuildUser });
+					pageCount, true, new[] { Context.User as IGuildUser });
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

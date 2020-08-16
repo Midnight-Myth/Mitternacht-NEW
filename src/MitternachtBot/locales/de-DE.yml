@@ -935,6 +935,8 @@ utility:
   unh_update_usernames:                          "{0} Nicknames und {1} Usernames von {2} Nutzern wurden in {3} geupdatet."
   uptime:                                        Betriebszeit
   userid:                                        "{0} von Benutzer {1} ist {2}"
+  userrolecolorbindings_list_title:              "Durch {0} farbveränderbare Rollen"
+  userrolecolorbindings_list_empty:              "{0} kann keine Rollenfarben bearbeiten."
   users:                                         Benutzer
   verbose_errors_disabled:                       ''
   verbose_errors_enabled:                        ''

@@ -39,6 +39,7 @@ namespace Mitternacht.Services.Database {
 		public DbSet<VerifiedUser> VerifiedUsers { get; set; }
 		public DbSet<VoiceChannelStats> VoiceChannelStats { get; set; }
 		public DbSet<Warning> Warnings { get; set; }
+		public DbSet<UserRoleColorBinding> UserRoleColorBindings { get; set; }
 
 		public MitternachtContext() {
 
@@ -145,6 +146,10 @@ namespace Mitternacht.Services.Database {
 
 			modelBuilder.Entity<TeamUpdateRank>()
 				.HasIndex(tur => new { tur.GuildId, tur.Rankname })
+				.IsUnique();
+
+			modelBuilder.Entity<UserRoleColorBinding>()
+				.HasIndex(m => new { m.UserId, m.GuildId, m.RoleId })
 				.IsUnique();
 		}
 	}
