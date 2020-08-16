@@ -142,7 +142,7 @@ namespace Mitternacht.Modules.Utility
                         .WithTitle(GetText("activity_page"))
                         .WithFooter(efb => efb.WithText(GetText("activity_users_total", CmdHandler.UserMessagesSent.Count)))
                         .WithDescription(new StringBuilder().AppendJoin('\n', strng).ToString());
-                }, (int)Math.Ceiling(CmdHandler.UserMessagesSent.Count * 1d / elementsPerPage), pageChangeAllowedWithPermissions: gp => gp.Administrator);
+                }, (int)Math.Ceiling(CmdHandler.UserMessagesSent.Count * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser });
             }
         }
     }

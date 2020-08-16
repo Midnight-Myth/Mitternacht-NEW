@@ -229,7 +229,7 @@ namespace Mitternacht.Modules.Verification {
 					embed.AddField(key.Key, GetText("verification_keys_field", discordname, key.ForumUserId, key.KeyScope), true);
 				}
 				return embed;
-			}, pageCount, true, null, gp => gp.Administrator).ConfigureAwait(false);
+			}, pageCount, true, new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 		}
 
 

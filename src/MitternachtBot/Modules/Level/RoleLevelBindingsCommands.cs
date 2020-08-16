@@ -88,7 +88,7 @@ namespace Mitternacht.Modules.Level
                         }
 
                         return embed;
-                    }, pageCount, reactUsers: new[] { Context.User as IGuildUser }, pageChangeAllowedWithPermissions: gp => gp.KickMembers).ConfigureAwait(false);
+                    }, pageCount, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
             }
         }
     }
