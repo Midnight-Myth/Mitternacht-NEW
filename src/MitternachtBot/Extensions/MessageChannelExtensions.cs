@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using NLog;
 
 namespace Mitternacht.Extensions {
 	public static class MessageChannelExtensions {
@@ -107,9 +108,9 @@ namespace Mitternacht.Extensions {
 								toSend.AddPaginatedFooter(currentPage, lastPage);
 							await msg.ModifyAsync(x => x.Embed = toSend.Build()).ConfigureAwait(false);
 						}
-					} catch(Exception) {
-						//ignored
-					}
+					} catch(InvalidOperationException e) {
+						LogManager.GetCurrentClassLogger().Error(e);
+					} catch { }
 				}
 
 				using(msg.OnReaction(client, ChangePage, ChangePage)) {
