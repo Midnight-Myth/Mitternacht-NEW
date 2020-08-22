@@ -37,8 +37,8 @@ namespace Mitternacht.Modules.Verification.Common {
 			_fs = fs;
 		}
 
-		public async Task Start() {
-			await _verificationService.InvokeVerificationStep(this, VerificationStep.Started).ConfigureAwait(false);
+		public async Task StartAsync() {
+			await _verificationService.InvokeVerificationStepAsync(this, VerificationStep.Started).ConfigureAwait(false);
 			UserChannel = await GuildUser.GetOrCreateDMChannelAsync().ConfigureAwait(false);
 
 			var eb = new EmbedBuilder().WithOkColor();
@@ -51,36 +51,36 @@ namespace Mitternacht.Modules.Verification.Common {
 
 			await UserChannel.EmbedAsync(eb).ConfigureAwait(false);
 
-			_client.MessageReceived += Step1_ReceiveForumName;
+			_client.MessageReceived += Step1_ReceiveForumNameAsync;
 		}
 
 		public void Stop() {
-			_client.MessageReceived -= Step1_ReceiveForumName;
-			_client.MessageReceived -= Step2_ReadPrivateForumMessage;
-			_client.MessageReceived -= Step3_ReadDiscordBotkey;
+			_client.MessageReceived -= Step1_ReceiveForumNameAsync;
+			_client.MessageReceived -= Step2_ReadPrivateForumMessageAsync;
+			_client.MessageReceived -= Step3_ReadDiscordBotkeyAsync;
 		}
 
 		public void Dispose()
 			=> Stop();
 
-		private async Task<bool> ReceiveAbort(SocketMessage msg) {
+		private async Task<bool> ReceiveAbortAsync(SocketMessage msg) {
 			if(msg.Content.Equals(AbortString, StringComparison.OrdinalIgnoreCase)) {
 				Stop();
 
 				await ConfirmAsync("process_aborted").ConfigureAwait(false);
 				_verificationService.EndVerification(this);
 
-				await _verificationService.InvokeVerificationStep(this, VerificationStep.Aborted).ConfigureAwait(false);
+				await _verificationService.InvokeVerificationStepAsync(this, VerificationStep.Aborted).ConfigureAwait(false);
 				return true;
 			}
 			return false;
 		}
 
-		private async Task Step1_ReceiveForumName(SocketMessage msg) {
+		private async Task Step1_ReceiveForumNameAsync(SocketMessage msg) {
 			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
-				await _verificationService.InvokeVerificationMessage(this, msg).ConfigureAwait(false);
+				await _verificationService.InvokeVerificationMessageAsync(this, msg).ConfigureAwait(false);
 
-				if(!await ReceiveAbort(msg)) {
+				if(!await ReceiveAbortAsync(msg)) {
 					if(_fs.LoggedIn) {
 						var forumname = msg.Content.Trim();
 						UserInfo forumUser;
@@ -123,7 +123,7 @@ namespace Mitternacht.Modules.Verification.Common {
 
 						ForumUserId = forumUser.Id;
 
-						await _verificationService.InvokeVerificationStep(this, VerificationStep.ForumNameSent).ConfigureAwait(false);
+						await _verificationService.InvokeVerificationStepAsync(this, VerificationStep.ForumNameSent).ConfigureAwait(false);
 
 						//prepare Step 2
 						var verificationKey = VerificationKeyManager.GenerateVerificationKey(GuildUser.GuildId, GuildUser.Id, ForumUserId, VerificationKeyScope.Forum);
@@ -134,8 +134,8 @@ namespace Mitternacht.Modules.Verification.Common {
 						//Step 2 - Send a private message in the GommeHDnet forum
 						await EmbedAsync("send_message_in_forum", verificationKey.Key, GuildUser.ToString(), conversationUrl, passwordChannelString, passwordChannelString).ConfigureAwait(false);
 
-						_client.MessageReceived -= Step1_ReceiveForumName;
-						_client.MessageReceived += Step2_ReadPrivateForumMessage;
+						_client.MessageReceived -= Step1_ReceiveForumNameAsync;
+						_client.MessageReceived += Step2_ReadPrivateForumMessageAsync;
 					} else {
 						await ErrorAsync("forum_not_logged_in").ConfigureAwait(false);
 					}
@@ -143,11 +143,11 @@ namespace Mitternacht.Modules.Verification.Common {
 			}
 		}
 
-		private async Task Step2_ReadPrivateForumMessage(SocketMessage msg) {
+		private async Task Step2_ReadPrivateForumMessageAsync(SocketMessage msg) {
 			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
-				await _verificationService.InvokeVerificationMessage(this, msg).ConfigureAwait(false);
+				await _verificationService.InvokeVerificationMessageAsync(this, msg).ConfigureAwait(false);
 
-				if(!await ReceiveAbort(msg).ConfigureAwait(false)) {
+				if(!await ReceiveAbortAsync(msg).ConfigureAwait(false)) {
 					if(_fs.LoggedIn) {
 						var conversations = await _fs.Forum.GetConversations(startPage: 1, pageCount: 2).ConfigureAwait(false);
 						var conversation = conversations.Where(c => c.Author is UserInfo).FirstOrDefault(c => (c.Author as UserInfo).Id == ForumUserId);
@@ -184,7 +184,7 @@ namespace Mitternacht.Modules.Verification.Common {
 							return;
 						}
 
-						await _verificationService.InvokeVerificationStep(this, VerificationStep.ForumConversationCreated).ConfigureAwait(false);
+						await _verificationService.InvokeVerificationStepAsync(this, VerificationStep.ForumConversationCreated).ConfigureAwait(false);
 
 						//complete Step 2
 						//this has to be below Step 3 preparation to allow handling the failure of sending the second verification key.
@@ -192,8 +192,8 @@ namespace Mitternacht.Modules.Verification.Common {
 
 						await EmbedAsync("send_botkey_in_dm").ConfigureAwait(false);
 
-						_client.MessageReceived -= Step2_ReadPrivateForumMessage;
-						_client.MessageReceived += Step3_ReadDiscordBotkey;
+						_client.MessageReceived -= Step2_ReadPrivateForumMessageAsync;
+						_client.MessageReceived += Step3_ReadDiscordBotkeyAsync;
 					} else {
 						await ErrorAsync("forum_not_logged_in").ConfigureAwait(false);
 					}
@@ -201,11 +201,11 @@ namespace Mitternacht.Modules.Verification.Common {
 			}
 		}
 
-		private async Task Step3_ReadDiscordBotkey(SocketMessage msg) {
+		private async Task Step3_ReadDiscordBotkeyAsync(SocketMessage msg) {
 			if(msg.Channel.Id == UserChannel.Id && msg.Author.Id == GuildUser.Id) {
-				await _verificationService.InvokeVerificationMessage(this, msg).ConfigureAwait(false);
+				await _verificationService.InvokeVerificationMessageAsync(this, msg).ConfigureAwait(false);
 
-				if(!await ReceiveAbort(msg)) {
+				if(!await ReceiveAbortAsync(msg)) {
 					var keyString = VerificationKeyManager.GetKeyString(GuildUser.GuildId, GuildUser.Id, ForumUserId, VerificationKeyScope.Discord);
 					if(!msg.Content.Equals(keyString)) {
 						await ErrorAsync("dm_no_botkey").ConfigureAwait(false);
@@ -213,11 +213,11 @@ namespace Mitternacht.Modules.Verification.Common {
 					}
 
 					try {
-						await _verificationService.SetVerified(GuildUser, ForumUserId);
+						await _verificationService.SetVerifiedAsync(GuildUser, ForumUserId);
 						await EmbedAsync("process_completed");
 						_verificationService.EndVerification(this);
 
-						await _verificationService.InvokeVerificationStep(this, VerificationStep.Ended).ConfigureAwait(false);
+						await _verificationService.InvokeVerificationStepAsync(this, VerificationStep.Ended).ConfigureAwait(false);
 					} catch(UserCannotVerifyException) {
 						await ErrorAsync("user_cannot_verify").ConfigureAwait(false);
 					}

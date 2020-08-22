@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Verification.Services {
 			_fs = fs;
 		}
 
-		public async Task StartVerification(IGuildUser guildUser) {
+		public async Task StartVerificationAsync(IGuildUser guildUser) {
 			if(VerificationProcesses.Any(vp => vp.GuildUser == guildUser))
 				throw new UserAlreadyVerifyingException();
 
@@ -44,7 +44,7 @@ namespace Mitternacht.Modules.Verification.Services {
 
 			var verificationProcess = new VerificationProcess(guildUser, _client, _db, this, _stringService, _fs);
 			try {
-				await verificationProcess.Start();
+				await verificationProcess.StartAsync();
 			} catch(Exception) {
 				verificationProcess.Dispose();
 				throw;
@@ -109,7 +109,7 @@ namespace Mitternacht.Modules.Verification.Services {
 				await guildUser.AddRoleAsync(role).ConfigureAwait(false);
 		}
 
-		public async Task SetVerified(IGuildUser guildUser, long forumUserId) {
+		public async Task SetVerifiedAsync(IGuildUser guildUser, long forumUserId) {
 			using var uow = _db.UnitOfWork;
 			if(!uow.VerifiedUsers.SetVerified(guildUser.GuildId, guildUser.Id, forumUserId))
 				throw new UserCannotVerifyException();
@@ -136,10 +136,10 @@ namespace Mitternacht.Modules.Verification.Services {
 			uow.SaveChanges();
 		}
 
-		public async Task InvokeVerificationStep(VerificationProcess process, VerificationStep step)
+		public async Task InvokeVerificationStepAsync(VerificationProcess process, VerificationStep step)
 			=> await VerificationStep.Invoke(process, step).ConfigureAwait(false);
 
-		public async Task InvokeVerificationMessage(VerificationProcess process, SocketMessage msg)
+		public async Task InvokeVerificationMessageAsync(VerificationProcess process, SocketMessage msg)
 			=> await VerificationMessage.Invoke(process, msg).ConfigureAwait(false);
 	}
 }
