@@ -34,11 +34,12 @@ namespace Mitternacht.Modules.Verification {
 		public async Task Verify() {
 			if(_fs.LoggedIn) {
 				try {
-					await Service.StartVerification(Context.User as IGuildUser).ConfigureAwait(false);
+					await Service.StartVerificationAsync(Context.User as IGuildUser).ConfigureAwait(false);
 				} catch(UserAlreadyVerifyingException) {
 					await ReplyErrorLocalized("already_started").ConfigureAwait(false);
 				} catch(UserAlreadyVerifiedException) {
 					await ReplyErrorLocalized("already_verified").ConfigureAwait(false);
+					await Service.AddVerifiedRoleAsync(Context.User as IGuildUser).ConfigureAwait(false);
 				} catch(HttpException e) {
 					if(e.HttpCode == System.Net.HttpStatusCode.Forbidden)
 						await ReplyErrorLocalized("unable_sending_dm").ConfigureAwait(false);
@@ -68,7 +69,7 @@ namespace Mitternacht.Modules.Verification {
 			else if(uow.VerifiedUsers.IsVerified(user.GuildId, forumUserId))
 				await ErrorLocalized("already_verified_forum", forumUserName).ConfigureAwait(false);
 			else {
-				await Service.SetVerified(user, forumUserId).ConfigureAwait(false);
+				await Service.SetVerifiedAsync(user, forumUserId).ConfigureAwait(false);
 				await ConfirmLocalized("add_manually_success", user.ToString(), forumUserName).ConfigureAwait(false);
 			}
 		}
