@@ -39,6 +39,7 @@ namespace Mitternacht.Modules.Verification {
 					await ReplyErrorLocalized("already_started").ConfigureAwait(false);
 				} catch(UserAlreadyVerifiedException) {
 					await ReplyErrorLocalized("already_verified").ConfigureAwait(false);
+					await Service.AddVerifiedRoleAsync(Context.User as IGuildUser).ConfigureAwait(false);
 				} catch(HttpException e) {
 					if(e.HttpCode == System.Net.HttpStatusCode.Forbidden)
 						await ReplyErrorLocalized("unable_sending_dm").ConfigureAwait(false);
