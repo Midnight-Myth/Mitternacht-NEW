@@ -40,17 +40,21 @@ namespace Mitternacht.Modules.Utility {
 			public async Task UserRoleColorBinding(SocketRole role, IGuildUser guildUser = null) {
 				guildUser ??= Context.User as IGuildUser;
 				
-				if(!_uow.UserRoleColorBindings.HasBinding(guildUser.Id, role)) {
-					_uow.UserRoleColorBindings.CreateBinding(guildUser.Id, role);
+				if((Context.User as IGuildUser).GetRoles().Max(r => r.Position) >= role.Position) {
+					if(!_uow.UserRoleColorBindings.HasBinding(guildUser.Id, role)) {
+						_uow.UserRoleColorBindings.CreateBinding(guildUser.Id, role);
 
-					await ConfirmLocalized("userrolecolorbinding_role_added", guildUser.ToString(), role.Name).ConfigureAwait(false);
+						await ConfirmLocalized("userrolecolorbinding_role_added", guildUser.ToString(), role.Name).ConfigureAwait(false);
+					} else {
+						_uow.UserRoleColorBindings.DeleteBinding(guildUser.Id, role);
+
+						await ConfirmLocalized("userrolecolorbinding_role_removed", guildUser.ToString(), role.Name).ConfigureAwait(false);
+					}
+
+					_uow.SaveChanges(false);
 				} else {
-					_uow.UserRoleColorBindings.DeleteBinding(guildUser.Id, role);
-
-					await ConfirmLocalized("userrolecolorbinding_role_removed", guildUser.ToString(), role.Name).ConfigureAwait(false);
+					await ErrorLocalized("userrolecolorbinding_position_too_high", role.Name).ConfigureAwait(false);
 				}
-
-				_uow.SaveChanges(false);
 			}
 
 			[MitternachtCommand, Description, Usage, Aliases]
