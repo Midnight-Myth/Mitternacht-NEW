@@ -215,6 +215,10 @@
 			<label asp-for="ForumNotificationChannelId" class="control-label"></label>
 			<input asp-for="ForumNotificationChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
 		</div>
+		<div class="form-group">
+			<label asp-for="ColorMetricSimilarityRadius" class="control-label"></label>
+			<input asp-for="ColorMetricSimilarityRadius" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+		</div>
 
 		@if(ViewBag.PermissionWriteGuildConfig) {
 			<input type="hidden" asp-for="GuildId" />

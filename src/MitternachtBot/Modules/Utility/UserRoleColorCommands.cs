@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Utility {
 					var forbiddenRoleColors = Context.Guild.Roles.Where(r => r.IsHoisted && !levelRoles.Contains(r.Id) && r.Id != role.Id);
 
 					var requestedColor = color.ToColor();
-					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => c.Color.Difference(requestedColor) < 5.0);
+					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => c.Color.Difference(requestedColor) < _uow.GuildConfigs.For(Context.Guild.Id).ColorMetricSimilarityRadius);
 
 					if(similarlyColoredRole == null) {
 						await role.ModifyAsync(rp => rp.Color = requestedColor).ConfigureAwait(false);

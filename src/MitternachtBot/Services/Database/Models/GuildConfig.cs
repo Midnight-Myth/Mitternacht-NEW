@@ -48,6 +48,7 @@ namespace Mitternacht.Services.Database.Models {
 		public ulong? CountToNumberChannelId             { get; set; } = null;
 		public double CountToNumberMessageChance         { get; set; } = 0.05;
 		public ulong? ForumNotificationChannelId         { get; set; } = null;
+		public double ColorMetricSimilarityRadius        { get; set; } = 5.0;
 
 		public Permission         RootPermission     { get; set; } = null;
 		public List<Permissionv2> Permissions        { get; set; }
