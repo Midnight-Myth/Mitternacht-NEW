@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services.Database;
@@ -50,6 +51,29 @@ namespace Mitternacht.Modules.Utility {
 				}
 
 				_uow.SaveChanges(false);
+			}
+
+			[MitternachtCommand, Description, Usage, Aliases]
+			[RequireContext(ContextType.Guild)]
+			public async Task UserRoleColor(SocketRole role, HexColor color) {
+				if(_uow.UserRoleColorBindings.HasBinding(Context.User.Id, role)) {
+					var level = _uow.LevelModel.Get(Context.Guild.Id, Context.User.Id)?.Level ?? 0;
+					var levelRoles = _uow.RoleLevelBindings.GetAll().Where(rl => rl.MinimumLevel <= level).Select(rl => rl.RoleId).ToArray();
+					var forbiddenRoleColors = Context.Guild.Roles.Where(r => r.IsHoisted && !levelRoles.Contains(r.Id) && r.Id != role.Id);
+
+					var requestedColor = color.ToColor();
+					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => c.Color.Difference(requestedColor) < 5.0);
+
+					if(similarlyColoredRole == null) {
+						await role.ModifyAsync(rp => rp.Color = requestedColor).ConfigureAwait(false);
+
+						await ReplyConfirmLocalized("userrolecolor_changed", role.Name, requestedColor).ConfigureAwait(false);
+					} else {
+						await ReplyErrorLocalized("userrolecolor_color_too_similar", requestedColor, similarlyColoredRole.Name).ConfigureAwait(false);
+					}
+				} else {
+					await ReplyErrorLocalized("userrolecolor_no_binding", role.Name).ConfigureAwait(false);
+				}
 			}
 		}
 	}

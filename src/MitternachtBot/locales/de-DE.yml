@@ -935,6 +935,9 @@ utility:
   unh_update_usernames:                          "{0} Nicknames und {1} Usernames von {2} Nutzern wurden in {3} geupdatet."
   uptime:                                        Betriebszeit
   userid:                                        "{0} von Benutzer {1} ist {2}"
+  userrolecolor_changed:                         "Farbe der Rolle **{0}** zu **{1}** geändert."
+  userrolecolor_color_too_similar:               "Die Farbe **{0}** liegt zu nah an der Farbe der Rolle **{1}**."
+  userrolecolor_no_binding:                      "Du hast keine Berechtigung zum Ändern der Farbe der Rolle **{0}**."
   userrolecolorbinding_role_added:               "**{0}** kann nun die Farbe der Rolle **{1}** bearbeiten."
   userrolecolorbinding_role_removed:             "**{0}** kann die Farbe der Rolle **{1}** nicht mehr bearbeiten."
   userrolecolorbindings_list_title:              "Durch {0} farbveränderbare Rollen"

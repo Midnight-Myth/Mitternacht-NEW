@@ -2383,3 +2383,9 @@
   -        urcb
   desc:    "Gibt oder entzieht einem Nutzer das Recht, die Farbe einer Rolle zu bearbeiten."
   usage:   "`{0}userrolecolorbinding <Rolle> [Nutzer]`"
+- name:    userrolecolor
+  cmd:     userrolecolor
+  aliases:
+  -        urc
+  desc:    "Ändert die Farbe der angegebenen Rolle bei Besitz der nötigen Berechtigung."
+  usage:   "`{0}userrolecolor <Rolle> <#RRGGBB>`"
