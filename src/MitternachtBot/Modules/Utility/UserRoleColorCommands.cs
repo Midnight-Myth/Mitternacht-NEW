@@ -61,14 +61,14 @@ namespace Mitternacht.Modules.Utility {
 			[RequireContext(ContextType.Guild)]
 			public async Task UserRoleColor(SocketRole role, HexColor color) {
 				if(_uow.UserRoleColorBindings.HasBinding(Context.User.Id, role)) {
-					var level = _uow.LevelModel.Get(Context.Guild.Id, Context.User.Id)?.Level ?? 0;
-					var levelRoles = _uow.RoleLevelBindings.GetAll().Where(rl => rl.MinimumLevel <= level).Select(rl => rl.RoleId).ToArray();
-					var forbiddenRoleColors = Context.Guild.Roles.Where(r => r.IsHoisted && !levelRoles.Contains(r.Id) && r.Id != role.Id);
+					var allowedRoleColors = (Context.User as IGuildUser).GetRoles().Select(r => r.Color).ToArray();
+					var forbiddenRoleColors = Context.Guild.Roles.Where(r => r.IsHoisted && r.Id != role.Id);
 
 					var requestedColor = color.ToColor();
-					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => c.Color.Difference(requestedColor) < _uow.GuildConfigs.For(Context.Guild.Id).ColorMetricSimilarityRadius);
+					var similarityRadius = _uow.GuildConfigs.For(Context.Guild.Id).ColorMetricSimilarityRadius;
+					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => c.Color.Difference(requestedColor) < similarityRadius);
 
-					if(similarlyColoredRole == null) {
+					if(similarlyColoredRole == null || allowedRoleColors.Any(c => c.Difference(requestedColor) < similarityRadius)) {
 						await role.ModifyAsync(rp => rp.Color = requestedColor).ConfigureAwait(false);
 
 						await ReplyConfirmLocalized("userrolecolor_changed", role.Name, requestedColor).ConfigureAwait(false);
