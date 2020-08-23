@@ -38,9 +38,10 @@ namespace Mitternacht.Modules.Utility {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageRoles)]
 			public async Task UserRoleColorBinding(SocketRole role, IGuildUser guildUser = null) {
-				guildUser ??= Context.User as IGuildUser;
+				var contextGuildUser = Context.User as IGuildUser;
+				guildUser ??= contextGuildUser;
 				
-				if((Context.User as IGuildUser).GetRoles().Max(r => r.Position) >= role.Position) {
+				if(contextGuildUser.GuildPermissions.Administrator || contextGuildUser.GetRoles().Max(r => r.Position) >= role.Position) {
 					if(!_uow.UserRoleColorBindings.HasBinding(guildUser.Id, role)) {
 						_uow.UserRoleColorBindings.CreateBinding(guildUser.Id, role);
 
