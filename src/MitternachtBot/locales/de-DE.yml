@@ -940,7 +940,7 @@ utility:
   userrolecolor_no_binding:                      "Du hast keine Berechtigung zum Ändern der Farbe der Rolle **{0}**."
   userrolecolorbinding_role_added:               "**{0}** kann nun die Farbe der Rolle **{1}** bearbeiten."
   userrolecolorbinding_role_removed:             "**{0}** kann die Farbe der Rolle **{1}** nicht mehr bearbeiten."
-  userrolecolorbindings_list_title:              "Durch {0} farbveränderbare Rollen"
+  userrolecolorbindings_list_title:              "Rollen, deren Farbe {0} verändern kann"
   userrolecolorbindings_list_empty:              "{0} kann keine Rollenfarben bearbeiten."
   users:                                         Benutzer
   verbose_errors_disabled:                       ''

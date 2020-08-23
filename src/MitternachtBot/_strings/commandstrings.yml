@@ -2374,7 +2374,8 @@
   usage:   "`{0}generatecommandslist`"
 - name:    userrolecolorbindings
   cmd:     userrolecolorbindings
-  aliases: []
+  aliases:
+  -        urcbs
   desc:    "Zeigt alle durch den angegebenen Nutzer farbveränderbaren Rollen an."
   usage:   "`{0}userrolecolorbindings [Nutzer]`"
 - name:    userrolecolorbinding

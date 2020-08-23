@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Utility {
 				user ??= Context.User;
 
 				const int elementsPerPage = 10;
-				var bindings = _uow.UserRoleColorBindings.UserBindingsOnGuild(user.Id, Context.Guild.Id).ToList();
+				var bindings = _uow.UserRoleColorBindings.UserBindingsOnGuild(user.Id, Context.Guild.Id).AsEnumerable().Select(b => Context.Guild.GetRole(b.RoleId)?.Name ?? b.RoleId.ToString()).ToList();
 
 				if(bindings.Any()) {
 					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, 0, currentPage => new EmbedBuilder().WithTitle(GetText("userrolecolorbindings_list_title", user.ToString())).WithOkColor().WithDescription(string.Join("\n", bindings.Skip(elementsPerPage * currentPage).Take(elementsPerPage))), (int)Math.Ceiling(bindings.Count * 1d / elementsPerPage), true, new[] { Context.User as IGuildUser }).ConfigureAwait(false);
