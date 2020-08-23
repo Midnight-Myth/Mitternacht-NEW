@@ -2374,6 +2374,19 @@
   usage:   "`{0}generatecommandslist`"
 - name:    userrolecolorbindings
   cmd:     userrolecolorbindings
-  aliases: []
+  aliases:
+  -        urcbs
   desc:    "Zeigt alle durch den angegebenen Nutzer farbveränderbaren Rollen an."
   usage:   "`{0}userrolecolorbindings [Nutzer]`"
+- name:    userrolecolorbinding
+  cmd:     userrolecolorbinding
+  aliases:
+  -        urcb
+  desc:    "Gibt oder entzieht einem Nutzer das Recht, die Farbe einer Rolle zu bearbeiten."
+  usage:   "`{0}userrolecolorbinding <Rolle> [Nutzer]`"
+- name:    userrolecolor
+  cmd:     userrolecolor
+  aliases:
+  -        urc
+  desc:    "Ändert die Farbe der angegebenen Rolle bei Besitz der nötigen Berechtigung."
+  usage:   "`{0}userrolecolor <Rolle> <#RRGGBB>`"
