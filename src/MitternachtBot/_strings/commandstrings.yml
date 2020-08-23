@@ -2377,3 +2377,9 @@
   aliases: []
   desc:    "Zeigt alle durch den angegebenen Nutzer farbveränderbaren Rollen an."
   usage:   "`{0}userrolecolorbindings [Nutzer]`"
+- name:    userrolecolorbinding
+  cmd:     userrolecolorbinding
+  aliases:
+  -        urcb
+  desc:    "Gibt oder entzieht einem Nutzer das Recht, die Farbe einer Rolle zu bearbeiten."
+  usage:   "`{0}userrolecolorbinding <Rolle> [Nutzer]`"
