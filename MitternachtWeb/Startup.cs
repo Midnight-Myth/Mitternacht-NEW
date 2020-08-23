@@ -94,12 +94,12 @@ namespace MitternachtWeb {
 				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 			});
 
-			if(env.IsDevelopment()) {
-				app.UseDeveloperExceptionPage();
-			} else {
-				app.UseExceptionHandler("/Home/Error");
+			//if(env.IsDevelopment()) {
+			//	app.UseDeveloperExceptionPage();
+			//} else {
+				app.UseExceptionHandler("/error");
 				app.UseHsts();
-			}
+			//}
 			app.UseHttpsRedirection();
 			if(Configuration.GetValue("ServeStaticFiles", true)) {
 				app.UseStaticFiles();

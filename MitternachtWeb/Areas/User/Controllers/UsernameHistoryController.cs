@@ -27,7 +27,7 @@ namespace MitternachtWeb.Areas.User.Controllers {
 		public IActionResult Nicknames() {
 			using var uow = _db.UnitOfWork;
 
-			var nicknames = uow.NicknameHistory.GetUserNames(RequestedUserId).ToList();
+			var nicknames = uow.NicknameHistory.GetUserNames(RequestedUserId).OrderByDescending(n => n.DateSet).ToList();
 
 			return View("Nicknames", nicknames);
 		}

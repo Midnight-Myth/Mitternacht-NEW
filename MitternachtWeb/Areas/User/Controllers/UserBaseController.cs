@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MitternachtWeb.Controllers;
+using MitternachtWeb.Exceptions;
 using System;
 
 namespace MitternachtWeb.Areas.User.Controllers {
@@ -16,11 +17,15 @@ namespace MitternachtWeb.Areas.User.Controllers {
 				if(ulong.TryParse(userIdString.ToString(), out var userId)) {
 					RequestedUserId     = userId;
 					RequestedSocketUser = Program.MitternachtBot.Client.GetUser(RequestedUserId);
+
+					if(RequestedSocketUser is null) {
+						throw new UserNotFoundException(userId);
+					}
 				} else {
-					throw new ArgumentException("userId");
+					throw new ArgumentException("Failed to parse the UserID.", nameof(userId));
 				}
 			} else {
-				throw new ArgumentNullException("userId");
+				throw new ArgumentNullException("No UserID given.", nameof(userIdString));
 			}
 
 			base.OnActionExecuting(context);

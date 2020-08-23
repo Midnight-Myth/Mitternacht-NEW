@@ -1,6 +1,7 @@
+using System;
+
 namespace MitternachtWeb.Models {
 	public class ErrorViewModel {
-		public string RequestId { get; set; }
-		public bool   ShowRequestId => !string.IsNullOrEmpty(RequestId);
+		public Exception ErrorException { get; set; }
 	}
 }
