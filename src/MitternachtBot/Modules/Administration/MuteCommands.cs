@@ -103,9 +103,9 @@ namespace Mitternacht.Modules.Administration {
 					var timeSpan       = muteTime.Value - DateTime.UtcNow;
 					var timeSpanString = $"{((int) Math.Floor(timeSpan.TotalDays) == 0 ? "" : (int) Math.Floor(timeSpan.TotalDays) + "d")} {(timeSpan.Hours == 0 ? "" : timeSpan.Hours + "h")} {(timeSpan.Minutes == 0 ? "" : timeSpan.Minutes + "min")} {(timeSpan.Seconds == 0 ? "" : timeSpan.Seconds + "s")}".Trim();
 
-					await Context.Channel.SendConfirmAsync($"User {guildUser} ist noch {Format.Bold(timeSpanString)} gemutet.");
+					await ConfirmLocalized("mutetime_muted", guildUser.ToString(), timeSpanString).ConfigureAwait(false);
 				} else {
-					await Context.Channel.SendErrorAsync($"User {guildUser} ist nicht gemutet.");
+					await ErrorLocalized("mutetime_not_muted", guildUser.ToString()).ConfigureAwait(false);
 				}
 			}
 

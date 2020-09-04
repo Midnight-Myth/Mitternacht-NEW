@@ -102,6 +102,8 @@ administration:
   mute_error:                                    Ich habe wahrscheinlich die benötigten Rechte nicht.
   mute_error_timeformat:                         Das angegebene Zeitformat `{0}` ist falsch.
   mute_role_set:                                 Neue Mute-Rolle gesetzt.
+  mutetime_not_muted:                            Der Nutzer **{0}** ist nicht gemutet.
+  mutetime_muted:                                Der Nutzer **{0}** ist noch **{1}** gemutet.
   muted_pl:                                      wurden stummgeschaltet
   muted_sn:                                      wurde stummgeschaltet
   need_admin:                                    Ich brauche **Administrationsrechte**, um dies tun zu können.
