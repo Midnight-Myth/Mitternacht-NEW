@@ -6,7 +6,6 @@ using Discord;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
-using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services.Database;
 
