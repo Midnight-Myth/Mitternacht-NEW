@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -160,11 +159,6 @@ namespace Mitternacht.Modules.Administration.Services {
 			if(UnmuteTimers.TryGetValue(guildId, out var userUnmuteTimers) && userUnmuteTimers.TryRemove(userId, out var removed)) {
 				removed.Dispose();
 			}
-		}
-
-		public DateTime? GetMuteTime(IGuildUser guildUser) {
-			using var uow = _db.UnitOfWork;
-			return uow.GuildConfigs.For(guildUser.GuildId, set => set.Include(x => x.UnmuteTimers)).UnmuteTimers.FirstOrDefault(ut => ut.UserId == guildUser.Id)?.UnmuteAt;
 		}
 
 		private void RemoveUnmuteTimerFromDb(ulong guildId, ulong userId) {
