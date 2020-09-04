@@ -31,7 +31,7 @@ namespace Mitternacht.Modules.Administration {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
 				gc.MuteRoleName = name;
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
-				await ReplyConfirmLocalized("mute_role_set").ConfigureAwait(false);
+				await ConfirmLocalized("mute_role_set").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -49,10 +49,10 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Mute(IGuildUser user) {
 				try {
 					await Service.MuteUser(user).ConfigureAwait(false);
-					await ReplyConfirmLocalized("user_muted", Format.Bold(user.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("user_muted", Format.Bold(user.ToString())).ConfigureAwait(false);
 				} catch(Exception e) {
 					_log.Warn(e);
-					await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
+					await ErrorLocalized("mute_error").ConfigureAwait(false);
 				}
 			}
 
@@ -78,14 +78,14 @@ namespace Mitternacht.Modules.Administration {
 					} else {
 						try {
 							await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
-							await ReplyConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
+							await ConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
 						} catch(Exception e) {
 							_log.Warn(e);
-							await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
+							await ErrorLocalized("mute_error").ConfigureAwait(false);
 						}
 					}
 				} else {
-					await ReplyErrorLocalized("mute_error_timeformat", time).ConfigureAwait(false);
+					await ErrorLocalized("mute_error_timeformat", time).ConfigureAwait(false);
 				}
 			}
 
@@ -125,10 +125,10 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Unmute(IGuildUser user) {
 				try {
 					await Service.UnmuteUser(user).ConfigureAwait(false);
-					await ReplyConfirmLocalized("user_unmuted", Format.Bold(user.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("user_unmuted", Format.Bold(user.ToString())).ConfigureAwait(false);
 				} catch(Exception e) {
 					_log.Warn(e);
-					await ReplyErrorLocalized("mute_error").ConfigureAwait(false);
+					await ErrorLocalized("mute_error").ConfigureAwait(false);
 				}
 			}
 		}
