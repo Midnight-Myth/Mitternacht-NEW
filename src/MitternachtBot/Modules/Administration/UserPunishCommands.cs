@@ -57,7 +57,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[Priority(1)]
 			public async Task Warnlog(int page, [Remainder] IGuildUser user = null)
-				=> await Warnlog(1, user?.Id);
+				=> await Warnlog(page, user?.Id);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
