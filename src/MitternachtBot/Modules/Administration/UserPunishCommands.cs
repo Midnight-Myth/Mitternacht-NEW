@@ -31,18 +31,18 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
 					try {
-						await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
+						await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("userpunish_warn_warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("userpunish_warn_reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 					} catch { }
 
 					var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
 
 					if(punishment == null) {
-						await ConfirmLocalized("warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
+						await ConfirmLocalized("userpunish_warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
 					} else {
-						await ConfirmLocalized("warn_user_warned_and_punished", Format.Bold(user.ToString()), Format.Bold(punishment.ToString())).ConfigureAwait(false);
+						await ConfirmLocalized("userpunish_warn_user_warned_and_punished", Format.Bold(user.ToString()), Format.Bold(punishment.ToString())).ConfigureAwait(false);
 					}
 				} else {
-					await ErrorLocalized("warn_hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("userpunish_warn_hierarchy").ConfigureAwait(false);
 				}
 			}
 
@@ -80,21 +80,21 @@ namespace Mitternacht.Modules.Administration {
 				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).OrderByDescending(w => w.DateAdded);
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
-					.WithTitle(GetText("warnlog_for_user", username));
+					.WithTitle(GetText("userpunish_warnlog_for_user", username));
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
-				var textKey     = showMods ? "warned_on_by" : "warned_on";
+				var textKey     = showMods ? "userpunish_warnlog_warned_on_by" : "userpunish_warnlog_warned_on";
 
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
 					var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
 
 					if(!warnings.Any()) {
-						embed.WithDescription(GetText("warnings_none"));
+						embed.WithDescription(GetText("userpunish_warnlog_warnings_none"));
 					} else {
 						foreach(var w in warnings) {
 							var warnText = GetText(textKey, w.DateAdded, w.Moderator);
 
 							if(w.Forgiven)
-								warnText = $"{Format.Strikethrough(warnText)} {(showMods ? GetText("warn_cleared_by", w.ForgivenBy) : "")}".Trim();
+								warnText = $"{Format.Strikethrough(warnText)} {(showMods ? GetText("userpunish_warnlog_warn_cleared_by", w.ForgivenBy) : "")}".Trim();
 							warnText = $"({w.Id}) {warnText}";
 
 							embed.AddField(x => x.WithName(warnText).WithValue(w.Reason));
@@ -125,7 +125,7 @@ namespace Mitternacht.Modules.Administration {
 																											return $"{(await Context.Guild.GetUserAsync(x.Key).ConfigureAwait(false))?.ToString() ?? x.Key.ToString()} | {total} ({all} - {forgiven})";
 																										}));
 
-																	return new EmbedBuilder().WithTitle(GetText("warnings_list")).WithDescription(string.Join("\n", ws));
+																	return new EmbedBuilder().WithTitle(GetText("userpunish_warnlogall_warnings_list")).WithDescription(string.Join("\n", ws));
 																}, (int)Math.Ceiling(warnings.Count() * 1d / elementsPerPage), reactUsers: new[] {Context.User as IGuildUser}, pageChangeAllowedWithPermissions: gp => gp.KickMembers)
 							.ConfigureAwait(false);
 			}
@@ -143,7 +143,7 @@ namespace Mitternacht.Modules.Administration {
 				await uow.Warnings.ForgiveAll(Context.Guild.Id, userId, Context.User.ToString()).ConfigureAwait(false);
 				uow.SaveChanges(false);
 
-				await ConfirmLocalized("warnings_cleared", Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
+				await ConfirmLocalized("userpunish_warnclear_warnings_cleared", Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -154,10 +154,10 @@ namespace Mitternacht.Modules.Administration {
 				
 				if(warning != null) {
 					uow.Warnings.Remove(warning);
-					await ConfirmLocalized("warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
+					await ConfirmLocalized("userpunish_warnremove_warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
+					await ErrorLocalized("userpunish_warnremove_warn_id_not_found", id).ConfigureAwait(false);
 				}
 			}
 
@@ -168,10 +168,10 @@ namespace Mitternacht.Modules.Administration {
 				var warn = uow.Warnings.Get(id);
 
 				if(warn != null) {
-					var title = GetText("warned_by", warn.Moderator);
+					var title = GetText("userpunish_warndetails_warned_by", warn.Moderator);
 
 					if(warn.Forgiven) {
-						title = $"{Format.Strikethrough(title)} {GetText("warn_cleared_by", warn.ForgivenBy)}";
+						title = $"{Format.Strikethrough(title)} {GetText("userpunish_warndetails_warn_cleared_by", warn.ForgivenBy)}";
 					}
 
 					title += $" ({warn.Id:X})";
@@ -196,7 +196,7 @@ namespace Mitternacht.Modules.Administration {
 					await Context.Channel.EmbedAsync(embedBuilder).ConfigureAwait(false);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
+					await ErrorLocalized("userpunish_warndetails_warn_id_not_found", id).ConfigureAwait(false);
 				}
 			}
 
@@ -214,12 +214,12 @@ namespace Mitternacht.Modules.Administration {
 
 						uow.Warnings.Update(warn);
 						await uow.SaveChangesAsync(false);
-						await ConfirmLocalized("warn_edit", id, (await Context.Guild.GetUserAsync(warn.UserId)).ToString(), string.IsNullOrWhiteSpace(oldReason) ? "null" : oldReason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
+						await ConfirmLocalized("userpunish_warnedit_warn_edit", id, (await Context.Guild.GetUserAsync(warn.UserId)).ToString(), string.IsNullOrWhiteSpace(oldReason) ? "null" : oldReason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
 					} else {
-						await ErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
+						await ErrorLocalized("userpunish_warnedit_warn_id_not_found", id).ConfigureAwait(false);
 					}
 				} else if(Context.User is IGuildUser user && warn.GuildId != user.GuildId) {
-					await ErrorLocalized("warn_edit_perms", id).ConfigureAwait(false);
+					await ErrorLocalized("userpunish_warnedit_warn_edit_perms", id).ConfigureAwait(false);
 				}
 			}
 
@@ -238,7 +238,7 @@ namespace Mitternacht.Modules.Administration {
 					});
 
 					uow.SaveChanges(false);
-					await ConfirmLocalized("warn_punish_set", Format.Bold(punish.ToString()), Format.Bold(numberOfWarns.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("userpunish_warnpunish_warn_punish_set", Format.Bold(punish.ToString()), Format.Bold(numberOfWarns.ToString())).ConfigureAwait(false);
 				}
 			}
 
@@ -251,7 +251,7 @@ namespace Mitternacht.Modules.Administration {
 
 					warnPunishments.RemoveAll(x => x.Count == numberOfWarns);
 					uow.SaveChanges(false);
-					await ConfirmLocalized("warn_punish_rem", Format.Bold(numberOfWarns.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("userpunish_warnpunish_warn_punish_rem", Format.Bold(numberOfWarns.ToString())).ConfigureAwait(false);
 				}
 			}
 
@@ -261,7 +261,7 @@ namespace Mitternacht.Modules.Administration {
 				var warnPunishments = uow.GuildConfigs.For(Context.Guild.Id, gc => gc.Include(x => x.WarnPunishments)).WarnPunishments.OrderBy(x => x.Count).ToArray();
 
 				var list = warnPunishments.Any() ? string.Join("\n", warnPunishments.Select(x => $"{x.Count} -> {x.Punishment}")) : GetText("warnpl_none");
-				await Context.Channel.SendConfirmAsync(list, GetText("warn_punish_list")).ConfigureAwait(false);
+				await Context.Channel.SendConfirmAsync(list, GetText("userpunish_warnpunishlist_warn_punish_list")).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -272,7 +272,7 @@ namespace Mitternacht.Modules.Administration {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max()) {
 					if(!string.IsNullOrWhiteSpace(msg)) {
 						try {
-							await user.SendErrorAsync(GetText("bandm", Format.Bold(Context.Guild.Name), msg));
+							await user.SendErrorAsync(GetText("userpunish_ban_bandm", Format.Bold(Context.Guild.Name), msg));
 						} catch { }
 					}
 
@@ -280,9 +280,9 @@ namespace Mitternacht.Modules.Administration {
 					
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
-						.WithTitle($"⛔️ {GetText("banned_user")}")
+						.WithTitle($"⛔️ {GetText("userpunish_ban_banned_user")}")
 						.AddField(efb => efb
-							.WithName(GetText("username"))
+							.WithName(GetText("userpunish_ban_username"))
 							.WithValue(user.ToString())
 							.WithIsInline(true))
 						.AddField(efb => efb
@@ -292,7 +292,7 @@ namespace Mitternacht.Modules.Administration {
 					
 					await Context.Channel.EmbedAsync(embedBuilder).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("userpunish_ban_hierarchy").ConfigureAwait(false);
 				}
 			}
 
@@ -322,9 +322,9 @@ namespace Mitternacht.Modules.Administration {
 				if(ban != null) {
 					await Context.Guild.RemoveBanAsync(ban.User).ConfigureAwait(false);
 
-					await ConfirmLocalized("unbanned_user", Format.Bold(ban.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("userpunish_unban_unbanned_user", Format.Bold(ban.ToString())).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("user_not_found").ConfigureAwait(false);
+					await ErrorLocalized("userpunish_unban_user_not_found").ConfigureAwait(false);
 				}
 			}
 
@@ -337,7 +337,7 @@ namespace Mitternacht.Modules.Administration {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max()) {
 					if(!string.IsNullOrWhiteSpace(msg)) {
 						try {
-							await user.SendErrorAsync(GetText("sbdm", Format.Bold(Context.Guild.Name), msg)).ConfigureAwait(false);
+							await user.SendErrorAsync(GetText("userpunish_softban_sbdm", Format.Bold(Context.Guild.Name), msg)).ConfigureAwait(false);
 						} catch { }
 					}
 
@@ -350,9 +350,9 @@ namespace Mitternacht.Modules.Administration {
 
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
-						.WithTitle($"☣ {GetText("sb_user")}")
+						.WithTitle($"☣ {GetText("userpunish_softban_sb_user")}")
 						.AddField(efb => efb
-							.WithName(GetText("username"))
+							.WithName(GetText("userpunish_softban_username"))
 							.WithValue(user.ToString())
 							.WithIsInline(true))
 						.AddField(efb => efb
@@ -362,7 +362,7 @@ namespace Mitternacht.Modules.Administration {
 
 					await Context.Channel.EmbedAsync(embedBuilder).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("userpunish_softban_hierarchy").ConfigureAwait(false);
 				}
 			}
 
@@ -374,7 +374,7 @@ namespace Mitternacht.Modules.Administration {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Select(r => r.Position).Max() < ((IGuildUser)Context.User).GetRoles().Select(r => r.Position).Max()) {
 					if(!string.IsNullOrWhiteSpace(msg)) {
 						try {
-							await user.SendErrorAsync(GetText("kickdm", Format.Bold(Context.Guild.Name), msg)).ConfigureAwait(false);
+							await user.SendErrorAsync(GetText("userpunish_kick_kickdm", Format.Bold(Context.Guild.Name), msg)).ConfigureAwait(false);
 						} catch { }
 					}
 
@@ -382,9 +382,9 @@ namespace Mitternacht.Modules.Administration {
 
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
-						.WithTitle(GetText("kicked_user"))
+						.WithTitle(GetText("userpunish_kick_kicked_user"))
 						.AddField(efb => efb
-							.WithName(GetText("username"))
+							.WithName(GetText("userpunish_kick_username"))
 							.WithValue(user.ToString())
 							.WithIsInline(true))
 						.AddField(efb => efb
@@ -394,7 +394,7 @@ namespace Mitternacht.Modules.Administration {
 
 					await Context.Channel.EmbedAsync(embedBuilder).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("userpunish_kick_hierarchy").ConfigureAwait(false);
 				}
 			}
 		}
