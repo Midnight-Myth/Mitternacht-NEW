@@ -6,11 +6,12 @@ administration:
   addroleforall_error:                           Hinzufügen der Rolle {0} fehlgeschlagen.
   attachments:                                   Anhänge
   avatar_changed:                                Avatar varändert
-  bandm:                                         |-
+  userpunish_ban_bandm:                          |-
                                                  Du wurdest vom Server {0} gebannt.
                                                  Grund: {1}
   banned_pl:                                     gebannt
   banned_user:                                   Benutzer gebannt
+  userpunish_ban_banned_user:                    Benutzer gebannt
   bot_name:                                      Name des Bots wurde zu `{0}` geändert.
   bot_nick:                                      Nickname des Bots wurde zu `{0}` geändert.
   bot_status:                                    Status des Bots geändert zu {0}
@@ -66,11 +67,11 @@ administration:
   joined:                                        "{0} ist {1} beigetreten"
   joined_discord:                                Discord beigetreten
   joined_server:                                 Server beigetreten
-  kickdm:                                        |-
+  userpunish_kick_kickdm:                        |-
                                                  Du hast {0} von dem Server gekickt.
                                                  Grund: {1}
   kicked_pl:                                     Kicked
-  kicked_user:                                   Benutzer wurde gekickt
+  userpunish_kick_kicked_user:                   Benutzer wurde gekickt
   lang_list:                                     Sprachliste
   lang_set:                                      Die Sprache des Servers ist jetzt {0} - {1}
   lang_set_bot:                                  Die Sprache des Bots ist nun {0} - {1}
@@ -102,6 +103,9 @@ administration:
   mute_error:                                    Ich habe wahrscheinlich die benötigten Rechte nicht.
   mute_error_timeformat:                         Das angegebene Zeitformat `{0}` ist falsch.
   mute_role_set:                                 Neue Mute-Rolle gesetzt.
+  mutetime_not_muted:                            Der Nutzer **{0}** ist nicht gemutet.
+  mutetime_muted:                                Der Nutzer **{0}** ist noch **{1}** gemutet.
+  mutetime_permanent:                            Der Nutzer **{0}** ist permanent gemutet.
   muted_pl:                                      wurden stummgeschaltet
   muted_sn:                                      wurde stummgeschaltet
   need_admin:                                    Ich brauche **Administrationsrechte**, um dies tun zu können.
@@ -155,8 +159,8 @@ administration:
                                                  Hier ist die Liste der rotierenden Status:
                                                  {0}
   ropl_not_set:                                  Keine rotierenden Status gesetzt.
-  sb_user:                                       Nutzer wurde gekickt
-  sbdm:                                          |-
+  userpunish_softban_sb_user:                    Nutzer wurde gekickt
+  userpunish_softban_sbdm:                       |-
                                                  Du wurdest vom Server {0} gekickt.
                                                  Grund: {1}
   scadd:                                         Neuer Startbefehl hinzugefügt.
@@ -206,7 +210,7 @@ administration:
   timezone_guild:                                Die Zeitzone für des Servers ist `{0}`
   timezone_not_found:                            Zeitzone nicht gefunden.
   timezones_available:                           Verfügbare Zeitzonen
-  unbanned_user:                                 Benutzer {0} wurde entbannt.
+  userpunish_unban_unbanned_user:                Benutzer {0} wurde entbannt.
   undeafen:                                      Taubschaltung aufgehoben.
   unmuted_sn:                                    Stummschaltung aufgehoben
   user_banned:                                   Benutzer gebannt
@@ -218,6 +222,7 @@ administration:
   user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1}min **stummgeschaltet**."
   user_nick:                                     Nickname des Benutzers {0} wurde zu {1} geändert
   user_not_found:                                Benutzer nicht gefunden.
+  userpunish_unban_user_not_found:               Benutzer nicht gefunden.
   user_role_add:                                 Benutzerrolle hinzugefügt
   user_role_rem:                                 Benutzerrolle entfernt
   user_status_change:                            "{0} ist nun {1}"
@@ -229,6 +234,9 @@ administration:
   user_voice_mute:                               "{0} wurde im Sprachchat **stummgeschaltet**."
   user_voice_unmute:                             "{0} ist im Sprachchat nicht länger **stummgeschaltet**."
   username:                                      Benutzername
+  userpunish_ban_username:                       Benutzername
+  userpunish_softban_username:                   Benutzername
+  userpunish_kick_username:                      Benutzername
   username_changed:                              Benutzername geändert
   users:                                         Benutzer
   vc_role_list:                                  Rollen für Sprachkanäle
@@ -241,25 +249,32 @@ administration:
   vt_exit:                                       Ich habe keine **Rollenmanagement**- und/oder **Kanalmanagement**-Rechte, sodass ich `voice+text` auf dem Server {0} nicht ausführen kann.
   vt_no_admin:                                   Sie schalten diese Funktion ein bzw. aus und **ich habe keine ADMINISTRATORRECHTE**. Dies könnte einige Probleme hervorrufen, sodass sie ihre Textkanäle eventuell selber aufräumen müssen.
   vt_perms:                                      Ich benötige mindestens **Rollenmanagement**- und **Kanalmanagement**-Rechte um diese Funktion zu aktivieren. (Bevorzugt Administratorrechte)
-  warn_cleared_by:                               Gelöscht von {0}
-  warn_edit:                                     Der Grund der Verwarnung `{0}` von `{1}` wurde von `{2}` auf `{3}` gesetzt.
-  warn_edit_perms:                               Zum Ändern der Verwarnung `{0}` musst du als Botowner eingetragen sein oder Solche fragen!
-  warn_hierarchy:                                Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
-  warn_id_not_found:                             Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
-  warn_punish_list:                              Verwarnungsstrafliste
-  warn_punish_rem:                               "{0} Verwarnungen werden keine Bestrafung mehr auslösen."
-  warn_punish_set:                               Ich werde die Bestrafung {0} an Benutzern mit {1} Verwarnungen ausführen.
-  warn_user_warned:                              Benutzer {0} wurde verwarnt.
-  warn_user_warned_and_punished:                 Benutzer {0} wurde verwarnt und Strafe {1} ausgeführt.
-  warned_by:                                     Verwarnt von {0}
-  warned_on_server:                              Verwarnt auf dem Server {0}
-  warned_on:                                     Am {0:dd.MM.yyyy} um {0:HH:mm}
-  warned_on_by:                                  Am {0:dd.MM.yyyy} um {0:HH:mm} von {1}
-  warning_removed:                               Die Verwarnung {0} des Nutzers {1} wurde entfernt.
-  warnings_cleared:                              Alle Warnungen für {0} bereinigt.
-  warnings_list:                                 Liste aller verwarnten Benutzer auf diesem Server
-  warnings_none:                                 Keine Warnungen auf dieser Seite.
-  warnlog_for_user:                              Warnlog für {0}
+  userpunish_warnlog_warn_cleared_by:            Gelöscht von {0}
+  userpunish_warndetails_warn_cleared_by:        Gelöscht von {0}
+  userpunish_warnedit_warn_edit:                 Der Grund der Verwarnung `{0}` von `{1}` wurde von `{2}` auf `{3}` gesetzt.
+  userpunish_warnedit_warn_edit_perms:           Zum Ändern der Verwarnung `{0}` musst du als Botowner eingetragen sein oder Solche fragen!
+  userpunish_warn_hierarchy:                     Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
+  userpunish_ban_hierarchy:                      Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
+  userpunish_softban_hierarchy:                  Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
+  userpunish_kick_hierarchy:                     Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
+  userpunish_warnremove_warn_id_not_found:       Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
+  userpunish_warndetails_warn_id_not_found:      Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
+  userpunish_warnedit_warn_id_not_found:         Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
+  userpunish_warnpunishlist_warn_punish_list:    Verwarnungsstrafliste
+  userpunish_warnpunish_warn_punish_rem:         "{0} Verwarnungen werden keine Bestrafung mehr auslösen."
+  userpunish_warnpunish_warn_punish_set:         Ich werde die Bestrafung {0} an Benutzern mit {1} Verwarnungen ausführen.
+  userpunish_warn_user_warned:                   Benutzer {0} wurde verwarnt.
+  userpunish_warn_user_warned_and_punished:      Benutzer {0} wurde verwarnt und Strafe {1} ausgeführt.
+  userpunish_warn_reason:                        Grund
+  userpunish_warndetails_warned_by:              Verwarnt von {0}
+  userpunish_warn_warned_on_server:              Verwarnt auf dem Server {0}
+  userpunish_warnlog_warned_on:                  Am {0:dd.MM.yyyy} um {0:HH:mm}
+  userpunish_warnlog_warned_on_by:               Am {0:dd.MM.yyyy} um {0:HH:mm} von {1}
+  userpunish_warnremove_warning_removed:         Die Verwarnung {0} des Nutzers {1} wurde entfernt.
+  userpunish_warnclear_warnings_cleared:         Alle Warnungen für {0} bereinigt.
+  userpunish_warnlogall_warnings_list:           Liste aller verwarnten Benutzer auf diesem Server
+  userpunish_warnlog_warnings_none:              Keine Warnungen auf dieser Seite.
+  userpunish_warnlog_for_user:                   Warnlog für {0}
   warnpl_none:                                   Keine Bestrafungen gesetzt.
   xmuted_text:                                   Benutzer {0} vom Textchat
   xmuted_text_and_voice:                         Benutzer {0} vom Text- und Sprachchat
