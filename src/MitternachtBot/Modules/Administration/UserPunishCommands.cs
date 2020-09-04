@@ -30,20 +30,20 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
 				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
-					await ReplyErrorLocalized("warn_hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("warn_hierarchy").ConfigureAwait(false);
 					return;
 				}
 
 				try {
-					await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("moderator")).WithValue(Context.User.ToString())).AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
+					await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 				} catch { }
 
 				var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
 
 				if(punishment == null) {
-					await ReplyConfirmLocalized("warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
 				} else {
-					await ReplyConfirmLocalized("warn_user_warned_and_punished", Format.Bold(user.ToString()), Format.Bold(punishment.ToString())).ConfigureAwait(false);
+					await ConfirmLocalized("warn_user_warned_and_punished", Format.Bold(user.ToString()), Format.Bold(punishment.ToString())).ConfigureAwait(false);
 				}
 			}
 
@@ -144,7 +144,7 @@ namespace Mitternacht.Modules.Administration {
 				await uow.Warnings.ForgiveAll(Context.Guild.Id, userId, Context.User.ToString()).ConfigureAwait(false);
 				uow.SaveChanges(false);
 
-				await ReplyConfirmLocalized("warnings_cleared", Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
+				await ConfirmLocalized("warnings_cleared", Format.Bold((Context.Guild as SocketGuild)?.GetUser(userId)?.ToString() ?? userId.ToString())).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -153,12 +153,12 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Warnremove(int id) {
 				var warning = uow.Warnings.Get(id);
 				if(warning == null) {
-					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
+					await ErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
 					return;
 				}
 
 				uow.Warnings.Remove(warning);
-				await ReplyConfirmLocalized("warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
+				await ConfirmLocalized("warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 			}
 
@@ -168,7 +168,7 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Warndetails(int id) {
 				var w = uow.Warnings.Get(id);
 				if(w == null) {
-					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
+					await ErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
 					return;
 				}
 
@@ -196,13 +196,13 @@ namespace Mitternacht.Modules.Administration {
 				if(!_bc.IsOwner(Context.User)) {
 					if(user == null) return;
 					if(w.GuildId != user.GuildId) {
-						await ReplyErrorLocalized("warn_edit_perms", id).ConfigureAwait(false);
+						await ErrorLocalized("warn_edit_perms", id).ConfigureAwait(false);
 						return;
 					}
 				}
 
 				if(w == null) {
-					await ReplyErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
+					await ErrorLocalized("warn_id_not_found", id).ConfigureAwait(false);
 					return;
 				}
 
@@ -210,7 +210,7 @@ namespace Mitternacht.Modules.Administration {
 				w.Reason = reason;
 				uow.Warnings.Update(w);
 				await uow.SaveChangesAsync(false);
-				await ReplyConfirmLocalized("warn_edit", id, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
+				await ConfirmLocalized("warn_edit", id, (await Context.Guild.GetUserAsync(w.UserId)).ToString(), string.IsNullOrWhiteSpace(oldreason) ? "null" : oldreason, string.IsNullOrWhiteSpace(reason) ? "null" : reason).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -226,7 +226,7 @@ namespace Mitternacht.Modules.Administration {
 				ps.Add(new WarningPunishment {Count = number, Punishment = punish, Time = time});
 				uow.SaveChanges(false);
 
-				await ReplyConfirmLocalized("warn_punish_set", Format.Bold(punish.ToString()), Format.Bold(number.ToString())).ConfigureAwait(false);
+				await ConfirmLocalized("warn_punish_set", Format.Bold(punish.ToString()), Format.Bold(number.ToString())).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -243,7 +243,7 @@ namespace Mitternacht.Modules.Administration {
 					uow.SaveChanges(false);
 				}
 
-				await ReplyConfirmLocalized("warn_punish_rem", Format.Bold(number.ToString())).ConfigureAwait(false);
+				await ConfirmLocalized("warn_punish_rem", Format.Bold(number.ToString())).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -261,7 +261,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireBotPermission(GuildPermission.BanMembers)]
 			public async Task Ban(IGuildUser user, [Remainder] string msg = null) {
 				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max()) {
-					await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("hierarchy").ConfigureAwait(false);
 					return;
 				}
 
@@ -287,7 +287,7 @@ namespace Mitternacht.Modules.Administration {
 				var bun = bans.FirstOrDefault(x => string.Equals(x.User.ToString(), user, StringComparison.InvariantCultureIgnoreCase));
 
 				if(bun == null) {
-					await ReplyErrorLocalized("user_not_found").ConfigureAwait(false);
+					await ErrorLocalized("user_not_found").ConfigureAwait(false);
 					return;
 				}
 
@@ -304,7 +304,7 @@ namespace Mitternacht.Modules.Administration {
 				var bun = bans.FirstOrDefault(x => x.User.Id == userId);
 
 				if(bun == null) {
-					await ReplyErrorLocalized("user_not_found").ConfigureAwait(false);
+					await ErrorLocalized("user_not_found").ConfigureAwait(false);
 					return;
 				}
 
@@ -314,7 +314,7 @@ namespace Mitternacht.Modules.Administration {
 			private async Task UnbanInternal(IUser user) {
 				await Context.Guild.RemoveBanAsync(user).ConfigureAwait(false);
 
-				await ReplyConfirmLocalized("unbanned_user", Format.Bold(user.ToString())).ConfigureAwait(false);
+				await ConfirmLocalized("unbanned_user", Format.Bold(user.ToString())).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -324,7 +324,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireBotPermission(GuildPermission.BanMembers)]
 			public async Task Softban(IGuildUser user, [Remainder] string msg = null) {
 				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).Max()) {
-					await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("hierarchy").ConfigureAwait(false);
 					return;
 				}
 
@@ -352,7 +352,7 @@ namespace Mitternacht.Modules.Administration {
 			[RequireBotPermission(GuildPermission.KickMembers)]
 			public async Task Kick(IGuildUser user, [Remainder] string msg = null) {
 				if(Context.User.Id != user.Guild.OwnerId && user.GetRoles().Select(r => r.Position).Max() >= ((IGuildUser) Context.User).GetRoles().Select(r => r.Position).Max()) {
-					await ReplyErrorLocalized("hierarchy").ConfigureAwait(false);
+					await ErrorLocalized("hierarchy").ConfigureAwait(false);
 					return;
 				}
 
