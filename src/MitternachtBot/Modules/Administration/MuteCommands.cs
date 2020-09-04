@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services;
 using Mitternacht.Services.Database;
 
 namespace Mitternacht.Modules.Administration {
@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Administration {
 			[Priority(1)]
 			public async Task Mute(IGuildUser user, string time) {
 				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?";
-				
+
 				var match = Regex.Match(time, timeRegex);
 
 				if(match.Success) {
@@ -73,7 +73,7 @@ namespace Mitternacht.Modules.Administration {
 					var minutes = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
 
 					var muteTime = days*24*60 + hours*60 + minutes;
-					
+
 					if(muteTime == 0) {
 						await Mute(user).ConfigureAwait(false);
 					} else {
@@ -95,16 +95,17 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			[RequireUserPermission(GuildPermission.MuteMembers)]
 			[Priority(1)]
-			public async Task MuteTime(IGuildUser user) {
-				if(user == null)
-					return;
-				var muteTime = Service.GetMuteTime(user);
-				if(muteTime == null || muteTime.Value < DateTime.UtcNow)
-					await Context.Channel.SendErrorAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist nicht gemutet.");
-				else {
-					var ts = muteTime.Value - DateTime.UtcNow;
-					var tstring = $"{((int) Math.Floor(ts.TotalDays) == 0 ? "" : (int) Math.Floor(ts.TotalDays) + "d")} {(ts.Hours == 0 ? "" : ts.Hours + "h")} {(ts.Minutes == 0 ? "" : ts.Minutes + "min")} {(ts.Seconds == 0 ? "" : ts.Seconds + "s")}".Trim();
-					await Context.Channel.SendConfirmAsync($"User {(string.IsNullOrWhiteSpace(user.Nickname) ? user.Username : user.Nickname)} ist noch {Format.Bold(tstring)} gemutet.");
+			public async Task MuteTime(IGuildUser guildUser) {
+				guildUser ??= Context.User as IGuildUser;
+				var muteTime = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.UnmuteTimers)).UnmuteTimers.FirstOrDefault(ut => ut.UserId == guildUser.Id)?.UnmuteAt;
+
+				if(muteTime != null && muteTime.Value >= DateTime.UtcNow) {
+					var timeSpan       = muteTime.Value - DateTime.UtcNow;
+					var timeSpanString = $"{((int) Math.Floor(timeSpan.TotalDays) == 0 ? "" : (int) Math.Floor(timeSpan.TotalDays) + "d")} {(timeSpan.Hours == 0 ? "" : timeSpan.Hours + "h")} {(timeSpan.Minutes == 0 ? "" : timeSpan.Minutes + "min")} {(timeSpan.Seconds == 0 ? "" : timeSpan.Seconds + "s")}".Trim();
+
+					await Context.Channel.SendConfirmAsync($"User {guildUser} ist noch {Format.Bold(timeSpanString)} gemutet.");
+				} else {
+					await Context.Channel.SendErrorAsync($"User {guildUser} ist nicht gemutet.");
 				}
 			}
 
