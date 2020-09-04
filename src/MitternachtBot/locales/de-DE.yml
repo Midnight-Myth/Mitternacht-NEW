@@ -104,6 +104,7 @@ administration:
   mute_role_set:                                 Neue Mute-Rolle gesetzt.
   mutetime_not_muted:                            Der Nutzer **{0}** ist nicht gemutet.
   mutetime_muted:                                Der Nutzer **{0}** ist noch **{1}** gemutet.
+  mutetime_permanent:                            Der Nutzer **{0}** ist permanent gemutet.
   muted_pl:                                      wurden stummgeschaltet
   muted_sn:                                      wurde stummgeschaltet
   need_admin:                                    Ich brauche **Administrationsrechte**, um dies tun zu können.
