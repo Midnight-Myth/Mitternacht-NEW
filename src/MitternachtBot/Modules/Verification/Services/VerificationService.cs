@@ -114,6 +114,7 @@ namespace Mitternacht.Modules.Verification.Services {
 			if(!uow.VerifiedUsers.SetVerified(guildUser.GuildId, guildUser.Id, forumUserId))
 				throw new UserCannotVerifyException();
 
+			await uow.SaveChangesAsync().ConfigureAwait(false);
 			await AddVerifiedRoleAsync(guildUser).ConfigureAwait(false);
 
 			await UserVerified.Invoke(guildUser, forumUserId).ConfigureAwait(false);
