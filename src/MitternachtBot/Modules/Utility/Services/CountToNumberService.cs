@@ -21,7 +21,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			_db = db;
 
 			ReloadGuildConfigs();
-			_client.MessageReceived += CountUpRandom;
+			_client.MessageReceived += CountToMessageReceived;
 		}
 
 		public void ReloadGuildConfigs() {
@@ -65,7 +65,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			=> _countChannelIds.TryGetValue(guildId, out var guildCountToNumberItem) ? guildCountToNumberItem.MessageChance : 0;
 
 
-		public async Task CountUpRandom(SocketMessage msg) {
+		public async Task CountToMessageReceived(SocketMessage msg) {
 			if(!msg.Author.IsBot) {
 				var guildChannels = _countChannelIds.Where(gc => gc.Value.ChannelId != null).Select(gc => (gc.Key, gc.Value.ChannelId.Value, gc.Value.MessageChance)).ToList();
 				if(guildChannels.Any(gc => gc.Value == msg.Channel.Id)) {
