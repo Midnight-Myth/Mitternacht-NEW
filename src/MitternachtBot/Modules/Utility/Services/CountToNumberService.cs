@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
@@ -30,7 +31,14 @@ namespace Mitternacht.Modules.Utility.Services {
 					if(match.Success) {
 						var currentnumber = ulong.Parse(match.Groups[1].Value);
 
-						if(_random.NextDouble() < gc.CountToNumberMessageChance) {
+						var lastMessages = (await channel.GetMessagesAsync(10).FlattenAsync().ConfigureAwait(false)).ToList();
+						var messageIndex = lastMessages.FindIndex(m => m.Id == msg.Id);
+						var previousMessage = lastMessages[messageIndex+1];
+						var previousMatch = Regex.Match(previousMessage.Content.Trim(), "\\A(\\d+)");
+
+						if(gc.CountToNumberDeleteWrongMessages && previousMatch.Success && currentnumber - ulong.Parse(previousMatch.Groups[1].Value) != 1) {
+							await msg.DeleteAsync().ConfigureAwait(false);
+						} else if(_random.NextDouble() < gc.CountToNumberMessageChance) {
 							await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
 						}
 					} else if(gc.CountToNumberDeleteWrongMessages) {
