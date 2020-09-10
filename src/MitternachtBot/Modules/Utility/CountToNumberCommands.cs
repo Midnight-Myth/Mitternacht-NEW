@@ -22,15 +22,15 @@ namespace Mitternacht.Modules.Utility {
 				var channelId = _uow.GuildConfigs.For(Context.Guild.Id).CountToNumberChannelId;
 
 				if(channelId.HasValue) {
-					var channel = await Context.Guild.GetTextChannelAsync(channelId.Value);
+					var channel = await Context.Guild.GetTextChannelAsync(channelId.Value).ConfigureAwait(false);
 
 					if(channel == null) {
-						await ErrorLocalized("counttonumber_channel_not_existing");
+						await ErrorLocalized("counttonumber_channel_not_existing").ConfigureAwait(false);
 					} else {
-						await ConfirmLocalized("counttonumber_channel_current", channel.Mention);
+						await ConfirmLocalized("counttonumber_channel_current", channel.Mention).ConfigureAwait(false);
 					}
 				} else {
-					await ConfirmLocalized("counttonumber_channel_not_set");
+					await ConfirmLocalized("counttonumber_channel_not_set").ConfigureAwait(false);
 				}
 			}
 
@@ -44,9 +44,9 @@ namespace Mitternacht.Modules.Utility {
 					gc.CountToNumberChannelId = channel.Id;
 					await _uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-					await ConfirmLocalized("counttonumber_channel_set", channel.Mention);
+					await ConfirmLocalized("counttonumber_channel_set", channel.Mention).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("counttonumber_channel_already_set", channel.Mention);
+					await ErrorLocalized("counttonumber_channel_already_set", channel.Mention).ConfigureAwait(false);
 				}
 			}
 
@@ -61,9 +61,9 @@ namespace Mitternacht.Modules.Utility {
 						gc.CountToNumberChannelId = null;
 						await _uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-						await ConfirmLocalized("counttonumber_channel_removed");
+						await ConfirmLocalized("counttonumber_channel_removed").ConfigureAwait(false);
 					} else {
-						await ErrorLocalized("counttonumber_channel_already_removed");
+						await ErrorLocalized("counttonumber_channel_already_removed").ConfigureAwait(false);
 					}
 				}
 			}
@@ -74,7 +74,7 @@ namespace Mitternacht.Modules.Utility {
 			public async Task CountToNumberMessageChance() {
 				var chance = _uow.GuildConfigs.For(Context.Guild.Id).CountToNumberMessageChance;
 
-				await ConfirmLocalized("counttonumber_chance_current", chance);
+				await ConfirmLocalized("counttonumber_chance_current", chance).ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -86,9 +86,9 @@ namespace Mitternacht.Modules.Utility {
 					gc.CountToNumberMessageChance = chance;
 					await _uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-					await ConfirmLocalized("counttonumber_chance_set", chance);
+					await ConfirmLocalized("counttonumber_chance_set", chance).ConfigureAwait(false);
 				} else {
-					await ErrorLocalized("counttonumber_chance_already_set", chance);
+					await ErrorLocalized("counttonumber_chance_already_set", chance).ConfigureAwait(false);
 				}
 			}
 		}
