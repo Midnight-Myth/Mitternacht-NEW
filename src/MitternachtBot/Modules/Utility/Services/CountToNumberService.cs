@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Utility.Services {
 						var previousMessage = lastMessages[messageIndex+1];
 						var previousMatch = Regex.Match(previousMessage.Content.Trim(), "\\A(\\d+)");
 
-						if(gc.CountToNumberDeleteWrongMessages && previousMatch.Success && currentnumber - ulong.Parse(previousMatch.Groups[1].Value) != 1) {
+						if(gc.CountToNumberDeleteWrongMessages && (previousMatch.Success && currentnumber - ulong.Parse(previousMatch.Groups[1].Value) != 1 || previousMessage.Author.Id == msg.Author.Id)) {
 							await msg.DeleteAsync().ConfigureAwait(false);
 						} else if(_random.NextDouble() < gc.CountToNumberMessageChance) {
 							await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
