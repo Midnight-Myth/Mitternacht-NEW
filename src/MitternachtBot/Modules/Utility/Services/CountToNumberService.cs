@@ -33,6 +33,8 @@ namespace Mitternacht.Modules.Utility.Services {
 						if(_random.NextDouble() < gc.CountToNumberMessageChance) {
 							await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
 						}
+					} else if(gc.CountToNumberDeleteWrongMessages) {
+						await msg.DeleteAsync().ConfigureAwait(false);
 					}
 				}
 			}
