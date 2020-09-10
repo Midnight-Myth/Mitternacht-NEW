@@ -184,6 +184,11 @@
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
+				<input class="form-check-input" asp-for="CountToNumberDeleteWrongMessages" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.CountToNumberDeleteWrongMessages)
+			</label>
+		</div>
+		<div class="form-group form-check">
+			<label class="form-check-label">
 				<input class="form-check-input" asp-for="VerbosePermissions" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.VerbosePermissions)
 			</label>
 		</div>
