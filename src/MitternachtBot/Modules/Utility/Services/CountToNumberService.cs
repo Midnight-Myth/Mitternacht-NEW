@@ -68,11 +68,14 @@ namespace Mitternacht.Modules.Utility.Services {
 		public async Task CountToMessageReceived(SocketMessage msg) {
 			if(!msg.Author.IsBot) {
 				var guildChannels = _countChannelIds.Where(gc => gc.Value.ChannelId != null).Select(gc => (gc.Key, gc.Value.ChannelId.Value, gc.Value.MessageChance)).ToList();
+
 				if(guildChannels.Any(gc => gc.Value == msg.Channel.Id)) {
 					var match = Regex.Match(msg.Content.Trim(), "\\A(\\d+)");
+					
 					if(match.Success) {
 						var (guildId, channelId, messageChance) = guildChannels.First(gc => gc.Value == msg.Channel.Id);
 						var guild = _client.GetGuild(guildId);
+						
 						if(guild != null) {
 							var channel = guild.GetTextChannel(channelId);
 							var currentnumber = ulong.Parse(match.Groups[1].Value);
