@@ -28,15 +28,13 @@ namespace Mitternacht.Modules.Utility.Services {
 				if(gc.CountToNumberChannelId == channel.Id) {
 					var match = Regex.Match(msg.Content.Trim(), "\\A(\\d+)");
 					
-					if(match.Success) {
-						var currentnumber = ulong.Parse(match.Groups[1].Value);
-
+					if(match.Success && ulong.TryParse(match.Groups[1].Value, out var currentnumber)) {
 						var lastMessages = (await channel.GetMessagesAsync(10).FlattenAsync().ConfigureAwait(false)).ToList();
 						var messageIndex = lastMessages.FindIndex(m => m.Id == msg.Id);
 						var previousMessage = lastMessages[messageIndex+1];
 						var previousMatch = Regex.Match(previousMessage.Content.Trim(), "\\A(\\d+)");
 
-						if(gc.CountToNumberDeleteWrongMessages && (previousMatch.Success && currentnumber - ulong.Parse(previousMatch.Groups[1].Value) != 1 || previousMessage.Author.Id == msg.Author.Id)) {
+						if(gc.CountToNumberDeleteWrongMessages && (previousMatch.Success && ulong.TryParse(previousMatch.Groups[1].Value, out var previousNumberParsingSuccess) && currentnumber - previousNumberParsingSuccess != 1 || previousMessage.Author.Id == msg.Author.Id)) {
 							await msg.DeleteAsync().ConfigureAwait(false);
 						} else if(_random.NextDouble() < gc.CountToNumberMessageChance) {
 							await channel.SendMessageAsync($"{currentnumber + 1}").ConfigureAwait(false);
