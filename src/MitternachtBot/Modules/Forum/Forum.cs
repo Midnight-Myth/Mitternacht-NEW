@@ -7,6 +7,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services.Database;
+using System;
 
 namespace Mitternacht.Modules.Forum {
 	public partial class Forum : MitternachtTopLevelModule<ForumService> {
@@ -39,7 +40,9 @@ namespace Mitternacht.Modules.Forum {
 				} catch(UserProfileAccessException) {
 					await ReplyErrorLocalized("forum_user_not_seeable", user.ToString()).ConfigureAwait(false);
 					return;
-				} catch { }
+				} catch(Exception e) {
+					_log.Error(e);
+				}
 			}
 
 			if(uinfo != null) {
@@ -75,7 +78,9 @@ namespace Mitternacht.Modules.Forum {
 				} catch(UserProfileAccessException) {
 					await ReplyErrorLocalized("forum_user_not_seeable", userText).ConfigureAwait(false);
 					return;
-				} catch { }
+				} catch(Exception e) {
+					_log.Error(e);
+				}
 
 				if(uinfo != null) {
 					var embed = ForumUserInfoBuilder(uinfo);
