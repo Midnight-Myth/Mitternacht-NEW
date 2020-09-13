@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Mitternacht.Services;
 using NLog;
@@ -21,8 +22,13 @@ namespace Mitternacht.Modules.Forum.Services {
 		public void InitForumInstance() {
 			_loginTask?.Dispose();
 			_loginTask = Task.Run(() => {
-				Forum = new GommeHDnetForumAPI.Forum(_creds.ForumUsername, _creds.ForumPassword);
-				_log.Log(Forum.LoggedIn ? LogLevel.Info : LogLevel.Warn, $"Initialized new Forum instance. Login {(Forum.LoggedIn ? "successful" : "failed")}!");
+				try {
+					Forum = new GommeHDnetForumAPI.Forum(_creds.ForumUsername, _creds.ForumPassword);
+
+					_log.Info($"Initialized new Forum instance.");
+				} catch(Exception e) {
+					_log.Warn(e, $"Initializing new Forum instance failed.");
+				}
 			});
 		}
 	}
