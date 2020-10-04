@@ -4,6 +4,7 @@ using Discord.Commands;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Help.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Utility.Services {
 	public class VerboseErrorsService : IMService {

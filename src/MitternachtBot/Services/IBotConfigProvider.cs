@@ -1,5 +1,5 @@
 using Mitternacht.Common;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using System;
 
 namespace Mitternacht.Services {

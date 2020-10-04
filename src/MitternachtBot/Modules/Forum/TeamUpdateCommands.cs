@@ -3,7 +3,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

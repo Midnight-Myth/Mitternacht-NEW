@@ -8,8 +8,9 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Games.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Games {
 	public partial class Games {
@@ -40,7 +41,7 @@ namespace Mitternacht.Modules.Games {
 
 				await Task.WhenAll(msgs.Where(m => m != null).Select(toDelete => toDelete.DeleteAsync())).ConfigureAwait(false);
 
-				await _cs.AddAsync((IGuildUser)Context.User, $"Picked {_bc.BotConfig.CurrencyPluralName}", msgs.Count, false).ConfigureAwait(false);
+				await _cs.AddAsync((IGuildUser)Context.User, $"Picked {_bc.BotConfig.CurrencyPluralName}", msgs.Count).ConfigureAwait(false);
 				var msg = await ReplyConfirmLocalized("picked", msgs.Count + _bc.BotConfig.CurrencySign)
 					.ConfigureAwait(false);
 				msg.DeleteAfter(10);
@@ -52,7 +53,7 @@ namespace Mitternacht.Modules.Games {
 				if(amount < 1)
 					return;
 
-				var removed = await _cs.RemoveAsync((IGuildUser)Context.User, $"Planted a {_bc.BotConfig.CurrencyName}", amount, false).ConfigureAwait(false);
+				var removed = await _cs.RemoveAsync((IGuildUser)Context.User, $"Planted a {_bc.BotConfig.CurrencyName}", amount).ConfigureAwait(false);
 				if(!removed) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 					return;

@@ -7,7 +7,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Forum {
 	public partial class Forum {

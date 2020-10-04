@@ -14,7 +14,7 @@ using Mitternacht.Common.TypeReaders;
 using Mitternacht.Common.TypeReaders.Models;
 using Mitternacht.Modules.Birthday.Models;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 

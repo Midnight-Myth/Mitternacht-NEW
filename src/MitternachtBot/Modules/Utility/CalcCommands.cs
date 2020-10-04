@@ -7,8 +7,8 @@ using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
 using NCalc;
 
 namespace Mitternacht.Modules.Utility {

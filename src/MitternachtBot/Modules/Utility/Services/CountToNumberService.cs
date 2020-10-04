@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Utility.Services {
 	public class CountToNumberService : IMService {

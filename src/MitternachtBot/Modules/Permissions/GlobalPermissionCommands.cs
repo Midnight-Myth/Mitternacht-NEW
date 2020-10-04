@@ -7,8 +7,8 @@ using Mitternacht.Common.TypeReaders;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions {
 	public partial class Permissions {

@@ -10,6 +10,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Image = SixLabors.ImageSharp.Image;
 using SixLabors.ImageSharp.PixelFormats;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
@@ -71,7 +72,7 @@ namespace Mitternacht.Modules.Gambling {
 					await ReplyErrorLocalized("min_bet_limit", $"{_bc.BotConfig.MinimumBetAmount}{_bc.BotConfig.CurrencySign}").ConfigureAwait(false);
 					return;
 				}
-				var removed = await _cs.RemoveAsync(user, "Betflip Gamble", amount, false).ConfigureAwait(false);
+				var removed = await _cs.RemoveAsync(user, "Betflip Gamble", amount).ConfigureAwait(false);
 				if(!removed) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencyPluralName).ConfigureAwait(false);
 					return;
@@ -83,7 +84,7 @@ namespace Mitternacht.Modules.Gambling {
 				if(guess == result) {
 					var toWin = (int)Math.Round(amount * _bc.BotConfig.BetflipMultiplier);
 					str = $"{user.Mention} {GetText("flip_guess", $"{toWin}{_bc.BotConfig.CurrencySign}")}";
-					await _cs.AddAsync(user, "Betflip Gamble", toWin, false).ConfigureAwait(false);
+					await _cs.AddAsync(user, "Betflip Gamble", toWin).ConfigureAwait(false);
 				} else {
 					str = $"{user.Mention} {GetText("better_luck")}";
 				}

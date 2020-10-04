@@ -1,4 +1,4 @@
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Common {
 	public class OldPermissionCache {

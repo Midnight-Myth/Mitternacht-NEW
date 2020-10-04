@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Common.Collections
 {

@@ -3,7 +3,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 using System.Threading.Tasks;
 
 namespace Mitternacht.Modules.Forum {

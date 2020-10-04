@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using System;
 using System.Linq;
 

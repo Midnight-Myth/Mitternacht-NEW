@@ -6,7 +6,7 @@ using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.CustomReactions.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.CustomReactions.Extensions {
 	public static class Extensions {

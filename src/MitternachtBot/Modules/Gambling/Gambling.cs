@@ -9,7 +9,8 @@ using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
+using Mitternacht.Services.Impl;
 using MoreLinq;
 
 namespace Mitternacht.Modules.Gambling {
@@ -63,16 +64,24 @@ namespace Mitternacht.Modules.Gambling {
 		public async Task Give(long amount, [Remainder] IGuildUser receiver) {
 			if(amount > 0) {
 				if(Context.User.Id != receiver.Id) {
-					if(await _currency.RemoveAsync((IGuildUser)Context.User, $"Gift to {receiver.Username} ({receiver.Id}).", amount, false).ConfigureAwait(false)) {
-						await _currency.AddAsync(receiver, $"Gift from {Context.User.Username} ({Context.User.Id}).", amount, true).ConfigureAwait(false);
-						await ReplyConfirmLocalized("gifted", amount + CurrencySign, Format.Bold(receiver.ToString())).ConfigureAwait(false);
+					var reason = $"Gift to {receiver.Username} ({receiver.Id}).";
+
+					if(await _currency.RemoveAsync((IGuildUser)Context.User, reason, amount).ConfigureAwait(false)) {
+						await _currency.AddAsync(receiver, $"Gift from {Context.User.Username} ({Context.User.Id}).", amount).ConfigureAwait(false);
+						await ReplyConfirmLocalized("gifted", $"{amount}{CurrencySign}", Format.Bold(receiver.ToString())).ConfigureAwait(false);
+
+						try {
+							await receiver.SendConfirmAsync($"`You received:` {amount}{CurrencySign} on Server with ID {receiver.GuildId}.\n`Reason:` {reason}").ConfigureAwait(false);
+						} catch { }
 					} else {
 						await ReplyErrorLocalized("not_enough", CurrencyPluralName).ConfigureAwait(false);
 					}
 				} else {
+					// FIXME: Use translations.
 					await Context.Channel.SendMessageAsync("Geld kann man nicht an sich selbst verschenken!");
 				}
 			} else {
+				// FIXME: Use translations.
 				await Context.Channel.SendMessageAsync($"Geldbeträge von 0{CurrencySign} oder weniger können nicht verschenkt werden!");
 			}
 		}
@@ -111,10 +120,17 @@ namespace Mitternacht.Modules.Gambling {
 		[OwnerOnly]
 		public async Task Take(long amount, [Remainder] IGuildUser user) {
 			if(amount > 0) {
-				if(await _currency.RemoveAsync(user, $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})", amount, true).ConfigureAwait(false))
+				var reason = $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})";
+				if(await _currency.RemoveAsync(user, reason, amount).ConfigureAwait(false)) {
 					await ReplyConfirmLocalized("take", $"{amount}{CurrencySign}", Format.Bold(user.ToString())).ConfigureAwait(false);
-				else
+					
+					try {
+						// FIXME: Use translations.
+						await user.SendErrorAsync($"`You lost:` {amount}{CurrencySign} on Server with ID {user.GuildId}.\n`Reason:` {reason}").ConfigureAwait(false);
+					} catch { }
+				} else {
 					await ReplyErrorLocalized("take_fail", $"{amount}{CurrencySign}", Format.Bold(user.ToString()), CurrencyPluralName).ConfigureAwait(false);
+				}
 			}
 		}
 
@@ -137,7 +153,7 @@ namespace Mitternacht.Modules.Gambling {
 			if(amount >= 1) {
 				var guildUser = (IGuildUser) Context.User;
 
-				if(await _currency.RemoveAsync(guildUser, "Betroll Gamble", amount, false).ConfigureAwait(false)) {
+				if(await _currency.RemoveAsync(guildUser, "Betroll Gamble", amount).ConfigureAwait(false)) {
 					var rnd = new NadekoRandom().Next(0, 101);
 					var str = $"{Context.User.Mention}{Format.Code(GetText("roll", rnd))}";
 					if(rnd < 67) {
@@ -145,13 +161,13 @@ namespace Mitternacht.Modules.Gambling {
 					} else {
 						if(rnd < 91) {
 							str += GetText("br_win", $"{amount * _bc.BotConfig.Betroll67Multiplier}{CurrencySign}", 66);
-							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll67Multiplier), false).ConfigureAwait(false);
+							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll67Multiplier)).ConfigureAwait(false);
 						} else if(rnd < 100) {
 							str += GetText("br_win", $"{amount * _bc.BotConfig.Betroll91Multiplier}{CurrencySign}", 90);
-							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll91Multiplier), false).ConfigureAwait(false);
+							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll91Multiplier)).ConfigureAwait(false);
 						} else {
 							str += $"{GetText("br_win", $"{amount * _bc.BotConfig.Betroll100Multiplier}{CurrencySign}", 100)} 👑";
-							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll100Multiplier), false).ConfigureAwait(false);
+							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll100Multiplier)).ConfigureAwait(false);
 						}
 					}
 					await Context.Channel.SendConfirmAsync(str).ConfigureAwait(false);

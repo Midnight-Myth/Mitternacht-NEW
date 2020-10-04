@@ -6,7 +6,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Level {
 	public partial class Level {

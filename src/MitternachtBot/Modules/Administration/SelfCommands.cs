@@ -12,10 +12,10 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration

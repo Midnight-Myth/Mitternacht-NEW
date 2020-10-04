@@ -11,9 +11,8 @@ using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 using NLog;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public class SelfService : ILateExecutor, IMService
+namespace Mitternacht.Modules.Administration.Services {
+	public class SelfService : ILateExecutor, IMService
     {
         //todo bot config
         public bool ForwardDMs => _bc.BotConfig.ForwardMessages;

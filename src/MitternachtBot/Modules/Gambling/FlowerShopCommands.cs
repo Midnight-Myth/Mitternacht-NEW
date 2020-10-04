@@ -11,8 +11,9 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
@@ -87,12 +88,12 @@ namespace Mitternacht.Modules.Gambling {
 						return;
 					}
 
-					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price, false).ConfigureAwait(false)) {
+					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price).ConfigureAwait(false)) {
 						try {
 							await guildUser.AddRoleAsync(role).ConfigureAwait(false);
 						} catch(Exception ex) {
 							_log.Warn(ex);
-							await _cs.AddAsync(guildUser, "Shop error refund", entry.Price, false);
+							await _cs.AddAsync(guildUser, "Shop error refund", entry.Price);
 							await ReplyErrorLocalized("shop_role_purchase_error").ConfigureAwait(false);
 							return;
 						}
@@ -110,7 +111,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var item = entry.Items.ToArray()[new NadekoRandom().Next(0, entry.Items.Count)];
 
-					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price, false)) {
+					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price)) {
 						uow.Context.Set<ShopEntryItem>().Remove(item);
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 						try {
@@ -127,7 +128,7 @@ namespace Mitternacht.Modules.Gambling {
 							uow.Context.Set<ShopEntryItem>().Add(item);
 							await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-							await _cs.AddAsync(guildUser, $"Shop error refund - {entry.Name}", entry.Price, false).ConfigureAwait(false);
+							await _cs.AddAsync(guildUser, $"Shop error refund - {entry.Name}", entry.Price).ConfigureAwait(false);
 							await ReplyErrorLocalized("shop_buy_error").ConfigureAwait(false);
 							return;
 						}

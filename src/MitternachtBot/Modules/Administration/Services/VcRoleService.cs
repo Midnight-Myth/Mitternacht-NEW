@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {

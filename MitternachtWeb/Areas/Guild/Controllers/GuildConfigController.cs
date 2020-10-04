@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
+using Mitternacht.Services.Impl;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
 	[Area("Guild")]

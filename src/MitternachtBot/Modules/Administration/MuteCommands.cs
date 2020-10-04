@@ -7,7 +7,7 @@ using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {

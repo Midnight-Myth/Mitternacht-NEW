@@ -4,6 +4,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using Wof = Mitternacht.Modules.Gambling.Common.WheelOfFortune;
 
 namespace Mitternacht.Modules.Gambling {
@@ -26,7 +27,7 @@ namespace Mitternacht.Modules.Gambling {
 					return;
 				}
 
-				if(!await _cs.RemoveAsync((IGuildUser) Context.User, "Wheel Of Fortune - bet", bet, false).ConfigureAwait(false)) {
+				if(!await _cs.RemoveAsync((IGuildUser) Context.User, "Wheel Of Fortune - bet", bet).ConfigureAwait(false)) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 					return;
 				}
@@ -36,7 +37,7 @@ namespace Mitternacht.Modules.Gambling {
 				var amount = (int)(bet * wof.Multiplier);
 
 				if(amount > 0)
-					await _cs.AddAsync((IGuildUser)Context.User, "Wheel Of Fortune - won", amount, false).ConfigureAwait(false);
+					await _cs.AddAsync((IGuildUser)Context.User, "Wheel Of Fortune - won", amount).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync(
 Format.Bold($@"{Context.User} won: {amount + _bc.BotConfig.CurrencySign}

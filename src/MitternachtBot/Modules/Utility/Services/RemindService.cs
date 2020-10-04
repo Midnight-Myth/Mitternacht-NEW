@@ -7,8 +7,8 @@ using Discord.WebSocket;
 using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 

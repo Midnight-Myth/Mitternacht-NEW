@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using Discord.WebSocket;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class GuildTimezoneService : IMService {

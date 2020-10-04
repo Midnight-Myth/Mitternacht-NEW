@@ -9,6 +9,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Gambling.Common;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
@@ -93,7 +94,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var guildUser = (IGuildUser) Context.User;
 
-					if(!await _cs.RemoveAsync(guildUser, "Slot Machine", amount, false)) {
+					if(!await _cs.RemoveAsync(guildUser, "Slot Machine", amount)) {
 						await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 						return;
 					}
@@ -105,7 +106,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var msg = result.Multiplier != 0 ? "" : GetText("better_luck");
 					if(result.Multiplier != 0) {
-						await _cs.AddAsync(guildUser, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier, false);
+						await _cs.AddAsync(guildUser, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier);
 						Interlocked.Add(ref _totalPaidOut, amount * result.Multiplier);
 						switch(result.Multiplier) {
 							case 1:

@@ -5,8 +5,9 @@ using Discord;
 using Discord.WebSocket;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Repositories;
-using Mitternacht.Services.Database.Repositories.Impl;
+using Mitternacht.Database.Repositories;
+using Mitternacht.Database.Repositories.Impl;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Level.Services {
 	public class LevelService : IMService {

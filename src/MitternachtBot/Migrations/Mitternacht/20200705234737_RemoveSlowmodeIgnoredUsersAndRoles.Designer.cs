@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Mitternacht.Migrations.Mitternacht
@@ -21,7 +21,7 @@ namespace Mitternacht.Migrations.Mitternacht
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.AntiRaidSetting", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.AntiRaidSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("AntiRaidSetting");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.AntiSpamIgnore", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.AntiSpamIgnore", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,7 +74,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("AntiSpamIgnore");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.AntiSpamSetting", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.AntiSpamSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +104,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("AntiSpamSetting");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.BirthDateModel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.BirthDateModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +137,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("BirthDates");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.BlacklistItem", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.BlacklistItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -163,7 +163,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("BlacklistItem");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.BlockedCmdOrMdl", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.BlockedCmdOrMdl", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +191,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("BlockedCmdOrMdl");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.BotConfig", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.BotConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -293,7 +293,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("BotConfig");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.CommandAlias", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.CommandAlias", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -319,7 +319,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("CommandAlias");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.CommandCooldown", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.CommandCooldown", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -345,7 +345,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("CommandCooldown");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Currency", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Currency", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -369,7 +369,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Currency");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.CurrencyTransaction", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.CurrencyTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -393,7 +393,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("CurrencyTransactions");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.CustomReaction", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.CustomReaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -432,7 +432,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("CustomReactions");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.DailyMoney", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.DailyMoney", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -456,7 +456,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("DailyMoney");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.DailyMoneyStats", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.DailyMoneyStats", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -480,7 +480,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("DailyMoneyStats");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Donator", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Donator", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -507,7 +507,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Donators");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.EightBallResponse", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.EightBallResponse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -530,7 +530,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("EightBallResponse");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.FilterChannelId", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.FilterChannelId", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -558,7 +558,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("FilterChannelId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.FilteredWord", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.FilteredWord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -581,7 +581,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("FilteredWord");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.GCChannelId", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.GCChannelId", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -604,7 +604,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("GCChannelId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.GuildConfig", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.GuildConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -788,7 +788,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("GuildConfigs");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.GuildRepeater", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.GuildRepeater", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -823,7 +823,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("GuildRepeater");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.IgnoredLogChannel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.IgnoredLogChannel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -846,7 +846,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("IgnoredLogChannel");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.IgnoredVoicePresenceChannel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.IgnoredVoicePresenceChannel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -869,7 +869,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("IgnoredVoicePresenceChannel");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.LevelModel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.LevelModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -899,7 +899,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("LevelModel");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.LogSetting", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.LogSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -965,7 +965,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("LogSetting");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.MessageXpRestriction", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.MessageXpRestriction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -989,7 +989,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("MessageXpRestrictions");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.MutedUserId", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.MutedUserId", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1012,7 +1012,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("MutedUserId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.NsfwBlacklitedTag", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.NsfwBlacklitedTag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1035,7 +1035,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("NsfwBlacklitedTag");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Permission", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Permission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1071,7 +1071,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Permission");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Permissionv2", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Permissionv2", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1109,7 +1109,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Permissionv2");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.PlayingStatus", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.PlayingStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1132,7 +1132,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("PlayingStatus");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Quote", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Quote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1165,7 +1165,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Quotes");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Reminder", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Reminder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1198,7 +1198,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Reminders");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.RewardedUser", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.RewardedUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1228,7 +1228,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("RewardedUser");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.RoleLevelBinding", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.RoleLevelBinding", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1252,7 +1252,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("RoleLevelBinding");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.RoleMoney", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.RoleMoney", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1279,7 +1279,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("RoleMoney");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.SelfAssignedRole", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.SelfAssignedRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1303,7 +1303,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("SelfAssignableRoles");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.ShopEntry", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.ShopEntry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1344,7 +1344,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("ShopEntry");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.ShopEntryItem", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.ShopEntryItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1367,7 +1367,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("ShopEntryItem");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.StartupCommand", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.StartupCommand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1411,7 +1411,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("StartupCommand");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.TeamUpdateRank", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.TeamUpdateRank", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1435,7 +1435,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("TeamUpdateRank");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.UnmuteTimer", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.UnmuteTimer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1461,7 +1461,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("UnmuteTimer");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.UsernameHistoryModel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.UsernameHistoryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1497,7 +1497,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.HasDiscriminator<string>("Discriminator").HasValue("UsernameHistoryModel");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.VcRoleInfo", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.VcRoleInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1523,7 +1523,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("VcRoleInfo");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.VerifiedUser", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.VerifiedUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1550,7 +1550,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("VerifiedUsers");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.VoiceChannelStats", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.VoiceChannelStats", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1577,7 +1577,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("VoiceChannelStats");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Warning", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Warning", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1610,7 +1610,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("Warnings");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.WarningPunishment", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.WarningPunishment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1639,7 +1639,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("WarningPunishment");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.ZalgoFilterChannel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.ZalgoFilterChannel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1662,9 +1662,9 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("ZalgoFilterChannel");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.NicknameHistoryModel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.NicknameHistoryModel", b =>
                 {
-                    b.HasBaseType("Mitternacht.Services.Database.Models.UsernameHistoryModel");
+                    b.HasBaseType("Mitternacht.Database.Models.UsernameHistoryModel");
 
                     b.Property<decimal>("GuildId")
                         .HasColumnType("numeric(20,0)");
@@ -1672,207 +1672,207 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.HasDiscriminator().HasValue("NicknameHistoryModel");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.AntiRaidSetting", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.AntiRaidSetting", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", "GuildConfig")
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", "GuildConfig")
                         .WithOne("AntiRaidSetting")
-                        .HasForeignKey("Mitternacht.Services.Database.Models.AntiRaidSetting", "GuildConfigId")
+                        .HasForeignKey("Mitternacht.Database.Models.AntiRaidSetting", "GuildConfigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.AntiSpamIgnore", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.AntiSpamIgnore", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.AntiSpamSetting", null)
+                    b.HasOne("Mitternacht.Database.Models.AntiSpamSetting", null)
                         .WithMany("IgnoredChannels")
                         .HasForeignKey("AntiSpamSettingId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.AntiSpamSetting", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.AntiSpamSetting", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", "GuildConfig")
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", "GuildConfig")
                         .WithOne("AntiSpamSetting")
-                        .HasForeignKey("Mitternacht.Services.Database.Models.AntiSpamSetting", "GuildConfigId")
+                        .HasForeignKey("Mitternacht.Database.Models.AntiSpamSetting", "GuildConfigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.BlacklistItem", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.BlacklistItem", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.BotConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.BotConfig", null)
                         .WithMany("Blacklist")
                         .HasForeignKey("BotConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.BlockedCmdOrMdl", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.BlockedCmdOrMdl", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.BotConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.BotConfig", null)
                         .WithMany("BlockedCommands")
                         .HasForeignKey("BotConfigId");
 
-                    b.HasOne("Mitternacht.Services.Database.Models.BotConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.BotConfig", null)
                         .WithMany("BlockedModules")
                         .HasForeignKey("BotConfigId1");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.CommandAlias", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.CommandAlias", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("CommandAliases")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.CommandCooldown", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.CommandCooldown", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("CommandCooldowns")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.EightBallResponse", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.EightBallResponse", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.BotConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.BotConfig", null)
                         .WithMany("EightBallResponses")
                         .HasForeignKey("BotConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.FilterChannelId", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.FilterChannelId", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("FilterInvitesChannelIds")
                         .HasForeignKey("GuildConfigId");
 
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("FilterWordsChannelIds")
                         .HasForeignKey("GuildConfigId1");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.FilteredWord", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.FilteredWord", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("FilteredWords")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.GCChannelId", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.GCChannelId", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("GenerateCurrencyChannelIds")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.GuildConfig", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.GuildConfig", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.LogSetting", "LogSetting")
+                    b.HasOne("Mitternacht.Database.Models.LogSetting", "LogSetting")
                         .WithMany()
                         .HasForeignKey("LogSettingId");
 
-                    b.HasOne("Mitternacht.Services.Database.Models.Permission", "RootPermission")
+                    b.HasOne("Mitternacht.Database.Models.Permission", "RootPermission")
                         .WithMany()
                         .HasForeignKey("RootPermissionId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.GuildRepeater", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.GuildRepeater", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("GuildRepeaters")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.IgnoredLogChannel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.IgnoredLogChannel", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.LogSetting", "LogSetting")
+                    b.HasOne("Mitternacht.Database.Models.LogSetting", "LogSetting")
                         .WithMany("IgnoredChannels")
                         .HasForeignKey("LogSettingId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.IgnoredVoicePresenceChannel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.IgnoredVoicePresenceChannel", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.LogSetting", "LogSetting")
+                    b.HasOne("Mitternacht.Database.Models.LogSetting", "LogSetting")
                         .WithMany("IgnoredVoicePresenceChannelIds")
                         .HasForeignKey("LogSettingId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.MutedUserId", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.MutedUserId", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("MutedUsers")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.NsfwBlacklitedTag", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.NsfwBlacklitedTag", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("NsfwBlacklistedTags")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Permission", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Permission", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.Permission", "Next")
+                    b.HasOne("Mitternacht.Database.Models.Permission", "Next")
                         .WithOne("Previous")
-                        .HasForeignKey("Mitternacht.Services.Database.Models.Permission", "NextId");
+                        .HasForeignKey("Mitternacht.Database.Models.Permission", "NextId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.Permissionv2", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.Permissionv2", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("Permissions")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.PlayingStatus", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.PlayingStatus", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.BotConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.BotConfig", null)
                         .WithMany("RotatingStatusMessages")
                         .HasForeignKey("BotConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.ShopEntry", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.ShopEntry", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("ShopEntries")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.ShopEntryItem", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.ShopEntryItem", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.ShopEntry", null)
+                    b.HasOne("Mitternacht.Database.Models.ShopEntry", null)
                         .WithMany("Items")
                         .HasForeignKey("ShopEntryId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.StartupCommand", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.StartupCommand", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.BotConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.BotConfig", null)
                         .WithMany("StartupCommands")
                         .HasForeignKey("BotConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.UnmuteTimer", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.UnmuteTimer", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("UnmuteTimers")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.VcRoleInfo", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.VcRoleInfo", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("VcRoleInfos")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.WarningPunishment", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.WarningPunishment", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("WarnPunishments")
                         .HasForeignKey("GuildConfigId");
                 });
 
-            modelBuilder.Entity("Mitternacht.Services.Database.Models.ZalgoFilterChannel", b =>
+            modelBuilder.Entity("Mitternacht.Database.Models.ZalgoFilterChannel", b =>
                 {
-                    b.HasOne("Mitternacht.Services.Database.Models.GuildConfig", null)
+                    b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("FilterZalgoChannelIds")
                         .HasForeignKey("GuildConfigId");
                 });

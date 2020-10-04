@@ -9,7 +9,7 @@ using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Modules.Verification.Common;
 using Mitternacht.Modules.Verification.Exceptions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Verification.Services {

@@ -13,7 +13,7 @@ using Mitternacht.Modules.Verification.Common;
 using Mitternacht.Modules.Verification.Exceptions;
 using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Verification {
 	public partial class Verification : MitternachtTopLevelModule<VerificationService> {

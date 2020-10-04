@@ -4,12 +4,12 @@ using System.Threading;
 using Discord.WebSocket;
 using Mitternacht.Common.Replacements;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
-namespace Mitternacht.Modules.Administration.Services
-{
-    public class PlayingRotateService : IMService
+namespace Mitternacht.Modules.Administration.Services {
+	public class PlayingRotateService : IMService
     {
         private readonly Timer _t;
         private readonly DiscordSocketClient _client;

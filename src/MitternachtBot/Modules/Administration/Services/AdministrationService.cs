@@ -4,6 +4,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {
