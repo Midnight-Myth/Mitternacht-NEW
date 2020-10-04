@@ -11,7 +11,6 @@ using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Impl;
-using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
@@ -165,40 +164,6 @@ namespace Mitternacht.Modules.Gambling {
 					await channel.SendMessageAsync(s).ConfigureAwait(false);
 					Thread.Sleep(250);
 				}
-			}
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
-			[Priority(0)]
-			public Task DailyMoneyStats()
-				=> DailyMoneyStats(Context.User as IGuildUser);
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
-			[OwnerOrGuildPermission(GuildPermission.Administrator)]
-			[Priority(1)]
-			public async Task DailyMoneyStats(params IGuildUser[] users) {
-				users = users.Any() ? users : new[] { (IGuildUser)Context.User };
-
-				var stats = uow.DailyMoneyStats
-						.GetAllForUsers(Context.Guild.Id, users.Select(gu => gu.Id).ToArray()).ToList()
-						.GroupBy(dms => dms.UserId)
-						.ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
-				
-				await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_dailymoney-stats.json").ConfigureAwait(false);
-			}
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
-			[OwnerOrGuildPermission(GuildPermission.Administrator)]
-			public async Task DailyMoneyStatsAll() {
-				var stats = uow.DailyMoneyStats
-						.GetAll()
-						.ToList()
-						.GroupBy(dms => dms.UserId)
-						.ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
-
-				await Context.User.SendFileAsync(await JsonConvert.SerializeObject(stats).ToStream().ConfigureAwait(false), $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}_dailymoney-stats.json").ConfigureAwait(false);
 			}
 		}
 	}
