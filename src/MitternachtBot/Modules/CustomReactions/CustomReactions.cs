@@ -39,14 +39,14 @@ namespace Mitternacht.Modules.CustomReactions {
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					var eb = new EmbedBuilder().WithOkColor()
-						.WithTitle(GetText("new_cust_react"))
+						.WithTitle(GetText("addcustreact_new_cust_react"))
 						.WithDescription($"#{cr.Id}")
-						.AddField(efb => efb.WithName(GetText("trigger")).WithValue(key))
-						.AddField(efb => efb.WithName(GetText("response")).WithValue(message.Length > 1024 ? GetText("redacted_too_long") : message));
+						.AddField(efb => efb.WithName(GetText("addcustreact_trigger")).WithValue(key))
+						.AddField(efb => efb.WithName(GetText("addcustreact_response")).WithValue(message.Length > 1024 ? GetText("addcustreact_redacted_too_long") : message));
 
 					await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
 				} else {
-					await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
+					await ReplyErrorLocalized("addcustreact_insuff_perms").ConfigureAwait(false);
 				}
 			}
 		}
@@ -59,7 +59,7 @@ namespace Mitternacht.Modules.CustomReactions {
 
 				if(customReactions.Any()) {
 					const int elementsPerPage = 20;
-					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("name")).WithDescription(string.Join("\n",
+					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("listcustreact_name")).WithDescription(string.Join("\n",
 							customReactions.OrderBy(cr => cr.Trigger).Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(cr => {
 								var str = $"`#{cr.Id}` {cr.Trigger}";
 								if(cr.AutoDeleteTrigger) {
@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.CustomReactions {
 								return str;
 							}))), (int)Math.Ceiling(customReactions.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 				} else {
-					await ReplyErrorLocalized("no_found").ConfigureAwait(false);
+					await ReplyErrorLocalized("listcustreact_no_found").ConfigureAwait(false);
 				}
 			}
 		}
@@ -94,9 +94,9 @@ namespace Mitternacht.Modules.CustomReactions {
 
 				var channel = Context.Guild == null ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
 
-				await channel.SendFileAsync(txtStream, "customreactions.txt", GetText("list_all")).ConfigureAwait(false);
+				await channel.SendFileAsync(txtStream, "customreactions.txt", GetText("listcustreact_list_all")).ConfigureAwait(false);
 			} else {
-				await ReplyErrorLocalized("no_found").ConfigureAwait(false);
+				await ReplyErrorLocalized("listcustreact_no_found").ConfigureAwait(false);
 			}
 		}
 
@@ -114,14 +114,14 @@ namespace Mitternacht.Modules.CustomReactions {
 					const int elementsPerPage = 20;
 					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage =>
 						new EmbedBuilder().WithOkColor()
-							.WithTitle(GetText("name"))
+							.WithTitle(GetText("listcustreactg_name"))
 							.WithDescription(string.Join("\r\n", ordered
 															 .Skip(currentPage * elementsPerPage)
 															 .Take(elementsPerPage)
 															 .Select(cr => $"**{cr.Key.Trim().ToLowerInvariant()}** `x{cr.Count()}`"))), (int)Math.Ceiling(ordered.Count * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser })
 								 .ConfigureAwait(false);
 				} else {
-					await ReplyErrorLocalized("no_found").ConfigureAwait(false);
+					await ReplyErrorLocalized("listcustreactg_no_found").ConfigureAwait(false);
 				}
 			}
 		}
@@ -134,11 +134,11 @@ namespace Mitternacht.Modules.CustomReactions {
 			if(found != null) {
 				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
 					.WithDescription($"#{id}")
-					.AddField(efb => efb.WithName(GetText("trigger")).WithValue(found.Trigger))
-					.AddField(efb => efb.WithName(GetText("response")).WithValue($"{found.Response}\n```css\n{found.Response}```"))
+					.AddField(efb => efb.WithName(GetText("showcustreact_trigger")).WithValue(found.Trigger))
+					.AddField(efb => efb.WithName(GetText("showcustreact_response")).WithValue($"{found.Response}\n```css\n{found.Response}```"))
 				).ConfigureAwait(false);
 			} else {
-				await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
+				await ReplyErrorLocalized("showcustreact_no_found_id").ConfigureAwait(false);
 			}
 		}
 
@@ -152,15 +152,15 @@ namespace Mitternacht.Modules.CustomReactions {
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
-						.WithTitle(GetText("deleted"))
+						.WithTitle(GetText("delcustreact_deleted"))
 						.WithDescription($"#{toDelete.Id}")
-						.AddField(efb => efb.WithName(GetText("trigger")).WithValue(toDelete.Trigger))
-						.AddField(efb => efb.WithName(GetText("response")).WithValue(toDelete.Response)));
+						.AddField(efb => efb.WithName(GetText("delcustreact_trigger")).WithValue(toDelete.Trigger))
+						.AddField(efb => efb.WithName(GetText("delcustreact_response")).WithValue(toDelete.Response)));
 				} else {
-					await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
+					await ReplyErrorLocalized("delcustreact_no_found_id").ConfigureAwait(false);
 				}
 			} else {
-				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
+				await ReplyErrorLocalized("delcustreact_insuff_perms").ConfigureAwait(false);
 			}
 		}
 
@@ -178,13 +178,13 @@ namespace Mitternacht.Modules.CustomReactions {
 
 						await ReplyConfirmLocalized(!reaction.ContainsAnywhere ? "crca_enabled" : "crca_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 					} else {
-						await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
+						await ReplyErrorLocalized("crca_no_found_id").ConfigureAwait(false);
 					}
 				} else {
-					await ReplyErrorLocalized("no_found").ConfigureAwait(false);
+					await ReplyErrorLocalized("crca_no_found").ConfigureAwait(false);
 				}
 			} else {
-				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
+				await ReplyErrorLocalized("crca_insuff_perms").ConfigureAwait(false);
 			}
 		}
 
@@ -202,13 +202,13 @@ namespace Mitternacht.Modules.CustomReactions {
 
 						await ReplyConfirmLocalized(!reaction.DmResponse ? "crdm_enabled" : "crdm_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 					} else {
-						await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
+						await ReplyErrorLocalized("crdm_no_found_id").ConfigureAwait(false);
 					}
 				} else {
-					await ReplyErrorLocalized("no_found").ConfigureAwait(false);
+					await ReplyErrorLocalized("crdm_no_found").ConfigureAwait(false);
 				}
 			} else {
-				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
+				await ReplyErrorLocalized("crdm_insuff_perms").ConfigureAwait(false);
 			}
 		}
 
@@ -226,13 +226,13 @@ namespace Mitternacht.Modules.CustomReactions {
 
 						await ReplyConfirmLocalized(!reaction.AutoDeleteTrigger ? "crad_enabled" : "crad_disabled", Format.Code(reaction.Id.ToString())).ConfigureAwait(false);
 					} else {
-						await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
+						await ReplyErrorLocalized("crad_no_found_id").ConfigureAwait(false);
 					}
 				} else {
-					await ReplyErrorLocalized("no_found").ConfigureAwait(false);
+					await ReplyErrorLocalized("crad_no_found").ConfigureAwait(false);
 				}
 			} else {
-				await ReplyErrorLocalized("insuff_perms").ConfigureAwait(false);
+				await ReplyErrorLocalized("crad_insuff_perms").ConfigureAwait(false);
 			}
 		}
 
@@ -242,12 +242,12 @@ namespace Mitternacht.Modules.CustomReactions {
 			var success = Service.ClearStats(trigger);
 			
 			if(string.IsNullOrWhiteSpace(trigger)) {
-				await ReplyConfirmLocalized("all_stats_cleared").ConfigureAwait(false);
+				await ReplyConfirmLocalized("crstatsclear_all_stats_cleared").ConfigureAwait(false);
 			} else {
 				if(success) {
-					await ReplyErrorLocalized("stats_cleared", Format.Bold(trigger)).ConfigureAwait(false);
+					await ReplyErrorLocalized("crstatsclear_stats_cleared", Format.Bold(trigger)).ConfigureAwait(false);
 				} else {
-					await ReplyErrorLocalized("stats_not_found").ConfigureAwait(false);
+					await ReplyErrorLocalized("crstatsclear_stats_not_found").ConfigureAwait(false);
 				}
 			}
 		}
@@ -258,7 +258,7 @@ namespace Mitternacht.Modules.CustomReactions {
 				var ordered = Service.ReactionStats.OrderByDescending(x => x.Value).ToArray();
 				if(ordered.Any()) {
 					const int elementsPerPage = 9;
-					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => ordered.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Aggregate(new EmbedBuilder().WithOkColor().WithTitle(GetText("stats")), (agg, cur) => agg.AddField(efb => efb.WithName(cur.Key).WithValue(cur.Value.ToString()).WithIsInline(true))), (int)Math.Ceiling(ordered.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
+					await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => ordered.Skip(currentPage * elementsPerPage).Take(elementsPerPage).Aggregate(new EmbedBuilder().WithOkColor().WithTitle(GetText("crstats_stats")), (agg, cur) => agg.AddField(efb => efb.WithName(cur.Key).WithValue(cur.Value.ToString()).WithIsInline(true))), (int)Math.Ceiling(ordered.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 				}
 			}
 		}

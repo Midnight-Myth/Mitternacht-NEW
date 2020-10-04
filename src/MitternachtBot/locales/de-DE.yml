@@ -321,23 +321,43 @@ birthday:
   birthdayget_user_age:                          "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt."
   birthdayget_user_none:                         Der Geburtstag von `{0}` ist dem Bot nicht bekannt.
 customreactions:                                 
-  all_stats_cleared:                             Reaktionsstatistiken gelöscht.
-  crad_disabled:                                 Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird nicht automatisch gelöscht.
-  crad_enabled:                                  Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird automatisch gelöscht.
+  addcustreact_insuff_perms:                     Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
+  addcustreact_new_cust_react:                   Neue benutzerdefinierte Reaktion
+  addcustreact_response:                         Antwort
+  addcustreact_trigger:                          Auslöser
+  addcustreact_redacted_too_long:                Antwort ist zu lang und wurde weggekürzt.
+  listcustreact_name:                            Benutzerdefinierte Reaktionen
+  listcustreact_no_found:                        Keine benutzerdefinierten Reaktionen gefunden.
+  listcustreact_list_all:                        Liste aller benutzerdefinierten Reaktionen
+  listcustreactg_name:                           Benutzerdefinierte Reaktionen
+  listcustreactg_no_found:                       Keine benutzerdefinierten Reaktionen gefunden.
+  showcustreact_response:                        Antwort
+  showcustreact_trigger:                         Auslöser
+  showcustreact_no_found_id:                     Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
+  delcustreact_deleted:                          Benutzerdefinierte Reaktion gelöscht.
+  delcustreact_response:                         Antwort
+  delcustreact_trigger:                          Auslöser
+  delcustreact_no_found_id:                      Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
+  delcustreact_insuff_perms:                     Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
+  crca_enabled:                                  Die benutzerdefinierte Reaktion mit der ID {0} wird ausgelöst, wenn der Auslöser irgendwo in einer Nachricht vorkommt.
+  crca_disabled:                                 Die benutzerdefinierte Reaktion mit der ID {0} wird ausgelöst, wenn der Auslöser am Anfang einer Nachricht vorkommt.
+  crca_no_found:                                 Keine benutzerdefinierten Reaktionen gefunden.
+  crca_no_found_id:                              Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
+  crca_insuff_perms:                             Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
   crdm_disabled:                                 Reaktionsnachricht für die benutzerdefinierte Reaktion mit der ID {0} wird nicht als DN gesendet.
   crdm_enabled:                                  Reaktionsnachricht für die benutzerdefinierte Reaktion mit der ID {0} wird als DN gesendet.
-  deleted:                                       Benutzerdefinierte Reaktion gelöscht.
-  insuff_perms:                                  Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
-  list_all:                                      Liste aller benutzerdefinierten Reaktionen
-  name:                                          Benutzerdefinierte Reaktionen
-  new_cust_react:                                Neue benutzerdefinierte Reaktion
-  no_found:                                      Keine benutzerdefinierten Reaktionen gefunden.
-  no_found_id:                                   Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
-  response:                                      Antwort
-  stats:                                         Reaktionsstatistiken
-  stats_cleared:                                 Statistiken für die Reaktion {0} gelöscht.
-  stats_not_found:                               Keine Statistiken für diesen Auslöser gefunden, keine Aktion unternommen.
-  trigger:                                       Auslöser
+  crdm_no_found:                                 Keine benutzerdefinierten Reaktionen gefunden.
+  crdm_no_found_id:                              Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
+  crdm_insuff_perms:                             Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
+  crad_disabled:                                 Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird nicht automatisch gelöscht.
+  crad_enabled:                                  Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird automatisch gelöscht.
+  crad_no_found:                                 Keine benutzerdefinierten Reaktionen gefunden.
+  crad_no_found_id:                              Keine benutzerdefinierte Reaktion mit dieser ID gefunden.
+  crad_insuff_perms:                             Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
+  crstatsclear_all_stats_cleared:                Reaktionsstatistiken gelöscht.
+  crstatsclear_stats_cleared:                    Statistiken für die Reaktion {0} gelöscht.
+  crstatsclear_stats_not_found:                  Keine Statistiken für diesen Auslöser gefunden, keine Aktion unternommen.
+  crstats_stats:                                 Reaktionsstatistiken
 forum:                                           
   dev_failed:                                    Hoppla, da bin ich doch glatt in einen unmöglichen Fall gestolpert! Um mich wieder aufzufangen, kontaktiere den Botentwickler.
   forum_id:                                      ForumId
