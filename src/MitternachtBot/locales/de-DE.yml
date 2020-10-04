@@ -279,7 +279,7 @@ administration:
   xmuted_text:                                   Benutzer {0} vom Textchat
   xmuted_text_and_voice:                         Benutzer {0} vom Text- und Sprachchat
   xmuted_voice:                                  Benutzer {0} vom Sprachchat
-birthday:                                        
+birthday:
   birthdaysall_all_title:                        Alle Geburtstage
   birthdayreactions_disabled:                    deaktiviert
   birthdaymessageevent_disabled:                 deaktiviert
@@ -320,7 +320,7 @@ birthday:
   birthdayget_user:                              "`{0}` hat am **{1}** Geburtstag."
   birthdayget_user_age:                          "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt."
   birthdayget_user_none:                         Der Geburtstag von `{0}` ist dem Bot nicht bekannt.
-customreactions:                                 
+customreactions:
   addcustreact_insuff_perms:                     Unzureichende Rechte. Für serverseitige Reaktionen brauchst du Administratorrechte, für globale Reaktion musst du Botowner sein.
   addcustreact_new_cust_react:                   Neue benutzerdefinierte Reaktion
   addcustreact_response:                         Antwort
@@ -358,7 +358,7 @@ customreactions:
   crstatsclear_stats_cleared:                    Statistiken für die Reaktion {0} gelöscht.
   crstatsclear_stats_not_found:                  Keine Statistiken für diesen Auslöser gefunden, keine Aktion unternommen.
   crstats_stats:                                 Reaktionsstatistiken
-forum:                                           
+forum:
   dev_failed:                                    Hoppla, da bin ich doch glatt in einen unmöglichen Fall gestolpert! Um mich wieder aufzufangen, kontaktiere den Botentwickler.
   forum_id:                                      ForumId
   forum_name:                                    Forumname
@@ -411,7 +411,7 @@ forum:
   viprole:                                       Die VIP-Rolle ist {0}.
   viprole_not_set:                               nicht gesetzt
   viprole_set:                                   Die VIP-Rolle wurde von {0} zu {1} geändert.
-gambling:                                        
+gambling:
   animal_race:                                   Tierrennen
   animal_race_already_in:                        Du bist diesem Rennen schon beigetreten!
   animal_race_already_started:                   Tierrennen läuft bereits.
@@ -522,7 +522,7 @@ gambling:
   waifu_recent_divorce:                          Sie haben sich vor kurzem scheiden lassen. Sie müssen {0} Stunden und {1} Minuten warten bevor Sie sich erneut scheiden lassen können.
   waifus_none:                                   Keine Waifus wurden bisher beansprucht.
   waifus_top_waifus:                             Top Waifus
-games:                                           
+games:
   8ball:                                         8ball
   acro_ended_no_sub:                             Spiel wurde ohne Einsendungen beendet.
   acro_no_votes_cast:                            Keine Stimmen abgegeben. Spiel endet ohne Gewinner.
@@ -589,7 +589,7 @@ games:
   ttt_users_move:                                "{0}'s Zug"
   vs:                                            "{0} gegen {1}"
   x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
-help:                                            
+help:
   back_to_toc:                                   Zurück zu ToC
   bot_owner_only:                                Nur Bot-Besitzer
   channel_permission:                            Benötigt Kanalrecht {0}.
@@ -615,7 +615,7 @@ help:
   server_permission:                             Benötigt Serverrecht {0}.
   table_of_contents:                             Inhaltsverzeichnis
   usage:                                         Verwendung
-level:                                           
+level:
   addxp:                                         "{0} XP an {1} vergeben."
   levelguilddata:                                "{0} ist gesetzt auf {1}"
   levelguilddata_changed:                        "{0} wurde von {1} auf {2} gesetzt."
@@ -648,7 +648,7 @@ level:
   ttxp_error_zero_value:                         0 {0} sind 0 XP!
   ttxp_turned_other:                             Dem Nutzer {3} wurden {0}{1} in {2} XP umgewandelt.
   ttxp_turned_self:                              "{0}{1} wurden in {2} XP umgewandelt."
-minecraft:                                       
+minecraft:
   apistatus_title:                               Status der Mojang-APIs
   error_apistatus:                               'Beim Abrufen der Status ist ein Fehler aufgetreten: {0}'
   error_names:                                   'Beim Abrufen der Namen ist ein Fehler aufgetreten: {0}'
@@ -666,7 +666,7 @@ minecraft:
   server_title:                                  Informationen zu `{0}`
   server_version:                                Version
   usernames_title:                               Minecraftnamen von {0} ({1})
-permissions:                                     
+permissions:
   acm_disable:                                   Benutzung ALLER MODULE für Kanal {0} verboten.
   acm_enable:                                    Benutzung ALLER MODULE für Kanal {0} erlaubt.
   allowed:                                       Erlaubt
@@ -731,7 +731,7 @@ permissions:
   zalgo_filter_channel_on:                       Filterung für Zalgo in diesem Kanal aktiviert.
   zalgo_filter_server_off:                       Filterung für Zalgo auf diesem Server deaktiviert.
   zalgo_filter_server_on:                        Filterung für Zalgo auf diesem Server aktiviert.
-searches:                                        
+searches:
   anime_no_fav:                                  Keine favorisierten anime
   atl_ad_started:                                Startete die Automatische Übersetzung der Nachrichten auf diesem Kanal. Nachrichten von Benutzern werden automatisch gelöscht.
   atl_removed:                                   Ihre Automatische-Übersetzungs Sprache wurde entfernt.
@@ -827,7 +827,7 @@ searches:
   wind_speed:                                    Windgeschwindigkeit
   x_most_banned_champs:                          Die {0} meistgebannten Champions
   yodify_error:                                  Deine Nachricht konnte nicht yodifiziert werden.
-utility:                                         
+utility:
   activity_line:                                 "`{0}.` {1} - {2} [{3:F2}/s]"
   activity_page:                                 Nachrichtenaktivitätsliste
   activity_users_total:                          "{0} Benutzer insgesamt"
@@ -982,7 +982,7 @@ utility:
   voicestats_reset:                              Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!
   voicestats_time:                               Der Nutzer **{0}** hat bisher **{1}** in Sprachkanälen verbracht.
   voicestats_untracked:                          Ich habe keine Aufzeichnungen über den Aufenthalt von **{0}** in Sprachkanälen!
-verification:                                    
+verification:
   add_manually_success:                          Der Nutzer `{0}` wurde manuell mit dem Forumaccount `{1}` verifiziert.
   additional_verification_users_not_set:         Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.
   additional_verification_users_set:             Zusätzliche Verifizierungsnachrichtenempfänger wurden gesetzt.
