@@ -36,7 +36,7 @@ namespace Mitternacht.Modules.Gambling {
 				var amount = (int)(bet * wof.Multiplier);
 
 				if(amount > 0)
-					await _cs.AddAsync((IGuildUser)Context.User, "Wheel Of Fortune - won", amount, false).ConfigureAwait(false);
+					await _cs.AddAsync((IGuildUser)Context.User, "Wheel Of Fortune - won", amount).ConfigureAwait(false);
 
 				await Context.Channel.SendConfirmAsync(
 Format.Bold($@"{Context.User} won: {amount + _bc.BotConfig.CurrencySign}

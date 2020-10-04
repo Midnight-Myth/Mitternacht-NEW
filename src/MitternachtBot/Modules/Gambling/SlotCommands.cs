@@ -105,7 +105,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var msg = result.Multiplier != 0 ? "" : GetText("better_luck");
 					if(result.Multiplier != 0) {
-						await _cs.AddAsync(guildUser, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier, false);
+						await _cs.AddAsync(guildUser, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier);
 						Interlocked.Add(ref _totalPaidOut, amount * result.Multiplier);
 						switch(result.Multiplier) {
 							case 1:

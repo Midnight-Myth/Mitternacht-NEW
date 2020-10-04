@@ -51,7 +51,7 @@ namespace Mitternacht.Modules.Gambling {
 								.First();
 						var role = userRoles.First(r => r.Id == rm.RoleId);
 						var time = uow.DailyMoney.UpdateState(guildUser.GuildId, guildUser.Id);
-						await _currency.AddAsync(guildUser, $"Daily Reward ({role.Name})", rm.Money, false, uow).ConfigureAwait(false);
+						await _currency.AddAsync(guildUser, $"Daily Reward ({role.Name})", rm.Money, uow).ConfigureAwait(false);
 						uow.DailyMoneyStats.Add(guildUser.GuildId, guildUser.Id, time, rm.Money);
 
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);

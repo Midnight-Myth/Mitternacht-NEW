@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Gambling {
 				if(guess == result) {
 					var toWin = (int)Math.Round(amount * _bc.BotConfig.BetflipMultiplier);
 					str = $"{user.Mention} {GetText("flip_guess", $"{toWin}{_bc.BotConfig.CurrencySign}")}";
-					await _cs.AddAsync(user, "Betflip Gamble", toWin, false).ConfigureAwait(false);
+					await _cs.AddAsync(user, "Betflip Gamble", toWin).ConfigureAwait(false);
 				} else {
 					str = $"{user.Mention} {GetText("better_luck")}";
 				}

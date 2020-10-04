@@ -92,7 +92,7 @@ namespace Mitternacht.Modules.Gambling {
 							await guildUser.AddRoleAsync(role).ConfigureAwait(false);
 						} catch(Exception ex) {
 							_log.Warn(ex);
-							await _cs.AddAsync(guildUser, "Shop error refund", entry.Price, false);
+							await _cs.AddAsync(guildUser, "Shop error refund", entry.Price);
 							await ReplyErrorLocalized("shop_role_purchase_error").ConfigureAwait(false);
 							return;
 						}
@@ -127,7 +127,7 @@ namespace Mitternacht.Modules.Gambling {
 							uow.Context.Set<ShopEntryItem>().Add(item);
 							await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-							await _cs.AddAsync(guildUser, $"Shop error refund - {entry.Name}", entry.Price, false).ConfigureAwait(false);
+							await _cs.AddAsync(guildUser, $"Shop error refund - {entry.Name}", entry.Price).ConfigureAwait(false);
 							await ReplyErrorLocalized("shop_buy_error").ConfigureAwait(false);
 							return;
 						}

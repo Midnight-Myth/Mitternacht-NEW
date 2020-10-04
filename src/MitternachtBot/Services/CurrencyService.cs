@@ -68,11 +68,8 @@ namespace Mitternacht.Services {
 			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
-		public async Task AddAsync(IGuildUser author, string reason, long amount, bool sendMessage, IUnitOfWork uow = null) {
+		public async Task AddAsync(IGuildUser author, string reason, long amount, IUnitOfWork uow = null) {
 			await AddAsync(author.GuildId, author.Id, reason, amount, uow).ConfigureAwait(false);
-
-			if(sendMessage)
-				try { await author.SendConfirmAsync($"`You received:` {amount} {_config.BotConfig.CurrencySign} on Server with ID {author.GuildId}.\n`Reason:` {reason}").ConfigureAwait(false); } catch { }
 		}
 
 		public async Task AddAsync(ulong guildId, ulong receiverId, string reason, long amount, IUnitOfWork uow = null) {

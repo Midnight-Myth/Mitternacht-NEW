@@ -93,7 +93,7 @@ namespace Mitternacht.Modules.Gambling {
 			private Task SneakyGameMessageReceivedEventHandler(SocketMessage arg) {
 				if(arg.Author is IGuildUser guildUser && arg.Content == _secretCode && SneakyGameAwardedUsers.Add(arg.Author.Id)) {
 					var _ = Task.Run(async () => {
-						await _cs.AddAsync(guildUser, "Sneaky Game Event", 100, false).ConfigureAwait(false);
+						await _cs.AddAsync(guildUser, "Sneaky Game Event", 100).ConfigureAwait(false);
 						
 						try {
 							await arg.DeleteAsync(new RequestOptions { RetryMode = RetryMode.AlwaysFail }).ConfigureAwait(false);
