@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Discord;
 using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Services {
 	public class BlacklistService : IEarlyBlocker, IMService {

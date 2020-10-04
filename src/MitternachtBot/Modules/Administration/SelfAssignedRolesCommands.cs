@@ -9,8 +9,8 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {

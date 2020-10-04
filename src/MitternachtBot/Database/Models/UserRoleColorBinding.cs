@@ -1,4 +1,4 @@
-﻿namespace Mitternacht.Services.Database.Models {
+﻿namespace Mitternacht.Database.Models {
 	public class UserRoleColorBinding : DbEntity {
 		public ulong UserId  { get; set; }
 		public ulong GuildId { get; set; }

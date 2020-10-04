@@ -1,9 +1,9 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using System;
 
-namespace Mitternacht.Services.Database.Repositories.Impl {
+namespace Mitternacht.Database.Repositories.Impl {
 	public class ReminderRepository : Repository<Reminder>, IReminderRepository {
 		public ReminderRepository(DbContext context) : base(context) { }
 

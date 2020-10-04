@@ -1,7 +1,7 @@
 using System.Linq;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface ICurrencyRepository : IRepository<Currency> {
 		Currency GetOrCreate(ulong guildId, ulong userId);
 		long GetUserCurrencyValue(ulong guildId, ulong userId);

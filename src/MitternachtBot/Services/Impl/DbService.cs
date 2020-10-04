@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Services.Impl {
 	public class DbService {

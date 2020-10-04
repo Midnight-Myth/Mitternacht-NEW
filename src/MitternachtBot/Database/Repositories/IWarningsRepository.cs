@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IWarningsRepository : IRepository<Warning> {
 		IQueryable<Warning> For(ulong guildId, ulong userId);
 		Task ForgiveAll(ulong guildId, ulong userId, string mod);

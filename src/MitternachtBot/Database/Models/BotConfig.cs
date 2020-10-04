@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class BotConfig : DbEntity {
 		public bool     ForwardMessages            { get; set; } = true;
 		public bool     ForwardToAllOwners         { get; set; } = true;

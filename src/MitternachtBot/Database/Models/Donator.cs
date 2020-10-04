@@ -1,4 +1,4 @@
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class Donator : DbEntity {
 		public ulong  UserId { get; set; }
 		public string Name   { get; set; }

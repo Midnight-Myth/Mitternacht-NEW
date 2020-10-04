@@ -1,8 +1,8 @@
 using Discord;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using System.Linq;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IMessageXpRestrictionRepository : IRepository<MessageXpRestriction> {
 		bool CreateRestriction(ITextChannel channel);
 		bool CreateRestriction(ulong guildId, ulong channelId);

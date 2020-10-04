@@ -1,7 +1,7 @@
 using System;
 using Mitternacht.Modules.Birthday.Models;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class BirthDateModel : DbEntity, IBirthDate {
 		public ulong UserId                 { get; set; }
 		public int   Day                    { get; set; }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class LogSetting : DbEntity {
 		public HashSet<IgnoredLogChannel>           IgnoredChannels                { get; set; } = new HashSet<IgnoredLogChannel>();
 		public HashSet<IgnoredVoicePresenceChannel> IgnoredVoicePresenceChannelIds { get; set; } = new HashSet<IgnoredVoicePresenceChannel>();

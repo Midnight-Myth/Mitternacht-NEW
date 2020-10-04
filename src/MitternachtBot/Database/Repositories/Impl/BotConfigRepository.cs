@@ -1,8 +1,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories.Impl {
+namespace Mitternacht.Database.Repositories.Impl {
 	public class BotConfigRepository : Repository<BotConfig>, IBotConfigRepository {
 		public BotConfigRepository(DbContext context) : base(context) { }
 

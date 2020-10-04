@@ -1,6 +1,6 @@
 using System;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class DailyMoney : DbEntity {
 		public ulong    GuildId        { get; set; }
 		public ulong    UserId         { get; set; }

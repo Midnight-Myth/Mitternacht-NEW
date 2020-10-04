@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories.Impl {
+namespace Mitternacht.Database.Repositories.Impl {
 	public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository {
 		public UsernameHistoryRepository(DbContext context) : base(context) { }
 

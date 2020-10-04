@@ -1,6 +1,6 @@
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IRoleMoneyRepository : IRepository<RoleMoney> {
 		RoleMoney GetOrCreate(ulong guildId, ulong roleId);
 		void SetMoney(ulong guildId, ulong roleId, long money);

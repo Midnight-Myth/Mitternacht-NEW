@@ -1,7 +1,7 @@
 using System;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IDailyMoneyRepository : IRepository<DailyMoney> {
 		DailyMoney GetOrCreate(ulong guildId, ulong userId);
 		DateTime GetLastReceived(ulong guildId, ulong userId);

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Collections;
 using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Permissions.Services {

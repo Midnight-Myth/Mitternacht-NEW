@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using Mitternacht.Services.Database.Repositories;
-using Mitternacht.Services.Database.Repositories.Impl;
+using Mitternacht.Database.Repositories;
+using Mitternacht.Database.Repositories.Impl;
 
-namespace Mitternacht.Services.Database {
+namespace Mitternacht.Database {
 	public class UnitOfWork : IUnitOfWork {
 		public MitternachtContext Context { get; }
 

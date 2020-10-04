@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class DbEntity {
 		[Key]
 		public int       Id        { get; set; }

@@ -1,4 +1,4 @@
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class CommandCooldown : DbEntity {
 		public int    Seconds     { get; set; }
 		public string CommandName { get; set; }

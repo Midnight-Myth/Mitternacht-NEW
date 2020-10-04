@@ -4,7 +4,7 @@ using Discord.WebSocket;
 using Mitternacht.Common;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

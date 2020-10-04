@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
+using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Administration
 {

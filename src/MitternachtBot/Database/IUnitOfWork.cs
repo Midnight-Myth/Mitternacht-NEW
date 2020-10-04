@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Mitternacht.Services.Database.Repositories;
+using Mitternacht.Database.Repositories;
 
-namespace Mitternacht.Services.Database
+namespace Mitternacht.Database
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -1,8 +1,8 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories.Impl {
+namespace Mitternacht.Database.Repositories.Impl {
 	public class RoleMoneyRepository : Repository<RoleMoney>, IRoleMoneyRepository {
 		public RoleMoneyRepository(DbContext context) : base(context) { }
 

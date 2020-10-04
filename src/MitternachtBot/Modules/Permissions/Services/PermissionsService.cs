@@ -9,7 +9,7 @@ using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Common;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 

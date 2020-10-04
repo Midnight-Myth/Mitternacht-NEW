@@ -1,6 +1,6 @@
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface ICustomReactionRepository : IRepository<CustomReaction> {
 
 	}

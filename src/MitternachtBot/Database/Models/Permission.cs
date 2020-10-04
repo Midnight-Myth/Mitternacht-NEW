@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
-namespace Mitternacht.Services.Database.Models
+namespace Mitternacht.Database.Models
 {
     [DebuggerDisplay("{global::MitternachtBot.Modules.Permissions.PermissionExtensions.GetCommand(this)}", Target = typeof(Permission))]
     public class Permission : DbEntity

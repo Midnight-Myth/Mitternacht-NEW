@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class AntiRaidSetting : DbEntity {
         public int              GuildConfigId { get; set; }
         public GuildConfig      GuildConfig   { get; set; }

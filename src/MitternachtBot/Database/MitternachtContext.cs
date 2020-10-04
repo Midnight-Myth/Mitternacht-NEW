@@ -3,9 +3,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Mitternacht.Extensions;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database {
+namespace Mitternacht.Database {
 	public class MitternachtContextFactory : IDesignTimeDbContextFactory<MitternachtContext> {
 		public MitternachtContext CreateDbContext(string[] args) {
 			var optionsBuilder = new DbContextOptionsBuilder();

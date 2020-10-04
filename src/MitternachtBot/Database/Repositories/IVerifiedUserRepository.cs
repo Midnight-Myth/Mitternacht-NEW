@@ -1,7 +1,7 @@
 using System.Linq;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IVerifiedUserRepository : IRepository<VerifiedUser> {
 		VerifiedUser GetVerifiedUser(ulong guildId, ulong userId);
 		VerifiedUser GetVerifiedUser(ulong guildId, long forumUserId);

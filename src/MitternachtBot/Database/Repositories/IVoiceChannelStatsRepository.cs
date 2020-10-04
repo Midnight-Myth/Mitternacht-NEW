@@ -1,6 +1,6 @@
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IVoiceChannelStatsRepository : IRepository<VoiceChannelStats> {
 		void AddTime(ulong guildId, ulong userId, double time);
 		bool TryGetTime(ulong guildId, ulong userId, out double time);

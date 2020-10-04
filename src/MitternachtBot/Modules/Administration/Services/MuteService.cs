@@ -7,7 +7,7 @@ using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 

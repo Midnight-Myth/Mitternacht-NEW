@@ -1,8 +1,8 @@
 ﻿using Discord.WebSocket;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using System.Linq;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IUserRoleColorBindingRepository {
 		bool HasBinding(ulong userId, SocketRole role);
 		void CreateBinding(ulong userId, SocketRole role);

@@ -8,8 +8,8 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.CustomReactions.Services;
 using Mitternacht.Services;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
 using Newtonsoft.Json;
 
 namespace Mitternacht.Modules.CustomReactions {

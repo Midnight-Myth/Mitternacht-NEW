@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class Quote : DbEntity {
 		public ulong  GuildId    { get; set; }
 		[Required]

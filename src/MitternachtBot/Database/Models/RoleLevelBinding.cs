@@ -1,4 +1,4 @@
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class RoleLevelBinding : DbEntity {
 		public ulong GuildId      { get; set; }
 		public ulong RoleId       { get; set; }

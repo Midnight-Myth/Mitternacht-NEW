@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Discord;
 using Discord.WebSocket;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Common {
 	public static class PermissionExtensions {

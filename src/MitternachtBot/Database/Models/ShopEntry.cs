@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public enum ShopEntryType {
 		Role,
 		List,

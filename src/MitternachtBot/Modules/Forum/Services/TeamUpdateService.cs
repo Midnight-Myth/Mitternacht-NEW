@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Mitternacht.Common;
 using Mitternacht.Modules.Forum.Common;
 using Mitternacht.Services;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
 using System;

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 
-namespace Mitternacht.Services.Database.Repositories.Impl {
+namespace Mitternacht.Database.Repositories.Impl {
 	public class DailyMoneyStatsRepository : Repository<DailyMoneyStats>, IDailyMoneyStatsRepository {
 		public DailyMoneyStatsRepository(DbContext context) : base(context) { }
 

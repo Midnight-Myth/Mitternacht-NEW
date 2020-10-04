@@ -1,7 +1,7 @@
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using System.Linq;
 
-namespace Mitternacht.Services.Database.Repositories {
+namespace Mitternacht.Database.Repositories {
 	public interface IRepository<T> where T : DbEntity {
 		T Get(int id);
 		IQueryable<T> GetAll();

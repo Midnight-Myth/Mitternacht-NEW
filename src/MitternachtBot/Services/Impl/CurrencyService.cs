@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
-using Mitternacht.Services.Database;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Services.Impl {
 	public class CurrencyService : IMService {

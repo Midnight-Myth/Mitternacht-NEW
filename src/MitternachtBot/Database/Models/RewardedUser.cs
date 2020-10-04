@@ -1,6 +1,6 @@
 using System;
 
-namespace Mitternacht.Services.Database.Models {
+namespace Mitternacht.Database.Models {
 	public class RewardedUser : DbEntity {
 		public ulong    UserId                  { get; set; }
 		public string   PatreonUserId           { get; set; }

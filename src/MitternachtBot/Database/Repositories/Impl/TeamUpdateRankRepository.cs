@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Mitternacht.Services.Database.Models;
+using Mitternacht.Database.Models;
 using System;
 using System.Linq;
 
-namespace Mitternacht.Services.Database.Repositories.Impl {
+namespace Mitternacht.Database.Repositories.Impl {
 	public class TeamUpdateRankRepository : Repository<TeamUpdateRank>, ITeamUpdateRankRepository {
 		public TeamUpdateRankRepository(DbContext context) : base(context) { }
 
