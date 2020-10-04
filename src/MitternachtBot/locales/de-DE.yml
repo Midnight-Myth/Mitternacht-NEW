@@ -280,42 +280,46 @@ administration:
   xmuted_text_and_voice:                         Benutzer {0} vom Text- und Sprachchat
   xmuted_voice:                                  Benutzer {0} vom Sprachchat
 birthday:                                        
-  all_title:                                     Alle Geburtstage
-  disabled:                                      deaktiviert
-  enable:                                        Geburtstagsaktionen wurden **{0}**.
-  enable_same:                                   Geburtstagsaktionen sind schon **{0}**.
-  enabled:                                       aktiviert
-  list_title:                                    Geburtstage am **{0}**
+  birthdaysall_all_title:                        Alle Geburtstage
+  birthdayreactions_disabled:                    deaktiviert
+  birthdaymessageevent_disabled:                 deaktiviert
+  birthdayreactions_enable:                      Geburtstagsaktionen wurden **{0}**.
+  birthdayreactions_enable_same:                 Geburtstagsaktionen sind schon **{0}**.
+  birthdayreactions_enabled:                     aktiviert
+  birthdaymessageevent_enabled:                  aktiviert
+  birthdays_list_title:                          Geburtstage am **{0}**
   messageevent_already_set:                      Geburtstagsnachrichten sind für dich sind schon **{0}**.
   messageevent_birthday_not_set:                 Dein Geburtstag ist mir unbekannt, daher kannst du keine Geburtstagsnachrichten bekommen.
   messageevent_changed:                          Geburtstagsnachrichten wurden für dich **{0}**.
   messageevent_show:                             Geburtstagsnachrichten sind für dich **{0}**.
-  money:                                         Das Geburtstagsgeld beträgt {1}{0}
-  money_already_set:                             Das Geburtstagsgeld ist schon auf {0}{1} gesetzt.
-  money_set:                                     Das Geburtstagsgeld wurde von {1}{0} auf {2}{0} gesetzt.
-  msg:                                           Die aktuelle Geburtstagsnachricht lautet `{0}`
-  msg_changed:                                   Die Geburtstagsnachricht wurde von `{0}` auf `{1}` geändert.
-  msgch:                                         Der aktuelle Geburtstagsnachrichtenkanal ist **{0}**.
-  msgch_not_existing:                            nicht existent
-  msgch_not_set:                                 nicht gesetzt
-  msgch_set:                                     Der Geburtstagsnachrichtenkanal wurde von **{0}** zu **{1}** geändert.
-  none:                                          Es sind keine Geburtstage eingetragen!
-  none_date:                                     Für den **{0}** sind keine Geburtstage eingetragen.
-  remove_failed:                                 Für `{0}` ist kein Geburtstag bekannt, löschen unmöglich.
-  removed:                                       Der Geburtstag von `{0}` wurde gelöscht.
-  role:                                          Die Geburtstagsrolle ist **{0}**.
-  role_not_existing:                             nicht existent
-  role_not_set:                                  nicht gesetzt
-  role_set:                                      Die Geburtstagsrolle wurde von **{0}** zu **{1}** geändert.
-  self:                                          Du hast am **{0}** Geburtstag.
-  self_age:                                      Du hast am **{0}** Geburtstag und bist {1} Jahre alt.
-  self_none:                                     Dein Geburtstag ist dem Bot nicht bekannt.
-  set:                                           Du hast nun am **{0}** Geburtstag.
-  set_before:                                    Du hast deinen Geburtstag schon registriert. Für Änderungen frage den Botowner.
-  set_owner:                                     Der User `{0}` hat nun am **{1}** Geburtstag.
-  user:                                          "`{0}` hat am **{1}** Geburtstag."
-  user_age:                                      "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt."
-  user_none:                                     Der Geburtstag von `{0}` ist dem Bot nicht bekannt.
+  birthdaymoney_money:                           Das Geburtstagsgeld beträgt {1}{0}
+  birthdaymoney_money_already_set:               Das Geburtstagsgeld ist schon auf {0}{1} gesetzt.
+  birthdaymoney_money_set:                       Das Geburtstagsgeld wurde von {1}{0} auf {2}{0} gesetzt.
+  birthdaymessage_msg:                           Die aktuelle Geburtstagsnachricht lautet `{0}`
+  birthdaymessage_msg_changed:                   Die Geburtstagsnachricht wurde von `{0}` auf `{1}` geändert.
+  birthdaymessagechannel_msgch:                  Der aktuelle Geburtstagsnachrichtenkanal ist **{0}**.
+  birthdaymessagechannel_msgch_not_existing:     nicht existent
+  birthdaymessagechannel_msgch_not_set:          nicht gesetzt
+  birthdaymessagechannel_msgch_set:              Der Geburtstagsnachrichtenkanal wurde von **{0}** zu **{1}** geändert.
+  birthdaymessagechannelremove_msgch_set:        Der Geburtstagsnachrichtenkanal wurde von **{0}** zu **{1}** geändert.
+  birthdaysall_none:                             Es sind keine Geburtstage eingetragen!
+  birthdays_none_date:                           Für den **{0}** sind keine Geburtstage eingetragen.
+  birthdayremove_remove_failed:                  Für `{0}` ist kein Geburtstag bekannt, löschen unmöglich.
+  birthdayremove_removed:                        Der Geburtstag von `{0}` wurde gelöscht.
+  birthdayrole_role:                             Die Geburtstagsrolle ist **{0}**.
+  birthdayrole_role_not_existing:                nicht existent
+  birthdayrole_role_not_set:                     nicht gesetzt
+  birthdayrole_role_set:                         Die Geburtstagsrolle wurde von **{0}** zu **{1}** geändert.
+  birthdayroleremove_role_set:                   Die Geburtstagsrolle wurde von **{0}** zu **{1}** geändert.
+  birthdayget_self:                              Du hast am **{0}** Geburtstag.
+  birthdayget_self_age:                          Du hast am **{0}** Geburtstag und bist {1} Jahre alt.
+  birthdayget_self_none:                         Dein Geburtstag ist dem Bot nicht bekannt.
+  birthdayset_set:                               Du hast nun am **{0}** Geburtstag.
+  birthdayset_set_before:                        Du hast deinen Geburtstag schon registriert. Für Änderungen frage den Botowner.
+  birthdayset_set_owner:                         Der User `{0}` hat nun am **{1}** Geburtstag.
+  birthdayget_user:                              "`{0}` hat am **{1}** Geburtstag."
+  birthdayget_user_age:                          "`{0}` hat am **{1}** Geburtstag und ist {2} Jahre alt."
+  birthdayget_user_none:                         Der Geburtstag von `{0}` ist dem Bot nicht bekannt.
 customreactions:                                 
   all_stats_cleared:                             Reaktionsstatistiken gelöscht.
   crad_disabled:                                 Auslösende Nachricht der benutzerdefinierten Reaktion mit der ID {0} wird nicht automatisch gelöscht.

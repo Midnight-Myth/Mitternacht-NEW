@@ -29,14 +29,14 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdaySet(IBirthDate bd) {
 			var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
 			if(!_botCreds.IsOwner(Context.User) && (bdm?.Year != null || bdm != null && bdm.Year == null && (bdm.Day != bd.Day || bdm.Month != bd.Month))) {
-				await ReplyErrorLocalized("set_before").ConfigureAwait(false);
+				await ReplyErrorLocalized("birthdayset_set_before").ConfigureAwait(false);
 				return;
 			}
 
 			uow.BirthDates.SetBirthDate(Context.User.Id, bd);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-			await ReplyConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
+			await ReplyConfirmLocalized("birthdayset_set", bd.ToString()).ConfigureAwait(false);
 
 			if(bd.IsBirthday(DateTime.Now) && (bdm == null || !bdm.IsBirthday(DateTime.Now))) {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
@@ -66,9 +66,9 @@ namespace Mitternacht.Modules.Birthday {
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 			if(user == Context.User)
-				await ConfirmLocalized("set", bd.ToString()).ConfigureAwait(false);
+				await ConfirmLocalized("birthdayset_set", bd.ToString()).ConfigureAwait(false);
 			else
-				await ConfirmLocalized("set_owner", user.ToString(), bd.ToString()).ConfigureAwait(false);
+				await ConfirmLocalized("birthdayset_set_owner", user.ToString(), bd.ToString()).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -76,9 +76,9 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdayRemove(IUser user) {
 			var success = uow.BirthDates.DeleteBirthDate(user.Id);
 			if(success)
-				await ConfirmLocalized("removed", user.ToString()).ConfigureAwait(false);
+				await ConfirmLocalized("birthdayremove_removed", user.ToString()).ConfigureAwait(false);
 			else
-				await ErrorLocalized("remove_failed", user.ToString()).ConfigureAwait(false);
+				await ErrorLocalized("birthdayremove_remove_failed", user.ToString()).ConfigureAwait(false);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
@@ -90,17 +90,17 @@ namespace Mitternacht.Modules.Birthday {
 			var age = bdm?.Year != null ? (int)Math.Floor((DateTime.Now - new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)).TotalDays / 365.25) : 0;
 			if(user == Context.User)
 				if(bdm == null)
-					await ReplyErrorLocalized("self_none").ConfigureAwait(false);
+					await ReplyErrorLocalized("birthdayget_self_none").ConfigureAwait(false);
 				else if(bdm.Year == null)
-					await ReplyConfirmLocalized("self", bdm.ToString()).ConfigureAwait(false);
+					await ReplyConfirmLocalized("birthdayget_self", bdm.ToString()).ConfigureAwait(false);
 				else
-					await ReplyConfirmLocalized("self_age", bdm.ToString(), age).ConfigureAwait(false);
+					await ReplyConfirmLocalized("birthdayget_self_age", bdm.ToString(), age).ConfigureAwait(false);
 			else if(bdm == null)
-				await ReplyErrorLocalized("user_none", user.ToString()).ConfigureAwait(false);
+				await ReplyErrorLocalized("birthdayget_user_none", user.ToString()).ConfigureAwait(false);
 			else if(bdm.Year == null)
-				await ReplyConfirmLocalized("user", user.ToString(), bdm.ToString()).ConfigureAwait(false);
+				await ReplyConfirmLocalized("birthdayget_user", user.ToString(), bdm.ToString()).ConfigureAwait(false);
 			else
-				await ReplyConfirmLocalized("user_age", user.ToString(), bdm.ToString(), age).ConfigureAwait(false);
+				await ReplyConfirmLocalized("birthdayget_user_age", user.ToString(), bdm.ToString(), age).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -110,11 +110,11 @@ namespace Mitternacht.Modules.Birthday {
 			var birthdates = uow.BirthDates.GetBirthdays(bd, bd.Year.HasValue).ToList();
 
 			if(!birthdates.Any())
-				await ConfirmLocalized("none_date", bd.ToString()).ConfigureAwait(false);
+				await ConfirmLocalized("birthdays_none_date", bd.ToString()).ConfigureAwait(false);
 			else {
 				var eb = new EmbedBuilder()
 					.WithOkColor()
-					.WithTitle(GetText("list_title", bd.ToString()))
+					.WithTitle(GetText("birthdays_list_title", bd.ToString()))
 					.WithDescription(string.Join("\n", birthdates.Select(bdm => $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()}{(bdm.Year.HasValue && !bd.Year.HasValue ? $"{BirthDate.Today.Year - bdm.Year}" : "")}")));
 				await Context.Channel.EmbedAsync(eb).ConfigureAwait(false);
 			}
@@ -128,7 +128,7 @@ namespace Mitternacht.Modules.Birthday {
 			var birthdates = uow.BirthDates.GetAll().OrderBy(bdm => bdm.Month).ThenBy(bdm => bdm.Day).ToList();
 
 			if(!birthdates.Any()) {
-				await ErrorLocalized("none").ConfigureAwait(false);
+				await ErrorLocalized("birthdaysall_none").ConfigureAwait(false);
 				return;
 			}
 
@@ -137,7 +137,7 @@ namespace Mitternacht.Modules.Birthday {
 			page = page > pageCount ? pageCount : page;
 
 			await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1,
-				currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("all_title")).WithDescription(string.Join("\n",
+				currentPage => new EmbedBuilder().WithOkColor().WithTitle(GetText("birthdaysall_all_title")).WithDescription(string.Join("\n",
 					birthdates.Skip(elementsPerPage * currentPage).Take(elementsPerPage).Select(BdmToString))),
 				pageCount, reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
 		}
@@ -148,11 +148,11 @@ namespace Mitternacht.Modules.Birthday {
 			var bdayroleid = uow.GuildConfigs.For(Context.Guild.Id).BirthdayRoleId;
 			var bdayrole = bdayroleid.HasValue ? Context.Guild.GetRole(bdayroleid.Value) : null;
 			if(!bdayroleid.HasValue)
-				await ErrorLocalized("role", GetText("role_not_set")).ConfigureAwait(false);
+				await ErrorLocalized("birthdayrole_role", GetText("birthdayrole_role_not_set")).ConfigureAwait(false);
 			else if(bdayrole == null)
-				await ErrorLocalized("role", GetText("role_not_existing")).ConfigureAwait(false);
+				await ErrorLocalized("birthdayrole_role", GetText("birthdayrole_role_not_existing")).ConfigureAwait(false);
 			else
-				await ConfirmLocalized("role", bdayrole.Name).ConfigureAwait(false);
+				await ConfirmLocalized("birthdayrole_role", bdayrole.Name).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -165,7 +165,7 @@ namespace Mitternacht.Modules.Birthday {
 			gc.BirthdayRoleId = role.Id;
 			uow.GuildConfigs.Update(gc);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
-			await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), role.Name).ConfigureAwait(false);
+			await ConfirmLocalized("birthdayrole_role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), role.Name).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -178,7 +178,7 @@ namespace Mitternacht.Modules.Birthday {
 			gc.BirthdayRoleId = null;
 			uow.GuildConfigs.Update(gc);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
-			await ConfirmLocalized("role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
+			await ConfirmLocalized("birthdayroleremove_role_set", oldrole?.Name ?? oldroleid?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
 		}
 
 
@@ -188,11 +188,11 @@ namespace Mitternacht.Modules.Birthday {
 			var bdayMsgChId = uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessageChannelId;
 			var bdayMsgCh = bdayMsgChId.HasValue ? await Context.Guild.GetTextChannelAsync(bdayMsgChId.Value).ConfigureAwait(false) : null;
 			if(!bdayMsgChId.HasValue)
-				await ErrorLocalized("msgch", GetText("msgch_not_set")).ConfigureAwait(false);
+				await ErrorLocalized("birthdaymessagechannel_msgch", GetText("birthdaymessagechannel_msgch_not_set")).ConfigureAwait(false);
 			else if(bdayMsgCh == null)
-				await ErrorLocalized("msgch", GetText("msgch_not_existing")).ConfigureAwait(false);
+				await ErrorLocalized("birthdaymessagechannel_msgch", GetText("birthdaymessagechannel_msgch_not_existing")).ConfigureAwait(false);
 			else
-				await ConfirmLocalized("msgch", bdayMsgCh.Name).ConfigureAwait(false);
+				await ConfirmLocalized("birthdaymessagechannel_msgch", bdayMsgCh.Name).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -205,7 +205,7 @@ namespace Mitternacht.Modules.Birthday {
 			gc.BirthdayMessageChannelId = channel.Id;
 			uow.GuildConfigs.Update(gc);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
-			await ConfirmLocalized("msgch_set", oldch?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), channel.Name).ConfigureAwait(false);
+			await ConfirmLocalized("birthdaymessagechannel_msgch_set", oldch?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), channel.Name).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -218,7 +218,7 @@ namespace Mitternacht.Modules.Birthday {
 			gc.BirthdayMessageChannelId = null;
 			uow.GuildConfigs.Update(gc);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
-			await ConfirmLocalized("msgch_set", oldCh?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
+			await ConfirmLocalized("birthdaymessagechannelremove_msgch_set", oldCh?.Name ?? oldChId?.ToString() ?? Format.Italics("null"), Format.Italics("null")).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -226,7 +226,7 @@ namespace Mitternacht.Modules.Birthday {
 		[OwnerOnly]
 		[Priority(1)]
 		public async Task BirthdayMessage() {
-			await ConfirmLocalized("msg", uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessage).ConfigureAwait(false);
+			await ConfirmLocalized("birthdaymessage_msg", uow.GuildConfigs.For(Context.Guild.Id).BirthdayMessage).ConfigureAwait(false);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
 
@@ -240,7 +240,7 @@ namespace Mitternacht.Modules.Birthday {
 			gc.BirthdayMessage = msg;
 			uow.GuildConfigs.Update(gc);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
-			await ConfirmLocalized("msg_changed", oldmsg ?? "null", msg);
+			await ConfirmLocalized("birthdaymessage_msg_changed", oldmsg ?? "null", msg);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -249,14 +249,14 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdayReactions(bool enable) {
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			if(gc.BirthdaysEnabled == enable) {
-				await ErrorLocalized("enable_same", GetEnabledText(enable)).ConfigureAwait(false);
+				await ErrorLocalized("birthdayreactions_enable_same", GetText(enable ? "birthdayreactions_enabled" : "birthdayreactions_disabled")).ConfigureAwait(false);
 				return;
 			}
 
 			gc.BirthdaysEnabled = enable;
 			uow.GuildConfigs.Update(gc);
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
-			await ConfirmLocalized("enable", GetEnabledText(enable)).ConfigureAwait(false);
+			await ConfirmLocalized("birthdayreactions_enable", GetText(enable ? "birthdayreactions_enabled" : "birthdayreactions_disabled")).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -265,13 +265,13 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdayMoney(long money) {
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			if(gc.BirthdayMoney == money) {
-				await ReplyErrorLocalized("money_already_set").ConfigureAwait(false);
+				await ReplyErrorLocalized("birthdaymoney_money_already_set").ConfigureAwait(false);
 				return;
 			}
 			var oldMoney = gc.BirthdayMoney ?? 0;
 			gc.BirthdayMoney = money;
 			uow.GuildConfigs.Update(gc);
-			await ReplyConfirmLocalized("money_set", _botConf.BotConfig.CurrencySign, oldMoney, money).ConfigureAwait(false);
+			await ReplyConfirmLocalized("birthdaymoney_money_set", _botConf.BotConfig.CurrencySign, oldMoney, money).ConfigureAwait(false);
 
 			await uow.SaveChangesAsync(false).ConfigureAwait(false);
 		}
@@ -281,7 +281,7 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdayMoney() {
 			var gc = uow.GuildConfigs.For(Context.Guild.Id);
 			var money = gc.BirthdayMoney ?? 0;
-			await ReplyConfirmLocalized("money", _botConf.BotConfig.CurrencySign, money).ConfigureAwait(false);
+			await ReplyConfirmLocalized("birthdaymoney_money", _botConf.BotConfig.CurrencySign, money).ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -295,15 +295,15 @@ namespace Mitternacht.Modules.Birthday {
 
 			var bdm = uow.BirthDates.GetUserBirthDate(Context.User.Id);
 			if(!enable.HasValue)
-				await ReplyConfirmLocalized($"messageevent_show", GetEnabledText(bdm.BirthdayMessageEnabled)).ConfigureAwait(false);
+				await ReplyConfirmLocalized($"messageevent_show", GetText(bdm.BirthdayMessageEnabled ? "birthdaymessageevent_enabled" : "birthdaymessageevent_disabled")).ConfigureAwait(false);
 			else {
 				if(bdm.BirthdayMessageEnabled == enable.Value)
-					await ReplyErrorLocalized($"messageevent_already_set", GetEnabledText(bdm.BirthdayMessageEnabled)).ConfigureAwait(false);
+					await ReplyErrorLocalized($"messageevent_already_set", GetText(bdm.BirthdayMessageEnabled ? "birthdaymessageevent_enabled" : "birthdaymessageevent_disabled")).ConfigureAwait(false);
 				else {
 					bdm.BirthdayMessageEnabled = enable.Value;
 					uow.BirthDates.Update(bdm);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
-					await ReplyConfirmLocalized($"messageevent_changed", GetEnabledText(enable.Value)).ConfigureAwait(false);
+					await ReplyConfirmLocalized($"messageevent_changed", GetText(enable.Value ? "birthdaymessageevent_enabled" : "birthdaymessageevent_disabled")).ConfigureAwait(false);
 				}
 			}
 		}
@@ -311,8 +311,5 @@ namespace Mitternacht.Modules.Birthday {
 
 		private string BdmToString(BirthDateModel bdm)
 			=> $"- {Context.Client.GetUserAsync(bdm.UserId).GetAwaiter().GetResult()?.ToString() ?? bdm.UserId.ToString()} - **{bdm}**";
-
-		private string GetEnabledText(bool enabled)
-			=> GetText(enabled ? "enabled" : "disabled");
 	}
 }
