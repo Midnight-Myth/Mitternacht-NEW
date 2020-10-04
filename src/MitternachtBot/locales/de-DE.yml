@@ -642,11 +642,6 @@ minecraft:
   server_title:                                  Informationen zu `{0}`
   server_version:                                Version
   usernames_title:                               Minecraftnamen von {0} ({1})
-nsfw:                                            
-  autohentai_started:                            'Autohentai wurde gestartet. Es wird alle {0} Sekunden etwas mit einem der folgenden Stichwörtern gepostet: {1}'
-  autohentai_stopped:                            Autohentai angehalten.
-  not_found:                                     Keine Ergebnisse gefunden.
-  tag:                                           Stichwort
 permissions:                                     
   acm_disable:                                   Benutzung ALLER MODULE für Kanal {0} verboten.
   acm_enable:                                    Benutzung ALLER MODULE für Kanal {0} erlaubt.
@@ -712,9 +707,6 @@ permissions:
   zalgo_filter_channel_on:                       Filterung für Zalgo in diesem Kanal aktiviert.
   zalgo_filter_server_off:                       Filterung für Zalgo auf diesem Server deaktiviert.
   zalgo_filter_server_on:                        Filterung für Zalgo auf diesem Server aktiviert.
-precattr:                                        
-  owner_only:                                    Diesen Befehl dürfen nur Botowner ausführen!
-  perms_missing:                                 Du darfst diesen Befehl erst mit der Berechtigung `{0}` ausführen!
 searches:                                        
   anime_no_fav:                                  Keine favorisierten anime
   atl_ad_started:                                Startete die Automatische Übersetzung der Nachrichten auf diesem Kanal. Nachrichten von Benutzern werden automatisch gelöscht.
