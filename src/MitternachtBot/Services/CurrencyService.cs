@@ -1,18 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
-using Mitternacht.Extensions;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
 namespace Mitternacht.Services {
 	public class CurrencyService : IMService {
-		private readonly IBotConfigProvider _config;
-		private readonly DbService          _db;
+		private readonly DbService _db;
 
-		public CurrencyService(IBotConfigProvider config, DbService db) {
-			_config = config;
-			_db     = db;
+		public CurrencyService(DbService db) {
+			_db = db;
 		}
 
 		public Task<bool> RemoveAsync(IGuildUser author, string reason, long amount)
