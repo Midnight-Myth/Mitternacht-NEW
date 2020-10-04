@@ -63,7 +63,7 @@ namespace Mitternacht.Modules.Gambling {
 		public async Task Give(long amount, [Remainder] IGuildUser receiver) {
 			if(amount > 0) {
 				if(Context.User.Id != receiver.Id) {
-					if(await _currency.RemoveAsync((IGuildUser)Context.User, $"Gift to {receiver.Username} ({receiver.Id}).", amount, false).ConfigureAwait(false)) {
+					if(await _currency.RemoveAsync((IGuildUser)Context.User, $"Gift to {receiver.Username} ({receiver.Id}).", amount).ConfigureAwait(false)) {
 						await _currency.AddAsync(receiver, $"Gift from {Context.User.Username} ({Context.User.Id}).", amount, true).ConfigureAwait(false);
 						await ReplyConfirmLocalized("gifted", amount + CurrencySign, Format.Bold(receiver.ToString())).ConfigureAwait(false);
 					} else {
@@ -111,10 +111,17 @@ namespace Mitternacht.Modules.Gambling {
 		[OwnerOnly]
 		public async Task Take(long amount, [Remainder] IGuildUser user) {
 			if(amount > 0) {
-				if(await _currency.RemoveAsync(user, $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})", amount, true).ConfigureAwait(false))
+				var reason = $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})";
+				if(await _currency.RemoveAsync(user, reason, amount).ConfigureAwait(false)) {
 					await ReplyConfirmLocalized("take", $"{amount}{CurrencySign}", Format.Bold(user.ToString())).ConfigureAwait(false);
-				else
+					
+					try {
+						// FIXME: Use translations.
+						await user.SendErrorAsync($"`You lost:` {amount}{CurrencySign} on Server with ID {user.GuildId}.\n`Reason:` {reason}").ConfigureAwait(false);
+					} catch { }
+				} else {
 					await ReplyErrorLocalized("take_fail", $"{amount}{CurrencySign}", Format.Bold(user.ToString()), CurrencyPluralName).ConfigureAwait(false);
+				}
 			}
 		}
 
@@ -137,7 +144,7 @@ namespace Mitternacht.Modules.Gambling {
 			if(amount >= 1) {
 				var guildUser = (IGuildUser) Context.User;
 
-				if(await _currency.RemoveAsync(guildUser, "Betroll Gamble", amount, false).ConfigureAwait(false)) {
+				if(await _currency.RemoveAsync(guildUser, "Betroll Gamble", amount).ConfigureAwait(false)) {
 					var rnd = new NadekoRandom().Next(0, 101);
 					var str = $"{Context.User.Mention}{Format.Code(GetText("roll", rnd))}";
 					if(rnd < 67) {

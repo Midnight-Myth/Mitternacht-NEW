@@ -93,7 +93,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var guildUser = (IGuildUser) Context.User;
 
-					if(!await _cs.RemoveAsync(guildUser, "Slot Machine", amount, false)) {
+					if(!await _cs.RemoveAsync(guildUser, "Slot Machine", amount)) {
 						await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 						return;
 					}

@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Gambling {
 						return;
 					}
 
-					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price, false).ConfigureAwait(false)) {
+					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price).ConfigureAwait(false)) {
 						try {
 							await guildUser.AddRoleAsync(role).ConfigureAwait(false);
 						} catch(Exception ex) {
@@ -110,7 +110,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var item = entry.Items.ToArray()[new NadekoRandom().Next(0, entry.Items.Count)];
 
-					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price, false)) {
+					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price)) {
 						uow.Context.Set<ShopEntryItem>().Remove(item);
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 						try {

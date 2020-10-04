@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Gambling {
 					return;
 				}
 
-				if(!await _cs.RemoveAsync((IGuildUser) Context.User, "Wheel Of Fortune - bet", bet, false).ConfigureAwait(false)) {
+				if(!await _cs.RemoveAsync((IGuildUser) Context.User, "Wheel Of Fortune - bet", bet).ConfigureAwait(false)) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 					return;
 				}

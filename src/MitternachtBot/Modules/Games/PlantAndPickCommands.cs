@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Games {
 				if(amount < 1)
 					return;
 
-				var removed = await _cs.RemoveAsync((IGuildUser)Context.User, $"Planted a {_bc.BotConfig.CurrencyName}", amount, false).ConfigureAwait(false);
+				var removed = await _cs.RemoveAsync((IGuildUser)Context.User, $"Planted a {_bc.BotConfig.CurrencyName}", amount).ConfigureAwait(false);
 				if(!removed) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 					return;

@@ -71,7 +71,7 @@ namespace Mitternacht.Modules.Gambling {
 					await ReplyErrorLocalized("min_bet_limit", $"{_bc.BotConfig.MinimumBetAmount}{_bc.BotConfig.CurrencySign}").ConfigureAwait(false);
 					return;
 				}
-				var removed = await _cs.RemoveAsync(user, "Betflip Gamble", amount, false).ConfigureAwait(false);
+				var removed = await _cs.RemoveAsync(user, "Betflip Gamble", amount).ConfigureAwait(false);
 				if(!removed) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencyPluralName).ConfigureAwait(false);
 					return;

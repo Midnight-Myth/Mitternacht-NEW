@@ -15,17 +15,8 @@ namespace Mitternacht.Services {
 			_db     = db;
 		}
 
-		public async Task<bool> RemoveAsync(IGuildUser author, string reason, long amount, bool sendMessage) {
-			var success = await RemoveAsync(author.GuildId, author.Id, reason, amount).ConfigureAwait(false);
-
-			if(!success || !sendMessage)
-				return success;
-			try {
-				await author.SendErrorAsync($"`You lost:` {amount} {_config.BotConfig.CurrencySign} on Server with ID {author.GuildId}.\n`Reason:` {reason}").ConfigureAwait(false);
-			} catch { }
-
-			return true;
-		}
+		public async Task<bool> RemoveAsync(IGuildUser author, string reason, long amount)
+			=> await RemoveAsync(author.GuildId, author.Id, reason, amount).ConfigureAwait(false);
 
 		public async Task<bool> RemoveAsync(ulong guildId, ulong authorId, string reason, long amount, IUnitOfWork uow = null) {
 			if(amount < 0)
