@@ -74,6 +74,7 @@ namespace Mitternacht.Modules.Gambling {
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
 			public async Task Slot(int amount = 0) {
 				if(!RunningUsers.Add(Context.User.Id))
 					return;
@@ -90,7 +91,9 @@ namespace Mitternacht.Modules.Gambling {
 						return;
 					}
 
-					if(!await _cs.RemoveAsync(Context.User, "Slot Machine", amount, false)) {
+					var guildUser = (IGuildUser) Context.User;
+
+					if(!await _cs.RemoveAsync(guildUser, "Slot Machine", amount, false)) {
 						await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencySign).ConfigureAwait(false);
 						return;
 					}
@@ -102,7 +105,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var msg = result.Multiplier != 0 ? "" : GetText("better_luck");
 					if(result.Multiplier != 0) {
-						await _cs.AddAsync(Context.User, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier, false);
+						await _cs.AddAsync(guildUser, $"Slot Machine x{result.Multiplier}", amount * result.Multiplier, false);
 						Interlocked.Add(ref _totalPaidOut, amount * result.Multiplier);
 						switch(result.Multiplier) {
 							case 1:

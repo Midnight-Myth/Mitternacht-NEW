@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Level {
 			[OwnerOnly]
 			public async Task SetRoleLevelBinding(IRole role, int minlevel) {
 				if(minlevel >= 0) {
-					uow.RoleLevelBindings.SetBinding(role.Id, minlevel);
+					uow.RoleLevelBindings.SetBinding(Context.Guild.Id, role.Id, minlevel);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ConfirmLocalized("rlb_set", role.Name, minlevel);
@@ -35,7 +35,7 @@ namespace Mitternacht.Modules.Level {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task RemoveRoleLevelBinding(IRole role) {
-				var wasRemoved = uow.RoleLevelBindings.Remove(role.Id);
+				var wasRemoved = uow.RoleLevelBindings.Remove(Context.Guild.Id, role.Id);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(wasRemoved) {
@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Level {
 			public async Task RoleLevelBindings(int page = 1) {
 				const int elementsPerPage = 9;
 
-				var roleLevelBindings = uow.RoleLevelBindings.GetAll().OrderByDescending(r => r.MinimumLevel).ToList();
+				var roleLevelBindings = uow.RoleLevelBindings.GetAll().Where(rlb => rlb.GuildId == Context.Guild.Id).OrderByDescending(r => r.MinimumLevel).ToList();
 
 				if(roleLevelBindings.Any()) {
 					var pageCount = (int) Math.Ceiling(roleLevelBindings.Count * 1d / elementsPerPage);

@@ -90,16 +90,16 @@ namespace Mitternacht.Services.Database {
 				.IsUnique();
 
 			modelBuilder.Entity<DailyMoney>()
-				.HasIndex(c => c.UserId)
+				.HasIndex(c => new { c.GuildId, c.UserId })
 				.IsUnique();
 			modelBuilder.Entity<RoleMoney>()
-				.HasIndex(c => c.RoleId)
+				.HasIndex(c => new { c.GuildId, c.RoleId })
 				.IsUnique();
 			modelBuilder.Entity<LevelModel>()
 				.HasIndex(c => new { c.GuildId, c.UserId })
 				.IsUnique();
 			modelBuilder.Entity<RoleLevelBinding>()
-				.HasIndex(c => c.RoleId)
+				.HasIndex(c => new { c.GuildId, c.RoleId })
 				.IsUnique();
 			modelBuilder.Entity<MessageXpRestriction>()
 				.HasIndex(c => new { c.GuildId, c.ChannelId })
@@ -120,7 +120,7 @@ namespace Mitternacht.Services.Database {
 				.IsUnique();
 
 			modelBuilder.Entity<Currency>()
-				.HasIndex(c => c.UserId)
+				.HasIndex(c => new { c.GuildId, c.UserId })
 				.IsUnique();
 			
 			modelBuilder.Entity<Permission>()

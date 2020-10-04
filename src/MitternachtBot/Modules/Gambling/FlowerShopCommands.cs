@@ -76,9 +76,10 @@ namespace Mitternacht.Modules.Gambling {
 					await ReplyErrorLocalized("shop_item_not_found").ConfigureAwait(false);
 					return;
 				}
+				
+				var guildUser = (IGuildUser)Context.User;
 
 				if(entry.Type == ShopEntryType.Role) {
-					var guildUser = (IGuildUser)Context.User;
 					var role = Context.Guild.GetRole(entry.RoleId);
 
 					if(role == null) {
@@ -86,16 +87,16 @@ namespace Mitternacht.Modules.Gambling {
 						return;
 					}
 
-					if(await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price).ConfigureAwait(false)) {
+					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price, false).ConfigureAwait(false)) {
 						try {
 							await guildUser.AddRoleAsync(role).ConfigureAwait(false);
 						} catch(Exception ex) {
 							_log.Warn(ex);
-							await _cs.AddAsync(Context.User.Id, "Shop error refund", entry.Price);
+							await _cs.AddAsync(guildUser, "Shop error refund", entry.Price, false);
 							await ReplyErrorLocalized("shop_role_purchase_error").ConfigureAwait(false);
 							return;
 						}
-						await _cs.AddAsync(entry.AuthorId, $"Shop sell item - {entry.Type}", GetProfitAmount(entry.Price), uow).ConfigureAwait(false);
+						await _cs.AddAsync(Context.Guild.Id, entry.AuthorId, $"Shop sell item - {entry.Type}", GetProfitAmount(entry.Price), uow).ConfigureAwait(false);
 
 						await ReplyConfirmLocalized("shop_role_purchase", Format.Bold(role.Name)).ConfigureAwait(false);
 					} else {
@@ -109,7 +110,7 @@ namespace Mitternacht.Modules.Gambling {
 
 					var item = entry.Items.ToArray()[new NadekoRandom().Next(0, entry.Items.Count)];
 
-					if(await _cs.RemoveAsync(Context.User.Id, $"Shop purchase - {entry.Type}", entry.Price)) {
+					if(await _cs.RemoveAsync(guildUser, $"Shop purchase - {entry.Type}", entry.Price, false)) {
 						uow.Context.Set<ShopEntryItem>().Remove(item);
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 						try {
@@ -121,14 +122,12 @@ namespace Mitternacht.Modules.Gambling {
 								.AddField(efb => efb.WithName(GetText("name")).WithValue(entry.Name).WithIsInline(true)))
 								.ConfigureAwait(false);
 
-							await _cs.AddAsync(entry.AuthorId,
-									$"Shop sell item - {entry.Name}",
-									GetProfitAmount(entry.Price)).ConfigureAwait(false);
+							await _cs.AddAsync(Context.Guild.Id, entry.AuthorId, $"Shop sell item - {entry.Name}", GetProfitAmount(entry.Price)).ConfigureAwait(false);
 						} catch {
 							uow.Context.Set<ShopEntryItem>().Add(item);
 							await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-							await _cs.AddAsync(Context.User.Id, $"Shop error refund - {entry.Name}", entry.Price, uow).ConfigureAwait(false);
+							await _cs.AddAsync(guildUser, $"Shop error refund - {entry.Name}", entry.Price, false).ConfigureAwait(false);
 							await ReplyErrorLocalized("shop_buy_error").ConfigureAwait(false);
 							return;
 						}

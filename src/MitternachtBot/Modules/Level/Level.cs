@@ -172,7 +172,7 @@ namespace Mitternacht.Modules.Level {
 			
 			if(moneyToSpend >= 0) {
 				if(moneyToSpend > 0) {
-					if(uow.Currency.TryAddCurrencyValue(user.Id, -moneyToSpend)) {
+					if(uow.Currency.TryAddCurrencyValue(Context.Guild.Id, user.Id, -moneyToSpend)) {
 						var xp = (int) (moneyToSpend * uow.GuildConfigs.For(Context.Guild.Id).TurnToXpMultiplier);
 						uow.LevelModel.AddXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);

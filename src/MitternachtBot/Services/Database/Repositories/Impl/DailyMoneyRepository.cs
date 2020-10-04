@@ -7,11 +7,12 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 	public class DailyMoneyRepository : Repository<DailyMoney>, IDailyMoneyRepository {
 		public DailyMoneyRepository(DbContext context) : base(context) { }
 
-		public DailyMoney GetOrCreate(ulong userId) {
-			var dm = _set.FirstOrDefault(c => c.UserId == userId);
+		public DailyMoney GetOrCreate(ulong guildId, ulong userId) {
+			var dm = _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId);
 
 			if(dm == null) {
 				_set.Add(dm = new DailyMoney {
+					GuildId = guildId,
 					UserId = userId,
 					LastTimeGotten = DateTime.MinValue
 				});
@@ -20,22 +21,22 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			return dm;
 		}
 
-		public DateTime GetLastReceived(ulong userId)
-			=> _set.FirstOrDefault(c => c.UserId == userId)?.LastTimeGotten ?? DateTime.MinValue;
+		public DateTime GetLastReceived(ulong guildId, ulong userId)
+			=> _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId)?.LastTimeGotten ?? DateTime.MinValue;
 
-		public bool CanReceive(ulong userId)
-			=> GetLastReceived(userId).Date < DateTime.Today.Date;
+		public bool CanReceive(ulong guildId, ulong userId)
+			=> GetLastReceived(guildId, userId).Date < DateTime.Today.Date;
 
-		public DateTime UpdateState(ulong userId) {
-			var dm = GetOrCreate(userId);
+		public DateTime UpdateState(ulong guildId, ulong userId) {
+			var dm = GetOrCreate(guildId, userId);
 			dm.LastTimeGotten = DateTime.Now;
 
 			return dm.LastTimeGotten;
 		}
 
-		public void ResetLastTimeReceived(ulong userId) {
-			if(!CanReceive(userId)) {
-				var dm = GetOrCreate(userId);
+		public void ResetLastTimeReceived(ulong guildId, ulong userId) {
+			if(!CanReceive(guildId, userId)) {
+				var dm = GetOrCreate(guildId, userId);
 
 				if(dm.LastTimeGotten.Date >= DateTime.Today.Date) {
 					dm.LastTimeGotten = DateTime.Today.AddDays(-1);
