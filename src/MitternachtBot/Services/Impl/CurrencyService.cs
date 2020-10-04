@@ -4,7 +4,7 @@ using Discord;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
 
-namespace Mitternacht.Services {
+namespace Mitternacht.Services.Impl {
 	public class CurrencyService : IMService {
 		private readonly DbService _db;
 
@@ -32,7 +32,7 @@ namespace Mitternacht.Services {
 
 		private bool InternalRemoveCurrency(ulong guildId, ulong authorId, string reason, long amount, IUnitOfWork uow) {
 			var success = uow.Currency.TryAddCurrencyValue(guildId, authorId, -amount);
-			
+
 			if(success) {
 				uow.CurrencyTransactions.Add(new CurrencyTransaction {
 					GuildId = guildId,
@@ -49,7 +49,7 @@ namespace Mitternacht.Services {
 
 		public async Task AddToManyAsync(ulong guildId, string reason, long amount, params ulong[] userIds) {
 			using var uow = _db.UnitOfWork;
-			
+
 			foreach(var userId in userIds) {
 				var transaction = new CurrencyTransaction {
 					GuildId = guildId,

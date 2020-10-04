@@ -4,6 +4,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using Wof = Mitternacht.Modules.Gambling.Common.WheelOfFortune;
 
 namespace Mitternacht.Modules.Gambling {

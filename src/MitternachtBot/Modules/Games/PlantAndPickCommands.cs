@@ -10,6 +10,7 @@ using Mitternacht.Modules.Games.Services;
 using Mitternacht.Services;
 using Mitternacht.Services.Database;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Games {
 	public partial class Games {

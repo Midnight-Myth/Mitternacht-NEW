@@ -13,6 +13,7 @@ using Mitternacht.Common.Collections;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Gambling {

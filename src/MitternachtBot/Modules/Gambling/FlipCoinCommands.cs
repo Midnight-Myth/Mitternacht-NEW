@@ -10,6 +10,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Image = SixLabors.ImageSharp.Image;
 using SixLabors.ImageSharp.PixelFormats;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {

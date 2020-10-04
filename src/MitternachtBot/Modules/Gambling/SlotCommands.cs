@@ -9,6 +9,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Gambling.Common;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
