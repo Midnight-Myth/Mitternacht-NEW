@@ -6,6 +6,7 @@ using GommeHDnetForumAPI.Models;
 using GommeHDnetForumAPI.Models.Entities;
 using Mitternacht.Modules.Verification.Services;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Forum.Services {
 	public class TeamRoleSyncService : IMService {

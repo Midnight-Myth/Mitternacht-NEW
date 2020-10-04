@@ -5,6 +5,7 @@ using Discord.WebSocket;
 using Mitternacht.Common;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
 

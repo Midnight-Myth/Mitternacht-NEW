@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using MitternachtWeb.Models;
 using System.Linq;
 

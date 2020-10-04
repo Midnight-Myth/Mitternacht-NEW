@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Common.Collections;
 using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
+using Mitternacht.Services.Impl;
 using NLog;
 using Npgsql;
 

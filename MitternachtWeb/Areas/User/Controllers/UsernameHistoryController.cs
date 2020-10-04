@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.User.Controllers {

@@ -8,6 +8,7 @@ using Mitternacht.Common.ModuleBehaviors;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Utility.Services {

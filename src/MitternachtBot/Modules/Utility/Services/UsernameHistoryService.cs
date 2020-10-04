@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Utility.Services {

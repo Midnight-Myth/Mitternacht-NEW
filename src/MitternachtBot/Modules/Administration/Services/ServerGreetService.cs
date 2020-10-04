@@ -6,6 +6,7 @@ using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
 using Mitternacht.Extensions;
 using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {

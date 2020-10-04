@@ -9,6 +9,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 using NLog;
 
 namespace Mitternacht.Modules.Administration.Services {

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services.Database;
 
-namespace Mitternacht.Services {
+namespace Mitternacht.Services.Impl {
 	public class DbService {
 		private readonly DbContextOptions _optionsPostgres;
 

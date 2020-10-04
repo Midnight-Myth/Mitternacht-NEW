@@ -6,6 +6,7 @@ using Discord;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services;
 using Mitternacht.Services.Database.Models;
+using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class UserPunishService : IMService {

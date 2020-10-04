@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services;
+using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Guild.Models;
 using System.Linq;
 using System.Threading.Tasks;
