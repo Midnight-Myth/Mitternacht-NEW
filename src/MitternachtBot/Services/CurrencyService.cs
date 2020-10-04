@@ -15,8 +15,8 @@ namespace Mitternacht.Services {
 			_db     = db;
 		}
 
-		public async Task<bool> RemoveAsync(IGuildUser author, string reason, long amount)
-			=> await RemoveAsync(author.GuildId, author.Id, reason, amount).ConfigureAwait(false);
+		public Task<bool> RemoveAsync(IGuildUser author, string reason, long amount)
+			=> RemoveAsync(author.GuildId, author.Id, reason, amount);
 
 		public async Task<bool> RemoveAsync(ulong guildId, ulong authorId, string reason, long amount, IUnitOfWork uow = null) {
 			if(amount < 0)
@@ -68,9 +68,8 @@ namespace Mitternacht.Services {
 			await uow.SaveChangesAsync().ConfigureAwait(false);
 		}
 
-		public async Task AddAsync(IGuildUser author, string reason, long amount, IUnitOfWork uow = null) {
-			await AddAsync(author.GuildId, author.Id, reason, amount, uow).ConfigureAwait(false);
-		}
+		public Task AddAsync(IGuildUser author, string reason, long amount, IUnitOfWork uow = null)
+			=> AddAsync(author.GuildId, author.Id, reason, amount, uow);
 
 		public async Task AddAsync(ulong guildId, ulong receiverId, string reason, long amount, IUnitOfWork uow = null) {
 			if(amount < 0)
