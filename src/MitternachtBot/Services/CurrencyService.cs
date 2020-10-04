@@ -17,7 +17,7 @@ namespace Mitternacht.Services {
 
 		public async Task<bool> RemoveAsync(ulong guildId, ulong authorId, string reason, long amount, IUnitOfWork uow = null) {
 			if(amount < 0)
-				throw new ArgumentNullException(nameof(amount));
+				throw new ArgumentException(nameof(amount));
 
 			if(uow == null) {
 				using var _uow = _db.UnitOfWork;
@@ -70,7 +70,7 @@ namespace Mitternacht.Services {
 
 		public async Task AddAsync(ulong guildId, ulong receiverId, string reason, long amount, IUnitOfWork uow = null) {
 			if(amount < 0)
-				throw new ArgumentNullException(nameof(amount));
+				throw new ArgumentException(nameof(amount));
 
 			var transaction = new CurrencyTransaction {
 				GuildId = guildId,
