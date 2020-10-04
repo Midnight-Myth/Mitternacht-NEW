@@ -42,18 +42,20 @@ namespace Mitternacht.Modules.Gambling {
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
 		public async Task Cash([Remainder] IUser user = null) {
 			if(user == null)
-				await ConfirmLocalized("has", Format.Bold(Context.User.ToString()), $"{uow.Currency.GetUserCurrencyValue(Context.User.Id)} {CurrencySign}").ConfigureAwait(false);
+				await ConfirmLocalized("has", Format.Bold(Context.User.ToString()), $"{uow.Currency.GetUserCurrencyValue(Context.Guild.Id, Context.User.Id)} {CurrencySign}").ConfigureAwait(false);
 			else
-				await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{uow.Currency.GetUserCurrencyValue(user.Id)} {CurrencySign}").ConfigureAwait(false);
+				await ReplyConfirmLocalized("has", Format.Bold(user.ToString()), $"{uow.Currency.GetUserCurrencyValue(Context.Guild.Id, user.Id)} {CurrencySign}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
 		public async Task Cash(ulong userId) {
-			await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{uow.Currency.GetUserCurrencyValue(userId)} {CurrencySign}").ConfigureAwait(false);
+			await ReplyConfirmLocalized("has", Format.Code(userId.ToString()), $"{uow.Currency.GetUserCurrencyValue(Context.Guild.Id, userId)} {CurrencySign}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -83,11 +85,12 @@ namespace Mitternacht.Modules.Gambling {
 			=> Award(amount, user.Id);
 
 		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		[Priority(1)]
 		public async Task Award(int amount, ulong userId) {
 			if(amount > 0) {
-				await _currency.AddAsync(userId, $"Awarded by bot owner. ({Context.User.Username}/{Context.User.Id})", amount).ConfigureAwait(false);
+				await _currency.AddAsync(Context.Guild.Id, userId, $"Awarded by bot owner. ({Context.User.Username}/{Context.User.Id})", amount).ConfigureAwait(false);
 				await ReplyConfirmLocalized("awarded", $"{amount}{CurrencySign}", MentionUtils.MentionUser(userId)).ConfigureAwait(false);
 			}
 		}
@@ -98,7 +101,7 @@ namespace Mitternacht.Modules.Gambling {
 		[Priority(2)]
 		public async Task Award(int amount, [Remainder] IRole role) {
 			var users = (await Context.Guild.GetUsersAsync()).Where(u => u.GetRoles().Contains(role)).ToList();
-			await Task.WhenAll(users.Select(u => _currency.AddAsync(u.Id, $"Awarded by bot owner to **{role.Name}** role. ({Context.User.Username}/{Context.User.Id})", amount))).ConfigureAwait(false);
+			await Task.WhenAll(users.Select(u => _currency.AddAsync(Context.Guild.Id, u.Id, $"Awarded by bot owner to **{role.Name}** role. ({Context.User.Username}/{Context.User.Id})", amount))).ConfigureAwait(false);
 
 			await ReplyConfirmLocalized("mass_award", $"{amount}{CurrencySign}", Format.Bold(users.Count.ToString()), Format.Bold(role.Name)).ConfigureAwait(false);
 		}
@@ -117,10 +120,11 @@ namespace Mitternacht.Modules.Gambling {
 
 
 		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		[OwnerOnly]
 		public async Task Take(long amount, [Remainder] ulong userId) {
 			if(amount > 0) {
-				if(await _currency.RemoveAsync(userId, $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})", amount).ConfigureAwait(false))
+				if(await _currency.RemoveAsync(Context.Guild.Id, userId, $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})", amount).ConfigureAwait(false))
 					await ReplyConfirmLocalized("take", $"{amount}{CurrencySign}", $"<@{userId}>").ConfigureAwait(false);
 				else
 					await ReplyErrorLocalized("take_fail", $"{amount}{CurrencySign}", Format.Code(userId.ToString()), CurrencyPluralName).ConfigureAwait(false);
@@ -128,9 +132,12 @@ namespace Mitternacht.Modules.Gambling {
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		public async Task BetRoll(long amount) {
 			if(amount >= 1) {
-				if(await _currency.RemoveAsync(Context.User, "Betroll Gamble", amount, false).ConfigureAwait(false)) {
+				var guildUser = (IGuildUser) Context.User;
+
+				if(await _currency.RemoveAsync(guildUser, "Betroll Gamble", amount, false).ConfigureAwait(false)) {
 					var rnd = new NadekoRandom().Next(0, 101);
 					var str = $"{Context.User.Mention}{Format.Code(GetText("roll", rnd))}";
 					if(rnd < 67) {
@@ -138,13 +145,13 @@ namespace Mitternacht.Modules.Gambling {
 					} else {
 						if(rnd < 91) {
 							str += GetText("br_win", $"{amount * _bc.BotConfig.Betroll67Multiplier}{CurrencySign}", 66);
-							await _currency.AddAsync(Context.User, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll67Multiplier), false).ConfigureAwait(false);
+							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll67Multiplier), false).ConfigureAwait(false);
 						} else if(rnd < 100) {
 							str += GetText("br_win", $"{amount * _bc.BotConfig.Betroll91Multiplier}{CurrencySign}", 90);
-							await _currency.AddAsync(Context.User, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll91Multiplier), false).ConfigureAwait(false);
+							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll91Multiplier), false).ConfigureAwait(false);
 						} else {
 							str += $"{GetText("br_win", $"{amount * _bc.BotConfig.Betroll100Multiplier}{CurrencySign}", 100)} 👑";
-							await _currency.AddAsync(Context.User, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll100Multiplier), false).ConfigureAwait(false);
+							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll100Multiplier), false).ConfigureAwait(false);
 						}
 					}
 					await Context.Channel.SendConfirmAsync(str).ConfigureAwait(false);
@@ -155,6 +162,7 @@ namespace Mitternacht.Modules.Gambling {
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
+		[RequireContext(ContextType.Guild)]
 		public async Task Leaderboard(int page = 1) {
 			if(page >= 1) {
 				const int elementsPerPage = 9;
@@ -163,7 +171,7 @@ namespace Mitternacht.Modules.Gambling {
 				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page - 1, async currentPage => {
 					var embedBuilder = new EmbedBuilder().WithOkColor().WithTitle($"{CurrencySign} {GetText("leaderboard")}");
 					using var unitOfWork = _db.UnitOfWork;
-					var leaderboardPage = unitOfWork.Currency.OrderByAmount().Skip(elementsPerPage * currentPage).Take(elementsPerPage).ToList();
+					var leaderboardPage = unitOfWork.Currency.OrderByAmount(Context.Guild.Id).Skip(elementsPerPage * currentPage).Take(elementsPerPage).ToList();
 
 					if(leaderboardPage.Any()) {
 						foreach(var c in leaderboardPage) {

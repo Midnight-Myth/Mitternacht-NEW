@@ -136,7 +136,7 @@ namespace Mitternacht.Modules.Utility {
 						user = context.Guild.GetUserAsync(expr).GetAwaiter().GetResult();
 					}
 
-					return user == null ? null : (object)uow.Currency.GetUserCurrencyValue(user.Id);
+					return user == null ? null : (object)uow.Currency.GetUserCurrencyValue(user.GuildId, user.Id);
 				} else {
 					return null;
 				}

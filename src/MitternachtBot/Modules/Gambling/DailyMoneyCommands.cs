@@ -34,7 +34,7 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task DailyMoney() {
 				var guildUser = (IGuildUser)Context.User;
 
-				var canReceiveDailyMoney = uow.DailyMoney.CanReceive(guildUser.Id);
+				var canReceiveDailyMoney = uow.DailyMoney.CanReceive(guildUser.GuildId, guildUser.Id);
 
 				if(canReceiveDailyMoney) {
 					var userRolesAll = guildUser.GetRoles().OrderBy(r => -r.Position);
@@ -50,9 +50,9 @@ namespace Mitternacht.Modules.Gambling {
 								.OrderBy(m => -userRoles.First(r => r.Id == m.RoleId).Position)
 								.First();
 						var role = userRoles.First(r => r.Id == rm.RoleId);
-						var time = uow.DailyMoney.UpdateState(guildUser.Id);
+						var time = uow.DailyMoney.UpdateState(guildUser.GuildId, guildUser.Id);
 						await _currency.AddAsync(guildUser, $"Daily Reward ({role.Name})", rm.Money, false, uow).ConfigureAwait(false);
-						uow.DailyMoneyStats.Add(guildUser.Id, time, rm.Money);
+						uow.DailyMoneyStats.Add(guildUser.GuildId, guildUser.Id, time, rm.Money);
 
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
@@ -66,8 +66,8 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task SetRoleMoney(IRole role, long money, int priority) {
-				uow.RoleMoney.SetMoney(role.Id, money);
-				uow.RoleMoney.SetPriority(role.Id, priority);
+				uow.RoleMoney.SetMoney(Context.Guild.Id, role.Id, money);
+				uow.RoleMoney.SetPriority(Context.Guild.Id, role.Id, priority);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				
 				await MessageLocalized("dm_role_set", role.Name, money, CurrencySign, priority).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Gambling {
 			[OwnerOnly]
 			public async Task ResetDailyMoney([Remainder] IGuildUser user = null) {
 				user ??= (IGuildUser)Context.User;
-				uow.DailyMoney.ResetLastTimeReceived(user.Id);
+				uow.DailyMoney.ResetLastTimeReceived(Context.Guild.Id, user.Id);
 
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
@@ -95,7 +95,7 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task RemoveRoleMoney(IRole role) {
-				var removed = uow.RoleMoney.Remove(role.Id);
+				var removed = uow.RoleMoney.Remove(Context.Guild.Id, role.Id);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized(removed ? "dm_role_removed" : "dm_role_not_set", role.Name).ConfigureAwait(false);
@@ -105,9 +105,9 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task SetRoleMoneyPriority(IRole role, int priority) {
-				var exists = uow.RoleMoney.MoneyForRoleIsDefined(role.Id);
+				var exists = uow.RoleMoney.MoneyForRoleIsDefined(Context.Guild.Id, role.Id);
 				if(exists)
-					uow.RoleMoney.SetPriority(role.Id, priority);
+					uow.RoleMoney.SetPriority(Context.Guild.Id, role.Id, priority);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority).ConfigureAwait(false);
@@ -120,13 +120,13 @@ namespace Mitternacht.Modules.Gambling {
 				
 				var roleMoneys = uow.RoleMoney
 					.GetAll()
+					.Where(rm => rm.GuildId == Context.Guild.Id)
 					.ToList()
 					.OrderByDescending(rm => rm.Priority)
 					.ThenByDescending(rm => Context.Guild.GetRole(rm.RoleId)?.Position ?? 0)
 					.Skip(position - 1 <= 0 ? 0 : position - 1)
 					.Take(count)
 					.ToList();
-				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(!roleMoneys.Any())
 					return;
@@ -180,7 +180,7 @@ namespace Mitternacht.Modules.Gambling {
 				users = users.Any() ? users : new[] { (IGuildUser)Context.User };
 
 				var stats = uow.DailyMoneyStats
-						.GetAllForUsers(users.Select(gu => gu.Id).ToArray()).ToList()
+						.GetAllForUsers(Context.Guild.Id, users.Select(gu => gu.Id).ToArray()).ToList()
 						.GroupBy(dms => dms.UserId)
 						.ToDictionary(g => g.Key, g => g.Select(dms => new {date = dms.TimeReceived.ToUnixTimestamp(), money = dms.MoneyReceived}).ToArray());
 				

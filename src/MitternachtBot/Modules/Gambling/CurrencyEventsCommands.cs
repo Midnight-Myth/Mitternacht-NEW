@@ -50,17 +50,17 @@ namespace Mitternacht.Modules.Gambling {
 				_ = Task.Run(async () => {
 					switch(e) {
 						case CurrencyEvent.Reaction:
-							await ReactionEvent(Context, arg).ConfigureAwait(false);
+							await ReactionEvent(arg).ConfigureAwait(false);
 							break;
 						case CurrencyEvent.SneakyGameStatus:
-							await SneakyGameStatusEvent(Context, arg).ConfigureAwait(false);
+							await SneakyGameStatusEvent(arg).ConfigureAwait(false);
 							break;
 					}
 				});
 				return Task.CompletedTask;
 			}
 
-			public async Task SneakyGameStatusEvent(ICommandContext context, int? arg) {
+			public async Task SneakyGameStatusEvent(int? arg) {
 				var num = arg == null || arg < 5 ? 60 : arg.Value;
 
 				if(_secretCode != string.Empty)
@@ -75,7 +75,7 @@ namespace Mitternacht.Modules.Gambling {
 				try {
 					var title = GetText("sneakygamestatus_title");
 					var desc = GetText("sneakygamestatus_desc", $"{Format.Bold(100.ToString())}{_bc.BotConfig.CurrencySign}", Format.Bold(num.ToString()));
-					await context.Channel.SendConfirmAsync(desc, title).ConfigureAwait(false);
+					await Context.Channel.SendConfirmAsync(desc, title).ConfigureAwait(false);
 				} catch { }
 
 
@@ -91,10 +91,10 @@ namespace Mitternacht.Modules.Gambling {
 			}
 
 			private Task SneakyGameMessageReceivedEventHandler(SocketMessage arg) {
-				if(arg.Content == _secretCode && SneakyGameAwardedUsers.Add(arg.Author.Id)) {
+				if(arg.Author is IGuildUser guildUser && arg.Content == _secretCode && SneakyGameAwardedUsers.Add(arg.Author.Id)) {
 					var _ = Task.Run(async () => {
-						await _cs.AddAsync(arg.Author, "Sneaky Game Event", 100, false).ConfigureAwait(false);
-
+						await _cs.AddAsync(guildUser, "Sneaky Game Event", 100, false).ConfigureAwait(false);
+						
 						try {
 							await arg.DeleteAsync(new RequestOptions { RetryMode = RetryMode.AlwaysFail }).ConfigureAwait(false);
 						} catch { }
@@ -104,105 +104,101 @@ namespace Mitternacht.Modules.Gambling {
 				return Task.CompletedTask;
 			}
 
-			public async Task ReactionEvent(ICommandContext context, int amount) {
+			public async Task ReactionEvent(int amount) {
 				if(amount <= 0)
 					amount = 100;
 
 				var title = GetText("reaction_title");
 				var desc = GetText("reaction_desc", _bc.BotConfig.CurrencySign, $"{Format.Bold(amount.ToString())}{_bc.BotConfig.CurrencySign}");
 				var footer = GetText("reaction_footer", 24);
-				var msg = await context.Channel.SendConfirmAsync(desc, title, footer: footer).ConfigureAwait(false);
+				var msg = await Context.Channel.SendConfirmAsync(desc, title, footer: footer).ConfigureAwait(false);
 
-				await new ReactionEvent(_bc.BotConfig, _client, _cs, amount).Start(msg, context);
+				await new ReactionEvent(_bc.BotConfig, _client, _cs, Context.Guild, msg, amount).Start();
 			}
 		}
 	}
 
-	public abstract class CurrencyEvent {
-		public abstract Task Start(IUserMessage msg, ICommandContext channel);
-	}
-
-	public class ReactionEvent : CurrencyEvent {
+	public class ReactionEvent {
 		private readonly ConcurrentHashSet<ulong> _reactionAwardedUsers = new ConcurrentHashSet<ulong>();
 		private readonly BotConfig _bc;
 		private readonly Logger _log;
 		private readonly DiscordSocketClient _client;
-		private readonly SocketSelfUser _botUser;
 
-		private IUserMessage StartingMessage { get; set; }
+		private readonly IGuild _guild;
+		private readonly IUserMessage _reactionMessage;
 
-		private CancellationTokenSource Source { get; }
-		private CancellationToken CancelToken { get; }
+		private readonly CancellationTokenSource _tokenSource;
+		private readonly CancellationToken _cancelToken;
 
 		private readonly ConcurrentQueue<ulong> _toGiveTo = new ConcurrentQueue<ulong>();
 
-		public ReactionEvent(BotConfig bc, DiscordSocketClient client, CurrencyService cs, int amount) {
+		public ReactionEvent(BotConfig bc, DiscordSocketClient client, CurrencyService cs, IGuild guild, IUserMessage reactionMessage, int amount) {
 			_bc = bc;
 			_log = LogManager.GetCurrentClassLogger();
 			_client = client;
-			_botUser = client.CurrentUser;
-			Source = new CancellationTokenSource();
-			CancelToken = Source.Token;
+			_guild = guild;
+			_reactionMessage = reactionMessage;
+			_tokenSource = new CancellationTokenSource();
+			_cancelToken = _tokenSource.Token;
 
 			var _ = Task.Run(async () => {
 				var users = new List<ulong>();
-				while (!CancelToken.IsCancellationRequested) {
+				while (!_cancelToken.IsCancellationRequested) {
 					await Task.Delay(1000).ConfigureAwait(false);
 					while (_toGiveTo.TryDequeue(out var usrId)) {
 						users.Add(usrId);
 					}
 
 					if (users.Count > 0) {
-						await cs.AddToManyAsync("", amount, users.ToArray()).ConfigureAwait(false);
+						await cs.AddToManyAsync(_guild.Id, "", amount, users.ToArray()).ConfigureAwait(false);
 					}
 
 					users.Clear();
 				}
-			}, CancelToken);
+			}, _cancelToken);
 		}
 
 		private async Task End() {
-			if(StartingMessage != null)
-				await StartingMessage.DeleteAsync().ConfigureAwait(false);
+			if(_reactionMessage != null)
+				await _reactionMessage.DeleteAsync().ConfigureAwait(false);
 
-			if(!Source.IsCancellationRequested)
-				Source.Cancel();
+			if(!_tokenSource.IsCancellationRequested)
+				_tokenSource.Cancel();
 
 			_client.MessageDeleted -= MessageDeletedEventHandler;
 		}
 
 		private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, ISocketMessageChannel channel) {
-			if(StartingMessage?.Id != msg.Id)
+			if(_reactionMessage?.Id != msg.Id)
 				return Task.CompletedTask;
 			_log.Warn("Stopping reaction event because message is deleted.");
-			var __ = Task.Run(End, CancelToken);
+			var __ = Task.Run(End, _cancelToken);
 
 			return Task.CompletedTask;
 		}
 
-		public override async Task Start(IUserMessage umsg, ICommandContext context) {
-			StartingMessage = umsg;
+		public async Task Start() {
 			_client.MessageDeleted += MessageDeletedEventHandler;
 
 			var iemote = Emote.TryParse(_bc.CurrencySign, out var emote) ? emote : new Emoji(_bc.CurrencySign) as IEmote;
 
 			try {
-				await StartingMessage.AddReactionAsync(iemote).ConfigureAwait(false);
+				await _reactionMessage.AddReactionAsync(iemote).ConfigureAwait(false);
 			} catch {
 				try {
-					await StartingMessage.AddReactionAsync(iemote = new Emoji("🌸")).ConfigureAwait(false);
+					await _reactionMessage.AddReactionAsync(iemote = new Emoji("🌸")).ConfigureAwait(false);
 				} catch {
 					try {
-						await StartingMessage.DeleteAsync().ConfigureAwait(false);
+						await _reactionMessage.DeleteAsync().ConfigureAwait(false);
 					} catch {
 						return;
 					}
 				}
 			}
 
-			using(StartingMessage.OnReaction(_client, r => {
+			using(_reactionMessage.OnReaction(_client, r => {
 				try {
-					if(r.UserId == _botUser.Id)
+					if(r.UserId == _client.CurrentUser.Id)
 						return;
 
 					if(string.Equals(r.Emote.Name, iemote.Name, StringComparison.Ordinal) && r.User.IsSpecified && (DateTime.UtcNow - r.User.Value.CreatedAt).TotalDays > 5 && _reactionAwardedUsers.Add(r.User.Value.Id)) {
@@ -211,11 +207,11 @@ namespace Mitternacht.Modules.Gambling {
 				} catch { }
 			})) {
 				try {
-					await Task.Delay(TimeSpan.FromHours(24), CancelToken).ConfigureAwait(false);
+					await Task.Delay(TimeSpan.FromHours(24), _cancelToken).ConfigureAwait(false);
 				} catch(OperationCanceledException) {
 
 				}
-				if(CancelToken.IsCancellationRequested)
+				if(_cancelToken.IsCancellationRequested)
 					return;
 
 				_log.Warn("Stopping reaction event because it expired.");

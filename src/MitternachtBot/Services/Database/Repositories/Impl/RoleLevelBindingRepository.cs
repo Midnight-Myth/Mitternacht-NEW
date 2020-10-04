@@ -6,8 +6,8 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 	public class RoleLevelBindingRepository : Repository<RoleLevelBinding>, IRoleLevelBindingRepository {
 		public RoleLevelBindingRepository(DbContext context) : base(context) { }
 
-		public bool Remove(ulong roleid) {
-			var rl = _set.FirstOrDefault(r => r.RoleId == roleid);
+		public bool Remove(ulong guildId, ulong roleid) {
+			var rl = _set.FirstOrDefault(r => r.GuildId == guildId && r.RoleId == roleid);
 			
 			if(rl != null) {
 				_set.Remove(rl);
@@ -18,11 +18,12 @@ namespace Mitternacht.Services.Database.Repositories.Impl {
 			}
 		}
 
-		public void SetBinding(ulong roleid, int level) {
-			var rl = _set.FirstOrDefault(r => r.RoleId == roleid);
+		public void SetBinding(ulong guildId, ulong roleid, int level) {
+			var rl = _set.FirstOrDefault(r => r.GuildId == guildId && r.RoleId == roleid);
 			
 			if(rl == null) {
 				_set.Add(rl = new RoleLevelBinding {
+					GuildId      = guildId,
 					RoleId       = roleid,
 					MinimumLevel = level,
 				});

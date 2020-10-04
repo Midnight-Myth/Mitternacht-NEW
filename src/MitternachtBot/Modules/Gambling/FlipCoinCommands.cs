@@ -28,6 +28,7 @@ namespace Mitternacht.Modules.Gambling {
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
 			public async Task Flip(int count = 1) {
 				if(count == 1) {
 					if(rng.Next(0, 2) == 1) {
@@ -62,12 +63,15 @@ namespace Mitternacht.Modules.Gambling {
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
 			public async Task Betflip(int amount, BetFlipGuess guess) {
+				var user = (IGuildUser) Context.User;
+
 				if(amount < _bc.BotConfig.MinimumBetAmount) {
 					await ReplyErrorLocalized("min_bet_limit", $"{_bc.BotConfig.MinimumBetAmount}{_bc.BotConfig.CurrencySign}").ConfigureAwait(false);
 					return;
 				}
-				var removed = await _cs.RemoveAsync(Context.User, "Betflip Gamble", amount, false).ConfigureAwait(false);
+				var removed = await _cs.RemoveAsync(user, "Betflip Gamble", amount, false).ConfigureAwait(false);
 				if(!removed) {
 					await ReplyErrorLocalized("not_enough", _bc.BotConfig.CurrencyPluralName).ConfigureAwait(false);
 					return;
@@ -78,10 +82,10 @@ namespace Mitternacht.Modules.Gambling {
 				string str;
 				if(guess == result) {
 					var toWin = (int)Math.Round(amount * _bc.BotConfig.BetflipMultiplier);
-					str = $"{Context.User.Mention} {GetText("flip_guess", $"{toWin}{_bc.BotConfig.CurrencySign}")}";
-					await _cs.AddAsync(Context.User, "Betflip Gamble", toWin, false).ConfigureAwait(false);
+					str = $"{user.Mention} {GetText("flip_guess", $"{toWin}{_bc.BotConfig.CurrencySign}")}";
+					await _cs.AddAsync(user, "Betflip Gamble", toWin, false).ConfigureAwait(false);
 				} else {
-					str = $"{Context.User.Mention} {GetText("better_luck")}";
+					str = $"{user.Mention} {GetText("better_luck")}";
 				}
 
 				using var toSend = imageToSend.ToStream();
