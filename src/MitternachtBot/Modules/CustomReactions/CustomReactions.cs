@@ -63,10 +63,10 @@ namespace Mitternacht.Modules.CustomReactions {
 							customReactions.OrderBy(cr => cr.Trigger).Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(cr => {
 								var str = $"`#{cr.Id}` {cr.Trigger}";
 								if(cr.AutoDeleteTrigger) {
-									str = "🗑" + str;
+									str = $"🗑{str}";
 								}
 								if(cr.DmResponse) {
-									str = "📪" + str;
+									str = $"📪{str}";
 								}
 								return str;
 							}))), (int)Math.Ceiling(customReactions.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);
@@ -135,7 +135,7 @@ namespace Mitternacht.Modules.CustomReactions {
 				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor()
 					.WithDescription($"#{id}")
 					.AddField(efb => efb.WithName(GetText("trigger")).WithValue(found.Trigger))
-					.AddField(efb => efb.WithName(GetText("response")).WithValue(found.Response + "\n```css\n" + found.Response + "```"))
+					.AddField(efb => efb.WithName(GetText("response")).WithValue($"{found.Response}\n```css\n{found.Response}```"))
 				).ConfigureAwait(false);
 			} else {
 				await ReplyErrorLocalized("no_found_id").ConfigureAwait(false);
