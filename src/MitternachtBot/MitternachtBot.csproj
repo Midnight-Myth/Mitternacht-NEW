@@ -4,7 +4,7 @@
     <Copyright>Kwoth</Copyright>
     <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
     <PublisherName>Kwoth</PublisherName>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
