@@ -8,7 +8,7 @@ using YamlDotNet.Serialization;
 namespace Mitternacht.Resources {
 	public class CommandStrings {
 		private static readonly Logger _logger;
-		private const string CmdStringPath = @"./_strings/commandstrings.yml";
+		private static readonly string CmdStringPath = Path.Combine(Path.GetDirectoryName(typeof(CommandStrings).Assembly.Location), "_strings/commandstrings.yml");
 		private static ConcurrentHashSet<CommandStringsModel> _commandStrings;
 
 		static CommandStrings() {
