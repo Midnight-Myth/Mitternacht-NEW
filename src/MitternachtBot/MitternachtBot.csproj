@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>General purpose Discord bot written in C#. Modified for inofficial GommeHD.net Plauderkonfi Discord.</Description>
-    <Copyright>Kwoth</Copyright>
+    <Copyright>Kwoth/expeehaa</Copyright>
     <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
-    <PublisherName>Kwoth</PublisherName>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PublisherName>expeehaa</PublisherName>
+    <TargetFramework>net5.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>MitternachtBot</PackageId>
-    <!--<AssetTargetFallback>$(AssetTargetFallback);dnxcore50;portable-net45+win8+wpa81</AssetTargetFallback>-->
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -22,6 +21,7 @@
     <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     <RootNamespace>Mitternacht</RootNamespace>
     <StartupObject>Mitternacht.Program</StartupObject>
+		<LangVersion>8</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Version)' == '' ">
     <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">1.4.1</VersionPrefix>
@@ -45,29 +45,32 @@
     <None Update="data\musicdata\**\*">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+		<None Update="_strings\commandstrings.yml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="2.3.0-dev-20200904.2" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.88" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.49.0.2098" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.49.0.2099" />
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.49.0.2084" />
     <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-unstable0421" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2-alpha.0.9" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-unstable0456" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-rc.1.20451.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-rc.1.20451.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0-rc.1.20451.13" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-rc.1.20451.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0-rc.1.20451.14" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.5" />
@@ -76,17 +79,9 @@
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>8</LangVersion>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
     <ProjectReference Include="..\..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="_strings\commandstrings.yml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio><UserProperties /></VisualStudio>

@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 			using var uow = _db.UnitOfWork;
 
-			foreach(var gc in uow.GuildConfigs.GetAllGuildConfigs(client.Guilds.Select(g => g.Id).ToList())) {
+			foreach(var gc in uow.GuildConfigs.GetAllGuildConfigs(client.Guilds.Select(g => g.Id).ToList(), set => set.Include(x => x.UnmuteTimers))) {
 				foreach(var ut in gc.UnmuteTimers) {
 					var after = ut.UnmuteAt - TimeSpan.FromMinutes(2) <= DateTime.UtcNow ? TimeSpan.FromMinutes(2) : ut.UnmuteAt - DateTime.UtcNow;
 					StartUnmuteTimer(gc.GuildId, ut.UserId, after);

@@ -11,7 +11,7 @@ using YamlDotNet.Serialization;
 
 namespace Mitternacht.Services.Impl {
 	public class StringService : IMService {
-		public const string StringsPath = @"locales";
+		public static readonly string StringsPath = Path.Combine(Path.GetDirectoryName(typeof(StringService).Assembly.Location), "locales");
 		public const string FilenameRegex = @"(.+)\.yml$";
 
 		private readonly ImmutableDictionary<string, ImmutableDictionary<string, ImmutableDictionary<string, string>>> _responseStrings;
