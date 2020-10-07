@@ -4,9 +4,7 @@ using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Services;
-using Mitternacht.Services;
 using Mitternacht.Database;
-using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
@@ -27,10 +25,11 @@ namespace Mitternacht.Modules.Administration {
 
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				if(timer > 0)
+				if(timer > 0) {
 					await ReplyConfirmLocalized("greetdel_on", timer).ConfigureAwait(false);
-				else
+				} else { 
 					await ReplyConfirmLocalized("greetdel_off").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -43,10 +42,11 @@ namespace Mitternacht.Modules.Administration {
 
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				if(gc.SendChannelGreetMessage)
+				if(gc.SendChannelGreetMessage) {
 					await ReplyConfirmLocalized("greet_on").ConfigureAwait(false);
-				else
+				} else {
 					await ReplyConfirmLocalized("greet_off").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -57,7 +57,6 @@ namespace Mitternacht.Modules.Administration {
 					var channelGreetMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelGreetMessageText;
 
 					await ReplyConfirmLocalized("greetmsg_cur", channelGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
-					return;
 				} else {
 					var gc = uow.GuildConfigs.For(Context.Guild.Id);
 					gc.ChannelGreetMessageText = text.SanitizeMentions();
@@ -65,8 +64,10 @@ namespace Mitternacht.Modules.Administration {
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("greetmsg_new").ConfigureAwait(false);
-					if(!gc.SendChannelGreetMessage)
+					
+					if(!gc.SendChannelGreetMessage) {
 						await ReplyConfirmLocalized("greetmsg_enable", $"`{Prefix}greet`").ConfigureAwait(false);
+					}
 				}
 			}
 
@@ -79,10 +80,11 @@ namespace Mitternacht.Modules.Administration {
 
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				if(gc.SendDmGreetMessage)
+				if(gc.SendDmGreetMessage) {
 					await ReplyConfirmLocalized("greetdm_on").ConfigureAwait(false);
-				else
+				} else {
 					await ReplyConfirmLocalized("greetdm_off").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -93,7 +95,6 @@ namespace Mitternacht.Modules.Administration {
 					var config = uow.GuildConfigs.For(Context.Guild.Id);
 
 					await ReplyConfirmLocalized("greetdmmsg_cur", config.DmGreetMessageText?.SanitizeMentions()).ConfigureAwait(false);
-					return;
 				} else {
 					var gc = uow.GuildConfigs.For(Context.Guild.Id);
 					gc.DmGreetMessageText = text.SanitizeMentions();
@@ -101,8 +102,10 @@ namespace Mitternacht.Modules.Administration {
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("greetdmmsg_new").ConfigureAwait(false);
-					if(!gc.SendDmGreetMessage)
+					
+					if(!gc.SendDmGreetMessage) {
 						await ReplyConfirmLocalized("greetdmmsg_enable", $"`{Prefix}greetdm`").ConfigureAwait(false);
+					}
 				}
 			}
 
@@ -114,10 +117,13 @@ namespace Mitternacht.Modules.Administration {
 				gc.SendChannelByeMessage = !gc.SendChannelByeMessage;
 				gc.ByeMessageChannelId = Context.Channel.Id;
 
-				if(gc.SendChannelByeMessage)
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+				if(gc.SendChannelByeMessage) {
 					await ReplyConfirmLocalized("bye_on").ConfigureAwait(false);
-				else
+				} else {
 					await ReplyConfirmLocalized("bye_off").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -128,7 +134,6 @@ namespace Mitternacht.Modules.Administration {
 					var byeMessageText = uow.GuildConfigs.For(Context.Guild.Id).ChannelByeMessageText;
 
 					await ReplyConfirmLocalized("byemsg_cur", byeMessageText?.SanitizeMentions()).ConfigureAwait(false);
-					return;
 				} else {
 					var gc = uow.GuildConfigs.For(Context.Guild.Id);
 					gc.ChannelByeMessageText = text.SanitizeMentions();
@@ -136,8 +141,10 @@ namespace Mitternacht.Modules.Administration {
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 					await ReplyConfirmLocalized("byemsg_new").ConfigureAwait(false);
-					if(!gc.SendChannelByeMessage)
+					
+					if(!gc.SendChannelByeMessage) {
 						await ReplyConfirmLocalized("byemsg_enable", $"`{Prefix}bye`").ConfigureAwait(false);
+					}
 				}
 			}
 
@@ -150,10 +157,11 @@ namespace Mitternacht.Modules.Administration {
 
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				if(timer > 0)
+				if(timer > 0) {
 					await ReplyConfirmLocalized("byedel_on", timer).ConfigureAwait(false);
-				else
+				} else {
 					await ReplyConfirmLocalized("byedel_off").ConfigureAwait(false);
+				}
 			}
 
 		}
