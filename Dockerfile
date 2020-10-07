@@ -7,3 +7,5 @@ EXPOSE 5000
 
 RUN mkdir /data
 WORKDIR /data
+ENV ASPNETCORE_ENVIRONMENT="Production"
+ENV ASPNETCORE_URLS="http://*:5000"
