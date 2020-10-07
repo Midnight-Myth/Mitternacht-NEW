@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>General purpose Discord bot written in C#. Modified for inofficial GommeHD.net Plauderkonfi Discord.</Description>
-    <Copyright>Kwoth</Copyright>
+    <Copyright>Kwoth/expeehaa</Copyright>
     <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
-    <PublisherName>Kwoth</PublisherName>
+    <PublisherName>expeehaa</PublisherName>
     <TargetFramework>net5.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>MitternachtBot</PackageId>
-    <!--<AssetTargetFallback>$(AssetTargetFallback);dnxcore50;portable-net45+win8+wpa81</AssetTargetFallback>-->
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -22,6 +21,7 @@
     <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     <RootNamespace>Mitternacht</RootNamespace>
     <StartupObject>Mitternacht.Program</StartupObject>
+		<LangVersion>8</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Version)' == '' ">
     <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">1.4.1</VersionPrefix>
@@ -45,6 +45,9 @@
     <None Update="data\musicdata\**\*">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+		<None Update="_strings\commandstrings.yml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="2.3.0-dev-20200904.2" />
@@ -76,17 +79,9 @@
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>8</LangVersion>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
     <ProjectReference Include="..\..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="_strings\commandstrings.yml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio><UserProperties /></VisualStudio>
