@@ -10,15 +10,15 @@ namespace Mitternacht.Services.Impl
     {
         private readonly Logger _log;
 
-        private const string BasePath = "data/images/";
+        private static readonly string BasePath = Path.Combine(Path.GetDirectoryName(typeof(ImagesService).Assembly.Location), "data/images/");
 
-        private const string HeadsPath = BasePath + "coins/heads.png";
-        private const string TailsPath = BasePath + "coins/tails.png";
+        private static readonly string HeadsPath = BasePath + "coins/heads.png";
+        private static readonly string TailsPath = BasePath + "coins/tails.png";
 
-        private const string CurrencyImagesPath = BasePath + "currency";
+        private static readonly string CurrencyImagesPath = BasePath + "currency";
 
-        private const string WifeMatrixPath = BasePath + "rategirl/wifematrix.png";
-        private const string RategirlDotPath = BasePath + "rategirl/dot.png";
+        private static readonly string WifeMatrixPath = BasePath + "rategirl/wifematrix.png";
+        private static readonly string RategirlDotPath = BasePath + "rategirl/dot.png";
 
 
         public ImmutableArray<byte> Heads { get; private set; }
