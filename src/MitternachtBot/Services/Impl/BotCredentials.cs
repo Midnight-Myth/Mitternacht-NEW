@@ -10,7 +10,6 @@ namespace Mitternacht.Services.Impl {
 	public class BotCredentials : IBotCredentials {
 		public ulong  ClientId                { get; set; } = 0;
 		public string Token                   { get; set; } = "";
-		public string DbConnectionString      { get; set; } = "Filename=./data/MitternachtBot.db";
 		public string DbConnection            { get; set; } = "Host=127.0.0.1;Port=5432;Database=mitternachtbot;Username=mitternachtbot;Password=mitternachtbotpassword;";
 
 		public ImmutableArray<ulong> OwnerIds { get; set; } = new ulong[1].ToImmutableArray();
@@ -59,9 +58,8 @@ namespace Mitternacht.Services.Impl {
 					Environment.Exit(3);
 				}
 
-				creds.ShardRunPort     ??= new NadekoRandom().Next(5000, 6000);
-				creds.TotalShards        = Math.Max(1, creds.TotalShards);
-				creds.DbConnectionString = string.IsNullOrWhiteSpace(creds.DbConnectionString) ? "Filename=./data/MitternachtBot.db" : creds.DbConnectionString;
+				creds.ShardRunPort ??= new NadekoRandom().Next(5000, 6000);
+				creds.TotalShards    = Math.Max(1, creds.TotalShards);
 
 				return creds;
 			} catch(Exception ex) {
