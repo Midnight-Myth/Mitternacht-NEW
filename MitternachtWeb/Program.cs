@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Mitternacht;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MitternachtWeb {
@@ -17,7 +19,11 @@ namespace MitternachtWeb {
 
 		public static IHostBuilder CreateHostBuilder(string[] args)
 			=> Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((context, config) => {
+				config.SetBasePath(Environment.CurrentDirectory);
 				config.AddJsonFile("mitternachtweb.config");
-			}).ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+			}).ConfigureWebHostDefaults(webBuilder => {
+				webBuilder.UseStartup<Startup>();
+				webBuilder.UseContentRoot(Path.GetDirectoryName(typeof(Program).Assembly.Location));
+			});
 	}
 }
