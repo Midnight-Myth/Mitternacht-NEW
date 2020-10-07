@@ -21,29 +21,13 @@ namespace Mitternacht.Database.Repositories.Impl {
 				}
 			};
 
-		public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds) {
-			var guildConfigs = _set.Where((Expression<Func<GuildConfig, bool>>)(gc => availableGuilds.Contains(gc.GuildId))).ToList();
-			foreach(var guildConfig in guildConfigs) {
-				_context.Entry(guildConfig).Reference(gc => gc.LogSetting).Load();
-				if(guildConfig.LogSetting != null)
-					_context.Entry(guildConfig.LogSetting).Collection(ls => ls.IgnoredChannels).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.MutedUsers).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.CommandAliases).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.UnmuteTimers).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.VcRoleInfos).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.GenerateCurrencyChannelIds).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.FilterInvitesChannelIds).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.FilterWordsChannelIds).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.FilteredWords).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.CommandCooldowns).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.GuildRepeaters).Load();
-				_context.Entry(guildConfig).Reference(gc => gc.AntiRaidSetting).Load();
-				_context.Entry(guildConfig).Reference(gc => gc.AntiSpamSetting).Load();
-				if(guildConfig.AntiSpamSetting != null)
-					_context.Entry(guildConfig.AntiSpamSetting).Collection(x => x.IgnoredChannels).Load();
-				_context.Entry(guildConfig).Collection(gc => gc.NsfwBlacklistedTags).Load();
-			}
-			return guildConfigs;
+		public IEnumerable<GuildConfig> GetAllGuildConfigs(List<ulong> availableGuilds, Func<IQueryable<GuildConfig>, IQueryable<GuildConfig>> includes = null) {
+			includes ??= set => set;
+
+			var guildConfigs = _set.AsQueryable().Where(gc => availableGuilds.Contains(gc.GuildId));
+			var guildConfigsWithIncludes = includes(guildConfigs);
+
+			return guildConfigsWithIncludes.ToList();
 		}
 
 		/// <summary>
