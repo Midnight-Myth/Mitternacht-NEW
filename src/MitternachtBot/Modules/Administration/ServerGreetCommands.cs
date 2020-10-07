@@ -113,6 +113,8 @@ namespace Mitternacht.Modules.Administration {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
 				gc.SendChannelByeMessage = !gc.SendChannelByeMessage;
 				gc.ByeMessageChannelId = Context.Channel.Id;
+				
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				if(gc.SendChannelByeMessage)
 					await ReplyConfirmLocalized("bye_on").ConfigureAwait(false);
