@@ -144,7 +144,7 @@ namespace Mitternacht.Modules.Gambling {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[RequireUserPermission(GuildPermission.Administrator)]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			[RequireBotPermission(GuildPermission.ManageRoles)]
 			public async Task ShopAdd(Role _, int price, [Remainder] IRole role) {
 				var entry = new ShopEntry {

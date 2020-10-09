@@ -88,14 +88,14 @@ namespace Mitternacht.Modules.Gambling {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		[Priority(0)]
 		public Task Award(int amount, [Remainder] IGuildUser user)
 			=> Award(amount, user.Id);
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		[Priority(1)]
 		public async Task Award(int amount, ulong userId) {
 			if(amount > 0) {
@@ -106,7 +106,7 @@ namespace Mitternacht.Modules.Gambling {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		[Priority(2)]
 		public async Task Award(int amount, [Remainder] IRole role) {
 			var users = (await Context.Guild.GetUsersAsync()).Where(u => u.GetRoles().Contains(role)).ToList();
@@ -117,7 +117,7 @@ namespace Mitternacht.Modules.Gambling {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task Take(long amount, [Remainder] IGuildUser user) {
 			if(amount > 0) {
 				var reason = $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})";
@@ -137,7 +137,7 @@ namespace Mitternacht.Modules.Gambling {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task Take(long amount, [Remainder] ulong userId) {
 			if(amount > 0) {
 				if(await _currency.RemoveAsync(Context.Guild.Id, userId, $"Taken by bot owner.({Context.User.Username}/{Context.User.Id})", amount).ConfigureAwait(false))

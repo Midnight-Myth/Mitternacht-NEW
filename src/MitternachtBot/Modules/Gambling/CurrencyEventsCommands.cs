@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Gambling {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public Task StartEvent(CurrencyEvent e, int arg = -1) {
 				_ = Task.Run(async () => {
 					switch(e) {
