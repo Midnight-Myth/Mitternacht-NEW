@@ -64,7 +64,7 @@ namespace Mitternacht.Modules.Gambling {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task SetRoleMoney(IRole role, long money, int priority) {
 				uow.RoleMoney.SetMoney(Context.Guild.Id, role.Id, money, priority);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
@@ -74,13 +74,13 @@ namespace Mitternacht.Modules.Gambling {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task SetRoleMoney(IRole role, long money)
 				=> await SetRoleMoney(role, money, 0).ConfigureAwait(false);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task ResetDailyMoney([Remainder] IGuildUser user = null) {
 				user ??= (IGuildUser)Context.User;
 				uow.DailyMoney.ResetLastTimeReceived(Context.Guild.Id, user.Id);
@@ -92,7 +92,7 @@ namespace Mitternacht.Modules.Gambling {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task RemoveRoleMoney(IRole role) {
 				var removed = uow.RoleMoney.Remove(Context.Guild.Id, role.Id);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
@@ -102,7 +102,7 @@ namespace Mitternacht.Modules.Gambling {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task SetRoleMoneyPriority(IRole role, int priority) {
 				var exists = uow.RoleMoney.MoneyForRoleIsDefined(Context.Guild.Id, role.Id);
 
