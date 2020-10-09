@@ -29,22 +29,17 @@ namespace Mitternacht.Modules.Games {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task Pick() {
-				var channel = (ITextChannel)Context.Channel;
+				try {
+					await Context.Message.DeleteAsync().ConfigureAwait(false);
+				} catch { }
+				
+				if(Service.PlantedFlowers.TryRemove(Context.Channel.Id, out List<IUserMessage> msgs)) {
+					await Task.WhenAll(msgs.Where(m => m != null).Select(toDelete => toDelete.DeleteAsync())).ConfigureAwait(false);
 
-				if(!(await channel.Guild.GetCurrentUserAsync()).GetPermissions(channel).ManageMessages)
-					return;
-
-
-				try { await Context.Message.DeleteAsync().ConfigureAwait(false); } catch { }
-				if(!Service.PlantedFlowers.TryRemove(channel.Id, out List<IUserMessage> msgs))
-					return;
-
-				await Task.WhenAll(msgs.Where(m => m != null).Select(toDelete => toDelete.DeleteAsync())).ConfigureAwait(false);
-
-				await _cs.AddAsync((IGuildUser)Context.User, $"Picked {_bc.BotConfig.CurrencyPluralName}", msgs.Count).ConfigureAwait(false);
-				var msg = await ReplyConfirmLocalized("picked", msgs.Count + _bc.BotConfig.CurrencySign)
-					.ConfigureAwait(false);
-				msg.DeleteAfter(10);
+					await _cs.AddAsync((IGuildUser)Context.User, $"Picked {_bc.BotConfig.CurrencyPluralName}", msgs.Count).ConfigureAwait(false);
+					var msg = await ReplyConfirmLocalized("picked", msgs.Count + _bc.BotConfig.CurrencySign).ConfigureAwait(false);
+					msg.DeleteAfter(10);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

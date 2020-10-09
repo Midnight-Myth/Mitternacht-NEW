@@ -81,9 +81,9 @@ namespace Mitternacht.Services.Impl {
 
 			if(uow == null) {
 				using var _uow = _db.UnitOfWork;
-				uow.Currency.TryAddCurrencyValue(guildId, receiverId, amount);
-				uow.CurrencyTransactions.Add(transaction);
-				await uow.SaveChangesAsync();
+				_uow.Currency.TryAddCurrencyValue(guildId, receiverId, amount);
+				_uow.CurrencyTransactions.Add(transaction);
+				await _uow.SaveChangesAsync();
 			} else {
 				uow.Currency.TryAddCurrencyValue(guildId, receiverId, amount);
 				uow.CurrencyTransactions.Add(transaction);
