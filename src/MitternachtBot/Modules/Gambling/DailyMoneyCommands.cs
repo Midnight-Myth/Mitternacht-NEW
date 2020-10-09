@@ -66,8 +66,7 @@ namespace Mitternacht.Modules.Gambling {
 			[RequireContext(ContextType.Guild)]
 			[OwnerOnly]
 			public async Task SetRoleMoney(IRole role, long money, int priority) {
-				uow.RoleMoney.SetMoney(Context.Guild.Id, role.Id, money);
-				uow.RoleMoney.SetPriority(Context.Guild.Id, role.Id, priority);
+				uow.RoleMoney.SetMoney(Context.Guild.Id, role.Id, money, priority);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				
 				await MessageLocalized("dm_role_set", role.Name, money, CurrencySign, priority).ConfigureAwait(false);
@@ -106,8 +105,10 @@ namespace Mitternacht.Modules.Gambling {
 			[OwnerOnly]
 			public async Task SetRoleMoneyPriority(IRole role, int priority) {
 				var exists = uow.RoleMoney.MoneyForRoleIsDefined(Context.Guild.Id, role.Id);
-				if(exists)
-					uow.RoleMoney.SetPriority(Context.Guild.Id, role.Id, priority);
+
+				if(exists) {
+					uow.RoleMoney.SetMoney(Context.Guild.Id, role.Id, null, priority);
+				}
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized(exists ? "dm_role_priority_set" : "dm_role_not_set", role.Name, priority).ConfigureAwait(false);
