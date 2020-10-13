@@ -5,7 +5,7 @@ namespace Mitternacht.Database.Models {
 	public class GuildConfig : DbEntity {
 		public ulong GuildId { get; set; }
 
-		public string Prefix                             { get; set; } = null;
+		public string Prefix                             { get; set; }
 		public bool   DeleteMessageOnCommand             { get; set; }
 		public ulong  AutoAssignRoleId                   { get; set; }
 		public int    AutoDeleteGreetMessagesTimer       { get; set; } = 30;
@@ -22,36 +22,36 @@ namespace Mitternacht.Database.Models {
 		public bool   AutoDeleteSelfAssignedRoleMessages { get; set; }
 		public bool   VoicePlusTextEnabled               { get; set; }
 		public string MuteRoleName                       { get; set; }
-		public string Locale                             { get; set; } = null;
-		public string TimeZoneId                         { get; set; } = null;
-		public ulong? GameVoiceChannel                   { get; set; } = null;
-		public bool   VerboseErrors                      { get; set; } = false;
-		public ulong? VerifiedRoleId                     { get; set; } = null;
-		public string VerifyString                       { get; set; } = null;
-		public string VerificationTutorialText           { get; set; } = null;
-		public string AdditionalVerificationUsers        { get; set; } = null;
-		public ulong? VerificationPasswordChannelId      { get; set; } = null;
+		public string Locale                             { get; set; }
+		public string TimeZoneId                         { get; set; }
+		public ulong? GameVoiceChannel                   { get; set; }
+		public bool   VerboseErrors                      { get; set; }
+		public ulong? VerifiedRoleId                     { get; set; }
+		public string VerifyString                       { get; set; }
+		public string VerificationTutorialText           { get; set; }
+		public string AdditionalVerificationUsers        { get; set; }
+		public ulong? VerificationPasswordChannelId      { get; set; }
 		public double TurnToXpMultiplier                 { get; set; } = 5;
 		public double MessageXpTimeDifference            { get; set; } = 60;
 		public int    MessageXpCharCountMin              { get; set; } = 10;
 		public int    MessageXpCharCountMax              { get; set; } = 25;
-		public bool?  LogUsernameHistory                 { get; set; } = null;
-		public ulong? BirthdayRoleId                     { get; set; } = null;
+		public bool?  LogUsernameHistory                 { get; set; }
+		public ulong? BirthdayRoleId                     { get; set; }
 		public string BirthdayMessage                    { get; set; } = "Happy Birthday {0}!";
-		public ulong? BirthdayMessageChannelId           { get; set; } = null;
+		public ulong? BirthdayMessageChannelId           { get; set; }
 		public bool   BirthdaysEnabled                   { get; set; } = true;
 		public long?  BirthdayMoney                      { get; set; } = 50;
-		public ulong? GommeTeamMemberRoleId              { get; set; } = null;
-		public ulong? VipRoleId                          { get; set; } = null;
-		public ulong? TeamUpdateChannelId                { get; set; } = null;
+		public ulong? GommeTeamMemberRoleId              { get; set; }
+		public ulong? VipRoleId                          { get; set; }
+		public ulong? TeamUpdateChannelId                { get; set; }
 		public string TeamUpdateMessagePrefix            { get; set; } = "";
-		public ulong? CountToNumberChannelId             { get; set; } = null;
+		public ulong? CountToNumberChannelId             { get; set; }
 		public double CountToNumberMessageChance         { get; set; } = 0.05;
-		public bool   CountToNumberDeleteWrongMessages   { get; set; } = false;
-		public ulong? ForumNotificationChannelId         { get; set; } = null;
+		public bool   CountToNumberDeleteWrongMessages   { get; set; }
+		public ulong? ForumNotificationChannelId         { get; set; }
 		public double ColorMetricSimilarityRadius        { get; set; } = 5.0;
 
-		public Permission         RootPermission     { get; set; } = null;
+		public Permission         RootPermission     { get; set; }
 		public List<Permissionv2> Permissions        { get; set; }
 		public bool               VerbosePermissions { get; set; } = true;
 		public string             PermissionRole     { get; set; } = "Permissions";
