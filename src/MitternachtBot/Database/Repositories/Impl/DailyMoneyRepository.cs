@@ -24,8 +24,8 @@ namespace Mitternacht.Database.Repositories.Impl {
 		public DateTime GetLastReceived(ulong guildId, ulong userId)
 			=> _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId)?.LastTimeGotten ?? DateTime.MinValue;
 
-		public bool CanReceive(ulong guildId, ulong userId)
-			=> GetLastReceived(guildId, userId).Date < DateTime.Today.Date;
+		public bool CanReceive(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo)
+			=> GetLastReceived(guildId, userId).Date < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo ?? TimeZoneInfo.Utc).Date;
 
 		public DateTime UpdateState(ulong guildId, ulong userId) {
 			var dm = GetOrCreate(guildId, userId);
@@ -34,8 +34,8 @@ namespace Mitternacht.Database.Repositories.Impl {
 			return dm.LastTimeGotten;
 		}
 
-		public void ResetLastTimeReceived(ulong guildId, ulong userId) {
-			if(!CanReceive(guildId, userId)) {
+		public void ResetLastTimeReceived(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo) {
+			if(!CanReceive(guildId, userId, timeZoneInfo)) {
 				var dm = GetOrCreate(guildId, userId);
 
 				if(dm.LastTimeGotten.Date >= DateTime.Today.Date) {

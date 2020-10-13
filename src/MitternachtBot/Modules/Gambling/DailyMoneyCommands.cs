@@ -11,6 +11,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Database;
 using Mitternacht.Services.Impl;
+using Mitternacht.Modules.Administration.Services;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling {
@@ -19,14 +20,16 @@ namespace Mitternacht.Modules.Gambling {
 			private readonly IBotConfigProvider _bc;
 			private readonly IUnitOfWork uow;
 			private readonly CurrencyService _currency;
+			private readonly GuildTimezoneService _gts;
 
 			private string CurrencyName => _bc.BotConfig.CurrencyName;
 			private string CurrencySign => _bc.BotConfig.CurrencySign;
 
-			public DailyMoneyCommands(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService currency) {
+			public DailyMoneyCommands(IBotConfigProvider bc, IUnitOfWork uow, CurrencyService currency, GuildTimezoneService gts) {
 				_bc = bc;
 				this.uow = uow;
 				_currency = currency;
+				_gts = gts;
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
@@ -34,7 +37,7 @@ namespace Mitternacht.Modules.Gambling {
 			public async Task DailyMoney() {
 				var guildUser = (IGuildUser)Context.User;
 
-				var canReceiveDailyMoney = uow.DailyMoney.CanReceive(guildUser.GuildId, guildUser.Id);
+				var canReceiveDailyMoney = uow.DailyMoney.CanReceive(guildUser.GuildId, guildUser.Id, _gts.GetTimeZoneOrUtc(Context.Guild.Id));
 
 				if(canReceiveDailyMoney) {
 					var userRolesAll = guildUser.GetRoles().OrderBy(r => -r.Position);
@@ -83,7 +86,7 @@ namespace Mitternacht.Modules.Gambling {
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task ResetDailyMoney([Remainder] IGuildUser user = null) {
 				user ??= (IGuildUser)Context.User;
-				uow.DailyMoney.ResetLastTimeReceived(Context.Guild.Id, user.Id);
+				uow.DailyMoney.ResetLastTimeReceived(Context.Guild.Id, user.Id, _gts.GetTimeZoneOrUtc(Context.Guild.Id));
 
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
