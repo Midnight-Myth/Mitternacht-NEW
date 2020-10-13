@@ -64,7 +64,7 @@ namespace Mitternacht.Database.Models {
 		public HashSet<FilterChannelId>    FilterWordsChannelIds   { get; set; } = new HashSet<FilterChannelId>();
 		public HashSet<ZalgoFilterChannel> FilterZalgoChannelIds   { get; set; } = new HashSet<ZalgoFilterChannel>();
 
-		public LogSetting         LogSetting      { get; set; } = new LogSetting();
+		public LogSetting         LogSetting      { get; set; }
 		public AntiRaidSetting    AntiRaidSetting { get; set; }
 		public AntiSpamSetting    AntiSpamSetting { get; set; }
 
