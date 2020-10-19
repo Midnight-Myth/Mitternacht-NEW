@@ -207,7 +207,7 @@ administration:
   startcmds_cleared:                             Alle Startbefehle wurden entfernt.
   text_chan_created:                             Textkanal erstellt
   text_chan_destroyed:                           Textkanal gelöscht
-  timezone_guild:                                Die Zeitzone für des Servers ist `{0}`
+  timezone_guild:                                Die Zeitzone des Servers ist `{0}`
   timezone_not_found:                            Zeitzone nicht gefunden.
   timezones_available:                           Verfügbare Zeitzonen
   userpunish_unban_unbanned_user:                Benutzer {0} wurde entbannt.
