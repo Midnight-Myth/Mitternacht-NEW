@@ -29,7 +29,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 
 		public DateTime UpdateState(ulong guildId, ulong userId) {
 			var dm = GetOrCreate(guildId, userId);
-			dm.LastTimeGotten = DateTime.Now;
+			dm.LastTimeGotten = DateTime.UtcNow;
 
 			return dm.LastTimeGotten;
 		}
