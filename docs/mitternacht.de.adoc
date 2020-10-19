@@ -1,0 +1,176 @@
+= Dokumentation Mitternachtbot
+
+= Einrichtung des Bots
+
+Es wird empfohlen, eines der https://github.com/expeehaa/dotnet-build-run[dotnet-build-run-Skripte] zum Runterladen und Starten des Bots zu verwenden.
+In dem Repository befinden sich zwei Skripte: Eins für die Ausführung mit Docker und eins ohne Docker.
+Beide Skripte benötigen ähnliche Konfigurationsdateien und können selbstständig das Repository, in dem sich Mitternacht befindet, herunterladen.
+
+== Installation
+
+=== Ohne Docker (dotnet-build-run)
+
+
+=== Mit Docker (dotnet-build-run-docker)
+
+Eine Beispielkonfiguration kann mit folgendem Befehl generiert werden.
+[source,bash]
+----
+$ dotnet-build-run-docker --create-sample-config
+----
+
+Diese befindet sich dann in `build-run-docker-sample.cfg` und sieht ungefähr so aus:
+
+[source,bash]
+----
+#!/bin/bash
+# This is a sample configuration for the dotnet-build-run-docker script.
+
+# The name of your application.
+name="Sample"
+repourl="sample.git"
+branch="master"
+# Root path of the script.
+root="/home/user/git/dotnet-build-run"
+# Name of the repository directory in $rootdir.
+sourcedir="${root}/source"
+# Name of the directory containing shared data (configurations, ...).
+datadir="${root}/data"
+# Name of the executable.
+executable="Sample.dll"
+# Additional arguments to "docker run".
+docker_run_args=""
+----
+
+Standardmäßig zeigt `root` auf das Verzeichnis, in dem der Befehl ausgeführt wurde.
+
+Für Mitternacht müssen einige Veränderungen vorgenommen werden.
+
+[source,bash]
+----
+#!/bin/bash
+
+name="uniquename"
+repourl="https://github.com/Midnight-Myth/Mitternacht-NEW.git"
+branch="master"
+root="/path/to/the/bot/root/directory"
+sourcedir="${root}/source"
+datadir="${root}/data"
+executable="Mitternacht.dll"
+docker_run_args=""
+----
+
+Dabei ist zu beachten, dass das Feld `name` einen global eindeutigen, kleingeschriebenen Namen haben muss.
+Dieser wird von docker als Imagename verwendet.
+`root` kann auf ein beliebiges Verzeichnis verweisen, jedoch ist es sinnvoll, das Verzeichnis zu wählen, in dem sich die Konfigurationsdatei befindet.
+
+Möchte man Mitternacht ohne Webinterface starten, muss `executable` auf `Mitternacht.dll` gesetzt werden.
+Mit Webinterface sollte stattdessen `MitternachtWeb.dll` verwendet werden.
+Außerdem, um das Webinterface außerhalb des Dockercontainers verfügbar zu machen, kann in `docker_run_args` ein Eintrag `-p=yourport:5000/tcp` hinzugefügt werden.
+`yourport` muss dabei mit dem gewünschten Port ersetzt werden.
+Es wird davon abgeraten, einen gängigen Port wie 80 oder 443 zu verwenden, stattdessen sollte ein Reverse-Proxy wie nginx genutzt werden, um das Webinterface öffentlich verfügbar zu machen.
+
+Das Verzeichnis `datadir` wird für den Bot notwendige Konfigurationsdateien enthalten und mit einem laufenden Dockercontainer geteilt.
+
+==== Starten des Bots
+
+Zum Generieren der Botkonfigurationsdateien kann der Bot nun ausgeführt werden.
+Der Befehl `dotnet-build-run-docker` liest standardmäßig eine Datei `build-run-docker.cfg` im aktuellen Verzeichnis.
+Die modifizierte Beispielkonfiguration sollte entsprechend umbenannt werden.
+Alternativ kann der Pfad zu einer beliebigen anderen Konfigurationsdatei als Argument angegeben werden.
+Zum Starten kann der Befehl ausgeführt werden.
+
+[source,bash]
+----
+$ dotnet-build-run-docker
+----
+
+Es wird zunächst das Repository in `sourcedir` geklont oder, falls schon vorhanden, auf den aktuellsten Commit in `branch` geupdatet.
+Danach wird ein Dockerimage erstellt und der Bot gestartet.
+Der Start sollte mit folgender Nachricht abbrechen:
+
+[source]
+----
+12:20:09 Mitternacht.Services.Impl.BotCredentials | 'credentials.json' is missing. Add it and restart the program. An example can be found in /data/credentials_example.json
+----
+
+
+== Konfiguration
+
+=== PostgreSQL
+
+=== credentials.json
+
+Benenne die Datei `credentials_example.json` um in `credentials.json`.
+Der Inhalt sollte bisher ungefähr so aussehen:
+
+[source,json]
+----
+{
+  "ClientId": 0,
+  "Token": "",
+  "DbConnection": "Host=127.0.0.1;Port=5432;Database=mitternachtbot;Username=mitternachtbot;Password=mitternachtbotpassword;",
+  "OwnerIds": [
+    0
+  ],
+  "GoogleApiKey": "",
+  "MashapeKey": "",
+  "LoLApiKey": "",
+  "OsuApiKey": "",
+  "CleverbotApiKey": "",
+  "CarbonKey": "",
+  "PatreonAccessToken": "",
+  "PatreonCampaignId": "",
+  "TotalShards": 1,
+  "ShardRunCommand": "",
+  "ShardRunArguments": "",
+  "ShardRunPort": null,
+  "ForumUsername": "",
+  "ForumPassword": ""
+}
+----
+
+Die folgende Tabelle bietet einen Überblick über die einzelnen Felder.
+
+|====
+| ClientId      | Die ClientId des Botaccounts.
+| Token         | Das Token des Botaccounts.
+| DbConnection  | Verbindung zur Datenbank, siehe <<PostgreSQL>> zur Einrichtung dieser.
+| OwnerIds      | Die IDs der Discordaccounts der Botbesitzer. Einige Befehle können nur von Botbesitzern ausgeführt werden.
+| ForumUsername | Nutzername des Accounts, mit dem sich der Bot im GommeHD.net-Forum einloggt.
+| ForumPassword | Passwort des Accounts, mit dem sich der Bot im GommeHD.net-Forum einloggt.
+|====
+
+=== mitternachtweb.config
+
+Wird das Webinterface gestartet, reicht `credentials.json` nicht aus.
+Im gleichen Verzeichnis wird noch eine Datei `mitternachtweb.config` benötigt mit folgendem Inhalt.
+
+[source,json]
+----
+{
+  "Discord": {
+    "ClientId": 0,
+    "ClientSecret": ""
+  }
+}
+----
+
+|====
+| ClientId     | Die ClientId des Botaccounts
+| ClientSecret | Das Client secret des Botaccounts
+|====
+
+= Botnutzung
+
+== Globale Boteinrichtung
+
+== Servereinrichtung
+
+== Features
+
+=== Geldsystem
+
+=== Levelsystem
+
+=== Userrolecolors
