@@ -1813,6 +1813,7 @@
   cmd:     dailymoney
   aliases:
   -        dm
+  -        damn
   desc:    Tägliches Geld (20 Euro, wird um 0 Uhr zurückgesetzt)
   usage:   "`{0}dm`"
 - name:    delcustreact
