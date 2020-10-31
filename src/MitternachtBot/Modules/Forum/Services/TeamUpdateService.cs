@@ -79,16 +79,17 @@ namespace Mitternacht.Modules.Forum.Services {
 
 			foreach(var gc in guildConfigs) {
 				var guild = _client.GetGuild(gc.GuildId);
-				var tuCh = guild?.GetTextChannel(gc.TeamUpdateChannelId.Value);
-				if(tuCh == null)
-					continue;
-				var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
-				if(roles is null || roles.Length == 0)
-					continue;
-
-				await TeamMemberAdded_Message.Invoke(tuCh, rankAdded).ConfigureAwait(false);
-				await TeamMemberRankChanged_Message.Invoke(tuCh, rankChanged).ConfigureAwait(false);
-				await TeamMemberRemoved_Message.Invoke(tuCh, rankRemoved).ConfigureAwait(false);
+				var teamUpdateChannel = guild?.GetTextChannel(gc.TeamUpdateChannelId.Value);
+				
+				if(teamUpdateChannel != null) {
+					var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
+					
+					if(!(roles is null) && roles.Length != 0) {
+						await TeamMemberAdded_Message.Invoke(teamUpdateChannel, rankAdded).ConfigureAwait(false);
+						await TeamMemberRankChanged_Message.Invoke(teamUpdateChannel, rankChanged).ConfigureAwait(false);
+						await TeamMemberRemoved_Message.Invoke(teamUpdateChannel, rankRemoved).ConfigureAwait(false);
+					}
+				}
 			}
 
 			_staff = staff;
