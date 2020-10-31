@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 
 namespace Mitternacht.Modules.Forum.Services {
 	public class TeamUpdateService : IMService {
@@ -116,7 +117,11 @@ namespace Mitternacht.Modules.Forum.Services {
 						var key = $"teamupdate_changed_{(rankUsers.Count() == 1 ? "single" : "multi")}";
 						var usernameString = ConcatenateUsernames(channel.Guild, rankUsers.Select(rui => rui.NewUserInfo));
 
-						await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rankPrefix) ? defaultPrefix : rankPrefix)}{GetText(key, channel.Guild.Id, usernameString, rankUsers.Key.OldRank, rankUsers.Key.NewRank)}").ConfigureAwait(false);
+						var message = await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rankPrefix) ? defaultPrefix : rankPrefix)}{GetText(key, channel.Guild.Id, usernameString, rankUsers.Key.OldRank, rankUsers.Key.NewRank)}").ConfigureAwait(false);
+						
+						if(channel is SocketNewsChannel newsChannel) {
+							await message.CrosspostAsync();
+						}
 					}
 				}
 			}
