@@ -146,7 +146,11 @@ namespace Mitternacht.Modules.Forum.Services {
 						var key = $"teamupdate_{keypart}_{(rankUsers.Count() == 1 ? "single" : "multi")}";
 						var usernameString = ConcatenateUsernames(channel.Guild, rankUsers);
 
-						await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rank.MessagePrefix) ? defaultPrefix : rank.MessagePrefix)}{GetText(key, channel.Guild.Id, usernameString, rank.Rankname)}").ConfigureAwait(false);
+						var message = await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rank.MessagePrefix) ? defaultPrefix : rank.MessagePrefix)}{GetText(key, channel.Guild.Id, usernameString, rank.Rankname)}").ConfigureAwait(false);
+
+						if(channel is SocketNewsChannel newsChannel) {
+							await message.CrosspostAsync();
+						}
 					}
 				}
 			}
