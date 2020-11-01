@@ -50,15 +50,15 @@
 		</None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="2.3.0-dev-20200904.2" />
+    <PackageReference Include="Discord.Net" Version="2.3.0-dev-20201028.4" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.88" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
-    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.49.0.2106" />
+    <PackageReference Include="Google.Apis.YouTube.v3" Version="1.49.0.2120" />
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.49.0.2084" />
     <PackageReference Include="morelinq" Version="3.3.2" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2-alpha.0.12" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2-alpha.0.23" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-unstable0456" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-rc.2.20475.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-rc.2.20475.6">

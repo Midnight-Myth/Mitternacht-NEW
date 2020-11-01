@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 
 namespace Mitternacht.Modules.Forum.Services {
 	public class TeamUpdateService : IMService {
@@ -79,16 +80,17 @@ namespace Mitternacht.Modules.Forum.Services {
 
 			foreach(var gc in guildConfigs) {
 				var guild = _client.GetGuild(gc.GuildId);
-				var tuCh = guild?.GetTextChannel(gc.TeamUpdateChannelId.Value);
-				if(tuCh == null)
-					continue;
-				var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
-				if(roles is null || roles.Length == 0)
-					continue;
-
-				await TeamMemberAdded_Message.Invoke(tuCh, rankAdded).ConfigureAwait(false);
-				await TeamMemberRankChanged_Message.Invoke(tuCh, rankChanged).ConfigureAwait(false);
-				await TeamMemberRemoved_Message.Invoke(tuCh, rankRemoved).ConfigureAwait(false);
+				var teamUpdateChannel = guild?.GetTextChannel(gc.TeamUpdateChannelId.Value);
+				
+				if(teamUpdateChannel != null) {
+					var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
+					
+					if(!(roles is null) && roles.Length != 0) {
+						await TeamMemberAdded_Message.Invoke(teamUpdateChannel, rankAdded).ConfigureAwait(false);
+						await TeamMemberRankChanged_Message.Invoke(teamUpdateChannel, rankChanged).ConfigureAwait(false);
+						await TeamMemberRemoved_Message.Invoke(teamUpdateChannel, rankRemoved).ConfigureAwait(false);
+					}
+				}
 			}
 
 			_staff = staff;
@@ -115,7 +117,11 @@ namespace Mitternacht.Modules.Forum.Services {
 						var key = $"teamupdate_changed_{(rankUsers.Count() == 1 ? "single" : "multi")}";
 						var usernameString = ConcatenateUsernames(channel.Guild, rankUsers.Select(rui => rui.NewUserInfo));
 
-						await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rankPrefix) ? defaultPrefix : rankPrefix)}{GetText(key, channel.Guild.Id, usernameString, rankUsers.Key.OldRank, rankUsers.Key.NewRank)}").ConfigureAwait(false);
+						var message = await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rankPrefix) ? defaultPrefix : rankPrefix)}{GetText(key, channel.Guild.Id, usernameString, rankUsers.Key.OldRank, rankUsers.Key.NewRank)}").ConfigureAwait(false);
+						
+						if(channel is SocketNewsChannel newsChannel) {
+							await message.CrosspostAsync();
+						}
 					}
 				}
 			}
@@ -140,7 +146,11 @@ namespace Mitternacht.Modules.Forum.Services {
 						var key = $"teamupdate_{keypart}_{(rankUsers.Count() == 1 ? "single" : "multi")}";
 						var usernameString = ConcatenateUsernames(channel.Guild, rankUsers);
 
-						await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rank.MessagePrefix) ? defaultPrefix : rank.MessagePrefix)}{GetText(key, channel.Guild.Id, usernameString, rank.Rankname)}").ConfigureAwait(false);
+						var message = await channel.SendMessageAsync($"{(string.IsNullOrWhiteSpace(rank.MessagePrefix) ? defaultPrefix : rank.MessagePrefix)}{GetText(key, channel.Guild.Id, usernameString, rank.Rankname)}").ConfigureAwait(false);
+
+						if(channel is SocketNewsChannel newsChannel) {
+							await message.CrosspostAsync();
+						}
 					}
 				}
 			}
