@@ -63,37 +63,37 @@ namespace Mitternacht.Modules.Forum.Services {
 		}
 
 		public async Task DoTeamUpdate() {
-			if(_fs.Forum == null)
-				return;
-			var staff = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
-			var rankAdded = staff.Where(uiNew => _staff.All(uiOld => uiOld.Id != uiNew.Id)).ToArray();
-			var rankChanged = _staff.Where(uiOld => staff.Any(uiNew => uiNew.Id == uiOld.Id && !string.Equals(uiNew.UserTitle, uiOld.UserTitle, StringComparison.OrdinalIgnoreCase))).Select(uiOld => new RankUpdateItem(uiOld, staff.First(uiNew => uiNew.Id == uiOld.Id))).ToArray();
-			var rankRemoved = _staff.Where(uiOld => staff.All(uiNew => uiNew.Id != uiOld.Id)).ToArray();
+			if(_fs.Forum != null) {
+				var oldStaff = _staff;
+				_staff = await _fs.Forum.GetMembersList(MembersListType.Staff).ConfigureAwait(false);
 
-			await TeamMemberAdded.Invoke(rankAdded).ConfigureAwait(false);
-			await TeamMemberRankChanged.Invoke(rankChanged).ConfigureAwait(false);
-			await TeamMemberRemoved.Invoke(rankRemoved).ConfigureAwait(false);
+				var rankAdded = _staff.Where(uiNew => oldStaff.All(uiOld => uiOld.Id != uiNew.Id)).ToArray();
+				var rankChanged = oldStaff.Where(uiOld => _staff.Any(uiNew => uiNew.Id == uiOld.Id && !string.Equals(uiNew.UserTitle, uiOld.UserTitle, StringComparison.OrdinalIgnoreCase))).Select(uiOld => new RankUpdateItem(uiOld, _staff.First(uiNew => uiNew.Id == uiOld.Id))).ToArray();
+				var rankRemoved = oldStaff.Where(uiOld => _staff.All(uiNew => uiNew.Id != uiOld.Id)).ToArray();
 
-			using var uow = _db.UnitOfWork;
-			var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
-			var teamUpdateRanks = uow.TeamUpdateRanks.GetAll().AsEnumerable().Where(tur => guildConfigs.Any(gc => gc.GuildId == tur.GuildId)).GroupBy(tur => tur.GuildId).ToList();
+				await TeamMemberAdded.Invoke(rankAdded).ConfigureAwait(false);
+				await TeamMemberRankChanged.Invoke(rankChanged).ConfigureAwait(false);
+				await TeamMemberRemoved.Invoke(rankRemoved).ConfigureAwait(false);
 
-			foreach(var gc in guildConfigs) {
-				var guild = _client.GetGuild(gc.GuildId);
-				var teamUpdateChannel = guild?.GetTextChannel(gc.TeamUpdateChannelId.Value);
-				
-				if(teamUpdateChannel != null) {
-					var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
-					
-					if(!(roles is null) && roles.Length != 0) {
-						await TeamMemberAdded_Message.Invoke(teamUpdateChannel, rankAdded).ConfigureAwait(false);
-						await TeamMemberRankChanged_Message.Invoke(teamUpdateChannel, rankChanged).ConfigureAwait(false);
-						await TeamMemberRemoved_Message.Invoke(teamUpdateChannel, rankRemoved).ConfigureAwait(false);
+				using var uow = _db.UnitOfWork;
+				var guildConfigs = uow.GuildConfigs.GetAllGuildConfigs(_client.Guilds.Select(g => g.Id).ToList()).Where(gc => gc.TeamUpdateChannelId.HasValue).ToList();
+				var teamUpdateRanks = uow.TeamUpdateRanks.GetAll().AsEnumerable().Where(tur => guildConfigs.Any(gc => gc.GuildId == tur.GuildId)).GroupBy(tur => tur.GuildId).ToList();
+
+				foreach(var gc in guildConfigs) {
+					var guild = _client.GetGuild(gc.GuildId);
+					var teamUpdateChannel = guild?.GetTextChannel(gc.TeamUpdateChannelId.Value);
+
+					if(teamUpdateChannel != null) {
+						var roles = teamUpdateRanks.FirstOrDefault(turgroup => turgroup.Key == gc.GuildId)?.ToArray();
+
+						if(!(roles is null) && roles.Length != 0) {
+							await TeamMemberAdded_Message.Invoke(teamUpdateChannel, rankAdded).ConfigureAwait(false);
+							await TeamMemberRankChanged_Message.Invoke(teamUpdateChannel, rankChanged).ConfigureAwait(false);
+							await TeamMemberRemoved_Message.Invoke(teamUpdateChannel, rankRemoved).ConfigureAwait(false);
+						}
 					}
 				}
 			}
-
-			_staff = staff;
 		}
 
 
