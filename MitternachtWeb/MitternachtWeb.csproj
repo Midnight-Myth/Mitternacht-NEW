@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <StartupObject>MitternachtWeb.Program</StartupObject>
+		<LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
