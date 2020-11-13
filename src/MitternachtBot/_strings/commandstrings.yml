@@ -2126,6 +2126,7 @@
   cmd:     birthday
   aliases:
   -        bday
+  -        bd
   desc:    Zeigt den Geburtstag eines Users an.
   usage:   "`{0}birthday [user]`"
 - name:    birthdayremove
