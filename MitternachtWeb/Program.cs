@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace MitternachtWeb {
 	public class Program {
 		public static MitternachtBot MitternachtBot;
+		public static readonly string BasePath = Environment.CurrentDirectory;
 
 		public static async Task Main(string[] args) {
 			MitternachtBot = new MitternachtBot(0, 0);
@@ -19,7 +20,7 @@ namespace MitternachtWeb {
 
 		public static IHostBuilder CreateHostBuilder(string[] args)
 			=> Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((context, config) => {
-				config.SetBasePath(Environment.CurrentDirectory);
+				config.SetBasePath(BasePath);
 				config.AddJsonFile("mitternachtweb.config");
 			}).ConfigureWebHostDefaults(webBuilder => {
 				webBuilder.UseStartup<Startup>();

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -15,6 +16,7 @@ using MitternachtWeb.Areas.Analysis.Services;
 using MitternachtWeb.Authorization;
 using MitternachtWeb.Helpers;
 using MitternachtWeb.Models;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -91,6 +93,8 @@ namespace MitternachtWeb {
 			});
 
 			services.ConfigureNonBreakingSameSiteCookies();
+
+			services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(Program.BasePath, ".aspnet-dataprotection")));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
