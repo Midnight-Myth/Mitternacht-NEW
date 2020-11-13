@@ -54,6 +54,8 @@ namespace MitternachtWeb {
 				options.CallbackPath            = new PathString("/login/authenticate_discord");
 				options.SaveTokens              = true;
 
+				options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+				
 				options.Scope.Add("identify");
 				options.Scope.Add("guilds");
 				
@@ -87,9 +89,13 @@ namespace MitternachtWeb {
 				options.AddPolicy("ReadBotConfig",  p => p.Requirements.Add(new BotLevelPermissionRequirement(BotLevelPermission. ReadBotConfig)));
 				options.AddPolicy("WriteBotConfig", p => p.Requirements.Add(new BotLevelPermissionRequirement(BotLevelPermission.WriteBotConfig)));
 			});
+
+			services.ConfigureNonBreakingSameSiteCookies();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+			app.UseCookiePolicy();
+			
 			app.UseForwardedHeaders(new ForwardedHeadersOptions {
 				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 			});
