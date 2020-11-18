@@ -33,6 +33,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						WarnedAt      = w.DateAdded,
 						Reason        = w.Reason,
 						CanBeForgiven = PermissionForgiveWarns,
+						Points        = w.Points,
 					};
 				}).ToList();
 

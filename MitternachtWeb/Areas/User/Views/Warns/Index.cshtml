@@ -14,6 +14,9 @@
 					@Html.DisplayNameFor(model => model.Reason)
 				</th>
 				<th>
+					@Html.DisplayNameFor(model => model.Points)
+				</th>
+				<th>
 					@Html.DisplayNameFor(model => model.Forgiven)
 				</th>
 				<th>
@@ -26,37 +29,40 @@
 		</thead>
 		<tbody>
 			@foreach(var warn in Model) {
-				<tr>
-					<td class="discord-avatar">
-						@if(!string.IsNullOrWhiteSpace(warn.AvatarUrl)) {
-							<img src="@warn.AvatarUrl" alt="Avatar" />
-						}
-					</td>
-					<td>
-						<a asp-area="Guild" asp-controller="Warns" asp-action="Index" asp-route-guildId="@warn.GuildId">
-							@(warn.Guild == null ? warn.GuildId.ToString() : warn.Guild.Name)
-						</a>
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => warn.Reason)
-					</td>
-					<td>
-						@{
-							var forgivenString = warn.Forgiven ? Html.Raw("✅") : Html.Raw("❌");
-						}
-						@if(warn.CanBeForgiven) {
-							<a asp-area="User" asp-controller="Warns" asp-action="ToggleForgive" asp-route-userId="@warn.UserId" asp-route-id="@warn.Id">@forgivenString</a>
-						} else {
-							@forgivenString
-						}
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => warn.WarnedAtString)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => warn.WarnedBy)
-					</td>
-				</tr>
+			<tr>
+				<td class="discord-avatar">
+					@if(!string.IsNullOrWhiteSpace(warn.AvatarUrl)) {
+						<img src="@warn.AvatarUrl" alt="Avatar" />
+					}
+				</td>
+				<td>
+					<a asp-area="Guild" asp-controller="Warns" asp-action="Index" asp-route-guildId="@warn.GuildId">
+						@(warn.Guild == null ? warn.GuildId.ToString() : warn.Guild.Name)
+					</a>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => warn.Reason)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => warn.Points)
+				</td>
+				<td>
+					@{
+						var forgivenString = warn.Forgiven ? Html.Raw("✅") : Html.Raw("❌");
+					}
+					@if(warn.CanBeForgiven) {
+						<a asp-area="User" asp-controller="Warns" asp-action="ToggleForgive" asp-route-userId="@warn.UserId" asp-route-id="@warn.Id">@forgivenString</a>
+					} else {
+						@forgivenString
+					}
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => warn.WarnedAtString)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => warn.WarnedBy)
+				</td>
+			</tr>
 			}
 		</tbody>
 	</table>
