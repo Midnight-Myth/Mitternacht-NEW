@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 				Cache.TryAdd(x.GuildId, new PermissionCache {
 					Verbose = x.VerbosePermissions,
 					PermRole = x.PermissionRole,
-					Permissions = new PermissionsCollection<Permissionv2>(x.Permissions)
+					Permissions = new PermissionsCollection(x.Permissions)
 				});
 			}
 		}
@@ -65,11 +65,11 @@ namespace Mitternacht.Modules.Permissions.Services {
 
 		public void UpdateCache(GuildConfig config) {
 			Cache.AddOrUpdate(config.GuildId, new PermissionCache {
-				Permissions = new PermissionsCollection<Permissionv2>(config.Permissions),
+				Permissions = new PermissionsCollection(config.Permissions),
 				PermRole = config.PermissionRole,
 				Verbose = config.VerbosePermissions
 			}, (id, old) => {
-				old.Permissions = new PermissionsCollection<Permissionv2>(config.Permissions);
+				old.Permissions = new PermissionsCollection(config.Permissions);
 				old.PermRole = config.PermissionRole;
 				old.Verbose = config.VerbosePermissions;
 				return old;

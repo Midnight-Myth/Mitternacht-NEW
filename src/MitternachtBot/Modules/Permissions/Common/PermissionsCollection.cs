@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Mitternacht.Common;
 using Mitternacht.Common.Collections;
+using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Common {
-	public class PermissionsCollection<T> : IndexedCollection<T> where T : class, IIndexed {
+	public class PermissionsCollection : IndexedCollection<Permissionv2> {
 		private readonly object _localLocker = new object();
 
-		public PermissionsCollection(IEnumerable<T> source) : base(source) { }
+		public PermissionsCollection(IEnumerable<Permissionv2> source) : base(source) { }
 
-		public static implicit operator List<T>(PermissionsCollection<T> x)
+		public static implicit operator List<Permissionv2>(PermissionsCollection x)
 			=> x.Source;
 
 		public override void Clear() {
@@ -20,20 +20,20 @@ namespace Mitternacht.Modules.Permissions.Common {
 			}
 		}
 
-		public override bool Remove(T item) {
+		public override bool Remove(Permissionv2 permission) {
 			lock(_localLocker) {
-				if(Source.IndexOf(item) != 0) {
-					return base.Remove(item);
+				if(Source.IndexOf(permission) != 0) {
+					return base.Remove(permission);
 				} else{
 					throw new ArgumentException("Cannot remove the permission 'allow all'.");
 				}
 			}
 		}
 
-		public override void Insert(int index, T item) {
+		public override void Insert(int index, Permissionv2 permission) {
 			lock(_localLocker) {
 				if(index != 0) {
-					base.Insert(index, item);
+					base.Insert(index, permission);
 				} else {
 					throw new IndexOutOfRangeException("Cannot insert permission at index 0. The first permission is always 'allow all'.");
 				}
@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Permissions.Common {
 			}
 		}
 
-		public override T this[int index] {
+		public override Permissionv2 this[int index] {
 			get => Source[index];
 			set {
 				lock(_localLocker) {

@@ -88,7 +88,7 @@ namespace Mitternacht.Modules.Permissions {
 				return;
 			try {
 				var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-				var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
+				var permsCol = new PermissionsCollection(config.Permissions);
 				var p = permsCol[index];
 				permsCol.RemoveAt(index);
 				uow.Context.Remove(p);
@@ -109,7 +109,7 @@ namespace Mitternacht.Modules.Permissions {
 			if(!(from == to || from < 0 || to < 0)) {
 				try {
 					var config = uow.GuildConfigs.GcWithPermissionsv2For(Context.Guild.Id);
-					var permsCol = new PermissionsCollection<Permissionv2>(config.Permissions);
+					var permsCol = new PermissionsCollection(config.Permissions);
 
 					var fromFound = from < permsCol.Count;
 					var toFound = to < permsCol.Count;
