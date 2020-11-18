@@ -6,11 +6,11 @@ using Mitternacht.Common.Collections;
 namespace Mitternacht.Modules.Permissions.Common {
 	public class PermissionsCollection<T> : IndexedCollection<T> where T : class, IIndexed {
 		private readonly object _localLocker = new object();
-		public PermissionsCollection(IEnumerable<T> source) : base(source) {
-		}
 
-		public static implicit operator List<T>(PermissionsCollection<T> x) =>
-			x.Source;
+		public PermissionsCollection(IEnumerable<T> source) : base(source) { }
+
+		public static implicit operator List<T>(PermissionsCollection<T> x)
+			=> x.Source;
 
 		public override void Clear() {
 			lock(_localLocker) {
@@ -21,29 +21,32 @@ namespace Mitternacht.Modules.Permissions.Common {
 		}
 
 		public override bool Remove(T item) {
-			bool removed;
 			lock(_localLocker) {
-				if(Source.IndexOf(item) == 0)
-					throw new ArgumentException("You can't remove first permsission (allow all)");
-				removed = base.Remove(item);
+				if(Source.IndexOf(item) != 0) {
+					return base.Remove(item);
+				} else{
+					throw new ArgumentException("Cannot remove the permission 'allow all'.");
+				}
 			}
-			return removed;
 		}
 
 		public override void Insert(int index, T item) {
 			lock(_localLocker) {
-				if(index == 0) // can't insert on first place. Last item is always allow all.
-					throw new IndexOutOfRangeException(nameof(index));
-				base.Insert(index, item);
+				if(index != 0) {
+					base.Insert(index, item);
+				} else {
+					throw new IndexOutOfRangeException("Cannot insert permission at index 0. The first permission is always 'allow all'.");
+				}
 			}
 		}
 
 		public override void RemoveAt(int index) {
 			lock(_localLocker) {
-				if(index == 0) // you can't remove first permission (allow all)
-					throw new IndexOutOfRangeException(nameof(index));
-
-				base.RemoveAt(index);
+				if(index != 0) {
+					base.RemoveAt(index);
+				} else {
+					throw new IndexOutOfRangeException("Cannot remove permission at index 0. It is always 'allow all'.");
+				}
 			}
 		}
 
@@ -51,9 +54,11 @@ namespace Mitternacht.Modules.Permissions.Common {
 			get => Source[index];
 			set {
 				lock(_localLocker) {
-					if(index == 0) // can't set first element. It's always allow all
-						throw new IndexOutOfRangeException(nameof(index));
-					base[index] = value;
+					if(index != 0){
+						base[index] = value;
+					} else{
+						throw new IndexOutOfRangeException("Cannot set permission at index 0. The first permission is always 'allow all'.");
+					}
 				}
 			}
 		}
