@@ -6,5 +6,6 @@ namespace Mitternacht.Database.Models {
 		public bool   Forgiven   { get; set; }
 		public string ForgivenBy { get; set; }
 		public string Moderator  { get; set; }
+		public long   Points     { get; set; }
 	}
 }

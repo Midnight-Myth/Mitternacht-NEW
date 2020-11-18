@@ -122,11 +122,6 @@ namespace Mitternacht.Database {
 			modelBuilder.Entity<Currency>()
 				.HasIndex(c => new { c.GuildId, c.UserId })
 				.IsUnique();
-			
-			modelBuilder.Entity<Permission>()
-				.HasOne(p => p.Next)
-				.WithOne(p => p.Previous)
-				.IsRequired(false);
 
 			modelBuilder.Entity<RewardedUser>()
 				.HasIndex(x => x.UserId)

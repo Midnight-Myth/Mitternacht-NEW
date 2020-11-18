@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 using System.Linq.Expressions;
+using Mitternacht.Common;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class GuildConfigRepository : Repository<GuildConfig>, IGuildConfigRepository {
@@ -45,7 +46,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 			if(config == null) {
 				_set.Add(config = new GuildConfig {
 					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist,
+					Permissions = Permission.GetDefaultPermlist,
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
@@ -76,7 +77,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 			if(config == null) {
 				_set.Add(config = new GuildConfig {
 					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist,
+					Permissions = Permission.GetDefaultPermlist,
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
@@ -88,18 +89,6 @@ namespace Mitternacht.Database.Repositories.Impl {
 			}
 
 			return config;
-		}
-
-		public IEnumerable<GuildConfig> OldPermissionsForAll() {
-			var query = _set
-				.Where((Expression<Func<GuildConfig, bool>>)(gc => gc.RootPermission != null))
-				.Include(gc => gc.RootPermission);
-
-			for(var i = 0; i < 60; i++) {
-				query = query.ThenInclude(gc => gc.Next);
-			}
-
-			return query.ToList();
 		}
 
 		public IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include) {
@@ -114,10 +103,10 @@ namespace Mitternacht.Database.Repositories.Impl {
 			if(config == null) {
 				_set.Add(config = new GuildConfig {
 					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist
+					Permissions = Permission.GetDefaultPermlist
 				});
 			} else if(config.Permissions == null || !config.Permissions.Any()) {
-				config.Permissions = Permissionv2.GetDefaultPermlist;
+				config.Permissions = Permission.GetDefaultPermlist;
 			}
 
 			return config;

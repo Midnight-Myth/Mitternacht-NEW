@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
+using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class UserPunishService : IMService {

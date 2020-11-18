@@ -15,6 +15,7 @@ using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
+using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class LogCommandService : IMService {

@@ -15,6 +15,7 @@ namespace MitternachtWeb.Models {
 		public string      ForgivenBy    { get; set; }
 		public string      WarnedBy      { get; set; }
 		public bool        CanBeForgiven { get; set; }
+		public long        Points        { get; set; }
 
 		public string WarnedAtString => WarnedAt.HasValue ? WarnedAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ") : "-";
 	}

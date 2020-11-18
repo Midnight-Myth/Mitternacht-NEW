@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mitternacht.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mitternacht.Migrations.Mitternacht
 {
     [DbContext(typeof(MitternachtContext))]
-    partial class MitternachtContextModelSnapshot : ModelSnapshot
+    [Migration("20201118035640_AddColumnPointsToWarnings")]
+    partial class AddColumnPointsToWarnings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -735,6 +737,9 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<string>("Prefix")
                         .HasColumnType("text");
 
+                    b.Property<int?>("RootPermissionId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("SendChannelByeMessage")
                         .HasColumnType("boolean");
 
@@ -789,6 +794,8 @@ namespace Mitternacht.Migrations.Mitternacht
                         .IsUnique();
 
                     b.HasIndex("LogSettingId");
+
+                    b.HasIndex("RootPermissionId");
 
                     b.ToTable("GuildConfigs");
                 });
@@ -1040,6 +1047,42 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.ToTable("NsfwBlacklitedTag");
                 });
 
+            modelBuilder.Entity("Mitternacht.Database.Models.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("NextId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PrimaryTarget")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("PrimaryTargetId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<int>("SecondaryTarget")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SecondaryTargetName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("State")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NextId")
+                        .IsUnique();
+
+                    b.ToTable("Permission");
+                });
+
             modelBuilder.Entity("Mitternacht.Database.Models.Permissionv2", b =>
                 {
                     b.Property<int>("Id")
@@ -1075,7 +1118,7 @@ namespace Mitternacht.Migrations.Mitternacht
 
                     b.HasIndex("GuildConfigId");
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permissionv2");
                 });
 
             modelBuilder.Entity("Mitternacht.Database.Models.PlayingStatus", b =>
@@ -1779,7 +1822,13 @@ namespace Mitternacht.Migrations.Mitternacht
                         .WithMany()
                         .HasForeignKey("LogSettingId");
 
+                    b.HasOne("Mitternacht.Database.Models.Permission", "RootPermission")
+                        .WithMany()
+                        .HasForeignKey("RootPermissionId");
+
                     b.Navigation("LogSetting");
+
+                    b.Navigation("RootPermission");
                 });
 
             modelBuilder.Entity("Mitternacht.Database.Models.GuildRepeater", b =>
@@ -1819,6 +1868,15 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.HasOne("Mitternacht.Database.Models.GuildConfig", null)
                         .WithMany("NsfwBlacklistedTags")
                         .HasForeignKey("GuildConfigId");
+                });
+
+            modelBuilder.Entity("Mitternacht.Database.Models.Permission", b =>
+                {
+                    b.HasOne("Mitternacht.Database.Models.Permission", "Next")
+                        .WithOne("Previous")
+                        .HasForeignKey("Mitternacht.Database.Models.Permission", "NextId");
+
+                    b.Navigation("Next");
                 });
 
             modelBuilder.Entity("Mitternacht.Database.Models.Permissionv2", b =>
@@ -1946,6 +2004,11 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Navigation("IgnoredChannels");
 
                     b.Navigation("IgnoredVoicePresenceChannelIds");
+                });
+
+            modelBuilder.Entity("Mitternacht.Database.Models.Permission", b =>
+                {
+                    b.Navigation("Previous");
                 });
 
             modelBuilder.Entity("Mitternacht.Database.Models.ShopEntry", b =>

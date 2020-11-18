@@ -12,6 +12,7 @@ using Mitternacht.Services;
 using Mitternacht.Database;
 using Mitternacht.Database.Models;
 using MoreLinq;
+using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
@@ -188,10 +189,8 @@ namespace Mitternacht.Modules.Administration {
 					} else {
 						embedBuilder.WithAuthor(user);
 					}
-
-					if(warn.DateAdded != null) {
-						embedBuilder.WithTimestamp(warn.DateAdded.Value);
-					}
+					
+					embedBuilder.WithTimestamp(warn.DateAdded);
 
 					await Context.Channel.EmbedAsync(embedBuilder).ConfigureAwait(false);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
