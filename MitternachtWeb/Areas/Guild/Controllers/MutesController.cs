@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Guild.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					var user = Guild.GetUser(userId);
 					var unmuteTimer = unmuteTimers.Where(ut => ut.UserId == userId).OrderBy(ut => ut.UnmuteAt).FirstOrDefault();
 					var mutedUser = mutedUsers.Where(mu => mu.UserId == userId).OrderBy(mu => mu.DateAdded).FirstOrDefault();
-					var mutedSince = mutedUser != null && mutedUser.DateAdded.HasValue ? (unmuteTimer != null && unmuteTimer.DateAdded.HasValue ? new []{ mutedUser.DateAdded.Value, unmuteTimer.DateAdded.Value }.Min() : mutedUser.DateAdded) : (unmuteTimer != null && unmuteTimer.DateAdded.HasValue ? unmuteTimer.DateAdded : null);
+					var mutedSince = mutedUser != null ? (unmuteTimer != null ? (DateTime?)new []{ mutedUser.DateAdded, unmuteTimer.DateAdded }.Min() : (DateTime?)mutedUser.DateAdded) : (unmuteTimer != null ? (DateTime?)unmuteTimer.DateAdded : null);
 
 					return new Mute {
 						UserId     = userId,

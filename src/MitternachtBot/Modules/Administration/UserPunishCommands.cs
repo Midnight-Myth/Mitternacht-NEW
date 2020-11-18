@@ -188,10 +188,8 @@ namespace Mitternacht.Modules.Administration {
 					} else {
 						embedBuilder.WithAuthor(user);
 					}
-
-					if(warn.DateAdded != null) {
-						embedBuilder.WithTimestamp(warn.DateAdded.Value);
-					}
+					
+					embedBuilder.WithTimestamp(warn.DateAdded);
 
 					await Context.Channel.EmbedAsync(embedBuilder).ConfigureAwait(false);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
