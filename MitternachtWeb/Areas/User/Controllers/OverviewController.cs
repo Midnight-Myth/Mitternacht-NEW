@@ -9,7 +9,7 @@ namespace MitternachtWeb.Areas.User.Controllers {
 	public class OverviewController : UserBaseController {
 		public IActionResult Index() {
 			var loggedInUserGuilds = DiscordUser.GuildPagePermissions.Keys.ToArray();
-			var guilds = RequestedSocketUser != null ? RequestedSocketUser.MutualGuilds.Where(g => loggedInUserGuilds.Contains(g.Id)).ToArray() : new SocketGuild[0];
+			var guilds = RequestedUser is SocketUser socketUser ? socketUser.MutualGuilds.Where(g => loggedInUserGuilds.Contains(g.Id)).ToArray() : new SocketGuild[0];
 
 			return View(guilds);
 		}
