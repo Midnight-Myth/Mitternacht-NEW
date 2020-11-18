@@ -9,7 +9,6 @@ namespace MitternachtWeb.Areas.Guild.Models {
 		public string    Username     { get; set; }
 		public string    AvatarUrl    { get; set; }
 
-		public string MutedUntil => UnmuteAt.HasValue ? UnmuteAt.Value.ToString("yyyy-MM-ddTHH:mm:ssZ") : "-";
 		public string MuteDuration => MutedSince.HasValue && UnmuteAt.HasValue ? $"{UnmuteAt.Value - MutedSince.Value:d'd'h'h'm'min'}" : "-";
 	}
 }
