@@ -11,9 +11,4 @@ namespace Mitternacht.Database.Models {
 
 		public bool IsGlobal => !GuildId.HasValue;
 	}
-
-	public class ReactionResponse : DbEntity {
-		public bool   OwnerOnly { get; set; }
-		public string Text      { get; set; }
-	}
 }
