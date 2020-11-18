@@ -1,12 +1,9 @@
+using Mitternacht.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
 namespace Mitternacht.Database.Models {
-	public interface IIndexed {
-		int Index { get; set; }
-	}
-
 	[DebuggerDisplay("{PrimaryTarget}{SecondaryTarget} {SecondaryTargetName} {State} {PrimaryTargetId}")]
 	public class Permissionv2 : DbEntity, IIndexed {
 		public int? GuildConfigId { get; set; }

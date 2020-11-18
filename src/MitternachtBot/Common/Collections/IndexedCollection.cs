@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Mitternacht.Database.Models;
 
-namespace Mitternacht.Common.Collections
-{
-    public class IndexedCollection<T> : IList<T> where T : class, IIndexed
+namespace Mitternacht.Common.Collections {
+	public class IndexedCollection<T> : IList<T> where T : class, IIndexed
     {
         public List<T> Source { get; }
         private readonly object _locker = new object();

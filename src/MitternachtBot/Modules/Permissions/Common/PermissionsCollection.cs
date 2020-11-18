@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Mitternacht.Common;
 using Mitternacht.Common.Collections;
-using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Common {
 	public class PermissionsCollection<T> : IndexedCollection<T> where T : class, IIndexed {
