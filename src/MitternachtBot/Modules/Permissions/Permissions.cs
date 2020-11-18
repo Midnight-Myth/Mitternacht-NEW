@@ -11,7 +11,6 @@ using Mitternacht.Common.TypeReaders.Models;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Permissions.Common;
 using Mitternacht.Modules.Permissions.Services;
-using Mitternacht.Services;
 using Mitternacht.Database;
 using Mitternacht.Database.Models;
 
