@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Administration.Common;
 using Mitternacht.Services;
-using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
+using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class ProtectionService : IMService {

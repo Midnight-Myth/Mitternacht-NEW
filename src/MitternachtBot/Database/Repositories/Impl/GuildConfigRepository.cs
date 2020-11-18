@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 using System.Linq.Expressions;
+using Mitternacht.Common;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class GuildConfigRepository : Repository<GuildConfig>, IGuildConfigRepository {
