@@ -44,7 +44,7 @@
 						@Html.DisplayFor(modelItem => mute.MuteDuration)
 					</td>
 					<td>
-						@Html.DisplayFor(modelItem => mute.MutedUntil)
+						@Html.DisplayFor(modelItem => mute.UnmuteAt, "DateTimeNullable")
 					</td>
 					<td>
 						@if(ViewBag.PermissionWriteMutes) {
