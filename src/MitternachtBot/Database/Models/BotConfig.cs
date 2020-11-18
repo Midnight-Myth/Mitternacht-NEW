@@ -1,3 +1,4 @@
+using Mitternacht.Common;
 using System;
 using System.Collections.Generic;
 
@@ -74,12 +75,6 @@ For a specific command help, use `{1}h CommandName` (for example {1}h {1}q).
 	public class BlacklistItem : DbEntity {
 		public ulong         ItemId { get; set; }
 		public BlacklistType Type   { get; set; }
-	}
-
-	public enum BlacklistType {
-		Server,
-		Channel,
-		User
 	}
 
 	public class EightBallResponse : DbEntity {

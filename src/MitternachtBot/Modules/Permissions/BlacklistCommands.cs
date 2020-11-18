@@ -7,6 +7,7 @@ using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
 using Mitternacht.Database;
 using Mitternacht.Database.Models;
+using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Permissions {
 	public partial class Permissions {
