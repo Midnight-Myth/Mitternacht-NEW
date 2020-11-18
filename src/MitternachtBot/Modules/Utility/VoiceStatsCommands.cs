@@ -22,7 +22,7 @@ namespace Mitternacht.Modules.Utility {
 
 				if(uow.VoiceChannelStats.TryGetTime(user.GuildId, user.Id, out var time)) {
 					var timespan = TimeSpan.FromSeconds(time);
-					await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan:dd}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
+					await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan.Days}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
 				} else
 					await ConfirmLocalized("voicestats_untracked", user.ToString()).ConfigureAwait(false);
 			}
