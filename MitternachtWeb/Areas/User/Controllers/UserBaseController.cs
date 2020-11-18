@@ -1,9 +1,8 @@
 ﻿using Discord;
-using Discord.WebSocket;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MitternachtWeb.Controllers;
-using MitternachtWeb.Exceptions;
+using MitternachtWeb.Models;
 using System;
 
 namespace MitternachtWeb.Areas.User.Controllers {
@@ -20,7 +19,7 @@ namespace MitternachtWeb.Areas.User.Controllers {
 					RequestedUser = Program.MitternachtBot.Client.GetUser(RequestedUserId);
 
 					if(RequestedUser is null) {
-						throw new UserNotFoundException(userId);
+						RequestedUser = new RemnantDiscordUser(RequestedUserId);
 					}
 				} else {
 					throw new ArgumentException("Failed to parse the UserID.", nameof(userId));
