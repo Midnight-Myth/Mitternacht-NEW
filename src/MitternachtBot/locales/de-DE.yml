@@ -979,7 +979,8 @@ utility:
   verbose_errors_enabled:                        ''
   verified_members:                              Verifizierungen
   voice_channels:                                Sprachkanäle
-  voicestats_reset:                              Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!
+  voicestatsreset_no_user:                       Es wurde kein Nutzer angegeben, für den die Sprachkanalstatistiken zurückgesetzt werden sollen.
+  voicestatsreset_reset:                         Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!
   voicestats_time:                               Der Nutzer **{0}** hat bisher **{1}** in Sprachkanälen verbracht.
   voicestats_untracked:                          Ich habe keine Aufzeichnungen über den Aufenthalt von **{0}** in Sprachkanälen!
 verification:
