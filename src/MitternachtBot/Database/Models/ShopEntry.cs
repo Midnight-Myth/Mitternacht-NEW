@@ -3,11 +3,6 @@ using System;
 using System.Collections.Generic;
 
 namespace Mitternacht.Database.Models {
-	public enum ShopEntryType {
-		Role,
-		List,
-	}
-
 	public class ShopEntry : DbEntity, IIndexed {
 		public int                    Index    { get; set; }
 		public int                    Price    { get; set; }

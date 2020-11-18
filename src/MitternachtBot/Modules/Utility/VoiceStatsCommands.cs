@@ -22,21 +22,24 @@ namespace Mitternacht.Modules.Utility {
 
 				if(uow.VoiceChannelStats.TryGetTime(user.GuildId, user.Id, out var time)) {
 					var timespan = TimeSpan.FromSeconds(time);
-					await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan:dd}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
-				} else
+					await ConfirmLocalized("voicestats_time", user.ToString(), $"{(timespan.Days > 0 ? $"{timespan.Days}d" : "")}{(timespan.Hours > 0 ? $"{timespan:hh}h" : "")}{(timespan.Minutes > 0 ? $"{timespan:mm}min" : "")}{timespan:ss}s").ConfigureAwait(false);
+				} else {
 					await ConfirmLocalized("voicestats_untracked", user.ToString()).ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Description, Usage, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task VoiceStatsReset(IGuildUser user) {
-				if(user == null)
-					return;
-				uow.VoiceChannelStats.Reset(user.GuildId, user.Id);
-				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+				if(user != null) {
+					uow.VoiceChannelStats.Reset(user.GuildId, user.Id);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				await ConfirmLocalized("voicestats_reset", user.ToString()).ConfigureAwait(false);
+					await ConfirmLocalized("voicestatsreset_reset", user.ToString()).ConfigureAwait(false);
+				} else {
+					await ErrorLocalized("voicestatsreset_no_user").ConfigureAwait(false);
+				}
 			}
 		}
 	}
