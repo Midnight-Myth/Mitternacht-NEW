@@ -52,9 +52,9 @@ namespace Mitternacht.Database.Models {
 		public ulong? ForumNotificationChannelId         { get; set; }
 		public double ColorMetricSimilarityRadius        { get; set; } = 5.0;
 
-		public List<Permissionv2> Permissions        { get; set; }
-		public bool               VerbosePermissions { get; set; } = true;
-		public string             PermissionRole     { get; set; } = "Permissions";
+		public List<Permission> Permissions        { get; set; }
+		public bool             VerbosePermissions { get; set; } = true;
+		public string           PermissionRole     { get; set; } = "Permissions";
 
 		public bool                        FilterInvites           { get; set; }
 		public bool                        FilterWords             { get; set; }

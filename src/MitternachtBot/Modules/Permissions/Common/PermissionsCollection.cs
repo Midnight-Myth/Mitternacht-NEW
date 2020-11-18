@@ -4,12 +4,12 @@ using Mitternacht.Common.Collections;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Common {
-	public class PermissionsCollection : IndexedCollection<Permissionv2> {
+	public class PermissionsCollection : IndexedCollection<Permission> {
 		private readonly object _localLocker = new object();
 
-		public PermissionsCollection(IEnumerable<Permissionv2> source) : base(source) { }
+		public PermissionsCollection(IEnumerable<Permission> source) : base(source) { }
 
-		public static implicit operator List<Permissionv2>(PermissionsCollection x)
+		public static implicit operator List<Permission>(PermissionsCollection x)
 			=> x.Source;
 
 		public override void Clear() {
@@ -20,7 +20,7 @@ namespace Mitternacht.Modules.Permissions.Common {
 			}
 		}
 
-		public override bool Remove(Permissionv2 permission) {
+		public override bool Remove(Permission permission) {
 			lock(_localLocker) {
 				if(Source.IndexOf(permission) != 0) {
 					return base.Remove(permission);
@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Permissions.Common {
 			}
 		}
 
-		public override void Insert(int index, Permissionv2 permission) {
+		public override void Insert(int index, Permission permission) {
 			lock(_localLocker) {
 				if(index != 0) {
 					base.Insert(index, permission);
@@ -50,7 +50,7 @@ namespace Mitternacht.Modules.Permissions.Common {
 			}
 		}
 
-		public override Permissionv2 this[int index] {
+		public override Permission this[int index] {
 			get => Source[index];
 			set {
 				lock(_localLocker) {

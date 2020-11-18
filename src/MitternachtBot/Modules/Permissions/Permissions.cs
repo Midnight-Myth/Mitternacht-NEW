@@ -60,7 +60,7 @@ namespace Mitternacht.Modules.Permissions {
 		public async Task ListPerms(int page = 1) {
 			const int permsPerPage = 20;
 
-			IList<Permissionv2> perms = Service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permissionv2.GetDefaultPermlist;
+			IList<Permission> perms = Service.Cache.TryGetValue(Context.Guild.Id, out var permCache) ? permCache.Permissions.Source.ToList() : Permission.GetDefaultPermlist;
 			var pageCount = (int)Math.Ceiling(perms.Count * 1d / permsPerPage);
 			page--;
 			if(page < 0)
@@ -144,7 +144,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task SrvrCmd(CommandOrCrInfo command, PermissionAction action) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Server,
 				PrimaryTargetId = 0,
 				SecondaryTarget = SecondaryPermissionType.Command,
@@ -166,7 +166,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task SrvrMdl(ModuleOrCrInfo module, PermissionAction action) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Server,
 				PrimaryTargetId = 0,
 				SecondaryTarget = SecondaryPermissionType.Module,
@@ -188,7 +188,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task UsrCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] IGuildUser user) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.User,
 				PrimaryTargetId = user.Id,
 				SecondaryTarget = SecondaryPermissionType.Command,
@@ -212,7 +212,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task UsrMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] IGuildUser user) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.User,
 				PrimaryTargetId = user.Id,
 				SecondaryTarget = SecondaryPermissionType.Module,
@@ -239,7 +239,7 @@ namespace Mitternacht.Modules.Permissions {
 			if(role == role.Guild.EveryoneRole)
 				return;
 
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Role,
 				PrimaryTargetId = role.Id,
 				SecondaryTarget = SecondaryPermissionType.Command,
@@ -266,7 +266,7 @@ namespace Mitternacht.Modules.Permissions {
 			if(role == role.Guild.EveryoneRole)
 				return;
 
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Role,
 				PrimaryTargetId = role.Id,
 				SecondaryTarget = SecondaryPermissionType.Module,
@@ -291,7 +291,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task ChnlCmd(CommandOrCrInfo command, PermissionAction action, [Remainder] ITextChannel chnl) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Channel,
 				PrimaryTargetId = chnl.Id,
 				SecondaryTarget = SecondaryPermissionType.Command,
@@ -315,7 +315,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task ChnlMdl(ModuleOrCrInfo module, PermissionAction action, [Remainder] ITextChannel chnl) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Channel,
 				PrimaryTargetId = chnl.Id,
 				SecondaryTarget = SecondaryPermissionType.Module,
@@ -339,7 +339,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task AllChnlMdls(PermissionAction action, [Remainder] ITextChannel chnl) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Channel,
 				PrimaryTargetId = chnl.Id,
 				SecondaryTarget = SecondaryPermissionType.AllModules,
@@ -362,7 +362,7 @@ namespace Mitternacht.Modules.Permissions {
 			if(role == role.Guild.EveryoneRole)
 				return;
 
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.Role,
 				PrimaryTargetId = role.Id,
 				SecondaryTarget = SecondaryPermissionType.AllModules,
@@ -382,7 +382,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task AllUsrMdls(PermissionAction action, [Remainder] IUser user) {
-			await Service.AddPermissions(Context.Guild.Id, new Permissionv2 {
+			await Service.AddPermissions(Context.Guild.Id, new Permission {
 				PrimaryTarget = PrimaryPermissionType.User,
 				PrimaryTargetId = user.Id,
 				SecondaryTarget = SecondaryPermissionType.AllModules,
@@ -402,7 +402,7 @@ namespace Mitternacht.Modules.Permissions {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		public async Task AllSrvrMdls(PermissionAction action) {
-			var newPerm = new Permissionv2 {
+			var newPerm = new Permission {
 				PrimaryTarget = PrimaryPermissionType.Server,
 				PrimaryTargetId = 0,
 				SecondaryTarget = SecondaryPermissionType.AllModules,
@@ -410,7 +410,7 @@ namespace Mitternacht.Modules.Permissions {
 				State = action.Value,
 			};
 
-			var allowUser = new Permissionv2 {
+			var allowUser = new Permission {
 				PrimaryTarget = PrimaryPermissionType.User,
 				PrimaryTargetId = Context.User.Id,
 				SecondaryTarget = SecondaryPermissionType.AllModules,

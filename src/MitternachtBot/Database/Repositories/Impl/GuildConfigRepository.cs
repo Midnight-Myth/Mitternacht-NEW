@@ -46,7 +46,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 			if(config == null) {
 				_set.Add(config = new GuildConfig {
 					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist,
+					Permissions = Permission.GetDefaultPermlist,
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
@@ -77,7 +77,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 			if(config == null) {
 				_set.Add(config = new GuildConfig {
 					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist,
+					Permissions = Permission.GetDefaultPermlist,
 					WarningsInitialized = true,
 					WarnPunishments = DefaultWarnPunishments,
 				});
@@ -103,10 +103,10 @@ namespace Mitternacht.Database.Repositories.Impl {
 			if(config == null) {
 				_set.Add(config = new GuildConfig {
 					GuildId = guildId,
-					Permissions = Permissionv2.GetDefaultPermlist
+					Permissions = Permission.GetDefaultPermlist
 				});
 			} else if(config.Permissions == null || !config.Permissions.Any()) {
-				config.Permissions = Permissionv2.GetDefaultPermlist;
+				config.Permissions = Permission.GetDefaultPermlist;
 			}
 
 			return config;

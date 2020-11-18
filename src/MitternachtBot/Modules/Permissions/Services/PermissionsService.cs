@@ -49,7 +49,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 			return pc;
 		}
 
-		public async Task AddPermissions(ulong guildId, params Permissionv2[] perms) {
+		public async Task AddPermissions(ulong guildId, params Permission[] perms) {
 			using(var uow = _db.UnitOfWork) {
 				var config = uow.GuildConfigs.GcWithPermissionsv2For(guildId);
 				//var orderedPerms = new PermissionsCollection<Permissionv2>(config.Permissions);

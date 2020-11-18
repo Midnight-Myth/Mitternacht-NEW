@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Mitternacht.Database.Models {
 	[DebuggerDisplay("{PrimaryTarget}{SecondaryTarget} {SecondaryTargetName} {State} {PrimaryTargetId}")]
-	public class Permissionv2 : DbEntity, IIndexed {
+	public class Permission : DbEntity, IIndexed {
 		public int? GuildConfigId { get; set; }
 		public int Index { get; set; }
 
@@ -18,7 +18,7 @@ namespace Mitternacht.Database.Models {
 		public bool State { get; set; }
 
 		[NotMapped]
-		public static Permissionv2 AllowAllPerm => new Permissionv2() {
+		public static Permission AllowAllPerm => new Permission() {
 			PrimaryTarget = PrimaryPermissionType.Server,
 			PrimaryTargetId = 0,
 			SecondaryTarget = SecondaryPermissionType.AllModules,
@@ -28,7 +28,7 @@ namespace Mitternacht.Database.Models {
 		};
 
 		[NotMapped]
-		private static Permissionv2 BlockNsfwPerm => new Permissionv2() {
+		private static Permission BlockNsfwPerm => new Permission() {
 			PrimaryTarget = PrimaryPermissionType.Server,
 			PrimaryTargetId = 0,
 			SecondaryTarget = SecondaryPermissionType.Module,
@@ -37,7 +37,7 @@ namespace Mitternacht.Database.Models {
 			Index = 1
 		};
 
-		public static List<Permissionv2> GetDefaultPermlist => new List<Permissionv2> {
+		public static List<Permission> GetDefaultPermlist => new List<Permission> {
 			BlockNsfwPerm,
 			AllowAllPerm
 		};

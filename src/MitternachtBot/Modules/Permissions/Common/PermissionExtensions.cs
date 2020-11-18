@@ -6,8 +6,8 @@ using Mitternacht.Database.Models;
 
 namespace Mitternacht.Modules.Permissions.Common {
 	public static class PermissionExtensions {
-		public static bool CheckPermissions(this IEnumerable<Permissionv2> permsEnumerable, IUserMessage message, string commandName, string moduleName, out int permIndex) {
-			var perms = permsEnumerable as List<Permissionv2> ?? permsEnumerable.ToList();
+		public static bool CheckPermissions(this IEnumerable<Permission> permsEnumerable, IUserMessage message, string commandName, string moduleName, out int permIndex) {
+			var perms = permsEnumerable as List<Permission> ?? permsEnumerable.ToList();
 
 			for(int i = perms.Count - 1; i >= 0; i--) {
 				var perm = perms[i];
@@ -26,7 +26,7 @@ namespace Mitternacht.Modules.Permissions.Common {
 		}
 
 		/// <returns>null if not applicable, true if allowed, false if not allowed.</returns>
-		public static bool? CheckPermission(this Permissionv2 perm, IUserMessage message, string commandName, string moduleName) {
+		public static bool? CheckPermission(this Permission perm, IUserMessage message, string commandName, string moduleName) {
 			if(!((perm.SecondaryTarget == SecondaryPermissionType.Command &&
 					perm.SecondaryTargetName.ToLowerInvariant() == commandName.ToLowerInvariant()) ||
 				(perm.SecondaryTarget == SecondaryPermissionType.Module &&
@@ -57,7 +57,7 @@ namespace Mitternacht.Modules.Permissions.Common {
 			return null;
 		}
 
-		public static string GetCommand(this Permissionv2 perm, string prefix, SocketGuild guild = null) {
+		public static string GetCommand(this Permission perm, string prefix, SocketGuild guild = null) {
 			var com = "";
 			switch(perm.PrimaryTarget) {
 				case PrimaryPermissionType.User:

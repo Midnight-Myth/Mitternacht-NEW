@@ -18,7 +18,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 		public async Task ResetPermissions(ulong guildId) {
 			using(var uow = _db.UnitOfWork) {
 				var config = uow.GuildConfigs.GcWithPermissionsv2For(guildId);
-				config.Permissions = Permissionv2.GetDefaultPermlist;
+				config.Permissions = Permission.GetDefaultPermlist;
 				await uow.SaveChangesAsync().ConfigureAwait(false);
 				_perms.UpdateCache(config);
 			}
