@@ -91,18 +91,6 @@ namespace Mitternacht.Database.Repositories.Impl {
 			return config;
 		}
 
-		public IEnumerable<GuildConfig> OldPermissionsForAll() {
-			var query = _set
-				.Where((Expression<Func<GuildConfig, bool>>)(gc => gc.RootPermission != null))
-				.Include(gc => gc.RootPermission);
-
-			for(var i = 0; i < 60; i++) {
-				query = query.ThenInclude(gc => gc.Next);
-			}
-
-			return query.ToList();
-		}
-
 		public IEnumerable<GuildConfig> Permissionsv2ForAll(List<ulong> include) {
 			var query = _set.Where((Expression<Func<GuildConfig, bool>>)(x => include.Contains(x.GuildId))).Include(gc => gc.Permissions);
 

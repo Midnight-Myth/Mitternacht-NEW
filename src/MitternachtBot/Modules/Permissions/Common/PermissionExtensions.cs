@@ -105,11 +105,5 @@ namespace Mitternacht.Modules.Permissions.Common {
 
 			return prefix + com;
 		}
-
-		public static IEnumerable<Permission> AsEnumerable(this Permission perm) {
-			do
-				yield return perm;
-			while((perm = perm.Next) != null);
-		}
 	}
 }

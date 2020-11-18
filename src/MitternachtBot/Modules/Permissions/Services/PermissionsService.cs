@@ -11,7 +11,6 @@ using Mitternacht.Modules.Permissions.Common;
 using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
-using NLog;
 
 namespace Mitternacht.Modules.Permissions.Services {
 	public class PermissionService : ILateBlocker, IMService {
@@ -48,82 +47,6 @@ namespace Mitternacht.Modules.Permissions.Services {
 			if(pc == null)
 				throw new Exception("Cache is null.");
 			return pc;
-		}
-
-		private void TryMigratePermissions() {
-			using(var uow = _db.UnitOfWork) {
-				var bc = uow.BotConfig.GetOrCreate();
-				var log = LogManager.GetCurrentClassLogger();
-				if(bc.PermissionVersion <= 1) {
-					log.Info("Permission version is 1, upgrading to 2.");
-					var oldCache = new ConcurrentDictionary<ulong, OldPermissionCache>(uow.GuildConfigs
-						.OldPermissionsForAll()
-						.Where(x => x.RootPermission != null) // there is a check inside already, but just in case
-                        .ToDictionary(k => k.GuildId,
-							v => new OldPermissionCache {
-								RootPermission = v.RootPermission,
-								Verbose = v.VerbosePermissions,
-								PermRole = v.PermissionRole
-							}));
-
-					if(oldCache.Any()) {
-						log.Info("Old permissions found. Performing one-time migration to v2.");
-						var i = 0;
-						foreach(var oc in oldCache) {
-							if(i % 3 == 0)
-								log.Info("Migrating Permissions #" + i + " - GuildId: " + oc.Key);
-							i++;
-							var gc = uow.GuildConfigs.GcWithPermissionsv2For(oc.Key);
-
-							var oldPerms = oc.Value.RootPermission.AsEnumerable().Reverse().ToList();
-							uow.Context.Set<Permission>().RemoveRange(oldPerms);
-							gc.RootPermission = null;
-							if(oldPerms.Count <= 2)
-								continue;
-							var newPerms = oldPerms.Take(oldPerms.Count - 1)
-								.Select(x => x.Tov2())
-								.ToList();
-
-							var allowPerm = Permissionv2.AllowAllPerm;
-							var firstPerm = newPerms[0];
-							if(allowPerm.State != firstPerm.State ||
-								allowPerm.PrimaryTarget != firstPerm.PrimaryTarget ||
-								allowPerm.SecondaryTarget != firstPerm.SecondaryTarget ||
-								allowPerm.PrimaryTargetId != firstPerm.PrimaryTargetId ||
-								allowPerm.SecondaryTargetName != firstPerm.SecondaryTargetName)
-								newPerms.Insert(0, Permissionv2.AllowAllPerm);
-							Cache.TryAdd(oc.Key, new PermissionCache {
-								Permissions = new PermissionsCollection<Permissionv2>(newPerms),
-								Verbose = gc.VerbosePermissions,
-								PermRole = gc.PermissionRole,
-							});
-							gc.Permissions = newPerms;
-						}
-						log.Info("Permission migration to v2 is done.");
-					}
-
-					bc.PermissionVersion = 2;
-					uow.SaveChanges();
-				}
-				if(bc.PermissionVersion > 2)
-					return;
-				var oldPrefixes = new[] { ".", ";", "!!", "!m", "!", "+", "-", "$", ">" };
-				uow.Context.Database.ExecuteSqlRaw(
-					$@"UPDATE {nameof(Permissionv2)}
-                    SET secondaryTargetName=trim(substr(secondaryTargetName, 3))
-                    WHERE secondaryTargetName LIKE '!!%' OR secondaryTargetName LIKE '!m%';
-
-                    UPDATE {nameof(Permissionv2)}
-                    SET secondaryTargetName=substr(secondaryTargetName, 2)
-                    WHERE secondaryTargetName LIKE '.%' OR
-                    secondaryTargetName LIKE '~%' OR
-                    secondaryTargetName LIKE ';%' OR
-                    secondaryTargetName LIKE '>%' OR
-                    secondaryTargetName LIKE '-%' OR
-                    secondaryTargetName LIKE '!%';");
-				bc.PermissionVersion = 3;
-				uow.SaveChanges();
-			}
 		}
 
 		public async Task AddPermissions(ulong guildId, params Permissionv2[] perms) {
