@@ -124,7 +124,7 @@ namespace Mitternacht.Modules.Utility
 
             [MitternachtCommand, Usage, Description, Aliases]
             [RequireContext(ContextType.Guild)]
-            [OwnerOnly]
+            [OwnerOrGuildPermission(GuildPermission.ManageMessages)]
             public async Task Activity(int page = 1)
             {
                 const int elementsPerPage = 15;
