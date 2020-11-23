@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task MsgXpRestrictionAdd(ITextChannel channel) {
 				var success = uow.MessageXpRestrictions.CreateRestriction(channel);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task MsgXpRestrictionRemove(ITextChannel channel) {
 				var success = uow.MessageXpRestrictions.RemoveRestriction(channel);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);

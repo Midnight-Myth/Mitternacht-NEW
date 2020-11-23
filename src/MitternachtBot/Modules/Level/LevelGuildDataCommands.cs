@@ -5,6 +5,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Level.Common;
 using Mitternacht.Database;
+using Discord;
 
 namespace Mitternacht.Modules.Level {
 	public partial class Level {
@@ -18,7 +19,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task LevelGuildData(LevelGuildData data, double value) {
 				var previous = 0d;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
@@ -52,7 +53,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task LevelGuildData(LevelGuildData data) {
 				var value = 0d;
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
@@ -76,7 +77,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task LevelGuildDataChoices() {
 				await Context.Channel.SendConfirmAsync(string.Join(", ", Enum.GetNames(typeof(LevelGuildData)))).ConfigureAwait(false);
 			}

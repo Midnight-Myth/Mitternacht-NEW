@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task AddXp(int xp, [Remainder] IUser user = null) {
 			user??=Context.User;
 
@@ -125,7 +125,7 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task AddXp(int xp, ulong userId) {
 			var user = await Context.Guild.GetUserAsync(userId);
 			if(user != null) {
@@ -141,7 +141,7 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(1)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task SetXp(int xp, [Remainder] IUser user = null) {
 			user??=Context.User;
 			uow.LevelModel.SetXP(Context.Guild.Id, user.Id, xp, Context.Channel.Id);
@@ -152,7 +152,7 @@ namespace Mitternacht.Modules.Level {
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]
 		[Priority(0)]
-		[OwnerOnly]
+		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task SetXp(int xp, ulong userId) {
 			var user = await Context.Guild.GetUserAsync(userId);
 			if(user != null) {
