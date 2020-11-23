@@ -5,6 +5,7 @@ using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Level.Common;
 using Mitternacht.Database;
+using Discord;
 
 namespace Mitternacht.Modules.Level {
 	public partial class Level {
