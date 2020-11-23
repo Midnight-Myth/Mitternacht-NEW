@@ -19,7 +19,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task SetRoleLevelBinding(IRole role, int minlevel) {
 				if(minlevel >= 0) {
 					uow.RoleLevelBindings.SetBinding(Context.Guild.Id, role.Id, minlevel);
@@ -33,7 +33,7 @@ namespace Mitternacht.Modules.Level {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[OwnerOnly]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task RemoveRoleLevelBinding(IRole role) {
 				var wasRemoved = uow.RoleLevelBindings.Remove(Context.Guild.Id, role.Id);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
