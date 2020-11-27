@@ -50,28 +50,38 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[Priority(0)]
-			public async Task Warnlog(int page, [Remainder] ulong? userId = null)
-				=> await (!userId.HasValue ? InternalWarnlog(Context.User.Id, page - 1) : Context.User.Id == userId || ((IGuildUser) Context.User).GuildPermissions.KickMembers ? InternalWarnlog(userId.Value, page - 1) : Task.CompletedTask);
+			public Task Warnlog(int page = 1)
+				=> InternalWarnlog(Context.User.Id, page, true);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
 			[Priority(1)]
+			public async Task Warnlog(int page, [Remainder] ulong? userId = null)
+				=> await InternalWarnlog(userId ?? Context.User.Id, page, false);
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
+			[Priority(2)]
 			public Task Warnlog(int page, [Remainder] IGuildUser user = null)
 				=> Warnlog(page, user?.Id);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[Priority(2)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
+			[Priority(3)]
 			public Task Warnlog([Remainder] ulong? userId = null)
 				=> Warnlog(1, userId);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[Priority(3)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
+			[Priority(4)]
 			public Task Warnlog([Remainder] IGuildUser user = null)
 				=> Warnlog(1, user?.Id);
 
-			private async Task InternalWarnlog(ulong userId, int page) {
+			private async Task InternalWarnlog(ulong userId, int page, bool sendPerDm) {
 				page = page < 0 ? 0 : page;
 
 				const int warnsPerPage = 9;
@@ -84,8 +94,9 @@ namespace Mitternacht.Modules.Administration {
 					.WithTitle(GetText("userpunish_warnlog_for_user", username));
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var textKey     = showMods ? "userpunish_warnlog_warned_on_by" : "userpunish_warnlog_warned_on";
+				var channel = sendPerDm ? (await Context.User.GetOrCreateDMChannelAsync()) : Context.Channel;
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
+				await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
 					var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
 
 					if(!warnings.Any()) {
