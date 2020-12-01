@@ -22,9 +22,9 @@ namespace Mitternacht.Common {
 			=> new ModerationPoints(a.PointsHard + b.PointsHard, a.PointsMedium + b.PointsMedium, a.PointsLight + b.PointsLight);
 
 		public static ModerationPoints FromList(IEnumerable<IModerationPoints> moderationPoints) {
-			var hard   = 0l;
-			var medium = 0l;
-			var light  = 0l;
+			var hard   = 0L;
+			var medium = 0L;
+			var light  = 0L;
 			
 			foreach(var mp in moderationPoints) {
 				hard   += mp.PointsHard;
