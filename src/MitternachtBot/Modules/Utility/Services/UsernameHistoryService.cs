@@ -20,12 +20,10 @@ namespace Mitternacht.Modules.Utility.Services {
 			_client.UserJoined += UserJoined;
 			_client.GuildMemberUpdated += UserUpdated;
 
-			var _ = Task.Run(async () => await UpdateUsernames().ConfigureAwait(false));
+			var _ = Task.Run(() => UpdateUsernames());
 		}
 
-		public async Task<(int Nicks, int Usernames, int Users, TimeSpan Time)> UpdateUsernames() {
-			var nickupdates = 0;
-			var usernameupdates = 0;
+		public (int Nicks, int Usernames, int Users, TimeSpan Time) UpdateUsernames() {
 			var time1 = DateTime.UtcNow;
 			var users = _client.Guilds.Select(g => g.Users).Aggregate((u, g) => u.Concat(g).ToArray());
 			var usernicks = users.GroupBy(u => u.Id, u => new {
@@ -39,9 +37,9 @@ namespace Mitternacht.Modules.Utility.Services {
 			}).ToList();
 
 			using var uow = _db.UnitOfWork;
-			usernameupdates += usernames.Count(u => uow.UsernameHistory.AddUsername(u.Id, u.Username, u.DiscriminatorValue));
-			nickupdates += usernicks.Sum(nicks => nicks.Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
-			await uow.SaveChangesAsync().ConfigureAwait(false);
+			var usernameupdates = usernames.Count(u => uow.UsernameHistory.AddUsername(u.Id, u.Username, u.DiscriminatorValue));
+			var nickupdates     = usernicks.Sum(nicks => nicks.Count(a => uow.NicknameHistory.AddUsername(a.GuildId, nicks.Key, a.Nickname, usernames.First(an => an.Id == nicks.Key).DiscriminatorValue)));
+			uow.SaveChanges();
 
 			var ts = DateTime.UtcNow - time1;
 			_log.Info($"Updated {nickupdates} nicknames and {usernameupdates} usernames for {usernicks.Count} users in {ts.TotalSeconds:F2}s");

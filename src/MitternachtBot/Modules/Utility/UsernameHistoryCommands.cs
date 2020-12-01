@@ -147,7 +147,7 @@ namespace Mitternacht.Modules.Utility {
 			[MitternachtCommand, Description, Aliases, Usage]
 			[OwnerOnly]
 			public async Task UpdateUsernames() {
-				var (nicks, usernames, users, time) = await Service.UpdateUsernames().ConfigureAwait(false);
+				var (nicks, usernames, users, time) = Service.UpdateUsernames();
 				await ConfirmLocalized("unh_update_usernames", nicks, usernames, users, $"{time.TotalSeconds:F2}s").ConfigureAwait(false);
 			}
 		}
