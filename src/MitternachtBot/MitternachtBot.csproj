@@ -50,6 +50,7 @@
 		</None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Colourful" Version="3.0.0-beta1" />
     <PackageReference Include="Discord.Net" Version="2.3.0-dev-20201201.2" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.92" />
