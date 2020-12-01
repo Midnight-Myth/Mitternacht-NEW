@@ -90,14 +90,13 @@ namespace Mitternacht.Modules.Administration {
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded).ToArray();
-				var embed       = new EmbedBuilder()
-					.WithOkColor()
-					.WithTitle(GetText("userpunish_warnlog_for_user", username));
 				var textKey     = showMods ? "userpunish_warnlog_warned_on_by" : "userpunish_warnlog_warned_on";
 				var channel = sendPerDm ? (await Context.User.GetOrCreateDMChannelAsync()) : Context.Channel;
+				var embedTitle = GetText("userpunish_warnlog_for_user", username);
 
 				await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
 					var warnings = allWarnings.Skip(currentPage * warnsPerPage).Take(warnsPerPage).ToArray();
+					var embed    = new EmbedBuilder().WithOkColor().WithTitle(embedTitle);
 
 					if(!warnings.Any()) {
 						embed.WithDescription(GetText("userpunish_warnlog_warnings_none"));
