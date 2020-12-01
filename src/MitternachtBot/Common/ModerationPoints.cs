@@ -1,5 +1,7 @@
 ﻿using Mitternacht.Database.Models;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Mitternacht.Common {
 	public class ModerationPoints : IModerationPoints {
@@ -31,6 +33,23 @@ namespace Mitternacht.Common {
 			}
 
 			return new ModerationPoints(hard, medium, light);
+		}
+
+		public static ModerationPoints FromString(string moderationPointsString) {
+			var match = Regex.Match(moderationPointsString, "(?:(?<hard>(\\+|-)?\\d+)(?:H|S))?(?:(?<medium>(\\+|-)?\\d+)M)?(?:(?<light>(\\+|-)?\\d+)L)?", RegexOptions.IgnoreCase);
+
+			if(match != null && match.Success){
+				if(!long.TryParse(match.Groups["hard"  ].Value, out var hard))
+					hard   = 0;
+				if(!long.TryParse(match.Groups["medium"].Value, out var medium))
+					medium = 0;
+				if(!long.TryParse(match.Groups["light" ].Value, out var light))
+					light  = 0;
+
+				return new ModerationPoints(hard, medium, light);
+			} else {
+				throw new ArgumentException($"'{moderationPointsString}' is not a valid moderation points string.", nameof(moderationPointsString));
+			}
 		}
 
 		public static explicit operator ModerationPoints(Warning warning)

@@ -29,13 +29,13 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
-			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
+			public async Task Warn(IGuildUser user, ModerationPoints points, [Remainder] string reason = null) {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
 					try {
 						await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("userpunish_warn_warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("userpunish_warn_reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 					} catch { }
 
-					var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
+					var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason, points).ConfigureAwait(false);
 
 					if(punishment == null) {
 						await ConfirmLocalized("userpunish_warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
