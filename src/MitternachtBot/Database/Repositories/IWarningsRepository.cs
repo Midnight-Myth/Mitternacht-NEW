@@ -8,6 +8,8 @@ namespace Mitternacht.Database.Repositories {
 		Task ForgiveAll(ulong guildId, ulong userId, string mod);
 		IQueryable<Warning> GetForGuild(ulong id);
 		bool ToggleForgiven(ulong guildId, int warnId, string modName);
+		bool ToggleHidden(ulong guildId, int warnId);
 		IQueryable<Warning> GetForUser(ulong userId);
+
 	}
 }

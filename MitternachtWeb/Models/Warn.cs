@@ -17,5 +17,6 @@ namespace MitternachtWeb.Models {
 		public string           WarnedBy      { get; set; }
 		public bool             CanBeForgiven { get; set; }
 		public ModerationPoints Points        { get; set; }
+		public bool             Hidden        { get; set; }
 	}
 }

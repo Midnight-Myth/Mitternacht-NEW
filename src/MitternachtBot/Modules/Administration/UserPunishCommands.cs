@@ -82,22 +82,22 @@ namespace Mitternacht.Modules.Administration {
 				=> Warnlog(1, user?.Id);
 
 			private async Task InternalWarnlog(ulong userId, int page, bool sendPerDm) {
-				page = page < 0 ? 0 : page;
+				page = page < 0 ? 0 : page-1;
 
 				const int warnsPerPage = 9;
 
 				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
-				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).OrderByDescending(w => w.DateAdded);
+				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
+				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded);
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
 					.WithTitle(GetText("userpunish_warnlog_for_user", username));
-				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var textKey     = showMods ? "userpunish_warnlog_warned_on_by" : "userpunish_warnlog_warned_on";
 				var channel = sendPerDm ? (await Context.User.GetOrCreateDMChannelAsync()) : Context.Channel;
 
 				await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
-					var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
+					var warnings = allWarnings.Skip(currentPage * warnsPerPage).Take(warnsPerPage).ToArray();
 
 					if(!warnings.Any()) {
 						embed.WithDescription(GetText("userpunish_warnlog_warnings_none"));
@@ -161,15 +161,13 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.BanMembers)]
-			public async Task WarnRemove(int id) {
-				var warning = uow.Warnings.Get(id);
-				
-				if(warning != null) {
-					uow.Warnings.Remove(warning);
-					await ConfirmLocalized("userpunish_warnremove_warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
+			public async Task WarnHide(int id) {
+				try {
+					var hidden = uow.Warnings.ToggleHidden(Context.Guild.Id, id);
+					await ConfirmLocalized(hidden? "userpunish_warnhide_warning_hidden" : "userpunish_warnhide_warning_visible", Format.Bold($"{id}")).ConfigureAwait(false);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
-				} else {
-					await ErrorLocalized("userpunish_warnremove_warn_id_not_found", id).ConfigureAwait(false);
+				} catch(NullReferenceException) {
+					await ErrorLocalized("userpunish_warnhide_warn_id_not_found", id).ConfigureAwait(false);
 				}
 			}
 

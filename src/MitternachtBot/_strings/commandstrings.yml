@@ -1,9 +1,9 @@
 ---
-- name:    warnremove
-  cmd:     warnremove
+- name:    warnhide
+  cmd:     warnhide
   aliases: []
   desc:    Entfernt eine Verwarnung mit der gegebenen Id aus der Datenbank.
-  usage:   "`{0}warnremove <id>`"
+  usage:   "`{0}warnhide <id>`"
 - name:    warndetails
   cmd:     warndetails
   aliases: []

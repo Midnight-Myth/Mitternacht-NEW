@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Common;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Models;
+using System;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
@@ -35,6 +36,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						Reason        = w.Reason,
 						CanBeForgiven = PermissionForgiveWarns,
 						Points        = (ModerationPoints) w,
+						Hidden        = w.Hidden,
 					};
 				}).ToList();
 
@@ -53,6 +55,22 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 					return RedirectToAction("Index");
 				} else {
+					return NotFound();
+				}
+			} else {
+				return Unauthorized();
+			}
+		}
+
+		public IActionResult ToggleHidden(int id) {
+			if(PermissionForgiveWarns) {
+				using var uow = _db.UnitOfWork;
+
+				try{
+					uow.Warnings.ToggleHidden(GuildId, id);
+					uow.SaveChanges();
+					return RedirectToAction("Index");
+				} catch(NullReferenceException) {
 					return NotFound();
 				}
 			} else {

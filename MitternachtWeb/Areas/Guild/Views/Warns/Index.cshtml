@@ -20,6 +20,9 @@
 					@Html.DisplayNameFor(model => model.Forgiven)
 				</th>
 				<th>
+					@Html.DisplayNameFor(model => model.Hidden)
+				</th>
+				<th>
 					@Html.DisplayNameFor(model => model.WarnedAt)
 				</th>
 				<th>
@@ -54,6 +57,16 @@
 						<a asp-area="Guild" asp-controller="Warns" asp-action="ToggleForgive" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@warn.Id">@forgivenString</a>
 					} else {
 						@forgivenString
+					}
+				</td>
+				<td>
+					@{
+						var hiddenString = warn.Hidden ? Html.Raw("✅") : Html.Raw("❌");
+					}
+					@if(warn.CanBeForgiven) {
+						<a asp-area="Guild" asp-controller="Warns" asp-action="ToggleHidden" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@warn.Id">@hiddenString</a>
+					} else {
+						@hiddenString
 					}
 				</td>
 				<td>
