@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Colourful;
 using Discord;
 
 namespace Mitternacht.Common {
@@ -36,6 +37,9 @@ namespace Mitternacht.Common {
 
 		public Color ToColor()
 			=> new Color(Red, Green, Blue);
+
+		public RGBColor ToRGBColor()
+			=> RGBColor.FromRGB8bit(Red, Green, Blue);
 
 		public static implicit operator Color(HexColor hc)
 			=> hc.ToColor();
