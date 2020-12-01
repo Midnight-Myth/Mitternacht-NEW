@@ -37,15 +37,15 @@ namespace Mitternacht.Database.Repositories.Impl {
 							return false;
 						}
 					}
-				} else {
-					_set.Add(new NicknameHistoryModel {
-						UserId               = userId,
-						GuildId              = guildId,
-						Name                 = nickname,
-						DiscordDiscriminator = discriminator,
-						DateSet              = now,
-					});
 				}
+
+				_set.Add(new NicknameHistoryModel {
+					UserId               = userId,
+					GuildId              = guildId,
+					Name                 = nickname,
+					DiscordDiscriminator = discriminator,
+					DateSet              = now,
+				});
 				
 				return true;
 			} else {
