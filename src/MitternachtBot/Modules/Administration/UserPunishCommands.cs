@@ -89,7 +89,7 @@ namespace Mitternacht.Modules.Administration {
 				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
-				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded);
+				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded).ToArray();
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
 					.WithTitle(GetText("userpunish_warnlog_for_user", username));
