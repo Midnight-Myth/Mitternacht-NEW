@@ -19,18 +19,21 @@ namespace Mitternacht.Modules.Administration.Services {
 			_db   = db;
 		}
 
-		public async Task<PunishmentAction?> Warn(IGuild guild, ulong userId, string modName, string reason) {
+		public async Task<PunishmentAction?> Warn(IGuild guild, ulong userId, string modName, string reason, ModerationPoints points) {
 			if(string.IsNullOrWhiteSpace(reason))
 				reason = "-";
 
 			var guildId = guild.Id;
 
 			var warn = new Warning {
-				UserId    = userId,
-				GuildId   = guildId,
-				Forgiven  = false,
-				Reason    = reason,
-				Moderator = modName,
+				UserId       = userId,
+				GuildId      = guildId,
+				Forgiven     = false,
+				Reason       = reason,
+				Moderator    = modName,
+				PointsHard   = points.PointsHard,
+				PointsMedium = points.PointsMedium,
+				PointsLight  = points.PointsLight,
 			};
 
 			var                     warnings = 1;

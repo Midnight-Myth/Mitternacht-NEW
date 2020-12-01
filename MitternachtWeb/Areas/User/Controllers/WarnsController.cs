@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mitternacht.Common;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Models;
+using System;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.User.Controllers {
@@ -36,11 +38,12 @@ namespace MitternachtWeb.Areas.User.Controllers {
 					WarnedAt      = w.DateAdded,
 					Reason        = w.Reason,
 					CanBeForgiven = guildsWhereUserCanForgiveWarns.Contains(w.GuildId),
-					Points        = w.Points,
+					Points        = (ModerationPoints) w,
+					Hidden        = w.Hidden,
 				};
 			}).ToList();
 
-			
+
 
 			return View(warns);
 		}
@@ -57,6 +60,20 @@ namespace MitternachtWeb.Areas.User.Controllers {
 				} else {
 					return NotFound();
 				}
+			} else {
+				return Unauthorized();
+			}
+		}
+
+		public IActionResult ToggleHidden(int id) {
+			using var uow = _db.UnitOfWork;
+			var warning = uow.Warnings.Get(id);
+
+			if(warning != null && (DiscordUser.BotPagePermissions.HasFlag(BotLevelPermission.ForgiveAllWarns) || DiscordUser.GuildPagePermissions.TryGetValue(warning.GuildId, out var perm) && perm.HasFlag(GuildLevelPermission.ForgiveWarns))) {
+				uow.Warnings.ToggleHidden(warning.GuildId, id);
+				uow.SaveChanges();
+
+				return RedirectToAction("Index");
 			} else {
 				return Unauthorized();
 			}

@@ -29,13 +29,13 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
-			public async Task Warn(IGuildUser user, [Remainder] string reason = null) {
+			public async Task Warn(IGuildUser user, ModerationPoints points, [Remainder] string reason = null) {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
 					try {
 						await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("userpunish_warn_warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("userpunish_warn_reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 					} catch { }
 
-					var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason).ConfigureAwait(false);
+					var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason, points).ConfigureAwait(false);
 
 					if(punishment == null) {
 						await ConfirmLocalized("userpunish_warn_user_warned", Format.Bold(user.ToString())).ConfigureAwait(false);
@@ -50,43 +50,54 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[Priority(0)]
-			public async Task Warnlog(int page, [Remainder] ulong? userId = null)
-				=> await (!userId.HasValue ? InternalWarnlog(Context.User.Id, page - 1) : Context.User.Id == userId || ((IGuildUser) Context.User).GuildPermissions.KickMembers ? InternalWarnlog(userId.Value, page - 1) : Task.CompletedTask);
+			public Task Warnlog(int page = 1)
+				=> InternalWarnlog(Context.User.Id, page, true);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
 			[Priority(1)]
+			public async Task Warnlog(int page, [Remainder] ulong? userId = null)
+				=> await InternalWarnlog(userId ?? Context.User.Id, page, false);
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
+			[Priority(2)]
 			public Task Warnlog(int page, [Remainder] IGuildUser user = null)
 				=> Warnlog(page, user?.Id);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[Priority(2)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
+			[Priority(3)]
 			public Task Warnlog([Remainder] ulong? userId = null)
 				=> Warnlog(1, userId);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[Priority(3)]
+			[RequireUserPermission(GuildPermission.ViewAuditLog)]
+			[Priority(4)]
 			public Task Warnlog([Remainder] IGuildUser user = null)
 				=> Warnlog(1, user?.Id);
 
-			private async Task InternalWarnlog(ulong userId, int page) {
-				page = page < 0 ? 0 : page;
+			private async Task InternalWarnlog(ulong userId, int page, bool sendPerDm) {
+				page = page < 0 ? 0 : page-1;
 
 				const int warnsPerPage = 9;
 
 				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
-				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).OrderByDescending(w => w.DateAdded);
+				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
+				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded);
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
 					.WithTitle(GetText("userpunish_warnlog_for_user", username));
-				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var textKey     = showMods ? "userpunish_warnlog_warned_on_by" : "userpunish_warnlog_warned_on";
+				var channel = sendPerDm ? (await Context.User.GetOrCreateDMChannelAsync()) : Context.Channel;
 
-				await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
-					var warnings = allWarnings.Skip(page * warnsPerPage).Take(warnsPerPage).ToArray();
+				await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {
+					var warnings = allWarnings.Skip(currentPage * warnsPerPage).Take(warnsPerPage).ToArray();
 
 					if(!warnings.Any()) {
 						embed.WithDescription(GetText("userpunish_warnlog_warnings_none"));
@@ -150,15 +161,13 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.BanMembers)]
-			public async Task WarnRemove(int id) {
-				var warning = uow.Warnings.Get(id);
-				
-				if(warning != null) {
-					uow.Warnings.Remove(warning);
-					await ConfirmLocalized("userpunish_warnremove_warning_removed", Format.Bold($"{id}")).ConfigureAwait(false);
+			public async Task WarnHide(int id) {
+				try {
+					var hidden = uow.Warnings.ToggleHidden(Context.Guild.Id, id);
+					await ConfirmLocalized(hidden? "userpunish_warnhide_warning_hidden" : "userpunish_warnhide_warning_visible", Format.Bold($"{id}")).ConfigureAwait(false);
 					await uow.SaveChangesAsync(false).ConfigureAwait(false);
-				} else {
-					await ErrorLocalized("userpunish_warnremove_warn_id_not_found", id).ConfigureAwait(false);
+				} catch(NullReferenceException) {
+					await ErrorLocalized("userpunish_warnhide_warn_id_not_found", id).ConfigureAwait(false);
 				}
 			}
 

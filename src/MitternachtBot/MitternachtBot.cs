@@ -138,6 +138,7 @@ namespace Mitternacht {
 			CommandService.AddTypeReader<GuildDateTime>(new GuildDateTimeTypeReader());
 			CommandService.AddTypeReader<IBirthDate>(new BirthDateTypeReader());
 			CommandService.AddTypeReader<HexColor>(new HexColorTypeReader());
+			CommandService.AddTypeReader<ModerationPoints>(new ModerationPointsTypeReader());
 		}
 
 		private async Task LoginAsync(string token) {

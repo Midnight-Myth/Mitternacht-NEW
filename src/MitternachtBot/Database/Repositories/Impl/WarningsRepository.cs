@@ -39,5 +39,11 @@ namespace Mitternacht.Database.Repositories.Impl {
 
 		public IQueryable<Warning> GetForUser(ulong userId)
 			=> _set.AsQueryable().Where(w => w.UserId == userId);
+
+		public bool ToggleHidden(ulong guildId, int warnId) {
+			var warn = _set.FirstOrDefault(w => w.GuildId == guildId && w.Id == warnId);
+
+			return warn.Hidden = !warn.Hidden;
+		}
 	}
 }

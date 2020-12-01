@@ -257,7 +257,7 @@ administration:
   userpunish_ban_hierarchy:                      Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
   userpunish_softban_hierarchy:                  Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
   userpunish_kick_hierarchy:                     Du kannst diesen Befehl nicht an Benutzern mit einer Rolle über oder gleich zu deiner in der Rangordnung benutzen.
-  userpunish_warnremove_warn_id_not_found:       Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
+  userpunish_warnhide_warn_id_not_found:         Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
   userpunish_warndetails_warn_id_not_found:      Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
   userpunish_warnedit_warn_id_not_found:         Zur Id **`{0}`** konnte keine Verwarnung gefunden werden!
   userpunish_warnpunishlist_warn_punish_list:    Verwarnungsstrafliste
@@ -270,7 +270,8 @@ administration:
   userpunish_warn_warned_on_server:              Verwarnt auf dem Server {0}
   userpunish_warnlog_warned_on:                  Am {0:dd.MM.yyyy} um {0:HH:mm}
   userpunish_warnlog_warned_on_by:               Am {0:dd.MM.yyyy} um {0:HH:mm} von {1}
-  userpunish_warnremove_warning_removed:         Die Verwarnung {0} des Nutzers {1} wurde entfernt.
+  userpunish_warnhide_warning_hidden:            Die Verwarnung {0} wurde versteckt.
+  userpunish_warnhide_warning_visible:           Die Verwarnung {0} wurde sichtbar gemacht.
   userpunish_warnclear_warnings_cleared:         Alle Warnungen für {0} bereinigt.
   userpunish_warnlogall_warnings_list:           Liste aller verwarnten Benutzer auf diesem Server
   userpunish_warnlog_warnings_none:              Keine Warnungen auf dieser Seite.
