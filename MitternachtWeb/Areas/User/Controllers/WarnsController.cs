@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mitternacht.Common;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Models;
 using System.Linq;
@@ -36,11 +37,11 @@ namespace MitternachtWeb.Areas.User.Controllers {
 					WarnedAt      = w.DateAdded,
 					Reason        = w.Reason,
 					CanBeForgiven = guildsWhereUserCanForgiveWarns.Contains(w.GuildId),
-					Points        = w.Points,
+					Points        = (ModerationPoints) w,
 				};
 			}).ToList();
 
-			
+
 
 			return View(warns);
 		}
