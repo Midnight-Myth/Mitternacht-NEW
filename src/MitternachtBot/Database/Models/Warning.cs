@@ -11,5 +11,6 @@ namespace Mitternacht.Database.Models {
 		public long   PointsLight  { get; set; }
 		public long   PointsMedium { get; set; }
 		public long   PointsHard   { get; set; }
+		public bool   Hidden       { get; set; }
 	}
 }
