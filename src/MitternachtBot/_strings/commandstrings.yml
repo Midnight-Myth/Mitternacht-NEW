@@ -1032,8 +1032,8 @@
 - name:    warn
   cmd:     warn
   aliases: []
-  desc:    Warns a user.
-  usage:   "`{0}warn @b1nzy Very rude person`"
+  desc:    Verwarnt einen Nutzer.
+  usage:   "`{0}warn <Nutzer> <10S5M2L> <Grund>`"
 - name:    typelist
   cmd:     typelist
   aliases: []
