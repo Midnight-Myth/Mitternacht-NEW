@@ -89,7 +89,7 @@ namespace Mitternacht.Modules.Administration {
 				var guildUser   = await Context.Guild.GetUserAsync(userId).ConfigureAwait(false);
 				var username    = guildUser?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? userId.ToString();
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
-				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded);
+				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded).ToArray();
 				var embed       = new EmbedBuilder()
 					.WithOkColor()
 					.WithTitle(GetText("userpunish_warnlog_for_user", username));
@@ -107,7 +107,7 @@ namespace Mitternacht.Modules.Administration {
 
 							if(w.Forgiven)
 								warnText = $"{Format.Strikethrough(warnText)} {(showMods ? GetText("userpunish_warnlog_warn_cleared_by", w.ForgivenBy) : "")}".Trim();
-							warnText = $"({w.Id}) {warnText}";
+							warnText = $"({w.Id}) {warnText} [{(ModerationPoints)w}]";
 
 							embed.AddField(x => x.WithName(warnText).WithValue(w.Reason));
 						}
@@ -184,7 +184,7 @@ namespace Mitternacht.Modules.Administration {
 						title = $"{Format.Strikethrough(title)} {GetText("userpunish_warndetails_warn_cleared_by", warn.ForgivenBy)}";
 					}
 
-					title += $" ({warn.Id:X})";
+					title += $" ({warn.Id:X}) [{(ModerationPoints) warn}]";
 
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
