@@ -23,11 +23,6 @@
     <StartupObject>Mitternacht.Program</StartupObject>
 		<LangVersion>9</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Version)' == '' ">
-    <VersionPrefix Condition=" '$(VersionPrefix)' == '' ">1.4.1</VersionPrefix>
-    <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix).$(VersionSuffix)</Version>
-    <Version Condition=" '$(Version)' == '' ">$(VersionPrefix)</Version>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="data\**\*;credentials.json" />
     <Compile Remove="Modules\Utility\Models\**" />
@@ -84,7 +79,4 @@
     <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
     <ProjectReference Include="..\..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
   </ItemGroup>
-  <ProjectExtensions>
-    <VisualStudio><UserProperties /></VisualStudio>
-  </ProjectExtensions>
 </Project>
