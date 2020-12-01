@@ -36,9 +36,9 @@ namespace Mitternacht.Common {
 		}
 
 		public static ModerationPoints FromString(string moderationPointsString) {
-			var match = Regex.Match(moderationPointsString, "(?:(?<hard>(\\+|-)?\\d+)(?:H|S))?(?:(?<medium>(\\+|-)?\\d+)M)?(?:(?<light>(\\+|-)?\\d+)L)?", RegexOptions.IgnoreCase);
+			var match = Regex.Match(moderationPointsString.Trim(), "\\A(?:(?<hard>(\\+|-)?\\d+)(?:H|S))?(?:(?<medium>(\\+|-)?\\d+)M)?(?:(?<light>(\\+|-)?\\d+)L)?\\z", RegexOptions.IgnoreCase);
 
-			if(match != null && match.Success){
+			if(!string.IsNullOrWhiteSpace(moderationPointsString) && match != null && match.Success){
 				if(!long.TryParse(match.Groups["hard"  ].Value, out var hard))
 					hard   = 0;
 				if(!long.TryParse(match.Groups["medium"].Value, out var medium))
