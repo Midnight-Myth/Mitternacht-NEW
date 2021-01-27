@@ -64,6 +64,7 @@ namespace Mitternacht {
 			_comClient =  new ShardComClient(port.Value);
 
 			using var uow = _db.UnitOfWork;
+			uow.Context.EnsureCorrectDatabaseState();
 			OnBotConfigChanged(uow.BotConfig.GetOrCreate());
 
 			SetupShard(parentProcessId, port.Value);
