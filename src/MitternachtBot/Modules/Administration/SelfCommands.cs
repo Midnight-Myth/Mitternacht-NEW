@@ -16,6 +16,7 @@ using Mitternacht.Database.Models;
 using Mitternacht.Common;
 using Mitternacht.Common.Replacements;
 using Mitternacht.Database;
+using System.Text.RegularExpressions;
 
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
@@ -281,50 +282,47 @@ namespace Mitternacht.Modules.Administration {
 				if(string.IsNullOrWhiteSpace(msg))
 					return;
 
-				var ids = where.Split('|');
-				if(ids.Length != 2)
-					return;
-				var sid = ulong.Parse(ids[0]);
-				var server = _client.Guilds.FirstOrDefault(s => s.Id == sid);
+				var destinationMatch = Regex.Match(where, "\\A(?<serverId>\\d+)\\|(?<channelOrUser>c|u):(?<channelOrUserId>\\d+)\\z", RegexOptions.IgnoreCase);
 
-				if(server == null)
-					return;
+				if(destinationMatch.Success && ulong.TryParse(destinationMatch.Groups["serverId"].Value, out var destinationServerId) && ulong.TryParse(destinationMatch.Groups["channelOrUserId"].Value, out var destinationChannelOrUserId)) {
+					var channelOrUser = destinationMatch.Groups["channelOrUser"].Value;
 
-				var rep = new ReplacementBuilder()
-					 .WithDefault(Context)
-					 .Build();
+					var guild = _client.Guilds.FirstOrDefault(g => g.Id == destinationServerId);
 
-				if(ids[1].ToUpperInvariant().StartsWith("C:")) {
-					var cid = ulong.Parse(ids[1].Substring(2));
-					var ch = server.TextChannels.FirstOrDefault(c => c.Id == cid);
-					if(ch == null) {
-						return;
-					}
-					if(CREmbed.TryParse(msg, out var crembed)) {
-						rep.Replace(crembed);
-						await ch.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
-						return;
-					}
-					await ch.SendMessageAsync($"{rep.Replace(msg)?.SanitizeMentions() ?? ""}");
-				} else if(ids[1].ToUpperInvariant().StartsWith("U:")) {
-					var uid = ulong.Parse(ids[1].Substring(2));
-					var user = server.Users.FirstOrDefault(u => u.Id == uid);
-					if(user == null) {
-						return;
-					}
-					if(CREmbed.TryParse(msg, out var crembed)) {
-						rep.Replace(crembed);
-						await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "")
-							.ConfigureAwait(false);
-						return;
-					}
+					if(guild != null) {
+						var rep = new ReplacementBuilder().WithDefault(Context).Build();
 
-					await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
+						if(channelOrUser.Equals("c", StringComparison.OrdinalIgnoreCase)) {
+							var channel = guild.TextChannels.FirstOrDefault(c => c.Id == destinationChannelOrUserId);
+
+							if(channel != null) {
+								if(CREmbed.TryParse(msg, out var crembed)) {
+									rep.Replace(crembed);
+									await channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+								} else {
+									await channel.SendMessageAsync($"{rep.Replace(msg)?.SanitizeMentions() ?? ""}");
+								}
+								
+								await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
+							}
+						} else if(channelOrUser.Equals("u", StringComparison.OrdinalIgnoreCase)) {
+							var user = guild.Users.FirstOrDefault(u => u.Id == destinationChannelOrUserId);
+							
+							if(user != null) {
+								if(CREmbed.TryParse(msg, out var crembed)) {
+									rep.Replace(crembed);
+									await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+								} else {
+									await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
+								}
+								
+								await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
+							}
+						}
+					}
 				} else {
 					await ReplyErrorLocalized("invalid_format").ConfigureAwait(false);
-					return;
 				}
-				await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
