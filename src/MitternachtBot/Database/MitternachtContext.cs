@@ -147,5 +147,14 @@ namespace Mitternacht.Database {
 				.HasIndex(m => new { m.UserId, m.GuildId, m.RoleId })
 				.IsUnique();
 		}
+
+		public void EnsureCorrectDatabaseState(){
+			foreach(var gc in GuildConfigs.Include(g => g.LogSetting)) {
+				if(gc.LogSetting == null) {
+					gc.LogSetting = new LogSetting();
+					GuildConfigs.Update(gc);
+				}
+			}
+		}
 	}
 }
