@@ -70,9 +70,9 @@ namespace Mitternacht.Modules.Utility {
 					var colorDifference      = new CIEDE2000ColorDifference();
 					var requestedColor       = converter.Convert(color.ToRGBColor());
 					var similarityRadius     = _uow.GuildConfigs.For(Context.Guild.Id).ColorMetricSimilarityRadius;
-					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8bit(c.Color.R, c.Color.G, c.Color.B))) < similarityRadius);
+					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8Bit(c.Color.R, c.Color.G, c.Color.B))) < similarityRadius);
 
-					if(similarlyColoredRole == null || allowedRoleColors.Any(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8bit(c.R, c.G, c.B))) < similarityRadius)) {
+					if(similarlyColoredRole == null || allowedRoleColors.Any(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8Bit(c.R, c.G, c.B))) < similarityRadius)) {
 						await role.ModifyAsync(rp => rp.Color = color).ConfigureAwait(false);
 
 						await ReplyConfirmLocalized("userrolecolor_changed", role.Name, color).ConfigureAwait(false);

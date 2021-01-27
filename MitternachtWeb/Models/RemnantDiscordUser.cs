@@ -22,6 +22,8 @@ namespace MitternachtWeb.Models {
 		public IImmutableSet<ClientType> ActiveClients      => ImmutableHashSet.Create<ClientType>();
 		public IImmutableList<IActivity> Activities         => ImmutableList.Create<IActivity>();
 
+		public UserProperties? PublicFlags { get; } = UserProperties.None;
+
 		public RemnantDiscordUser(ulong userId) {
 			Id = userId;
 		}
