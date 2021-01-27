@@ -39,7 +39,7 @@ namespace Mitternacht.Common {
 			=> new Color(Red, Green, Blue);
 
 		public RGBColor ToRGBColor()
-			=> RGBColor.FromRGB8bit(Red, Green, Blue);
+			=> RGBColor.FromRGB8Bit(Red, Green, Blue);
 
 		public static implicit operator Color(HexColor hc)
 			=> hc.ToColor();

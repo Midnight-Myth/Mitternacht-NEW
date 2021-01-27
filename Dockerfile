@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 WORKDIR /source
 COPY . .
 RUN dotnet publish -c Release -o /build
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime
 COPY --from=build /build /build
 WORKDIR /data
 EXPOSE 5000
