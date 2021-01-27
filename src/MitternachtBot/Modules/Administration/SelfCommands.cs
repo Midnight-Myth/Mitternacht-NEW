@@ -164,31 +164,7 @@ namespace Mitternacht.Modules.Administration {
 					await ReplyConfirmLocalized("fwall_start").ConfigureAwait(false);
 				else
 					await ReplyConfirmLocalized("fwall_stop").ConfigureAwait(false);
-
 			}
-
-			//todo 2 shard commands
-			//[MitternachtCommand, Usage, Description, Aliases]
-			//[Shard0Precondition]
-			//[OwnerOnly]
-			//public async Task RestartShard(int shardid)
-			//{
-			//    if (shardid == 0 || shardid > b)
-			//    {
-			//        await ReplyErrorLocalized("no_shard_id").ConfigureAwait(false);
-			//        return;
-			//    }
-			//    try
-			//    {
-			//        await ReplyConfirmLocalized("shard_reconnecting", Format.Bold("#" + shardid)).ConfigureAwait(false);
-			//        await shard.StartAsync().ConfigureAwait(false);
-			//        await ReplyConfirmLocalized("shard_reconnected", Format.Bold("#" + shardid)).ConfigureAwait(false);
-			//    }
-			//    catch (Exception ex)
-			//    {
-			//        _log.Warn(ex);
-			//    }
-			//}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
@@ -209,7 +185,6 @@ namespace Mitternacht.Modules.Administration {
 					await ReplyConfirmLocalized("deleted_server", Format.Bold(server.Name)).ConfigureAwait(false);
 				}
 			}
-
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
@@ -273,32 +248,28 @@ namespace Mitternacht.Modules.Administration {
 				if(string.IsNullOrWhiteSpace(img))
 					return;
 
-				using(var http = new HttpClient()) {
-					using(var sr = await http.GetStreamAsync(img)) {
-						var imgStream = new MemoryStream();
-						await sr.CopyToAsync(imgStream);
-						imgStream.Position = 0;
+				using var http = new HttpClient();
+				using var sr = await http.GetStreamAsync(img);
+				var imgStream = new MemoryStream();
+				await sr.CopyToAsync(imgStream);
+				imgStream.Position = 0;
 
-						await _client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
-					}
-				}
+				await _client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized("set_avatar").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public async Task SetActivity(ActivityType type, [Remainder] string game = null) {
-				await _client.SetGameAsync(game, type: type).ConfigureAwait(false);
+			public async Task SetActivity(ActivityType type, [Remainder] string activityName = "") {
+				await _client.SetGameAsync(activityName, type: type).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized("set_activity").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public async Task SetStream(string url, [Remainder] string name = null) {
-				name = name ?? "";
-
+			public async Task SetStream(string url, [Remainder] string name = "") {
 				await _client.SetGameAsync(name, url, ActivityType.Streaming).ConfigureAwait(false);
 
 				await ReplyConfirmLocalized("set_stream").ConfigureAwait(false);
@@ -306,7 +277,7 @@ namespace Mitternacht.Modules.Administration {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[OwnerOnly]
-			public async Task Send(string where, [Remainder] string msg = null) {
+			public async Task Send(string where, [Remainder] string msg = "") {
 				if(string.IsNullOrWhiteSpace(msg))
 					return;
 
@@ -374,18 +345,13 @@ namespace Mitternacht.Modules.Administration {
 			}
 
 			private static UserStatus SettableUserStatusToUserStatus(SettableUserStatus sus) {
-				switch(sus) {
-					case SettableUserStatus.Online:
-						return UserStatus.Online;
-					case SettableUserStatus.Invisible:
-						return UserStatus.Invisible;
-					case SettableUserStatus.Idle:
-						return UserStatus.AFK;
-					case SettableUserStatus.Dnd:
-						return UserStatus.DoNotDisturb;
-				}
-
-				return UserStatus.Online;
+				return sus switch {
+					SettableUserStatus.Online => UserStatus.Online,
+					SettableUserStatus.Invisible => UserStatus.Invisible,
+					SettableUserStatus.Idle => UserStatus.AFK,
+					SettableUserStatus.Dnd => UserStatus.DoNotDisturb,
+					_ => UserStatus.Online,
+				};
 			}
 
 			public enum SettableUserStatus {
