@@ -155,6 +155,8 @@ namespace Mitternacht.Database {
 					GuildConfigs.Update(gc);
 				}
 			}
+
+			SaveChanges();
 		}
 	}
 }
