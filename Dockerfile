@@ -4,6 +4,7 @@ COPY . .
 RUN dotnet publish -c Release -o /build
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime
+RUN apk add tzdata
 COPY --from=build /build /build
 WORKDIR /data
 EXPOSE 5000
