@@ -544,7 +544,6 @@ games:
   curgen_enabled:                                Währungsgeneration in diesem Kanal aktiviert.
   curgen_pl:                                     "{0} zufällige {1} sind erschienen! "
   curgen_sn:                                     Eine zufällige {0} ist erschienen!
-  current_poll_results:                          Aktuelle Umfragewerte
   failed_loading_question:                       Laden einer Frage fehlgeschlagen.
   game_started:                                  Spiel gestartet
   hangman_game_started:                          Galgenraten gestartet
@@ -554,18 +553,11 @@ games:
   hangman_types:                                 'Liste der "{0}hangman" Worttypen:'
   leaderboard:                                   Bestenliste
   no_results:                                    Keine Ergebnisse
-  no_votes_cast:                                 Keine Abstimmungen eingereicht.
   not_enough:                                    Du hast nicht genug {0}
   pick_pl:                                       Sammel sie durch Schreiben von `{0}pick`
   pick_sn:                                       Sammel sie durch Schreiben von `{0}pick`
   picked:                                        hat {0} aufgehoben
   planted:                                       "{0} pflanzte {1}! "
-  poll_already_running:                          Eine Umfrage läuft bereits auf diesem Server.
-  poll_created:                                  "\U0001F4C3 {0} hat eine Umfrage erstellt"
-  poll_result:                                   "`{0}.` {1} mit {2} Abstimmungen."
-  poll_vote_private:                             Sende mir eine private Nachricht mit der entsprechenden Nummer der Antwort.
-  poll_vote_public:                              Sende hier eine Nachricht mit der entsprechenden Nummer der Antwort.
-  poll_voted:                                    "{0} stimmte ab."
   question:                                      Gestellte Frage
   rps_draw:                                      Unentschieden! Beide haben {0} gewählt
   rps_win:                                       "{0} hat gewonnen! {1} schlägt {2}"
@@ -589,7 +581,6 @@ games:
   ttt_time_expired:                              Zeit abgelaufen
   ttt_users_move:                                "{0}'s Zug"
   vs:                                            "{0} gegen {1}"
-  x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
 help:
   back_to_toc:                                   Zurück zu ToC
   bot_owner_only:                                Nur Bot-Besitzer
@@ -984,6 +975,15 @@ utility:
   voicestatsreset_reset:                         Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!
   voicestats_time:                               Der Nutzer **{0}** hat bisher **{1}** in Sprachkanälen verbracht.
   voicestats_untracked:                          Ich habe keine Aufzeichnungen über den Aufenthalt von **{0}** in Sprachkanälen!
+  poll_current_results:                          Aktuelle Umfragewerte
+  poll_already_running:                          Eine Umfrage läuft bereits auf diesem Server.
+  poll_created:                                  "\U0001F4C3 {0} hat eine Umfrage erstellt"
+  poll_result:                                   "`{0}.` {1} mit {2} Abstimmungen."
+  poll_vote_private:                             Sende mir eine private Nachricht mit der entsprechenden Nummer der Antwort.
+  poll_vote_public:                              Sende hier eine Nachricht mit der entsprechenden Nummer der Antwort.
+  poll_voted:                                    "{0} stimmte ab."
+  poll_x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
+  poll_no_votes_cast:                                 Keine Abstimmungen eingereicht.
 verification:
   add_manually_success:                          Der Nutzer `{0}` wurde manuell mit dem Forumaccount `{1}` verifiziert.
   additional_verification_users_not_set:         Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.
