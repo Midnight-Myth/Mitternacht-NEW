@@ -975,15 +975,15 @@ utility:
   voicestatsreset_reset:                         Die Sprachkanalstatistiken von **{0}** wurden zurückgesetzt!
   voicestats_time:                               Der Nutzer **{0}** hat bisher **{1}** in Sprachkanälen verbracht.
   voicestats_untracked:                          Ich habe keine Aufzeichnungen über den Aufenthalt von **{0}** in Sprachkanälen!
-  current_poll_results:                          Aktuelle Umfragewerte
+  poll_current_results:                          Aktuelle Umfragewerte
   poll_already_running:                          Eine Umfrage läuft bereits auf diesem Server.
   poll_created:                                  "\U0001F4C3 {0} hat eine Umfrage erstellt"
   poll_result:                                   "`{0}.` {1} mit {2} Abstimmungen."
   poll_vote_private:                             Sende mir eine private Nachricht mit der entsprechenden Nummer der Antwort.
   poll_vote_public:                              Sende hier eine Nachricht mit der entsprechenden Nummer der Antwort.
   poll_voted:                                    "{0} stimmte ab."
-  x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
-  no_votes_cast:                                 Keine Abstimmungen eingereicht.
+  poll_x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
+  poll_no_votes_cast:                                 Keine Abstimmungen eingereicht.
 verification:
   add_manually_success:                          Der Nutzer `{0}` wurde manuell mit dem Forumaccount `{1}` verifiziert.
   additional_verification_users_not_set:         Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.

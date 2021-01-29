@@ -48,7 +48,7 @@ namespace Mitternacht.Modules.Utility.Common
             var totalVotesCast = 0;
             if (results.Length == 0)
             {
-                sb.AppendLine(GetText("no_votes_cast"));
+                sb.AppendLine(GetText("poll_no_votes_cast"));
             }
             else {
                 foreach (var result in results) {
@@ -62,7 +62,7 @@ namespace Mitternacht.Modules.Utility.Common
 
 
             eb.WithDescription(sb.ToString())
-              .WithFooter(efb => efb.WithText(GetText("x_votes_cast", totalVotesCast)));
+              .WithFooter(efb => efb.WithText(GetText("poll_x_votes_cast", totalVotesCast)));
 
             return eb;
         }
