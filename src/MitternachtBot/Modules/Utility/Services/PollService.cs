@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Mitternacht.Common.ModuleBehaviors;
-using Mitternacht.Modules.Games.Common;
+using Mitternacht.Modules.Utility.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 using NLog;
 
-namespace Mitternacht.Modules.Games.Services
-{
-    public class PollService : IEarlyBlockingExecutor, IMService
+namespace Mitternacht.Modules.Utility.Services {
+	public class PollService : IEarlyBlockingExecutor, IMService
     {
         public ConcurrentDictionary<ulong, Poll> ActivePolls = new ConcurrentDictionary<ulong, Poll>();
         private readonly Logger _log;

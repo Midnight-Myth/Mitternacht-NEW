@@ -4,12 +4,11 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Modules.Games.Services;
+using Mitternacht.Modules.Utility.Services;
 
-namespace Mitternacht.Modules.Games
+namespace Mitternacht.Modules.Utility
 {
-    public partial class Games
-    {
+    public partial class Utility {
         [Group]
         public class PollCommands : MitternachtSubmodule<PollService>
         {

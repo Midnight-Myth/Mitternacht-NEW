@@ -8,7 +8,7 @@ using Discord;
 using Mitternacht.Extensions;
 using Mitternacht.Services.Impl;
 
-namespace Mitternacht.Modules.Games.Common
+namespace Mitternacht.Modules.Utility.Common
 {
     public class Poll
     {
@@ -111,7 +111,7 @@ namespace Mitternacht.Modules.Games.Common
         }
 
         private string GetText(string key, params object[] replacements)
-            => _strings.GetText("Games".ToLowerInvariant(),
+            => _strings.GetText("Utility".ToLowerInvariant(),
 				key,
 				_guild.Id,
 				replacements);
