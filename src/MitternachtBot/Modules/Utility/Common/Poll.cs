@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,13 +19,12 @@ namespace Mitternacht.Modules.Utility.Common {
 
 		public event Action<ulong> OnEnded = delegate { };
 
-		public Poll(StringService strings, IUserMessage umsg, string question, IEnumerable<string> enumerable) {
+		public Poll(StringService strings, IUserMessage umsg, string question, string[] answers) {
 			_strings = strings;
-
 			_originalMessage = umsg;
 			_guild = ((ITextChannel)umsg.Channel).Guild;
 			_question = question;
-			_answers = enumerable as string[] ?? enumerable.ToArray();
+			_answers = answers;
 		}
 
 		public EmbedBuilder GetStats(string title) {
@@ -42,30 +40,26 @@ namespace Mitternacht.Modules.Utility.Common {
 				.AppendLine();
 
 			var totalVotesCast = 0;
+			
 			if(results.Length == 0) {
 				sb.AppendLine(GetText("poll_no_votes_cast"));
 			} else {
 				foreach(var result in results) {
-					sb.AppendLine(GetText("poll_result",
-						result.Key,
-						Format.Bold(_answers[result.Key - 1]),
-						Format.Bold(result.Value.ToString())));
+					sb.AppendLine(GetText("poll_result", result.Key, Format.Bold(_answers[result.Key - 1]), Format.Bold(result.Value.ToString())));
 					totalVotesCast += result.Value;
 				}
 			}
 
-
-			eb.WithDescription(sb.ToString())
-			  .WithFooter(efb => efb.WithText(GetText("poll_x_votes_cast", totalVotesCast)));
+			eb.WithDescription(sb.ToString()).WithFooter(efb => efb.WithText(GetText("poll_x_votes_cast", totalVotesCast)));
 
 			return eb;
 		}
 
 		public async Task StartPoll() {
-			var msgToSend = GetText("poll_created", Format.Bold(_originalMessage.Author.Username)) + "\n\n" + Format.Bold(_question) + "\n";
+			var msgToSend = $"{GetText("poll_created", Format.Bold(_originalMessage.Author.Username))}\n\n{Format.Bold(_question)}\n";
 			var num = 1;
-			msgToSend = _answers.Aggregate(msgToSend, (current, answ) => current + $"`{num++}.` **{answ}**\n");
-			msgToSend += "\n" + Format.Bold(GetText("poll_vote_public"));
+			msgToSend = _answers.Aggregate(msgToSend, (current, answ) => $"{current}`{num++}.` **{answ}**\n");
+			msgToSend += $"\n{Format.Bold(GetText("poll_vote_public"))}";
 
 			await _originalMessage.Channel.SendConfirmAsync(msgToSend).ConfigureAwait(false);
 			_running = true;
@@ -78,34 +72,37 @@ namespace Mitternacht.Modules.Utility.Common {
 		}
 
 		public async Task<bool> TryVote(IUserMessage msg) {
-			// has to be a user message
-			if(msg == null || msg.Author.IsBot || !_running)
-				return false;
+			if(msg != null && !msg.Author.IsBot && _running) {
+				if(int.TryParse(msg.Content, out var vote)) {
+					if(vote >= 1 && vote <= _answers.Length) {
+						if(_originalMessage.Channel.Id == msg.Channel.Id) {
+							if(_participants.TryAdd(msg.Author.Id, vote)) {
+								var toDelete = await msg.Channel.SendConfirmAsync(GetText("poll_voted", Format.Bold(msg.Author.ToString()))).ConfigureAwait(false);
+								toDelete.DeleteAfter(5);
 
-			// has to be an integer
-			if(!int.TryParse(msg.Content, out int vote))
+								try {
+									await msg.DeleteAsync().ConfigureAwait(false);
+								} catch { /*ignored*/ }
+								
+								return true;
+							} else {
+								return false;
+							}
+						} else {
+							return false;
+						}
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			} else {
 				return false;
-			if(vote < 1 || vote > _answers.Length)
-				return false;
-
-			//if public, channel must be the same the poll started in
-			if(_originalMessage.Channel.Id != msg.Channel.Id)
-				return false;
-			var ch = msg.Channel;
-
-			//user can vote only once
-			if(!_participants.TryAdd(msg.Author.Id, vote))
-				return false;
-			var toDelete = await ch.SendConfirmAsync(GetText("poll_voted", Format.Bold(msg.Author.ToString()))).ConfigureAwait(false);
-			toDelete.DeleteAfter(5);
-			try { await msg.DeleteAsync().ConfigureAwait(false); } catch { /*ignored*/ }
-			return true;
+			}
 		}
 
 		private string GetText(string key, params object[] replacements)
-			=> _strings.GetText("Utility".ToLowerInvariant(),
-				key,
-				_guild.Id,
-				replacements);
+			=> _strings.GetText("utility", key, _guild.Id, replacements);
 	}
 }
