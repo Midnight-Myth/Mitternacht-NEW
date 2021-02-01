@@ -957,9 +957,9 @@
 - name:    listquotes
   cmd:     listquotes
   aliases:
-  -        liqu
+  -        lq
   desc:    Zeigt alle Zitate dieser Gilde oder eines angegebenen Nutzers an.
-  usage:   "`{0}liqu [seite]` oder `{0}liqu <nutzer> [seite]`"
+  usage:   "`{0}lq [seite]` oder `{0}lq <nutzer> [seite]`"
 - name:    lsar
   cmd:     lsar
   aliases: []
@@ -1567,10 +1567,11 @@
   desc:    Claim a waifu for yourself by spending currency.  You must spend at least 10% more than her current value unless she set `{0}affinity` towards you.
   usage:   "`{0}claim 50 @Himesama`"
 - name:    addquote
-  cmd:     "."
-  aliases: []
+  cmd:     addquote
+  aliases:
+  -        aq
   desc:    Adds a new quote with the specified name and message.
-  usage:   "`{0}. sayhi Hi`"
+  usage:   "`{0}aq sayhi Hi`"
 - name:    crad
   cmd:     crad
   aliases: []
@@ -1922,10 +1923,11 @@
   desc:    Queries omdb for movies or series, show first result.
   usage:   "`{0}imdb Batman vs Superman`"
 - name:    showquote
-  cmd:     ".."
-  aliases: []
+  cmd:     quote
+  aliases:
+  -        q
   desc:    Zeigt ein zufälliges Zitat mit einem bestimmten Schlüsselwort an.
-  usage:   "`{0}.. abc`"
+  usage:   "`{0}q abc`"
 - name:    vcrole
   cmd:     vcrole
   aliases: []
