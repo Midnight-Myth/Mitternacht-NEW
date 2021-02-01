@@ -957,7 +957,7 @@
 - name:    listquotes
   cmd:     listquotes
   aliases:
-  -        liqu
+  -        lq
   desc:    Zeigt alle Zitate dieser Gilde oder eines angegebenen Nutzers an.
   usage:   "`{0}liqu [seite]` oder `{0}liqu <nutzer> [seite]`"
 - name:    lsar
