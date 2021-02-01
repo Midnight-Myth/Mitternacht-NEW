@@ -959,7 +959,7 @@
   aliases:
   -        lq
   desc:    Zeigt alle Zitate dieser Gilde oder eines angegebenen Nutzers an.
-  usage:   "`{0}liqu [seite]` oder `{0}liqu <nutzer> [seite]`"
+  usage:   "`{0}lq [seite]` oder `{0}lq <nutzer> [seite]`"
 - name:    lsar
   cmd:     lsar
   aliases: []
