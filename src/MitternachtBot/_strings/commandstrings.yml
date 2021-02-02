@@ -1600,6 +1600,11 @@
   -        ppoll
   desc:    Creates a public poll which requires users to type a number of the voting option in the channel command is ran in.
   usage:   "`{0}ppoll Question?;Answer1;Answ 2;A_3`"
+- name:    pollreaction
+  cmd:     pollreaction
+  aliases: []
+  desc:    Erstellt eine Umfrage mit Reaktionen.
+  usage:   "`{0}pollreaction Frage? \"Antwort 1\" \"Antwort 2\"`"
 - name:    pick
   cmd:     pick
   aliases: []
