@@ -984,6 +984,8 @@ utility:
   poll_voted:                                    "{0} stimmte ab."
   poll_x_votes_cast:                                  Insgesamt {0} Stimmen eingereicht.
   poll_no_votes_cast:                                 Keine Abstimmungen eingereicht.
+  pollreaction_title:                            "{0}"
+  pollreaction_answer:                           "{0} {1}"
 verification:
   add_manually_success:                          Der Nutzer `{0}` wurde manuell mit dem Forumaccount `{1}` verifiziert.
   additional_verification_users_not_set:         Keine zusätzlichen Verifizierungsnachrichtenempfänger gesetzt.
