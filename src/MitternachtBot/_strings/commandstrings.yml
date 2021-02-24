@@ -2025,6 +2025,11 @@
   aliases: []
   desc:    Erlaube einem User, sein tägliches Geld nochmal zu holen.
   usage:   "`{0}resetdailymoney [user]`"
+- name:    resetdailymoneyguild
+  cmd:     resetdailymoneyguild
+  aliases: []
+  desc:    Erlaube jedem Nutzer des Servers, sein tägliches Geld nochmal zu holen.
+  usage:   "`{0}resetdailymoneyguild`"
 - name:    addverification
   cmd:     addverification
   aliases: []

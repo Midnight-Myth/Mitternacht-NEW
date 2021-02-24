@@ -21,15 +21,21 @@ namespace Mitternacht.Database.Repositories.Impl {
 			return dm;
 		}
 
+		public IQueryable<DailyMoney> ForGuild(ulong guildId)
+			=> _set.AsQueryable().Where(dm => dm.GuildId == guildId);
+
 		public DateTime GetLastReceived(ulong guildId, ulong userId)
 			=> _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId)?.LastTimeGotten ?? DateTime.MinValue;
 
-		public bool CanReceive(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo) {
-			var lastReceived        = TimeZoneInfo.ConvertTimeFromUtc(GetLastReceived(guildId, userId), timeZoneInfo ?? TimeZoneInfo.Utc).Date;
-			var currentTimeZoneDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,                  timeZoneInfo ?? TimeZoneInfo.Utc).Date;
+		private static bool CanReceive(DateTime lastReceived, TimeZoneInfo timeZoneInfo) {
+			lastReceived = TimeZoneInfo.ConvertTimeFromUtc(lastReceived, timeZoneInfo ?? TimeZoneInfo.Utc).Date;
+			var currentTimeZoneDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo ?? TimeZoneInfo.Utc).Date;
 
 			return lastReceived < currentTimeZoneDate;
 		}
+
+		public bool CanReceive(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo)
+			=> CanReceive(GetLastReceived(guildId, userId), timeZoneInfo);
 
 		public DateTime UpdateState(ulong guildId, ulong userId) {
 			var dm = GetOrCreate(guildId, userId);
@@ -38,13 +44,18 @@ namespace Mitternacht.Database.Repositories.Impl {
 			return dm.LastTimeGotten;
 		}
 
-		public void ResetLastTimeReceived(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo) {
-			if(!CanReceive(guildId, userId, timeZoneInfo)) {
-				var dm = GetOrCreate(guildId, userId);
+		private static void ResetLastTimeReceived(DailyMoney dailyMoney, TimeZoneInfo timeZoneInfo) {
+			if(!CanReceive(dailyMoney.LastTimeGotten, timeZoneInfo) && dailyMoney.LastTimeGotten.Date >= DateTime.Today.Date) {
+				dailyMoney.LastTimeGotten = DateTime.Today.AddDays(-1);
+			}
+		}
 
-				if(dm.LastTimeGotten.Date >= DateTime.Today.Date) {
-					dm.LastTimeGotten = DateTime.Today.AddDays(-1);
-				}
+		public void ResetLastTimeReceived(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo)
+			=> ResetLastTimeReceived(GetOrCreate(guildId, userId), timeZoneInfo);
+
+		public void ResetLastTimeReceivedForGuild(ulong guildId, TimeZoneInfo timeZoneInfo) {
+			foreach(var dm in ForGuild(guildId)) {
+				ResetLastTimeReceived(dm, timeZoneInfo);
 			}
 		}
 	}

@@ -96,6 +96,17 @@ namespace Mitternacht.Modules.Gambling {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[OwnerOrGuildPermission(GuildPermission.Administrator)]
+			public async Task ResetDailyMoneyGuild() {
+				uow.DailyMoney.ResetLastTimeReceivedForGuild(Context.Guild.Id, _gts.GetTimeZoneOrUtc(Context.Guild.Id));
+
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+				await ConfirmLocalized("dailymoney_resetdailymoneyguild_success").ConfigureAwait(false);
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
 			public async Task RemoveRoleMoney(IRole role) {
 				var removed = uow.RoleMoney.Remove(Context.Guild.Id, role.Id);
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);

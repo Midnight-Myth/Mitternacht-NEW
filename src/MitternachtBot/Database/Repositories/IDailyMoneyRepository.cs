@@ -8,5 +8,6 @@ namespace Mitternacht.Database.Repositories {
 		bool CanReceive(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo);
 		DateTime UpdateState(ulong guildId, ulong userId);
 		void ResetLastTimeReceived(ulong guildId, ulong userId, TimeZoneInfo timeZoneInfo);
+		void ResetLastTimeReceivedForGuild(ulong guildId, TimeZoneInfo timeZoneInfo);
 	}
 }

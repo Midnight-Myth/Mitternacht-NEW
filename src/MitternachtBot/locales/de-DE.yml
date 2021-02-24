@@ -436,6 +436,7 @@ gambling:
   dice_rolled:                                   würfelte {0}
   dice_rolled_num:                               'Würfel gerollt: {0}'
   divorces:                                      Scheidungen
+  dailymoney_resetdailymoneyguild_success:       Der ganze Server kann sich seinen täglichen Anteil nochmal abholen.
   dm_again:                                      "`{0}` kann sich seinen täglichen Anteil nochmal abholen."
   dm_already_received:                           Du hast deinen täglichen Anteil heute bereits abgeholt.
   dm_no_role:                                    Deine Rollen erlauben kein DailyMoney, also bekommst du nichts.
