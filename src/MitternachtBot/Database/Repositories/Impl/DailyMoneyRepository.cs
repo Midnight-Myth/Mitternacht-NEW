@@ -14,7 +14,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 				_set.Add(dm = new DailyMoney {
 					GuildId = guildId,
 					UserId = userId,
-					LastTimeGotten = DateTime.MinValue
+					LastTimeReceived = DateTime.MinValue
 				});
 			}
 
@@ -25,7 +25,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 			=> _set.AsQueryable().Where(dm => dm.GuildId == guildId);
 
 		public DateTime GetLastReceived(ulong guildId, ulong userId)
-			=> _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId)?.LastTimeGotten ?? DateTime.MinValue;
+			=> _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId)?.LastTimeReceived ?? DateTime.MinValue;
 
 		private static bool CanReceive(DateTime lastReceived, TimeZoneInfo timeZoneInfo) {
 			lastReceived = TimeZoneInfo.ConvertTimeFromUtc(lastReceived, timeZoneInfo ?? TimeZoneInfo.Utc).Date;
@@ -39,14 +39,14 @@ namespace Mitternacht.Database.Repositories.Impl {
 
 		public DateTime UpdateState(ulong guildId, ulong userId) {
 			var dm = GetOrCreate(guildId, userId);
-			dm.LastTimeGotten = DateTime.UtcNow;
+			dm.LastTimeReceived = DateTime.UtcNow;
 
-			return dm.LastTimeGotten;
+			return dm.LastTimeReceived;
 		}
 
 		private static void ResetLastTimeReceived(DailyMoney dailyMoney, TimeZoneInfo timeZoneInfo) {
-			if(!CanReceive(dailyMoney.LastTimeGotten, timeZoneInfo) && dailyMoney.LastTimeGotten.Date >= DateTime.Today.Date) {
-				dailyMoney.LastTimeGotten = DateTime.Today.AddDays(-1);
+			if(!CanReceive(dailyMoney.LastTimeReceived, timeZoneInfo) && dailyMoney.LastTimeReceived.Date >= DateTime.Today.Date) {
+				dailyMoney.LastTimeReceived = DateTime.Today.AddDays(-1);
 			}
 		}
 
