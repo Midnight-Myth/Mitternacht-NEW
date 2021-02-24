@@ -1,9 +1,12 @@
 root = true
 
-[*.cs]
-indent_size = 4
+[*.{appxmanifest,asax,ascx,aspx,build,cs,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
 indent_style = tab
-tab_width = 4
+indent_size  = tab
+tab_width    = 4
+
+
+[*.cs]
 end_of_line = crlf
 insert_final_newline = false
 
@@ -245,9 +248,3 @@ resharper_unused_member_in_super_global_highlighting=none
 resharper_web_config_module_not_resolved_highlighting=warning
 resharper_web_config_type_not_resolved_highlighting=warning
 resharper_web_config_wrong_module_highlighting=warning
-
-
-[*.{appxmanifest,asax,ascx,aspx,build,cs,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
-indent_style=tab
-indent_size=tab
-tab_width=4
