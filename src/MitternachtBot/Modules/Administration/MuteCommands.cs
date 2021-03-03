@@ -62,22 +62,23 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.MuteMembers)]
 			[Priority(1)]
 			public async Task Mute(IGuildUser user, string time) {
-				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?";
+				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?((?<seconds>\\d+)s)?";
 
 				var match = Regex.Match(time, timeRegex);
 
 				if(match.Success) {
-					var days    = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
-					var hours   = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
-					var minutes = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
+					var days     = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
+					var hours    = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
+					var minutes  = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
+					var seconds  = string.IsNullOrWhiteSpace(match.Groups["seconds"].Value) ? 0 : Convert.ToInt32(match.Groups["seconds"].Value);
 
-					var muteTime = days*24*60 + hours*60 + minutes;
+					var muteTime = days*24*60*60 + hours*60*60 + minutes*60 + seconds;
 
 					if(muteTime == 0) {
 						await Mute(user).ConfigureAwait(false);
 					} else {
 						try {
-							await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
+							await Service.TimedMute(user, TimeSpan.FromSeconds(muteTime)).ConfigureAwait(false);
 							await ConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
 						} catch(Exception e) {
 							_log.Warn(e);
