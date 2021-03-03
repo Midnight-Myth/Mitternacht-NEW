@@ -25,13 +25,13 @@ namespace Mitternacht.Modules.Administration {
 			[Priority(0)]
 			public async Task SetMuteRole([Remainder] string name) {
 				name = name.Trim();
-				if(string.IsNullOrWhiteSpace(name))
-					return;
 
-				var gc = uow.GuildConfigs.For(Context.Guild.Id);
-				gc.MuteRoleName = name;
-				await uow.SaveChangesAsync(false).ConfigureAwait(false);
-				await ConfirmLocalized("mute_role_set").ConfigureAwait(false);
+				if(!string.IsNullOrWhiteSpace(name)) {
+					var gc = uow.GuildConfigs.For(Context.Guild.Id);
+					gc.MuteRoleName = name;
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
+					await ConfirmLocalized("mute_role_set").ConfigureAwait(false);
+				}
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
