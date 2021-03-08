@@ -31,6 +31,16 @@ namespace Mitternacht.Modules.Administration {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageRoles)]
+			public async Task SetSilencedRole([Remainder] IRole role = null) {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.SilencedRoleId = role?.Id;
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+				await ConfirmLocalized("setsilencedrole_role_set").ConfigureAwait(false);
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			[RequireUserPermission(GuildPermission.MuteMembers)]
 			[Priority(0)]

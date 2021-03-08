@@ -85,6 +85,10 @@
 			<input asp-for="MutedRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
 		</div>
 		<div class="form-group">
+			<label asp-for="SilencedRoleId" class="control-label"></label>
+			<input asp-for="SilencedRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+		</div>
+		<div class="form-group">
 			<label asp-for="Locale" class="control-label"></label>
 			<input asp-for="Locale" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
 		</div>

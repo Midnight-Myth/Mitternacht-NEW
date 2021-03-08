@@ -25,6 +25,7 @@ namespace Mitternacht.Database.Models {
 		[Obsolete]
 		public string MuteRoleName                       { get; set; }
 		public ulong? MutedRoleId                        { get; set; }
+		public ulong? SilencedRoleId                     { get; set; }
 		public string Locale                             { get; set; }
 		public string TimeZoneId                         { get; set; }
 		public ulong? GameVoiceChannel                   { get; set; }
