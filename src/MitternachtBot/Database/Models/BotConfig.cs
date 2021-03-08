@@ -1,4 +1,4 @@
-using Mitternacht.Common;
+﻿using Mitternacht.Common;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +9,8 @@ namespace Mitternacht.Database.Models {
 		public float    CurrencyGenerationChance   { get; set; } = 0.02f;
 		public int      CurrencyGenerationCooldown { get; set; } = 10;
 		public bool     RotatingStatuses           { get; set; } = false;
-		public string   RemindMessageFormat        { get; set; } = "❗⏰**I've been told to remind you to '%message%' now by %user%.**⏰❗";
-		public string   CurrencySign               { get; set; } = "💶";
+		public string   RemindMessageFormat        { get; set; } = "â—â°**I've been told to remind you to '%message%' now by %user%.**â°â—";
+		public string   CurrencySign               { get; set; } = "ðŸ’¶";
 		public string   CurrencyName               { get; set; } = "Money";
 		public string   CurrencyPluralName         { get; set; } = "Money";
 		public int      MinimumBetAmount           { get; set; } = 2;

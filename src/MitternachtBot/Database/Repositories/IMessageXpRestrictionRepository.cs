@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Mitternacht.Database.Models;
 using System.Linq;
 

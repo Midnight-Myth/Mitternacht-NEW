@@ -1,4 +1,4 @@
-using Mitternacht.Common;
+﻿using Mitternacht.Common;
 
 namespace Mitternacht.Database.Models {
 	public class Warning : DbEntity, IModerationPoints {

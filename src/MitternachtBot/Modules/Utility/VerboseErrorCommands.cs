@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Modules.Utility.Services;

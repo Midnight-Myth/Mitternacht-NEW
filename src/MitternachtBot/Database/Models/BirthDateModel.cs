@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Mitternacht.Modules.Birthday.Models;
 
 namespace Mitternacht.Database.Models {

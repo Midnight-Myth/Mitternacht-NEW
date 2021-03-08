@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Mitternacht.Database.Models {
 	public class LogSetting : DbEntity {

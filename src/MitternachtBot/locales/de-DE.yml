@@ -1,4 +1,4 @@
----
+﻿---
 administration:
   aar_disabled:                                  "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **deaktiviert**."
   aar_enabled:                                   "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **aktiviert**."

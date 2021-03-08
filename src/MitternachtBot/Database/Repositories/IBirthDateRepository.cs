@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Mitternacht.Modules.Birthday.Models;
 using Mitternacht.Database.Models;

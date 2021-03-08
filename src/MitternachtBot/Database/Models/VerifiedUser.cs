@@ -1,4 +1,4 @@
-namespace Mitternacht.Database.Models {
+﻿namespace Mitternacht.Database.Models {
 	public class VerifiedUser : DbEntity {
 		public ulong GuildId     { get; set; }
 		public ulong UserId      { get; set; }

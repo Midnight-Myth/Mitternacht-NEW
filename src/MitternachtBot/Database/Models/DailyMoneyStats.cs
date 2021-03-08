@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Mitternacht.Database.Models {
 	public class DailyMoneyStats : DbEntity {

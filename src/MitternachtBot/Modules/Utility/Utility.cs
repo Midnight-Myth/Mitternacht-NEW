@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace Mitternacht.Modules.Utility
             if (arr.Length == 0)
                 await ReplyErrorLocalized("nobody_playing_game").ConfigureAwait(false);
             else
-                await Context.Channel.SendConfirmAsync("```css\n" + string.Join("\n", arr.GroupBy(item => i++ / 2).Select(ig => string.Concat(ig.Select(el => $"• {el,-27}")))) + "\n```").ConfigureAwait(false);
+                await Context.Channel.SendConfirmAsync("```css\n" + string.Join("\n", arr.GroupBy(item => i++ / 2).Select(ig => string.Concat(ig.Select(el => $"â€¢ {el,-27}")))) + "\n```").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -92,7 +92,7 @@ namespace Mitternacht.Modules.Utility
                     .OrderBy(x => rng.Next())
                     .Take(50));
             var embed = new EmbedBuilder().WithOkColor()
-                .WithTitle("ℹ️ " + Format.Bold(GetText("inrole_list", Format.Bold(role.Name))) + $" - {roleUsers.Length}")
+                .WithTitle("â„¹ï¸ " + Format.Bold(GetText("inrole_list", Format.Bold(role.Name))) + $" - {roleUsers.Length}")
                 .WithDescription($"```css\n[{role.Name}]\n{inroleusers}```");
             await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
         }
@@ -116,14 +116,14 @@ namespace Mitternacht.Modules.Utility
         public async Task UserId([Remainder] IGuildUser target = null)
         {
             var usr = target ?? Context.User;
-            await ReplyConfirmLocalized("userid", "🆔", Format.Bold(usr.ToString()),
+            await ReplyConfirmLocalized("userid", "ðŸ†”", Format.Bold(usr.ToString()),
                 Format.Code(usr.Id.ToString())).ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task ChannelId()
         {
-            await ReplyConfirmLocalized("channelid", "🆔", Format.Code(Context.Channel.Id.ToString()))
+            await ReplyConfirmLocalized("channelid", "ðŸ†”", Format.Code(Context.Channel.Id.ToString()))
                 .ConfigureAwait(false);
         }
 
@@ -131,7 +131,7 @@ namespace Mitternacht.Modules.Utility
         [RequireContext(ContextType.Guild)]
         public async Task ServerId()
         {
-            await ReplyConfirmLocalized("serverid", "🆔", Format.Code(Context.Guild.Id.ToString()))
+            await ReplyConfirmLocalized("serverid", "ðŸ†”", Format.Code(Context.Guild.Id.ToString()))
                 .ConfigureAwait(false);
         }
 
@@ -152,7 +152,7 @@ namespace Mitternacht.Modules.Utility
                 else
                     await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor()
                         .WithTitle(GetText("roles_page", currentPage + 1, Format.Bold(target.ToString())))
-                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(currentPage * rolesPerPage).Take(rolesPerPage))), (int)Math.Ceiling(roles.Length * 1d / rolesPerPage), reactUsers: new[] { Context.User as IGuildUser });
+                        .WithDescription("\nâ€¢ " + string.Join("\nâ€¢ ", roles.Skip(currentPage * rolesPerPage).Take(rolesPerPage))), (int)Math.Ceiling(roles.Length * 1d / rolesPerPage), reactUsers: new[] { Context.User as IGuildUser });
             }
             else
             {
@@ -162,7 +162,7 @@ namespace Mitternacht.Modules.Utility
                 else
                     await Context.Channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => new EmbedBuilder().WithOkColor()
                         .WithTitle(GetText("roles_all_page", currentPage + 1))
-                        .WithDescription("\n• " + string.Join("\n• ", roles.Skip(currentPage * rolesPerPage).Take(rolesPerPage))), (int)Math.Ceiling(roles.Length * 1d / rolesPerPage), reactUsers: new[] { Context.User as IGuildUser });
+                        .WithDescription("\nâ€¢ " + string.Join("\nâ€¢ ", roles.Skip(currentPage * rolesPerPage).Take(rolesPerPage))), (int)Math.Ceiling(roles.Length * 1d / rolesPerPage), reactUsers: new[] { Context.User as IGuildUser });
             }
         }
 
@@ -327,11 +327,11 @@ namespace Mitternacht.Modules.Utility
         public async Task Ping()
         {
             var sw = Stopwatch.StartNew();
-            var msg = await Context.Channel.SendMessageAsync("🏓").ConfigureAwait(false);
+            var msg = await Context.Channel.SendMessageAsync("ðŸ“").ConfigureAwait(false);
             sw.Stop();
             msg.DeleteAfter(0);
 
-            await Context.Channel.SendConfirmAsync($"{Format.Bold(Context.User.ToString())} 🏓 {(int)sw.Elapsed.TotalMilliseconds}ms").ConfigureAwait(false);
+            await Context.Channel.SendConfirmAsync($"{Format.Bold(Context.User.ToString())} ðŸ“ {(int)sw.Elapsed.TotalMilliseconds}ms").ConfigureAwait(false);
         }
     }
 }

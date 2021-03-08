@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -29,7 +29,7 @@ namespace Mitternacht.Modules.Games
             if (listArr.Length < 2)
                 return;
             var rng = new NadekoRandom();
-            await Context.Channel.SendConfirmAsync(listArr[rng.Next(0, listArr.Length)], "🤔").ConfigureAwait(false);
+            await Context.Channel.SendConfirmAsync(listArr[rng.Next(0, listArr.Length)], "ðŸ¤”").ConfigureAwait(false);
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -39,8 +39,8 @@ namespace Mitternacht.Modules.Games
                 return;
 
             await Context.Channel.EmbedAsync(new EmbedBuilder().WithColor(MitternachtBot.OkColor)
-                               .AddField(efb => efb.WithName("❓ " + GetText("question") ).WithValue(question).WithIsInline(false))
-                               .AddField(efb => efb.WithName("🎱 " + GetText("8ball")).WithValue(Service.EightBallResponses[new NadekoRandom().Next(0, Service.EightBallResponses.Length)]).WithIsInline(false)));
+                               .AddField(efb => efb.WithName("â“ " + GetText("question") ).WithValue(question).WithIsInline(false))
+                               .AddField(efb => efb.WithName("ðŸŽ± " + GetText("8ball")).WithValue(Service.EightBallResponses[new NadekoRandom().Next(0, Service.EightBallResponses.Length)]).WithIsInline(false)));
         }
 
         [MitternachtCommand, Usage, Description, Aliases]
@@ -49,11 +49,11 @@ namespace Mitternacht.Modules.Games
             string GetRpsPick(int p) {
                 switch (p) {
                     case 0:
-                        return "🚀";
+                        return "ðŸš€";
                     case 1:
-                        return "📎";
+                        return "ðŸ“Ž";
                     default:
-                        return "✂️";
+                        return "âœ‚ï¸";
                 }
             }
 

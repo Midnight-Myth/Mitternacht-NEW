@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -83,7 +83,7 @@ namespace Mitternacht.Modules.Utility {
 
 					var gTime = TimeZoneInfo.ConvertTime(time, _tz.GetTimeZoneOrUtc(Context.Guild.Id));
 					_ = Task.Run(() => Service.StartReminder(rem));
-					await Context.Channel.SendConfirmAsync($"⏰ {(GetText("remind", !isPrivate ? MentionUtils.MentionChannel(targetId) : Context.User.Username, timespan, gTime, message.SanitizeMentions()))}").ConfigureAwait(false);
+					await Context.Channel.SendConfirmAsync($"â° {(GetText("remind", !isPrivate ? MentionUtils.MentionChannel(targetId) : Context.User.Username, timespan, gTime, message.SanitizeMentions()))}").ConfigureAwait(false);
 				} else {
 					await ReplyErrorLocalized("remind_invalid_format").ConfigureAwait(false);
 				}

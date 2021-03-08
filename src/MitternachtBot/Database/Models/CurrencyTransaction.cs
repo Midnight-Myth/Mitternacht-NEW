@@ -1,4 +1,4 @@
-namespace Mitternacht.Database.Models {
+﻿namespace Mitternacht.Database.Models {
 	public class CurrencyTransaction : DbEntity {
 		public long   Amount { get; set; }
 		public string Reason { get; set; }

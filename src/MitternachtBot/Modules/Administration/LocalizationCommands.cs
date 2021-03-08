@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -18,29 +18,29 @@ namespace Mitternacht.Modules.Administration
         {
             private static ImmutableDictionary<string, string> supportedLocales { get; } = new Dictionary<string, string>()
             {
-                {"ar", "العربية" },
-                {"zh-TW", "繁體中文, 台灣" },
-                {"zh-CN", "简体中文, 中华人民共和国"},
+                {"ar", "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©" },
+                {"zh-TW", "ç¹é«”ä¸­æ–‡, å°ç£" },
+                {"zh-CN", "ç®€ä½“ä¸­æ–‡, ä¸­åŽäººæ°‘å…±å’Œå›½"},
                 {"nl-NL", "Nederlands, Nederland"},
                 {"en-US", "English, United States"},
-                {"fr-FR", "Français, France"},
-                {"cs-CZ", "Čeština, Česká republika" },
+                {"fr-FR", "FranÃ§ais, France"},
+                {"cs-CZ", "ÄŒeÅ¡tina, ÄŒeskÃ¡ republika" },
                 {"da-DK", "Dansk, Danmark" },
                 {"de-DE", "Deutsch, Deutschland"},
-                {"he-IL", "עברית, ישראל"},
+                {"he-IL", "×¢×‘×¨×™×ª, ×™×©×¨××œ"},
                 {"id-ID", "Bahasa Indonesia, Indonesia" },
                 {"it-IT", "Italiano, Italia" },
-                {"ja-JP", "日本語, 日本"},
-                {"ko-KR", "한국어, 대한민국" },
+                {"ja-JP", "æ—¥æœ¬èªž, æ—¥æœ¬"},
+                {"ko-KR", "í•œêµ­ì–´, ëŒ€í•œë¯¼êµ­" },
                 {"nb-NO", "Norsk, Norge"},
                 {"pl-PL", "Polski, Polska" },
-                {"pt-BR", "Português Brasileiro, Brasil"},
-                {"ro-RO", "Română, România" },
-                {"ru-RU", "Русский, Россия"},
-                {"sr-Cyrl-RS", "Српски, Србија"},
-                {"es-ES", "Español, España"},
+                {"pt-BR", "PortuguÃªs Brasileiro, Brasil"},
+                {"ro-RO", "RomÃ¢nÄƒ, RomÃ¢nia" },
+                {"ru-RU", "Ð ÑƒÑÑÐºÐ¸Ð¹, Ð Ð¾ÑÑÐ¸Ñ"},
+                {"sr-Cyrl-RS", "Ð¡Ñ€Ð¿ÑÐºÐ¸, Ð¡Ñ€Ð±Ð¸Ñ˜Ð°"},
+                {"es-ES", "EspaÃ±ol, EspaÃ±a"},
                 {"sv-SE", "Svenska, Sverige"},
-                {"tr-TR", "Türkçe, Türkiye"}
+                {"tr-TR", "TÃ¼rkÃ§e, TÃ¼rkiye"}
             }.ToImmutableDictionary();
 
             [MitternachtCommand, Usage, Description, Aliases]

@@ -1,4 +1,4 @@
-namespace Mitternacht.Database.Models {
+﻿namespace Mitternacht.Database.Models {
 	public class VoiceChannelStats : DbEntity {
 		public ulong  UserId             { get; set; }
 		public ulong  GuildId            { get; set; }

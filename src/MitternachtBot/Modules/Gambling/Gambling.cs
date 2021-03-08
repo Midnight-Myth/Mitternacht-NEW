@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -39,7 +39,7 @@ namespace Mitternacht.Modules.Gambling {
 			var membersArray = members as IUser[] ?? members.ToArray();
 			//TODO: This breaks when membersArray has no elements.
 			var user = membersArray.RandomSubset(1).First();
-			await Context.Channel.SendConfirmAsync($"**{user.Username}#{user.Discriminator}**", $"🎟 {GetText("raffled_user")}", footer: $"ID: {user.Id}").ConfigureAwait(false);
+			await Context.Channel.SendConfirmAsync($"**{user.Username}#{user.Discriminator}**", $"ðŸŽŸ {GetText("raffled_user")}", footer: $"ID: {user.Id}").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Gambling {
 				}
 			} else {
 				// FIXME: Use translations.
-				await Context.Channel.SendMessageAsync($"Geldbeträge von 0{CurrencySign} oder weniger können nicht verschenkt werden!");
+				await Context.Channel.SendMessageAsync($"GeldbetrÃ¤ge von 0{CurrencySign} oder weniger kÃ¶nnen nicht verschenkt werden!");
 			}
 		}
 
@@ -166,7 +166,7 @@ namespace Mitternacht.Modules.Gambling {
 							str += GetText("br_win", $"{amount * _bc.BotConfig.Betroll91Multiplier}{CurrencySign}", 90);
 							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll91Multiplier)).ConfigureAwait(false);
 						} else {
-							str += $"{GetText("br_win", $"{amount * _bc.BotConfig.Betroll100Multiplier}{CurrencySign}", 100)} 👑";
+							str += $"{GetText("br_win", $"{amount * _bc.BotConfig.Betroll100Multiplier}{CurrencySign}", 100)} ðŸ‘‘";
 							await _currency.AddAsync(guildUser, "Betroll Gamble", (int)(amount * _bc.BotConfig.Betroll100Multiplier)).ConfigureAwait(false);
 						}
 					}

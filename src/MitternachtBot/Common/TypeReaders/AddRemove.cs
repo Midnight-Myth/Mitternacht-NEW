@@ -1,4 +1,4 @@
-namespace Mitternacht.Common.TypeReaders {
+﻿namespace Mitternacht.Common.TypeReaders {
 	public enum AddRemove {
 		Add    = 0,
 		Rem    = 1,
