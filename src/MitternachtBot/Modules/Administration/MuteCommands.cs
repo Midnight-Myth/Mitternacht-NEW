@@ -78,8 +78,10 @@ namespace Mitternacht.Modules.Administration {
 						await Mute(user).ConfigureAwait(false);
 					} else {
 						try {
-							await Service.TimedMute(user, TimeSpan.FromSeconds(muteTime)).ConfigureAwait(false);
-							await ConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
+							var muteTimeSpan = TimeSpan.FromSeconds(muteTime);
+
+							await Service.TimedMute(user, muteTimeSpan).ConfigureAwait(false);
+							await ConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), $"{muteTimeSpan:d'd'h'h'm'min's's'}").ConfigureAwait(false);
 						} catch(Exception e) {
 							_log.Warn(e);
 							await ErrorLocalized("mute_error").ConfigureAwait(false);

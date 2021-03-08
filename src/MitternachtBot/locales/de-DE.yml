@@ -219,7 +219,7 @@ administration:
   user_joined:                                   Benutzer ist beigetreten
   user_left:                                     Benutzer ist gegangen
   user_muted:                                    "{0} wurde im Text- und Sprachchat **stummgeschaltet**."
-  user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1}min **stummgeschaltet**."
+  user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1} **stummgeschaltet**."
   user_nick:                                     Nickname des Benutzers {0} wurde zu {1} geändert
   user_not_found:                                Benutzer nicht gefunden.
   userpunish_unban_user_not_found:               Benutzer nicht gefunden.
