@@ -5,6 +5,7 @@ tab_width                = 4
 charset                  = utf-8-bom
 trim_trailing_whitespace = false
 insert_final_newline     = false
+end_of_line              = lf
 
 max_line_length          = off
 
@@ -303,4 +304,3 @@ resharper_wrap_property_pattern = wrap_if_long
 [*.{appxmanifest,asax,ascx,aspx,build,cs,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
 indent_style = tab
 indent_size  = tab
-end_of_line  = crlf
