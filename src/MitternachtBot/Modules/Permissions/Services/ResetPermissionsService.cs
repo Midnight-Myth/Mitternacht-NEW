@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;

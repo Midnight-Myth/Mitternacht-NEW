@@ -1,4 +1,4 @@
-namespace Mitternacht.Modules.Verification.Common {
+﻿namespace Mitternacht.Modules.Verification.Common {
 	public enum VerificationKeyScope {
 		Forum, Discord
 	}

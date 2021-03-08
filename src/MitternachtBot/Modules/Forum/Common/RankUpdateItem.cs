@@ -1,4 +1,4 @@
-using GommeHDnetForumAPI.Models.Entities;
+﻿using GommeHDnetForumAPI.Models.Entities;
 
 namespace Mitternacht.Modules.Forum.Common {
 	public class RankUpdateItem {

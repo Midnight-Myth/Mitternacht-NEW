@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace MitternachtWeb.Models {
 	public class ErrorViewModel {

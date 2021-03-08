@@ -1,4 +1,4 @@
-namespace Mitternacht.Modules.Permissions.Common {
+﻿namespace Mitternacht.Modules.Permissions.Common {
 	public class PermissionCache {
 		public string PermRole { get; set; }
 		public bool Verbose { get; set; } = true;

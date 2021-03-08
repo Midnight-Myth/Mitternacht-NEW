@@ -1,4 +1,4 @@
-namespace Mitternacht.Common {
+﻿namespace Mitternacht.Common {
 	public enum BotConfigEditType {
 		BetflipMultiplier,
 		Betroll100Multiplier,
