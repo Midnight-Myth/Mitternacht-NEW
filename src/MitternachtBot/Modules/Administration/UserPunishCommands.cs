@@ -287,7 +287,7 @@ namespace Mitternacht.Modules.Administration {
 					
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
-						.WithTitle($"â›”ï¸ {GetText("userpunish_ban_banned_user")}")
+						.WithTitle($"⛔️ {GetText("userpunish_ban_banned_user")}")
 						.AddField(efb => efb
 							.WithName(GetText("userpunish_ban_username"))
 							.WithValue(user.ToString())
@@ -357,7 +357,7 @@ namespace Mitternacht.Modules.Administration {
 
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
-						.WithTitle($"â˜£ {GetText("userpunish_softban_sb_user")}")
+						.WithTitle($"☣ {GetText("userpunish_softban_sb_user")}")
 						.AddField(efb => efb
 							.WithName(GetText("userpunish_softban_username"))
 							.WithValue(user.ToString())

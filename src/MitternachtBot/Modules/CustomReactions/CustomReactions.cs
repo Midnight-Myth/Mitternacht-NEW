@@ -63,10 +63,10 @@ namespace Mitternacht.Modules.CustomReactions {
 							customReactions.OrderBy(cr => cr.Trigger).Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(cr => {
 								var str = $"`#{cr.Id}` {cr.Trigger}";
 								if(cr.AutoDeleteTrigger) {
-									str = $"ðŸ—‘{str}";
+									str = $"🗑‘{str}";
 								}
 								if(cr.DmResponse) {
-									str = $"ðŸ“ª{str}";
+									str = $"📪{str}";
 								}
 								return str;
 							}))), (int)Math.Ceiling(customReactions.Length * 1d / elementsPerPage), reactUsers: new[] { Context.User as IGuildUser }).ConfigureAwait(false);

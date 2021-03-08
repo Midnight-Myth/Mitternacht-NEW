@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Help {
 				.WithTitle(GetText("list_of_modules"))
 				.WithDescription(string.Join("\n", _cmds.Modules.GroupBy(m => m.GetTopLevelModule())
 										 .Where(m => !_perms.BlockedModules.Contains(m.Key.Name.ToLowerInvariant()))
-										 .Select(m => $"â€¢ {m.Key.Name}")
+										 .Select(m => $"• {m.Key.Name}")
 										 .OrderBy(s => s)));
 			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 		}
@@ -88,7 +88,7 @@ namespace Mitternacht.Modules.Help {
 			var groups = cmds.GroupBy(x => (j+=x.Count()) / 48).ToArray();
 
 			for(var i = 0; i < groups.Length; i++) {
-				var text = $"{(i == 0 ? $"ðŸ“ƒ **{GetText("list_of_commands")}**\n" : "")}```css\n";
+				var text = $"{(i == 0 ? $"📃 **{GetText("list_of_commands")}**\n" : "")}```css\n";
 				text += string.Join("\n", groups[i].Select(sm => {
 					var o = 0;
 					return $"{sm.Key.GetModuleName()}\n{string.Join("\n", sm.GroupBy(c => o++ / 3).Select(col => string.Concat(col.Select(c => $"{Prefix + c.Aliases.First(),-16} {$"[{c.Aliases.Skip(1).FirstOrDefault()}]",-9}"))))}";

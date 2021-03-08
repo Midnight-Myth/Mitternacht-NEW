@@ -42,11 +42,11 @@ namespace Mitternacht.Modules.Gambling {
 				await Context.Channel.SendConfirmAsync(
 Format.Bold($@"{Context.User} won: {amount + _bc.BotConfig.CurrencySign}
 
-   ã€Ž{Wof.Multipliers[1]}ã€   ã€Ž{Wof.Multipliers[0]}ã€   ã€Ž{Wof.Multipliers[7]}ã€
+   『{Wof.Multipliers[1]}』   『{Wof.Multipliers[0]}』   『{Wof.Multipliers[7]}』
 
-ã€Ž{Wof.Multipliers[2]}ã€      {wof.Emoji}      ã€Ž{Wof.Multipliers[6]}ã€
+『{Wof.Multipliers[2]}』      {wof.Emoji}      『{Wof.Multipliers[6]}』
 
-     ã€Ž{Wof.Multipliers[3]}ã€   ã€Ž{Wof.Multipliers[4]}ã€   ã€Ž{Wof.Multipliers[5]}ã€")).ConfigureAwait(false);
+     『{Wof.Multipliers[3]}』   『{Wof.Multipliers[4]}』   『{Wof.Multipliers[5]}』")).ConfigureAwait(false);
 			}
 		}
 	}

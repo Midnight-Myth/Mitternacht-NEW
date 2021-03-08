@@ -31,9 +31,9 @@ namespace Mitternacht.Modules.Utility {
 				var result = expr.Evaluate();
 
 				if(expr.Error == null) {
-					await Context.Channel.SendConfirmAsync($"{expression.Replace("*", "\\*").Replace("_", "\\_").Trim()}\n{result}", $"âš™ {GetText("result")}").ConfigureAwait(false);
+					await Context.Channel.SendConfirmAsync($"{expression.Replace("*", "\\*").Replace("_", "\\_").Trim()}\n{result}", $"⚙ {GetText("result")}").ConfigureAwait(false);
 				} else {
-					await Context.Channel.SendErrorAsync(expr.Error, $"âš™ {GetText("error")}").ConfigureAwait(false);
+					await Context.Channel.SendErrorAsync(expr.Error, $"⚙ {GetText("error")}").ConfigureAwait(false);
 				}
 			}
 

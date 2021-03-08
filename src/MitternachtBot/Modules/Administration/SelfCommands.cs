@@ -100,7 +100,7 @@ namespace Mitternacht.Modules.Administration {
 					return;
 				Context.Message.DeleteAfter(0);
 				try {
-					var msg = await Context.Channel.SendConfirmAsync($"â² {ms}ms").ConfigureAwait(false);
+					var msg = await Context.Channel.SendConfirmAsync($"⏲ {ms}ms").ConfigureAwait(false);
 					msg.DeleteAfter(ms / 1000);
 				} catch { /*ignored*/ }
 

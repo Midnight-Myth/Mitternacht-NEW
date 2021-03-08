@@ -297,7 +297,7 @@ namespace Mitternacht.Modules.Administration {
 		[RequireContext(ContextType.Guild)]
 		[RequireUserPermission(GuildPermission.MentionEveryone)]
 		public async Task MentionRole(params IRole[] roles) {
-			var send = "â•" + GetText("menrole", Context.User.Mention);
+			var send = "❕" + GetText("menrole", Context.User.Mention);
 			foreach(var role in roles) {
 				send += $"\n**{role.Name}**\n";
 				send += string.Join(", ", (await Context.Guild.GetUsersAsync())
@@ -317,7 +317,7 @@ namespace Mitternacht.Modules.Administration {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task Donators() {
-			await Context.Channel.SendConfirmAsync(string.Join("â­", uow.Donators.GetDonatorsOrdered().Select(d => d.Name).ToList()), GetText("donators")).ConfigureAwait(false);
+			await Context.Channel.SendConfirmAsync(string.Join("⭐­", uow.Donators.GetDonatorsOrdered().Select(d => d.Name).ToList()), GetText("donators")).ConfigureAwait(false);
 		}
 
 

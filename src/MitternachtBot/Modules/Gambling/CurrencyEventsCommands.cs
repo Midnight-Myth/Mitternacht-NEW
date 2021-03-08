@@ -187,7 +187,7 @@ namespace Mitternacht.Modules.Gambling {
 				await _reactionMessage.AddReactionAsync(iemote).ConfigureAwait(false);
 			} catch {
 				try {
-					await _reactionMessage.AddReactionAsync(iemote = new Emoji("ðŸŒ¸")).ConfigureAwait(false);
+					await _reactionMessage.AddReactionAsync(iemote = new Emoji("🌸")).ConfigureAwait(false);
 				} catch {
 					try {
 						await _reactionMessage.DeleteAsync().ConfigureAwait(false);

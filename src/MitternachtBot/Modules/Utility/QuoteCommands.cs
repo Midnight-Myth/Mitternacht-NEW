@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Utility {
 						replacer.Replace(crembed);
 						await Context.Channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
 					} else {
-						await Context.Channel.SendMessageAsync($"`#{quote.Id}` ðŸ“£ {quote.Keyword.SanitizeMentions()}: {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
+						await Context.Channel.SendMessageAsync($"`#{quote.Id}` 📣 {quote.Keyword.SanitizeMentions()}: {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
 					}
 				} else {
 					await ReplyErrorLocalized("quote_not_found", keyword).ConfigureAwait(false);
@@ -99,7 +99,7 @@ namespace Mitternacht.Modules.Utility {
 				var keywordquote= uow.Quotes.SearchQuoteKeywordText(Context.Guild.Id, keyword, text);
 
 				if(keywordquote != null) {
-					await Context.Channel.SendMessageAsync($"`#{keywordquote.Id}` ðŸ’¬ {keywordquote.Keyword}:  {keywordquote.Text.SanitizeMentions()}").ConfigureAwait(false);
+					await Context.Channel.SendMessageAsync($"`#{keywordquote.Id}` 💬 {keywordquote.Keyword}:  {keywordquote.Text.SanitizeMentions()}").ConfigureAwait(false);
 				} else {
 					await ReplyErrorLocalized("quote_text_not_found", keyword).ConfigureAwait(false);
 				}
@@ -118,7 +118,7 @@ namespace Mitternacht.Modules.Utility {
 					replacer.Replace(crembed);
 					await Context.Channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
 				} else
-					await Context.Channel.SendMessageAsync($"`#{quote.Id}` ðŸ—¯ï¸ {quote.Keyword.ToLowerInvariant().SanitizeMentions()}:  {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
+					await Context.Channel.SendMessageAsync($"`#{quote.Id}` 🗯️ {quote.Keyword.ToLowerInvariant().SanitizeMentions()}:  {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

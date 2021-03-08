@@ -30,7 +30,7 @@ namespace Mitternacht.Modules.Administration {
 				var newval = config.AutoDeleteSelfAssignedRoleMessages = !config.AutoDeleteSelfAssignedRoleMessages;
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-				await Context.Channel.SendConfirmAsync($"â„¹ï¸ Automatic deleting of `iam` and `iamn` confirmations has been {(newval ? "**enabled**" : "**disabled**")}.")
+				await Context.Channel.SendConfirmAsync($"ℹ️ Automatic deleting of `iam` and `iamn` confirmations has been {(newval ? "**enabled**" : "**disabled**")}.")
 							 .ConfigureAwait(false);
 			}
 
