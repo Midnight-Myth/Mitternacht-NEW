@@ -1,4 +1,4 @@
-## Inhaltsverzeichnis
+﻿## Inhaltsverzeichnis
 - [Help](#help)
 - [Administration](#administration)
 - [Birthday](#birthday)
