@@ -9,17 +9,7 @@ for file in "$@"; do
 		withbom="$(echo "${t}" | grep -q '(with BOM)' && echo true || echo false)"
 		isascii="$(echo "${t}" | grep -q 'ASCII' && echo true || echo false)"
 		
-		if [ "${isutf}" = "true" ] && [ "${withbom}" != "true" ]; then
-			echo "+ Converting to 1252..."
-			enconv -L none -x windows-1252 "${file}"
-			mv "${file}"{,~}
-			if uconv -f windows-1252 -t utf-8 --add-signature "${file}~" -o "${file}"; then
-				rm "${file}~"
-			else
-				echo "- Error with uconv."
-				mv "${file}"{~,}
-			fi
-		elif [ "${isascii}" = "true" ]; then
+		if [ "${isutf}" = "true" ] && [ "${withbom}" != "true" ] || [ "${isascii}" = "true" ]; then
 			echo "+ Adding UTF-8 BOM..."
 			mv "${file}"{,~}
 			if uconv -f utf-8 -t utf-8 --add-signature "${file}~" -o "${file}"; then

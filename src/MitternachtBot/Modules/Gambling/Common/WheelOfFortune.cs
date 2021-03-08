@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Gambling.Common {
