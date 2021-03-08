@@ -22,24 +22,12 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageRoles)]
-			[Priority(0)]
-			public async Task SetMuteRole([Remainder] string name) {
-				name = name.Trim();
-
-				if(!string.IsNullOrWhiteSpace(name)) {
-					var gc = uow.GuildConfigs.For(Context.Guild.Id);
-					gc.MuteRoleName = name;
-					await uow.SaveChangesAsync(false).ConfigureAwait(false);
-					await ConfirmLocalized("mute_role_set").ConfigureAwait(false);
-				}
+			public async Task SetMuteRole([Remainder] IRole role) {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.MutedRoleId = role.Id;
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+				await ConfirmLocalized("mute_role_set").ConfigureAwait(false);
 			}
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
-			[RequireUserPermission(GuildPermission.ManageRoles)]
-			[Priority(1)]
-			public Task SetMuteRole([Remainder] IRole role)
-				=> SetMuteRole(role.Name);
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]

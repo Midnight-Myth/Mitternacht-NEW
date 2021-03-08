@@ -112,20 +112,21 @@ namespace Mitternacht.Modules.Administration.Services {
 		public async Task<IRole> GetMuteRole(IGuild guild) {
 			const string defaultMuteRoleName = "Muted";
 
-			using var uow = _db.UnitOfWork;
-			var gc = uow.GuildConfigs.For(guild.Id);
-			if(string.IsNullOrWhiteSpace(gc.MuteRoleName)) {
-				gc.MuteRoleName = defaultMuteRoleName;
-				await uow.SaveChangesAsync().ConfigureAwait(false);
-			}
+			using var uow      = _db.UnitOfWork;
+			var       gc       = uow.GuildConfigs.For(guild.Id);
+			var       muteRole = gc.MutedRoleId.HasValue ? guild.Roles.FirstOrDefault(r => r.Id == gc.MutedRoleId) : null;
 
-			var muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName);
 			if(muteRole == null) {
-				//TODO: Silently creating the role is not a good design.
-				try {
-					muteRole = await guild.CreateRoleAsync(gc.MuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
-				} catch {
-					muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName) ?? await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
+				var muteRoleName = string.IsNullOrWhiteSpace(gc.MuteRoleName) ? defaultMuteRoleName : gc.MuteRoleName;
+
+				muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName);
+
+				if(muteRole == null) {
+					//TODO: Silently creating the role is not a good design.
+					muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
+				} else {
+					gc.MutedRoleId = muteRole.Id;
+					await uow.SaveChangesAsync();
 				}
 			}
 

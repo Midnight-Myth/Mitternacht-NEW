@@ -22,7 +22,9 @@ namespace Mitternacht.Database.Models {
 		public bool   ExclusiveSelfAssignedRoles         { get; set; }
 		public bool   AutoDeleteSelfAssignedRoleMessages { get; set; }
 		public bool   VoicePlusTextEnabled               { get; set; }
+		[Obsolete]
 		public string MuteRoleName                       { get; set; }
+		public ulong? MutedRoleId                        { get; set; }
 		public string Locale                             { get; set; }
 		public string TimeZoneId                         { get; set; }
 		public ulong? GameVoiceChannel                   { get; set; }
