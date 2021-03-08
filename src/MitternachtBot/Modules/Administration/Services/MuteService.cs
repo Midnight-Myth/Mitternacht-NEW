@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Mitternacht.Database;
 using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
@@ -54,11 +55,11 @@ namespace Mitternacht.Modules.Administration.Services {
 		}
 
 		private async Task Client_GuildMemberUpdated(SocketGuildUser oldUser, SocketGuildUser updatedUser) {
-			var changedRoles = updatedUser.Roles.Where(r => !oldUser.Roles.Contains(r)).ToArray();
-			var mutedRole     = await GetMuteRole(updatedUser.Guild).ConfigureAwait(false);
+			var       changedRoles = updatedUser.Roles.Where(r => !oldUser.Roles.Contains(r)).ToArray();
+			using var uow          = _db.UnitOfWork;
+			var       mutedRole    = await GetMuteRole(updatedUser.Guild, uow).ConfigureAwait(false);
 
 			if(changedRoles.Contains(mutedRole)) {
-				using var uow       = _db.UnitOfWork;
 				var       gc        = uow.GuildConfigs.For(updatedUser.Guild.Id, set => set.Include(g => g.MutedUsers));
 				var       mutedUser = gc.MutedUsers.FirstOrDefault(mu => mu.UserId == updatedUser.Id);
 
@@ -82,7 +83,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			}
 
 			//Add muted role to user.
-			var muteRole     = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
+			var muteRole     = await GetMuteRole(guildUser.Guild, uow).ConfigureAwait(false);
 			var alreadyMuted = guildUser.RoleIds.Contains(muteRole.Id);
 			if(!alreadyMuted)
 				await guildUser.AddRoleAsync(muteRole).ConfigureAwait(false);
@@ -94,10 +95,12 @@ namespace Mitternacht.Modules.Administration.Services {
 		public async Task UnmuteUser(IGuildUser guildUser) {
 			StopUnmuteTimer(guildUser.GuildId, guildUser.Id);
 			RemoveUnmuteTimerFromDb(guildUser.GuildId, guildUser.Id);
+			
+			using var uow = _db.UnitOfWork;
 
 			//Remove muted role from user.
-			var muteRole     = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
-			var silencedRole = GetSilencedRole(guildUser.Guild);
+			var muteRole     = await GetMuteRole(guildUser.Guild, uow).ConfigureAwait(false);
+			var silencedRole = GetSilencedRole(guildUser.Guild, uow);
 			if(guildUser.RoleIds.Contains(muteRole.Id))
 				await guildUser.RemoveRoleAsync(muteRole).ConfigureAwait(false);
 			if(silencedRole is not null && guildUser.RoleIds.Contains(silencedRole.Id)) {
@@ -105,7 +108,6 @@ namespace Mitternacht.Modules.Administration.Services {
 			}
 
 			//Remove mute from database.
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
 			gc.MutedUsers.RemoveWhere(mu => mu.UserId == guildUser.Id);
 			await uow.SaveChangesAsync().ConfigureAwait(false);
@@ -114,9 +116,13 @@ namespace Mitternacht.Modules.Administration.Services {
 		}
 
 		public async Task<IRole> GetMuteRole(IGuild guild) {
-			const string defaultMuteRoleName = "Muted";
+			using var uow = _db.UnitOfWork;
+			return await GetMuteRole(guild, uow).ConfigureAwait(false);
+		}
 
-			using var uow      = _db.UnitOfWork;
+		public async Task<IRole> GetMuteRole(IGuild guild, IUnitOfWork uow) {
+			const string defaultMuteRoleName = "Muted";
+			
 			var       gc       = uow.GuildConfigs.For(guild.Id);
 			var       muteRole = gc.MutedRoleId.HasValue ? guild.Roles.FirstOrDefault(r => r.Id == gc.MutedRoleId) : null;
 
@@ -137,10 +143,9 @@ namespace Mitternacht.Modules.Administration.Services {
 			return muteRole;
 		}
 
-		public IRole GetSilencedRole(IGuild guild) {
-			using var uow            = _db.UnitOfWork;
-			var       gc             = uow.GuildConfigs.For(guild.Id);
-			var       silencedRoleId = gc.SilencedRoleId;
+		public IRole GetSilencedRole(IGuild guild, IUnitOfWork uow) {
+			var gc             = uow.GuildConfigs.For(guild.Id);
+			var silencedRoleId = gc.SilencedRoleId;
 
 			return silencedRoleId.HasValue ? guild.GetRole(silencedRoleId.Value) : null;
 		}
@@ -174,7 +179,7 @@ namespace Mitternacht.Modules.Administration.Services {
 					}
 				} catch(Exception ex) {
 					RemoveUnmuteTimerFromDb(guildId, userId);
-                    _log.Warn("Couldn't unmute user {0} in guild {1}", userId, guildId);
+					_log.Warn("Couldn't unmute user {0} in guild {1}", userId, guildId);
 					_log.Warn(ex);
 				}
 			}, null, after, Timeout.InfiniteTimeSpan);
