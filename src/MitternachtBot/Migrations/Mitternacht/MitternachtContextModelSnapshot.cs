@@ -15,16 +15,16 @@ namespace Mitternacht.Migrations.Mitternacht
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Mitternacht.Database.Models.AntiRaidSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Action")
                         .HasColumnType("integer");
@@ -54,7 +54,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("AntiSpamSettingId")
                         .HasColumnType("integer");
@@ -77,7 +77,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Action")
                         .HasColumnType("integer");
@@ -107,7 +107,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<bool>("BirthdayMessageEnabled")
                         .HasColumnType("boolean");
@@ -140,7 +140,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("BotConfigId")
                         .HasColumnType("integer");
@@ -166,7 +166,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("BotConfigId")
                         .HasColumnType("integer");
@@ -194,7 +194,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<float>("BetflipMultiplier")
                         .HasColumnType("real");
@@ -296,7 +296,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -322,7 +322,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("CommandName")
                         .HasColumnType("text");
@@ -348,7 +348,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<long>("Amount")
                         .HasColumnType("bigint");
@@ -375,7 +375,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<long>("Amount")
                         .HasColumnType("bigint");
@@ -402,7 +402,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<bool>("AutoDeleteTrigger")
                         .HasColumnType("boolean");
@@ -441,7 +441,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -449,7 +449,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<decimal>("GuildId")
                         .HasColumnType("numeric(20,0)");
 
-                    b.Property<DateTime>("LastTimeGotten")
+                    b.Property<DateTime>("LastTimeReceived")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("UserId")
@@ -468,7 +468,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -495,7 +495,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Amount")
                         .HasColumnType("integer");
@@ -522,7 +522,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("BotConfigId")
                         .HasColumnType("integer");
@@ -545,7 +545,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -573,7 +573,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -596,7 +596,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -619,7 +619,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("AdditionalVerificationUsers")
                         .HasColumnType("text");
@@ -729,6 +729,9 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<string>("MuteRoleName")
                         .HasColumnType("text");
 
+                    b.Property<decimal?>("MutedRoleId")
+                        .HasColumnType("numeric(20,0)");
+
                     b.Property<string>("PermissionRole")
                         .HasColumnType("text");
 
@@ -743,6 +746,9 @@ namespace Mitternacht.Migrations.Mitternacht
 
                     b.Property<bool>("SendDmGreetMessage")
                         .HasColumnType("boolean");
+
+                    b.Property<decimal?>("SilencedRoleId")
+                        .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("TeamUpdateChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -798,7 +804,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -833,7 +839,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -856,7 +862,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -879,7 +885,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -909,7 +915,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal?>("ChannelCreatedId")
                         .HasColumnType("numeric(20,0)");
@@ -975,7 +981,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -999,7 +1005,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1022,7 +1028,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1045,7 +1051,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1083,7 +1089,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("BotConfigId")
                         .HasColumnType("integer");
@@ -1106,7 +1112,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("AuthorId")
                         .HasColumnType("numeric(20,0)");
@@ -1139,7 +1145,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");
@@ -1172,7 +1178,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("AmountRewardedThisMonth")
                         .HasColumnType("integer");
@@ -1202,7 +1208,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1229,7 +1235,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1259,7 +1265,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1283,7 +1289,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("AuthorId")
                         .HasColumnType("numeric(20,0)");
@@ -1324,7 +1330,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1347,7 +1353,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int?>("BotConfigId")
                         .HasColumnType("integer");
@@ -1391,7 +1397,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1418,7 +1424,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1444,7 +1450,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1471,7 +1477,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1507,7 +1513,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1533,7 +1539,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1560,7 +1566,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1587,7 +1593,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("timestamp without time zone");
@@ -1632,7 +1638,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Count")
                         .HasColumnType("integer");
@@ -1661,7 +1667,7 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal>("ChannelId")
                         .HasColumnType("numeric(20,0)");

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -22,14 +22,9 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageRoles)]
-			[Priority(0)]
-			public async Task SetMuteRole([Remainder] string name) {
-				name = name.Trim();
-				if(string.IsNullOrWhiteSpace(name))
-					return;
-
+			public async Task SetMuteRole([Remainder] IRole role) {
 				var gc = uow.GuildConfigs.For(Context.Guild.Id);
-				gc.MuteRoleName = name;
+				gc.MutedRoleId = role.Id;
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 				await ConfirmLocalized("mute_role_set").ConfigureAwait(false);
 			}
@@ -37,9 +32,12 @@ namespace Mitternacht.Modules.Administration {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.ManageRoles)]
-			[Priority(1)]
-			public Task SetMuteRole([Remainder] IRole role)
-				=> SetMuteRole(role.Name);
+			public async Task SetSilencedRole([Remainder] IRole role = null) {
+				var gc = uow.GuildConfigs.For(Context.Guild.Id);
+				gc.SilencedRoleId = role?.Id;
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+				await ConfirmLocalized("setsilencedrole_role_set").ConfigureAwait(false);
+			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
@@ -62,23 +60,26 @@ namespace Mitternacht.Modules.Administration {
 			[RequireUserPermission(GuildPermission.MuteMembers)]
 			[Priority(1)]
 			public async Task Mute(IGuildUser user, string time) {
-				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?";
+				const string timeRegex = "((?<days>\\d+)d)?((?<hours>\\d+)h)?((?<minutes>\\d+)m(in)?)?((?<seconds>\\d+)s)?";
 
 				var match = Regex.Match(time, timeRegex);
 
 				if(match.Success) {
-					var days    = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
-					var hours   = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
-					var minutes = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
+					var days     = string.IsNullOrWhiteSpace(match.Groups["days"   ].Value) ? 0 : Convert.ToInt32(match.Groups["days"   ].Value);
+					var hours    = string.IsNullOrWhiteSpace(match.Groups["hours"  ].Value) ? 0 : Convert.ToInt32(match.Groups["hours"  ].Value);
+					var minutes  = string.IsNullOrWhiteSpace(match.Groups["minutes"].Value) ? 0 : Convert.ToInt32(match.Groups["minutes"].Value);
+					var seconds  = string.IsNullOrWhiteSpace(match.Groups["seconds"].Value) ? 0 : Convert.ToInt32(match.Groups["seconds"].Value);
 
-					var muteTime = days*24*60 + hours*60 + minutes;
+					var muteTime = days*24*60*60 + hours*60*60 + minutes*60 + seconds;
 
 					if(muteTime == 0) {
 						await Mute(user).ConfigureAwait(false);
 					} else {
 						try {
-							await Service.TimedMute(user, TimeSpan.FromMinutes(muteTime)).ConfigureAwait(false);
-							await ConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), muteTime).ConfigureAwait(false);
+							var muteTimeSpan = TimeSpan.FromSeconds(muteTime);
+
+							await Service.TimedMute(user, muteTimeSpan).ConfigureAwait(false);
+							await ConfirmLocalized("user_muted_time", Format.Bold(user.ToString()), $"{muteTimeSpan:d'd'h'h'm'min's's'}").ConfigureAwait(false);
 						} catch(Exception e) {
 							_log.Warn(e);
 							await ErrorLocalized("mute_error").ConfigureAwait(false);

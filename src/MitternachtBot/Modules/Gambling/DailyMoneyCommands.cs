@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -91,6 +91,17 @@ namespace Mitternacht.Modules.Gambling {
 				await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
 				await MessageLocalized("dm_again", user.ToString()).ConfigureAwait(false);
+			}
+
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[OwnerOrGuildPermission(GuildPermission.Administrator)]
+			public async Task ResetDailyMoneyGuild() {
+				uow.DailyMoney.ResetLastTimeReceivedForGuild(Context.Guild.Id, _gts.GetTimeZoneOrUtc(Context.Guild.Id));
+
+				await uow.SaveChangesAsync(false).ConfigureAwait(false);
+
+				await ConfirmLocalized("dailymoney_resetdailymoneyguild_success").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]

@@ -1,4 +1,4 @@
----
+﻿---
 administration:
   aar_disabled:                                  "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **deaktiviert**."
   aar_enabled:                                   "**Automatische Rollenzuteilung** bei Beitritt eines Benutzers ist nun **aktiviert**."
@@ -103,6 +103,7 @@ administration:
   mute_error:                                    Ich habe wahrscheinlich die benötigten Rechte nicht.
   mute_error_timeformat:                         Das angegebene Zeitformat `{0}` ist falsch.
   mute_role_set:                                 Neue Mute-Rolle gesetzt.
+  setsilencedrole_role_set:                      Neue Silenced-Rolle gesetzt.
   mutetime_not_muted:                            Der Nutzer **{0}** ist nicht gemutet.
   mutetime_muted:                                Der Nutzer **{0}** ist noch **{1}** gemutet.
   mutetime_permanent:                            Der Nutzer **{0}** ist permanent gemutet.
@@ -219,7 +220,7 @@ administration:
   user_joined:                                   Benutzer ist beigetreten
   user_left:                                     Benutzer ist gegangen
   user_muted:                                    "{0} wurde im Text- und Sprachchat **stummgeschaltet**."
-  user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1}min **stummgeschaltet**."
+  user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1} **stummgeschaltet**."
   user_nick:                                     Nickname des Benutzers {0} wurde zu {1} geändert
   user_not_found:                                Benutzer nicht gefunden.
   userpunish_unban_user_not_found:               Benutzer nicht gefunden.
@@ -436,6 +437,7 @@ gambling:
   dice_rolled:                                   würfelte {0}
   dice_rolled_num:                               'Würfel gerollt: {0}'
   divorces:                                      Scheidungen
+  dailymoney_resetdailymoneyguild_success:       Der ganze Server kann sich seinen täglichen Anteil nochmal abholen.
   dm_again:                                      "`{0}` kann sich seinen täglichen Anteil nochmal abholen."
   dm_already_received:                           Du hast deinen täglichen Anteil heute bereits abgeholt.
   dm_no_role:                                    Deine Rollen erlauben kein DailyMoney, also bekommst du nichts.

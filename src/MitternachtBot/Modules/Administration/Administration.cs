@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -317,7 +317,7 @@ namespace Mitternacht.Modules.Administration {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		public async Task Donators() {
-			await Context.Channel.SendConfirmAsync(string.Join("⭐", uow.Donators.GetDonatorsOrdered().Select(d => d.Name).ToList()), GetText("donators")).ConfigureAwait(false);
+			await Context.Channel.SendConfirmAsync(string.Join("⭐­", uow.Donators.GetDonatorsOrdered().Select(d => d.Name).ToList()), GetText("donators")).ConfigureAwait(false);
 		}
 
 

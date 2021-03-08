@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Mitternacht.Modules.Games.Common.Hangman.Exceptions {
 	public class TermNotFoundException : Exception {

@@ -1,4 +1,4 @@
----
+﻿---
 - name:    warnhide
   cmd:     warnhide
   aliases: []
@@ -249,7 +249,12 @@
   cmd:     setmuterole
   aliases: []
   desc:    Sets a name of the role which will be assigned to people who should be muted. Default is Muted.
-  usage:   "`{0}setmuterole Silenced`"
+  usage:   "`{0}setmuterole Muted`"
+- name:    setsilencedrole
+  cmd:     setsilencedrole
+  aliases: []
+  desc:    Sets a name of the role which will be assigned to people who should be silenced.
+  usage:   "`{0}setsilencedrole Silenced`"
 - name:    rank
   cmd:     rank
   aliases:
@@ -2025,6 +2030,11 @@
   aliases: []
   desc:    Erlaube einem User, sein tägliches Geld nochmal zu holen.
   usage:   "`{0}resetdailymoney [user]`"
+- name:    resetdailymoneyguild
+  cmd:     resetdailymoneyguild
+  aliases: []
+  desc:    Erlaube jedem Nutzer des Servers, sein tägliches Geld nochmal zu holen.
+  usage:   "`{0}resetdailymoneyguild`"
 - name:    addverification
   cmd:     addverification
   aliases: []

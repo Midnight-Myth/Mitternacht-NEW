@@ -1,4 +1,4 @@
-Placeholders are used in Quotes, Custom Reactions, Greet/bye messages, playing statuses, and a few other places.  
+﻿Placeholders are used in Quotes, Custom Reactions, Greet/bye messages, playing statuses, and a few other places.  
 
 They can be used to make the message more user friendly, generate random numbers or pictures, etc...  
 

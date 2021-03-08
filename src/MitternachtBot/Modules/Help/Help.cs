@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +58,7 @@ namespace Mitternacht.Modules.Help {
 						var s = $"{m.Key.Name}";
 						var sms = m.Where(sm => sm.IsSubmodule).ToList();
 						if(sms.Any())
-							s += "\n" + string.Join("\n", sms.Select(sm => $"• {sm.GetModuleName()}"));
+							s += "\n" + string.Join("\n", sms.Select(sm => $"â€¢ {sm.GetModuleName()}"));
 						return s;
 					})));
 			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);

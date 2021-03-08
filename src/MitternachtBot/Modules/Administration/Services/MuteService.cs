@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
+using Mitternacht.Database;
 using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
@@ -35,7 +36,8 @@ namespace Mitternacht.Modules.Administration.Services {
 				}
 			}
 
-			_client.UserJoined += Client_UserJoined;
+			_client.UserJoined         += Client_UserJoined;
+			_client.GuildMemberUpdated += Client_GuildMemberUpdated;
 		}
 
 		private Task Client_UserJoined(IGuildUser guildUser) {
@@ -52,24 +54,39 @@ namespace Mitternacht.Modules.Administration.Services {
 			return Task.CompletedTask;
 		}
 
+		private async Task Client_GuildMemberUpdated(SocketGuildUser oldUser, SocketGuildUser updatedUser) {
+			var       changedRoles = updatedUser.Roles.Where(r => !oldUser.Roles.Contains(r)).ToArray();
+			using var uow          = _db.UnitOfWork;
+			var       mutedRole    = await GetMuteRole(updatedUser.Guild, uow).ConfigureAwait(false);
+
+			if(changedRoles.Contains(mutedRole)) {
+				var       gc        = uow.GuildConfigs.For(updatedUser.Guild.Id, set => set.Include(g => g.MutedUsers));
+				var       mutedUser = gc.MutedUsers.FirstOrDefault(mu => mu.UserId == updatedUser.Id);
+
+				if(mutedUser is null) {
+					_ = Task.Run(async () => await MuteUser(updatedUser).ConfigureAwait(false));
+				}
+			}
+		}
+
 		public async Task MuteUser(IGuildUser guildUser) {
 			StopUnmuteTimer(guildUser.GuildId, guildUser.Id);
 			RemoveUnmuteTimerFromDb(guildUser.GuildId, guildUser.Id);
-
-			//Add muted role to user.
-			var muteRole = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
-			var alreadyMuted = guildUser.RoleIds.Contains(muteRole.Id);
-			if(!alreadyMuted)
-				await guildUser.AddRoleAsync(muteRole).ConfigureAwait(false);
-
+			
 			//Save mute to database.
-			using var uow = _db.UnitOfWork;
-			var gc = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
-			var mutedUser = gc.MutedUsers.FirstOrDefault(mu => mu.UserId == guildUser.Id);
+			using var uow       = _db.UnitOfWork;
+			var       gc        = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
+			var       mutedUser = gc.MutedUsers.FirstOrDefault(mu => mu.UserId == guildUser.Id);
 			if(mutedUser == null) {
 				gc.MutedUsers.Add(new MutedUserId { UserId = guildUser.Id });
 				await uow.SaveChangesAsync().ConfigureAwait(false);
 			}
+
+			//Add muted role to user.
+			var muteRole     = await GetMuteRole(guildUser.Guild, uow).ConfigureAwait(false);
+			var alreadyMuted = guildUser.RoleIds.Contains(muteRole.Id);
+			if(!alreadyMuted)
+				await guildUser.AddRoleAsync(muteRole).ConfigureAwait(false);
 
 			if(!alreadyMuted || mutedUser == null)
 				UserMuted(guildUser);
@@ -78,14 +95,19 @@ namespace Mitternacht.Modules.Administration.Services {
 		public async Task UnmuteUser(IGuildUser guildUser) {
 			StopUnmuteTimer(guildUser.GuildId, guildUser.Id);
 			RemoveUnmuteTimerFromDb(guildUser.GuildId, guildUser.Id);
+			
+			using var uow = _db.UnitOfWork;
 
 			//Remove muted role from user.
-			var muteRole = await GetMuteRole(guildUser.Guild).ConfigureAwait(false);
+			var muteRole     = await GetMuteRole(guildUser.Guild, uow).ConfigureAwait(false);
+			var silencedRole = GetSilencedRole(guildUser.Guild, uow);
 			if(guildUser.RoleIds.Contains(muteRole.Id))
 				await guildUser.RemoveRoleAsync(muteRole).ConfigureAwait(false);
+			if(silencedRole is not null && guildUser.RoleIds.Contains(silencedRole.Id)) {
+				await guildUser.RemoveRoleAsync(silencedRole).ConfigureAwait(false);
+			}
 
 			//Remove mute from database.
-			using var uow = _db.UnitOfWork;
 			var gc = uow.GuildConfigs.For(guildUser.Guild.Id, set => set.Include(g => g.MutedUsers));
 			gc.MutedUsers.RemoveWhere(mu => mu.UserId == guildUser.Id);
 			await uow.SaveChangesAsync().ConfigureAwait(false);
@@ -94,26 +116,38 @@ namespace Mitternacht.Modules.Administration.Services {
 		}
 
 		public async Task<IRole> GetMuteRole(IGuild guild) {
-			const string defaultMuteRoleName = "Muted";
-
 			using var uow = _db.UnitOfWork;
-			var gc = uow.GuildConfigs.For(guild.Id);
-			if(string.IsNullOrWhiteSpace(gc.MuteRoleName)) {
-				gc.MuteRoleName = defaultMuteRoleName;
-				await uow.SaveChangesAsync().ConfigureAwait(false);
-			}
+			return await GetMuteRole(guild, uow).ConfigureAwait(false);
+		}
 
-			var muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName);
+		public async Task<IRole> GetMuteRole(IGuild guild, IUnitOfWork uow) {
+			const string defaultMuteRoleName = "Muted";
+			
+			var       gc       = uow.GuildConfigs.For(guild.Id);
+			var       muteRole = gc.MutedRoleId.HasValue ? guild.Roles.FirstOrDefault(r => r.Id == gc.MutedRoleId) : null;
+
 			if(muteRole == null) {
-				//TODO: Silently creating the role is not a good design.
-				try {
-					muteRole = await guild.CreateRoleAsync(gc.MuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
-				} catch {
-					muteRole = guild.Roles.FirstOrDefault(r => r.Name == gc.MuteRoleName) ?? await guild.CreateRoleAsync(defaultMuteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
+				var muteRoleName = string.IsNullOrWhiteSpace(gc.MuteRoleName) ? defaultMuteRoleName : gc.MuteRoleName;
+
+				muteRole = guild.Roles.FirstOrDefault(r => r.Name == muteRoleName);
+
+				if(muteRole == null) {
+					//TODO: Silently creating the role is not a good design.
+					muteRole = await guild.CreateRoleAsync(muteRoleName, GuildPermissions.None, isMentionable: false).ConfigureAwait(false);
+				} else {
+					gc.MutedRoleId = muteRole.Id;
+					await uow.SaveChangesAsync();
 				}
 			}
 
 			return muteRole;
+		}
+
+		public IRole GetSilencedRole(IGuild guild, IUnitOfWork uow) {
+			var gc             = uow.GuildConfigs.For(guild.Id);
+			var silencedRoleId = gc.SilencedRoleId;
+
+			return silencedRoleId.HasValue ? guild.GetRole(silencedRoleId.Value) : null;
 		}
 
 		public async Task TimedMute(IGuildUser guildUser, TimeSpan after) {
@@ -145,7 +179,7 @@ namespace Mitternacht.Modules.Administration.Services {
 					}
 				} catch(Exception ex) {
 					RemoveUnmuteTimerFromDb(guildId, userId);
-                    _log.Warn("Couldn't unmute user {0} in guild {1}", userId, guildId);
+					_log.Warn("Couldn't unmute user {0} in guild {1}", userId, guildId);
 					_log.Warn(ex);
 				}
 			}, null, after, Timeout.InfiniteTimeSpan);

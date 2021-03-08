@@ -1,4 +1,4 @@
-namespace Mitternacht.Modules.Verification.Common {
+﻿namespace Mitternacht.Modules.Verification.Common {
 	public enum VerificationStep {
 		Started,
 		ForumNameSent,

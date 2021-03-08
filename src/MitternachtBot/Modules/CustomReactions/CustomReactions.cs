@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -63,7 +63,7 @@ namespace Mitternacht.Modules.CustomReactions {
 							customReactions.OrderBy(cr => cr.Trigger).Skip(currentPage * elementsPerPage).Take(elementsPerPage).Select(cr => {
 								var str = $"`#{cr.Id}` {cr.Trigger}";
 								if(cr.AutoDeleteTrigger) {
-									str = $"🗑{str}";
+									str = $"🗑‘{str}";
 								}
 								if(cr.DmResponse) {
 									str = $"📪{str}";

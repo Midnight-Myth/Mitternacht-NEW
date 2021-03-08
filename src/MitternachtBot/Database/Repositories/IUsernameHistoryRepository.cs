@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories {

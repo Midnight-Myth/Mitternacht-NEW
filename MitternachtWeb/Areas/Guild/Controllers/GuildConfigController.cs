@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
@@ -26,7 +26,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit([Bind("GuildId,Prefix,DeleteMessageOnCommand,AutoAssignRoleId,AutoDeleteGreetMessagesTimer,AutoDeleteByeMessagesTimer,GreetMessageChannelId,ByeMessageChannelId,SendDmGreetMessage,DmGreetMessageText,SendChannelGreetMessage,ChannelGreetMessageText,SendChannelByeMessage,ChannelByeMessageText,ExclusiveSelfAssignedRoles,AutoDeleteSelfAssignedRoleMessages,DefaultMusicVolume,VoicePlusTextEnabled,CleverbotEnabled,MuteRoleName,Locale,TimeZoneId,GameVoiceChannel,VerboseErrors,VerifiedRoleId,VerifyString,VerificationTutorialText,AdditionalVerificationUsers,VerificationPasswordChannelId,TurnToXpMultiplier,MessageXpTimeDifference,MessageXpCharCountMin,MessageXpCharCountMax,LogUsernameHistory,BirthdayRoleId,BirthdayMessage,BirthdayMessageChannelId,BirthdaysEnabled,BirthdayMoney,GommeTeamMemberRoleId,VipRoleId,TeamUpdateChannelId,TeamUpdateMessagePrefix,CountToNumberChannelId,CountToNumberMessageChance,CountToNumberDeleteWrongMessages,VerbosePermissions,PermissionRole,FilterInvites,FilterWords,FilterZalgo,WarningsInitialized,ForumNotificationChannelId,ColorMetricSimilarityRadius")] GuildConfig guildConfig) {
+		public async Task<IActionResult> Edit([Bind("GuildId,Prefix,DeleteMessageOnCommand,AutoAssignRoleId,AutoDeleteGreetMessagesTimer,AutoDeleteByeMessagesTimer,GreetMessageChannelId,ByeMessageChannelId,SendDmGreetMessage,DmGreetMessageText,SendChannelGreetMessage,ChannelGreetMessageText,SendChannelByeMessage,ChannelByeMessageText,ExclusiveSelfAssignedRoles,AutoDeleteSelfAssignedRoleMessages,DefaultMusicVolume,VoicePlusTextEnabled,CleverbotEnabled,MuteRoleName,MutedRoleId,SilencedRoleId,Locale,TimeZoneId,GameVoiceChannel,VerboseErrors,VerifiedRoleId,VerifyString,VerificationTutorialText,AdditionalVerificationUsers,VerificationPasswordChannelId,TurnToXpMultiplier,MessageXpTimeDifference,MessageXpCharCountMin,MessageXpCharCountMax,LogUsernameHistory,BirthdayRoleId,BirthdayMessage,BirthdayMessageChannelId,BirthdaysEnabled,BirthdayMoney,GommeTeamMemberRoleId,VipRoleId,TeamUpdateChannelId,TeamUpdateMessagePrefix,CountToNumberChannelId,CountToNumberMessageChance,CountToNumberDeleteWrongMessages,VerbosePermissions,PermissionRole,FilterInvites,FilterWords,FilterZalgo,WarningsInitialized,ForumNotificationChannelId,ColorMetricSimilarityRadius")] GuildConfig guildConfig) {
 			if(PermissionWriteGuildConfig) {
 				if(GuildId == guildConfig.GuildId) {
 					if(ModelState.IsValid) {
@@ -51,6 +51,8 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 							gc.AutoDeleteSelfAssignedRoleMessages = guildConfig.AutoDeleteSelfAssignedRoleMessages;
 							gc.VoicePlusTextEnabled               = guildConfig.VoicePlusTextEnabled;
 							gc.MuteRoleName                       = guildConfig.MuteRoleName;
+							gc.MutedRoleId                        = guildConfig.MutedRoleId;
+							gc.SilencedRoleId                     = guildConfig.SilencedRoleId;
 							gc.Locale                             = guildConfig.Locale;
 							gc.TimeZoneId                         = guildConfig.TimeZoneId;
 							gc.GameVoiceChannel                   = guildConfig.GameVoiceChannel;

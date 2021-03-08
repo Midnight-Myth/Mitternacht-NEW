@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
@@ -287,7 +287,7 @@ namespace Mitternacht.Modules.Administration {
 					
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
-						.WithTitle($"⛔️ {GetText("userpunish_ban_banned_user")}")
+						.WithTitle($"⛔️ {GetText("userpunish_ban_banned_user")}")
 						.AddField(efb => efb
 							.WithName(GetText("userpunish_ban_username"))
 							.WithValue(user.ToString())

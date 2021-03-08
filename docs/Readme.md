@@ -1,4 +1,4 @@
-## Readme for Commands List
+﻿## Readme for Commands List
 
 ### Bot Owner Only
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -48,7 +48,8 @@ namespace Mitternacht.Services {
 		public ConcurrentDictionary<ulong, uint> UserMessagesSent     { get; } = new ConcurrentDictionary<ulong, uint>();
 		public ConcurrentHashSet<ulong>          UsersOnShortCooldown { get; } = new ConcurrentHashSet<ulong>();
 
-		private readonly Timer _clearUsersOnShortCooldown;
+		private readonly Timer  _clearUsersOnShortCooldown;
+		private readonly Random _random = new();
 
 		public CommandHandler(DiscordSocketClient client, DbService db, IBotConfigProvider bcp, CommandService commandService, MitternachtBot bot, IBotCredentials bc) {
 			_client         = client;
@@ -161,8 +162,16 @@ namespace Mitternacht.Services {
 
 				await TryRunCommand(guild, channel, usrMsg);
 			} catch(Exception ex) {
-				_log.Warn(ex, $"Error in CommandHandler. Stacktrace:\n{ex.StackTrace}");
+				const string codeCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+				var code = new string(Enumerable.Repeat(codeCharacters, 8).Select(s => s[_random.Next(codeCharacters.Length)]).ToArray());
+
+				_log.Warn(ex, $"Error in CommandHandler (EID {code}). Stacktrace:\n{ex.StackTrace}");
 				if(ex.InnerException != null) _log.Warn(ex.InnerException, $"Inner Exception of the error in CommandHandler. Stacktrace:\n{ex.InnerException.StackTrace}");
+
+				try {
+					await msg.Channel.SendErrorAsync($"Error: {ex.GetType().FullName ?? "Unknown"} (EID {code})").ConfigureAwait(false);
+				} catch { /* ignored */}
 			}
 		}
 
@@ -326,6 +335,8 @@ namespace Mitternacht.Services {
 					await context.Channel.SendErrorAsync("Command execution failed, please contact the bot author.").ConfigureAwait(false);
 				} else {
 					uow.Context.Database.CommitTransaction();
+
+					await context.Channel.SendErrorAsync($"Error while executing command: {execResult.Exception.GetType().FullName ?? "Unknown"}\nSee the error logs for more information.").ConfigureAwait(false);
 				}
 			} else {
 				uow.Context.Database.CommitTransaction();

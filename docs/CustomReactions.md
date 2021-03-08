@@ -1,4 +1,4 @@
-##Custom Reactions
+﻿##Custom Reactions
 ###Important
 *	For modifying **global** custom reactions, the ones which will work across all the servers your bot is connected to, you **must** be a Bot Owner.  
 You must also use the commands for adding, deleting and listing these reactions in a direct message with the bot.  

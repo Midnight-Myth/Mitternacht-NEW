@@ -1,4 +1,4 @@
-files:
+﻿files:
   - source: /src/MitternachtBot/data/*/**/*.json
     translation: /src/MitternachtBot/locale/%locale%/%original_file_name%
   - source: /src/MitternachtBot/locales/de-DE.yml

@@ -1,1 +1,1 @@
-[![Discord](https://discordapp.com/api/guilds/147439310096826368/widget.png)](https://discordapp.com/invite/0p3mZ7JeMSz5A4sR)
+﻿[![Discord](https://discordapp.com/api/guilds/147439310096826368/widget.png)](https://discordapp.com/invite/0p3mZ7JeMSz5A4sR)

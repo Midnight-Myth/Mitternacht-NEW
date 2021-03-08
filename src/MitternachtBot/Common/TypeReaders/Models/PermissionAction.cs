@@ -1,4 +1,4 @@
-namespace Mitternacht.Common.TypeReaders.Models {
+﻿namespace Mitternacht.Common.TypeReaders.Models {
 	public class PermissionAction {
 		public static PermissionAction Enable  => new PermissionAction(true);
 		public static PermissionAction Disable => new PermissionAction(false);

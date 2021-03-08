@@ -1,4 +1,4 @@
-namespace Mitternacht.Database.Models {
+﻿namespace Mitternacht.Database.Models {
 	public class CustomReaction : DbEntity {
 		public ulong? GuildId           { get; set; }
 		public string Response          { get; set; }

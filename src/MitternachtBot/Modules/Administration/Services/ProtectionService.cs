@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,29 +67,31 @@ namespace Mitternacht.Modules.Administration.Services {
 		}
 
 		private Task MessageReceivedAntiSpamHandler(SocketMessage message) {
-			if(!(message is IUserMessage userMessage) || userMessage.Author.IsBot || !(userMessage.Channel is ITextChannel channel) || !_antiSpamGuilds.TryGetValue(channel.Guild.Id, out var antiSpamStats))
+			if(message is IUserMessage userMessage && !userMessage.Author.IsBot && userMessage.Channel is ITextChannel channel && _antiSpamGuilds.TryGetValue(channel.Guild.Id, out var antiSpamStats)) {
+				var _ = Task.Run(async () => {
+					try {
+						using var uow = _db.UnitOfWork;
+						var settings = uow.GuildConfigs.For(channel.GuildId, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels)).AntiSpamSetting;
+
+						if(settings.IgnoredChannels.Any(x => x.ChannelId == channel.Id))
+							return;
+
+						var stats = antiSpamStats.UserStats.AddOrUpdate(userMessage.Author.Id, (id) => new UserSpamStats(userMessage), (id, old) => {
+							old.ApplyNextMessage(userMessage);
+							return old;
+						});
+
+						if(stats.Count >= settings.MessageThreshold && antiSpamStats.UserStats.TryRemove(userMessage.Author.Id, out stats)) {
+							stats.Dispose();
+							await PunishUsers(settings.Action, ProtectionType.Spamming, settings.MuteTime, (IGuildUser)userMessage.Author).ConfigureAwait(false);
+						}
+					} catch { }
+				});
+
 				return Task.CompletedTask;
-
-			var _ = Task.Run(async () => {
-				try {
-					using var uow = _db.UnitOfWork;
-					var settings = uow.GuildConfigs.For(channel.GuildId, set => set.Include(x => x.AntiSpamSetting).ThenInclude(x => x.IgnoredChannels)).AntiSpamSetting;
-
-					if(settings.IgnoredChannels.Any(x => x.ChannelId == channel.Id))
-						return;
-
-					var stats = antiSpamStats.UserStats.AddOrUpdate(userMessage.Author.Id, (id) => new UserSpamStats(userMessage), (id, old) => {
-						old.ApplyNextMessage(userMessage);
-						return old;
-					});
-
-					if(stats.Count >= settings.MessageThreshold && antiSpamStats.UserStats.TryRemove(userMessage.Author.Id, out stats)) {
-						stats.Dispose();
-						await PunishUsers(settings.Action, ProtectionType.Spamming, settings.MuteTime, (IGuildUser)userMessage.Author).ConfigureAwait(false);
-					}
-				} catch { }
-			});
-			return Task.CompletedTask;
+			} else {
+				return Task.CompletedTask;
+			}
 		}
 
 

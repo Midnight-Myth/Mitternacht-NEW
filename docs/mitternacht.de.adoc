@@ -1,4 +1,4 @@
-= Dokumentation Mitternachtbot
+﻿= Dokumentation Mitternachtbot
 
 = Einrichtung des Bots
 

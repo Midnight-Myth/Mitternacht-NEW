@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -118,7 +118,7 @@ namespace Mitternacht.Modules.Utility {
 					replacer.Replace(crembed);
 					await Context.Channel.EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
 				} else
-					await Context.Channel.SendMessageAsync($"`#{quote.Id}` 🗯️ {quote.Keyword.ToLowerInvariant().SanitizeMentions()}:  {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
+					await Context.Channel.SendMessageAsync($"`#{quote.Id}` 🗯️ {quote.Keyword.ToLowerInvariant().SanitizeMentions()}:  {replacer.Replace(quote.Text)?.SanitizeMentions()}").ConfigureAwait(false);
 			}
 
 			[MitternachtCommand, Usage, Description, Aliases]
