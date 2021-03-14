@@ -359,4 +359,4 @@ build/
 /src/NadekoBot/Services/Database/Models/SupportMessage.cs
 *.sqlite
 
-docker-compose.env
+.env

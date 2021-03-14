@@ -1,5 +1,5 @@
 ﻿Dockerfile
 **/.git
-docker-compose.env
+.env
 .gitignore
 .gitmodules
