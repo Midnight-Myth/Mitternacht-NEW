@@ -17,7 +17,7 @@ services:
     volumes:
       -                  'mitternacht-data:/data'
     ports:
-      -                  '5000:${MITTERNACHT_WEB_PORT:?Port not provided.}'
+      -                  '${MITTERNACHT_WEB_PORT:?Port not provided.}:5000'
     restart:             'unless-stopped'
 volumes:
   db-data:
