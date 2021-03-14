@@ -1,4 +1,9 @@
-﻿= Dokumentation Mitternachtbot
+﻿:toc:
+:toc-placement!:
+
+= Dokumentation Mitternachtbot
+
+toc::[]
 
 = Einrichtung des Bots
 
