@@ -15,9 +15,7 @@ Sie versuchen außerdem, den Bot automatisch zu updaten, falls dieser ohne Fehle
 === Ohne Docker (dotnet-build-run)
 
 
-=== Mit Docker
-
-==== dotnet-build-run-docker
+=== Mit Docker (dotnet-build-run-docker)
 
 Eine Beispielkonfiguration kann mit folgendem Befehl generiert werden.
 [source,bash]
@@ -78,7 +76,7 @@ Es wird davon abgeraten, einen gängigen Port wie 80 oder 443 zu verwenden, stat
 
 Das Verzeichnis `datadir` wird für den Bot notwendige Konfigurationsdateien enthalten und mit einem laufenden Dockercontainer geteilt.
 
-===== Starten des Bots
+==== Starten des Bots
 
 Zum Generieren der Botkonfigurationsdateien kann der Bot nun ausgeführt werden.
 Der Befehl `dotnet-build-run-docker` liest standardmäßig eine Datei `build-run-docker.cfg` im aktuellen Verzeichnis.
@@ -100,7 +98,7 @@ Der Start sollte mit folgender Nachricht abbrechen:
 12:20:09 Mitternacht.Services.Impl.BotCredentials | 'credentials.json' is missing. Add it and restart the program. An example can be found in /data/credentials_example.json
 ----
 
-==== docker-compose
+=== Mit docker-compose
 
 Grundvoraussetzungen für diese Methode sind eine aktuelle Version von `docker-compose` und `docker>=19.03.0`.
 Im Gegensatz zur Variante mit dem <<dotnet-build-run-docker,dotnet-build-run-docker Skript>> wird hier kein zusätzlicher Prozess, wie bspw. eine `tmux`-Session, benötigt.
@@ -110,7 +108,7 @@ Die folgenden Erklärungen nutzen das Verzeichnis `mybot` als Hauptverzeichnis f
 Der Name kann selbstverständlich (und sollte) mit einem beliebigen anderen Namen ausgetauscht werden.
 Dieser Name ist gleichzeitig auch Präfix für docker images, container und volumes.
 
-===== Klonen des Repositories
+==== Klonen des Repositories
 
 Der Bot kann mit folgendem Befehl geklont werden.
 
@@ -122,7 +120,7 @@ $ cd mybot
 
 Standardmäßig wird der Branch `master` ausgecheckt, der gleichzeitig auch der stabile Branch ist.
 
-===== Konfiguration für docker-compose
+==== Konfiguration für docker-compose
 
 Als nächstes müssen Einstellungen für `docker-compose` festgelegt werden.
 Dazu kann die Datei `example.env` zu `.env` kopiert werden.
@@ -141,7 +139,7 @@ Die folgende Tabelle listet alle Konfigurationsmöglichkeiten
 Die aktuelle Dockerunterstützung ist darauf ausgerichtet, dass das Webinterface hinter einem Reverseproxy aktiv ist.
 Möglicherweise wird die Option `MITTERNACHT_WEB_PORT` daher in Zukunft wegfallen.
 
-===== Der erste Start des Bots
+==== Der erste Start des Bots
 
 Der Bot muss konfiguriert werden, um richtig zu funktionieren.
 Da am Anfang die nötigen Konfigurationsdateien fehlen, kann man sich Beispieldateien generieren lassen.
@@ -171,7 +169,7 @@ $ docker-compose run mitternacht /bin/sh
 
 Weitere Informationen zur Konfiguration gibt es in der Sektion <<Konfiguration>>.
 
-===== Reguläres Starten und Stoppen des Bots
+==== Reguläres Starten und Stoppen des Bots
 
 [source,bash]
 ----
@@ -182,7 +180,7 @@ $ docker-compose up -d
 $ docker-compose down
 ----
 
-===== Updates
+==== Updates
 
 Mit den folgenden Befehlen, ausgeführt im Verzeichnis `mybot`, wird der Bot geupdatet.
 
@@ -193,7 +191,7 @@ $ git pull --ff-only --recurse-submodules
 $ docker-compose up -d
 ----
 
-===== Speicherort der Daten
+==== Speicherort der Daten
 
 In `docker-compose.yml` werden zwei Volumes definiert: Eins für die Postgres-Datenbank und eins für die Konfigurations- und weitere Dateien des Bots.
 Standardmäßig sind diese unter `/var/lib/docker/volumes/` zu finden.
