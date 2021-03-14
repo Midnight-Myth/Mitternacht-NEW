@@ -10,7 +10,7 @@ namespace Mitternacht.Services.Impl {
 	public class BotCredentials : IBotCredentials {
 		public ulong  ClientId                { get; set; } = 0;
 		public string Token                   { get; set; } = "";
-		public string DbConnection            { get; set; } = "Host=127.0.0.1;Port=5432;Database=mitternachtbot;Username=mitternachtbot;Password=mitternachtbotpassword;";
+		public string DbConnection            { get; set; } = "Host=postgres;Port=5432;Database=mitternacht;Username=mitternacht;Password=mitternacht;";
 
 		public ImmutableArray<ulong> OwnerIds { get; set; } = new ulong[1].ToImmutableArray();
 		
