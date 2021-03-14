@@ -1,10 +1,19 @@
-﻿= Dokumentation Mitternachtbot
+﻿:toc:
+:toc-placement!:
+
+= Dokumentation Mitternachtbot
+
+toc::[]
 
 = Einrichtung des Bots
 
-Es wird empfohlen, eines der https://github.com/expeehaa/dotnet-build-run[dotnet-build-run-Skripte] zum Runterladen und Starten des Bots zu verwenden.
+Für größtmögliche Portabilität und Einfachkeit wird empfohlen, die Installationsmethode <<Mit docker-compose,mit docker-compose>> zu verwenden.
+Aktuell unterstützt diese Variante jedoch keine automatischen Updates.
+
+Alternativ ist es möglich, eines der https://github.com/expeehaa/dotnet-build-run[dotnet-build-run-Skripte] zum Runterladen und Starten des Bots zu verwenden.
 In dem Repository befinden sich zwei Skripte: Eins für die Ausführung mit Docker und eins ohne Docker.
 Beide Skripte benötigen ähnliche Konfigurationsdateien und können selbstständig das Repository, in dem sich Mitternacht befindet, herunterladen.
+Sie versuchen außerdem, den Bot automatisch zu updaten, falls dieser ohne Fehler gestoppt wird.
 
 == Installation
 
@@ -94,6 +103,104 @@ Der Start sollte mit folgender Nachricht abbrechen:
 12:20:09 Mitternacht.Services.Impl.BotCredentials | 'credentials.json' is missing. Add it and restart the program. An example can be found in /data/credentials_example.json
 ----
 
+=== Mit docker-compose
+
+Grundvoraussetzungen für diese Methode sind eine aktuelle Version von `docker-compose` und `docker>=19.03.0`.
+Im Gegensatz zur Variante mit dem <<Mit Docker (dotnet-build-run-docker),dotnet-build-run-docker Skript>> wird hier kein zusätzlicher Prozess, wie bspw. eine `tmux`-Session, benötigt.
+Das hat jedoch zum Nachteil, dass der Bot nicht mehr in der Lage ist, sich selbst zu updaten.
+
+Die folgenden Erklärungen nutzen das Verzeichnis `mybot` als Hauptverzeichnis für das geklonte Botrepository.
+Der Name kann selbstverständlich (und sollte) mit einem beliebigen anderen Namen ausgetauscht werden.
+Dieser Name ist gleichzeitig auch Präfix für docker images, container und volumes.
+
+==== Klonen des Repositories
+
+Der Bot kann mit folgendem Befehl geklont werden.
+
+[source,bash]
+----
+$ git clone --recurse-submodules https://github.com/Midnight-Myth/Mitternacht-NEW mybot
+$ cd mybot
+----
+
+Standardmäßig wird der Branch `master` ausgecheckt, der gleichzeitig auch der stabile Branch ist.
+
+==== Konfiguration für docker-compose
+
+Als nächstes müssen Einstellungen für `docker-compose` festgelegt werden.
+Dazu kann die Datei `example.env` zu `.env` kopiert werden.
+
+[source,bash]
+----
+$ cp example.env .env
+----
+
+Die folgende Tabelle listet alle Konfigurationsmöglichkeiten
+
+|====
+| MITTERNACHT_WEB_PORT | Der Port, unter dem das Webinterface über die Hostmaschine erreichbar ist.
+|====
+
+Die aktuelle Dockerunterstützung ist darauf ausgerichtet, dass das Webinterface hinter einem Reverseproxy aktiv ist.
+Möglicherweise wird die Option `MITTERNACHT_WEB_PORT` daher in Zukunft wegfallen.
+
+==== Der erste Start des Bots
+
+Der Bot muss konfiguriert werden, um richtig zu funktionieren.
+Da am Anfang die nötigen Konfigurationsdateien fehlen, kann man sich Beispieldateien generieren lassen.
+
+Dazu kann man den Bot mit
+
+[source,bash]
+----
+$ docker-compose up
+----
+
+starten und mit `Ctrl+C` beenden, sobald die folgende Nachricht auftritt.
+
+[source]
+----
+12:20:09 Mitternacht.Services.Impl.BotCredentials | 'credentials.json' is missing. Add it and restart the program. An example can be found in /data/credentials_example.json
+----
+
+Mit folgendem Befehl kann man in eine Sh-Umgebung gelangen, die Zugriff auf die Konfigurationsdateien gibt.
+Als Editor vorinstalliert ist aus Gründen der Einfachkeit `nano`.
+
+[source,bash]
+----
+$ docker-compose run mitternacht /bin/sh
+----
+
+Weitere Informationen zur Konfiguration gibt es in der Sektion <<Konfiguration>>.
+
+==== Reguläres Starten und Stoppen des Bots
+
+[source,bash]
+----
+# Start
+$ docker-compose up -d
+
+# Stop
+$ docker-compose down
+----
+
+==== Updates
+
+Mit den folgenden Befehlen, ausgeführt im Verzeichnis `mybot`, wird der Bot geupdatet.
+
+[source,bash]
+----
+$ docker-compose down
+$ git pull --ff-only --recurse-submodules
+$ docker-compose up -d
+----
+
+==== Speicherort der Daten
+
+In `docker-compose.yml` werden zwei Volumes definiert: Eins für die Postgres-Datenbank und eins für die Konfigurations- und weitere Dateien des Bots.
+Standardmäßig sind diese unter `/var/lib/docker/volumes/` zu finden.
+Eine Kopie dieser Volumes reicht aus, um den Bot zum Beispiel auf einem anderen Computer mit gleichen Daten zum Laufen zu bringen.
+
 
 == Konfiguration
 
@@ -109,7 +216,7 @@ Der Inhalt sollte bisher ungefähr so aussehen:
 {
   "ClientId": 0,
   "Token": "",
-  "DbConnection": "Host=127.0.0.1;Port=5432;Database=mitternachtbot;Username=mitternachtbot;Password=mitternachtbotpassword;",
+  "DbConnection": "Host=postgres;Port=5432;Database=mitternacht;Username=mitternacht;Password=mitternacht;",
   "OwnerIds": [
     0
   ],
@@ -135,7 +242,7 @@ Die folgende Tabelle bietet einen Überblick über die einzelnen Felder.
 |====
 | ClientId      | Die ClientId des Botaccounts.
 | Token         | Das Token des Botaccounts.
-| DbConnection  | Verbindung zur Datenbank, siehe <<PostgreSQL>> zur Einrichtung dieser.
+| DbConnection  | Verbindung zur Datenbank, siehe <<PostgreSQL>> zur Einrichtung dieser. Wird der Bot mit <<docker-compose>> gestartet, muss am Standardwert nichts weiter verändert werden.
 | OwnerIds      | Die IDs der Discordaccounts der Botbesitzer. Einige Befehle können nur von Botbesitzern ausgeführt werden.
 | ForumUsername | Nutzername des Accounts, mit dem sich der Bot im GommeHD.net-Forum einloggt.
 | ForumPassword | Passwort des Accounts, mit dem sich der Bot im GommeHD.net-Forum einloggt.
