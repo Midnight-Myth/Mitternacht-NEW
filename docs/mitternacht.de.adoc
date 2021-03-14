@@ -2,7 +2,7 @@
 
 = Einrichtung des Bots
 
-Für größtmögliche Portabilität und Einfachkeit wird empfohlen, die Installationsmethode mit <<docker-compose>> zu verwenden.
+Für größtmögliche Portabilität und Einfachkeit wird empfohlen, die Installationsmethode <<Mit docker-compose,mit docker-compose>> zu verwenden.
 Aktuell unterstützt diese Variante jedoch keine automatischen Updates.
 
 Alternativ ist es möglich, eines der https://github.com/expeehaa/dotnet-build-run[dotnet-build-run-Skripte] zum Runterladen und Starten des Bots zu verwenden.
@@ -101,7 +101,7 @@ Der Start sollte mit folgender Nachricht abbrechen:
 === Mit docker-compose
 
 Grundvoraussetzungen für diese Methode sind eine aktuelle Version von `docker-compose` und `docker>=19.03.0`.
-Im Gegensatz zur Variante mit dem <<dotnet-build-run-docker,dotnet-build-run-docker Skript>> wird hier kein zusätzlicher Prozess, wie bspw. eine `tmux`-Session, benötigt.
+Im Gegensatz zur Variante mit dem <<Mit Docker (dotnet-build-run-docker),dotnet-build-run-docker Skript>> wird hier kein zusätzlicher Prozess, wie bspw. eine `tmux`-Session, benötigt.
 Das hat jedoch zum Nachteil, dass der Bot nicht mehr in der Lage ist, sich selbst zu updaten.
 
 Die folgenden Erklärungen nutzen das Verzeichnis `mybot` als Hauptverzeichnis für das geklonte Botrepository.
@@ -148,8 +148,7 @@ Dazu kann man den Bot mit
 
 [source,bash]
 ----
-$ docker-compose up --no-start
-$
+$ docker-compose up
 ----
 
 starten und mit `Ctrl+C` beenden, sobald die folgende Nachricht auftritt.
