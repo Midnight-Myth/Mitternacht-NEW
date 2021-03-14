@@ -10,3 +10,4 @@ WORKDIR /data
 EXPOSE 5000
 ENV ASPNETCORE_ENVIRONMENT="Production"
 ENV ASPNETCORE_URLS="http://*:5000"
+CMD ["dotnet", "/build/MitternachtWeb.dll"]

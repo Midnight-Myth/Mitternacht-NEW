@@ -1,0 +1,24 @@
+version:                 '3.8'
+services:
+  postgres:
+    image:               'postgres:12'
+    volumes:
+      -                  'db-data:/var/lib/postgresql/data'
+    restart:             'always'
+    environment:
+      POSTGRES_DB:       'mitternacht'
+      POSTGRES_USER:     'mitternacht'
+      POSTGRES_PASSWORD: 'mitternacht'
+  mitternacht:
+    build:               '.'
+    image:               'mitternacht'
+    depends_on:
+      -                  'postgres'
+    volumes:
+      -                  'mitternacht-data:/data'
+    ports:
+      -                  '${MITTERNACHT_WEB_PORT:?Port not provided.}:5000'
+    restart:             'unless-stopped'
+volumes:
+  db-data:
+  mitternacht-data:
