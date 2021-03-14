@@ -1,3 +1,5 @@
 ﻿Dockerfile
 **/.git
 docker-compose.env
+.gitignore
+.gitmodules
