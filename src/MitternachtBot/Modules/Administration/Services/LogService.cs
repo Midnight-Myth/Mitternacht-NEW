@@ -18,7 +18,7 @@ using NLog;
 using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Administration.Services {
-	public class LogCommandService : IMService {
+	public class LogService : IMService {
 		private readonly DiscordSocketClient _client;
 		private readonly DbService _db;
 		private readonly StringService _strings;
@@ -28,7 +28,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 		private ConcurrentDictionary<ITextChannel, List<string>> PresenceUpdates { get; } = new ConcurrentDictionary<ITextChannel, List<string>>();
 
-		public LogCommandService(DiscordSocketClient client, StringService strings, DbService db, MuteService mute, ProtectionService prot, GuildTimezoneService tz, VerificationService vs) {
+		public LogService(DiscordSocketClient client, StringService strings, DbService db, MuteService mute, ProtectionService prot, GuildTimezoneService tz, VerificationService vs) {
 			_client = client;
 			_db = db;
 			_strings = strings;
