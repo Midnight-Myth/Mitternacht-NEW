@@ -8,7 +8,7 @@ using Mitternacht.Common;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class GuildConfigRepository : Repository<GuildConfig>, IGuildConfigRepository {
-		public GuildConfigRepository(DbContext context) : base(context) { }
+		public GuildConfigRepository(MitternachtContext context) : base(context) { }
 
 		private static List<WarningPunishment> DefaultWarnPunishments
 			=> new List<WarningPunishment> {

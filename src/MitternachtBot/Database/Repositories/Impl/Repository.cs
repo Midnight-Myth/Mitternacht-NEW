@@ -4,10 +4,10 @@ using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class Repository<T> : IRepository<T> where T : DbEntity {
-		protected DbContext _context;
+		protected MitternachtContext _context;
 		protected DbSet<T> _set;
 
-		public Repository(DbContext context) {
+		public Repository(MitternachtContext context) {
 			_context = context;
 			_set = context.Set<T>();
 		}

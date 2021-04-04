@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class RoleMoneyRepository : Repository<RoleMoney>, IRoleMoneyRepository {
-		public RoleMoneyRepository(DbContext context) : base(context) { }
+		public RoleMoneyRepository(MitternachtContext context) : base(context) { }
 
 		public RoleMoney GetOrCreate(ulong guildId, ulong roleId) {
 			var rm = _set.FirstOrDefault(m => m.GuildId == guildId && m.RoleId == roleId);

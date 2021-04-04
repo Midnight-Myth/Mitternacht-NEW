@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 using MoreLinq;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class QuoteRepository : Repository<Quote>, IQuoteRepository {
-		public QuoteRepository(DbContext context) : base(context) { }
+		public QuoteRepository(MitternachtContext context) : base(context) { }
 
 		public IEnumerable<Quote> GetAllQuotesByKeyword(ulong guildId, string keyword)
 			=> _set.AsQueryable().Where(q => q.GuildId == guildId).AsEnumerable().Where(q => q.Keyword.Equals(keyword, StringComparison.OrdinalIgnoreCase));

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class NicknameHistoryRepository : Repository<NicknameHistoryModel>, INicknameHistoryRepository {
-		public NicknameHistoryRepository(DbContext context) : base(context) { }
+		public NicknameHistoryRepository(MitternachtContext context) : base(context) { }
 
 		public IQueryable<NicknameHistoryModel> GetGuildUserNames(ulong guildId, ulong userId)
 			=> _set.AsQueryable().Where(n => n.GuildId == guildId && n.UserId == userId);

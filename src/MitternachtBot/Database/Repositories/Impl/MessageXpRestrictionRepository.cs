@@ -1,11 +1,10 @@
 ﻿using System.Linq;
 using Discord;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class MessageXpRestrictionRepository : Repository<MessageXpRestriction>, IMessageXpRestrictionRepository {
-		public MessageXpRestrictionRepository(DbContext context) : base(context) { }
+		public MessageXpRestrictionRepository(MitternachtContext context) : base(context) { }
 
 		public bool CreateRestriction(ITextChannel channel)
 			=> CreateRestriction(channel.GuildId, channel.Id);

@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class VerifiedUserRepository : Repository<VerifiedUser>, IVerifiedUserRepository {
-		public VerifiedUserRepository(DbContext context) : base(context) { }
+		public VerifiedUserRepository(MitternachtContext context) : base(context) { }
 
 		public VerifiedUser GetVerifiedUser(ulong guildId, ulong userId)
 			=> _set.FirstOrDefault(v => v.GuildId == guildId && v.UserId == userId);

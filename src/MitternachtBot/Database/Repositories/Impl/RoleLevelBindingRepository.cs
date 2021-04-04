@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class RoleLevelBindingRepository : Repository<RoleLevelBinding>, IRoleLevelBindingRepository {
-		public RoleLevelBindingRepository(DbContext context) : base(context) { }
+		public RoleLevelBindingRepository(MitternachtContext context) : base(context) { }
 
 		public bool Remove(ulong guildId, ulong roleId) {
 			var rl = _set.FirstOrDefault(r => r.GuildId == guildId && r.RoleId == roleId);
