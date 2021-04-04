@@ -53,6 +53,8 @@ namespace Mitternacht.Database {
 		public  ITeamUpdateRankRepository       TeamUpdateRanks => _teamUpdateRanks ??= new TeamUpdateRankRepository(Context);
 		private IUserRoleColorBindingRepository _userRoleColorBindings;
 		public  IUserRoleColorBindingRepository UserRoleColorBindings => _userRoleColorBindings ??= new UserRoleColorBindingRepository(Context);
+		private IWatchedForumAccountsRepository _watchedForumAccounts;
+		public  IWatchedForumAccountsRepository WatchedForumAccounts => _watchedForumAccounts ??= new WatchedForumAccountsRepository(Context);
 
 		public UnitOfWork(MitternachtContext context) {
 			Context = context;

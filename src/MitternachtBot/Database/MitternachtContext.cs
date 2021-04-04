@@ -40,6 +40,7 @@ namespace Mitternacht.Database {
 		public DbSet<VoiceChannelStats> VoiceChannelStats { get; set; }
 		public DbSet<Warning> Warnings { get; set; }
 		public DbSet<UserRoleColorBinding> UserRoleColorBindings { get; set; }
+		public DbSet<WatchedForumAccount> WatchedForumAccounts { get; set; }
 
 		public MitternachtContext() {
 
