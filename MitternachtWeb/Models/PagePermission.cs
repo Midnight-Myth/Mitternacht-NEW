@@ -15,7 +15,7 @@ namespace MitternachtWeb.Models {
 		ForgiveAllWarns              = 0b_0000_0000_1100_0000,
 		WriteAllWarns                = 0b_0000_0001_1100_0000,
 		ReadAllQuotes                = 0b_0000_0010_0000_0000,
-		WriteAllQuotes               = 0b_0000_0110_0001_0000,
+		WriteAllQuotes               = 0b_0000_0110_0000_0000,
 		ReadAllVerifications         = 0b_0000_1000_0000_0000,
 		WriteAllVerifications        = 0b_0001_1000_0000_0000,
 		ReadAllWatchedForumAccounts  = 0b_0010_0000_0000_0000,
@@ -60,7 +60,7 @@ namespace MitternachtWeb.Models {
 			if(guildPerms.BanMembers) {
 				perms |= GuildLevelPermission.WriteWarns | GuildLevelPermission.WriteVerifications | GuildLevelPermission.WriteWatchedForumAccounts;
 			}
-			
+
 			if(guildPerms.Administrator) {
 				perms |= GuildLevelPermission.All;
 			}
