@@ -21,5 +21,17 @@ namespace Mitternacht.Database.Repositories.Impl {
 
 		public IQueryable<WatchedForumAccount> GetForGuild(ulong guildId)
 			=> _set.AsQueryable().Where(m => m.GuildId == guildId);
+
+		public bool ChangeWatchAction(ulong guildId, long forumUserId, WatchAction watchAction) {
+			var wfa = GetForGuild(guildId).FirstOrDefault(m => m.ForumUserId == forumUserId);
+
+			if(wfa is not null){
+				wfa.WatchAction = watchAction;
+
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 }

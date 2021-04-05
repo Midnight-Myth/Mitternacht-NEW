@@ -70,5 +70,42 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				return Unauthorized();
 			}
 		}
+
+		public IActionResult Edit(long id) {
+			if(PermissionWriteWatchedForumAccounts) {
+				using var uow = _db.UnitOfWork;
+
+				var wfa = uow.WatchedForumAccounts.GetForGuild(GuildId).FirstOrDefault(wfa => wfa.ForumUserId == id);
+
+				return View(new CreateWatchedForumAccount {
+					ForumUserId = wfa.ForumUserId,
+					WatchAction = wfa.WatchAction,
+				});
+			} else {
+				return Unauthorized();
+			}
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(long id, CreateWatchedForumAccount watchedForumAccount) {
+			if(PermissionWriteWatchedForumAccounts) {
+				if(ModelState.IsValid) {
+					using var uow = _db.UnitOfWork;
+
+					if(uow.WatchedForumAccounts.ChangeWatchAction(GuildId, watchedForumAccount.ForumUserId, watchedForumAccount.WatchAction)) {
+						uow.SaveChanges();
+
+						return RedirectToAction("Index");
+					} else {
+						return View(watchedForumAccount);
+					}
+				} else {
+					return View(watchedForumAccount);
+				}
+			} else {
+				return Unauthorized();
+			}
+		}
 	}
 }

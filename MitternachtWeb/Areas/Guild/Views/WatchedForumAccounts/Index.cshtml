@@ -20,6 +20,10 @@
 				<th>
 					@Html.DisplayNameFor(model => model.DiscordUser)
 				</th>
+				@if(ViewBag.PermissionWriteWatchedForumAccounts){
+					<th>
+					</th>
+				}
 			</tr>
 		</thead>
 		<tbody>
@@ -34,6 +38,11 @@
 					<td>
 						@Html.DisplayFor(model => watchedForumAccount.DiscordUser, "ModeledDiscordUser")
 					</td>
+					@if(ViewBag.PermissionWriteWatchedForumAccounts) {
+						<td>
+							<a asp-action="Edit" asp-route-id="@watchedForumAccount.ForumUserId">Edit</a>
+						</td>
+					}
 				</tr>
 			}
 		</tbody>
