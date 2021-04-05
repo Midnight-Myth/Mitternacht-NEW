@@ -12,7 +12,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 			=> _set.FirstOrDefault(v => v.GuildId == guildId && v.ForumUserId == forumUserId);
 
 		public bool SetVerified(ulong guildId, ulong userId, long forumUserId) {
-			if(CanVerifyForumAccount(guildId, userId, forumUserId)) {
+			if(!IsVerified(guildId, forumUserId)) {
 				var vu = GetVerifiedUser(guildId, userId);
 
 				if(vu == null) {
@@ -39,11 +39,6 @@ namespace Mitternacht.Database.Repositories.Impl {
 
 		public bool IsVerified(ulong guildId, ulong userId, long forumUserId)
 			=> _set.Any(v => v.GuildId == guildId && v.UserId == userId && v.ForumUserId == forumUserId);
-
-
-		public bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId)
-			=> !IsVerified(guildId, forumUserId) && !IsVerified(guildId, userId, forumUserId) || !IsVerified(guildId, userId);
-
 
 		public bool RemoveVerification(ulong guildId, ulong userId) {
 			var vu = GetVerifiedUser(guildId, userId);
