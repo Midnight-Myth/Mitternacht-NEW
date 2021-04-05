@@ -206,7 +206,7 @@ Mit den folgenden Befehlen, ausgeführt im Verzeichnis `mybot`, wird der Bot geu
 ----
 $ docker-compose down
 $ git pull --ff-only --recurse-submodules
-$ docker-compose up -d
+$ docker-compose up -d --build
 ----
 
 ==== Speicherort der Daten
