@@ -171,7 +171,21 @@ Als Editor vorinstalliert ist aus Gründen der Einfachkeit `nano`.
 $ docker-compose run mitternacht /bin/sh
 ----
 
-Weitere Informationen zur Konfiguration gibt es in der Sektion <<Konfiguration>>.
+Alternativ kann man auch direkt in das Datenverzeichnis schauen, das `docker` erstellt.
+Dieses kann mit folgendem Befehl gefunden werden.
+
+[source,bash]
+----
+$ docker volume inspect mybot_mitternacht-data -f '{{.Mountpoint}}'
+----
+
+Dieses Verzeichnis wird im Container des Bots unter `/data` gemountet.
+Auf dem Hostsystem ist es zum Beispiel unter `/var/lib/docker/volumes/mybot_mitternacht-data/_data` zu finden.
+In diesem Fall ist zu beachten, dass Zugriff darauf im Allgemeinen `root`-Berechtigungen benötigt.
+
+Der Pfad zu der oben angegebenen Datei `/data/credentials_example.json` wäre dementsprechend auf dem Hostsystem `/var/lib/docker/volumes/test_mitternacht-data/_data/credentials_example.json`.
+
+Weitere Informationen zur Konfiguration selbst gibt es in der Sektion <<Konfiguration>>.
 
 ==== Reguläres Starten und Stoppen des Bots
 
