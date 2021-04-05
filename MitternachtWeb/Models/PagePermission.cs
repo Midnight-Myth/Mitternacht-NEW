@@ -15,14 +15,15 @@ namespace MitternachtWeb.Models {
 		ForgiveAllWarns              = 0b_0000_0000_1100_0000,
 		WriteAllWarns                = 0b_0000_0001_1100_0000,
 		ReadAllQuotes                = 0b_0000_0010_0000_0000,
-		WriteAllQuotes               = 0b_0000_0110_0000_0000,
+		CreateQuotes                 = 0b_1000_0010_0000_0000,
+		WriteAllQuotes               = 0b_1000_0110_0000_0000,
 		ReadAllVerifications         = 0b_0000_1000_0000_0000,
 		WriteAllVerifications        = 0b_0001_1000_0000_0000,
 		ReadAllWatchedForumAccounts  = 0b_0010_0000_0000_0000,
 		WriteAllWatchedForumAccounts = 0b_0110_0000_0000_0000,
 		ReadAllGuilds                = ReadAllGuildConfigs | ReadAllMutes | ReadAllWarns | ReadAllQuotes | ReadAllVerifications | ReadAllWatchedForumAccounts,
 		ReadAll                      = ReadBotConfig | ReadAllGuilds,
-		All                          = 0b_0111_1111_1111_1111,
+		All                          = 0b_1111_1111_1111_1111,
 	}
 
 	[Flags]
@@ -36,7 +37,8 @@ namespace MitternachtWeb.Models {
 		ForgiveWarns              = 0b_0000_0000_0011_0000,
 		WriteWarns                = 0b_0000_0000_0111_0000,
 		ReadQuotes                = 0b_0000_0000_1000_0000,
-		WriteQuotes               = 0b_0000_0001_1000_0100,
+		CreateQuotes              = 0b_0010_0000_1000_0000,
+		WriteQuotes               = 0b_0010_0001_1000_0100,
 		ReadVerifications         = 0b_0000_0010_0000_0000,
 		WriteVerifications        = 0b_0000_0110_0000_0000,
 		ReadWatchedForumAccounts  = 0b_0000_1000_0000_0000,
@@ -54,11 +56,11 @@ namespace MitternachtWeb.Models {
 			}
 
 			if(guildPerms.ManageMessages) {
-				perms |= GuildLevelPermission.WriteMutes | GuildLevelPermission.ForgiveWarns | GuildLevelPermission.WriteQuotes | GuildLevelPermission.ReadWatchedForumAccounts;
+				perms |= GuildLevelPermission.WriteMutes | GuildLevelPermission.ForgiveWarns | GuildLevelPermission.CreateQuotes | GuildLevelPermission.ReadWatchedForumAccounts;
 			}
 
 			if(guildPerms.BanMembers) {
-				perms |= GuildLevelPermission.WriteWarns | GuildLevelPermission.WriteVerifications | GuildLevelPermission.WriteWatchedForumAccounts;
+				perms |= GuildLevelPermission.WriteWarns | GuildLevelPermission.WriteQuotes | GuildLevelPermission.WriteVerifications | GuildLevelPermission.WriteWatchedForumAccounts;
 			}
 
 			if(guildPerms.Administrator) {

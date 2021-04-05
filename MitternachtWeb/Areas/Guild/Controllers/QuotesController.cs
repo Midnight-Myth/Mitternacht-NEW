@@ -42,12 +42,12 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		}
 
 		public IActionResult Create()
-			=> PermissionWriteQuotes ? View() : Unauthorized();
+			=> PermissionCreateQuotes ? View() : Unauthorized();
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public IActionResult Create(EditQuote quote) {
-			if(PermissionWriteQuotes) {
+			if(PermissionCreateQuotes) {
 				if(ModelState.IsValid) {
 					using var uow = _db.UnitOfWork;
 

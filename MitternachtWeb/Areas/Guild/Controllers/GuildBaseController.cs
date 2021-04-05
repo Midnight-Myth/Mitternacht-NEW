@@ -34,6 +34,8 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		[ViewData]
 		public bool PermissionReadQuotes         => HasPermission(BotLevelPermission.ReadAllQuotes, GuildLevelPermission.ReadQuotes);
 		[ViewData]
+		public bool PermissionCreateQuotes       => HasPermission(BotLevelPermission.CreateQuotes, GuildLevelPermission.CreateQuotes);
+		[ViewData]
 		public bool PermissionWriteQuotes        => HasPermission(BotLevelPermission.WriteAllQuotes, GuildLevelPermission.WriteQuotes);
 		[ViewData]
 		public bool PermissionReadVerifications  => HasPermission(BotLevelPermission.ReadAllVerifications, GuildLevelPermission.ReadVerifications);
