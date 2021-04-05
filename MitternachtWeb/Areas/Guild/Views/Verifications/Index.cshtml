@@ -20,6 +20,9 @@
 				<th>
 					@Html.DisplayNameFor(model => model.Roles)
 				</th>
+				@if(ViewBag.PermissionWriteVerifications) {
+					<th></th>
+				}
 			</tr>
 		</thead>
 		<tbody>
@@ -34,6 +37,11 @@
 					<td>
 						@Html.DisplayFor(model => verification.Roles, "RolesArray")
 					</td>
+					@if(ViewBag.PermissionWriteVerifications) {
+						<td>
+							<a asp-action="Delete" asp-route-userid="@verification.DiscordUser.UserId">Löschen</a>
+						</td>
+					}
 				</tr>
 			}
 		</tbody>

@@ -100,5 +100,22 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				return Unauthorized();
 			}
 		}
+
+		public IActionResult Delete(ulong userId) {
+			if(PermissionWriteVerifications) {
+				using var uow = _db.UnitOfWork;
+
+				if(uow.VerifiedUsers.RemoveVerification(GuildId, userId)) {
+					uow.SaveChanges();
+
+					return RedirectToAction("Index");
+				} else {
+					// TODO: Print an error message on the page. Currently, there is no way to directly see whether the action succeeded or not.
+					return RedirectToAction("Index");
+				}
+			} else {
+				return Unauthorized();
+			}
+		}
 	}
 }
