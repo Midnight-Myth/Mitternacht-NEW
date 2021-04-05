@@ -34,11 +34,18 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 		[ViewData]
 		public bool PermissionReadQuotes         => HasPermission(BotLevelPermission.ReadAllQuotes, GuildLevelPermission.ReadQuotes);
 		[ViewData]
+		public bool PermissionCreateQuotes       => HasPermission(BotLevelPermission.CreateQuotes, GuildLevelPermission.CreateQuotes);
+		[ViewData]
 		public bool PermissionWriteQuotes        => HasPermission(BotLevelPermission.WriteAllQuotes, GuildLevelPermission.WriteQuotes);
 		[ViewData]
 		public bool PermissionReadVerifications  => HasPermission(BotLevelPermission.ReadAllVerifications, GuildLevelPermission.ReadVerifications);
 		[ViewData]
 		public bool PermissionWriteVerifications => HasPermission(BotLevelPermission.WriteAllVerifications, GuildLevelPermission.WriteVerifications);
+		[ViewData]
+		public bool PermissionReadWatchedForumAccounts => HasPermission(BotLevelPermission.ReadAllWatchedForumAccounts, GuildLevelPermission.ReadWatchedForumAccounts);
+		[ViewData]
+		public bool PermissionWriteWatchedForumAccounts => HasPermission(BotLevelPermission.WriteAllWatchedForumAccounts, GuildLevelPermission.WriteWatchedForumAccounts);
+
 
 		public override void OnActionExecuting(ActionExecutingContext context) {
 			if(RouteData.Values.TryGetValue("guildId", out var guildIdString)) {

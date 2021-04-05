@@ -40,6 +40,7 @@ namespace Mitternacht.Database {
 		public DbSet<VoiceChannelStats> VoiceChannelStats { get; set; }
 		public DbSet<Warning> Warnings { get; set; }
 		public DbSet<UserRoleColorBinding> UserRoleColorBindings { get; set; }
+		public DbSet<WatchedForumAccount> WatchedForumAccounts { get; set; }
 
 		public MitternachtContext() {
 
@@ -130,6 +131,9 @@ namespace Mitternacht.Database {
 			modelBuilder.Entity<VerifiedUser>()
 				.HasIndex(vu => new { vu.GuildId, vu.UserId })
 				.IsUnique();
+			modelBuilder.Entity<VerifiedUser>()
+				.HasIndex(vu => new { vu.GuildId, vu.ForumUserId })
+				.IsUnique();
 
 			modelBuilder.Entity<BirthDateModel>()
 				.HasIndex(bdm => bdm.UserId)
@@ -145,6 +149,10 @@ namespace Mitternacht.Database {
 
 			modelBuilder.Entity<UserRoleColorBinding>()
 				.HasIndex(m => new { m.UserId, m.GuildId, m.RoleId })
+				.IsUnique();
+
+			modelBuilder.Entity<WatchedForumAccount>()
+				.HasIndex(m => new { m.GuildId, m.ForumUserId })
 				.IsUnique();
 		}
 

@@ -5,7 +5,7 @@ using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class WarningsRepository : Repository<Warning>, IWarningsRepository {
-		public WarningsRepository(DbContext context) : base(context) { }
+		public WarningsRepository(MitternachtContext context) : base(context) { }
 
 		public IQueryable<Warning> For(ulong guildId, ulong userId)
 			=> _set.AsQueryable().Where(x => x.GuildId == guildId && x.UserId == userId);

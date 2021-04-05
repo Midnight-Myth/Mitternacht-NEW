@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Guild.Models;
+using MitternachtWeb.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,12 +34,14 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					var mutedSince = mutedUser != null ? (unmuteTimer != null ? (DateTime?)new []{ mutedUser.DateAdded, unmuteTimer.DateAdded }.Min() : (DateTime?)mutedUser.DateAdded) : (unmuteTimer != null ? (DateTime?)unmuteTimer.DateAdded : null);
 
 					return new Mute {
-						UserId     = userId,
+						DiscordUser = new ModeledDiscordUser {
+							UserId    = userId,
+							Username  = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
+							AvatarUrl = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+						},
 						Muted      = mutedUser != null,
 						MutedSince = mutedSince,
 						UnmuteAt   = unmuteTimer?.UnmuteAt,
-						Username   = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(userId).FirstOrDefault()?.ToString() ?? "-",
-						AvatarUrl  = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
 					};
 				}).ToList();
 

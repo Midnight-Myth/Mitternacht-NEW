@@ -9,7 +9,6 @@ namespace Mitternacht.Database.Repositories {
 		bool IsVerified(ulong guildId, ulong userId);
 		bool IsVerified(ulong guildId, long forumUserId);
 		bool IsVerified(ulong guildId, ulong userId, long forumUserId);
-		bool CanVerifyForumAccount(ulong guildId, ulong userId, long forumUserId);
 		bool RemoveVerification(ulong guildId, ulong userId);
 		bool RemoveVerification(ulong guildId, long forumUserId);
 		IQueryable<VerifiedUser> GetVerifiedUsers(ulong guildId);

@@ -1,0 +1,21 @@
+﻿@model CreateVerification
+
+<h4>Verifizierung hinzufügen</h4>
+<hr />
+
+<form asp-action="Create">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="form-group">
+		<label asp-for="UserId" class="control-label"></label>
+		<input asp-for="UserId" class="form-control" />
+		<span asp-validation-for="UserId" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="ForumUserId" class="control-label"></label>
+		<input asp-for="ForumUserId" class="form-control" />
+		<span asp-validation-for="ForumUserId" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<input type="submit" value="Save" class="btn btn-primary" />
+	</div>
+</form>

@@ -4,7 +4,7 @@ using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class BotConfigRepository : Repository<BotConfig>, IBotConfigRepository {
-		public BotConfigRepository(DbContext context) : base(context) { }
+		public BotConfigRepository(MitternachtContext context) : base(context) { }
 
 		public BotConfig GetOrCreate() {
 			var config = _set.Include(bc => bc.Blacklist)

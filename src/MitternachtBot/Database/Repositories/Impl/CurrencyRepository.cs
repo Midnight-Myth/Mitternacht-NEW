@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class CurrencyRepository : Repository<Currency>, ICurrencyRepository {
-		public CurrencyRepository(DbContext context) : base(context) { }
+		public CurrencyRepository(MitternachtContext context) : base(context) { }
 
 		public Currency GetOrCreate(ulong guildId, ulong userId) {
 			var currency = _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId);

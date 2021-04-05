@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Mitternacht.Database.Models;
+﻿using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class CustomReactionsRepository : Repository<CustomReaction>, ICustomReactionRepository {
-		public CustomReactionsRepository(DbContext context) : base(context) {
+		public CustomReactionsRepository(MitternachtContext context) : base(context) {
 		}
 	}
 }

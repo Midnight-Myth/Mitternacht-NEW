@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class UsernameHistoryRepository : Repository<UsernameHistoryModel>, IUsernameHistoryRepository {
-		public UsernameHistoryRepository(DbContext context) : base(context) { }
+		public UsernameHistoryRepository(MitternachtContext context) : base(context) { }
 
 		public bool AddUsername(ulong userId, string username, ushort discriminator) {
 			if(!string.IsNullOrWhiteSpace(username)) {

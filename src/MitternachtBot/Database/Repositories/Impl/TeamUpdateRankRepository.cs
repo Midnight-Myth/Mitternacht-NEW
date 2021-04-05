@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Mitternacht.Database.Models;
+﻿using Mitternacht.Database.Models;
 using System;
 using System.Linq;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class TeamUpdateRankRepository : Repository<TeamUpdateRank>, ITeamUpdateRankRepository {
-		public TeamUpdateRankRepository(DbContext context) : base(context) { }
+		public TeamUpdateRankRepository(MitternachtContext context) : base(context) { }
 
 		public bool AddRank(ulong guildId, string rank, string prefix) {
 			if(rank == null)

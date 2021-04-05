@@ -1,0 +1,21 @@
+﻿@model EditQuote
+
+<h4>Zitat verändern</h4>
+<hr />
+
+<form asp-action="Edit">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="form-group">
+		<label asp-for="Keyword" class="control-label"></label>
+		<input asp-for="Keyword" class="form-control" />
+		<span asp-validation-for="Keyword" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="Text" class="control-label"></label>
+		<textarea asp-for="Text" class="form-control"></textarea>
+		<span asp-validation-for="Text" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<input type="submit" value="Save" class="btn btn-primary" />
+	</div>
+</form>

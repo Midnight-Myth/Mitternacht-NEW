@@ -9,5 +9,6 @@ namespace Mitternacht.Database.Repositories {
 		Quote SearchQuoteKeywordText(ulong guildId, string keyword, string text);
 		IQueryable<Quote> GetAllForGuild(ulong guildId);
 		void RemoveAllByKeyword(ulong guildId, string keyword);
+		bool UpdateQuote(ulong guildId, int id, string keyword = null, string text = null);
 	}
 }

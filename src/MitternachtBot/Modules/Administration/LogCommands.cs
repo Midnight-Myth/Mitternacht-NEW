@@ -16,7 +16,7 @@ using Mitternacht.Database.Models;
 namespace Mitternacht.Modules.Administration {
 	public partial class Administration {
 		[Group]
-		public class LogCommands : MitternachtSubmodule<LogCommandService> {
+		public class LogCommands : MitternachtSubmodule<LogService> {
 			private readonly IUnitOfWork uow;
 
 			public LogCommands(IUnitOfWork uow) {
@@ -87,7 +87,7 @@ namespace Mitternacht.Modules.Administration {
 			[OwnerOnly]
 			public async Task LogEvents() {
 				await Context.Channel.SendConfirmAsync(Format.Bold(GetText("log_events")) + "\n" +
-													   $"```fix\n{string.Join(", ", Enum.GetNames(typeof(LogCommandService.LogType)).Cast<string>())}```")
+													   $"```fix\n{string.Join(", ", Enum.GetNames(typeof(LogService.LogType)).Cast<string>())}```")
 					.ConfigureAwait(false);
 			}
 
@@ -95,60 +95,60 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.Administrator)]
 			[OwnerOnly]
-			public async Task Log(LogCommandService.LogType type) {
+			public async Task Log(LogService.LogType type) {
 				ulong? channelId = null;
 
 				var logSetting = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.LogSetting)).LogSetting;
 				switch(type) {
-					case LogCommandService.LogType.Other:
+					case LogService.LogType.Other:
 						channelId = logSetting.LogOtherId = (logSetting.LogOtherId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.MessageUpdated:
+					case LogService.LogType.MessageUpdated:
 						channelId = logSetting.MessageUpdatedId = (logSetting.MessageUpdatedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.MessageDeleted:
+					case LogService.LogType.MessageDeleted:
 						channelId = logSetting.MessageDeletedId = (logSetting.MessageDeletedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserJoined:
+					case LogService.LogType.UserJoined:
 						channelId = logSetting.UserJoinedId = (logSetting.UserJoinedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserLeft:
+					case LogService.LogType.UserLeft:
 						channelId = logSetting.UserLeftId = (logSetting.UserLeftId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserBanned:
+					case LogService.LogType.UserBanned:
 						channelId = logSetting.UserBannedId = (logSetting.UserBannedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserUnbanned:
+					case LogService.LogType.UserUnbanned:
 						channelId = logSetting.UserUnbannedId = (logSetting.UserUnbannedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserUpdated:
+					case LogService.LogType.UserUpdated:
 						channelId = logSetting.UserUpdatedId = (logSetting.UserUpdatedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserMuted:
+					case LogService.LogType.UserMuted:
 						channelId = logSetting.UserMutedId = (logSetting.UserMutedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.ChannelCreated:
+					case LogService.LogType.ChannelCreated:
 						channelId = logSetting.ChannelCreatedId = (logSetting.ChannelCreatedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.ChannelDestroyed:
+					case LogService.LogType.ChannelDestroyed:
 						channelId = logSetting.ChannelDestroyedId = (logSetting.ChannelDestroyedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.ChannelUpdated:
+					case LogService.LogType.ChannelUpdated:
 						channelId = logSetting.ChannelUpdatedId = (logSetting.ChannelUpdatedId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.UserPresence:
+					case LogService.LogType.UserPresence:
 						channelId = logSetting.LogUserPresenceId = (logSetting.LogUserPresenceId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.VoicePresence:
+					case LogService.LogType.VoicePresence:
 						channelId = logSetting.LogVoicePresenceId = (logSetting.LogVoicePresenceId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.VoicePresenceTTS:
+					case LogService.LogType.VoicePresenceTTS:
 						channelId = logSetting.LogVoicePresenceTTSId = (logSetting.LogVoicePresenceTTSId == null ? Context.Channel.Id : default(ulong?));
 						break;
-					case LogCommandService.LogType.VerificationSteps:
+					case LogService.LogType.VerificationSteps:
 						channelId = logSetting.VerificationSteps = logSetting.VerificationSteps == null ? Context.Channel.Id : default(ulong?);
 						break;
-					case LogCommandService.LogType.VerificationMessages:
+					case LogService.LogType.VerificationMessages:
 						channelId = logSetting.VerificationMessages = logSetting.VerificationMessages == null ? Context.Channel.Id : default(ulong?);
 						break;
 				}

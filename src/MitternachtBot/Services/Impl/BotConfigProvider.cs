@@ -28,16 +28,20 @@ namespace Mitternacht.Services.Impl {
 			var bc = uow.BotConfig.GetOrCreate();
 			switch(type) {
 				case BotConfigEditType.CurrencyGenerationChance:
-					if(float.TryParse(newValue, out var chance) && chance >= 0 && chance <= 1)
+					if(float.TryParse(newValue, out var chance) && chance >= 0 && chance <= 1) {
 						bc.CurrencyGenerationChance = chance;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.CurrencyGenerationCooldown:
-					if(int.TryParse(newValue, out var cd) && cd >= 1)
+					if(int.TryParse(newValue, out var cd) && cd >= 1) {
 						bc.CurrencyGenerationCooldown = cd;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.CurrencyName:
 					bc.CurrencyName = newValue ?? "-";
@@ -55,60 +59,78 @@ namespace Mitternacht.Services.Impl {
 					bc.HelpString = string.IsNullOrWhiteSpace(newValue) ? "-" : newValue;
 					break;
 				case BotConfigEditType.CurrencyDropAmount:
-					if(int.TryParse(newValue, out var amount) && amount > 0)
+					if(int.TryParse(newValue, out var amount) && amount > 0) {
 						bc.CurrencyDropAmount = amount;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.CurrencyDropAmountMax:
-					if(newValue == null)
+					if(newValue == null) {
 						bc.CurrencyDropAmountMax = null;
-					else if(int.TryParse(newValue, out var maxAmount) && maxAmount > 0)
+					} else if(int.TryParse(newValue, out var maxAmount) && maxAmount > 0) {
 						bc.CurrencyDropAmountMax = maxAmount;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.MinimumBetAmount:
-					if(int.TryParse(newValue, out var minBetAmount) && minBetAmount > 0)
+					if(int.TryParse(newValue, out var minBetAmount) && minBetAmount > 0) {
 						bc.MinimumBetAmount = minBetAmount;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.Betroll100Multiplier:
-					if(float.TryParse(newValue, out var br100) && br100 > 0)
+					if(float.TryParse(newValue, out var br100) && br100 > 0) {
 						bc.Betroll100Multiplier = br100;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.Betroll91Multiplier:
-					if(int.TryParse(newValue, out var br91) && br91 > 0)
+					if(int.TryParse(newValue, out var br91) && br91 > 0) {
 						bc.Betroll91Multiplier = br91;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.Betroll67Multiplier:
-					if(int.TryParse(newValue, out var br67) && br67 > 0)
+					if(int.TryParse(newValue, out var br67) && br67 > 0) {
 						bc.Betroll67Multiplier = br67;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.BetflipMultiplier:
-					if(int.TryParse(newValue, out var bf) && bf > 0)
+					if(int.TryParse(newValue, out var bf) && bf > 0) {
 						bc.BetflipMultiplier = bf;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.HereChance:
-					if(double.TryParse(newValue, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var evchance) && evchance > 0)
+					if(double.TryParse(newValue, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var evchance) && evchance > 0) {
 						bc.FirstAprilHereChance = evchance;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				case BotConfigEditType.DmCommandsOwnerOnly:
-					if(bool.TryParse(newValue, out var owneronly))
+					if(bool.TryParse(newValue, out var owneronly)) {
 						bc.DmCommandsOwnerOnly = owneronly;
-					else
+					} else {
 						return false;
+					}
+
 					break;
 				default:
 					return false;
@@ -118,7 +140,7 @@ namespace Mitternacht.Services.Impl {
 			uow.SaveChanges();
 
 			BotConfigChanged?.Invoke(BotConfig);
-			
+
 			return true;
 		}
 	}

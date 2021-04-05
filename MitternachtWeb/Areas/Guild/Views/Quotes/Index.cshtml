@@ -2,13 +2,17 @@
 
 <h4>Quotes</h4>
 <hr />
+
+@if(ViewBag.PermissionCreateQuotes) {
+	<a asp-action="Create" class="btn btn-primary">Zitat hinzufügen</a>
+}
+
 <div class="table-responsive">
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="discord-avatar"></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Authorname)
+					@Html.DisplayNameFor(model => model.Author)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Keyword)
@@ -25,15 +29,8 @@
 		<tbody>
 			@foreach(var quote in Model) {
 				<tr>
-					<td class="discord-avatar">
-						@if(!string.IsNullOrWhiteSpace(quote.AvatarUrl)) {
-							<img src="@quote.AvatarUrl" alt="Avatar" />
-						}
-					</td>
 					<td>
-						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@quote.AuthorId">
-							@quote.Authorname
-						</a>
+						@Html.DisplayFor(model => quote.Author, "ModeledDiscordUser")
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => quote.Keyword)
@@ -46,8 +43,9 @@
 					</td>
 					<td>
 						@if(ViewBag.PermissionWriteQuotes) {
-							<a asp-area="Guild" asp-controller="Quotes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Löschen</a>
-						}
+		<a asp-area="Guild" asp-controller="Quotes" asp-action="Edit" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Bearbeiten</a>
+		<a asp-area="Guild" asp-controller="Quotes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Löschen</a>
+	}
 					</td>
 				</tr>
 			}

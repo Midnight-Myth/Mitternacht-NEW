@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Mitternacht.Database.Models;
+﻿using Mitternacht.Database.Models;
 using System.Linq;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class VoiceChannelStatsRepository : Repository<VoiceChannelStats>, IVoiceChannelStatsRepository {
-		public VoiceChannelStatsRepository(DbContext context) : base(context) { }
+		public VoiceChannelStatsRepository(MitternachtContext context) : base(context) { }
 
 		private VoiceChannelStats GetOrCreate(ulong userId, ulong guildId) {
 			var vcs = _set.FirstOrDefault(v => v.UserId == userId && v.GuildId == guildId);

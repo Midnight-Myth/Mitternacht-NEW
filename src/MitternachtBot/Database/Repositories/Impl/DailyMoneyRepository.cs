@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class DailyMoneyRepository : Repository<DailyMoney>, IDailyMoneyRepository {
-		public DailyMoneyRepository(DbContext context) : base(context) { }
+		public DailyMoneyRepository(MitternachtContext context) : base(context) { }
 
 		public DailyMoney GetOrCreate(ulong guildId, ulong userId) {
 			var dm = _set.FirstOrDefault(c => c.GuildId == guildId && c.UserId == userId);

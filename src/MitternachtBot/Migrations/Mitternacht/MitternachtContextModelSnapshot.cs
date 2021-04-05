@@ -16,7 +16,7 @@ namespace Mitternacht.Migrations.Mitternacht
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Mitternacht.Database.Models.AntiRaidSetting", b =>
@@ -1555,6 +1555,9 @@ namespace Mitternacht.Migrations.Mitternacht
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GuildId", "ForumUserId")
+                        .IsUnique();
+
                     b.HasIndex("GuildId", "UserId")
                         .IsUnique();
 
@@ -1660,6 +1663,33 @@ namespace Mitternacht.Migrations.Mitternacht
                     b.HasIndex("GuildConfigId");
 
                     b.ToTable("WarningPunishment");
+                });
+
+            modelBuilder.Entity("Mitternacht.Database.Models.WatchedForumAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("DateAdded")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long>("ForumUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("GuildId")
+                        .HasColumnType("numeric(20,0)");
+
+                    b.Property<int>("WatchAction")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuildId", "ForumUserId")
+                        .IsUnique();
+
+                    b.ToTable("WatchedForumAccounts");
                 });
 
             modelBuilder.Entity("Mitternacht.Database.Models.ZalgoFilterChannel", b =>

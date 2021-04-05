@@ -6,7 +6,6 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="discord-avatar"></th>
 				<th>
 					@Html.DisplayNameFor(model => model.Guild)
 				</th>
@@ -33,11 +32,6 @@
 		<tbody>
 			@foreach(var warn in Model) {
 			<tr>
-				<td class="discord-avatar">
-					@if(!string.IsNullOrWhiteSpace(warn.AvatarUrl)) {
-						<img src="@warn.AvatarUrl" alt="Avatar" />
-					}
-				</td>
 				<td>
 					<a asp-area="Guild" asp-controller="Warns" asp-action="Index" asp-route-guildId="@warn.GuildId">
 						@(warn.Guild == null ? warn.GuildId.ToString() : warn.Guild.Name)
@@ -54,7 +48,7 @@
 						var forgivenString = warn.Forgiven ? Html.Raw("✅") : Html.Raw("❌");
 					}
 					@if(warn.CanBeForgiven) {
-						<a asp-area="User" asp-controller="Warns" asp-action="ToggleForgive" asp-route-userId="@warn.UserId" asp-route-id="@warn.Id">@forgivenString</a>
+						<a asp-area="User" asp-controller="Warns" asp-action="ToggleForgive" asp-route-userId="@warn.DiscordUser.UserId" asp-route-id="@warn.Id">@forgivenString</a>
 					} else {
 						@forgivenString
 					}
@@ -64,7 +58,7 @@
 						var hiddenString = warn.Hidden ? Html.Raw("✅") : Html.Raw("❌");
 					}
 					@if(warn.CanBeForgiven) {
-						<a asp-area="User" asp-controller="Warns" asp-action="ToggleHidden" asp-route-userId="@warn.UserId" asp-route-id="@warn.Id">@hiddenString</a>
+						<a asp-area="User" asp-controller="Warns" asp-action="ToggleHidden" asp-route-userId="@warn.DiscordUser.UserId" asp-route-id="@warn.Id">@hiddenString</a>
 					} else {
 						@hiddenString
 					}

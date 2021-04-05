@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Modules.Birthday.Models;
 using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class BirthDateRepository : Repository<BirthDateModel>, IBirthDateRepository {
-		public BirthDateRepository(DbContext context) : base(context) { }
+		public BirthDateRepository(MitternachtContext context) : base(context) { }
 
 		public IQueryable<BirthDateModel> GetBirthdays(DateTime date)
 			=> _set.AsQueryable().Where(b => b.Day == date.Day && b.Month == date.Month);

@@ -5,7 +5,7 @@ using Mitternacht.Database.Models;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class DailyMoneyStatsRepository : Repository<DailyMoneyStats>, IDailyMoneyStatsRepository {
-		public DailyMoneyStatsRepository(DbContext context) : base(context) { }
+		public DailyMoneyStatsRepository(MitternachtContext context) : base(context) { }
 
 		public void Add(ulong guildId, ulong userId, DateTime timeReceived, long amount) {
 			_set.Add(new DailyMoneyStats {

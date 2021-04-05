@@ -31,6 +31,7 @@ namespace Mitternacht.Database
         IVoiceChannelStatsRepository VoiceChannelStats { get; }
         ITeamUpdateRankRepository TeamUpdateRanks { get; }
 		IUserRoleColorBindingRepository UserRoleColorBindings { get; }
+		IWatchedForumAccountsRepository WatchedForumAccounts { get; }
 
         int SaveChanges(bool acceptAllChanges = true);
         Task<int> SaveChangesAsync(bool acceptAllChanges = true);

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<WatchedForumAccount>
+
+<h4>Beobachtete Forumaccounts</h4>
+<hr />
+
+@if(ViewBag.PermissionWriteWatchedForumAccounts) {
+	<a asp-action="Create" class="btn btn-primary">Forumaccountbeobachtung hinzufügen</a>
+}
+
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.ForumProfileUrl)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.WatchAction)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.DiscordUser)
+				</th>
+				@if(ViewBag.PermissionWriteWatchedForumAccounts){
+					<th>
+					</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var watchedForumAccount in Model) {
+				<tr>
+					<td>
+						<a href="@watchedForumAccount.ForumProfileUrl">@Html.DisplayFor(modelItem => watchedForumAccount.ForumProfileUrl)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => watchedForumAccount.WatchAction)
+					</td>
+					<td>
+						@Html.DisplayFor(model => watchedForumAccount.DiscordUser, "ModeledDiscordUser")
+					</td>
+					@if(ViewBag.PermissionWriteWatchedForumAccounts) {
+						<td>
+							<a asp-action="Edit" asp-route-id="@watchedForumAccount.ForumUserId">Edit</a>
+						</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

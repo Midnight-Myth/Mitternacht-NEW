@@ -1,11 +1,10 @@
 ﻿using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
 using Mitternacht.Database.Models;
 using System.Linq;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class UserRoleColorBindingRepository : Repository<UserRoleColorBinding>, IUserRoleColorBindingRepository {
-		public UserRoleColorBindingRepository(DbContext context) : base(context) { }
+		public UserRoleColorBindingRepository(MitternachtContext context) : base(context) { }
 
 		public void CreateBinding(ulong userId, SocketRole role) {
 			if(!HasBinding(userId, role)) {

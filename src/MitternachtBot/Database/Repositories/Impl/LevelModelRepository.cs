@@ -8,7 +8,7 @@ namespace Mitternacht.Database.Repositories.Impl {
 	public class LevelModelRepository : Repository<LevelModel>, ILevelModelRepository {
 		private readonly IUnitOfWork _uow;
 
-		public LevelModelRepository(DbContext context, IUnitOfWork uow) : base(context) {
+		public LevelModelRepository(MitternachtContext context, IUnitOfWork uow) : base(context) {
 			_uow = uow;
 		}
 

@@ -4,9 +4,8 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="discord-avatar"></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Username)
+					@Html.DisplayNameFor(model => model.DiscordUser)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Muted)
@@ -23,15 +22,8 @@
 		<tbody>
 			@foreach(var mute in Model) {
 				<tr>
-					<td class="discord-avatar">
-						@if(!string.IsNullOrWhiteSpace(mute.AvatarUrl)) {
-							<img src="@mute.AvatarUrl" alt="Avatar" />
-						}
-					</td>
 					<td>
-						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@mute.UserId">
-							@mute.Username
-						</a>
+						@Html.DisplayFor(model => mute.DiscordUser, "ModeledDiscordUser")
 					</td>
 					<td>
 						@if(mute.Muted) {
@@ -48,7 +40,7 @@
 					</td>
 					<td>
 						@if(ViewBag.PermissionWriteMutes) {
-							<a asp-area="Guild" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.UserId">Löschen</a>
+							<a asp-area="Guild" asp-controller="Mutes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@mute.DiscordUser.UserId">Löschen</a>
 						}
 					</td>
 				</tr>

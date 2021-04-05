@@ -26,9 +26,11 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						Id            = w.Id,
 						GuildId       = w.GuildId,
 						Guild         = Guild,
-						UserId        = w.UserId,
-						Username      = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
-						AvatarUrl     = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+						DiscordUser   = new ModeledDiscordUser {
+							UserId    = w.UserId,
+							Username  = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(w.UserId).FirstOrDefault()?.ToString() ?? "-",
+							AvatarUrl = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+						},
 						Forgiven      = w.Forgiven,
 						ForgivenBy    = w.ForgivenBy,
 						WarnedBy      = w.Moderator,
@@ -66,7 +68,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			if(PermissionForgiveWarns) {
 				using var uow = _db.UnitOfWork;
 
-				try{
+				try {
 					uow.Warnings.ToggleHidden(GuildId, id);
 					uow.SaveChanges();
 					return RedirectToAction("Index");
