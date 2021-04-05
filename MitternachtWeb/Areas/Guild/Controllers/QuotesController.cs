@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mitternacht.Extensions;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Guild.Models;
 using MitternachtWeb.Models;
@@ -35,6 +36,35 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				}).ToList();
 
 				return View(quotes);
+			} else {
+				return Unauthorized();
+			}
+		}
+
+		public IActionResult Create()
+			=> PermissionWriteQuotes ? View() : Unauthorized();
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Create(EditQuote quote) {
+			if(PermissionWriteQuotes) {
+				if(ModelState.IsValid) {
+					using var uow = _db.UnitOfWork;
+
+					uow.Quotes.Add(new Mitternacht.Database.Models.Quote {
+						AuthorId = DiscordUser.User.Id,
+						AuthorName = DiscordUser.User.Username,
+						GuildId = GuildId,
+						Keyword = quote.Keyword.SanitizeMentions(),
+						Text = quote.Text,
+					});
+
+					uow.SaveChanges();
+
+					return RedirectToAction("Index");
+				} else {
+					return View(quote);
+				}
 			} else {
 				return Unauthorized();
 			}

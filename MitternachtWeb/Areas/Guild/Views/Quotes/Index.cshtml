@@ -2,6 +2,11 @@
 
 <h4>Quotes</h4>
 <hr />
+
+@if(ViewBag.PermissionWriteQuotes) {
+	<a asp-action="Create" class="btn btn-primary">Zitat hinzufügen</a>
+}
+
 <div class="table-responsive">
 	<table class="table">
 		<thead>
@@ -38,9 +43,9 @@
 					</td>
 					<td>
 						@if(ViewBag.PermissionWriteQuotes) {
-							<a asp-area="Guild" asp-controller="Quotes" asp-action="Edit" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Bearbeiten</a>
-							<a asp-area="Guild" asp-controller="Quotes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Löschen</a>
-						}
+		<a asp-area="Guild" asp-controller="Quotes" asp-action="Edit" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Bearbeiten</a>
+		<a asp-area="Guild" asp-controller="Quotes" asp-action="Delete" asp-route-guildId="@ViewBag.GuildId" asp-route-id="@quote.Id">Löschen</a>
+	}
 					</td>
 				</tr>
 			}
