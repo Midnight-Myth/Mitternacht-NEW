@@ -20,6 +20,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				using var uow = _db.UnitOfWork;
 
 				var data = (from wfa in uow.WatchedForumAccounts.GetForGuild(GuildId)
+							orderby wfa.DateAdded descending
 							join vu in uow.VerifiedUsers.GetVerifiedUsers(GuildId) on wfa.ForumUserId equals vu.ForumUserId into vus
 							from subvu in vus.DefaultIfEmpty()
 							select new {
