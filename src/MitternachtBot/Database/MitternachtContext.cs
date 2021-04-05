@@ -131,6 +131,9 @@ namespace Mitternacht.Database {
 			modelBuilder.Entity<VerifiedUser>()
 				.HasIndex(vu => new { vu.GuildId, vu.UserId })
 				.IsUnique();
+			modelBuilder.Entity<VerifiedUser>()
+				.HasIndex(vu => new { vu.GuildId, vu.ForumUserId })
+				.IsUnique();
 
 			modelBuilder.Entity<BirthDateModel>()
 				.HasIndex(bdm => bdm.UserId)
