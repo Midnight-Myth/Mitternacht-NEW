@@ -38,9 +38,13 @@
 						}
 					</td>
 					<td>
-						<a asp-area="User" asp-controller="Verifications" asp-action="Index" asp-route-userId="@watchedForumAccount.UserId">
+						@if(watchedForumAccount.UserId is not null) {
+							<a asp-area="User" asp-controller="Verifications" asp-action="Index" asp-route-userId="@watchedForumAccount.UserId">
+								@watchedForumAccount.Username
+							</a>
+						} else {
 							@watchedForumAccount.Username
-						</a>
+						}
 					</td>
 				</tr>
 			}
