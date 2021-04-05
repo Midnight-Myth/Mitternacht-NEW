@@ -1,0 +1,49 @@
+﻿@model IEnumerable<WatchedForumAccount>
+
+<h4>Beobachtete Forumaccounts</h4>
+<hr />
+
+@if(ViewBag.PermissionWriteWatchedForumAccounts) {
+	<a asp-action="Create">Forumaccountbeobachtung hinzufügen</a>
+}
+
+<div class="table-responsive">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.ForumProfileUrl)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.WatchAction)
+				</th>
+				<th class="discord-avatar"></th>
+				<th>
+					@Html.DisplayNameFor(model => model.Username)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var watchedForumAccount in Model) {
+				<tr>
+					<td>
+						<a href="@watchedForumAccount.ForumProfileUrl">@Html.DisplayFor(modelItem => watchedForumAccount.ForumProfileUrl)</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => watchedForumAccount.WatchAction)
+					</td>
+					<td class="discord-avatar">
+						@if(!string.IsNullOrWhiteSpace(watchedForumAccount.AvatarUrl)) {
+							<img src="@watchedForumAccount.AvatarUrl" alt="Avatar" />
+						}
+					</td>
+					<td>
+						<a asp-area="User" asp-controller="Verifications" asp-action="Index" asp-route-userId="@watchedForumAccount.UserId">
+							@watchedForumAccount.Username
+						</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
