@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Guild.Models;
+using MitternachtWeb.Models;
 using System.Linq;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
@@ -18,8 +19,6 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			if(PermissionReadWatchedForumAccounts) {
 				using var uow = _db.UnitOfWork;
 
-
-
 				var data = (from wfa in uow.WatchedForumAccounts.GetForGuild(GuildId)
 							join vu in uow.VerifiedUsers.GetVerifiedUsers(GuildId) on wfa.ForumUserId equals vu.ForumUserId into vus
 							from subvu in vus.DefaultIfEmpty()
@@ -30,9 +29,12 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 								var user = o.VerifiedUser is not null ? Guild.GetUser(o.VerifiedUser.UserId) : null;
 
 								return new WatchedForumAccount {
-									UserId      = o.VerifiedUser?.UserId,
-									Username    = user?.ToString() ?? (o.VerifiedUser is not null ? uow.UsernameHistory.GetUsernamesDescending(o.VerifiedUser.UserId).FirstOrDefault()?.ToString() : null) ?? "-",
-									AvatarUrl   = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+									DiscordUser = o.VerifiedUser is null ? null : new ModeledDiscordUser{
+										UserId         = o.VerifiedUser.UserId,
+										Username       = user?.ToString() ?? uow.UsernameHistory.GetUsernamesDescending(o.VerifiedUser.UserId).FirstOrDefault()?.ToString() ?? "-",
+										AvatarUrl      = user?.GetAvatarUrl() ?? user?.GetDefaultAvatarUrl(),
+										UserController = "Verifications",
+									},
 									ForumUserId = o.WatchedForumAccount.ForumUserId,
 									WatchAction = o.WatchedForumAccount.WatchAction,
 								};

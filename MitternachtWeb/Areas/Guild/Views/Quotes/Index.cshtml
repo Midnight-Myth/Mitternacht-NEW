@@ -6,9 +6,8 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="discord-avatar"></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Authorname)
+					@Html.DisplayNameFor(model => model.Author)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Keyword)
@@ -25,15 +24,8 @@
 		<tbody>
 			@foreach(var quote in Model) {
 				<tr>
-					<td class="discord-avatar">
-						@if(!string.IsNullOrWhiteSpace(quote.AvatarUrl)) {
-							<img src="@quote.AvatarUrl" alt="Avatar" />
-						}
-					</td>
 					<td>
-						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@quote.AuthorId">
-							@quote.Authorname
-						</a>
+						@Html.DisplayFor(model => quote.Author, "ModeledDiscordUser")
 					</td>
 					<td>
 						@Html.DisplayFor(modelItem => quote.Keyword)

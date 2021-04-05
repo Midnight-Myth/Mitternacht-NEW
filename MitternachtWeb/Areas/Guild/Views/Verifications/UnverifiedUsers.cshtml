@@ -6,9 +6,8 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="discord-avatar"></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Username)
+					@Html.DisplayNameFor(model => model.DiscordUser)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Roles)
@@ -17,21 +16,14 @@
 		</thead>
 		<tbody>
 			@foreach(var verification in Model) {
-				<tr>
-					<td class="discord-avatar">
-						@if(!string.IsNullOrWhiteSpace(verification.AvatarUrl)) {
-							<img src="@verification.AvatarUrl" alt="Avatar" />
-						}
-					</td>
-					<td>
-						<a asp-area="User" asp-controller="Overview" asp-action="Index" asp-route-userId="@verification.UserId">
-							@verification.Username
-						</a>
-					</td>
-					<td>
-						@Html.DisplayFor(model => verification.Roles, "RolesArray")
-					</td>
-				</tr>
+			<tr>
+				<td>
+					@Html.DisplayFor(model => verification.DiscordUser, "ModeledDiscordUser")
+				</td>
+				<td>
+					@Html.DisplayFor(model => verification.Roles, "RolesArray")
+				</td>
+			</tr>
 			}
 		</tbody>
 	</table>

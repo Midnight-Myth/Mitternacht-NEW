@@ -1,0 +1,15 @@
+﻿@model ModeledDiscordUser
+
+<span class="discord-avatar">
+	@if(Model is not null && !string.IsNullOrWhiteSpace(Model.AvatarUrl)) {
+		<img src="@Model.AvatarUrl" alt="Avatar" />
+	}
+</span>
+
+@if(Model is not null) {
+	<a asp-area="User" asp-controller="@(string.IsNullOrWhiteSpace(Model.UserController) ? "Overview" : Model.UserController)" asp-action="Index" asp-route-userId="@Model.UserId">
+		@Model.Username
+	</a>
+} else {
+	@:-
+}

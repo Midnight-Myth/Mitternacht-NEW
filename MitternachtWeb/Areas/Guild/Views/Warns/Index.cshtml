@@ -6,9 +6,8 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th class="discord-avatar"></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Username)
+					@Html.DisplayNameFor(model => model.DiscordUser)
 				</th>
 				<th>
 					@Html.DisplayNameFor(model => model.Reason)
@@ -33,15 +32,8 @@
 		<tbody>
 			@foreach(var warn in Model) {
 			<tr>
-				<td class="discord-avatar">
-					@if(!string.IsNullOrWhiteSpace(warn.AvatarUrl)) {
-						<img src="@warn.AvatarUrl" alt="Avatar" />
-					}
-				</td>
 				<td>
-					<a asp-area="User" asp-controller="Warns" asp-action="Index" asp-route-userId="@warn.UserId">
-						@warn.Username
-					</a>
+					@Html.DisplayFor(model => warn.DiscordUser, "ModeledDiscordUser")
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => warn.Reason)

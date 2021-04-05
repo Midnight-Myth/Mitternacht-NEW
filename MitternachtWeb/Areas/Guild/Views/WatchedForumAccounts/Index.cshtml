@@ -17,9 +17,8 @@
 				<th>
 					@Html.DisplayNameFor(model => model.WatchAction)
 				</th>
-				<th class="discord-avatar"></th>
 				<th>
-					@Html.DisplayNameFor(model => model.Username)
+					@Html.DisplayNameFor(model => model.DiscordUser)
 				</th>
 			</tr>
 		</thead>
@@ -32,19 +31,8 @@
 					<td>
 						@Html.DisplayFor(modelItem => watchedForumAccount.WatchAction)
 					</td>
-					<td class="discord-avatar">
-						@if(!string.IsNullOrWhiteSpace(watchedForumAccount.AvatarUrl)) {
-							<img src="@watchedForumAccount.AvatarUrl" alt="Avatar" />
-						}
-					</td>
 					<td>
-						@if(watchedForumAccount.UserId is not null) {
-							<a asp-area="User" asp-controller="Verifications" asp-action="Index" asp-route-userId="@watchedForumAccount.UserId">
-								@watchedForumAccount.Username
-							</a>
-						} else {
-							@watchedForumAccount.Username
-						}
+						@Html.DisplayFor(model => watchedForumAccount.DiscordUser, "ModeledDiscordUser")
 					</td>
 				</tr>
 			}
