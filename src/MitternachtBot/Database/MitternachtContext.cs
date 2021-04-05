@@ -147,6 +147,10 @@ namespace Mitternacht.Database {
 			modelBuilder.Entity<UserRoleColorBinding>()
 				.HasIndex(m => new { m.UserId, m.GuildId, m.RoleId })
 				.IsUnique();
+
+			modelBuilder.Entity<WatchedForumAccount>()
+				.HasIndex(m => new { m.GuildId, m.ForumUserId })
+				.IsUnique();
 		}
 
 		public void EnsureCorrectDatabaseState(){
