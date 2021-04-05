@@ -78,10 +78,14 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 				var wfa = uow.WatchedForumAccounts.GetForGuild(GuildId).FirstOrDefault(wfa => wfa.ForumUserId == id);
 
-				return View(new CreateWatchedForumAccount {
-					ForumUserId = wfa.ForumUserId,
-					WatchAction = wfa.WatchAction,
-				});
+				if(wfa is not null) {
+					return View(new CreateWatchedForumAccount {
+						ForumUserId = wfa.ForumUserId,
+						WatchAction = wfa.WatchAction,
+					});
+				} else {
+					return NotFound();
+				}
 			} else {
 				return Unauthorized();
 			}
