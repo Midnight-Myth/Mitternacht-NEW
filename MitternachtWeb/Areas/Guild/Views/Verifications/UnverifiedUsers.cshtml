@@ -12,18 +12,26 @@
 				<th>
 					@Html.DisplayNameFor(model => model.Roles)
 				</th>
+				@if(ViewBag.PermissionWriteVerifications) {
+					<th></th>
+				}
 			</tr>
 		</thead>
 		<tbody>
 			@foreach(var verification in Model) {
-			<tr>
-				<td>
-					@Html.DisplayFor(model => verification.DiscordUser, "ModeledDiscordUser")
-				</td>
-				<td>
-					@Html.DisplayFor(model => verification.Roles, "RolesArray")
-				</td>
-			</tr>
+				<tr>
+					<td>
+						@Html.DisplayFor(model => verification.DiscordUser, "ModeledDiscordUser")
+					</td>
+					<td>
+						@Html.DisplayFor(model => verification.Roles, "RolesArray")
+					</td>
+					<td>
+						@if(ViewBag.PermissionWriteVerifications) {
+							<a asp-action="Create" asp-route-userId="@verification.DiscordUser.UserId">Verifizieren</a>
+						}
+					</td>
+				</tr>
 			}
 		</tbody>
 	</table>

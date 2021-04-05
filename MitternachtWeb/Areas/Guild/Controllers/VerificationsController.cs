@@ -64,5 +64,41 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				return Unauthorized();
 			}
 		}
+
+		public IActionResult Create(ulong? userId = null, long? forumUserId = null)
+			=> PermissionWriteVerifications ? View(new CreateVerification {
+				UserId = userId,
+				ForumUserId = forumUserId,
+			}) : Unauthorized();
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Create(CreateVerification verification) {
+			if(PermissionWriteVerifications) {
+				if(ModelState.IsValid) {
+					using var uow = _db.UnitOfWork;
+
+					if(!uow.VerifiedUsers.IsVerified(GuildId, verification.UserId.Value, verification.ForumUserId.Value)) {
+						if(uow.VerifiedUsers.SetVerified(GuildId, verification.UserId.Value, verification.ForumUserId.Value)) {
+							uow.SaveChanges();
+
+							return RedirectToAction("Index");
+						} else {
+							ModelState.AddModelError("", "Mindestens einer der angegebenen Accounts ist schon verifiziert.");
+
+							return View(verification);
+						}
+					} else {
+						ModelState.AddModelError("", "Diese Kombination ist schon verifiziert.");
+
+						return View(verification);
+					}
+				} else {
+					return View(verification);
+				}
+			} else {
+				return Unauthorized();
+			}
+		}
 	}
 }

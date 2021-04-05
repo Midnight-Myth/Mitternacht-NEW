@@ -2,6 +2,11 @@
 
 <h4>Verifications</h4>
 <hr />
+
+@if(ViewBag.PermissionWriteVerifications) {
+	<a asp-action="Create" class="btn btn-primary">Verifizierung hinzufügen</a>
+}
+
 <div class="table-responsive">
 	<table class="table">
 		<thead>
