@@ -40,6 +40,46 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			}
 		}
 
+		public IActionResult Edit(int id) {
+			if(PermissionWriteQuotes) {
+				using var uow = _db.UnitOfWork;
+				var quote = uow.Quotes.GetAllForGuild(GuildId).FirstOrDefault(q => q.Id == id);
+
+				if(quote is not null) {
+					return View(new EditQuote {
+						Keyword = quote.Keyword,
+						Text = quote.Text,
+					});
+				} else {
+					return NotFound();
+				}
+			} else {
+				return Unauthorized();
+			}
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(int id, EditQuote quote) {
+			if(PermissionWriteQuotes) {
+				if(ModelState.IsValid) {
+					using var uow = _db.UnitOfWork;
+
+					if(uow.Quotes.UpdateQuote(GuildId, id, quote.Keyword, quote.Text)) {
+						uow.SaveChanges();
+
+						return RedirectToAction("Index");
+					} else {
+						return View(quote);
+					}
+				} else {
+					return View(quote);
+				}
+			} else {
+				return Unauthorized();
+			}
+		}
+
 		public IActionResult Delete(int id) {
 			if(PermissionWriteQuotes) {
 				using var uow = _db.UnitOfWork;
