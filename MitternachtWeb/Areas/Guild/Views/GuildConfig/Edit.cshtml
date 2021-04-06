@@ -201,6 +201,10 @@
 			</label>
 		</div>
 		<div class="form-group">
+			<label asp-for="ForumAccountWatchNotificationChannelId" class="control-label"></label>
+			<input asp-for="ForumAccountWatchNotificationChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+		</div>
+		<div class="form-group">
 			<label asp-for="PermissionRole" class="control-label"></label>
 			<input asp-for="PermissionRole" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
 		</div>
