@@ -282,6 +282,25 @@ Im gleichen Verzeichnis wird noch eine Datei `mitternachtweb.config` benötigt m
 | ClientSecret | Das Client secret des Botaccounts
 |====
 
+Diese Informationen sind notwendig, um die Anmeldung mit einem Discordaccount im Webinterface zu ermöglichen.
+Die Daten sind auf der Seite `OAuth2` für die gewünschte Botanwendung im https://discord.com/developers/applications[Discord Developer Portal] zu finden.
+
+Dort muss man außerdem noch einen Redirect einrichten.
+Das entspricht einer Whitelist für URIs, an die Discord nach Authorisierung mit dem Discordaccount weiterleitet.
+Ohne das funktioniert der Login im Webinterface nicht (und damit alle Funktionen, die das Webinterface bietet)!
+
+Die Redirect-URI wird exakt mit der angegebenen in einer OAuth-Anfrage abgeglichen.
+Läuft der Bot beispielsweise mit Protokoll `https` auf der Domain `mybot.de`, muss folgende Redirect-URI angegeben werden.
+
+[source]
+----
+https://mybot.de/login/authenticate_discord
+----
+
+Verweist der DNS-Eintrag der Domain `mybot.de` auf zB die IP-Adresse `11.12.13.14`, würde ein Zugriff auf das Webinterface über `http://11.12.13.14` eventuell funktionieren (obwohl es nicht empfohlen ist, Zugriff per HTTP zu erlauben).
+Da `http://11.12.13.14/login/authenticate_discord` jedoch nicht als Redirect-URI angegeben ist, wird ein Loginversuch auf der Webseite fehlschlagen.
+Die OAuth-Seite von Discord wird dann einen Fehlertext `Invalid OAuth2 redirect_uri` anzeigen.
+
 = Botnutzung
 
 == Globale Boteinrichtung

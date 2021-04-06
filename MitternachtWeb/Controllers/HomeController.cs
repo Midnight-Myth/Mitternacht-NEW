@@ -18,12 +18,12 @@ namespace MitternachtWeb.Controllers {
 
 		[Authorize]
 		public IActionResult Login() {
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction(nameof(Index));
 		}
 
 		public async Task<IActionResult> Logout() {
 			await HttpContext.SignOutAsync("Cookies");
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

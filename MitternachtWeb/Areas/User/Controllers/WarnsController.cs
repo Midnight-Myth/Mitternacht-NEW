@@ -58,7 +58,7 @@ namespace MitternachtWeb.Areas.User.Controllers {
 				if(uow.Warnings.ToggleForgiven(warning.GuildId, id, DiscordUser.User.ToString())) {
 					uow.SaveChanges();
 
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				} else {
 					return NotFound();
 				}
@@ -75,7 +75,7 @@ namespace MitternachtWeb.Areas.User.Controllers {
 				uow.Warnings.ToggleHidden(warning.GuildId, id);
 				uow.SaveChanges();
 
-				return RedirectToAction("Index");
+				return RedirectToAction(nameof(Index));
 			} else {
 				return Unauthorized();
 			}

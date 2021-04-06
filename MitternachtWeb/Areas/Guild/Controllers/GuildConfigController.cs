@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
+using MitternachtWeb.Areas.Guild.Models;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
+	[Authorize]
 	[Area("Guild")]
 	public class GuildConfigController : GuildBaseController {
 		private readonly DbService _db;
@@ -12,13 +14,14 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 			_db = db;
 		}
 
-		public IActionResult Index() {
+		public IActionResult Edit() {
 			if(PermissionReadGuildConfig) {
 				using var uow = _db.UnitOfWork;
 
 				var guildConfig = uow.GuildConfigs.For(GuildId);
+				var editGuildConfig = EditGuildConfig.FromGuildConfig(guildConfig);
 
-				return View(guildConfig);
+				return View(editGuildConfig);
 			} else {
 				return Unauthorized();
 			}
@@ -26,80 +29,27 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit([Bind("GuildId,Prefix,DeleteMessageOnCommand,AutoAssignRoleId,AutoDeleteGreetMessagesTimer,AutoDeleteByeMessagesTimer,GreetMessageChannelId,ByeMessageChannelId,SendDmGreetMessage,DmGreetMessageText,SendChannelGreetMessage,ChannelGreetMessageText,SendChannelByeMessage,ChannelByeMessageText,ExclusiveSelfAssignedRoles,AutoDeleteSelfAssignedRoleMessages,DefaultMusicVolume,VoicePlusTextEnabled,CleverbotEnabled,MuteRoleName,MutedRoleId,SilencedRoleId,Locale,TimeZoneId,GameVoiceChannel,VerboseErrors,VerifiedRoleId,VerifyString,VerificationTutorialText,AdditionalVerificationUsers,VerificationPasswordChannelId,TurnToXpMultiplier,MessageXpTimeDifference,MessageXpCharCountMin,MessageXpCharCountMax,LogUsernameHistory,BirthdayRoleId,BirthdayMessage,BirthdayMessageChannelId,BirthdaysEnabled,BirthdayMoney,GommeTeamMemberRoleId,VipRoleId,TeamUpdateChannelId,TeamUpdateMessagePrefix,CountToNumberChannelId,CountToNumberMessageChance,CountToNumberDeleteWrongMessages,VerbosePermissions,PermissionRole,FilterInvites,FilterWords,FilterZalgo,WarningsInitialized,ForumNotificationChannelId,ColorMetricSimilarityRadius")] GuildConfig guildConfig) {
+		public async Task<IActionResult> Edit(EditGuildConfig guildConfig) {
 			if(PermissionWriteGuildConfig) {
-				if(GuildId == guildConfig.GuildId) {
-					if(ModelState.IsValid) {
-						using var uow = _db.UnitOfWork;
-						var gc        = uow.GuildConfigs.For(GuildId);
+				if(ModelState.IsValid) {
+					using var uow = _db.UnitOfWork;
+					var gc        = uow.GuildConfigs.For(GuildId);
 
-						if(gc != null) {
-							gc.Prefix                             = guildConfig.Prefix;
-							gc.DeleteMessageOnCommand             = guildConfig.DeleteMessageOnCommand;
-							gc.AutoAssignRoleId                   = guildConfig.AutoAssignRoleId;
-							gc.AutoDeleteGreetMessagesTimer       = guildConfig.AutoDeleteGreetMessagesTimer;
-							gc.AutoDeleteByeMessagesTimer         = guildConfig.AutoDeleteByeMessagesTimer;
-							gc.GreetMessageChannelId              = guildConfig.GreetMessageChannelId;
-							gc.ByeMessageChannelId                = guildConfig.ByeMessageChannelId;
-							gc.SendDmGreetMessage                 = guildConfig.SendDmGreetMessage;
-							gc.DmGreetMessageText                 = guildConfig.DmGreetMessageText;
-							gc.SendChannelGreetMessage            = guildConfig.SendChannelGreetMessage;
-							gc.ChannelGreetMessageText            = guildConfig.ChannelGreetMessageText;
-							gc.SendChannelByeMessage              = guildConfig.SendChannelByeMessage;
-							gc.ChannelByeMessageText              = guildConfig.ChannelByeMessageText;
-							gc.ExclusiveSelfAssignedRoles         = guildConfig.ExclusiveSelfAssignedRoles;
-							gc.AutoDeleteSelfAssignedRoleMessages = guildConfig.AutoDeleteSelfAssignedRoleMessages;
-							gc.VoicePlusTextEnabled               = guildConfig.VoicePlusTextEnabled;
-							gc.MuteRoleName                       = guildConfig.MuteRoleName;
-							gc.MutedRoleId                        = guildConfig.MutedRoleId;
-							gc.SilencedRoleId                     = guildConfig.SilencedRoleId;
-							gc.Locale                             = guildConfig.Locale;
-							gc.TimeZoneId                         = guildConfig.TimeZoneId;
-							gc.GameVoiceChannel                   = guildConfig.GameVoiceChannel;
-							gc.VerboseErrors                      = guildConfig.VerboseErrors;
-							gc.VerifiedRoleId                     = guildConfig.VerifiedRoleId;
-							gc.VerifyString                       = guildConfig.VerifyString;
-							gc.VerificationTutorialText           = guildConfig.VerificationTutorialText;
-							gc.AdditionalVerificationUsers        = guildConfig.AdditionalVerificationUsers;
-							gc.VerificationPasswordChannelId      = guildConfig.VerificationPasswordChannelId;
-							gc.TurnToXpMultiplier                 = guildConfig.TurnToXpMultiplier;
-							gc.MessageXpTimeDifference            = guildConfig.MessageXpTimeDifference;
-							gc.MessageXpCharCountMin              = guildConfig.MessageXpCharCountMin;
-							gc.MessageXpCharCountMax              = guildConfig.MessageXpCharCountMax;
-							gc.LogUsernameHistory                 = guildConfig.LogUsernameHistory;
-							gc.BirthdayRoleId                     = guildConfig.BirthdayRoleId;
-							gc.BirthdayMessage                    = guildConfig.BirthdayMessage;
-							gc.BirthdayMessageChannelId           = guildConfig.BirthdayMessageChannelId;
-							gc.BirthdaysEnabled                   = guildConfig.BirthdaysEnabled;
-							gc.BirthdayMoney                      = guildConfig.BirthdayMoney;
-							gc.GommeTeamMemberRoleId              = guildConfig.GommeTeamMemberRoleId;
-							gc.VipRoleId                          = guildConfig.VipRoleId;
-							gc.TeamUpdateChannelId                = guildConfig.TeamUpdateChannelId;
-							gc.TeamUpdateMessagePrefix            = guildConfig.TeamUpdateMessagePrefix;
-							gc.CountToNumberChannelId             = guildConfig.CountToNumberChannelId;
-							gc.CountToNumberMessageChance         = guildConfig.CountToNumberMessageChance;
-							gc.CountToNumberDeleteWrongMessages   = guildConfig.CountToNumberDeleteWrongMessages;
-							gc.VerbosePermissions                 = guildConfig.VerbosePermissions;
-							gc.PermissionRole                     = guildConfig.PermissionRole;
-							gc.FilterInvites                      = guildConfig.FilterInvites;
-							gc.FilterWords                        = guildConfig.FilterWords;
-							gc.FilterZalgo                        = guildConfig.FilterZalgo;
-							gc.WarningsInitialized                = guildConfig.WarningsInitialized;
-							gc.ForumNotificationChannelId         = guildConfig.ForumNotificationChannelId;
-							gc.ColorMetricSimilarityRadius        = guildConfig.ColorMetricSimilarityRadius;
-
-							uow.GuildConfigs.Update(gc);
-
+					if(gc != null) {
+						if(guildConfig.ApplyToGuildConfig(gc)) {
 							await uow.SaveChangesAsync();
-							return RedirectToAction(nameof(Index));
+
+							return RedirectToAction(nameof(Edit));
 						} else {
-							return NotFound();
+							ModelState.AddModelError("", "GuildId does not match the one in the path.");
+
+							return View(guildConfig);
 						}
 					} else {
-						return View(guildConfig);
+						return NotFound();
 					}
 				} else {
-					return NotFound();
+					return View(guildConfig);
 				}
 			} else {
 				return Unauthorized();
