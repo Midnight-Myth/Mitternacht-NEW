@@ -54,6 +54,7 @@ namespace Mitternacht.Database.Models {
 		public bool   CountToNumberDeleteWrongMessages   { get; set; }
 		public ulong? ForumNotificationChannelId         { get; set; }
 		public double ColorMetricSimilarityRadius        { get; set; } = 5.0;
+		public ulong? ForumAccountWatchNotificationChannelId { get; set; }
 
 		public List<Permission> Permissions        { get; set; }
 		public bool             VerbosePermissions { get; set; } = true;
