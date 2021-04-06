@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mitternacht.Services.Impl;
 using MitternachtWeb.Areas.Guild.Models;
 
 namespace MitternachtWeb.Areas.Guild.Controllers {
+	[Authorize]
 	[Area("Guild")]
 	public class GuildConfigController : GuildBaseController {
 		private readonly DbService _db;
