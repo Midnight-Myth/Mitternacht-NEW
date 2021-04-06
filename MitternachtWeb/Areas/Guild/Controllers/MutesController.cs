@@ -67,7 +67,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					_muteService.StopUnmuteTimer(GuildId, id);
 				}
 
-				return RedirectToAction("Index");
+				return RedirectToAction(nameof(Index));
 			} else {
 				return Unauthorized();
 			}

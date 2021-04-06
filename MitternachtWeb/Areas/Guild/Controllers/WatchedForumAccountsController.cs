@@ -60,7 +60,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					if(uow.WatchedForumAccounts.Create(GuildId, watchedForumAccount.ForumUserId, watchedForumAccount.WatchAction)) {
 						uow.SaveChanges();
 
-						return RedirectToAction("Index");
+						return RedirectToAction(nameof(Index));
 					} else {
 						return View(watchedForumAccount);
 					}
@@ -101,7 +101,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					if(uow.WatchedForumAccounts.ChangeWatchAction(GuildId, watchedForumAccount.ForumUserId, watchedForumAccount.WatchAction)) {
 						uow.SaveChanges();
 
-						return RedirectToAction("Index");
+						return RedirectToAction(nameof(Index));
 					} else {
 						return View(watchedForumAccount);
 					}

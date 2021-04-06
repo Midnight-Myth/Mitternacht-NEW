@@ -82,7 +82,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 						if(uow.VerifiedUsers.SetVerified(GuildId, verification.UserId.Value, verification.ForumUserId.Value)) {
 							uow.SaveChanges();
 
-							return RedirectToAction("Index");
+							return RedirectToAction(nameof(Index));
 						} else {
 							ModelState.AddModelError("", "Mindestens einer der angegebenen Accounts ist schon verifiziert.");
 
@@ -108,10 +108,10 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 				if(uow.VerifiedUsers.RemoveVerification(GuildId, userId)) {
 					uow.SaveChanges();
 
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				} else {
 					// TODO: Print an error message on the page. Currently, there is no way to directly see whether the action succeeded or not.
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				}
 			} else {
 				return Unauthorized();

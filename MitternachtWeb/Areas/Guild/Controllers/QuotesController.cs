@@ -61,7 +61,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 
 					uow.SaveChanges();
 
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				} else {
 					return View(quote);
 				}
@@ -98,7 +98,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					if(uow.Quotes.UpdateQuote(GuildId, id, quote.Keyword, quote.Text)) {
 						uow.SaveChanges();
 
-						return RedirectToAction("Index");
+						return RedirectToAction(nameof(Index));
 					} else {
 						return View(quote);
 					}
@@ -119,7 +119,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 					uow.Quotes.Remove(quote);
 					uow.SaveChanges();
 
-					return RedirectToAction("Index");
+					return RedirectToAction(nameof(Index));
 				} else {
 					return NotFound();
 				}
