@@ -1067,3 +1067,4 @@ verification:
   write_your_forumname_title:                    Schritt 1/3 - Forumnamen eingeben
   userverified_notify_title:                     Verifizierungsbeobachtungsmitteilung
   userverified_notify_description:               Nutzer {0} ({1}) hat sich mit dem Forumaccount [{2}]({3}) verifiziert.
+  userverified_ban_reason:                       Automatischer Bann wegen Verifizierung mit einem überwachten Forumaccount.

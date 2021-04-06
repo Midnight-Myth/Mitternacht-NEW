@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Verification.Services {
 						}
 						break;
 					case Database.Models.WatchAction.BAN:
-						await guildUser.BanAsync(reason: "Automatic ban due to forum account being watched with action BAN on verification.").ConfigureAwait(false);
+						await guildUser.BanAsync(reason: GetText("userverified_ban_reason", guildUser.GuildId)).ConfigureAwait(false);
 						break;
 					default:
 						break;
