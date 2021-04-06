@@ -8,233 +8,287 @@
 		<div class="form-group">
 			<label asp-for="Prefix" class="control-label"></label>
 			<input asp-for="Prefix" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="Prefix" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="DeleteMessageOnCommand" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.DeleteMessageOnCommand)
 			</label>
+			<span asp-validation-for="DeleteMessageOnCommand" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="AutoAssignRoleId" class="control-label"></label>
 			<input asp-for="AutoAssignRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="AutoAssignRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="AutoDeleteGreetMessagesTimer" class="control-label"></label>
 			<input asp-for="AutoDeleteGreetMessagesTimer" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="AutoDeleteGreetMessagesTimer" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="AutoDeleteByeMessagesTimer" class="control-label"></label>
 			<input asp-for="AutoDeleteByeMessagesTimer" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="AutoDeleteByeMessagesTimer" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="GreetMessageChannelId" class="control-label"></label>
 			<input asp-for="GreetMessageChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="GreetMessageChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="ByeMessageChannelId" class="control-label"></label>
 			<input asp-for="ByeMessageChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="ByeMessageChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="SendDmGreetMessage" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.SendDmGreetMessage)
 			</label>
+			<span asp-validation-for="SendDmGreetMessage" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="DmGreetMessageText" class="control-label"></label>
 			<input asp-for="DmGreetMessageText" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="DmGreetMessageText" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="SendChannelGreetMessage" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.SendChannelGreetMessage)
 			</label>
+			<span asp-validation-for="SendChannelGreetMessage" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="ChannelGreetMessageText" class="control-label"></label>
 			<input asp-for="ChannelGreetMessageText" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="ChannelGreetMessageText" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="SendChannelByeMessage" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.SendChannelByeMessage)
 			</label>
+			<span asp-validation-for="SendChannelByeMessage" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="ChannelByeMessageText" class="control-label"></label>
 			<input asp-for="ChannelByeMessageText" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="ChannelByeMessageText" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="ExclusiveSelfAssignedRoles" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.ExclusiveSelfAssignedRoles)
 			</label>
+			<span asp-validation-for="ExclusiveSelfAssignedRoles" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="AutoDeleteSelfAssignedRoleMessages" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.AutoDeleteSelfAssignedRoleMessages)
 			</label>
+			<span asp-validation-for="AutoDeleteSelfAssignedRoleMessages" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="VoicePlusTextEnabled" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.VoicePlusTextEnabled)
 			</label>
+			<span asp-validation-for="VoicePlusTextEnabled" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="MuteRoleName" class="control-label"></label>
 			<input asp-for="MuteRoleName" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="MuteRoleName" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="MutedRoleId" class="control-label"></label>
 			<input asp-for="MutedRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="MutedRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="SilencedRoleId" class="control-label"></label>
 			<input asp-for="SilencedRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="SilencedRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="Locale" class="control-label"></label>
 			<input asp-for="Locale" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="Locale" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="TimeZoneId" class="control-label"></label>
 			<input asp-for="TimeZoneId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="TimeZoneId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="GameVoiceChannel" class="control-label"></label>
 			<input asp-for="GameVoiceChannel" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="GameVoiceChannel" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="VerboseErrors" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.VerboseErrors)
 			</label>
+			<span asp-validation-for="VerboseErrors" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="VerifiedRoleId" class="control-label"></label>
 			<input asp-for="VerifiedRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="VerifiedRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="VerifyString" class="control-label"></label>
 			<input asp-for="VerifyString" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="VerifyString" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="VerificationTutorialText" class="control-label"></label>
 			<input asp-for="VerificationTutorialText" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="VerificationTutorialText" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="AdditionalVerificationUsers" class="control-label"></label>
 			<input asp-for="AdditionalVerificationUsers" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="AdditionalVerificationUsers" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="VerificationPasswordChannelId" class="control-label"></label>
 			<input asp-for="VerificationPasswordChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="VerificationPasswordChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="TurnToXpMultiplier" class="control-label"></label>
 			<input asp-for="TurnToXpMultiplier" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="TurnToXpMultiplier" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="MessageXpTimeDifference" class="control-label"></label>
 			<input asp-for="MessageXpTimeDifference" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="MessageXpTimeDifference" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="MessageXpCharCountMin" class="control-label"></label>
 			<input asp-for="MessageXpCharCountMin" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="MessageXpCharCountMin" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="MessageXpCharCountMax" class="control-label"></label>
 			<input asp-for="MessageXpCharCountMax" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="MessageXpCharCountMax" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="LogUsernameHistory" class="control-label"></label>
 			<input asp-for="LogUsernameHistory" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="LogUsernameHistory" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="BirthdayRoleId" class="control-label"></label>
 			<input asp-for="BirthdayRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="BirthdayRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="BirthdayMessage" class="control-label"></label>
 			<input asp-for="BirthdayMessage" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="BirthdayMessage" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="BirthdayMessageChannelId" class="control-label"></label>
 			<input asp-for="BirthdayMessageChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="BirthdayMessageChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="BirthdaysEnabled" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.BirthdaysEnabled)
 			</label>
+			<span asp-validation-for="BirthdaysEnabled" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="BirthdayMoney" class="control-label"></label>
 			<input asp-for="BirthdayMoney" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="BirthdayMoney" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="GommeTeamMemberRoleId" class="control-label"></label>
 			<input asp-for="GommeTeamMemberRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="GommeTeamMemberRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="VipRoleId" class="control-label"></label>
 			<input asp-for="VipRoleId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="VipRoleId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="TeamUpdateChannelId" class="control-label"></label>
 			<input asp-for="TeamUpdateChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="TeamUpdateChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="TeamUpdateMessagePrefix" class="control-label"></label>
 			<input asp-for="TeamUpdateMessagePrefix" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="TeamUpdateMessagePrefix" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="CountToNumberChannelId" class="control-label"></label>
 			<input asp-for="CountToNumberChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="CountToNumberChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="CountToNumberMessageChance" class="control-label"></label>
 			<input asp-for="CountToNumberMessageChance" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="CountToNumberMessageChance" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="CountToNumberDeleteWrongMessages" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.CountToNumberDeleteWrongMessages)
 			</label>
+			<span asp-validation-for="CountToNumberDeleteWrongMessages" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="VerbosePermissions" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.VerbosePermissions)
 			</label>
+			<span asp-validation-for="VerbosePermissions" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="ForumAccountWatchNotificationChannelId" class="control-label"></label>
 			<input asp-for="ForumAccountWatchNotificationChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="ForumAccountWatchNotificationChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="PermissionRole" class="control-label"></label>
 			<input asp-for="PermissionRole" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="PermissionRole" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="FilterInvites" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.FilterInvites)
 			</label>
+			<span asp-validation-for="FilterInvites" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="FilterWords" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.FilterWords)
 			</label>
+			<span asp-validation-for="FilterWords" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="FilterZalgo" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.FilterZalgo)
 			</label>
+			<span asp-validation-for="FilterZalgo" class="text-danger"></span>
 		</div>
 		<div class="form-group form-check">
 			<label class="form-check-label">
 				<input class="form-check-input" asp-for="WarningsInitialized" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" /> @Html.DisplayNameFor(model => model.WarningsInitialized)
 			</label>
+			<span asp-validation-for="WarningsInitialized" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="ForumNotificationChannelId" class="control-label"></label>
 			<input asp-for="ForumNotificationChannelId" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="ForumNotificationChannelId" class="text-danger"></span>
 		</div>
 		<div class="form-group">
 			<label asp-for="ColorMetricSimilarityRadius" class="control-label"></label>
 			<input asp-for="ColorMetricSimilarityRadius" class="form-control" asp-disabled="@(!ViewBag.PermissionWriteGuildConfig)" />
+			<span asp-validation-for="ColorMetricSimilarityRadius" class="text-danger"></span>
 		</div>
 
 		@if(ViewBag.PermissionWriteGuildConfig) {
