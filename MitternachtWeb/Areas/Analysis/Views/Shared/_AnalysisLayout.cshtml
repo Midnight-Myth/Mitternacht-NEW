@@ -6,10 +6,10 @@
 }
 
 <div class="row">
-	<nav class="col-md-3 col-xl-2">
-		<ul class="nav">
+	<nav class="navbar navbar-light col-md-3 col-xl-2">
+		<ul class="navbar-nav flex-grow-1 align-self-start">
 			<li class="nav-item">
-				<a class="nav-link text-dark d-flex justify-content-between align-items-center" asp-area="Analysis" asp-controller="UnknownKeyRequests" asp-action="Index">
+				<a class="nav-link d-flex justify-content-between align-items-center" asp-area="Analysis" asp-controller="UnknownKeyRequests" asp-action="Index">
 					Unbekannte Translationkeys
 					<span class="badge badge-danger badge-pill">@UnknownKeyRequestsService.UnknownKeyRequests.Values.Aggregate(0ul, (r, i) => r+i)</span>
 				</a>

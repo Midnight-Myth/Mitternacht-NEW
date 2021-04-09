@@ -4,30 +4,30 @@
 }
 
 <div class="row">
-	<nav class="col-md-3 col-xl-2">
-		<ul class="nav flex-column">
+	<nav class="navbar navbar-light col-md-3 col-xl-2">
+		<ul class="navbar-nav flex-grow-1 align-self-start">
 			<li class="nav-item">
-				<a class="nav-link text-dark" asp-area="Guild" asp-controller="Stats" asp-action="Index">Statistiken</a>
+				<a class="nav-link" asp-area="Guild" asp-controller="Stats" asp-action="Index">Statistiken</a>
 			</li>
 			@if(ViewBag.PermissionReadQuotes || ViewBag.PermissionReadVerifications) {
 				<li><hr /></li>
 			}
 			@if(ViewBag.PermissionReadQuotes) {
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Quotes" asp-action="Index">Zitate</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="Quotes" asp-action="Index">Zitate</a>
 				</li>
 			}
 			@if(ViewBag.PermissionReadVerifications) {
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Verifications" asp-action="Index">Verifizierungen</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="Verifications" asp-action="Index">Verifizierungen</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Verifications" asp-action="UnverifiedUsers">Nicht-verifizierte Nutzer</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="Verifications" asp-action="UnverifiedUsers">Nicht-verifizierte Nutzer</a>
 				</li>
 			}
 			@if(ViewBag.PermissionReadWatchedForumAccounts) {
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="WatchedForumAccounts" asp-action="Index">WatchedForumAccounts</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="WatchedForumAccounts" asp-action="Index">WatchedForumAccounts</a>
 				</li>
 			}
 			@if(ViewBag.PermissionReadMutes || ViewBag.PermissionReadWarns) {
@@ -35,18 +35,18 @@
 			}
 			@if(ViewBag.PermissionReadMutes) {
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="Mutes" asp-action="Index">Mutes</a>
 				</li>
 			}
 			@if(ViewBag.PermissionReadWarns) {
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="Warns" asp-action="Index">Warns</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="Warns" asp-action="Index">Warns</a>
 				</li>
 			}
 			@if(ViewBag.PermissionReadGuildConfig) {
 				<li><hr /></li>
 				<li class="nav-item">
-					<a class="nav-link text-dark" asp-area="Guild" asp-controller="GuildConfig" asp-action="Edit">GuildConfig</a>
+					<a class="nav-link" asp-area="Guild" asp-controller="GuildConfig" asp-action="Edit">GuildConfig</a>
 				</li>
 			}
 		</ul>
