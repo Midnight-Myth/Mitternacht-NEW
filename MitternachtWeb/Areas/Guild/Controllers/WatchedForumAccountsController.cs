@@ -26,7 +26,7 @@ namespace MitternachtWeb.Areas.Guild.Controllers {
 							select new {
 								WatchedForumAccount = wfa,
 								VerifiedUser = subvu,
-							}).AsEnumerable().Select(o => {
+							}).ToList().Select(o => {
 								var user = o.VerifiedUser is not null ? Guild.GetUser(o.VerifiedUser.UserId) : null;
 
 								return new WatchedForumAccount {

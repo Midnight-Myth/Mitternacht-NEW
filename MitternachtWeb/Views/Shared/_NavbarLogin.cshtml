@@ -1,5 +1,8 @@
 ﻿@if(ViewBag.DiscordUser == null) {
-	<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+	<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
 } else {
-	@ViewBag.DiscordUser.User <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+	<span class="navbar-text">
+		@ViewBag.DiscordUser.User
+	</span>
+	<a class="nav-link" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
 }
