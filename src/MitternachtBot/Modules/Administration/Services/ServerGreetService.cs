@@ -84,7 +84,7 @@ namespace Mitternacht.Modules.Administration.Services {
 					}
 
 					if(gc.SendDmGreetMessage) {
-						await SendGreetMessage(guildUser, await guildUser.GetOrCreateDMChannelAsync().ConfigureAwait(false), gc.DmGreetMessageText, 0).ConfigureAwait(false);
+						await SendGreetMessage(guildUser, await guildUser.CreateDMChannelAsync().ConfigureAwait(false), gc.DmGreetMessageText, 0).ConfigureAwait(false);
 					}
 				} catch { }
 			});

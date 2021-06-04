@@ -54,8 +54,9 @@ namespace Mitternacht.Modules.Administration.Services {
 			return Task.CompletedTask;
 		}
 
-		private async Task Client_GuildMemberUpdated(SocketGuildUser oldUser, SocketGuildUser updatedUser) {
-			var       changedRoles = updatedUser.Roles.Where(r => !oldUser.Roles.Contains(r)).ToArray();
+		private async Task Client_GuildMemberUpdated(Cacheable<SocketGuildUser, ulong> oldUser, SocketGuildUser updatedUser) {
+			var       oldRoles     = (await oldUser.GetOrDownloadAsync()).Roles;
+			var       changedRoles = updatedUser.Roles.Where(r => !oldRoles.Contains(r)).ToArray();
 			using var uow          = _db.UnitOfWork;
 			var       mutedRole    = await GetMuteRole(updatedUser.Guild, uow).ConfigureAwait(false);
 

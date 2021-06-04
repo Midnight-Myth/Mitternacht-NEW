@@ -169,7 +169,7 @@ namespace Mitternacht.Modules.Gambling {
 			_client.MessageDeleted -= MessageDeletedEventHandler;
 		}
 
-		private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, ISocketMessageChannel channel) {
+		private Task MessageDeletedEventHandler(Cacheable<IMessage, ulong> msg, Cacheable<IMessageChannel, ulong> channel) {
 			if(_reactionMessage?.Id != msg.Id)
 				return Task.CompletedTask;
 			_log.Warn("Stopping reaction event because message is deleted.");

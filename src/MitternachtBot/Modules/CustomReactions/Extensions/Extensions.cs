@@ -41,7 +41,7 @@ namespace Mitternacht.Modules.CustomReactions.Extensions {
 			=> cr.Response.ResolveResponseString(ctx, client, cr.ResolveTriggerString(ctx, client), containsAnywhere);
 
 		public static async Task<IUserMessage> Send(this CustomReaction cr, IUserMessage ctx, DiscordSocketClient client, CustomReactionsService crs) {
-			var channel = cr.DmResponse ? await ctx.Author.GetOrCreateDMChannelAsync() : ctx.Channel;
+			var channel = cr.DmResponse ? await ctx.Author.CreateDMChannelAsync() : ctx.Channel;
 
 			crs.ReactionStats.AddOrUpdate(cr.Trigger, 1, (k, old) => ++old);
 

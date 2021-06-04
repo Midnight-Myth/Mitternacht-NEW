@@ -173,7 +173,7 @@ namespace Mitternacht.Modules.Gambling {
 
 				var channel = count <= 20
 					? Context.Channel
-					: await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+					: await Context.User.CreateDMChannelAsync().ConfigureAwait(false);
 
 				foreach(var s in listStrings) {
 					await channel.SendMessageAsync(s).ConfigureAwait(false);

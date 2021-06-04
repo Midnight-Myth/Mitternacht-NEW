@@ -113,7 +113,7 @@ namespace Mitternacht.Modules.Help {
 			var channel = Context.Channel;
 
 			if(com == null) {
-				var ch = channel is ITextChannel ? await ((IGuildUser)Context.User).GetOrCreateDMChannelAsync() : channel;
+				var ch = channel is ITextChannel ? await ((IGuildUser)Context.User).CreateDMChannelAsync() : channel;
 				await ch.SendMessageAsync(HelpString).ConfigureAwait(false);
 				return;
 			}

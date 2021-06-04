@@ -269,7 +269,7 @@ namespace Mitternacht.Modules.Verification {
 				await ReplyErrorLocalized("tutorial_not_set").ConfigureAwait(false);
 				return;
 			}
-			var ch = dm ? await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false) : Context.Channel;
+			var ch = dm ? await Context.User.CreateDMChannelAsync().ConfigureAwait(false) : Context.Channel;
 			await ch.SendConfirmAsync(text, GetText("tutorial")).ConfigureAwait(false);
 		}
 

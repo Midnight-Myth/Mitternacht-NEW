@@ -73,7 +73,7 @@ namespace Mitternacht.Modules.Level {
 
 			var channel = count <= 20
 				? Context.Channel
-				: await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+				: await Context.User.CreateDMChannelAsync().ConfigureAwait(false);
 
 			await SendRanks(levelModels, channel, position).ConfigureAwait(false);
 		}

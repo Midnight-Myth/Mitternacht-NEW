@@ -63,13 +63,13 @@ namespace Mitternacht.Modules.Level.Services {
 			}).ConfigureAwait(false);
 		}
 
-		private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, ISocketMessageChannel channel) {
+		private async Task OnMessageDeleted(Cacheable<IMessage, ulong> before, Cacheable<IMessageChannel, ulong> channel) {
 			var msg = await before.GetOrDownloadAsync().ConfigureAwait(false);
 			if(msg == null || !(msg.Author is IGuildUser user) || await _ch.WouldGetExecuted(msg).ConfigureAwait(false))
 				return;
 
 			using var uow = _db.UnitOfWork;
-			if(uow.MessageXpRestrictions.IsRestricted(channel as ITextChannel))
+			if(uow.MessageXpRestrictions.IsRestricted(await channel.GetOrDownloadAsync() as ITextChannel))
 				return;
 			uow.LevelModel.AddXP(user.GuildId, user.Id, -uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMax, channel.Id);
 			await uow.SaveChangesAsync().ConfigureAwait(false);

@@ -55,7 +55,7 @@ namespace Mitternacht.Modules.Utility.Services {
 					var user = _client.GetGuild(r.ServerId).GetUser(r.ChannelId);
 					if(user == null)
 						return;
-					ch = await user.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+					ch = await user.CreateDMChannelAsync().ConfigureAwait(false);
 				} else {
 					ch = _client.GetGuild(r.ServerId)?.GetTextChannel(r.ChannelId);
 				}

@@ -115,7 +115,7 @@ namespace Mitternacht.Modules.Gambling {
 						uow.Context.Set<ShopEntryItem>().Remove(item);
 						await uow.SaveChangesAsync(false).ConfigureAwait(false);
 						try {
-							await (await Context.User.GetOrCreateDMChannelAsync())
+							await (await Context.User.CreateDMChannelAsync())
 								.EmbedAsync(new EmbedBuilder().WithOkColor()
 								.WithTitle(GetText("shop_purchase", Context.Guild.Name))
 								.AddField(efb => efb.WithName(GetText("item")).WithValue(item.Text).WithIsInline(false))

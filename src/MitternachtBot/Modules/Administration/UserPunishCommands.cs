@@ -32,7 +32,7 @@ namespace Mitternacht.Modules.Administration {
 			public async Task Warn(IGuildUser user, ModerationPoints points, [Remainder] string reason = null) {
 				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
 					try {
-						await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("userpunish_warn_warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("userpunish_warn_reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
+						await (await user.CreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("userpunish_warn_warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("userpunish_warn_reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 					} catch { }
 
 					var punishment = await Service.Warn(Context.Guild, user.Id, Context.User.ToString(), reason, points).ConfigureAwait(false);
@@ -91,7 +91,7 @@ namespace Mitternacht.Modules.Administration {
 				var showMods    = (Context.User as IGuildUser).GuildPermissions.ViewAuditLog;
 				var allWarnings = uow.Warnings.For(Context.Guild.Id, userId).Where(w => showMods || !w.Hidden).OrderByDescending(w => w.DateAdded).ToArray();
 				var textKey     = showMods ? "userpunish_warnlog_warned_on_by" : "userpunish_warnlog_warned_on";
-				var channel = sendPerDm ? (await Context.User.GetOrCreateDMChannelAsync()) : Context.Channel;
+				var channel = sendPerDm ? (await Context.User.CreateDMChannelAsync()) : Context.Channel;
 				var embedTitle = GetText("userpunish_warnlog_for_user", username);
 
 				await channel.SendPaginatedConfirmAsync(Context.Client as DiscordSocketClient, page, currentPage => {

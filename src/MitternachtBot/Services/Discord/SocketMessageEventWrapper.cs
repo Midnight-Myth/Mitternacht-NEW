@@ -22,7 +22,7 @@ namespace Mitternacht.Services.Discord
             _client.ReactionsCleared += Discord_ReactionsCleared;
         }
 
-        private Task Discord_ReactionsCleared(Cacheable<IUserMessage, ulong> msg, ISocketMessageChannel channel)
+        private Task Discord_ReactionsCleared(Cacheable<IUserMessage, ulong> msg, Cacheable<IMessageChannel, ulong> channel)
         {
             Task.Run(() =>
             {
@@ -37,7 +37,7 @@ namespace Mitternacht.Services.Discord
             return Task.CompletedTask;
         }
 
-        private Task Discord_ReactionRemoved(Cacheable<IUserMessage, ulong> msg, ISocketMessageChannel channel, SocketReaction reaction)
+        private Task Discord_ReactionRemoved(Cacheable<IUserMessage, ulong> msg, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction)
         {
             Task.Run(() =>
             {
@@ -52,7 +52,7 @@ namespace Mitternacht.Services.Discord
             return Task.CompletedTask;
         }
 
-        private Task Discord_ReactionAdded(Cacheable<IUserMessage, ulong> msg, ISocketMessageChannel channel, SocketReaction reaction)
+        private Task Discord_ReactionAdded(Cacheable<IUserMessage, ulong> msg, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction)
         {
             Task.Run(() =>
             {

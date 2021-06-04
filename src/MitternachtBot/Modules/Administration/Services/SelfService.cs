@@ -82,7 +82,7 @@ namespace Mitternacht.Modules.Administration.Services {
                     {
                         if (hs.Remove(u.Id))
                         {
-                            channels.Add(u.Id, new AsyncLazy<IDMChannel>(async () => await u.GetOrCreateDMChannelAsync()));
+                            channels.Add(u.Id, new AsyncLazy<IDMChannel>(async () => await u.CreateDMChannelAsync()));
                             if (hs.Count == 0)
                                 break;
                         }

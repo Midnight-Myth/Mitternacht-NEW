@@ -92,7 +92,7 @@ namespace Mitternacht.Modules.CustomReactions {
 														.ToStream()
 														.ConfigureAwait(false);
 
-				var channel = Context.Guild == null ? Context.Channel : await Context.User.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+				var channel = Context.Guild == null ? Context.Channel : await Context.User.CreateDMChannelAsync().ConfigureAwait(false);
 
 				await channel.SendFileAsync(txtStream, "customreactions.txt", GetText("listcustreact_list_all")).ConfigureAwait(false);
 			} else {

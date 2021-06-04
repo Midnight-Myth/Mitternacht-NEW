@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Discord;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
@@ -64,7 +65,7 @@ namespace Mitternacht.Modules.Utility.Services {
 			return Task.CompletedTask;
 		}
 
-		private Task UserUpdated(SocketGuildUser b, SocketGuildUser a) {
+		private Task UserUpdated(Cacheable<SocketGuildUser, ulong> b, SocketGuildUser a) {
 			var _ = Task.Run(async () => {
 				if(b.Id != a.Id)
 					return;

@@ -38,7 +38,7 @@ namespace Mitternacht.Modules.Verification.Common {
 
 		public async Task StartAsync() {
 			await _verificationService.InvokeVerificationStepAsync(this, VerificationStep.Started).ConfigureAwait(false);
-			UserChannel = await GuildUser.GetOrCreateDMChannelAsync().ConfigureAwait(false);
+			UserChannel = await GuildUser.CreateDMChannelAsync().ConfigureAwait(false);
 
 			var eb = new EmbedBuilder().WithOkColor();
 			//verification process intro

@@ -311,9 +311,9 @@ namespace Mitternacht.Modules.Administration {
 							if(user != null) {
 								if(CREmbed.TryParse(msg, out var crembed)) {
 									rep.Replace(crembed);
-									await (await user.GetOrCreateDMChannelAsync()).EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
+									await (await user.CreateDMChannelAsync()).EmbedAsync(crembed.ToEmbedBuilder(), crembed.PlainText?.SanitizeMentions() ?? "").ConfigureAwait(false);
 								} else {
-									await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
+									await (await user.CreateDMChannelAsync()).SendMessageAsync($"`#{msg}` {rep.Replace(msg)?.SanitizeMentions() ?? ""}");
 								}
 								
 								await ReplyConfirmLocalized("message_sent").ConfigureAwait(false);

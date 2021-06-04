@@ -363,11 +363,12 @@ namespace Mitternacht.Modules.Administration.Services {
 			return Task.CompletedTask;
 		}
 
-		private Task _client_GuildUserUpdated(SocketGuildUser before, SocketGuildUser after) {
+		private Task _client_GuildUserUpdated(Cacheable<SocketGuildUser, ulong> before_cacheable, SocketGuildUser after) {
 			var _ = Task.Run(async () =>
 			{
 				try
 				{
+					var before = await before_cacheable.GetOrDownloadAsync();
 					if (!TryGetLogSettingForGuild(before.Guild.Id, out var logSetting))
 						return;
 
@@ -417,9 +418,9 @@ namespace Mitternacht.Modules.Administration.Services {
 							PresenceUpdates.AddOrUpdate(logChannel,
 								new List<string> { str }, (id, list) => { list.Add(str); return list; });
 						}
-						else if (before.Activity?.Name != after.Activity?.Name)
+						else if (before.Activities.FirstOrDefault()?.Name != after.Activities.FirstOrDefault()?.Name)
 						{
-							var str = $"👾`{PrettyCurrentTime(after.Guild)}`👤__**{after.Username}**__ is now playing **{after.Activity?.Name ?? "-"}**.";
+							var str = $"👾`{PrettyCurrentTime(after.Guild)}`👤__**{after.Username}**__ is now playing **{after.Activities.FirstOrDefault()?.Name ?? "-"}**.";
 							PresenceUpdates.AddOrUpdate(logChannel,
 								new List<string> { str }, (id, list) => { list.Add(str); return list; });
 						}
@@ -759,7 +760,7 @@ namespace Mitternacht.Modules.Administration.Services {
 			return Task.CompletedTask;
 		}
 
-		private Task _client_MessageDeleted(Cacheable<IMessage, ulong> optMsg, ISocketMessageChannel ch) {
+		private Task _client_MessageDeleted(Cacheable<IMessage, ulong> optMsg, Cacheable<IMessageChannel, ulong> ch) {
 			var _ = Task.Run(async () =>
 			{
 				try
@@ -767,7 +768,7 @@ namespace Mitternacht.Modules.Administration.Services {
 					if (!((optMsg.HasValue ? optMsg.Value : null) is IUserMessage msg) || msg.Author.Id == _client.CurrentUser.Id)
 						return;
 
-					if (!(ch is ITextChannel channel))
+					if (!(await ch.GetOrDownloadAsync() is ITextChannel channel))
 						return;
 
 					if (!TryGetLogSettingForGuild(channel.Guild.Id, out var logSetting)
