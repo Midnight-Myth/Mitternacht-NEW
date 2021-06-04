@@ -11,21 +11,16 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Help.Services;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Resources;
-using Mitternacht.Services;
 using YamlDotNet.Serialization;
 
 namespace Mitternacht.Modules.Help {
 	public partial class Help : MitternachtTopLevelModule<HelpService> {
 		public const string PatreonUrl = "https://patreon.com/plauderkonfi";
 
-		private readonly IBotCredentials         _creds;
-		private readonly IBotConfigProvider      _config;
 		private readonly CommandService          _cmds;
 		private readonly GlobalPermissionService _perms;
 
-		public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds) {
-			_creds = creds;
-			_config = config;
+		public Help(GlobalPermissionService perms, CommandService cmds) {
 			_cmds = cmds;
 			_perms = perms;
 		}
