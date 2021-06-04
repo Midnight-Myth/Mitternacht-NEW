@@ -34,7 +34,7 @@ namespace MitternachtWeb.Models {
 		public string GetDefaultAvatarUrl()
 			=> string.Empty;
 
-		public Task<IDMChannel> GetOrCreateDMChannelAsync(RequestOptions options = null)
+		public Task<IDMChannel> CreateDMChannelAsync(RequestOptions options = null)
 			=> throw new NotImplementedException();
 
 		public override string ToString()

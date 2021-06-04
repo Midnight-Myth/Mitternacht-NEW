@@ -25,7 +25,7 @@ namespace Mitternacht.Modules.Administration.Services {
 					if (!(user is SocketGuildUser guildUser))
 						return;
 
-					var game = guildUser.Activity?.Name?.TrimTo(50);
+					var game = guildUser.Activities.FirstOrDefault()?.Name?.TrimTo(50);
 
 					if (oldState.VoiceChannel == newState.VoiceChannel || newState.VoiceChannel == null)
 						return;

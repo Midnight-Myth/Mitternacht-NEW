@@ -1865,11 +1865,11 @@
   aliases: []
   desc:    Shows basic info from a MyAnimeList profile.
   usage:   "`{0}mal straysocks`"
-- name:    h
+- name:    helpcommand
   cmd:     help
   aliases:
   -        h
-  desc:    Either shows a help for a single command, or DMs you help link if no arguments are specified.
+  desc:    Zeigt Informationen zu einem angegebenen Befehl oder sich selbst an.
   usage:   "`{0}h {0}cmds` or `{0}h`"
 - name:    lucky7test
   cmd:     lucky7test

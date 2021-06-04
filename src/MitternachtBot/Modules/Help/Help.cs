@@ -11,24 +11,16 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Help.Services;
 using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Resources;
-using Mitternacht.Services;
 using YamlDotNet.Serialization;
 
 namespace Mitternacht.Modules.Help {
 	public partial class Help : MitternachtTopLevelModule<HelpService> {
 		public const string PatreonUrl = "https://patreon.com/plauderkonfi";
 
-		private readonly IBotCredentials         _creds;
-		private readonly IBotConfigProvider      _config;
 		private readonly CommandService          _cmds;
 		private readonly GlobalPermissionService _perms;
 
-		public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
-		public string DmHelpString => _config.BotConfig.DMHelpString;
-
-		public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds) {
-			_creds = creds;
-			_config = config;
+		public Help(GlobalPermissionService perms, CommandService cmds) {
 			_cmds = cmds;
 			_perms = perms;
 		}
@@ -103,20 +95,16 @@ namespace Mitternacht.Modules.Help {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(0)]
-		public async Task H([Remainder] string fail) {
+		public async Task HelpCommand([Remainder] string fail) {
 			await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(1)]
-		public async Task H([Remainder] CommandInfo com = null) {
+		public async Task HelpCommand([Remainder] CommandInfo com = null) {
 			var channel = Context.Channel;
 
-			if(com == null) {
-				var ch = channel is ITextChannel ? await ((IGuildUser)Context.User).GetOrCreateDMChannelAsync() : channel;
-				await ch.SendMessageAsync(HelpString).ConfigureAwait(false);
-				return;
-			}
+			com ??= _cmds.Commands.First(ci => ci.Name == "help");
 
 			var embed = Service.GetCommandHelp(com, Context.Guild);
 			await channel.EmbedAsync(embed).ConfigureAwait(false);
