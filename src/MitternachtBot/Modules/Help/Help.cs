@@ -24,7 +24,6 @@ namespace Mitternacht.Modules.Help {
 		private readonly GlobalPermissionService _perms;
 
 		public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
-		public string DmHelpString => _config.BotConfig.DMHelpString;
 
 		public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds) {
 			_creds = creds;
