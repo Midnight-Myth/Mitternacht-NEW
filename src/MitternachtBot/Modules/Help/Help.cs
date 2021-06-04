@@ -23,8 +23,6 @@ namespace Mitternacht.Modules.Help {
 		private readonly CommandService          _cmds;
 		private readonly GlobalPermissionService _perms;
 
-		public string HelpString => string.Format(_config.BotConfig.HelpString, _creds.ClientId, Prefix);
-
 		public Help(IBotCredentials creds, GlobalPermissionService perms, IBotConfigProvider config, CommandService cmds) {
 			_creds = creds;
 			_config = config;
@@ -111,11 +109,7 @@ namespace Mitternacht.Modules.Help {
 		public async Task HelpCommand([Remainder] CommandInfo com = null) {
 			var channel = Context.Channel;
 
-			if(com == null) {
-				var ch = channel is ITextChannel ? await ((IGuildUser)Context.User).CreateDMChannelAsync() : channel;
-				await ch.SendMessageAsync(HelpString).ConfigureAwait(false);
-				return;
-			}
+			com ??= _cmds.Commands.First(ci => ci.Name == "help");
 
 			var embed = Service.GetCommandHelp(com, Context.Guild);
 			await channel.EmbedAsync(embed).ConfigureAwait(false);
