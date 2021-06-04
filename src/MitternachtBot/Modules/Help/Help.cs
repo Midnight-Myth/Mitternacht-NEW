@@ -103,13 +103,13 @@ namespace Mitternacht.Modules.Help {
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(0)]
-		public async Task H([Remainder] string fail) {
+		public async Task HelpCommand([Remainder] string fail) {
 			await ReplyErrorLocalized("command_not_found").ConfigureAwait(false);
 		}
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[Priority(1)]
-		public async Task H([Remainder] CommandInfo com = null) {
+		public async Task HelpCommand([Remainder] CommandInfo com = null) {
 			var channel = Context.Channel;
 
 			if(com == null) {

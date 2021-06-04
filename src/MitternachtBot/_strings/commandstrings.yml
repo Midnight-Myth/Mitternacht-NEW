@@ -1865,7 +1865,7 @@
   aliases: []
   desc:    Shows basic info from a MyAnimeList profile.
   usage:   "`{0}mal straysocks`"
-- name:    h
+- name:    helpcommand
   cmd:     help
   aliases:
   -        h
