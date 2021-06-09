@@ -32,7 +32,7 @@ namespace Mitternacht {
 		public static Color OkColor    { get; private set; }
 		public static Color ErrorColor { get; private set; }
 
-		public TaskCompletionSource<bool> Ready { get; } = new TaskCompletionSource<bool>();
+		public TaskCompletionSource<bool> Ready { get; } = new();
 
 		public INServiceProvider Services { get; private set; }
 
@@ -41,8 +41,9 @@ namespace Mitternacht {
 		private readonly ShardComClient _comClient;
 
 		public MitternachtBot(int shardId, int parentProcessId, int? port = null) {
-			if(shardId < 0)
+			if(shardId < 0) {
 				throw new ArgumentOutOfRangeException(nameof(shardId));
+			}
 
 			LogSetup.SetupLogger();
 			_log = LogManager.GetCurrentClassLogger();
@@ -59,10 +60,13 @@ namespace Mitternacht {
 				AlwaysDownloadUsers = false,
 				GatewayIntents      = GatewayIntents.All,
 			});
-			CommandService = new CommandService(new CommandServiceConfig {CaseSensitiveCommands = false, DefaultRunMode = RunMode.Sync});
+			CommandService = new CommandService(new CommandServiceConfig {
+				CaseSensitiveCommands = false,
+				DefaultRunMode        = RunMode.Sync,
+			});
 
-			port       ??=Credentials.ShardRunPort;
-			_comClient =  new ShardComClient(port.Value);
+			port       ??= Credentials.ShardRunPort;
+			_comClient   = new ShardComClient(port.Value);
 
 			using var uow = _db.UnitOfWork;
 			uow.Context.EnsureCorrectDatabaseState();
@@ -76,7 +80,12 @@ namespace Mitternacht {
 		private void StartSendingData() {
 			Task.Run(async () => {
 				while(true) {
-					await _comClient.Send(new ShardComMessage {ConnectionState = Client.ConnectionState, Guilds = Client.ConnectionState == ConnectionState.Connected ? Client.Guilds.Count : 0, ShardId = Client.ShardId, Time = DateTime.UtcNow});
+					await _comClient.Send(new ShardComMessage {
+						ConnectionState = Client.ConnectionState,
+						Guilds          = Client.ConnectionState == ConnectionState.Connected ? Client.Guilds.Count : 0,
+						ShardId         = Client.ShardId,
+						Time            = DateTime.UtcNow,
+					});
 					await Task.Delay(5000);
 				}
 			});
@@ -86,10 +95,12 @@ namespace Mitternacht {
 			Task.Run(async () => {
 				var counter = 0;
 				while(true) {
-					if(Client.ConnectionState == ConnectionState.Disconnected || Client.ConnectionState == ConnectionState.Disconnecting) {
+					if(Client.ConnectionState is ConnectionState.Disconnected or ConnectionState.Disconnecting) {
 						counter++;
 						//shutdown Bot after unsuccessfully trying to reconnect 3 times.
-						if(counter > 3) Environment.Exit(0);
+						if(counter > 3) {
+							Environment.Exit(0);
+						}
 
 						_log.Warn($"Shard {Client.ShardId} is not connected, trying to reconnect!");
 						try {
@@ -180,8 +191,9 @@ namespace Mitternacht {
 		}
 
 		public async Task RunAsync(params string[] args) {
-			if(Client.ShardId == 0)
+			if(Client.ShardId == 0) {
 				_log.Info($"Starting MitternachtBot v{StatsService.BotVersion} (based on NadekoBot v1.7)");
+			}
 
 			var sw = Stopwatch.StartNew();
 
@@ -211,16 +223,19 @@ namespace Mitternacht {
 
 		private Task Client_Log(LogMessage arg) {
 			_log.Warn($"{arg.Source} | {arg.Message}");
-			if(arg.Exception != null) _log.Warn(arg.Exception);
+			if(arg.Exception != null) {
+				_log.Warn(arg.Exception);
+			}
+
 			return Task.CompletedTask;
 		}
 
 		public async Task RunAndBlockAsync(params string[] args) {
 			await RunAsync(args).ConfigureAwait(false);
 
-			if(ShardCoord != null)
+			if(ShardCoord != null) {
 				await ShardCoord.RunAndBlockAsync();
-			else {
+			} else {
 				await Task.Delay(-1).ConfigureAwait(false);
 			}
 		}
