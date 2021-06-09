@@ -56,7 +56,8 @@ namespace Mitternacht {
 				ConnectionTimeout   = int.MaxValue,
 				TotalShards         = Credentials.TotalShards,
 				ShardId             = shardId,
-				AlwaysDownloadUsers = false
+				AlwaysDownloadUsers = false,
+				GatewayIntents      = GatewayIntents.All,
 			});
 			CommandService = new CommandService(new CommandServiceConfig {CaseSensitiveCommands = false, DefaultRunMode = RunMode.Sync});
 
