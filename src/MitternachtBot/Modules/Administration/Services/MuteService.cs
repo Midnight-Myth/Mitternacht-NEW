@@ -11,6 +11,8 @@ using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
 using NLog;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Mitternacht.Modules.Administration.Services {
 	public class MuteService : IMService {
@@ -55,7 +57,7 @@ namespace Mitternacht.Modules.Administration.Services {
 		}
 
 		private async Task Client_GuildMemberUpdated(Cacheable<SocketGuildUser, ulong> oldUser, SocketGuildUser updatedUser) {
-			var       oldRoles     = (await oldUser.GetOrDownloadAsync()).Roles;
+			var       oldRoles     = oldUser.Value?.Roles ?? Array.Empty<SocketRole>();
 			var       changedRoles = updatedUser.Roles.Where(r => !oldRoles.Contains(r)).ToArray();
 			using var uow          = _db.UnitOfWork;
 			var       mutedRole    = await GetMuteRole(updatedUser.Guild, uow).ConfigureAwait(false);
