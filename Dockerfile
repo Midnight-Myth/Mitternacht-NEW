@@ -1,6 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 WORKDIR /source
 COPY . .
+WORKDIR /source/MitternachtWeb
 RUN dotnet publish -c Release -o /build
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime
