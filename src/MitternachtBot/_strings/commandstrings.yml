@@ -523,7 +523,7 @@
 - name:    addxp
   cmd:     addxp
   aliases: []
-  desc:    Gibt einem Spieler XP aus der unendlich Bot-XP-Quelle
+  desc:    Gibt einem Spieler XP aus der unendlichen Bot-XP-Quelle.
   usage:   "`{0}addxp <xp> <users>`"
 - name:    showcustreact
   cmd:     showcustreact
