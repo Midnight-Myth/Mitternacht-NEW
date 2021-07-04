@@ -97,7 +97,7 @@ namespace Mitternacht.Modules.Birthday {
 		public async Task BirthdayGet(IUser user = null) {
 			user ??= Context.User;
 			var bdm = uow.BirthDates.GetUserBirthDate(user.Id);
-			var age = bdm?.Year != null ? (int)Math.Floor((DateTime.Now - new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)).TotalDays / 365.25) : 0;
+			var age = bdm?.Year != null ? DateTime.Now.DifferenceInYears(new DateTime(bdm.Year.Value, bdm.Month, bdm.Day)) : 0;
 			
 			if(user == Context.User) {
 				if(bdm == null) {

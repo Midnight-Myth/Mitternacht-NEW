@@ -88,6 +88,9 @@ namespace Mitternacht.Extensions {
 		public static double ToUnixTimestamp(this DateTime dt)
 			=> dt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
 
+		public static int DifferenceInYears(this DateTime end, DateTime start)
+			=> end.Year - start.Year - (end.Month < start.Month || end.Month == start.Month && end.Day < start.Day ? 1 : 0);
+
 		public static async Task<IEnumerable<IGuildUser>> GetMembersAsync(this IRole role)
 			=> (await role.Guild.GetUsersAsync()).Where(u => u.RoleIds.Contains(role.Id));
 
