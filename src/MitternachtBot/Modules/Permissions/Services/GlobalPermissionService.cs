@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -16,17 +17,7 @@ namespace Mitternacht.Modules.Permissions.Services {
 			BlockedCommands = new ConcurrentHashSet<string>(bc.BotConfig.BlockedCommands.Select(x => x.Name));
 		}
 
-		public async Task<bool> TryBlockLate(DiscordSocketClient client, IUserMessage msg, IGuild guild, IMessageChannel channel, IUser user, string moduleName, string commandName) {
-			await Task.Yield();
-			commandName = commandName.ToLowerInvariant();
-
-			if(commandName != "resetglobalperms" &&
-				(BlockedCommands.Contains(commandName) ||
-				BlockedModules.Contains(moduleName.ToLowerInvariant()))) {
-				return true;
-				//return new ExecuteCommandResult(cmd, null, SearchResult.FromError(CommandError.Exception, $"Command or module is blocked globally by the bot owner."));
-			}
-			return false;
-		}
+		public Task<bool> TryBlockLate(DiscordSocketClient client, IUserMessage msg, IGuild guild, IMessageChannel channel, IUser user, string moduleName, string commandName)
+			=> Task.FromResult(!commandName.Equals("resetglobalperms", StringComparison.OrdinalIgnoreCase) && (BlockedCommands.Contains(commandName, StringComparer.OrdinalIgnoreCase) || BlockedModules.Contains(moduleName, StringComparer.OrdinalIgnoreCase)));
 	}
 }
