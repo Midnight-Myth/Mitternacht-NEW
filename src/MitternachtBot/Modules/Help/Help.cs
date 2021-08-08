@@ -31,9 +31,9 @@ namespace Mitternacht.Modules.Help {
 				.WithFooter(efb => efb.WithText(GetText("modules_footer", Prefix)))
 				.WithTitle(GetText("list_of_modules"))
 				.WithDescription(string.Join("\n", _cmds.Modules.GroupBy(m => m.GetTopLevelModule())
-										 .Where(m => !_perms.BlockedModules.Contains(m.Key.Name.ToLowerInvariant()))
-										 .Select(m => $"• {m.Key.Name}")
-										 .OrderBy(s => s)));
+					.Where(m => !_perms.BlockedModules.Any(bm => bm.Equals(m.Key.Name, StringComparison.OrdinalIgnoreCase)))
+					.Select(m => $"• {m.Key.Name}")
+					.OrderBy(s => s)));
 			await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 		}
 
@@ -66,7 +66,7 @@ namespace Mitternacht.Modules.Help {
 			var cmds = _cmds.Commands
 				.Where(c => c.Module.GetModuleName().StartsWith(module, StringComparison.OrdinalIgnoreCase)
 							|| c.Module.GetTopLevelModule().GetModuleName().StartsWith(module, StringComparison.OrdinalIgnoreCase))
-				.Where(c => !_perms.BlockedCommands.Any(bc => bc.Equals(c.Aliases.First(), StringComparison.OrdinalIgnoreCase)))
+				.Where(c => !_perms.BlockedCommands.Any(bc => bc.Equals(c.Aliases[0], StringComparison.OrdinalIgnoreCase)))
 				.Distinct(new CommandTextEqualityComparer())
 				.GroupBy(c => c.Module)
 				.OrderBy(g => g.Key.IsSubmodule ? g.Key.Name : "0", new ModuleOrderComparer())
