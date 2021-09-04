@@ -8,48 +8,34 @@ using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Administration {
-	public partial class Administration
-    {
-        [Group]
-        public class AutoAssignRoleCommands : MitternachtSubmodule<AutoAssignRoleService>
-        {
-            private readonly IUnitOfWork uow;
+	public partial class Administration {
+		[Group]
+		public class AutoAssignRoleCommands : MitternachtSubmodule<AutoAssignRoleService> {
+			private readonly IUnitOfWork uow;
 
-            public AutoAssignRoleCommands(IUnitOfWork uow)
-            {
-                this.uow = uow;
-            }
+			public AutoAssignRoleCommands(IUnitOfWork uow) {
+				this.uow = uow;
+			}
 
-            [MitternachtCommand, Usage, Description, Aliases]
-            [RequireContext(ContextType.Guild)]
-            [RequireUserPermission(GuildPermission.ManageRoles)]
-            public async Task AutoAssignRole([Remainder] IRole role = null)
-            {
-                var guser = (IGuildUser)Context.User;
-                if (role != null)
-                    if (Context.User.Id != guser.Guild.OwnerId && guser.GetRoles().Max(x => x.Position) <= role.Position)
-                        return;
+			[MitternachtCommand, Usage, Description, Aliases]
+			[RequireContext(ContextType.Guild)]
+			[RequireUserPermission(GuildPermission.ManageRoles)]
+			public async Task AutoAssignRole([Remainder] IRole role = null) {
+				var guildUser = Context.User as IGuildUser;
 
-                var conf = uow.GuildConfigs.For(Context.Guild.Id);
-                if (role == null)
-                {
-                    conf.AutoAssignRoleId = 0;
-                }
-                else
-                {
-                    conf.AutoAssignRoleId = role.Id;
-                }
+				if(role == null || Context.User.Id == guildUser.Guild.OwnerId || guildUser.GetRoles().Max(x => x.Position) > role.Position) {
+					var conf = uow.GuildConfigs.For(Context.Guild.Id);
+					conf.AutoAssignRoleId = role == null ? 0 : role.Id;
 
-                await uow.SaveChangesAsync(false).ConfigureAwait(false);
+					await uow.SaveChangesAsync(false).ConfigureAwait(false);
 
-                if (role == null)
-                {
-                    await ReplyConfirmLocalized("aar_disabled").ConfigureAwait(false);
-                    return;
-                }
-
-                await ReplyConfirmLocalized("aar_enabled").ConfigureAwait(false);
-            }
-        }
-    }
+					if(role == null) {
+						await ReplyConfirmLocalized("aar_disabled").ConfigureAwait(false);
+					} else {
+						await ReplyConfirmLocalized("aar_enabled").ConfigureAwait(false);
+					}
+				}
+			}
+		}
+	}
 }
