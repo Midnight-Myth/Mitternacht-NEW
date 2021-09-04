@@ -172,7 +172,7 @@ namespace Mitternacht.Modules.Forum.Services {
 			var usernames = (from userInfo in userInfos
 							 let verifiedUserId = uow.VerifiedUsers.GetVerifiedUser(guild.Id, userInfo.Id)?.UserId
 							 let user = verifiedUserId.HasValue ? guild.GetUser(verifiedUserId.Value) : null
-							 select user != null ? user.Mention : userInfo.Username).ToArray();
+							 select $"{userInfo.Username}{(user != null ? $" ({user.Mention})" : "")}").ToArray();
 
 			if(usernames.Length >= 2)
 				usernames = new[] { string.Join(", ", usernames.Take(usernames.Length - 1)), usernames.Last() };
