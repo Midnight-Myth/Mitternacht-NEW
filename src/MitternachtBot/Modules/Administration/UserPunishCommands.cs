@@ -283,8 +283,14 @@ namespace Mitternacht.Modules.Administration {
 						} catch { }
 					}
 
-					await Context.Guild.AddBanAsync(user, 7, msg).ConfigureAwait(false);
-					
+					try {
+						await Context.Guild.AddBanAsync(user, 7, msg).ConfigureAwait(false);
+					} catch {
+						await Task.Delay(500);
+						await Context.Guild.AddBanAsync(user, 7, msg).ConfigureAwait(false);
+					}
+
+
 					var embedBuilder = new EmbedBuilder()
 						.WithOkColor()
 						.WithTitle($"⛔️ {GetText("userpunish_ban_banned_user")}")
