@@ -52,6 +52,7 @@
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.55.0.2449" />
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.49.0.2084" />
+    <PackageReference Include="IssueStatusApi" Version="0.2.0" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
