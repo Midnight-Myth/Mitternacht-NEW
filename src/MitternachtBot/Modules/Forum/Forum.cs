@@ -8,6 +8,7 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Database;
 using System;
+using GommeHDnetForumAPI;
 
 namespace Mitternacht.Modules.Forum {
 	public partial class Forum : MitternachtTopLevelModule<ForumService> {
@@ -104,11 +105,8 @@ namespace Mitternacht.Modules.Forum {
 						.WithOkColor()
 						.WithThumbnailUrl(uinfo.AvatarUrl)
 						.AddField(GetText("name"), $"[{uinfo.Username}]({uinfo.Url})", true)
-						.AddField(GetText("id"), uinfo.Id, true)
-						.AddField(GetText("gender"), uinfo.Gender.ToString(), true);
+						.AddField(GetText("id"), uinfo.Id, true);
 
-			if(!string.IsNullOrWhiteSpace(uinfo.Status))
-				embed.AddField(GetText("status"), uinfo.Status, true);
 			if(uinfo.PostCount != null)
 				embed.AddField(GetText("posts"), uinfo.PostCount.Value, true);
 			if(uinfo.LikeCount != null)
