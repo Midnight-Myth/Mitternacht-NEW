@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Colourful" Version="3.0.0" />
-    <PackageReference Include="Discord.Net" Version="3.0.0-dev-20210710.3" />
+    <PackageReference Include="Discord.Net" Version="3.0.0-dev-20210822.1" />
     
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.92" />
     <PackageReference Include="Google.Apis.Urlshortener.v1" Version="1.41.1.138" />
