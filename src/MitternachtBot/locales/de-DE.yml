@@ -1057,7 +1057,7 @@ verification:
   verified_users:                                Verifizierte Nutzer - {0}
   verifypassword_current:                        Der aktuelle Verifizierungsforumunterhaltungstitel ist `{0}`.
   verifypassword_new:                            Der Verifizierungsforumunterhaltungstitel wurde von `{0}` zu `{1}` geändert.
-  verifypassword_not_checking:                   Der Verifizierungsforumunterhaltungstitel wird nun nicht mehr überprüft.
+  verifypassword_not_checking:                   Der Verifizierungsforumunterhaltungstitel wird aktuell nicht überprüft.
   welcome_to_verification_text:                  Ich bin der Bot der inoffiziellen GommeHDnet-Plauderkonfi und führe dich durch die Verifizierung mit deinem GommeHDnet-Forumaccount. Falls du Hilfe brauchst, wende dich an das Team der Plauderkonfi. Wenn du die Verifizierung an irgendeiner Stelle abbrechen möchtest, schreibe `{0}`
   welcome_to_verification_title:                 Hallo, ich bin Mitternacht
   why_do_we_need_verification_text:              Durch die Verifizierung speichere ich eine Verknüpfung zwischen deinem verifizierten Forum- und Discordaccount. Ein verifizierter Forumaccount ist dank eines System von GommeHDnet mit deinem Minecraftaccount verknüpft. Das ermöglicht es, die Plauderkonfi von Spammern freizuhalten.
