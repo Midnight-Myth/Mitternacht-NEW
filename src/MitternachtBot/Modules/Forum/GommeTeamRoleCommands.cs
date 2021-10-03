@@ -6,21 +6,19 @@ using GommeHDnetForumAPI.Models;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
-using Mitternacht.Services;
 using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Forum {
 	public partial class Forum {
 		[Group]
-		public class TeamRoleSyncCommands : MitternachtSubmodule<TeamRoleSyncService> {
+		public class GommeTeamRoleCommands : MitternachtSubmodule<GommeTeamRoleService> {
 			private readonly IUnitOfWork uow;
 			private readonly ForumService _fs;
 
-			public TeamRoleSyncCommands(IUnitOfWork uow, ForumService fs) {
+			public GommeTeamRoleCommands(IUnitOfWork uow, ForumService fs) {
 				this.uow = uow;
 				_fs = fs;
 			}
-
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
@@ -74,15 +72,6 @@ namespace Mitternacht.Modules.Forum {
 				var embed = new EmbedBuilder().WithOkColor().WithTitle(GetText("ranks_title", ranks.Count)).WithDescription(string.Join("\n", ranks));
 				await Context.Channel.EmbedAsync(embed).ConfigureAwait(false);
 			}
-
-			//[MitternachtCommand, Usage, Description, Aliases]
-			//[RequireContext(ContextType.Guild)]
-			//[OwnerOrGuildPermission(GuildPermission.ManageMessages)]
-			//public async Task GommeTeamUpdate()
-			//{
-			//    await Service.CheckGommeTeamMembers().ConfigureAwait(false);
-			//    await ConfirmLocalized("gt_update").ConfigureAwait(false);
-			//}
 		}
 	}
 }

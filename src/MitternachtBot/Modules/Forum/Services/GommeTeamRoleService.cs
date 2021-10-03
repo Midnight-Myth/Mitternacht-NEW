@@ -9,12 +9,12 @@ using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 
 namespace Mitternacht.Modules.Forum.Services {
-	public class TeamRoleSyncService : IMService {
+	public class GommeTeamRoleService : IMService {
 		private readonly DbService           _db;
 		private readonly ForumService        _fs;
 		private readonly DiscordSocketClient _client;
 
-		public TeamRoleSyncService(DbService db, ForumService fs, TeamUpdateService tus, DiscordSocketClient client, VerificationService vs) {
+		public GommeTeamRoleService(DbService db, ForumService fs, TeamUpdateService tus, DiscordSocketClient client, VerificationService vs) {
 			_db     = db;
 			_fs     = fs;
 			_client = client;
