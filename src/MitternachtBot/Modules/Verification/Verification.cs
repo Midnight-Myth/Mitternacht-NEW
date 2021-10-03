@@ -186,7 +186,7 @@ namespace Mitternacht.Modules.Verification {
 		[OwnerOrGuildPermission(GuildPermission.Administrator)]
 		public async Task VerifyPassword() {
 			if(string.IsNullOrWhiteSpace(Service.GetVerifyString(Context.Guild.Id)))
-				await ConfirmLocalized("verifypassword_not_checked").ConfigureAwait(false);
+				await ConfirmLocalized("verifypassword_not_checking").ConfigureAwait(false);
 			else
 				await ConfirmLocalized("verifypassword_current", Service.GetVerifyString(Context.Guild.Id)).ConfigureAwait(false);
 		}
