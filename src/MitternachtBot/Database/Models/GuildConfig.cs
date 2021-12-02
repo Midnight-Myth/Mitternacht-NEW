@@ -68,16 +68,16 @@ namespace Mitternacht.Database.Models {
 		public HashSet<FilterChannelId>    FilterWordsChannelIds   { get; set; } = new HashSet<FilterChannelId>();
 		public HashSet<ZalgoFilterChannel> FilterZalgoChannelIds   { get; set; } = new HashSet<ZalgoFilterChannel>();
 
-		public LogSetting         LogSetting      { get; set; }
-		public AntiRaidSetting    AntiRaidSetting { get; set; }
-		public AntiSpamSetting    AntiSpamSetting { get; set; }
+		public LogSetting         LogSetting      { get; set; } = new();
+		public AntiRaidSetting    AntiRaidSetting { get; set; } = new();
+		public AntiSpamSetting    AntiSpamSetting { get; set; } = new();
 
 		public HashSet<MutedUserId>         MutedUsers                 { get; set; } = new HashSet<MutedUserId>();
 		public HashSet<GuildRepeater>       GuildRepeaters             { get; set; } = new HashSet<GuildRepeater>();
 		public HashSet<GCChannelId>         GenerateCurrencyChannelIds { get; set; } = new HashSet<GCChannelId>();
 		public HashSet<CommandCooldown>     CommandCooldowns           { get; set; } = new HashSet<CommandCooldown>();
 		public HashSet<UnmuteTimer>         UnmuteTimers               { get; set; } = new HashSet<UnmuteTimer>();
-		public HashSet<VcRoleInfo>          VcRoleInfos                { get; set; }
+		public HashSet<VcRoleInfo>          VcRoleInfos                { get; set; } = new();
 		public HashSet<CommandAlias>        CommandAliases             { get; set; } = new HashSet<CommandAlias>();
 		public List<WarningPunishment>      WarnPunishments            { get; set; } = new List<WarningPunishment>();
 		public bool                         WarningsInitialized        { get; set; }
