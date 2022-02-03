@@ -636,27 +636,27 @@ namespace Mitternacht.Modules.Administration.Services {
 		//    return Task.CompletedTask;
 		//}
 
-		private Task _client_UserLeft(IGuildUser usr) {
+		private Task _client_UserLeft(SocketGuild guild, SocketUser user) {
 			var _ = Task.Run(async () =>
 			{
 				try
 				{
-					if (!TryGetLogSettingForGuild(usr.Guild.Id, out var logSetting)
+					if (!TryGetLogSettingForGuild(guild.Id, out var logSetting)
 						|| logSetting.UserLeftId == null)
 						return;
 
 					ITextChannel logChannel;
-					if ((logChannel = await TryGetLogChannel(usr.Guild, logSetting, LogType.UserLeft)) == null)
+					if ((logChannel = await TryGetLogChannel(guild, logSetting, LogType.UserLeft)) == null)
 						return;
 					var embed = new EmbedBuilder()
 						.WithOkColor()
 						.WithTitle("❌ " + GetText(logChannel.Guild, "user_left"))
-						.WithDescription(usr.ToString())
-						.AddField(efb => efb.WithName("Id").WithValue(usr.Id.ToString()))
-						.WithFooter(efb => efb.WithText(CurrentTime(usr.Guild)));
+						.WithDescription(user.ToString())
+						.AddField(efb => efb.WithName("Id").WithValue(user.Id.ToString()))
+						.WithFooter(efb => efb.WithText(CurrentTime(guild)));
 
-					if (Uri.IsWellFormedUriString(usr.GetAvatarUrl(), UriKind.Absolute))
-						embed.WithThumbnailUrl(usr.GetAvatarUrl());
+					if (Uri.IsWellFormedUriString(user.GetAvatarUrl(), UriKind.Absolute))
+						embed.WithThumbnailUrl(user.GetAvatarUrl());
 
 					await logChannel.EmbedAsync(embed).ConfigureAwait(false);
 				}

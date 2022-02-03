@@ -24,10 +24,10 @@ namespace Mitternacht.Modules.Administration.Services {
 			_client.UserLeft += UserLeft;
 		}
 
-		private async Task SendGreetMessage(IGuildUser guildUser, IMessageChannel channel, string messageText, int autoDeleteTimer) {
+		private async Task SendGreetMessage(IGuild guild, IUser user, IMessageChannel channel, string messageText, int autoDeleteTimer) {
 			if(channel != null) {
 				var rep = new ReplacementBuilder()
-								.WithDefault(guildUser, channel, guildUser.Guild, _client)
+								.WithDefault(user, channel, guild, _client)
 								.Build();
 
 				if(CREmbed.TryParse(messageText, out var embedData)) {
@@ -59,14 +59,14 @@ namespace Mitternacht.Modules.Administration.Services {
 			}
 		}
 
-		private Task UserLeft(IGuildUser guildUser) {
+		private Task UserLeft(SocketGuild guild, SocketUser user) {
 			var _ = Task.Run(async () => {
 				try {
 					using var uow = _db.UnitOfWork;
-					var gc = uow.GuildConfigs.For(guildUser.GuildId);
+					var gc = uow.GuildConfigs.For(guild.Id);
 
 					if(gc.SendChannelByeMessage) {
-						await SendGreetMessage(guildUser, await guildUser.Guild.GetTextChannelAsync(gc.ByeMessageChannelId).ConfigureAwait(false), gc.ChannelByeMessageText, gc.AutoDeleteByeMessagesTimer).ConfigureAwait(false);
+						await SendGreetMessage(guild, user, guild.GetTextChannel(gc.ByeMessageChannelId), gc.ChannelByeMessageText, gc.AutoDeleteByeMessagesTimer).ConfigureAwait(false);
 					}
 				} catch { }
 			});
@@ -80,11 +80,11 @@ namespace Mitternacht.Modules.Administration.Services {
 					var gc = uow.GuildConfigs.For(guildUser.GuildId);
 
 					if(gc.SendChannelGreetMessage) {
-						await SendGreetMessage(guildUser, await guildUser.Guild.GetTextChannelAsync(gc.GreetMessageChannelId).ConfigureAwait(false), gc.ChannelGreetMessageText, gc.AutoDeleteGreetMessagesTimer).ConfigureAwait(false);
+						await SendGreetMessage(guildUser.Guild, guildUser, await guildUser.Guild.GetTextChannelAsync(gc.GreetMessageChannelId).ConfigureAwait(false), gc.ChannelGreetMessageText, gc.AutoDeleteGreetMessagesTimer).ConfigureAwait(false);
 					}
 
 					if(gc.SendDmGreetMessage) {
-						await SendGreetMessage(guildUser, await guildUser.CreateDMChannelAsync().ConfigureAwait(false), gc.DmGreetMessageText, 0).ConfigureAwait(false);
+						await SendGreetMessage(guildUser.Guild, guildUser, await guildUser.CreateDMChannelAsync().ConfigureAwait(false), gc.DmGreetMessageText, 0).ConfigureAwait(false);
 					}
 				} catch { }
 			});

@@ -40,7 +40,7 @@ namespace Mitternacht.Modules.Utility {
 				var textchn = (await guild.GetTextChannelsAsync()).Count;
 				var voicechn = (await guild.GetVoiceChannelsAsync()).Count;
 				var users = await guild.GetUsersAsync().ConfigureAwait(false);
-				var features = guild.Features.Any() ? string.Join("\n", guild.Features) : "-";
+				var features = /*guild.Features ? string.Join("\n", guild.Features) :*/ "-"; // FIXME
 				var verified = uow.VerifiedUsers.GetNumberOfVerificationsInGuild(Context.Guild.Id);
 
 				var embed = new EmbedBuilder()

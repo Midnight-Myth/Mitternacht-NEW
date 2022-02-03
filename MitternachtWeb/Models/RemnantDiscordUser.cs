@@ -1,5 +1,6 @@
 ﻿using Discord;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 
@@ -19,8 +20,8 @@ namespace MitternachtWeb.Models {
 		public IActivity                 Activity           => null;
 		public DateTimeOffset            CreatedAt          => DateTimeOffset.MinValue;
 		public UserStatus                Status             => UserStatus.Offline;
-		public IImmutableSet<ClientType> ActiveClients      => ImmutableHashSet.Create<ClientType>();
-		public IImmutableList<IActivity> Activities         => ImmutableList.Create<IActivity>();
+		public IReadOnlyCollection<ClientType> ActiveClients => ImmutableArray.Create<ClientType>();
+		public IReadOnlyCollection<IActivity> Activities    => ImmutableArray.Create<IActivity>();
 
 		public UserProperties? PublicFlags { get; } = UserProperties.None;
 

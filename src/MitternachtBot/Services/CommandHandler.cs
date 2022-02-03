@@ -321,7 +321,7 @@ namespace Mitternacht.Services {
 
 			var execResult     = (ExecuteResult)await chosenOverload.Key.ExecuteAsync(context, chosenOverload.Value, scopedServices);
 
-			if(execResult.Exception != null && (!(execResult.Exception is HttpException he) || he.DiscordCode != 50013)) {
+			if(execResult.Exception != null && (!(execResult.Exception is HttpException he) || he.DiscordCode != DiscordErrorCode.InsufficientPermissions)) {
 				lock(_errorLogLock) {
 					var now = DateTime.Now;
 					File.AppendAllText($"./command_errors_{now:yyyy-MM-dd}.txt", $"[{now:HH:mm-yyyy-MM-dd}]{Environment.NewLine}{execResult.Exception}{Environment.NewLine}------{Environment.NewLine}");
