@@ -4,7 +4,6 @@ using Discord;
 using Discord.Commands;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
-using Mitternacht.Services;
 using Mitternacht.Database;
 
 namespace Mitternacht.Modules.Level {
@@ -46,8 +45,8 @@ namespace Mitternacht.Modules.Level {
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
 			public async Task MsgXpRestrictions() {
-				var blacklistedChannelsString = uow.MessageXpRestrictions.GetRestrictedChannelsForGuild(Context.Guild.Id).ToList().Aggregate("", (s, channelId) => $"{s}{MentionUtils.MentionChannel(channelId)}, ", s => s[0..^2]);
-
+				var blacklistedChannelsString = string.Join(", ", uow.MessageXpRestrictions.GetRestrictedChannelsForGuild(Context.Guild.Id).ToList().Select(c => MentionUtils.MentionChannel(c)));
+				
 				if(blacklistedChannelsString.Length > 0) {
 					await Context.Channel.SendConfirmAsync(blacklistedChannelsString, GetText("msgxpr_title")).ConfigureAwait(false);
 				} else {
