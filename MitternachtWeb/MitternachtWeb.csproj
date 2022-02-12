@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <StartupObject>MitternachtWeb.Program</StartupObject>
-		<LangVersion>9</LangVersion>
+    <LangVersion>9</LangVersion>
+	<InvariantGlobalization>false</InvariantGlobalization>
+	<PredefinedCulturesOnly>false</PredefinedCulturesOnly>
   </PropertyGroup>
 
   <ItemGroup>
