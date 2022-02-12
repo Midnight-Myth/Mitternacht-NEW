@@ -23,6 +23,7 @@
     <StartupObject>Mitternacht.Program</StartupObject>
     <LangVersion>9</LangVersion>
 	<InvariantGlobalization>false</InvariantGlobalization>
+    <PredefinedCulturesOnly>false</PredefinedCulturesOnly>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="data\**\*;credentials.json" />
