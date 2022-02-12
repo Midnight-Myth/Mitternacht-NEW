@@ -52,7 +52,7 @@ namespace Mitternacht.Modules.Level.Services {
 				if(uow.MessageXpRestrictions.IsRestricted(um.Channel as ITextChannel) || um.Content.Length < uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMin)
 					return;
 
-				var time = DateTime.Now;
+				var time = DateTime.UtcNow;
 				if(uow.LevelModel.CanGetMessageXP(user.GuildId, user.Id, time)) {
 					var maxXp = uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMax;
 					uow.LevelModel.AddXP(user.GuildId, user.Id, um.Content.Length > maxXp ? maxXp : um.Content.Length, um.Channel.Id);
