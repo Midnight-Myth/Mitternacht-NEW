@@ -88,7 +88,7 @@ namespace Mitternacht.Modules.Administration.Services {
 
 		private bool TryGetLogSettingForGuild(ulong guildId, out LogSetting logSetting) {
 			using var uow = _db.UnitOfWork;
-			logSetting = uow.GuildConfigs.For(guildId, set => set.Include(x => x.LogSetting)).LogSetting;
+			logSetting = uow.GuildConfigs.For(guildId).LogSetting;
 			return logSetting != null;
 		}
 

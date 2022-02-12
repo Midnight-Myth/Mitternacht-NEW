@@ -43,7 +43,7 @@ namespace Mitternacht.Modules.Birthday.Services {
 
 		private async Task TimerHandler() {
 			using var uow = _db.UnitOfWork;
-			var time = DateTime.Now;
+			var time = DateTime.UtcNow;
 			//var time = CustomTimeForTesting;
 			var birthdays = uow.BirthDates.GetBirthdays(time).ToList();
 			var bc = uow.BotConfig.GetOrCreate();

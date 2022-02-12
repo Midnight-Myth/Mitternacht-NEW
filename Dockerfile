@@ -1,10 +1,10 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 WORKDIR /source
 COPY . .
 WORKDIR /source/MitternachtWeb
 RUN dotnet publish -c Release -o /build
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS runtime
 RUN apk add tzdata
 COPY --from=build /build /build
 WORKDIR /data
