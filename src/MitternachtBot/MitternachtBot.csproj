@@ -21,7 +21,8 @@
     <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     <RootNamespace>Mitternacht</RootNamespace>
     <StartupObject>Mitternacht.Program</StartupObject>
-		<LangVersion>9</LangVersion>
+    <LangVersion>9</LangVersion>
+	<InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="data\**\*;credentials.json" />
