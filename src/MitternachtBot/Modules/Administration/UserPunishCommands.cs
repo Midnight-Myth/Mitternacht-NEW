@@ -311,38 +311,6 @@ namespace Mitternacht.Modules.Administration {
 
 			[MitternachtCommand, Usage, Description, Aliases]
 			[RequireContext(ContextType.Guild)]
-			[RequireUserPermission(GuildPermission.BanMembers)]
-			[RequireBotPermission(GuildPermission.BanMembers)]
-			public async Task Unban([Remainder] string user) {
-				var bans = await Context.Guild.GetBansAsync().ConfigureAwait(false);
-				var ban = bans.FirstOrDefault(b => string.Equals(b.User.ToString(), user, StringComparison.InvariantCultureIgnoreCase));
-
-				await UnbanInternal(ban).ConfigureAwait(false);
-			}
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
-			[RequireUserPermission(GuildPermission.BanMembers)]
-			[RequireBotPermission(GuildPermission.BanMembers)]
-			public async Task Unban(ulong userId) {
-				var bans = await Context.Guild.GetBansAsync().ConfigureAwait(false);
-				var ban = bans.FirstOrDefault(b => b.User.Id == userId);
-
-				await UnbanInternal(ban).ConfigureAwait(false);
-			}
-
-			private async Task UnbanInternal(IBan ban) {
-				if(ban != null) {
-					await Context.Guild.RemoveBanAsync(ban.User).ConfigureAwait(false);
-
-					await ConfirmLocalized("userpunish_unban_unbanned_user", Format.Bold(ban.ToString())).ConfigureAwait(false);
-				} else {
-					await ErrorLocalized("userpunish_unban_user_not_found").ConfigureAwait(false);
-				}
-			}
-
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			[RequireUserPermission(GuildPermission.ManageMessages)]
 			[RequireBotPermission(GuildPermission.BanMembers)]

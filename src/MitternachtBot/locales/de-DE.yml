@@ -211,7 +211,6 @@ administration:
   timezone_guild:                                Die Zeitzone des Servers ist `{0}`
   timezone_not_found:                            Zeitzone nicht gefunden.
   timezones_available:                           Verfügbare Zeitzonen
-  userpunish_unban_unbanned_user:                Benutzer {0} wurde entbannt.
   undeafen:                                      Taubschaltung aufgehoben.
   unmuted_sn:                                    Stummschaltung aufgehoben
   user_banned:                                   Benutzer gebannt
@@ -223,7 +222,6 @@ administration:
   user_muted_time:                               "{0} wurde im Text- und Sprachchat für {1} **stummgeschaltet**."
   user_nick:                                     Nickname des Benutzers {0} wurde zu {1} geändert
   user_not_found:                                Benutzer nicht gefunden.
-  userpunish_unban_user_not_found:               Benutzer nicht gefunden.
   user_role_add:                                 Benutzerrolle hinzugefügt
   user_role_rem:                                 Benutzerrolle entfernt
   user_status_change:                            "{0} ist nun {1}"

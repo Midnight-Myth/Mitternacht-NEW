@@ -1971,11 +1971,6 @@
   aliases: []
   desc:    Sets message for when the remind is triggered.  Available placeholders are `%user%` - user who ran the command, `%message%` - Message specified in the remind, `%target%` - target channel of the remind.
   usage:   "`{0}remindtemplate %user%, do %message%!`"
-- name:    unban
-  cmd:     unban
-  aliases: []
-  desc:    Unbans a user with the provided user#discrim or id.
-  usage:   "`{0}unban kwoth#1234` or `{0}unban 123123123`"
 - name:    forwardtoall
   cmd:     fwtoall
   aliases: []
