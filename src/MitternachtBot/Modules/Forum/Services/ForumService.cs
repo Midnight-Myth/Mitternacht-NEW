@@ -27,7 +27,7 @@ namespace Mitternacht.Modules.Forum.Services {
 
 					_log.Info($"Initialized new Forum instance.");
 				} catch(Exception e) {
-					_log.Warn(e, $"Initializing new Forum instance failed.");
+					_log.Warn(e, $"Initializing new Forum instance failed: {e}");
 				}
 			});
 		}
