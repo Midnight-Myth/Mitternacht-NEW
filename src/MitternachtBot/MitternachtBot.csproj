@@ -72,7 +72,7 @@
     <PackageReference Include="YamlDotNet" Version="17.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
-    <ProjectReference Include="..\..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
+    <ProjectReference Include="..\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj" />
+    <ProjectReference Include="..\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj" />
   </ItemGroup>
 </Project>

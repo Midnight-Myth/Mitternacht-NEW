@@ -1,7 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 COPY . .
-WORKDIR /source/MitternachtWeb
+WORKDIR /source/src/MitternachtWeb
 RUN dotnet publish -c Release -o /build
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS runtime

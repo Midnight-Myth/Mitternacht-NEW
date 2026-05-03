@@ -1,6 +1,6 @@
-[submodule "GommeHDnetForumAPI"]
-	path = GommeHDnetForumAPI
+[submodule "src/GommeHDnetForumAPI"]
+	path = src/GommeHDnetForumAPI
 	url = https://github.com/expeehaa/GommeHDnetForumAPI
-[submodule "MinecraftQuery"]
-	path = MinecraftQuery
+[submodule "src/MinecraftQuery"]
+	path = src/MinecraftQuery
 	url = https://github.com/expeehaa/MinecraftQuery-CSharp
