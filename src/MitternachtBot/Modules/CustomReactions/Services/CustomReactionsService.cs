@@ -12,7 +12,6 @@ using Mitternacht.Modules.Permissions.Services;
 using Mitternacht.Services;
 using Mitternacht.Database.Models;
 using Mitternacht.Services.Impl;
-using MoreLinq;
 using NLog;
 
 namespace Mitternacht.Modules.CustomReactions.Services {
@@ -73,7 +72,7 @@ namespace Mitternacht.Modules.CustomReactions.Services {
 					}).ToArray();
 
 					if(rs.Any()) {
-						var reaction = rs.RandomSubset(1).First();
+						var reaction = rs[Random.Shared.Next(0, rs.Length)];
 						return reaction.Response == "-" ? null : reaction;
 					}
 				}
@@ -84,7 +83,7 @@ namespace Mitternacht.Modules.CustomReactions.Services {
 					return hasTarget && content.StartsWith($"{trigger} ", StringComparison.OrdinalIgnoreCase) || _bc.BotConfig.CustomReactionsStartWith && content.StartsWith($"{trigger} ", StringComparison.OrdinalIgnoreCase) || content.Equals(trigger, StringComparison.OrdinalIgnoreCase);
 				}).ToArray();
 
-				return grs.Any() ? grs.RandomSubset(1).First() : null;
+				return grs.Any() ? grs[Random.Shared.Next(0, grs.Length)] : null;
 			} else {
 				return null;
 			}

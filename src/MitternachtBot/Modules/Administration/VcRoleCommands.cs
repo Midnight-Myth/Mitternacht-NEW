@@ -53,17 +53,17 @@ namespace Mitternacht.Modules.Administration {
 				}
 			}
 
-			[MitternachtCommand, Usage, Description, Aliases]
-			[RequireContext(ContextType.Guild)]
-			public async Task VcRoleList() {
-				var voiceChannelRoleInfos = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos)).VcRoleInfos;
-
-				var text = !voiceChannelRoleInfos.Any()
-					? GetText("no_vcroles")
-					: string.Join("\n", await voiceChannelRoleInfos.ToAsyncEnumerable().SelectAwait(async x => $"{Format.Bold((await Context.Guild.GetVoiceChannelAsync(x.VoiceChannelId).ConfigureAwait(false))?.Name ?? x.VoiceChannelId.ToString())} => {(Context.Guild.GetRole(x.RoleId).Name ?? x.RoleId.ToString())}").ToListAsync());
-
-				await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor().WithTitle(GetText("vc_role_list")).WithDescription(text)).ConfigureAwait(false);
-			}
+			// [MitternachtCommand, Usage, Description, Aliases]
+			// [RequireContext(ContextType.Guild)]
+			// public async Task VcRoleList() {
+			// 	var voiceChannelRoleInfos = uow.GuildConfigs.For(Context.Guild.Id, set => set.Include(x => x.VcRoleInfos)).VcRoleInfos;
+			//
+			// 	var text = !voiceChannelRoleInfos.Any()
+			// 		? GetText("no_vcroles")
+			// 		: string.Join("\n", await voiceChannelRoleInfos.ToAsyncEnumerable().SelectAwait(async x => $"{Format.Bold((await Context.Guild.GetVoiceChannelAsync(x.VoiceChannelId).ConfigureAwait(false))?.Name ?? x.VoiceChannelId.ToString())} => {(Context.Guild.GetRole(x.RoleId).Name ?? x.RoleId.ToString())}").ToListAsync());
+			//
+			// 	await Context.Channel.EmbedAsync(new EmbedBuilder().WithOkColor().WithTitle(GetText("vc_role_list")).WithDescription(text)).ConfigureAwait(false);
+			// }
 		}
 	}
 }

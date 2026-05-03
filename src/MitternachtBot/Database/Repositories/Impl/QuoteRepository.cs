@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mitternacht.Database.Models;
-using MoreLinq;
 
 namespace Mitternacht.Database.Repositories.Impl {
 	public class QuoteRepository : Repository<Quote>, IQuoteRepository {

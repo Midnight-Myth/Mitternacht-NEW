@@ -11,7 +11,6 @@ using Mitternacht.Extensions;
 using Mitternacht.Services;
 using Mitternacht.Database;
 using Mitternacht.Services.Impl;
-using MoreLinq;
 
 namespace Mitternacht.Modules.Gambling {
 	public partial class Gambling : MitternachtTopLevelModule {
@@ -38,7 +37,7 @@ namespace Mitternacht.Modules.Gambling {
 			var members = (await role.GetMembersAsync()).Where(u => u.Status != UserStatus.Offline);
 			var membersArray = members as IUser[] ?? members.ToArray();
 			//TODO: This breaks when membersArray has no elements.
-			var user = membersArray.RandomSubset(1).First();
+			var user = membersArray[Random.Shared.Next(0, membersArray.Length)];
 			await Context.Channel.SendConfirmAsync($"**{user.Username}#{user.Discriminator}**", $"🎟 {GetText("raffled_user")}", footer: $"ID: {user.Id}").ConfigureAwait(false);
 		}
 

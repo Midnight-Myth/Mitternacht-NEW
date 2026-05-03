@@ -10,7 +10,6 @@ using Mitternacht.Extensions;
 using Mitternacht.Modules.Forum.Services;
 using Mitternacht.Services;
 using Mitternacht.Database;
-using MoreLinq;
 
 namespace Mitternacht.Modules.Utility {
 	public partial class Utility {

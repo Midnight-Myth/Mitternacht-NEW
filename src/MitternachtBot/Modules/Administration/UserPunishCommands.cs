@@ -11,7 +11,6 @@ using Mitternacht.Modules.Administration.Services;
 using Mitternacht.Services;
 using Mitternacht.Database;
 using Mitternacht.Database.Models;
-using MoreLinq;
 using Mitternacht.Common;
 
 namespace Mitternacht.Modules.Administration {
@@ -30,7 +29,14 @@ namespace Mitternacht.Modules.Administration {
 			[RequireContext(ContextType.Guild)]
 			[RequireUserPermission(GuildPermission.KickMembers)]
 			public async Task Warn(IGuildUser user, ModerationPoints points, [Remainder] string reason = null) {
-				if(Context.User.Id == user.Guild.OwnerId || user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max() < ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).FallbackIfEmpty(int.MinValue).Max()) {
+				var hasPermissions = Context.User.Id == user.Guild.OwnerId;
+				if(!hasPermissions) {
+					var targetUserRolePositions = user.GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).ToArray();
+					var contextUserRolePositions = ((IGuildUser)Context.User).GetRoles().Where(r => r.IsHoisted).Select(r => r.Position).ToArray();
+					hasPermissions = (targetUserRolePositions.Length != 0 ? targetUserRolePositions.Max() : int.MinValue) < (contextUserRolePositions.Length != 0 ? contextUserRolePositions.Max() : int.MinValue);
+				}
+				
+				if(hasPermissions) {
 					try {
 						await (await user.CreateDMChannelAsync()).EmbedAsync(new EmbedBuilder().WithErrorColor().WithDescription(GetText("userpunish_warn_warned_on_server", Context.Guild.ToString())).AddField(efb => efb.WithName(GetText("userpunish_warn_reason")).WithValue(reason ?? "-"))).ConfigureAwait(false);
 					} catch { }
