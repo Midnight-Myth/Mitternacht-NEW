@@ -1,24 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>General purpose Discord bot written in C#. Modified for inofficial GommeHD.net Plauderkonfi Discord.</Description>
-    <Copyright>Kwoth/expeehaa</Copyright>
-    <Authors>Kwoth, expeehaa, Midnight Myth</Authors>
-    <PublisherName>expeehaa</PublisherName>
     <TargetFramework>net10.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>Mitternacht</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>MitternachtBot</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <ApplicationIcon>nadeko_icon.ico</ApplicationIcon>
-    <PackageProjectUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Midnight-Myth/Mitternacht-NEW/</RepositoryUrl>
     <RootNamespace>Mitternacht</RootNamespace>
     <StartupObject>Mitternacht.Program</StartupObject>
     <LangVersion>14</LangVersion>
@@ -33,18 +21,12 @@
     <None Update="locales\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="nadeko_icon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="data\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="data\musicdata\**\*">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    <None Update="_strings\commandstrings.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-		<None Update="_strings\commandstrings.yml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Colourful" Version="3.2.0" />
