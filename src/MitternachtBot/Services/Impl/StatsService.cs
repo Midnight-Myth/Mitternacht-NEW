@@ -44,11 +44,11 @@ namespace Mitternacht.Services.Impl {
 			_client.ChannelCreated += c => {
 				var _ = Task.Run(() => {
 					switch(c) {
-						case ITextChannel _:
-							Interlocked.Increment(ref _textChannels);
-							break;
 						case IVoiceChannel _:
 							Interlocked.Increment(ref _voiceChannels);
+							break;
+						case ITextChannel _:
+							Interlocked.Increment(ref _textChannels);
 							break;
 					}
 				});
@@ -59,11 +59,11 @@ namespace Mitternacht.Services.Impl {
 			_client.ChannelDestroyed += c => {
 				var _ = Task.Run(() => {
 					switch(c) {
-						case ITextChannel _:
-							Interlocked.Decrement(ref _textChannels);
-							break;
 						case IVoiceChannel _:
 							Interlocked.Decrement(ref _voiceChannels);
+							break;
+						case ITextChannel _:
+							Interlocked.Decrement(ref _textChannels);
 							break;
 					}
 				});

@@ -9,6 +9,7 @@ using Mitternacht.Modules.Utility.Common;
 using Mitternacht.Services;
 using Mitternacht.Services.Impl;
 using NLog;
+using Poll = Mitternacht.Modules.Utility.Common.Poll;
 
 namespace Mitternacht.Modules.Utility.Services {
 	public class PollService : IEarlyBlockingExecutor, IMService {
