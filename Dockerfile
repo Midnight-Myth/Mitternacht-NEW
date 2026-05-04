@@ -1,11 +1,11 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 COPY . .
-WORKDIR /source/MitternachtWeb
+WORKDIR /source/src/MitternachtWeb
 RUN dotnet publish -c Release -o /build
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS runtime
-RUN apk add tzdata icu-libs
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS runtime
+RUN apk add tzdata icu-libs krb5
 COPY --from=build /build /build
 WORKDIR /data
 EXPOSE 5000

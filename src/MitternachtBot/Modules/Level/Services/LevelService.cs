@@ -46,7 +46,7 @@ namespace Mitternacht.Modules.Level.Services {
 
 		private async Task OnMessageNoTrigger(IUserMessage um) {
 			await Task.Run(async () => {
-				if(!(um.Author is IGuildUser user))
+				if(!(um.Author is IGuildUser user) || um.Channel is IThreadChannel || um.Channel is IForumChannel)
 					return;
 				using var uow = _db.UnitOfWork;
 				if(uow.MessageXpRestrictions.IsRestricted(um.Channel as ITextChannel) || um.Content.Length < uow.GuildConfigs.For(user.GuildId).MessageXpCharCountMin)

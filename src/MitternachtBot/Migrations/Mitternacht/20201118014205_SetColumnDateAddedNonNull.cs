@@ -1,64 +1,15 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MoreLinq.Extensions;
 
 namespace Mitternacht.Migrations.Mitternacht {
 	public partial class SetColumnDateAddedNonNull : Migration {
 		protected override void Up(MigrationBuilder migrationBuilder) {
-			new string[]{
-				"ZalgoFilterChannel",
-				"Warnings",
-				"WarningPunishment",
-				"VoiceChannelStats",
-				"VerifiedUsers",
-				"VcRoleInfo",
-				"UserRoleColorBindings",
-				"UsernameHistory",
-				"UnmuteTimer",
-				"TeamUpdateRank",
-				"StartupCommand",
-				"ShopEntryItem",
-				"ShopEntry",
-				"SelfAssignableRoles",
-				"RoleMoney",
-				"RoleLevelBinding",
-				"RewardedUser",
-				"Reminders",
-				"Quotes",
-				"PlayingStatus",
-				"Permissionv2",
-				"Permission",
-				"NsfwBlacklitedTag",
-				"MutedUserId",
-				"MessageXpRestrictions",
-				"LogSetting",
-				"LevelModel",
-				"IgnoredVoicePresenceChannel",
-				"IgnoredLogChannel",
-				"GuildRepeater",
-				"GuildConfigs",
-				"GCChannelId",
-				"FilteredWord",
-				"FilterChannelId",
-				"EightBallResponse",
-				"Donators",
-				"DailyMoneyStats",
-				"DailyMoney",
-				"CustomReactions",
-				"CurrencyTransactions",
-				"Currency",
-				"CommandCooldown",
-				"CommandAlias",
-				"BotConfig",
-				"BlockedCmdOrMdl",
-				"BlacklistItem",
-				"BirthDates",
-				"AntiSpamSetting",
-				"AntiSpamIgnore",
-				"AntiRaidSetting",
-			}.ForEach(table => {
+			var tables = new string[] {
+				"ZalgoFilterChannel", "Warnings", "WarningPunishment", "VoiceChannelStats", "VerifiedUsers", "VcRoleInfo", "UserRoleColorBindings", "UsernameHistory", "UnmuteTimer", "TeamUpdateRank", "StartupCommand", "ShopEntryItem", "ShopEntry", "SelfAssignableRoles", "RoleMoney", "RoleLevelBinding", "RewardedUser", "Reminders", "Quotes", "PlayingStatus", "Permissionv2", "Permission", "NsfwBlacklitedTag", "MutedUserId", "MessageXpRestrictions", "LogSetting", "LevelModel", "IgnoredVoicePresenceChannel", "IgnoredLogChannel", "GuildRepeater", "GuildConfigs", "GCChannelId", "FilteredWord", "FilterChannelId", "EightBallResponse", "Donators", "DailyMoneyStats", "DailyMoney", "CustomReactions", "CurrencyTransactions", "Currency", "CommandCooldown", "CommandAlias", "BotConfig", "BlockedCmdOrMdl", "BlacklistItem", "BirthDates", "AntiSpamSetting", "AntiSpamIgnore", "AntiRaidSetting",
+			};
+			foreach(var table in tables) {
 				migrationBuilder.Sql($"UPDATE \"{table}\" SET \"DateAdded\" = '0001-01-01 00:00:00.0' WHERE \"DateAdded\" IS NULL");
-			});
+			}
 
 			migrationBuilder.AlterColumn<DateTime>(
 				name: "DateAdded",

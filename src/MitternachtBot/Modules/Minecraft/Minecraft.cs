@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using MinecraftQuery;
+using MinecraftQuery.Models;
 using Mitternacht.Common.Attributes;
 using Mitternacht.Extensions;
 
@@ -76,8 +77,11 @@ namespace Mitternacht.Modules.Minecraft {
 		}
 
 		private static string GetEmojiStringFromServiceStatus(ServiceStatus status)
-			=> status == ServiceStatus.Green ? ":white_check_mark:" :
-				status == ServiceStatus.Yellow ? ":warning:" : ":x:";
+			=> status switch {
+				ServiceStatus.Green  => ":white_check_mark:",
+				ServiceStatus.Yellow => ":warning:",
+				_                    => ":x:"
+			};
 
 		[MitternachtCommand, Usage, Description, Aliases]
 		[RequireContext(ContextType.Guild)]

@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{04929013-5BA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitternachtBot", "src\MitternachtBot\MitternachtBot.csproj", "{45EC1473-C678-4857-A544-07DFE0D0B478}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GommeHDnetForumAPI", "GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj", "{7FC96783-23B7-4D74-A68F-BDCC61418996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GommeHDnetForumAPI", "src\GommeHDnetForumAPI\GommeHDnetForumAPI\GommeHDnetForumAPI.csproj", "{7FC96783-23B7-4D74-A68F-BDCC61418996}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftQuery", "MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj", "{42BD36A3-263D-4D12-A54C-2F442F31CE3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftQuery", "src\MinecraftQuery\MinecraftQuery\MinecraftQuery.csproj", "{42BD36A3-263D-4D12-A54C-2F442F31CE3B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitternachtWeb", "MitternachtWeb\MitternachtWeb.csproj", "{F5BB649D-2FF7-403B-AA0C-1F9F90DAFF99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MitternachtWeb", "src\MitternachtWeb\MitternachtWeb.csproj", "{F5BB649D-2FF7-403B-AA0C-1F9F90DAFF99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +42,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{45EC1473-C678-4857-A544-07DFE0D0B478} = {04929013-5BAB-42B0-B9B2-8F2BB8F16AF2}
 		{F5BB649D-2FF7-403B-AA0C-1F9F90DAFF99} = {04929013-5BAB-42B0-B9B2-8F2BB8F16AF2}
+		{7FC96783-23B7-4D74-A68F-BDCC61418996} = {04929013-5BAB-42B0-B9B2-8F2BB8F16AF2}
+		{42BD36A3-263D-4D12-A54C-2F442F31CE3B} = {04929013-5BAB-42B0-B9B2-8F2BB8F16AF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {431D5AA8-CE6A-4455-B91D-89B21DCF892A}

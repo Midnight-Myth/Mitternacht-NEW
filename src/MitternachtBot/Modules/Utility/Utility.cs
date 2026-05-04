@@ -295,33 +295,33 @@ namespace Mitternacht.Modules.Utility
         }
 
 
-        [MitternachtCommand, Usage, Description, Aliases]
-        [RequireContext(ContextType.Guild)]
-        [OwnerOnly]
-        public async Task SaveChat(int count, IGuildUser user = null) {
-            if (count < 1) return;
-            var msgs = new List<IMessage>();
-            if(user == null) await Context.Channel.GetMessagesAsync(count).ForEachAsync(dled => msgs.AddRange(dled)).ConfigureAwait(false);
-            else {
-                IMessage last = null;
-                while (msgs.Count < count) {
-                    var tmpMsgs = (last is null ? await Context.Channel.GetMessagesAsync(count).FlattenAsync().ConfigureAwait(false) : await Context.Channel.GetMessagesAsync(last, Direction.Before, count).FlattenAsync().ConfigureAwait(false)).ToList();
-                    msgs.AddRange(tmpMsgs.Where(m => m.Author.Id == user.Id));
-                    var beforeLast = last;
-                    last = tmpMsgs.OrderBy(m => m.Timestamp).FirstOrDefault();
-                    if (beforeLast != null && last != null && beforeLast.Id == last.Id) break;
-                }
-                if (msgs.Count > count) msgs = msgs.Take(count).ToList();
-            }
-
-            var title = $"Chatlog{(user != null ? $"-{user.Username}" : "")}-{Context.Guild.Name}/#{Context.Channel.Name}-{DateTime.Now}.txt";
-            var grouping = msgs.GroupBy(x => $"{x.CreatedAt.Date:dd.MM.yyyy}")
-                .Select(g => new {
-                    date = g.Key,
-                    messages = g.OrderByDescending(x => x.CreatedAt).Select(s => new SavechatMessage(s.Author.ToString(), $"{s.Timestamp:HH:mm:ss}", s.ToString(), s.Attachments.Select(a => a.Url).ToList(), s.Embeds.Select(e => $"Description: {e.Description}").ToList()))
-                });
-            await Context.User.SendFileAsync(await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
-        }
+        // [MitternachtCommand, Usage, Description, Aliases]
+        // [RequireContext(ContextType.Guild)]
+        // [OwnerOnly]
+        // public async Task SaveChat(int count, IGuildUser user = null) {
+        //     if (count < 1) return;
+        //     var msgs = new List<IMessage>();
+        //     if(user == null) await Context.Channel.GetMessagesAsync(count).ForEachAsync(dled => msgs.AddRange(dled)).ConfigureAwait(false);
+        //     else {
+        //         IMessage last = null;
+        //         while (msgs.Count < count) {
+        //             var tmpMsgs = (last is null ? await Context.Channel.GetMessagesAsync(count).FlattenAsync().ConfigureAwait(false) : await Context.Channel.GetMessagesAsync(last, Direction.Before, count).FlattenAsync().ConfigureAwait(false)).ToList();
+        //             msgs.AddRange(tmpMsgs.Where(m => m.Author.Id == user.Id));
+        //             var beforeLast = last;
+        //             last = tmpMsgs.OrderBy(m => m.Timestamp).FirstOrDefault();
+        //             if (beforeLast != null && last != null && beforeLast.Id == last.Id) break;
+        //         }
+        //         if (msgs.Count > count) msgs = msgs.Take(count).ToList();
+        //     }
+        //
+        //     var title = $"Chatlog{(user != null ? $"-{user.Username}" : "")}-{Context.Guild.Name}/#{Context.Channel.Name}-{DateTime.Now}.txt";
+        //     var grouping = msgs.GroupBy(x => $"{x.CreatedAt.Date:dd.MM.yyyy}")
+        //         .Select(g => new {
+        //             date = g.Key,
+        //             messages = g.OrderByDescending(x => x.CreatedAt).Select(s => new SavechatMessage(s.Author.ToString(), $"{s.Timestamp:HH:mm:ss}", s.ToString(), s.Attachments.Select(a => a.Url).ToList(), s.Embeds.Select(e => $"Description: {e.Description}").ToList()))
+        //         });
+        //     await Context.User.SendFileAsync(await JsonConvert.SerializeObject(grouping, Formatting.Indented).ToStream().ConfigureAwait(false), title, title).ConfigureAwait(false);
+        // }
 
         [MitternachtCommand, Usage, Description, Aliases]
         public async Task Ping()

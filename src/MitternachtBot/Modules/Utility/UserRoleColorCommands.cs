@@ -63,14 +63,14 @@ namespace Mitternacht.Modules.Utility {
 			[RequireContext(ContextType.Guild)]
 			public async Task UserRoleColor(SocketRole role, HexColor color) {
 				if(_uow.UserRoleColorBindings.HasBinding(Context.User.Id, role)) {
-					var allowedRoleColors   = (Context.User as IGuildUser).GetRoles().Select(r => r.Color).ToArray();
+					var allowedRoleColors   = (Context.User as IGuildUser).GetRoles().Select(r => r.Colors.PrimaryColor).ToArray();
 					var forbiddenRoleColors = Context.Guild.Roles.Where(r => r.IsHoisted && r.Id != role.Id);
 
 					var converter            = new ConverterBuilder().FromRGB().ToLab().Build();
 					var colorDifference      = new CIEDE2000ColorDifference();
 					var requestedColor       = converter.Convert(color.ToRGBColor());
 					var similarityRadius     = _uow.GuildConfigs.For(Context.Guild.Id).ColorMetricSimilarityRadius;
-					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8Bit(c.Color.R, c.Color.G, c.Color.B))) < similarityRadius);
+					var similarlyColoredRole = forbiddenRoleColors.FirstOrDefault(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8Bit(c.Colors.PrimaryColor.R, c.Colors.PrimaryColor.G, c.Colors.PrimaryColor.B))) < similarityRadius);
 
 					if(similarlyColoredRole == null || allowedRoleColors.Any(c => colorDifference.ComputeDifference(requestedColor, converter.Convert(RGBColor.FromRGB8Bit(c.R, c.G, c.B))) < similarityRadius)) {
 						await role.ModifyAsync(rp => rp.Color = color).ConfigureAwait(false);
